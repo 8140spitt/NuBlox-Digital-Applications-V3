@@ -35,5 +35,8 @@ jobs:
       - name: Type and Svelte check
         run: pnpm check
 
+      - name: Strategy framework domain test
+        run: pnpm test:domain
+
       - name: Production build
         run: pnpm build

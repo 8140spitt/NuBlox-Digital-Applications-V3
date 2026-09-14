@@ -1,24 +1,35 @@
-# Business Function Architecture
+# Business Function & Workspace Architecture
 
-This directory is the canonical source for NuBlox V3's operating-model coverage.
+This directory is the canonical source for NuBlox V3's 29 tenant workspaces and their operating-model coverage.
+
+## Governing rule
+
+**Each of the 29 enterprise functions is a canonical workspace within the tenant application.**
+
+A workspace is the primary functional home in which users perform that function's work. It contains the relevant sub-functions, workflows, work queues, records, decisions, controls, evidence and reporting views.
+
+A workspace is **not** an independent application, database, bounded context or data silo. Shared business objects remain canonical, and cross-functional workflows may move through or surface information from several workspaces.
 
 ## Purpose
 
-The V3 business-function model must answer five questions without ambiguity:
+The V3 function/workspace model must answer six questions without ambiguity:
 
-1. What does the business need to do?
-2. Which native NuBlox capability enables it?
-3. Which workflow carries the work from trigger to outcome?
+1. What does this enterprise function need to achieve?
+2. Which sub-functions and activities belong in its tenant workspace?
+3. Which workflow carries each item of work from trigger to outcome?
 4. Which canonical business objects are created, changed or consumed?
-5. Which roles, controls and evidence govern the work?
+5. Which underlying NuBlox capability/domain owns the relevant rules and invariants?
+6. Which roles, permissions, controls and evidence govern the work?
 
 ## Canonical hierarchy
 
 NuBlox uses the following traceability hierarchy:
 
-`Business Function -> Sub-function -> Capability -> Workflow -> Activity -> Business Object / Control / Evidence`
+`Tenant -> Function Workspace -> Sub-function -> Workflow -> Activity -> Capability / Business Object / Control / Evidence`
 
-Business functions describe stable organisational responsibilities. Capabilities describe what NuBlox enables. Workflows describe how work actually progresses. These concepts must not be collapsed into a single list.
+The **workspace layer is user-facing**. The capability/domain layer is the underlying architectural ownership model. These two layers are intentionally related but are not the same thing.
+
+A function workspace may compose capabilities owned by several underlying domains. Conversely, one underlying capability may support several function workspaces.
 
 ## Required register fields
 
@@ -26,42 +37,48 @@ The master coverage register will contain, at minimum:
 
 | Field | Purpose |
 | --- | --- |
-| `function_id` | Stable identifier for one of the 29 business functions |
-| `function_name` | Canonical function name |
+| `function_id` | Stable identifier for one of the 29 enterprise functions/workspaces |
+| `function_name` | Canonical function and workspace name |
+| `workspace_id` | Stable tenant-workspace identifier |
+| `workspace_purpose` | User-facing purpose of the functional workspace |
 | `subfunction_id` | Stable sub-function identifier |
 | `subfunction_name` | Canonical sub-function name |
-| `capability_id` | Native NuBlox capability identifier |
-| `capability_name` | User/business-oriented capability name |
-| `capability_description` | Clear statement of the outcome enabled |
-| `owning_domain` | Domain responsible for the capability's core invariants |
-| `primary_workflow` | Main workflow implementing the capability |
-| `upstream_dependencies` | Required preceding capabilities/workflows |
-| `downstream_dependencies` | Consumers and resulting workflows |
-| `canonical_objects` | Core business objects touched by the capability |
+| `capability_id` | Supporting native NuBlox capability identifier |
+| `capability_name` | Business-oriented capability name |
+| `owning_domain` | Architectural domain responsible for core invariants |
+| `primary_workflow` | Main workflow implementing the sub-function |
+| `upstream_dependencies` | Required preceding capabilities/workflows/workspaces |
+| `downstream_dependencies` | Consumers and resulting workflows/workspaces |
+| `canonical_objects` | Core business objects touched by the workflow |
 | `primary_roles` | Roles expected to perform or own the work |
+| `permissions` | Required actions and scopes |
 | `controls` | Approvals, thresholds, segregation or policy constraints |
 | `evidence` | Required audit/documentary evidence |
-| `experience_surface` | Primary task/workspace where the capability is exposed |
+| `workspace_surface` | Primary view, queue or tool within the function workspace |
+| `cross_workspace_surfaces` | Other workspaces in which the same canonical record/workflow may be surfaced |
 | `implementation_state` | planned / designed / implemented / verified |
 | `benchmark_reference` | External benchmark coverage where relevant |
 | `acceptance_reference` | Test/specification proving coverage |
 
-## Mapping rules
+## Workspace rules
 
-- All 29 functions must be represented; no function may disappear because several functions share one software capability.
-- One native capability may support multiple functions, but each relationship must be recorded explicitly.
-- A function may require several capabilities and workflows; one screen is never assumed to equal one function.
-- Capability identifiers remain stable even if navigation or component implementation changes.
-- Cross-functional workflows must identify one owning domain for each material business object and lifecycle transition.
+- All 29 functions must exist as stable first-class workspaces within every applicable tenant application.
+- The function workspace is the primary information-architecture and navigation boundary for functional work.
+- Every one of the 353 L2 sub-functions must have one explicit primary function/workspace home.
+- A workspace may contain many views, queues, records and workflows; **one screen does not equal one function**.
+- Cross-functional workflows must preserve continuity when they move between workspaces.
+- Canonical objects are never duplicated merely because two workspaces need to see or act on them.
+- A capability may support multiple workspaces, but each relationship must be explicit.
+- Workspace IDs and function IDs remain stable even when component implementation or underlying domain boundaries evolve.
 - External benchmark mappings describe coverage and equivalence; they do not dictate NuBlox's internal architecture.
-- Job roles map to responsibilities and permissions after the capability model is validated; job titles do not define software modules.
+- Job roles determine responsibility and access within workspaces; job titles do not define workspace boundaries.
 
-## Definition of complete coverage
+## Definition of complete workspace coverage
 
-A sub-function is considered covered only when NuBlox has a traceable capability, workflow, canonical data ownership, role/permission model, control/evidence model and usable experience for the relevant business outcome.
+A sub-function is considered covered only when its function workspace provides a usable route into the work and NuBlox has traceable workflow behaviour, canonical data ownership, roles/permissions, controls/evidence and acceptance proof for the relevant business outcome.
 
-A checkbox against a module name is not sufficient evidence of coverage.
+A workspace consisting only of a menu entry or dashboard is not coverage.
 
 ## V3 workflow
 
-The existing NuBlox V1/V2 capability registers, benchmark documents and job architecture may be used as reference inputs, but V3 will revalidate their business meaning before adopting them. Legacy software structure is not authoritative for V3 architecture.
+The existing NuBlox V1/V2 taxonomy, capability registers, benchmark documents and job architecture may be used as reference inputs, but V3 will revalidate their business meaning before adopting them. Legacy software structure is not authoritative for V3 architecture.

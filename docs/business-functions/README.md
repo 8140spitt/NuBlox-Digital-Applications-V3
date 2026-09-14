@@ -10,6 +10,12 @@ A workspace is the primary functional home in which users perform that function'
 
 A workspace is **not** an independent application, database, bounded context or data silo. Shared business objects remain canonical, and cross-functional workflows may move through or surface information from several workspaces.
 
+## Workspace specifications
+
+- [`F01 — Strategy & Enterprise Planning`](f01-strategy-enterprise-planning.md) — governing V3 workspace specification covering its eight L2 work areas, business objects, strategy lifecycle, work queues, roles, permissions, controls, evidence, cross-workspace relationships, reporting and acceptance criteria.
+
+Additional workspace specifications are added only after their business taxonomy and operating model have been revalidated for V3.
+
 ## Purpose
 
 The V3 function/workspace model must answer six questions without ambiguity:

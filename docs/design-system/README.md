@@ -46,6 +46,8 @@ Every function workspace will be built from the same architectural grammar:
 
 This is an information-architecture contract, not a requirement that every workspace render all eight areas on one page.
 
+The detailed governing contract is [`function-workspace-anatomy.md`](function-workspace-anatomy.md).
+
 ## Required foundations before feature UI
 
 - tenant application shell;

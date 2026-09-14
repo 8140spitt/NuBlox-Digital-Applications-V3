@@ -4,6 +4,7 @@ export type WorkArea = {
   sourceName: string;
   summary: string;
   items: string[];
+  path?: string;
 };
 
 export const f01Workspace = {
@@ -12,7 +13,7 @@ export const f01Workspace = {
   purpose: "Define the organisation's direction, operating model, plans and performance to achieve long-term value in the built environment.",
   objects: ['Strategy framework', 'Business plan', 'Operating model', 'Strategic scenario', 'Review', 'Performance measure', 'Decision'],
   areas: [
-    { id: 'F01.01', name: 'Strategy Framework', sourceName: 'Vision & purpose', summary: 'Establish and maintain the enterprise purpose, vision, mission and strategic direction.', items: ['Overview', 'Purpose & vision', 'Mission', 'Direction', 'Review cycle', 'Published version'] },
+    { id: 'F01.01', name: 'Strategy Framework', sourceName: 'Vision & purpose', summary: 'Establish and maintain the enterprise purpose, vision, mission and strategic direction.', items: ['Overview', 'Purpose & vision', 'Mission', 'Direction', 'Review cycle', 'Published version'], path: 'strategy-framework' },
     { id: 'F01.02', name: 'External Environment', sourceName: 'Environmental analysis', summary: 'Maintain the evidence base for strategic choices.', items: ['Market analysis', 'PESTLE', 'Industry trends', 'Competitors', 'Regulatory landscape', 'Insights library'] },
     { id: 'F01.03', name: 'Strategy', sourceName: 'Strategic planning', summary: 'Translate evidence into objectives, choices and strategic priorities.', items: ['Strategic objectives', 'Strategic themes', 'Value creation', 'Risks & opportunities', 'Strategic choices', 'Dependencies'] },
     { id: 'F01.04', name: 'Business Plan', sourceName: 'Business planning', summary: 'Convert strategy into owned, funded and governed execution plans.', items: ['Financial plan', 'Resource plan', 'Delivery roadmap', 'Initiatives', 'Benefits', 'Approval'] },

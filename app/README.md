@@ -1,19 +1,30 @@
 # NuBlox V3 Application
 
-This directory will contain the V3 product application.
+This directory contains the greenfield NuBlox V3 tenant application.
 
-Application scaffolding is intentionally deferred until the Phase 0 operating-model baseline is sufficiently stable to prevent framework structure, routes or components from becoming accidental product architecture.
+## Current foundation
 
-Before the first functional vertical slice is built, V3 must have approved baselines for:
+The first runnable slice establishes:
 
-- enterprise functions and sub-functions;
-- native capability/domain ownership;
-- canonical identity, organisation and context model;
-- permission and delegated-authority model;
-- workflow/audit/evidence model;
-- initial canonical business objects;
-- application information architecture;
-- design-system foundations;
-- first end-to-end value stream and acceptance criteria.
+- SvelteKit 5 / TypeScript / pnpm application tooling;
+- the shared tenant application shell;
+- the canonical 29-function workspace directory;
+- F01 — Strategy & Enterprise Planning as the first active workspace;
+- the standard workspace anatomy: identity, sub-functions, business journey, platform services, integration and data;
+- responsive and accessible baseline layout behaviour.
 
-The application will then be scaffolded around those decisions rather than the other way around.
+Only F01 is active. F02–F29 are visible as the canonical future workspace set but intentionally non-navigable until each workspace specification is revalidated and implemented.
+
+## Run locally
+
+```bash
+pnpm install
+pnpm check
+pnpm dev
+```
+
+Open the URL printed by Vite. The root route redirects to the current demonstration tenant at `/perspective-bc/app/functions/f01`.
+
+## Engineering rule
+
+The UI is data-driven from canonical workspace definitions. Function workspaces may have different business content, but they use shared shell and interaction primitives rather than creating independent mini-applications.

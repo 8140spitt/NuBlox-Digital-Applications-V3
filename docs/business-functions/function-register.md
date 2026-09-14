@@ -1,11 +1,13 @@
-# Canonical Enterprise Function Register
+# Canonical Enterprise Function & Workspace Register
 
-**Status:** V3 baseline business taxonomy  
+**Status:** V3 baseline tenant workspace taxonomy  
 **Source treatment:** revalidated from the prior NuBlox business taxonomy; no legacy application structure is inherited by this register.
 
-The 29 functions describe **what the enterprise must be able to do**. They are not software modules, navigation sections or database ownership boundaries.
+The 29 functions describe **what the enterprise must be able to do** and each function is also a **stable first-class workspace within the tenant application**.
 
-| ID | Enterprise function | Purpose |
+They are user-facing navigation and work-context boundaries, but they are **not** independent applications, database schemas or data-ownership silos. Underlying capabilities and canonical business objects may support several workspaces while remaining governed by one authoritative model.
+
+| ID | Tenant workspace / enterprise function | Purpose |
 | --- | --- | --- |
 | F01 | Strategy & Enterprise Planning | Set direction, translate strategy into funded plans and govern strategic outcomes. |
 | F02 | Corporate Governance | Govern authority, policy, decisions, ethics and accountable enterprise actions. |
@@ -44,10 +46,13 @@ The prior taxonomy contained 353 L2 sub-functions and 1,510 source activities. V
 - clear business meaning;
 - duplication or overlap;
 - construction/built-environment relevance;
-- correct function placement;
+- correct function/workspace placement;
 - native capability ownership;
 - end-to-end workflow relationships;
-- accountable roles and controls;
+- accountable roles, permissions and controls;
+- canonical records and evidence;
 - measurable evidence of completion.
 
-The V3 function IDs are stable business identifiers. Changing software navigation, domain boundaries or implementation technology does not change them.
+Every L2 sub-function must have one primary workspace home. Cross-workspace visibility or action is allowed where the business process requires it, but the underlying record or process state must not be duplicated.
+
+The V3 function IDs are therefore also the stable workspace IDs. Underlying implementation technology, service boundaries or component structure may evolve without changing them.

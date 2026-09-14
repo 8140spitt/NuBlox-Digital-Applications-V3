@@ -55,3 +55,27 @@ V3 development follows this order:
 9. Add integration, analytics, automation and optimisation.
 
 A function workspace is not considered complete until its sub-function coverage, workflows, data ownership, permissions, audit behaviour, cross-workspace relationships, user experience and automated acceptance evidence are defined and tested.
+
+## Terminal interaction logging
+
+This repository includes helper scripts to capture and review terminal sessions for engineering review and traceability.
+
+```bash
+# Enable auto-start logging for zsh terminals opened in this repo
+./scripts/terminal-logging/enable-auto-start-zsh.sh
+
+# Disable auto-start logging
+./scripts/terminal-logging/disable-auto-start-zsh.sh
+
+# Start a manual recording session (exit to stop)
+./scripts/terminal-logging/start-session.sh
+
+# List recorded sessions
+./scripts/terminal-logging/list-sessions.sh
+
+# Render the latest session to readable text and preview it
+./scripts/terminal-logging/review-session.sh
+```
+
+Raw and rendered terminal logs are written under `logs/terminal/` and ignored by git.
+After enabling auto-start, open a new terminal in this repository and recording will begin automatically.

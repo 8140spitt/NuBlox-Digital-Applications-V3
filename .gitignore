@@ -25,6 +25,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+logs/terminal/*.typescript
+logs/terminal/*.meta.txt
+logs/terminal/*.review.txt
 
 # Editors / OS
 .DS_Store

@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/generate-business-object-register.mjs'
+      - 'scripts/export-business-object-register-for-app.mjs'
       - '.github/workflows/object-model-generate.yml'
   workflow_dispatch:
 
@@ -26,7 +27,9 @@ jobs:
           node-version: 22
 
       - name: Generate register
-        run: node scripts/generate-business-object-register.mjs
+        run: |
+          node scripts/generate-business-object-register.mjs
+          node scripts/export-business-object-register-for-app.mjs
 
       - name: Commit generated register
         run: |
@@ -34,10 +37,11 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/data-model/canonical-business-object-register.csv \
                   docs/data-model/canonical-business-object-duplicates.csv \
-                  docs/data-model/canonical-business-object-summary.md
+                  docs/data-model/canonical-business-object-summary.md \
+                  app/src/lib/generated/business-object-register.json
           if git diff --cached --quiet; then
             echo "Generated register already current"
           else
-            git commit -m "docs: generate canonical business object register"
+            git commit -m "build: generate canonical business object data"
             git push origin HEAD:main
           fi

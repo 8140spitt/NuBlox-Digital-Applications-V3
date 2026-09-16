@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { foundationCanonicalization } from '$lib/data/foundation-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -70,6 +71,48 @@ function validateInput(candidateKey: string, input: BusinessObjectReviewInput) {
   }
   if (input.decision === 'RENAME' && !clean(input.proposedCanonicalName)) {
     throw new Error('A proposed canonical name is required for rename decisions.');
+  }
+}
+
+export function seedFoundationCanonicalization(contextTenantSlug: string) {
+  const actor = 'NuBlox Architecture Baseline';
+  const exists = db.prepare('SELECT 1 FROM business_object_reviews WHERE candidate_key = ?');
+  const insertReview = db.prepare(`
+    INSERT INTO business_object_reviews
+      (candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, reviewed_by, reviewed_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const insertEvent = db.prepare(`
+    INSERT INTO business_object_review_events
+      (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  let inserted = 0;
+  db.exec('BEGIN IMMEDIATE');
+  try {
+    for (const entry of foundationCanonicalization) {
+      if (exists.get(entry.candidateKey)) continue;
+      const timestamp = now();
+      const decision = entry.decision as BusinessObjectReviewDecision;
+      validateInput(entry.candidateKey, {
+        decision,
+        proposedCanonicalName: entry.proposedCanonicalName,
+        targetCandidateKey: entry.targetCandidateKey,
+        notes: entry.notes
+      });
+      const canonicalName = clean(entry.proposedCanonicalName);
+      const target = clean(entry.targetCandidateKey);
+      const notes = clean(entry.notes);
+      insertReview.run(entry.candidateKey, decision, canonicalName, target, notes, actor, timestamp, timestamp);
+      insertEvent.run(randomUUID(), entry.candidateKey, decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp);
+      inserted += 1;
+    }
+    db.exec('COMMIT');
+    return inserted;
+  } catch (error) {
+    db.exec('ROLLBACK');
+    throw error;
   }
 }
 

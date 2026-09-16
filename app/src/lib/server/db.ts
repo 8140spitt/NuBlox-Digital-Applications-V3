@@ -63,4 +63,33 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_audit_object
     ON audit_events (tenant_slug, object_type, object_id, occurred_at DESC);
+
+  CREATE TABLE IF NOT EXISTS business_object_reviews (
+    candidate_key TEXT PRIMARY KEY,
+    decision TEXT NOT NULL,
+    proposed_canonical_name TEXT,
+    target_candidate_key TEXT,
+    notes TEXT,
+    reviewed_by TEXT NOT NULL,
+    reviewed_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_business_object_reviews_decision
+    ON business_object_reviews (decision, updated_at DESC);
+
+  CREATE TABLE IF NOT EXISTS business_object_review_events (
+    id TEXT PRIMARY KEY,
+    candidate_key TEXT NOT NULL,
+    decision TEXT NOT NULL,
+    proposed_canonical_name TEXT,
+    target_candidate_key TEXT,
+    notes TEXT,
+    actor TEXT NOT NULL,
+    context_tenant_slug TEXT NOT NULL,
+    occurred_at TEXT NOT NULL
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_business_object_review_events_candidate
+    ON business_object_review_events (candidate_key, occurred_at DESC);
 `);

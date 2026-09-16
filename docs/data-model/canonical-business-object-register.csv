@@ -1,0 +1,751 @@
+candidate_key,family_id,family_name,canonical_name,semantic_kind,maturity,source
+BOF-01-001,BOF-01,"Tenant, identity, party and enterprise structure",Tenant,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-002,BOF-01,"Tenant, identity, party and enterprise structure",Party,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-003,BOF-01,"Tenant, identity, party and enterprise structure",Person,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-004,BOF-01,"Tenant, identity, party and enterprise structure",Organisation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-005,BOF-01,"Tenant, identity, party and enterprise structure",Legal Entity,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-006,BOF-01,"Tenant, identity, party and enterprise structure",Enterprise Group,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-007,BOF-01,"Tenant, identity, party and enterprise structure",Organisation Unit,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-008,BOF-01,"Tenant, identity, party and enterprise structure",Division,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-009,BOF-01,"Tenant, identity, party and enterprise structure",Branch,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-010,BOF-01,"Tenant, identity, party and enterprise structure",Office,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-011,BOF-01,"Tenant, identity, party and enterprise structure",Team,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-012,BOF-01,"Tenant, identity, party and enterprise structure",Membership,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-013,BOF-01,"Tenant, identity, party and enterprise structure",User Identity,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-014,BOF-01,"Tenant, identity, party and enterprise structure",Contact Point,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-015,BOF-01,"Tenant, identity, party and enterprise structure",Address,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-016,BOF-01,"Tenant, identity, party and enterprise structure",Party Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-017,BOF-01,"Tenant, identity, party and enterprise structure",Ownership Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-018,BOF-01,"Tenant, identity, party and enterprise structure",Role Assignment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-019,BOF-01,"Tenant, identity, party and enterprise structure",Delegated Authority,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-01-020,BOF-01,"Tenant, identity, party and enterprise structure",External Identifier,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-001,BOF-02,"Strategy, governance and enterprise performance",Strategy Framework,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-002,BOF-02,"Strategy, governance and enterprise performance",Strategic Objective,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-003,BOF-02,"Strategy, governance and enterprise performance",Strategic Theme,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-004,BOF-02,"Strategy, governance and enterprise performance",Strategic Initiative,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-005,BOF-02,"Strategy, governance and enterprise performance",Business Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-006,BOF-02,"Strategy, governance and enterprise performance",Scenario,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-007,BOF-02,"Strategy, governance and enterprise performance",Assumption,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-008,BOF-02,"Strategy, governance and enterprise performance",KPI Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-009,BOF-02,"Strategy, governance and enterprise performance",Target,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-010,BOF-02,"Strategy, governance and enterprise performance",Performance Observation,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-011,BOF-02,"Strategy, governance and enterprise performance",Performance Snapshot,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-012,BOF-02,"Strategy, governance and enterprise performance",Strategic Review,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-013,BOF-02,"Strategy, governance and enterprise performance",Governance Body,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-014,BOF-02,"Strategy, governance and enterprise performance",Meeting,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-015,BOF-02,"Strategy, governance and enterprise performance",Agenda Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-016,BOF-02,"Strategy, governance and enterprise performance",Decision,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-017,BOF-02,"Strategy, governance and enterprise performance",Action,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-018,BOF-02,"Strategy, governance and enterprise performance",Policy,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-019,BOF-02,"Strategy, governance and enterprise performance",Authority Framework,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-02-020,BOF-02,"Strategy, governance and enterprise performance",Governance Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-001,BOF-03,"Market, CRM, business development and customer",Market Insight,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-002,BOF-03,"Market, CRM, business development and customer",Market Segment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-003,BOF-03,"Market, CRM, business development and customer",Account Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-004,BOF-03,"Market, CRM, business development and customer",Account Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-005,BOF-03,"Market, CRM, business development and customer",Interaction,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-006,BOF-03,"Market, CRM, business development and customer",Activity,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-007,BOF-03,"Market, CRM, business development and customer",Lead,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-008,BOF-03,"Market, CRM, business development and customer",Opportunity,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-009,BOF-03,"Market, CRM, business development and customer",Pursuit,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-010,BOF-03,"Market, CRM, business development and customer",Bid/No-Bid Decision,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-011,BOF-03,"Market, CRM, business development and customer",Pipeline Snapshot,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-012,BOF-03,"Market, CRM, business development and customer",Forecast Snapshot,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-013,BOF-03,"Market, CRM, business development and customer",Customer Onboarding,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-014,BOF-03,"Market, CRM, business development and customer",Customer Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-015,BOF-03,"Market, CRM, business development and customer",Complaint,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-016,BOF-03,"Market, CRM, business development and customer",Customer Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-03-017,BOF-03,"Market, CRM, business development and customer",Service Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-001,BOF-04,"Land, development, investment and property acquisition",Development Opportunity,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-002,BOF-04,"Land, development, investment and property acquisition",Investment Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-003,BOF-04,"Land, development, investment and property acquisition",Business Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-004,BOF-04,"Land, development, investment and property acquisition",Development Appraisal,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-005,BOF-04,"Land, development, investment and property acquisition",Option,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-006,BOF-04,"Land, development, investment and property acquisition",Site Appraisal,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-007,BOF-04,"Land, development, investment and property acquisition",Land Parcel,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-008,BOF-04,"Land, development, investment and property acquisition",Property Interest,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-009,BOF-04,"Land, development, investment and property acquisition",Ownership Interest,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-010,BOF-04,"Land, development, investment and property acquisition",Occupation Interest,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-011,BOF-04,"Land, development, investment and property acquisition",Constraint,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-012,BOF-04,"Land, development, investment and property acquisition",Valuation,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-013,BOF-04,"Land, development, investment and property acquisition",Survey,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-014,BOF-04,"Land, development, investment and property acquisition",Planning Application,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-015,BOF-04,"Land, development, investment and property acquisition",Consent,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-016,BOF-04,"Land, development, investment and property acquisition",Planning Condition,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-017,BOF-04,"Land, development, investment and property acquisition",Planning Obligation,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-018,BOF-04,"Land, development, investment and property acquisition",Funding Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-04-019,BOF-04,"Land, development, investment and property acquisition",Grant Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-001,BOF-05,"Estimating, measurement, tendering, proposals and sales",Enquiry,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-002,BOF-05,"Estimating, measurement, tendering, proposals and sales",Invitation to Tender,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-003,BOF-05,"Estimating, measurement, tendering, proposals and sales",Estimate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-004,BOF-05,"Estimating, measurement, tendering, proposals and sales",Estimate Version,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-005,BOF-05,"Estimating, measurement, tendering, proposals and sales",Estimate Breakdown Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-006,BOF-05,"Estimating, measurement, tendering, proposals and sales",Take-off,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-007,BOF-05,"Estimating, measurement, tendering, proposals and sales",Measurement Item,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-008,BOF-05,"Estimating, measurement, tendering, proposals and sales",Resource Build-up,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-009,BOF-05,"Estimating, measurement, tendering, proposals and sales",Rate,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-010,BOF-05,"Estimating, measurement, tendering, proposals and sales",Preliminaries,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-011,BOF-05,"Estimating, measurement, tendering, proposals and sales",Allowance,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-012,BOF-05,"Estimating, measurement, tendering, proposals and sales",Contingency,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-013,BOF-05,"Estimating, measurement, tendering, proposals and sales",Tender Package,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-014,BOF-05,"Estimating, measurement, tendering, proposals and sales",Supplier Enquiry,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-015,BOF-05,"Estimating, measurement, tendering, proposals and sales",Subcontract Enquiry,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-016,BOF-05,"Estimating, measurement, tendering, proposals and sales",Quote Return,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-017,BOF-05,"Estimating, measurement, tendering, proposals and sales",Bid Return,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-018,BOF-05,"Estimating, measurement, tendering, proposals and sales",Comparison,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-019,BOF-05,"Estimating, measurement, tendering, proposals and sales",Tender Adjudication,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-020,BOF-05,"Estimating, measurement, tendering, proposals and sales",Proposal,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-021,BOF-05,"Estimating, measurement, tendering, proposals and sales",Quotation,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-022,BOF-05,"Estimating, measurement, tendering, proposals and sales",Sales Order,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-05-023,BOF-05,"Estimating, measurement, tendering, proposals and sales",Acceptance,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-001,BOF-06,"Portfolio, programme, project and project controls",Portfolio,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-002,BOF-06,"Portfolio, programme, project and project controls",Programme,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-003,BOF-06,"Portfolio, programme, project and project controls",Project,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-004,BOF-06,"Portfolio, programme, project and project controls",Job,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-005,BOF-06,"Portfolio, programme, project and project controls",Project Charter,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-006,BOF-06,"Portfolio, programme, project and project controls",Phase,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-007,BOF-06,"Portfolio, programme, project and project controls",Stage,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-008,BOF-06,"Portfolio, programme, project and project controls",WBS Element,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-009,BOF-06,"Portfolio, programme, project and project controls",Work Package,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-010,BOF-06,"Portfolio, programme, project and project controls",Task,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-011,BOF-06,"Portfolio, programme, project and project controls",Activity,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-012,BOF-06,"Portfolio, programme, project and project controls",Milestone,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-013,BOF-06,"Portfolio, programme, project and project controls",Schedule,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-014,BOF-06,"Portfolio, programme, project and project controls",Schedule Baseline,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-015,BOF-06,"Portfolio, programme, project and project controls",Dependency,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-016,BOF-06,"Portfolio, programme, project and project controls",Progress Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-017,BOF-06,"Portfolio, programme, project and project controls",Resource Requirement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-018,BOF-06,"Portfolio, programme, project and project controls",Resource Allocation,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-019,BOF-06,"Portfolio, programme, project and project controls",Project Participant,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-020,BOF-06,"Portfolio, programme, project and project controls",Responsibility Assignment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-021,BOF-06,"Portfolio, programme, project and project controls",Project Risk,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-022,BOF-06,"Portfolio, programme, project and project controls",Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-023,BOF-06,"Portfolio, programme, project and project controls",Decision,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-024,BOF-06,"Portfolio, programme, project and project controls",Action,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-025,BOF-06,"Portfolio, programme, project and project controls",Constraint,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-026,BOF-06,"Portfolio, programme, project and project controls",Change Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-027,BOF-06,"Portfolio, programme, project and project controls",Status Report,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-028,BOF-06,"Portfolio, programme, project and project controls",Gate Review,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-029,BOF-06,"Portfolio, programme, project and project controls",Handover,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-06-030,BOF-06,"Portfolio, programme, project and project controls",Closure,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-001,BOF-07,"Design, engineering, BIM and information management",Information Requirement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-002,BOF-07,"Design, engineering, BIM and information management",Project Information Requirement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-003,BOF-07,"Design, engineering, BIM and information management",Asset Information Requirement,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-004,BOF-07,"Design, engineering, BIM and information management",Deliverable,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-005,BOF-07,"Design, engineering, BIM and information management",Responsibility Assignment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-006,BOF-07,"Design, engineering, BIM and information management",Information Delivery Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-007,BOF-07,"Design, engineering, BIM and information management",Information Container,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-008,BOF-07,"Design, engineering, BIM and information management",Document,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-009,BOF-07,"Design, engineering, BIM and information management",Drawing,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-010,BOF-07,"Design, engineering, BIM and information management",Model,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-011,BOF-07,"Design, engineering, BIM and information management",Specification,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-012,BOF-07,"Design, engineering, BIM and information management",Technical Schedule,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-013,BOF-07,"Design, engineering, BIM and information management",Calculation,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-014,BOF-07,"Design, engineering, BIM and information management",Technical Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-015,BOF-07,"Design, engineering, BIM and information management",Revision,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-016,BOF-07,"Design, engineering, BIM and information management",Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-017,BOF-07,"Design, engineering, BIM and information management",Transmittal,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-018,BOF-07,"Design, engineering, BIM and information management",Distribution,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-019,BOF-07,"Design, engineering, BIM and information management",RFI,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-020,BOF-07,"Design, engineering, BIM and information management",Technical Query,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-021,BOF-07,"Design, engineering, BIM and information management",Submittal,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-022,BOF-07,"Design, engineering, BIM and information management",Response,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-023,BOF-07,"Design, engineering, BIM and information management",Design Review,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-024,BOF-07,"Design, engineering, BIM and information management",Review Comment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-025,BOF-07,"Design, engineering, BIM and information management",Coordination Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-026,BOF-07,"Design, engineering, BIM and information management",Clash Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-027,BOF-07,"Design, engineering, BIM and information management",Design Change,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-028,BOF-07,"Design, engineering, BIM and information management",Survey Input,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-029,BOF-07,"Design, engineering, BIM and information management",Design Input,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-030,BOF-07,"Design, engineering, BIM and information management",Markup,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-07-031,BOF-07,"Design, engineering, BIM and information management",Handover Information Deliverable,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-001,BOF-08,"Contract, appointment and commercial management",Appointment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-002,BOF-08,"Contract, appointment and commercial management",Contract,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-003,BOF-08,"Contract, appointment and commercial management",Subcontract,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-004,BOF-08,"Contract, appointment and commercial management",Framework Agreement,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-005,BOF-08,"Contract, appointment and commercial management",Contract Party Role,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-006,BOF-08,"Contract, appointment and commercial management",Contract Clause,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-007,BOF-08,"Contract, appointment and commercial management",Obligation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-008,BOF-08,"Contract, appointment and commercial management",Key Date,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-009,BOF-08,"Contract, appointment and commercial management",Notice,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-010,BOF-08,"Contract, appointment and commercial management",Correspondence,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-011,BOF-08,"Contract, appointment and commercial management",Commercial Package,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-012,BOF-08,"Contract, appointment and commercial management",Procurement Package,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-013,BOF-08,"Contract, appointment and commercial management",Instruction,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-014,BOF-08,"Contract, appointment and commercial management",Change,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-015,BOF-08,"Contract, appointment and commercial management",Variation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-016,BOF-08,"Contract, appointment and commercial management",Compensation Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-017,BOF-08,"Contract, appointment and commercial management",Quotation for Change,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-018,BOF-08,"Contract, appointment and commercial management",Entitlement,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-019,BOF-08,"Contract, appointment and commercial management",Claim,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-020,BOF-08,"Contract, appointment and commercial management",Application for Payment,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-021,BOF-08,"Contract, appointment and commercial management",Valuation,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-022,BOF-08,"Contract, appointment and commercial management",Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-023,BOF-08,"Contract, appointment and commercial management",Certificate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-024,BOF-08,"Contract, appointment and commercial management",Pay-less Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-025,BOF-08,"Contract, appointment and commercial management",Withholding Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-026,BOF-08,"Contract, appointment and commercial management",Retention,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-027,BOF-08,"Contract, appointment and commercial management",Bond,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-028,BOF-08,"Contract, appointment and commercial management",Guarantee,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-029,BOF-08,"Contract, appointment and commercial management",Insurance Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-030,BOF-08,"Contract, appointment and commercial management",Daywork Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-08-031,BOF-08,"Contract, appointment and commercial management",Final Account,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-001,BOF-09,"Procurement, supplier and subcontract sourcing",Supplier Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-002,BOF-09,"Procurement, supplier and subcontract sourcing",Supplier Qualification,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-003,BOF-09,"Procurement, supplier and subcontract sourcing",Approved Supplier Status,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-004,BOF-09,"Procurement, supplier and subcontract sourcing",Procurement Strategy,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-005,BOF-09,"Procurement, supplier and subcontract sourcing",Procurement Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-006,BOF-09,"Procurement, supplier and subcontract sourcing",Procurement Package,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-007,BOF-09,"Procurement, supplier and subcontract sourcing",Requisition,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-008,BOF-09,"Procurement, supplier and subcontract sourcing",Sourcing Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-009,BOF-09,"Procurement, supplier and subcontract sourcing",RFQ,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-010,BOF-09,"Procurement, supplier and subcontract sourcing",RFP,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-011,BOF-09,"Procurement, supplier and subcontract sourcing",Invitation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-012,BOF-09,"Procurement, supplier and subcontract sourcing",Bid Response,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-013,BOF-09,"Procurement, supplier and subcontract sourcing",Tender Response,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-014,BOF-09,"Procurement, supplier and subcontract sourcing",Evaluation,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-015,BOF-09,"Procurement, supplier and subcontract sourcing",Comparison,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-016,BOF-09,"Procurement, supplier and subcontract sourcing",Award,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-017,BOF-09,"Procurement, supplier and subcontract sourcing",Purchase Order,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-018,BOF-09,"Procurement, supplier and subcontract sourcing",Purchase Order Line,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-019,BOF-09,"Procurement, supplier and subcontract sourcing",Call-off,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-020,BOF-09,"Procurement, supplier and subcontract sourcing",Delivery Schedule,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-021,BOF-09,"Procurement, supplier and subcontract sourcing",Subcontract Commitment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-022,BOF-09,"Procurement, supplier and subcontract sourcing",Order Amendment,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-023,BOF-09,"Procurement, supplier and subcontract sourcing",Goods Receipt,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-024,BOF-09,"Procurement, supplier and subcontract sourcing",Service Receipt,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-025,BOF-09,"Procurement, supplier and subcontract sourcing",Supplier Performance Review,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-026,BOF-09,"Procurement, supplier and subcontract sourcing",Supplier Risk,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-027,BOF-09,"Procurement, supplier and subcontract sourcing",Supplier Dispute,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-09-028,BOF-09,"Procurement, supplier and subcontract sourcing",Sourcing Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-001,BOF-10,"Product, material, catalogue, inventory and logistics",Product Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-002,BOF-10,"Product, material, catalogue, inventory and logistics",Material Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-003,BOF-10,"Product, material, catalogue, inventory and logistics",Service Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-004,BOF-10,"Product, material, catalogue, inventory and logistics",Item Specification,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-005,BOF-10,"Product, material, catalogue, inventory and logistics",Variant,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-006,BOF-10,"Product, material, catalogue, inventory and logistics",Substitution Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-007,BOF-10,"Product, material, catalogue, inventory and logistics",Manufacturer Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-008,BOF-10,"Product, material, catalogue, inventory and logistics",Supplier-Item Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-009,BOF-10,"Product, material, catalogue, inventory and logistics",Catalogue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-010,BOF-10,"Product, material, catalogue, inventory and logistics",Price List,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-011,BOF-10,"Product, material, catalogue, inventory and logistics",Commercial Rate,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-012,BOF-10,"Product, material, catalogue, inventory and logistics",Unit of Measure,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-013,BOF-10,"Product, material, catalogue, inventory and logistics",BOM,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-014,BOF-10,"Product, material, catalogue, inventory and logistics",Assembly,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-015,BOF-10,"Product, material, catalogue, inventory and logistics",Lot,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-016,BOF-10,"Product, material, catalogue, inventory and logistics",Batch,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-017,BOF-10,"Product, material, catalogue, inventory and logistics",Serial Identity,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-018,BOF-10,"Product, material, catalogue, inventory and logistics",Warehouse,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-019,BOF-10,"Product, material, catalogue, inventory and logistics",Store,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-020,BOF-10,"Product, material, catalogue, inventory and logistics",Bin Location,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-021,BOF-10,"Product, material, catalogue, inventory and logistics",Reservation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-022,BOF-10,"Product, material, catalogue, inventory and logistics",Inventory Movement,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-023,BOF-10,"Product, material, catalogue, inventory and logistics",Material Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-024,BOF-10,"Product, material, catalogue, inventory and logistics",Material Return,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-025,BOF-10,"Product, material, catalogue, inventory and logistics",Stock Transfer,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-026,BOF-10,"Product, material, catalogue, inventory and logistics",Stock Count,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-027,BOF-10,"Product, material, catalogue, inventory and logistics",Inventory Adjustment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-028,BOF-10,"Product, material, catalogue, inventory and logistics",Quarantine,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-029,BOF-10,"Product, material, catalogue, inventory and logistics",Pick,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-030,BOF-10,"Product, material, catalogue, inventory and logistics",Pack,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-031,BOF-10,"Product, material, catalogue, inventory and logistics",Shipment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-032,BOF-10,"Product, material, catalogue, inventory and logistics",Transport Order,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-033,BOF-10,"Product, material, catalogue, inventory and logistics",Delivery,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-034,BOF-10,"Product, material, catalogue, inventory and logistics",Site Logistics Booking,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-035,BOF-10,"Product, material, catalogue, inventory and logistics",Call-off,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-036,BOF-10,"Product, material, catalogue, inventory and logistics",Trade Declaration,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-037,BOF-10,"Product, material, catalogue, inventory and logistics",Import Declaration,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-10-038,BOF-10,"Product, material, catalogue, inventory and logistics",Export Declaration,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-001,BOF-11,"Manufacturing, fabrication and off-site production",Manufactured Product Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-002,BOF-11,"Manufacturing, fabrication and off-site production",Bill of Material,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-003,BOF-11,"Manufacturing, fabrication and off-site production",Routing,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-004,BOF-11,"Manufacturing, fabrication and off-site production",Process Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-005,BOF-11,"Manufacturing, fabrication and off-site production",Work Centre,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-006,BOF-11,"Manufacturing, fabrication and off-site production",Production Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-007,BOF-11,"Manufacturing, fabrication and off-site production",Production Order,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-008,BOF-11,"Manufacturing, fabrication and off-site production",Production Operation,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-009,BOF-11,"Manufacturing, fabrication and off-site production",Production Batch,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-010,BOF-11,"Manufacturing, fabrication and off-site production",Production Lot,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-011,BOF-11,"Manufacturing, fabrication and off-site production",Capacity Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-012,BOF-11,"Manufacturing, fabrication and off-site production",Shop-floor Progress Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-013,BOF-11,"Manufacturing, fabrication and off-site production",Production Quality Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-014,BOF-11,"Manufacturing, fabrication and off-site production",Production Traceability Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-015,BOF-11,"Manufacturing, fabrication and off-site production",Scrap Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-016,BOF-11,"Manufacturing, fabrication and off-site production",Waste Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-017,BOF-11,"Manufacturing, fabrication and off-site production",As-manufactured Configuration,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-11-018,BOF-11,"Manufacturing, fabrication and off-site production",Production Cost Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-001,BOF-12,"Site, field and construction operations",Site,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-002,BOF-12,"Site, field and construction operations",Phase,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-003,BOF-12,"Site, field and construction operations",Zone,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-004,BOF-12,"Site, field and construction operations",Work Area,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-005,BOF-12,"Site, field and construction operations",Site Establishment Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-006,BOF-12,"Site, field and construction operations",Mobilisation Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-007,BOF-12,"Site, field and construction operations",Access Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-008,BOF-12,"Site, field and construction operations",Daily Diary,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-009,BOF-12,"Site, field and construction operations",Field Progress Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-010,BOF-12,"Site, field and construction operations",Labour Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-011,BOF-12,"Site, field and construction operations",Plant Usage,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-012,BOF-12,"Site, field and construction operations",Material Usage,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-013,BOF-12,"Site, field and construction operations",Delivery Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-014,BOF-12,"Site, field and construction operations",Temporary Works Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-015,BOF-12,"Site, field and construction operations",Temporary Works Design,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-016,BOF-12,"Site, field and construction operations",Temporary Works Check,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-017,BOF-12,"Site, field and construction operations",Permit to Work,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-018,BOF-12,"Site, field and construction operations",Isolation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-019,BOF-12,"Site, field and construction operations",Work Instruction,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-020,BOF-12,"Site, field and construction operations",Field Constraint,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-021,BOF-12,"Site, field and construction operations",Field Form,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-022,BOF-12,"Site, field and construction operations",Photographic Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-023,BOF-12,"Site, field and construction operations",Geospatial Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-024,BOF-12,"Site, field and construction operations",Site Action,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-025,BOF-12,"Site, field and construction operations",Completion Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-12-026,BOF-12,"Site, field and construction operations",Handover Readiness Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-001,BOF-13,"Quality, health, safety, environment and assurance",Quality Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-002,BOF-13,"Quality, health, safety, environment and assurance",Inspection and Test Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-003,BOF-13,"Quality, health, safety, environment and assurance",Inspection,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-004,BOF-13,"Quality, health, safety, environment and assurance",Test,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-005,BOF-13,"Quality, health, safety, environment and assurance",Hold Point,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-006,BOF-13,"Quality, health, safety, environment and assurance",Witness Point,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-007,BOF-13,"Quality, health, safety, environment and assurance",Nonconformance Report,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-008,BOF-13,"Quality, health, safety, environment and assurance",Defect,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-009,BOF-13,"Quality, health, safety, environment and assurance",Snag,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-010,BOF-13,"Quality, health, safety, environment and assurance",Corrective Action,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-011,BOF-13,"Quality, health, safety, environment and assurance",Preventive Action,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-012,BOF-13,"Quality, health, safety, environment and assurance",CAPA,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-013,BOF-13,"Quality, health, safety, environment and assurance",Audit,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-014,BOF-13,"Quality, health, safety, environment and assurance",Assurance Review,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-015,BOF-13,"Quality, health, safety, environment and assurance",Calibration Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-016,BOF-13,"Quality, health, safety, environment and assurance",Quality Certificate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-017,BOF-13,"Quality, health, safety, environment and assurance",Hazard,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-018,BOF-13,"Quality, health, safety, environment and assurance",Risk Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-019,BOF-13,"Quality, health, safety, environment and assurance",Method Statement,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-020,BOF-13,"Quality, health, safety, environment and assurance",RAMS,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-021,BOF-13,"Quality, health, safety, environment and assurance",Permit,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-022,BOF-13,"Quality, health, safety, environment and assurance",Isolation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-023,BOF-13,"Quality, health, safety, environment and assurance",Induction,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-024,BOF-13,"Quality, health, safety, environment and assurance",Briefing,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-025,BOF-13,"Quality, health, safety, environment and assurance",Toolbox Talk,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-026,BOF-13,"Quality, health, safety, environment and assurance",Observation,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-027,BOF-13,"Quality, health, safety, environment and assurance",Near Miss,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-028,BOF-13,"Quality, health, safety, environment and assurance",Incident,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-029,BOF-13,"Quality, health, safety, environment and assurance",Investigation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-030,BOF-13,"Quality, health, safety, environment and assurance",Cause,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-031,BOF-13,"Quality, health, safety, environment and assurance",Statutory Inspection,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-032,BOF-13,"Quality, health, safety, environment and assurance",Compliance Requirement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-033,BOF-13,"Quality, health, safety, environment and assurance",Compliance Register,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-034,BOF-13,"Quality, health, safety, environment and assurance",Environmental Aspect,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-035,BOF-13,"Quality, health, safety, environment and assurance",Environmental Impact,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-036,BOF-13,"Quality, health, safety, environment and assurance",Pollution Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-13-037,BOF-13,"Quality, health, safety, environment and assurance",Waste Consignment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-001,BOF-14,"Building safety, regulatory control and statutory assurance",Dutyholder Assignment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-002,BOF-14,"Building safety, regulatory control and statutory assurance",Competence Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-003,BOF-14,"Building safety, regulatory control and statutory assurance",Regulator Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-004,BOF-14,"Building safety, regulatory control and statutory assurance",Regulatory Application,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-005,BOF-14,"Building safety, regulatory control and statutory assurance",Building Control Application,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-006,BOF-14,"Building safety, regulatory control and statutory assurance",Controlled Change Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-007,BOF-14,"Building safety, regulatory control and statutory assurance",Regulatory Inspection,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-008,BOF-14,"Building safety, regulatory control and statutory assurance",Regulatory Finding,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-009,BOF-14,"Building safety, regulatory control and statutory assurance",Mandatory Occurrence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-010,BOF-14,"Building safety, regulatory control and statutory assurance",Statutory Notice,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-011,BOF-14,"Building safety, regulatory control and statutory assurance",Regulatory Decision,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-012,BOF-14,"Building safety, regulatory control and statutory assurance",Completion Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-013,BOF-14,"Building safety, regulatory control and statutory assurance",Completion Certificate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-014,BOF-14,"Building safety, regulatory control and statutory assurance",Golden Thread Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-14-015,BOF-14,"Building safety, regulatory control and statutory assurance",Regulatory Submission,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-001,BOF-15,"Commissioning, completion, handover and closeout",Commissioning Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-002,BOF-15,"Commissioning, completion, handover and closeout",Commissioning System,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-003,BOF-15,"Commissioning, completion, handover and closeout",Commissioning Activity,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-004,BOF-15,"Commissioning, completion, handover and closeout",Witness Requirement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-005,BOF-15,"Commissioning, completion, handover and closeout",Test Result,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-006,BOF-15,"Commissioning, completion, handover and closeout",Inspection Result,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-007,BOF-15,"Commissioning, completion, handover and closeout",Balancing Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-008,BOF-15,"Commissioning, completion, handover and closeout",Commissioning Defect,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-009,BOF-15,"Commissioning, completion, handover and closeout",Retest,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-010,BOF-15,"Commissioning, completion, handover and closeout",Readiness Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-011,BOF-15,"Commissioning, completion, handover and closeout",Commissioning Certificate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-012,BOF-15,"Commissioning, completion, handover and closeout",Handover Package,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-013,BOF-15,"Commissioning, completion, handover and closeout",Operations and Maintenance Information,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-014,BOF-15,"Commissioning, completion, handover and closeout",Training Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-015,BOF-15,"Commissioning, completion, handover and closeout",Briefing Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-016,BOF-15,"Commissioning, completion, handover and closeout",Completion Certificate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-017,BOF-15,"Commissioning, completion, handover and closeout",Handover Acceptance,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-018,BOF-15,"Commissioning, completion, handover and closeout",Asset Information Delivery,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-15-019,BOF-15,"Commissioning, completion, handover and closeout",Closeout Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-001,BOF-16,"Property, estate, space, infrastructure and physical asset",Estate,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-002,BOF-16,"Property, estate, space, infrastructure and physical asset",Network,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-003,BOF-16,"Property, estate, space, infrastructure and physical asset",Site,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-004,BOF-16,"Property, estate, space, infrastructure and physical asset",Land,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-005,BOF-16,"Property, estate, space, infrastructure and physical asset",Property,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-006,BOF-16,"Property, estate, space, infrastructure and physical asset",Facility,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-007,BOF-16,"Property, estate, space, infrastructure and physical asset",Building,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-008,BOF-16,"Property, estate, space, infrastructure and physical asset",Infrastructure Entity,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-009,BOF-16,"Property, estate, space, infrastructure and physical asset",Level,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-010,BOF-16,"Property, estate, space, infrastructure and physical asset",Zone,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-011,BOF-16,"Property, estate, space, infrastructure and physical asset",Space,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-012,BOF-16,"Property, estate, space, infrastructure and physical asset",Linear Segment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-013,BOF-16,"Property, estate, space, infrastructure and physical asset",Linear Reference,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-014,BOF-16,"Property, estate, space, infrastructure and physical asset",System,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-015,BOF-16,"Property, estate, space, infrastructure and physical asset",Subsystem,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-016,BOF-16,"Property, estate, space, infrastructure and physical asset",Asset,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-017,BOF-16,"Property, estate, space, infrastructure and physical asset",Component,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-018,BOF-16,"Property, estate, space, infrastructure and physical asset",Maintainable Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-019,BOF-16,"Property, estate, space, infrastructure and physical asset",Plant,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-020,BOF-16,"Property, estate, space, infrastructure and physical asset",Equipment,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-021,BOF-16,"Property, estate, space, infrastructure and physical asset",Vehicle,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-022,BOF-16,"Property, estate, space, infrastructure and physical asset",Tool,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-023,BOF-16,"Property, estate, space, infrastructure and physical asset",Asset Type,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-024,BOF-16,"Property, estate, space, infrastructure and physical asset",Asset Model,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-025,BOF-16,"Property, estate, space, infrastructure and physical asset",Meter,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-026,BOF-16,"Property, estate, space, infrastructure and physical asset",Sensor,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-027,BOF-16,"Property, estate, space, infrastructure and physical asset",Condition Point,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-028,BOF-16,"Property, estate, space, infrastructure and physical asset",Warranty,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-029,BOF-16,"Property, estate, space, infrastructure and physical asset",Condition Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-030,BOF-16,"Property, estate, space, infrastructure and physical asset",Lifecycle Status,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-16-031,BOF-16,"Property, estate, space, infrastructure and physical asset",Installed-base Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-001,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Maintenance Strategy,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-002,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Maintenance Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-003,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Task Template,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-004,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Maintenance Schedule,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-005,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Work Order,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-006,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-007,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-008,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service Contract,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-009,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Entitlement,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-010,BOF-17,"Maintenance, facilities, service, warranty and aftercare",SLA,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-011,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service Appointment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-012,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Dispatch,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-013,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Field Visit,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-014,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Maintenance Inspection,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-015,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Failure,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-016,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Defect,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-017,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service History,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-018,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Parts Consumption,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-019,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Warranty Claim,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-020,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Defects Liability Period,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-021,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Aftercare Period,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-022,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service Quote,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-023,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Service Acceptance,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-024,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Occupancy Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-025,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Lease Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-026,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Licence Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-027,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Facilities Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-028,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Soft FM Service,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-029,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Utility Account,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-030,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Utility Consumption,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-17-031,BOF-17,"Maintenance, facilities, service, warranty and aftercare",Lifecycle Replacement Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-001,BOF-18,"People, HCM, competence, time, payroll and expenses",Worker Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-002,BOF-18,"People, HCM, competence, time, payroll and expenses",Employment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-003,BOF-18,"People, HCM, competence, time, payroll and expenses",Engagement,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-004,BOF-18,"People, HCM, competence, time, payroll and expenses",Position,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-005,BOF-18,"People, HCM, competence, time, payroll and expenses",Job Profile,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-006,BOF-18,"People, HCM, competence, time, payroll and expenses",Reporting Relationship,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-007,BOF-18,"People, HCM, competence, time, payroll and expenses",Career Profile,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-008,BOF-18,"People, HCM, competence, time, payroll and expenses",Skill,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-009,BOF-18,"People, HCM, competence, time, payroll and expenses",Competency,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-010,BOF-18,"People, HCM, competence, time, payroll and expenses",Qualification,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-011,BOF-18,"People, HCM, competence, time, payroll and expenses",Licence,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-012,BOF-18,"People, HCM, competence, time, payroll and expenses",Card,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-013,BOF-18,"People, HCM, competence, time, payroll and expenses",Certification,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-014,BOF-18,"People, HCM, competence, time, payroll and expenses",Training Course,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-015,BOF-18,"People, HCM, competence, time, payroll and expenses",Training Session,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-016,BOF-18,"People, HCM, competence, time, payroll and expenses",Training Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-017,BOF-18,"People, HCM, competence, time, payroll and expenses",CPD Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-018,BOF-18,"People, HCM, competence, time, payroll and expenses",Workforce Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-019,BOF-18,"People, HCM, competence, time, payroll and expenses",Availability,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-020,BOF-18,"People, HCM, competence, time, payroll and expenses",Shift,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-021,BOF-18,"People, HCM, competence, time, payroll and expenses",Work Pattern,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-022,BOF-18,"People, HCM, competence, time, payroll and expenses",Allocation,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-023,BOF-18,"People, HCM, competence, time, payroll and expenses",Attendance,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-024,BOF-18,"People, HCM, competence, time, payroll and expenses",Time Entry,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-025,BOF-18,"People, HCM, competence, time, payroll and expenses",Timesheet,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-026,BOF-18,"People, HCM, competence, time, payroll and expenses",Absence,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-027,BOF-18,"People, HCM, competence, time, payroll and expenses",Leave,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-028,BOF-18,"People, HCM, competence, time, payroll and expenses",Compensation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-029,BOF-18,"People, HCM, competence, time, payroll and expenses",Pay Element,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-030,BOF-18,"People, HCM, competence, time, payroll and expenses",Payroll Calendar,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-031,BOF-18,"People, HCM, competence, time, payroll and expenses",Payroll Run,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-032,BOF-18,"People, HCM, competence, time, payroll and expenses",Payroll Result,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-033,BOF-18,"People, HCM, competence, time, payroll and expenses",Payslip,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-034,BOF-18,"People, HCM, competence, time, payroll and expenses",Expense Claim,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-035,BOF-18,"People, HCM, competence, time, payroll and expenses",Vacancy,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-036,BOF-18,"People, HCM, competence, time, payroll and expenses",Candidate,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-037,BOF-18,"People, HCM, competence, time, payroll and expenses",Job Application,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-038,BOF-18,"People, HCM, competence, time, payroll and expenses",Offer,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-039,BOF-18,"People, HCM, competence, time, payroll and expenses",Onboarding,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-040,BOF-18,"People, HCM, competence, time, payroll and expenses",Performance Review,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-041,BOF-18,"People, HCM, competence, time, payroll and expenses",Learning Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-042,BOF-18,"People, HCM, competence, time, payroll and expenses",Employee Relations Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-18-043,BOF-18,"People, HCM, competence, time, payroll and expenses",Offboarding,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-001,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Chart of Accounts,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-002,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",GL Account,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-003,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Financial Dimension,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-004,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Cost Code,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-005,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Cost Centre,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-006,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Profit Centre,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-007,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Accounting Period,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-008,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Budget,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-009,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Forecast,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-010,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Journal,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-011,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Journal Line,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-012,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Ledger Entry,ledger / posting,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-013,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Accounting Posting,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-014,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Supplier Invoice,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-015,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Customer Invoice,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-016,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Credit Note,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-017,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Debit Note,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-018,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Payable Open Item,ledger / posting,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-019,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Receivable Open Item,ledger / posting,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-020,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Payment,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-021,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Receipt,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-022,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Allocation,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-023,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Bank Account,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-024,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Bank Statement,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-025,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Bank Transaction,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-026,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Reconciliation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-027,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Accrual,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-028,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Prepayment,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-029,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Tax Code,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-030,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Tax Transaction,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-031,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Tax Return,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-032,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Fixed Asset,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-033,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Depreciation Schedule,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-034,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Depreciation Run,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-035,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Exchange Rate,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-036,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Revaluation,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-037,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Intercompany Transaction,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-038,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Consolidation Run,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-039,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Elimination,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-040,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Close Cycle,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-041,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Capex Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-042,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Cash Forecast,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-043,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Liquidity Forecast,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-044,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Treasury Facility,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-045,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Treasury Deal,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-19-046,BOF-19,"Finance, accounting, tax, treasury and enterprise performance",Controlled Reporting Snapshot,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-001,BOF-20,"Sustainability, carbon, energy, circularity and social value",Carbon Methodology,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-002,BOF-20,"Sustainability, carbon, energy, circularity and social value",Carbon Factor Source,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-003,BOF-20,"Sustainability, carbon, energy, circularity and social value",Carbon Baseline,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-004,BOF-20,"Sustainability, carbon, energy, circularity and social value",Carbon Budget,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-005,BOF-20,"Sustainability, carbon, energy, circularity and social value",Carbon Target,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-006,BOF-20,"Sustainability, carbon, energy, circularity and social value",Carbon Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-007,BOF-20,"Sustainability, carbon, energy, circularity and social value",Embodied Carbon Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-008,BOF-20,"Sustainability, carbon, energy, circularity and social value",Operational Energy Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-009,BOF-20,"Sustainability, carbon, energy, circularity and social value",Operational Carbon Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-010,BOF-20,"Sustainability, carbon, energy, circularity and social value",Utility Consumption,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-011,BOF-20,"Sustainability, carbon, energy, circularity and social value",Waste Stream,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-012,BOF-20,"Sustainability, carbon, energy, circularity and social value",Recovery Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-013,BOF-20,"Sustainability, carbon, energy, circularity and social value",Reuse Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-014,BOF-20,"Sustainability, carbon, energy, circularity and social value",Circularity Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-015,BOF-20,"Sustainability, carbon, energy, circularity and social value",Environmental Product Declaration,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-016,BOF-20,"Sustainability, carbon, energy, circularity and social value",Material Provenance,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-017,BOF-20,"Sustainability, carbon, energy, circularity and social value",Responsible Procurement Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-018,BOF-20,"Sustainability, carbon, energy, circularity and social value",Biodiversity Measure,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-019,BOF-20,"Sustainability, carbon, energy, circularity and social value",Environmental Measure,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-020,BOF-20,"Sustainability, carbon, energy, circularity and social value",Social Value Commitment,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-021,BOF-20,"Sustainability, carbon, energy, circularity and social value",Social Value Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-022,BOF-20,"Sustainability, carbon, energy, circularity and social value",Social Value Outcome,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-023,BOF-20,"Sustainability, carbon, energy, circularity and social value",Climate Risk,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-024,BOF-20,"Sustainability, carbon, energy, circularity and social value",Resilience Risk,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-20-025,BOF-20,"Sustainability, carbon, energy, circularity and social value",Cost-Carbon Option Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-001,BOF-21,"Enterprise risk, compliance, internal control and audit",Risk Framework,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-002,BOF-21,"Enterprise risk, compliance, internal control and audit",Enterprise Risk,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-003,BOF-21,"Enterprise risk, compliance, internal control and audit",Risk Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-004,BOF-21,"Enterprise risk, compliance, internal control and audit",Treatment Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-005,BOF-21,"Enterprise risk, compliance, internal control and audit",Regulatory Obligation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-006,BOF-21,"Enterprise risk, compliance, internal control and audit",Compliance Requirement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-007,BOF-21,"Enterprise risk, compliance, internal control and audit",Compliance Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-008,BOF-21,"Enterprise risk, compliance, internal control and audit",Internal Control,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-009,BOF-21,"Enterprise risk, compliance, internal control and audit",Control Test,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-010,BOF-21,"Enterprise risk, compliance, internal control and audit",Assurance Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-011,BOF-21,"Enterprise risk, compliance, internal control and audit",Audit Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-012,BOF-21,"Enterprise risk, compliance, internal control and audit",Audit Engagement,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-013,BOF-21,"Enterprise risk, compliance, internal control and audit",Audit Finding,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-014,BOF-21,"Enterprise risk, compliance, internal control and audit",Remediation Action,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-015,BOF-21,"Enterprise risk, compliance, internal control and audit",Fraud Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-016,BOF-21,"Enterprise risk, compliance, internal control and audit",Conduct Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-21-017,BOF-21,"Enterprise risk, compliance, internal control and audit",Compliance Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-001,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Legal Matter,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-002,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Advice Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-003,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Legal Obligation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-004,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Statutory Filing,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-005,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Intellectual Property Asset,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-006,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Dispute,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-007,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Litigation,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-008,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Regulatory Matter,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-009,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Legal Hold,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-010,BOF-22,"Legal, corporate secretariat, privacy and records obligations",eDiscovery Collection,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-011,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Privacy Policy,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-012,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Privacy Framework,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-013,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Processing Activity,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-014,BOF-22,"Legal, corporate secretariat, privacy and records obligations",DPIA,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-015,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Consent Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-016,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Preference Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-017,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Data Subject Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-018,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Privacy Breach,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-019,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Privacy Incident,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-020,BOF-22,"Legal, corporate secretariat, privacy and records obligations",International Transfer,transaction,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-22-021,BOF-22,"Legal, corporate secretariat, privacy and records obligations",Privacy Assurance Review,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-001,BOF-23,"Business continuity, crisis and physical security",Business Impact Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-002,BOF-23,"Business continuity, crisis and physical security",Continuity Strategy,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-003,BOF-23,"Business continuity, crisis and physical security",Continuity Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-004,BOF-23,"Business continuity, crisis and physical security",Continuity Exercise,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-005,BOF-23,"Business continuity, crisis and physical security",Crisis,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-006,BOF-23,"Business continuity, crisis and physical security",Emergency Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-007,BOF-23,"Business continuity, crisis and physical security",Crisis Action,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-008,BOF-23,"Business continuity, crisis and physical security",Crisis Communication,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-009,BOF-23,"Business continuity, crisis and physical security",Disaster Recovery Invocation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-010,BOF-23,"Business continuity, crisis and physical security",Physical Security Zone,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-011,BOF-23,"Business continuity, crisis and physical security",Visitor Pass,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-012,BOF-23,"Business continuity, crisis and physical security",Access Pass,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-013,BOF-23,"Business continuity, crisis and physical security",Physical Security Incident,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-014,BOF-23,"Business continuity, crisis and physical security",Travel Risk Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-23-015,BOF-23,"Business continuity, crisis and physical security",Security Risk Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-001,BOF-24,"IT, data, cyber, analytics and AI",Technology Service,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-002,BOF-24,"IT, data, cyber, analytics and AI",Application Service,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-003,BOF-24,"IT, data, cyber, analytics and AI",Architecture Decision,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-004,BOF-24,"IT, data, cyber, analytics and AI",Infrastructure Resource,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-005,BOF-24,"IT, data, cyber, analytics and AI",Cloud Resource,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-006,BOF-24,"IT, data, cyber, analytics and AI",Endpoint,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-007,BOF-24,"IT, data, cyber, analytics and AI",Identity Account,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-008,BOF-24,"IT, data, cyber, analytics and AI",IT Service Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-009,BOF-24,"IT, data, cyber, analytics and AI",IT Incident,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-010,BOF-24,"IT, data, cyber, analytics and AI",Problem,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-011,BOF-24,"IT, data, cyber, analytics and AI",IT Change Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-012,BOF-24,"IT, data, cyber, analytics and AI",Release,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-013,BOF-24,"IT, data, cyber, analytics and AI",Configuration Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-014,BOF-24,"IT, data, cyber, analytics and AI",IT Asset,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-015,BOF-24,"IT, data, cyber, analytics and AI",Disaster Recovery Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-016,BOF-24,"IT, data, cyber, analytics and AI",Data Domain,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-017,BOF-24,"IT, data, cyber, analytics and AI",Data Product,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-018,BOF-24,"IT, data, cyber, analytics and AI",Dataset,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-019,BOF-24,"IT, data, cyber, analytics and AI",Reference Dataset,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-020,BOF-24,"IT, data, cyber, analytics and AI",Data Quality Rule,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-021,BOF-24,"IT, data, cyber, analytics and AI",Data Quality Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-022,BOF-24,"IT, data, cyber, analytics and AI",Data Pipeline,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-023,BOF-24,"IT, data, cyber, analytics and AI",Report Definition,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-024,BOF-24,"IT, data, cyber, analytics and AI",Dashboard Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-025,BOF-24,"IT, data, cyber, analytics and AI",Analytical Model,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-026,BOF-24,"IT, data, cyber, analytics and AI",AI Use Case,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-027,BOF-24,"IT, data, cyber, analytics and AI",AI Model,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-028,BOF-24,"IT, data, cyber, analytics and AI",AI Risk Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-029,BOF-24,"IT, data, cyber, analytics and AI",Data Access Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-030,BOF-24,"IT, data, cyber, analytics and AI",Security Policy,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-031,BOF-24,"IT, data, cyber, analytics and AI",Privileged Access Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-032,BOF-24,"IT, data, cyber, analytics and AI",Vulnerability,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-033,BOF-24,"IT, data, cyber, analytics and AI",Patch Campaign,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-034,BOF-24,"IT, data, cyber, analytics and AI",Security Alert,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-035,BOF-24,"IT, data, cyber, analytics and AI",Security Incident,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-036,BOF-24,"IT, data, cyber, analytics and AI",Threat Intelligence,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-037,BOF-24,"IT, data, cyber, analytics and AI",Penetration Test,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-24-038,BOF-24,"IT, data, cyber, analytics and AI",Security Finding,case,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-001,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Knowledge Article,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-002,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Knowledge Collection,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-003,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Controlled Document,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-004,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Information Container,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-005,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Declared Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-006,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Record Series,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-007,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Record File,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-008,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Retention Schedule,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-009,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Disposition Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-010,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Lesson Learned,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-011,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Communications Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-012,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Communication Item,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-013,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Media Enquiry,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-014,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Media Release,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-015,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Statement,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-016,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",PR Campaign,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-017,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Reputation Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-018,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Public Affairs Issue,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-019,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Investor Engagement,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-020,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Annual Report,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-25-021,BOF-25,"Knowledge, document/records management, communications and stakeholder engagement",Stakeholder Engagement Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-001,BOF-26,"Organisation change, transformation and continuous improvement",Transformation Portfolio,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-002,BOF-26,"Organisation change, transformation and continuous improvement",Transformation Initiative,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-003,BOF-26,"Organisation change, transformation and continuous improvement",Change Impact Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-004,BOF-26,"Organisation change, transformation and continuous improvement",Stakeholder Group,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-005,BOF-26,"Organisation change, transformation and continuous improvement",Change Action,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-006,BOF-26,"Organisation change, transformation and continuous improvement",Change Communication,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-007,BOF-26,"Organisation change, transformation and continuous improvement",Readiness Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-008,BOF-26,"Organisation change, transformation and continuous improvement",Training Plan,plan,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-009,BOF-26,"Organisation change, transformation and continuous improvement",Readiness Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-010,BOF-26,"Organisation change, transformation and continuous improvement",Adoption Intervention,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-011,BOF-26,"Organisation change, transformation and continuous improvement",Organisation Transition,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-012,BOF-26,"Organisation change, transformation and continuous improvement",Process Architecture,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-013,BOF-26,"Organisation change, transformation and continuous improvement",Enterprise Process,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-014,BOF-26,"Organisation change, transformation and continuous improvement",Process Model,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-015,BOF-26,"Organisation change, transformation and continuous improvement",Process Version,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-016,BOF-26,"Organisation change, transformation and continuous improvement",Process Owner Assignment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-017,BOF-26,"Organisation change, transformation and continuous improvement",Process Measure,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-018,BOF-26,"Organisation change, transformation and continuous improvement",Process Analysis,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-019,BOF-26,"Organisation change, transformation and continuous improvement",Improvement Opportunity,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-020,BOF-26,"Organisation change, transformation and continuous improvement",Redesign Proposal,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-021,BOF-26,"Organisation change, transformation and continuous improvement",Standard Operating Procedure,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-022,BOF-26,"Organisation change, transformation and continuous improvement",Process Compliance Assessment,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-26-023,BOF-26,"Organisation change, transformation and continuous improvement",Improvement Initiative,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-001,BOF-27,"Shared work, workflow, decision and collaboration",Work Item,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-002,BOF-27,"Shared work, workflow, decision and collaboration",Assignment,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-003,BOF-27,"Shared work, workflow, decision and collaboration",Review Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-004,BOF-27,"Shared work, workflow, decision and collaboration",Approval Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-005,BOF-27,"Shared work, workflow, decision and collaboration",Decision Request,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-006,BOF-27,"Shared work, workflow, decision and collaboration",Acknowledgement,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-007,BOF-27,"Shared work, workflow, decision and collaboration",Escalation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-008,BOF-27,"Shared work, workflow, decision and collaboration",Due Date Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-009,BOF-27,"Shared work, workflow, decision and collaboration",Priority Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-010,BOF-27,"Shared work, workflow, decision and collaboration",Delegation,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-011,BOF-27,"Shared work, workflow, decision and collaboration",Collaboration Invitation,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-012,BOF-27,"Shared work, workflow, decision and collaboration",Project Participation Invitation,relationship,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-013,BOF-27,"Shared work, workflow, decision and collaboration",External Submission,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-014,BOF-27,"Shared work, workflow, decision and collaboration",Response,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-27-015,BOF-27,"Shared work, workflow, decision and collaboration",Notification Preference,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-001,BOF-28,"Evidence, audit, retention and legal traceability",Business Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-002,BOF-28,"Evidence, audit, retention and legal traceability",Audit Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-003,BOF-28,"Evidence, audit, retention and legal traceability",Change Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-004,BOF-28,"Evidence, audit, retention and legal traceability",Approval Evidence,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-005,BOF-28,"Evidence, audit, retention and legal traceability",Signature,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-006,BOF-28,"Evidence, audit, retention and legal traceability",Attestation,work / execution,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-007,BOF-28,"Evidence, audit, retention and legal traceability",Evidence Item,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-008,BOF-28,"Evidence, audit, retention and legal traceability",Provenance Reference,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-009,BOF-28,"Evidence, audit, retention and legal traceability",Source Reference,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-010,BOF-28,"Evidence, audit, retention and legal traceability",Correction Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-011,BOF-28,"Evidence, audit, retention and legal traceability",Reversal Record,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-012,BOF-28,"Evidence, audit, retention and legal traceability",Archive Package,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-013,BOF-28,"Evidence, audit, retention and legal traceability",Retention Disposition,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-014,BOF-28,"Evidence, audit, retention and legal traceability",Legal Hold Link,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-28-015,BOF-28,"Evidence, audit, retention and legal traceability",Immutable Outbox Event,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-001,BOF-29,"Reference data, classification and jurisdiction configuration",Jurisdiction,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-002,BOF-29,"Reference data, classification and jurisdiction configuration",Currency,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-003,BOF-29,"Reference data, classification and jurisdiction configuration",Exchange Rate Source,projection / measure,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-004,BOF-29,"Reference data, classification and jurisdiction configuration",Unit of Measure,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-005,BOF-29,"Reference data, classification and jurisdiction configuration",Calendar,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-006,BOF-29,"Reference data, classification and jurisdiction configuration",Fiscal Calendar,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-007,BOF-29,"Reference data, classification and jurisdiction configuration",Numbering Scheme,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-008,BOF-29,"Reference data, classification and jurisdiction configuration",Tax Regime,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-009,BOF-29,"Reference data, classification and jurisdiction configuration",Tax Code,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-010,BOF-29,"Reference data, classification and jurisdiction configuration",Classification System,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-011,BOF-29,"Reference data, classification and jurisdiction configuration",Classification Release,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-012,BOF-29,"Reference data, classification and jurisdiction configuration",Classification Code,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-013,BOF-29,"Reference data, classification and jurisdiction configuration",Uniclass Reference,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-014,BOF-29,"Reference data, classification and jurisdiction configuration",Contract Form Family,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-015,BOF-29,"Reference data, classification and jurisdiction configuration",Contract Template,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-016,BOF-29,"Reference data, classification and jurisdiction configuration",Lifecycle Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-017,BOF-29,"Reference data, classification and jurisdiction configuration",Lifecycle State Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-018,BOF-29,"Reference data, classification and jurisdiction configuration",Workflow Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-019,BOF-29,"Reference data, classification and jurisdiction configuration",Workflow Template,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-020,BOF-29,"Reference data, classification and jurisdiction configuration",Status Code,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-021,BOF-29,"Reference data, classification and jurisdiction configuration",Suitability Code,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-022,BOF-29,"Reference data, classification and jurisdiction configuration",Document Type,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-023,BOF-29,"Reference data, classification and jurisdiction configuration",Project Stage Definition,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-024,BOF-29,"Reference data, classification and jurisdiction configuration",Retention Rule,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-025,BOF-29,"Reference data, classification and jurisdiction configuration",Approval Authority Rule,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-026,BOF-29,"Reference data, classification and jurisdiction configuration",Delegated Authority Rule,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-027,BOF-29,"Reference data, classification and jurisdiction configuration",Permission Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-028,BOF-29,"Reference data, classification and jurisdiction configuration",Role Definition,configuration / policy,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-029,BOF-29,"Reference data, classification and jurisdiction configuration",Location Classification,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-030,BOF-29,"Reference data, classification and jurisdiction configuration",Asset Classification,asset / technical object,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-031,BOF-29,"Reference data, classification and jurisdiction configuration",Cost Classification,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-032,BOF-29,"Reference data, classification and jurisdiction configuration",Work Classification,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-033,BOF-29,"Reference data, classification and jurisdiction configuration",Resource Classification,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-034,BOF-29,"Reference data, classification and jurisdiction configuration",Regulatory Regime,reference / classification,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-035,BOF-29,"Reference data, classification and jurisdiction configuration",Evidence Type,event / evidence,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-036,BOF-29,"Reference data, classification and jurisdiction configuration",Record Type,controlled information,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md
+BOF-29-037,BOF-29,"Reference data, classification and jurisdiction configuration",Data Retention Class,master / identity,candidate,construction-and-built-environment.md + canonical-business-object-discovery.md

@@ -1,0 +1,27 @@
+canonical_name,occurrence_count,families,candidate_keys,review_action
+Action,2,BOF-02 | BOF-06,BOF-02-017 | BOF-06-024,normalize to one canonical concept or explicitly distinguish semantics
+Activity,2,BOF-03 | BOF-06,BOF-03-006 | BOF-06-011,normalize to one canonical concept or explicitly distinguish semantics
+Allocation,2,BOF-18 | BOF-19,BOF-18-022 | BOF-19-022,normalize to one canonical concept or explicitly distinguish semantics
+Call-off,2,BOF-09 | BOF-10,BOF-09-019 | BOF-10-035,normalize to one canonical concept or explicitly distinguish semantics
+Comparison,2,BOF-05 | BOF-09,BOF-05-018 | BOF-09-015,normalize to one canonical concept or explicitly distinguish semantics
+Completion Certificate,2,BOF-14 | BOF-15,BOF-14-013 | BOF-15-016,normalize to one canonical concept or explicitly distinguish semantics
+Compliance Requirement,2,BOF-13 | BOF-21,BOF-13-032 | BOF-21-006,normalize to one canonical concept or explicitly distinguish semantics
+Constraint,2,BOF-04 | BOF-06,BOF-04-011 | BOF-06-025,normalize to one canonical concept or explicitly distinguish semantics
+Decision,2,BOF-02 | BOF-06,BOF-02-016 | BOF-06-023,normalize to one canonical concept or explicitly distinguish semantics
+Defect,2,BOF-13 | BOF-17,BOF-13-008 | BOF-17-016,normalize to one canonical concept or explicitly distinguish semantics
+Entitlement,2,BOF-08 | BOF-17,BOF-08-018 | BOF-17-009,normalize to one canonical concept or explicitly distinguish semantics
+Information Container,2,BOF-07 | BOF-25,BOF-07-007 | BOF-25-004,normalize to one canonical concept or explicitly distinguish semantics
+Isolation,2,BOF-12 | BOF-13,BOF-12-018 | BOF-13-022,normalize to one canonical concept or explicitly distinguish semantics
+Issue,2,BOF-06 | BOF-07,BOF-06-022 | BOF-07-016,normalize to one canonical concept or explicitly distinguish semantics
+Phase,2,BOF-06 | BOF-12,BOF-06-006 | BOF-12-002,normalize to one canonical concept or explicitly distinguish semantics
+Procurement Package,2,BOF-08 | BOF-09,BOF-08-012 | BOF-09-006,normalize to one canonical concept or explicitly distinguish semantics
+Response,2,BOF-07 | BOF-27,BOF-07-022 | BOF-27-014,normalize to one canonical concept or explicitly distinguish semantics
+Responsibility Assignment,2,BOF-06 | BOF-07,BOF-06-020 | BOF-07-005,normalize to one canonical concept or explicitly distinguish semantics
+Risk Assessment,2,BOF-13 | BOF-21,BOF-13-018 | BOF-21-003,normalize to one canonical concept or explicitly distinguish semantics
+Site,2,BOF-12 | BOF-16,BOF-12-001 | BOF-16-003,normalize to one canonical concept or explicitly distinguish semantics
+Tax Code,2,BOF-19 | BOF-29,BOF-19-029 | BOF-29-009,normalize to one canonical concept or explicitly distinguish semantics
+Training Record,2,BOF-15 | BOF-18,BOF-15-014 | BOF-18-016,normalize to one canonical concept or explicitly distinguish semantics
+Unit of Measure,2,BOF-10 | BOF-29,BOF-10-012 | BOF-29-004,normalize to one canonical concept or explicitly distinguish semantics
+Utility Consumption,2,BOF-17 | BOF-20,BOF-17-030 | BOF-20-010,normalize to one canonical concept or explicitly distinguish semantics
+Valuation,2,BOF-04 | BOF-08,BOF-04-012 | BOF-08-021,normalize to one canonical concept or explicitly distinguish semantics
+Zone,2,BOF-12 | BOF-16,BOF-12-003 | BOF-16-010,normalize to one canonical concept or explicitly distinguish semantics

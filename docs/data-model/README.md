@@ -8,6 +8,8 @@ This directory governs the NuBlox V3 canonical information model.
 - `canonical-business-object-register.csv` — generated machine-readable candidate-object register.
 - `canonical-business-object-duplicates.csv` — exact duplicate-name review queue used to normalize cross-domain concepts.
 - `canonical-business-object-summary.md` — generated counts and review sequence.
+- `canonical-business-object-normalization-review.md` — first semantic recommendations for duplicate/alias normalization.
+- `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
 

@@ -11,6 +11,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `canonical-business-object-normalization-review.md` — first semantic recommendations for duplicate/alias normalization.
 - `foundation-canonicalization-baseline.md` — reviewed first-pass decisions for the foundation identity spine.
 - `foundation-object-semantics.md` — governed identity, scope, lifecycle, versioning and relationship semantics for the foundation objects.
+- `authority-participation-model.md` — governed authentication, membership, role, responsibility and delegated-authority semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -23,6 +24,7 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Every material business object has one authoritative owner.
 - The 29 enterprise functions are tenant workspaces that act on shared objects; they do not own duplicate copies of business truth.
 - Shared identifiers do not imply shared write ownership.
+- Authentication is not authorization; role is not identity; responsibility is not permission; permission is not delegated authority.
 - Role is not identity; state is not an object; workflow work is not domain truth.
 - Stable identity is separated from revision/version/iteration, representation/content, lifecycle state and effectivity where applicable.
 - Lifecycle state is explicit where business rules depend on it.

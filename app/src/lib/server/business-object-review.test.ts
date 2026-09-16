@@ -67,6 +67,17 @@ describe('canonical business object review ledger', () => {
     expect(party?.decision).toBe('VALIDATE_OBJECT');
     expect(party?.proposedCanonicalName).toBe('Party');
 
+    const authority = service.getBusinessObjectReview('BOF-01-019');
+    expect(authority?.decision).toBe('VALIDATE_OBJECT');
+    expect(authority?.proposedCanonicalName).toBe('Delegated Authority');
+
+    const responsibility = service.getBusinessObjectReview('BOF-06-020');
+    expect(responsibility?.decision).toBe('RELATIONSHIP');
+
+    const duplicateResponsibility = service.getBusinessObjectReview('BOF-07-005');
+    expect(duplicateResponsibility?.decision).toBe('MERGE');
+    expect(duplicateResponsibility?.targetCandidateKey).toBe('BOF-06-020');
+
     const job = service.getBusinessObjectReview('BOF-06-004');
     expect(job?.decision).toBe('MERGE');
     expect(job?.targetCandidateKey).toBe('BOF-06-003');

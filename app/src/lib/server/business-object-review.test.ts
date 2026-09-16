@@ -58,4 +58,27 @@ describe('canonical business object review ledger', () => {
       'review-tenant'
     )).toThrow('An object cannot be merged into itself.');
   });
+
+  it('seeds the governed foundation baseline without overwriting an existing human decision', () => {
+    const inserted = service.seedFoundationCanonicalization('architecture-review');
+    expect(inserted).toBeGreaterThan(0);
+
+    const party = service.getBusinessObjectReview('BOF-01-002');
+    expect(party?.decision).toBe('VALIDATE_OBJECT');
+    expect(party?.proposedCanonicalName).toBe('Party');
+
+    const job = service.getBusinessObjectReview('BOF-06-004');
+    expect(job?.decision).toBe('MERGE');
+    expect(job?.targetCandidateKey).toBe('BOF-06-003');
+
+    const item = service.getBusinessObjectReview('BOF-10-001');
+    expect(item?.decision).toBe('RENAME');
+    expect(item?.proposedCanonicalName).toBe('Item');
+
+    const site = service.getBusinessObjectReview('BOF-16-003');
+    expect(site?.decision).toBe('RENAME');
+    expect(site?.proposedCanonicalName).toBe('Built Environment Site');
+
+    expect(service.seedFoundationCanonicalization('architecture-review')).toBe(0);
+  });
 });

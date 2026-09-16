@@ -33,6 +33,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}><span>◇</span>Business object model</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/foundation`}><span>⌘</span>Foundation semantics</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/authority`}><span>◆</span>Authority & participation</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}><span>▤</span>Delivery context</a>
     <div class="admin-item muted"><span>◫</span>Function directory</div>
     <div class="admin-item muted"><span>▦</span>Job architecture</div>
     <div class="admin-item muted"><span>◎</span>Positions</div>

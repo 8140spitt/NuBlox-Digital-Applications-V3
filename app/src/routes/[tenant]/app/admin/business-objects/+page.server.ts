@@ -6,6 +6,7 @@ import {
   listBusinessObjectReviews,
   reviewDecisions,
   saveBusinessObjectReview,
+  seedFoundationCanonicalization,
   type BusinessObjectReviewDecision
 } from '$lib/server/business-object-review';
 import type { Actions, PageServerLoad } from './$types';
@@ -13,6 +14,8 @@ import type { Actions, PageServerLoad } from './$types';
 const actor = 'Development User';
 
 export const load: PageServerLoad = ({ url, params }) => {
+  seedFoundationCanonicalization(params.tenant);
+
   const q = (url.searchParams.get('q') ?? '').trim();
   const family = url.searchParams.get('family') ?? '';
   const kind = url.searchParams.get('kind') ?? '';

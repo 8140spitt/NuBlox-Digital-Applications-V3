@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import FunctionSidebar from '$lib/components/FunctionSidebar.svelte';
 
   let { tenantSlug, children } = $props();
@@ -14,9 +15,9 @@
   <nav class="topnav" aria-label="Global">
     <a href={`/${tenantSlug}/app/functions/f01`}>Home</a>
     <a href={`/${tenantSlug}/app/functions/f01`}>My work</a>
-    <a class="active" href={`/${tenantSlug}/app/functions/f01`}>Functions</a>
+    <a class:active={!page.url.pathname.includes('/admin/')} href={`/${tenantSlug}/app/functions/f01`}>Functions</a>
     <a href={`/${tenantSlug}/app/functions/f01`}>Reports</a>
-    <a href={`/${tenantSlug}/app/functions/f01`}>Administration</a>
+    <a class:active={page.url.pathname.includes('/admin/')} href={`/${tenantSlug}/app/admin/business-objects`}>Administration</a>
   </nav>
   <div class="profile">
     <span class="avatar">SS</span>

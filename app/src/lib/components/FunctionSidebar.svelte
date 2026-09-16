@@ -30,11 +30,12 @@
 
   <section class="admin">
     <p class="label">Administration</p>
-    <div class="admin-item">Function directory</div>
-    <div class="admin-item">Job architecture</div>
-    <div class="admin-item">Positions</div>
-    <div class="admin-item">Lifecycle administration</div>
-    <div class="admin-item">Design system</div>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}><span>◇</span>Business object model</a>
+    <div class="admin-item muted"><span>◫</span>Function directory</div>
+    <div class="admin-item muted"><span>▦</span>Job architecture</div>
+    <div class="admin-item muted"><span>◎</span>Positions</div>
+    <div class="admin-item muted"><span>↻</span>Lifecycle administration</div>
+    <div class="admin-item muted"><span>◈</span>Design system</div>
   </section>
 </aside>
 
@@ -50,6 +51,9 @@
   .function.active { font-weight: 700; }
   .function.planned { color: #788794; cursor: default; }
   .fn-id { font-size: 10px; font-weight: 800; color: #52687b; }
-  .admin-item { padding: 7px 9px; color: #536779; font-size: 11.5px; }
+  .admin-item { display: grid; grid-template-columns: 22px minmax(0,1fr); align-items: center; min-height: 31px; padding: 6px 9px; border-radius: 7px; color: #536779; font-size: 11.5px; text-decoration: none; }
+  a.admin-item:hover { background: #eaf5fc; color: #1b5072; }
+  .admin-item.muted { color: #8795a1; }
+  .admin-item span { color: #607b8e; text-align: center; }
   @media (max-width: 760px) { .sidebar { position: static; height: auto; padding: 8px 10px; border-right: 0; border-bottom: 1px solid var(--line); } .sidebar > section:first-child, .sidebar .admin { display: none; } .sidebar section + section { border-top: 0; margin: 0; padding: 0; } .label { display: none; } .function-list { display: flex; overflow-x: auto; gap: 6px; padding-bottom: 2px; } .function { min-width: max-content; grid-template-columns: auto auto; gap: 5px; border: 1px solid var(--line); background: white; } .function.planned { display: none; } }
 </style>

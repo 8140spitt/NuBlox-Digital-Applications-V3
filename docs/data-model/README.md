@@ -16,6 +16,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `built-environment-spatial-physical-semantics.md` — governed Estate, Network, Site, land/property, facility/building/infrastructure, spatial, system, asset and component semantics.
 - `commercial-procurement-semantics.md` — governed Contract, party-role, obligation, commercial/procurement package, change, sourcing, award, purchase-order and receipt semantics.
 - `item-product-manufacturing-semantics.md` — governed Item, specification, variant, catalogue, pricing, BOM, manufacturing definition/process, Lot/Batch/Serial and as-manufactured semantics.
+- `inventory-logistics-semantics.md` — governed Warehouse/Store/Bin, reservation, movement, stock-control, shipment, transport, delivery and trade-declaration semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -43,6 +44,10 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Item definition, Lot/Batch, Serial Identity and installed Asset identity are distinct semantic layers with traceable relationships.
 - BOM/product structure is distinct from Project WBS and from permanent Asset/System configuration.
 - Manufacturer and supplier identities reuse canonical Party/Organisation records through governed relationships.
+- Stock Position is a projection from posted inventory events, reservations and restrictions; it is not independently editable business truth.
+- Warehouse, Store and Bin Location form an inventory-storage hierarchy, not a Project/WBS, Site or Asset hierarchy.
+- Issue, Return and Transfer are governed Inventory Movement types with immutable posting/correction evidence.
+- Pick, Pack, Shipment, Transport Order and Delivery remain distinct logistics execution/evidence records.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.
@@ -56,11 +61,12 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 4. Estate/network, site, land/property, facility/building/infrastructure and spatial context.
 5. Contract/appointment/package identity and commercial relationships.
 6. Product/material/service and manufactured-product identity.
-7. Information-container and controlled-information identity.
-8. Physical asset/system/component/maintainable-item identity.
-9. Finance/accounting identity and immutable recognition semantics.
-10. Shared work, decision, evidence, audit, retention and reference/configuration primitives.
-11. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
+7. Inventory, warehouse and logistics identity/event semantics.
+8. Information-container and controlled-information identity.
+9. Physical asset/system/component/maintainable-item identity.
+10. Finance/accounting identity and immutable recognition semantics.
+11. Shared work, decision, evidence, audit, retention and reference/configuration primitives.
+12. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
 
 ## Development hold
 

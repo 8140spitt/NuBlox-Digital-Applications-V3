@@ -18,6 +18,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `item-product-manufacturing-semantics.md` — governed Item, specification, variant, catalogue, pricing, BOM, manufacturing definition/process, Lot/Batch/Serial and as-manufactured semantics.
 - `inventory-logistics-semantics.md` — governed Warehouse/Store/Bin, reservation, movement, stock-control, shipment, transport, delivery and trade-declaration semantics.
 - `controlled-information-semantics.md` — governed Information Requirement, Deliverable, Information Container, revision/representation, issue/transmittal, query, review and design-change semantics.
+- `asset-operations-semantics.md` — governed commissioning, handover, maintenance, Work Order, service, failure/defect, warranty, occupancy and whole-life asset-history semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -55,6 +56,14 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Information Issue and Transmittal are immutable release/exchange evidence, not mutable folders or file copies.
 - RFI and Technical Query share one Information Query pattern; Design Change remains technically distinct from Commercial Change.
 - CDE/folder structures are collaboration/storage views around canonical information and do not redefine NuBlox business identity.
+- Handover changes stewardship and operational state but never recreates System, Asset or Component identity.
+- Commissioning evidence is immutable; retest creates new evidence rather than replacing failed or previous evidence.
+- Maintenance Strategy, Maintenance Plan, Task Template and Work Order are distinct semantic layers.
+- Work Order is operational work and is not a workflow task or Project Schedule Activity.
+- Failure is an event; Defect is a governed case; current condition is derived from retained observations/assessments.
+- Service Request, Service Case, Service Appointment and Work Order remain separate identities.
+- Service History is a rebuildable projection of canonical work/evidence, never independently editable truth.
+- Parts Consumption posts through Inventory Movement; operations does not create a separate material truth store.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.
@@ -71,9 +80,10 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 7. Inventory, warehouse and logistics identity/event semantics.
 8. Information-container and controlled-information identity.
 9. Physical asset/system/component/maintainable-item identity.
-10. Finance/accounting identity and immutable recognition semantics.
-11. Shared work, decision, evidence, audit, retention and reference/configuration primitives.
-12. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
+10. Commissioning, handover, maintenance, service and whole-life Asset operations semantics.
+11. Finance/accounting identity and immutable recognition semantics.
+12. Shared work, decision, evidence, audit, retention and reference/configuration primitives.
+13. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
 
 ## Development hold
 

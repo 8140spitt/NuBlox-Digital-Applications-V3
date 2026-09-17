@@ -11,7 +11,7 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test:domain": "vitest run src/lib/server/strategy-framework.test.ts && vitest run src/lib/server/business-object-review.test.ts && vitest run src/lib/data/foundation-object-model.test.ts && vitest run src/lib/data/authority-participation-model.test.ts && vitest run src/lib/data/delivery-context-model.test.ts && vitest run src/lib/data/built-environment-spatial-model.test.ts && vitest run src/lib/data/commercial-procurement-model.test.ts && vitest run src/lib/data/item-manufacturing-model.test.ts",
+    "test:domain": "vitest run src/lib/server/strategy-framework.test.ts && vitest run src/lib/server/business-object-review.test.ts && vitest run src/lib/data/foundation-object-model.test.ts && vitest run src/lib/data/authority-participation-model.test.ts && vitest run src/lib/data/delivery-context-model.test.ts && vitest run src/lib/data/built-environment-spatial-model.test.ts && vitest run src/lib/data/commercial-procurement-model.test.ts && vitest run src/lib/data/item-manufacturing-model.test.ts && vitest run src/lib/data/inventory-logistics-model.test.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

@@ -4,6 +4,7 @@ import { builtEnvironmentCanonicalization } from '$lib/data/built-environment-ca
 import { commercialProcurementCanonicalization } from '$lib/data/commercial-procurement-canonicalization';
 import { itemManufacturingCanonicalization } from '$lib/data/item-manufacturing-canonicalization';
 import { inventoryLogisticsCanonicalization } from '$lib/data/inventory-logistics-canonicalization';
+import { controlledInformationCanonicalization } from '$lib/data/controlled-information-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -97,7 +98,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...builtEnvironmentCanonicalization,
     ...commercialProcurementCanonicalization,
     ...itemManufacturingCanonicalization,
-    ...inventoryLogisticsCanonicalization
+    ...inventoryLogisticsCanonicalization,
+    ...controlledInformationCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

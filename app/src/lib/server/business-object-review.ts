@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { foundationCanonicalization } from '$lib/data/foundation-canonicalization';
+import { builtEnvironmentCanonicalization } from '$lib/data/built-environment-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -88,10 +89,11 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
+  const governedBaseline = [...foundationCanonicalization, ...builtEnvironmentCanonicalization];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');
   try {
-    for (const entry of foundationCanonicalization) {
+    for (const entry of governedBaseline) {
       if (exists.get(entry.candidateKey)) continue;
       const timestamp = now();
       const decision = entry.decision as BusinessObjectReviewDecision;

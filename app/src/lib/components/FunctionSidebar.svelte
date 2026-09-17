@@ -42,6 +42,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/asset-operations`}><span>◉</span>Asset operations</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/finance-accounting`}><span>¤</span>Finance & accounting</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/shared-work-evidence`}><span>◈</span>Work, decisions & evidence</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/reference-configuration`}><span>⌁</span>Reference & configuration</a>
     <div class="admin-item muted"><span>◫</span>Function directory</div>
     <div class="admin-item muted"><span>▦</span>Job architecture</div>
     <div class="admin-item muted"><span>◎</span>Positions</div>

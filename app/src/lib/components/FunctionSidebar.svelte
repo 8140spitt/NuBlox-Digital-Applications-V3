@@ -34,6 +34,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}><span>✓</span>Coverage audit</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/foundation`}><span>⌘</span>Foundation semantics</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/authority`}><span>◆</span>Authority & participation</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/crm-business-development`}><span>◎</span>CRM & business development</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}><span>▤</span>Delivery context</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/built-environment`}><span>▧</span>Built environment</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}><span>▥</span>Commercial & procurement</a>

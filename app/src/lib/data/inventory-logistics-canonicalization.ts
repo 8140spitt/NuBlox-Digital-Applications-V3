@@ -1,0 +1,25 @@
+import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
+
+export const inventoryLogisticsCanonicalization: FoundationCanonicalizationDecision[] = [
+  { candidateKey: 'BOF-10-018', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Warehouse', notes: 'Canonical inventory-storage/logistics context linked to Site/Facility and responsible organisation. Warehouse is not Project/WBS or Asset hierarchy.' },
+  { candidateKey: 'BOF-10-019', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Store', notes: 'Governed storage subdivision within Warehouse/Site inventory context; does not create duplicate Item or Site identity.' },
+  { candidateKey: 'BOF-10-020', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Bin Location', notes: 'Governed lowest-level inventory storage location. Bin is storage context and remains distinct from built-environment Space identity.' },
+  { candidateKey: 'BOF-10-021', decision: 'RELATIONSHIP', proposedCanonicalName: 'Inventory Reservation', notes: 'Effective commitment of available quantity to demand. Reservation constrains availability without moving stock or redefining Item identity.' },
+  { candidateKey: 'BOF-10-022', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Inventory Movement', notes: 'Canonical immutable inventory quantity/location event. Posted movements form inventory truth and are corrected through reversals/corrections.' },
+  { candidateKey: 'BOF-10-023', decision: 'MERGE', targetCandidateKey: 'BOF-10-022', notes: 'Material Issue is an Inventory Movement type rather than a separate ledger/object family.' },
+  { candidateKey: 'BOF-10-024', decision: 'MERGE', targetCandidateKey: 'BOF-10-022', notes: 'Material Return is an Inventory Movement type with explicit source/destination/reason.' },
+  { candidateKey: 'BOF-10-025', decision: 'MERGE', targetCandidateKey: 'BOF-10-022', notes: 'Stock Transfer is an Inventory Movement type. Cross-legal-entity transfer may trigger additional commercial/accounting records.' },
+  { candidateKey: 'BOF-10-026', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Stock Count', notes: 'Controlled count observation/evidence. A count variance may result in a separately authorised Inventory Adjustment.' },
+  { candidateKey: 'BOF-10-027', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Inventory Adjustment', notes: 'Governed posted correction with reason, authority and evidence; never a direct overwrite of stock-on-hand.' },
+  { candidateKey: 'BOF-10-028', decision: 'RENAME', proposedCanonicalName: 'Inventory Quarantine', notes: 'Governed restriction case affecting availability of Item/lot/batch/serial/location while quality, safety or compliance disposition is resolved.' },
+  { candidateKey: 'BOF-10-029', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Pick', notes: 'Logistics execution work selecting exact inventory to fulfil demand. Completion records actual quantity and traceability.' },
+  { candidateKey: 'BOF-10-030', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Pack', notes: 'Logistics execution grouping selected goods into handling units for shipment. It is not a commercial/procurement/work package.' },
+  { candidateKey: 'BOF-10-031', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Shipment', notes: 'Canonical consignment identity for goods moving from origin to destination with traceable contents.' },
+  { candidateKey: 'BOF-10-032', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Transport Order', notes: 'Governed transport-service request/commitment that may carry one or more Shipments; carrier reuses canonical Party identity.' },
+  { candidateKey: 'BOF-10-033', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Delivery', notes: 'Immutable proof/exception evidence that Shipment contents reached a destination. Procurement/financial receipt remains a distinct semantic record.' },
+  { candidateKey: 'BOF-10-034', decision: 'RENAME', proposedCanonicalName: 'Site Logistics Booking', notes: 'Governed logistics slot/access work at a canonical Site. It consumes Site, Shipment and Transport identities rather than becoming an Asset.' },
+  { candidateKey: 'BOF-10-035', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Call-off', notes: 'Governed release under an existing framework/contract/blanket commitment. It preserves the governing commercial reference.' },
+  { candidateKey: 'BOF-10-036', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Trade Declaration', notes: 'Canonical cross-border customs/trade compliance record with declaration type, jurisdiction, shipment and immutable submission evidence.' },
+  { candidateKey: 'BOF-10-037', decision: 'MERGE', targetCandidateKey: 'BOF-10-036', notes: 'Import Declaration is a governed Trade Declaration type rather than a separate declaration architecture.' },
+  { candidateKey: 'BOF-10-038', decision: 'MERGE', targetCandidateKey: 'BOF-10-036', notes: 'Export Declaration is a governed Trade Declaration type rather than a separate declaration architecture.' }
+];

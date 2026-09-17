@@ -9,6 +9,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `canonical-business-object-duplicates.csv` — exact duplicate-name review queue used to normalize cross-domain concepts.
 - `canonical-business-object-summary.md` — generated counts and review sequence.
 - `canonical-business-object-normalization-review.md` — first semantic recommendations for duplicate/alias normalization.
+- `canonical-model-convergence-audit.md` — machine-checkable convergence and five-lens coverage gate across all 29 discovery families.
 - `foundation-canonicalization-baseline.md` — reviewed first-pass decisions for the foundation identity spine.
 - `foundation-object-semantics.md` — governed identity, scope, lifecycle, versioning and relationship semantics for the foundation objects.
 - `authority-participation-model.md` — governed authentication, membership, role, responsibility and delegated-authority semantics.
@@ -91,6 +92,8 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Approval Authority Rule is policy rather than Approval Request, Decision or Approval Evidence.
 - Retention Rule is policy; Legal Hold and Retention Disposition Decision remain runtime control/evidence.
 - Numbering Scheme creates business identifiers but never replaces immutable system identity.
+- Canonical completeness is measured against five independent lenses: sector lifecycle, 29 workspaces, specialist overlays, end-to-end chains and external benchmarks.
+- Family-level coverage does not imply candidate-level completion; unresolved candidates and partial/candidate-only families remain visible architecture gaps.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.
@@ -111,11 +114,13 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 11. Finance/accounting identity and immutable recognition semantics.
 12. Shared work, workflow, decision, evidence, audit and retention semantics.
 13. Reference data, classification, jurisdiction and configuration/policy primitives.
-14. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
+14. Convergence/coverage audit across the 750-candidate universe, all 29 workspaces, lifecycle stages, specialist overlays, E2E chains and external benchmarks.
+15. Close candidate-only and partial family gaps before treating physical aggregate/database/API patterns as enterprise-wide authority.
+16. Domain transactions, cases, plans and execution records are physically implemented only against accepted canonical semantics.
 
 ## Development hold
 
-Broad horizontal application expansion is on hold until the initial object register and core identity/relationship model have been reviewed.
+Broad horizontal application expansion remains constrained until the convergence audit closes material candidate-only and partial-family gaps.
 
 The current F01.01 slice remains a learning prototype. It must not establish platform-wide object, lifecycle, workflow, permissions or versioning patterns by accident.
 

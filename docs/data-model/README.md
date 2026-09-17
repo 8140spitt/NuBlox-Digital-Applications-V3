@@ -19,6 +19,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `inventory-logistics-semantics.md` — governed Warehouse/Store/Bin, reservation, movement, stock-control, shipment, transport, delivery and trade-declaration semantics.
 - `controlled-information-semantics.md` — governed Information Requirement, Deliverable, Information Container, revision/representation, issue/transmittal, query, review and design-change semantics.
 - `asset-operations-semantics.md` — governed commissioning, handover, maintenance, Work Order, service, failure/defect, warranty, occupancy and whole-life asset-history semantics.
+- `finance-accounting-semantics.md` — governed Ledger, AP/AR, settlement, tax, fixed-asset accounting, treasury, project financial-control and immutable posting semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -64,6 +65,12 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Service Request, Service Case, Service Appointment and Work Order remain separate identities.
 - Service History is a rebuildable projection of canonical work/evidence, never independently editable truth.
 - Parts Consumption posts through Inventory Movement; operations does not create a separate material truth store.
+- Finance references canonical Legal Entity, Party, Project, WBS, Contract, Purchase Order and Asset identities rather than creating finance-owned duplicates.
+- Posted Ledger Entries are immutable; correction uses reversal or new adjusting entries with retained source provenance.
+- Budget and Forecast are plans; Commitment, Actual, Open Item and Cash positions are derived views and are never independently editable source truth.
+- Supplier/Customer Invoice, Payment/Receipt and Bank Transaction evidence remain separate financial records linked by settlement and reconciliation.
+- Fixed Asset Accounting Record is separate from the whole-life physical Asset identity and links to it explicitly where applicable.
+- Consolidation and elimination preserve source Legal Entity Ledgers; controlled reporting snapshots are projections/evidence rather than substitute Ledgers.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.

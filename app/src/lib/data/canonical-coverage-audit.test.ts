@@ -21,9 +21,9 @@ describe('canonical model convergence and coverage audit', () => {
   });
 
   it('keeps the audit honest about model maturity', () => {
-    expect(coverageAuditSummary.governedFamilyCount).toBe(14);
+    expect(coverageAuditSummary.governedFamilyCount).toBe(15);
     expect(coverageAuditSummary.partialFamilyCount).toBe(4);
-    expect(coverageAuditSummary.candidateOnlyFamilyCount).toBe(11);
+    expect(coverageAuditSummary.candidateOnlyFamilyCount).toBe(10);
     expect(coverageAuditSummary.governedFamilyCount + coverageAuditSummary.partialFamilyCount + coverageAuditSummary.candidateOnlyFamilyCount).toBe(29);
   });
 
@@ -40,9 +40,9 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.externalBenchmark.state).toBe('in-progress');
   });
 
-  it('keeps known convergence gaps visible', () => {
+  it('keeps known convergence gaps visible while promoting governed families', () => {
     const states = new Map(familyCoverageAudit.map((family) => [family.id, family.semanticModelState]));
-    expect(states.get('BOF-03')).toBe('candidate-only');
+    expect(states.get('BOF-03')).toBe('governed-semantic-model');
     expect(states.get('BOF-05')).toBe('candidate-only');
     expect(states.get('BOF-12')).toBe('partial-semantic-model');
     expect(states.get('BOF-18')).toBe('candidate-only');

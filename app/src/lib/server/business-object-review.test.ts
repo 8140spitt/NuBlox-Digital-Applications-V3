@@ -110,6 +110,18 @@ describe('canonical business object review ledger', () => {
     expect(workflowTemplate?.decision).toBe('MERGE');
     expect(workflowTemplate?.targetCandidateKey).toBe('BOF-29-018');
 
+    const opportunity = service.getBusinessObjectReview('BOF-03-008');
+    expect(opportunity?.decision).toBe('VALIDATE_OBJECT');
+    expect(opportunity?.proposedCanonicalName).toBe('Opportunity');
+
+    const customerRelationship = service.getBusinessObjectReview('BOF-03-016');
+    expect(customerRelationship?.decision).toBe('MERGE');
+    expect(customerRelationship?.targetCandidateKey).toBe('BOF-01-016');
+
+    const complaint = service.getBusinessObjectReview('BOF-03-015');
+    expect(complaint?.decision).toBe('MERGE');
+    expect(complaint?.targetCandidateKey).toBe('BOF-03-014');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

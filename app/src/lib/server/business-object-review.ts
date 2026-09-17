@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { foundationCanonicalization } from '$lib/data/foundation-canonicalization';
 import { builtEnvironmentCanonicalization } from '$lib/data/built-environment-canonicalization';
+import { commercialProcurementCanonicalization } from '$lib/data/commercial-procurement-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -89,7 +90,11 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
-  const governedBaseline = [...foundationCanonicalization, ...builtEnvironmentCanonicalization];
+  const governedBaseline = [
+    ...foundationCanonicalization,
+    ...builtEnvironmentCanonicalization,
+    ...commercialProcurementCanonicalization
+  ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');
   try {

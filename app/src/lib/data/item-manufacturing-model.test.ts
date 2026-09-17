@@ -29,8 +29,9 @@ describe('item and manufacturing semantic model', () => {
     for (const id of ['TRACE-LOT', 'TRACE-BATCH', 'TRACE-SERIAL']) {
       expect(itemManufacturingModel.find((entry) => entry.modelId === id)?.kind).toBe('traceability-identity');
     }
-    expect(itemManufacturingRules.join(' ')).toContain('Lot / Batch / Serial identities preserve provenance');
-    expect(itemManufacturingRules.join(' ')).toContain('Asset identity');
+    const rules = itemManufacturingRules.join(' ');
+    expect(rules).toContain('Lot, Batch and Serial identities preserve provenance');
+    expect(rules).toContain('Asset identity');
   });
 
   it('keeps manufacturing definition and execution distinct', () => {

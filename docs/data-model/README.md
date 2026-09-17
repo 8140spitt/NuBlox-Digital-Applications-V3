@@ -14,6 +14,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `authority-participation-model.md` — governed authentication, membership, role, responsibility and delegated-authority semantics.
 - `delivery-context-semantics.md` — governed Portfolio, Programme, Project, stage, WBS, work-package, schedule, baseline, progress and resource-planning semantics.
 - `built-environment-spatial-physical-semantics.md` — governed Estate, Network, Site, land/property, facility/building/infrastructure, spatial, system, asset and component semantics.
+- `commercial-procurement-semantics.md` — governed Contract, party-role, obligation, commercial/procurement package, change, sourcing, award, purchase-order and receipt semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -32,9 +33,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Lifecycle state is explicit where business rules depend on it.
 - Historical and audit evidence is preserved rather than overwritten when accountability requires it.
 - Tenant, organisation, project/programme, contract, property/site, asset and other relevant scopes are explicit.
-- WBS/scope, schedule/time, commercial packages, physical assets and controlled information are related structures, not one universal hierarchy.
+- WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.
+- Appointment, Subcontract and Framework Agreement are governed Contract types rather than duplicate agreement-master systems.
+- Requisition, sourcing, evaluation, Award, commitment and receipt remain separate traceable records; no single mutable procurement record replaces the end-to-end evidence chain.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.

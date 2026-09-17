@@ -98,6 +98,18 @@ describe('canonical business object review ledger', () => {
     expect(outbox?.decision).toBe('RENAME');
     expect(outbox?.proposedCanonicalName).toBe('Outbox Message');
 
+    const jurisdiction = service.getBusinessObjectReview('BOF-29-001');
+    expect(jurisdiction?.decision).toBe('VALIDATE_OBJECT');
+    expect(jurisdiction?.proposedCanonicalName).toBe('Jurisdiction');
+
+    const uniclass = service.getBusinessObjectReview('BOF-29-013');
+    expect(uniclass?.decision).toBe('MERGE');
+    expect(uniclass?.targetCandidateKey).toBe('BOF-29-012');
+
+    const workflowTemplate = service.getBusinessObjectReview('BOF-29-019');
+    expect(workflowTemplate?.decision).toBe('MERGE');
+    expect(workflowTemplate?.targetCandidateKey).toBe('BOF-29-018');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

@@ -17,6 +17,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `commercial-procurement-semantics.md` — governed Contract, party-role, obligation, commercial/procurement package, change, sourcing, award, purchase-order and receipt semantics.
 - `item-product-manufacturing-semantics.md` — governed Item, specification, variant, catalogue, pricing, BOM, manufacturing definition/process, Lot/Batch/Serial and as-manufactured semantics.
 - `inventory-logistics-semantics.md` — governed Warehouse/Store/Bin, reservation, movement, stock-control, shipment, transport, delivery and trade-declaration semantics.
+- `controlled-information-semantics.md` — governed Information Requirement, Deliverable, Information Container, revision/representation, issue/transmittal, query, review and design-change semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -48,6 +49,12 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Warehouse, Store and Bin Location form an inventory-storage hierarchy, not a Project/WBS, Site or Asset hierarchy.
 - Issue, Return and Transfer are governed Inventory Movement types with immutable posting/correction evidence.
 - Pick, Pack, Shipment, Transport Order and Delivery remain distinct logistics execution/evidence records.
+- Information Container is the stable business identity; file/rendition/native-model content is a representation of a governed revision/iteration.
+- Document, Drawing, Model, Specification, Technical Schedule and Calculation are governed Information Container types unless semantic review proves a genuinely distinct aggregate.
+- Information Requirement, Deliverable, Delivery Plan and Information Container are separate identities connected by traceable satisfaction relationships.
+- Information Issue and Transmittal are immutable release/exchange evidence, not mutable folders or file copies.
+- RFI and Technical Query share one Information Query pattern; Design Change remains technically distinct from Commercial Change.
+- CDE/folder structures are collaboration/storage views around canonical information and do not redefine NuBlox business identity.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.

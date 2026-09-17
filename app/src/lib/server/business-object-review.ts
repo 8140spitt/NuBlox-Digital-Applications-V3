@@ -6,6 +6,7 @@ import { itemManufacturingCanonicalization } from '$lib/data/item-manufacturing-
 import { inventoryLogisticsCanonicalization } from '$lib/data/inventory-logistics-canonicalization';
 import { controlledInformationCanonicalization } from '$lib/data/controlled-information-canonicalization';
 import { assetOperationsCanonicalization } from '$lib/data/asset-operations-canonicalization';
+import { financeAccountingCanonicalization } from '$lib/data/finance-accounting-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -101,7 +102,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...itemManufacturingCanonicalization,
     ...inventoryLogisticsCanonicalization,
     ...controlledInformationCanonicalization,
-    ...assetOperationsCanonicalization
+    ...assetOperationsCanonicalization,
+    ...financeAccountingCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

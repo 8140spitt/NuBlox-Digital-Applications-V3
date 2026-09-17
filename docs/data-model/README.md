@@ -20,6 +20,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `controlled-information-semantics.md` — governed Information Requirement, Deliverable, Information Container, revision/representation, issue/transmittal, query, review and design-change semantics.
 - `asset-operations-semantics.md` — governed commissioning, handover, maintenance, Work Order, service, failure/defect, warranty, occupancy and whole-life asset-history semantics.
 - `finance-accounting-semantics.md` — governed Ledger, AP/AR, settlement, tax, fixed-asset accounting, treasury, project financial-control and immutable posting semantics.
+- `shared-work-evidence-semantics.md` — governed Workflow Definition/Instance, Work Item, assignment, request/decision, evidence, audit, correction/reversal, retention, legal-hold and outbox semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -71,6 +72,16 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Supplier/Customer Invoice, Payment/Receipt and Bank Transaction evidence remain separate financial records linked by settlement and reconciliation.
 - Fixed Asset Accounting Record is separate from the whole-life physical Asset identity and links to it explicitly where applicable.
 - Consolidation and elimination preserve source Legal Entity Ledgers; controlled reporting snapshots are projections/evidence rather than substitute Ledgers.
+- Workflow Definition/Instance and Work Item coordinate work around canonical subjects; workflow runtime never becomes authoritative domain truth.
+- Work Item is distinct from Project Schedule Activity, Work Order, Service Appointment and specialist domain work/cases.
+- Work Assignment, responsibility, permission and Delegated Authority remain separate; assignment alone cannot authorise a protected decision.
+- Work Delegation never grants Delegated Authority and cannot bypass segregation-of-duties or scope controls.
+- Review Request, Approval Request and Decision Request are distinct; Response is not Decision, and Decision is immutable attributable outcome evidence.
+- Domain state changes happen through explicit domain commands after business rules, permissions and authority have been validated.
+- User interfaces expose the current authorised action rather than the complete workflow/lifecycle graph by default.
+- Business Event, Change Event, Audit Event and Outbox Message have distinct semantics and must not collapse into one generic event store contract.
+- Evidence, signatures, attestations, corrections and reversals preserve append-only provenance where accountability requires it.
+- Active Legal Hold blocks retention disposition without changing the canonical object's business identity or lifecycle.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.
@@ -89,8 +100,9 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 9. Physical asset/system/component/maintainable-item identity.
 10. Commissioning, handover, maintenance, service and whole-life Asset operations semantics.
 11. Finance/accounting identity and immutable recognition semantics.
-12. Shared work, decision, evidence, audit, retention and reference/configuration primitives.
-13. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
+12. Shared work, workflow, decision, evidence, audit and retention semantics.
+13. Reference data, classification, jurisdiction and configuration/policy primitives.
+14. Domain transactions, cases, plans and execution records introduced only against the validated identity model.
 
 ## Development hold
 

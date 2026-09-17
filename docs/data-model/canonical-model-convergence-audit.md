@@ -96,6 +96,7 @@ A family has a governed semantic architecture covering its principal identity, r
 Current governed families:
 
 - BOF-01 Tenant, identity, party and enterprise structure;
+- BOF-03 Market, CRM, business development and customer;
 - BOF-06 Portfolio, programme, project and project controls;
 - BOF-07 Design, engineering, BIM and information management;
 - BOF-08 Contract, appointment and commercial management;
@@ -128,7 +129,6 @@ Discovery candidates exist, but no complete family-level semantic architecture h
 Current candidate-only families:
 
 - BOF-02 Strategy, governance and enterprise performance;
-- BOF-03 Market, CRM, business development and customer;
 - BOF-04 Land, development, investment and property acquisition;
 - BOF-05 Estimating, measurement, tendering, proposals and sales;
 - BOF-14 Building safety, regulatory control and statutory assurance;
@@ -142,9 +142,9 @@ Current candidate-only families:
 Therefore the present maturity split is:
 
 ```text
-14 governed families
+15 governed families
  4 partial families
-11 candidate-only families
+10 candidate-only families
 29 total families
 ```
 
@@ -191,10 +191,9 @@ Before a family can be treated as physically authoritative, it must have:
 
 ## Immediate convergence queue
 
-The next canonicalization passes should address the candidate-only families in operating-model dependency order, while completing the four partial families. A practical sequence is:
+The next canonicalization passes should address the remaining candidate-only families in operating-model dependency order, while completing the four partial families. A practical sequence is:
 
 ```text
-BOF-03 CRM / BD / Customer
 BOF-05 Estimating / Measurement / Tender
 BOF-18 People / HCM / Competence / Time
 BOF-13 Quality / HSE / Assurance (complete partial family)

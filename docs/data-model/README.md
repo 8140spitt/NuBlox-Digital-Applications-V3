@@ -21,6 +21,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `asset-operations-semantics.md` — governed commissioning, handover, maintenance, Work Order, service, failure/defect, warranty, occupancy and whole-life asset-history semantics.
 - `finance-accounting-semantics.md` — governed Ledger, AP/AR, settlement, tax, fixed-asset accounting, treasury, project financial-control and immutable posting semantics.
 - `shared-work-evidence-semantics.md` — governed Workflow Definition/Instance, Work Item, assignment, request/decision, evidence, audit, correction/reversal, retention, legal-hold and outbox semantics.
+- `reference-configuration-semantics.md` — governed reference data, classification, jurisdiction, lifecycle/workflow configuration, permission/authority policy and retention-policy semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -82,6 +83,14 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Business Event, Change Event, Audit Event and Outbox Message have distinct semantics and must not collapse into one generic event store contract.
 - Evidence, signatures, attestations, corrections and reversals preserve append-only provenance where accountability requires it.
 - Active Legal Hold blocks retention disposition without changing the canonical object's business identity or lifecycle.
+- Reference/configuration data defines allowable meaning and policy but never becomes transactional truth.
+- Historical transactions retain the exact reference/configuration version needed to interpret their original meaning.
+- Classification is an overlay on canonical identity; Uniclass and other systems use one System → Release → Code architecture.
+- Lifecycle, workflow and Project Stage definitions are versioned configuration; runtime state remains on the governed domain/work object.
+- Role Definition is not Role Assignment; Permission Definition is not effective authorization; Delegated Authority Rule is not a Delegated Authority grant.
+- Approval Authority Rule is policy rather than Approval Request, Decision or Approval Evidence.
+- Retention Rule is policy; Legal Hold and Retention Disposition Decision remain runtime control/evidence.
+- Numbering Scheme creates business identifiers but never replaces immutable system identity.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.

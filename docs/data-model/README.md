@@ -13,6 +13,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `foundation-canonicalization-baseline.md` — reviewed first-pass decisions for the foundation identity spine.
 - `foundation-object-semantics.md` — governed identity, scope, lifecycle, versioning and relationship semantics for the foundation objects.
 - `authority-participation-model.md` — governed authentication, membership, role, responsibility and delegated-authority semantics.
+- `crm-business-development-semantics.md` — governed market, Party Relationship/account context, Lead, Opportunity, Pursuit, decision, interaction, onboarding and customer-case semantics.
 - `delivery-context-semantics.md` — governed Portfolio, Programme, Project, stage, WBS, work-package, schedule, baseline, progress and resource-planning semantics.
 - `built-environment-spatial-physical-semantics.md` — governed Estate, Network, Site, land/property, facility/building/infrastructure, spatial, system, asset and component semantics.
 - `commercial-procurement-semantics.md` — governed Contract, party-role, obligation, commercial/procurement package, change, sourcing, award, purchase-order and receipt semantics.
@@ -41,6 +42,9 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Lifecycle state is explicit where business rules depend on it.
 - Historical and audit evidence is preserved rather than overwritten when accountability requires it.
 - Tenant, organisation, project/programme, contract, property/site, asset and other relevant scopes are explicit.
+- Prospect, customer and account terminology uses canonical Party/Organisation plus governed Party Relationships rather than duplicate CRM masters.
+- Lead, Opportunity and Pursuit are separate commercial identities; Estimate, Proposal, Contract and Project remain separate downstream identities linked by provenance.
+- CRM Activity is distinct from Project Schedule Activity, Work Order and shared workflow Work Item; pipeline/forecast snapshots are projections rather than mutable source truth.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

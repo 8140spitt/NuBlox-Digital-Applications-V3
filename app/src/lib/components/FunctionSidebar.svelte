@@ -37,6 +37,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/built-environment`}><span>▧</span>Built environment</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}><span>▥</span>Commercial & procurement</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/item-manufacturing`}><span>▦</span>Item & manufacturing</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/inventory-logistics`}><span>▣</span>Inventory & logistics</a>
     <div class="admin-item muted"><span>◫</span>Function directory</div>
     <div class="admin-item muted"><span>▦</span>Job architecture</div>
     <div class="admin-item muted"><span>◎</span>Positions</div>

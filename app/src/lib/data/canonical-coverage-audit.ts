@@ -10,6 +10,7 @@ import { assetOperationsCanonicalization } from './asset-operations-canonicaliza
 import { financeAccountingCanonicalization } from './finance-accounting-canonicalization';
 import { sharedWorkEvidenceCanonicalization } from './shared-work-evidence-canonicalization';
 import { referenceConfigurationCanonicalization } from './reference-configuration-canonicalization';
+import { crmBusinessDevelopmentCanonicalization } from './crm-business-development-canonicalization';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -60,7 +61,7 @@ const ALL_STAGES = [...sectorLifecycle];
 export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
   { id: 'BOF-01', semanticModelState: 'governed-semantic-model', workspaces: ['F02','F15','F16','F19','F20','F27'], lifecycleStages: ['Market','Contract','Construct','Operate','Maintain'], processChains: ['hire-to-retire','record-to-report'], overlays: ['development','contracting','infrastructure','property-fm'], note: 'Foundation identity, Party, organisation, membership and authority spine is governed.' },
   { id: 'BOF-02', semanticModelState: 'candidate-only', workspaces: ['F01','F02','F03'], lifecycleStages: ['Plan','Control','Account'], processChains: ['record-to-report'], overlays: ['development','commercial-management'], note: 'Strategy/governance/EPM candidates still require family-level canonicalization.' },
-  { id: 'BOF-03', semanticModelState: 'candidate-only', workspaces: ['F06','F07','F08'], lifecycleStages: ['Market','Lead','Opportunity','Bid','Proposal','Quote','Contract'], processChains: ['market-to-contract'], overlays: ['development','commercial-management','contracting'], note: 'CRM, BD and customer objects remain a convergence gap.' },
+  { id: 'BOF-03', semanticModelState: 'governed-semantic-model', workspaces: ['F06','F07','F08'], lifecycleStages: ['Market','Lead','Opportunity','Bid','Proposal','Quote','Contract'], processChains: ['market-to-contract'], overlays: ['development','commercial-management','contracting'], note: 'Market insight, Party Relationship/account context, Lead, Opportunity, Pursuit, decision, interaction, onboarding and customer-case semantics are governed.' },
   { id: 'BOF-04', semanticModelState: 'candidate-only', workspaces: ['F04','F14','F19','F22','F27'], lifecycleStages: ['Opportunity','Estimate','Plan','Contract','Design','Construct','Operate','Refurbish','Dispose'], processChains: ['market-to-contract','asset-to-retirement'], overlays: ['development','infrastructure','property-fm','retrofit','regulation','heritage'], note: 'Land, development, investment and acquisition semantics remain to be canonicalized.' },
   { id: 'BOF-05', semanticModelState: 'candidate-only', workspaces: ['F07','F09','F14','F27'], lifecycleStages: ['Bid','Estimate','Proposal','Quote','Contract','Control'], processChains: ['market-to-contract','estimate-to-project-control'], overlays: ['commercial-management','contracting','trades'], note: 'Estimating, measurement, tender and proposal identities remain to be canonicalized.' },
   { id: 'BOF-06', semanticModelState: 'governed-semantic-model', workspaces: ['F03','F27'], lifecycleStages: ['Plan','Construct','Control','Handover','Refurbish'], processChains: ['estimate-to-project-control','plan-to-perform','change-to-commercial-position'], overlays: ['development','design','engineering','commercial-management','contracting','infrastructure','retrofit'], note: 'Portfolio/programme/project, WBS and schedule semantics are governed; residual candidates still need object-by-object decisions.' },
@@ -99,7 +100,8 @@ export const governedCanonicalizationDecisions = [
   ...assetOperationsCanonicalization,
   ...financeAccountingCanonicalization,
   ...sharedWorkEvidenceCanonicalization,
-  ...referenceConfigurationCanonicalization
+  ...referenceConfigurationCanonicalization,
+  ...crmBusinessDevelopmentCanonicalization
 ];
 
 const decisionKeys = new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey));

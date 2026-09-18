@@ -14,6 +14,7 @@ import { crmBusinessDevelopmentCanonicalization } from './crm-business-developme
 import { estimatingTenderingCanonicalization } from './estimating-tendering-canonicalization';
 import { peopleHcmCanonicalization } from './people-hcm-canonicalization';
 import { qhseAssuranceCanonicalization } from './qhse-assurance-canonicalization';
+import { buildingSafetyRegulatoryCanonicalization } from './building-safety-regulatory-canonicalization';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -75,7 +76,7 @@ export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
   { id: 'BOF-11', semanticModelState: 'governed-semantic-model', workspaces: ['F05','F11','F13'], lifecycleStages: ['Produce','Control','Handover'], processChains: ['plan-to-perform'], overlays: ['manufacturing','trades','infrastructure'], note: 'Manufacturing definition, production execution and as-manufactured configuration are governed.' },
   { id: 'BOF-12', semanticModelState: 'partial-semantic-model', workspaces: ['F12','F13','F23','F27'], lifecycleStages: ['Construct','Control','Handover'], processChains: ['plan-to-perform','incident/defect/NCR-to-resolution'], overlays: ['engineering','contracting','trades','infrastructure','regulation'], note: 'Site/location identities and shared evidence patterns are governed; field-operation transactions still need convergence.' },
   { id: 'BOF-13', semanticModelState: 'governed-semantic-model', workspaces: ['F13','F20','F23','F27'], lifecycleStages: ['Design','Produce','Construct','Control','Handover','Operate','Maintain'], processChains: ['incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['engineering','contracting','trades','manufacturing','infrastructure','property-fm','regulation'], note: 'Quality planning, verification, nonconformance/CAPA, safe-work controls, incidents, compliance and environmental assurance semantics are governed.' },
-  { id: 'BOF-14', semanticModelState: 'candidate-only', workspaces: ['F13','F19','F20','F23','F27'], lifecycleStages: ['Design','Construct','Control','Handover','Operate'], processChains: ['design-to-approved-information','incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['design','engineering','infrastructure','regulation','heritage'], note: 'Building-safety and statutory-assurance object family remains a convergence gap.' },
+  { id: 'BOF-14', semanticModelState: 'governed-semantic-model', workspaces: ['F13','F19','F20','F23','F27'], lifecycleStages: ['Design','Construct','Control','Handover','Operate'], processChains: ['design-to-approved-information','incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['design','engineering','infrastructure','regulation','heritage'], note: 'Dutyholder, competence evidence, regulator case/application, controlled change, inspection/finding, mandatory occurrence, notice, decision, completion, golden-thread and submission semantics are governed.' },
   { id: 'BOF-15', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F13','F22','F27'], lifecycleStages: ['Construct','Control','Handover','Operate'], processChains: ['commissioning-to-operation'], overlays: ['engineering','contracting','trades','infrastructure','property-fm','regulation'], note: 'Commissioning, acceptance and handover semantics are governed around persistent System/Asset identity.' },
   { id: 'BOF-16', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F14','F22','F23','F27'], lifecycleStages: ['Design','Construct','Handover','Operate','Maintain','Refurbish','Dispose'], processChains: ['commissioning-to-operation','asset-to-retirement'], overlays: ['development','design','engineering','infrastructure','property-fm','retrofit','heritage'], note: 'Built-environment spatial and physical identity model is governed.' },
   { id: 'BOF-17', semanticModelState: 'governed-semantic-model', workspaces: ['F08','F12','F22','F23'], lifecycleStages: ['Operate','Maintain','Refurbish','Dispose'], processChains: ['service-request-to-resolution','asset-to-retirement','incident/defect/NCR-to-resolution'], overlays: ['property-fm','infrastructure','retrofit','regulation'], note: 'Maintenance, service, warranty, condition and whole-life history semantics are governed.' },
@@ -107,7 +108,8 @@ export const governedCanonicalizationDecisions = [
   ...crmBusinessDevelopmentCanonicalization,
   ...estimatingTenderingCanonicalization,
   ...peopleHcmCanonicalization,
-  ...qhseAssuranceCanonicalization
+  ...qhseAssuranceCanonicalization,
+  ...buildingSafetyRegulatoryCanonicalization
 ];
 
 const decisionKeys = new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey));

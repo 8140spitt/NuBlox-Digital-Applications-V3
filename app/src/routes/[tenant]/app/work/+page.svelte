@@ -7,7 +7,7 @@
     inProgress: data.work.filter((item) => item.status === 'IN_PROGRESS').length,
     urgent: data.work.filter((item) => item.priority === 'URGENT').length,
     overdue: data.work.filter(
-      (item) => item.dueAt && new Date(item.dueAt).getTime() < Date.now()
+      (item) => item.dueAt && new Date(item.dueAt).getTime() < new Date(data.currentTime).getTime()
     ).length
   });
 
@@ -59,7 +59,7 @@
 
     <div class="work-list">
       {#each data.work as item}
-        <article class:urgent={item.priority === 'URGENT'} class:overdue={item.dueAt && new Date(item.dueAt).getTime() < Date.now()}>
+        <article class:urgent={item.priority === 'URGENT'} class:overdue={item.dueAt && new Date(item.dueAt).getTime() < new Date(data.currentTime).getTime()}>
           <div class="work-main">
             <div class="state-column">
               <span class={'priority priority-' + item.priority.toLowerCase()}>{item.priority}</span>

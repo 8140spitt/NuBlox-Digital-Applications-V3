@@ -184,7 +184,7 @@ describe('platform foundation runtime on MySQL', () => {
       .toBe('INACTIVE');
 
     const audit = await dbModule.queryRows<any>(
-      "SELECT action FROM platform_audit_events WHERE tenant_id = ? AND aggregate_id = 'AGG-00-TENANT'",
+      "SELECT action FROM platform_audit_events WHERE tenant_id = ? AND aggregate_id = 'AGG-01-TENANT'",
       [context.tenantId]
     );
     expect(audit.map((row) => row.action)).toEqual(expect.arrayContaining([

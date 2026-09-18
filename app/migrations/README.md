@@ -63,8 +63,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0013_authority_configuration_runtime.sql` — AGG-29-AUTHORITY-CONFIG approval and delegated-authority policy rules with immutable published versions.
 - `0014_reference_data_runtime.sql` — AGG-29-REFERENCE-DATA typed jurisdictions, currencies, units, tax regimes, contract-form families and versioned calendars.
 - `0015_strategy_decision_reference.sql` — F01 Strategy review versions retain immutable AGG-27-DECISION references for governed review outcomes.
+- `0016_reference_data_history.sql` — immutable snapshots for every typed reference-data revision plus historical backfill.
 
-Future schema changes start at `0016_...`; historical migrations remain immutable.
+Future schema changes start at `0017_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -104,3 +105,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0015 — Strategy Decision reference
 
 `0015_strategy_decision_reference.sql` replaces free-text review notes as the authoritative F01 review linkage with an explicit foreign-key reference from each Strategy Framework Version to immutable `AGG-27-DECISION` evidence. Domain state transition and Decision evidence remain separate aggregate commands; the domain command validates the exact referenced decision before changing Strategy state.
+
+
+## Migration 0016 — reference-data history
+
+`0016_reference_data_history.sql` adds immutable version snapshots for typed enterprise reference identities and backfills the existing governed state. Reference revisions use optimistic concurrency and append a snapshot rather than erasing prior meaning; retirement ends effectivity without deleting identity. Calendar configuration remains separately versioned and published with non-overlapping effectivity.

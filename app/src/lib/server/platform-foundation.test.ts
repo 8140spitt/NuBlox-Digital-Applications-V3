@@ -219,6 +219,49 @@ describe('platform foundation runtime on MySQL', () => {
   });
 
 
+
+  it('maintains the full tenant role lifecycle without allowing administrative self-lockout', async () => {
+    const tenant = 'role-lifecycle-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+    const personId = await personService.createPerson(context, { givenName: 'Evelyn', familyName: 'Steward' });
+    await tenantAuthority.grantTenantMembership(context, personId);
+
+    const roleId = await tenantAuthority.createTenantRole(context, 'commercial-reader', 'Commercial Reader', ['party.read']);
+    const firstAssignment = await tenantAuthority.assignTenantRole(context, personId, roleId);
+
+    await tenantAuthority.updateTenantRole(context, roleId, {
+      name: 'Commercial Data Steward',
+      permissions: ['party.read', 'party.change']
+    });
+    let role = (await tenantAuthority.listTenantRoles(context)).find((item) => item.id === roleId);
+    expect(role?.name).toBe('Commercial Data Steward');
+    expect(role?.permissions).toEqual(['party.change', 'party.read']);
+
+    await tenantAuthority.deactivateTenantRole(context, roleId);
+    role = (await tenantAuthority.listTenantRoles(context)).find((item) => item.id === roleId);
+    expect(role?.status).toBe('INACTIVE');
+    const firstAssignmentRows = await dbModule.queryRows<any>(
+      'SELECT status FROM role_assignments WHERE id = ?',
+      [firstAssignment]
+    );
+    expect(firstAssignmentRows[0]?.status).toBe('INACTIVE');
+
+    await tenantAuthority.reactivateTenantRole(context, roleId);
+    const secondAssignment = await tenantAuthority.assignTenantRole(context, personId, roleId);
+    expect(secondAssignment).not.toBe(firstAssignment);
+    await tenantAuthority.unassignTenantRole(context, secondAssignment);
+
+    const adminRole = (await tenantAuthority.listTenantRoles(context)).find((item) => item.roleKey === 'tenant-admin');
+    expect(adminRole).toBeTruthy();
+    await expect(tenantAuthority.deactivateTenantRole(context, adminRole!.id))
+      .rejects.toThrow('currently assigned to themselves');
+    await expect(tenantAuthority.updateTenantRole(context, adminRole!.id, {
+      name: adminRole!.name,
+      permissions: adminRole!.permissions.filter((permission) => permission !== 'tenant.role.manage')
+    })).rejects.toThrow("final tenant.role.manage authority");
+  });
+
   it('claims and publishes transactional outbox messages exactly once per worker claim', async () => {
     const tenant = 'outbox-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);

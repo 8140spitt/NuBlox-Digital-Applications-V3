@@ -10,6 +10,7 @@ import { financeAccountingCanonicalization } from '$lib/data/finance-accounting-
 import { sharedWorkEvidenceCanonicalization } from '$lib/data/shared-work-evidence-canonicalization';
 import { referenceConfigurationCanonicalization } from '$lib/data/reference-configuration-canonicalization';
 import { crmBusinessDevelopmentCanonicalization } from '$lib/data/crm-business-development-canonicalization';
+import { estimatingTenderingCanonicalization } from '$lib/data/estimating-tendering-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -109,7 +110,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...financeAccountingCanonicalization,
     ...sharedWorkEvidenceCanonicalization,
     ...referenceConfigurationCanonicalization,
-    ...crmBusinessDevelopmentCanonicalization
+    ...crmBusinessDevelopmentCanonicalization,
+    ...estimatingTenderingCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

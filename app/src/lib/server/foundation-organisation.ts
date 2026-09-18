@@ -101,7 +101,7 @@ function publish(
     objectType: 'organisation',
     objectId: organisation.id,
     action: eventType,
-    fromState: previousStatus ?? organisation.status,
+    fromState: previousStatus === undefined ? organisation.status : previousStatus,
     toState: organisation.status,
     note
   });

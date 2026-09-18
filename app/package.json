@@ -19,8 +19,10 @@
     "db:status": "node --env-file-if-exists=.env scripts/db-status.mjs",
     "db:migrate:test": "node --env-file-if-exists=.env scripts/db-migrate.mjs --test",
     "db:status:test": "node --env-file-if-exists=.env scripts/db-status.mjs --test",
-    "test:integration": "node --env-file-if-exists=.env scripts/db-migrate.mjs --test && vitest run src/lib/server/platform-foundation.test.ts src/lib/server/strategy-framework.test.ts src/lib/server/business-object-review.test.ts",
-    "test:all": "pnpm test:domain && pnpm test:integration"
+    "test:integration": "pnpm db:validate && pnpm test:migrations",
+    "test:all": "pnpm test:domain && pnpm test:integration",
+    "db:validate": "node scripts/db-validate.mjs",
+    "test:migrations": "node --env-file-if-exists=.env scripts/test-migrations.mjs"
   },
   "dependencies": {
     "@fontsource-variable/noto-sans": "^5.3.0",

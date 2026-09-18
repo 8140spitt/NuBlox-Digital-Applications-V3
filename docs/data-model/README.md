@@ -29,6 +29,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `people-hcm-semantics.md` — governed Person/Worker Relationship, Position/Job Profile, competence/credential, learning, workforce, time, payroll, recruitment and people-case semantics.
 - `qhse-assurance-semantics.md` — governed quality planning, inspection/test, NCR/Defect/CAPA, safe-work controls, incident/investigation, compliance and environmental-assurance semantics.
 - `building-safety-regulatory-semantics.md` — governed dutyholder, competence evidence, regulator case/application, controlled change, statutory inspection/finding, occurrence reporting, notices, decisions, completion and golden-thread semantics.
+- `sustainability-carbon-semantics.md` — governed carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, biodiversity/environmental measures and social-value semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -72,6 +73,12 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Statutory Completion Certificate remains distinct from Delivery Completion Certificate.
 - Golden Thread is a reconstructable source-linked information/evidence set, not one document, folder or duplicate truth store.
 - Regulatory Submission reuses shared External Submission semantics and pins exact information/evidence versions.
+- Sustainability assessments reference canonical Item, Asset, Project, Site, Party, Utility, Waste and financial/commercial truth rather than maintaining parallel masters.
+- Carbon Methodology/factor datasets are versioned and published assessments pin exact source versions; baseline, budget, target and assessment remain distinct.
+- Embodied carbon uses assessment lines referencing canonical Items; Operational Energy/Carbon derive from shared Utility Consumption evidence.
+- Waste Stream, Waste Consignment, Recovery, Reuse and Circularity Assessment remain distinct layers.
+- EPD and Material Provenance retain source/version/provenance while preserving Item/Organisation/inventory identity.
+- Social Value Commitment, Evidence and Outcome are distinct; Climate/Resilience Risk reuse Enterprise Risk.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

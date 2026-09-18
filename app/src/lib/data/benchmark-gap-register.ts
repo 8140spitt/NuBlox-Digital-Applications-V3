@@ -333,6 +333,45 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'Whole-life built-asset operation requires a traceable as-maintained configuration and a governed way to federate physical asset identity with engineering models, GIS, datasets, sensors and operational evidence. A digital twin must not become a second Asset master.',
     requiredOutcome: 'Govern As-Maintained Configuration, Digital Twin Federation Context, source-aware Data Bindings and reproducible Twin State Snapshots over canonical physical Asset/System and controlled source data.'
+  },
+  {
+    id: 'BG-025',
+    title: 'Asset investment intervention appraisal and long-range plan',
+    sourceBenchmarks: ['IBM-MAXIMO'],
+    sourceFindings: ['OPS-W4-MAXIMO-01'],
+    affectedExternalRows: ['MAXIMO-ASSET-INVESTMENT-PLANNING'],
+    workspaces: ['F01', 'F03', 'F14', 'F20', 'F22', 'F27'],
+    canonicalFamilies: ['BOF-02', 'BOF-06', 'BOF-16', 'BOF-17', 'BOF-19', 'BOF-21'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Asset-intensive organisations need repeatable long-range decisions about maintain/refurbish/replace/decommission interventions using condition, criticality, failure risk, service/KPI, lifecycle cost and constrained budget evidence. Existing Maintenance/Lifecycle Replacement plans lack explicit option appraisal and portfolio investment optimization evidence.',
+    requiredOutcome: 'Govern Asset Intervention Option, Asset Investment Appraisal and Asset Investment Plan, reusing Asset Health/Criticality, Scenario/Assumption, Business Case/Decision, Capex Request, Project and Work Order truth.'
+  },
+  {
+    id: 'BG-026',
+    title: 'Infrastructure network topology, linear location and trace analysis',
+    sourceBenchmarks: ['ESRI-ARCGIS'],
+    sourceFindings: ['OPS-W4-ESRI-01', 'OPS-W4-ESRI-02'],
+    affectedExternalRows: ['ESRI-UTILITY-NETWORK', 'ESRI-LINEAR-REFERENCING'],
+    workspaces: ['F10', 'F12', 'F17', 'F22', 'F23', 'F27'],
+    canonicalFamilies: ['BOF-12', 'BOF-16', 'BOF-17', 'BOF-24'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Network and Linear Segment identities alone do not prove topological connectivity, terminal-level paths, trace analysis or measure-based point/extent locations for infrastructure assets, condition and work.',
+    requiredOutcome: 'Govern Network Terminal, Network Connectivity Relationship, Linear Location Assignment, Network Trace Configuration/Run/Result while retaining canonical Network, Asset/System and Linear Segment identity and treating GIS as an authoritative spatial source/integration where configured.'
+  },
+  {
+    id: 'BG-027',
+    title: 'Workplace room desk and facility reservation',
+    sourceBenchmarks: ['PLANON-IWMS'],
+    sourceFindings: ['OPS-W4-PLANON-01'],
+    affectedExternalRows: ['PLANON-WORKPLACE-RESERVATIONS'],
+    workspaces: ['F15', 'F22', 'F24'],
+    canonicalFamilies: ['BOF-16', 'BOF-17', 'BOF-18', 'BOF-23'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'A sophisticated facilities/workplace function needs governed time-bound booking of rooms, desks and shared facilities. Inventory Reservation, Site Logistics Booking and Occupancy/Tenure have materially different semantics.',
+    requiredOutcome: 'Govern Workplace Reservation over canonical Space/resource and Party/worker identity with eligibility/access, calendar and optional facilities-service relationships.'
   }
 ];
 
@@ -350,9 +389,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 18) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 21) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
-  if (benchmarkGapSummary.resolvedCount !== 24) return false;
+  if (benchmarkGapSummary.resolvedCount !== 27) return false;
   return true;
 }

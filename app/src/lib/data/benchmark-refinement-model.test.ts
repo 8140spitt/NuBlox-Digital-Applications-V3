@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(46);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(48);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -75,6 +75,12 @@ describe('benchmark-driven canonical refinements', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-SCHEDULE-CALCULATION-RUN')?.kind).toBe('event-evidence');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT')?.kind).toBe('projection');
     expect(benchmarkRefinementRules.join(' ')).toContain('float and critical-path status are reproducible');
+  });
+
+  it('adds reproducible quantitative project-risk simulation without replacing risk or plan truth', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-RISK-SIMULATION-RUN')?.kind).toBe('event-evidence');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-RISK-ANALYSIS-SNAPSHOT')?.kind).toBe('projection');
+    expect(benchmarkRefinementRules.join(' ')).toContain('Quantitative project-risk results are reproducible');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

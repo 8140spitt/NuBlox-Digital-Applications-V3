@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(40);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(46);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -68,6 +68,13 @@ describe('benchmark-driven canonical refinements', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'FIN-LEASE-ACCOUNTING-RECORD')?.kind).toBe('accounting-record');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'FIN-LEASE-VALUATION')?.kind).toBe('event-evidence');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'FIN-LEASE-PAYMENT-SCHEDULE')?.kind).toBe('projection');
+  });
+
+  it('adds reproducible CPM schedule calculation rather than mutable float or critical flags', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-SCHEDULE-CALENDAR')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-SCHEDULE-CALCULATION-RUN')?.kind).toBe('event-evidence');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT')?.kind).toBe('projection');
+    expect(benchmarkRefinementRules.join(' ')).toContain('float and critical-path status are reproducible');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

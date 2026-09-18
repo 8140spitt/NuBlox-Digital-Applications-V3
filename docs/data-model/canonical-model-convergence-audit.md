@@ -119,6 +119,7 @@ Current governed families:
 - BOF-23 Business continuity, crisis and physical security;
 - BOF-24 IT, data, cyber, analytics and AI;
 - BOF-25 Knowledge, document/records management, communications and stakeholder engagement;
+- BOF-26 Organisation change, transformation and continuous improvement;
 - BOF-27 Shared work, workflow, decision and collaboration;
 - BOF-28 Evidence, audit, retention and legal traceability;
 - BOF-29 Reference data, classification, jurisdiction and configuration.
@@ -133,18 +134,14 @@ Current partial families:
 
 ### Candidate-only
 
-Discovery candidates exist, but no complete family-level semantic architecture has yet been accepted.
-
-Current candidate-only families:
-
-- BOF-26 Organisation change, transformation and continuous improvement.
+There are currently **no candidate-only families**. Every discovery family now has a governed family-level semantic architecture or, in the case of BOF-12, a partial semantic model still requiring completion.
 
 Therefore the present maturity split is:
 
 ```text
-27 governed families
+28 governed families
  1 partial family
- 1 candidate-only family
+ 0 candidate-only families
 29 total families
 ```
 
@@ -191,11 +188,10 @@ Before a family can be treated as physically authoritative, it must have:
 
 ## Immediate convergence queue
 
-The next canonicalization passes should address the remaining candidate-only families in operating-model dependency order, while completing the one partial family. A practical sequence is:
+The candidate-only backlog is closed. The remaining family-level convergence task is:
 
 ```text
-BOF-26 Change / Transformation / Process Improvement
-BOF-12 Site / Field Operations (complete remaining transactions)
+BOF-12 Site / Field Operations — complete remaining transaction and execution semantics
 ```
 
-The order can be refined by dependency evidence, but no unresolved family should disappear from the audit simply because implementation work starts elsewhere.
+BOF-12 must remain visible as partial until its remaining site/field/construction execution objects have explicit canonical decisions and a complete family-level semantic model.

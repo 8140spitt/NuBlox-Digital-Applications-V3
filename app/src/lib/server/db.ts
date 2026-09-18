@@ -273,7 +273,7 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_outbox_pending
     ON outbox_messages (status, available_at, created_at);
-
+`);
 
 export function dbTransaction<T>(work: () => T): T {
   db.exec('BEGIN IMMEDIATE');

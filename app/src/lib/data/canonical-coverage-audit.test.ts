@@ -26,6 +26,8 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.activityMapping.invalidAggregateRouteCount).toBe(0);
     expect(coverageAuditSummary.activityMapping.invalidObjectPlacementCount).toBe(0);
     expect(coverageAuditSummary.activityMapping.unsafeProjectionCommandCount).toBe(0);
+    expect(coverageAuditSummary.architectureConvergenceState).toBe('complete');
+    expect(coverageAuditSummary.implementationAuthority).toBe('controlled-aggregate-waves-authorized');
     expect(familyCoverageAudit).toHaveLength(29);
     expect(coverageAuditSummary.workspaceCount).toBe(29);
     expect(coverageAuditSummary.coveredWorkspaceCount).toBe(29);

@@ -12,6 +12,7 @@ let structureService: typeof import('./organisation-structure');
 let authorityService: typeof import('./delegated-authority');
 let sharedWorkService: typeof import('./shared-work');
 let workDecisionService: typeof import('./work-decision');
+let evidenceService: typeof import('./governed-evidence');
 let db: typeof import('./db');
 
 beforeAll(async () => {
@@ -24,6 +25,7 @@ beforeAll(async () => {
   authorityService = await import('./delegated-authority');
   sharedWorkService = await import('./shared-work');
   workDecisionService = await import('./work-decision');
+  evidenceService = await import('./governed-evidence');
   db = await import('./db');
 });
 
@@ -536,6 +538,103 @@ describe('shared foundation relationship, structure and authority aggregates', (
         }
       })
     ).rejects.toThrow('Delegated Authority');
+  });
+
+
+  it('captures provenance-rich evidence and verifies it independently', async () => {
+    const tenant = 'evidence-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+    const subjectId = 'subject-' + randomUUID();
+
+    const evidenceId = await evidenceService.captureEvidenceItem(context, {
+      evidenceType: 'INSPECTION_PHOTOGRAPH',
+      subjectType: 'TEST_SUBJECT',
+      subjectId,
+      subjectVersion: '4',
+      contentReference: 'object://evidence/' + randomUUID(),
+      contentMediaType: 'image/jpeg',
+      hashAlgorithm: 'SHA256',
+      contentHash: 'a'.repeat(64),
+      classification: 'CONTROLLED',
+      sources: [
+        {
+          sourceSystem: 'FIELD_CAPTURE',
+          sourceIdentifier: 'capture-' + randomUUID(),
+          sourceVersion: '1'
+        }
+      ],
+      provenance: [
+        {
+          sourceObjectType: 'TEST_SOURCE',
+          sourceObjectId: 'source-' + randomUUID(),
+          sourceObjectVersion: '2',
+          provenanceType: 'DIRECT_CAPTURE',
+          transformation: 'Original field capture; no content transformation.'
+        }
+      ]
+    });
+
+    let evidence = (await evidenceService.listEvidenceItems(context, {
+      type: 'TEST_SUBJECT',
+      id: subjectId
+    })).find((entry) => entry.id === evidenceId)!;
+    expect(evidence.status).toBe('CAPTURED');
+    expect(evidence.version).toBe(1);
+    expect(evidence.contentHash).toBe('a'.repeat(64));
+
+    const sources = await evidenceService.listEvidenceSourceReferences(context, evidenceId);
+    const provenance = await evidenceService.listEvidenceProvenance(context, evidenceId);
+    expect(sources).toHaveLength(1);
+    expect(sources[0].sourceSystem).toBe('FIELD_CAPTURE');
+    expect(provenance).toHaveLength(1);
+    expect(provenance[0].provenanceType).toBe('DIRECT_CAPTURE');
+
+    await expect(evidenceService.verifyEvidenceItem(context, evidenceId, 1)).rejects.toThrow(
+      'different Party'
+    );
+
+    const verifierPartyId = await personService.createPerson(context, {
+      givenName: 'Independent',
+      familyName: 'Verifier'
+    });
+    const verifierContext = {
+      ...context,
+      actorPartyId: verifierPartyId,
+      actorDisplayName: 'Independent Verifier',
+      correlationId: randomUUID()
+    };
+    evidence = await evidenceService.verifyEvidenceItem(verifierContext, evidenceId, 1);
+    expect(evidence.status).toBe('VERIFIED');
+    expect(evidence.version).toBe(2);
+    expect(evidence.verifiedByPartyId).toBe(verifierPartyId);
+
+    const events = await db.queryRows<any>(
+      "SELECT event_type AS eventType, aggregate_version AS aggregateVersion FROM business_events WHERE tenant_id = ? AND aggregate_id = 'AGG-28-EVIDENCE' AND aggregate_object_id = ? ORDER BY aggregate_version",
+      [context.tenantId, evidenceId]
+    );
+    expect(events.map((event) => event.eventType)).toEqual([
+      'EVIDENCE_ITEM_CAPTURED',
+      'EVIDENCE_ITEM_VERIFIED'
+    ]);
+    expect(events.map((event) => Number(event.aggregateVersion))).toEqual([1, 2]);
+  });
+
+  it('rejects malformed evidence integrity metadata before persistence', async () => {
+    const tenant = 'evidence-integrity-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    await expect(
+      evidenceService.captureEvidenceItem(context, {
+        evidenceType: 'TEST_EVIDENCE',
+        subjectType: 'TEST_SUBJECT',
+        subjectId: 'subject-' + randomUUID(),
+        contentReference: 'object://evidence/invalid-hash',
+        hashAlgorithm: 'SHA256',
+        contentHash: 'not-a-valid-hash'
+      })
+    ).rejects.toThrow('64 hexadecimal characters');
   });
 
 });

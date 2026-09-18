@@ -37,7 +37,7 @@ describe('canonical model convergence and coverage audit', () => {
 
   it('does not pretend the external benchmark programme is complete', () => {
     expect(coverageAuditSummary.externalBenchmark.requiredDomains).toBe(29);
-    expect(coverageAuditSummary.externalBenchmark.registeredBenchmarks).toBeGreaterThanOrEqual(18);
+    expect(coverageAuditSummary.externalBenchmark.registeredBenchmarks).toBeGreaterThanOrEqual(22);
     expect(coverageAuditSummary.externalBenchmark.legacySapCapabilityRows).toBe(64);
     expect(coverageAuditSummary.externalBenchmark.state).toBe('in-progress');
   });

@@ -495,9 +495,9 @@ describe('platform foundation runtime on MySQL', () => {
     expect(legalEntity?.legalEntityType).toBe('LIMITED_COMPANY');
 
     const relationships = await partyDirectory.listPartyDirectoryRelationships(context, personId);
-    relationship = relationships.find((item) => item.id === relationshipId);
-    expect(relationship?.status).toBe('ACTIVE');
-    expect(relationship?.toPartyId).toBe(organisationId);
+    const directoryRelationship = relationships.find((item) => item.id === relationshipId);
+    expect(directoryRelationship?.status).toBe('ACTIVE');
+    expect(directoryRelationship?.toPartyId).toBe(organisationId);
   });
 
 });

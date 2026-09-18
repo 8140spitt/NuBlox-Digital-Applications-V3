@@ -52,9 +52,7 @@ The first authority runtime implements the semantic chain:
 
 `User Identity → Party → Tenant Membership → Role Assignment → Role Definition → Permission Definition`
 
-Authentication itself is deliberately not implemented by this wave. The application currently uses an explicit **development-only identity bootstrap**. That bootstrap is disabled when `NODE_ENV=production`.
-
-This means V3 now has reusable authorization semantics without pretending that a production identity provider has already been integrated.
+Production authentication is integrated through Better Auth with MySQL-backed users, accounts, sessions and verification records. Authentication remains deliberately separate from NuBlox business authority: an authenticated user must resolve through a tenant-scoped `User Identity → Party → Membership → Role Assignment` chain before commands are available. Public registration is disabled by default, production has no development-identity fallback, and first-tenant administration is established through an explicit controlled bootstrap command.
 
 ## Evidence contract
 
@@ -92,13 +90,13 @@ The logical aggregate boundaries do **not** imply one MySQL table or one service
 
 ## Next implementation steps
 
-1. production authentication-provider adapter and session boundary;
-2. effective scoped Role Assignment and Delegated Authority administration;
-3. Party Relationship runtime for customer/supplier/subcontractor/consultant roles;
-4. Organisation Unit and enterprise hierarchy;
-5. canonical Project identity and project-context membership;
-6. shared workflow/work-item/decision runtime;
-7. controlled-information and evidence-store runtime;
-8. end-to-end market-to-contract and procure-to-pay slices.
+1. complete scoped Role Assignment and Delegated Authority administration;
+2. complete Party Relationship runtime for customer/supplier/subcontractor/consultant roles;
+3. complete Organisation Unit and enterprise hierarchy;
+4. canonical Project identity and project-context membership;
+5. shared workflow/work-item/decision runtime;
+6. controlled-information and evidence-store runtime;
+7. end-to-end market-to-contract and procure-to-pay slices;
+8. progressively activate all 29 business-function workspaces against these shared foundations.
 
 No later workspace should implement its own tenant, identity, permission, audit or outbox mechanism.

@@ -35,6 +35,7 @@ function runServiceTests() {
       ['exec', 'vitest', 'run',
         'src/lib/server/platform-foundation.test.ts',
         'src/lib/server/authentication.test.ts',
+        'src/lib/server/foundation-shared-context.test.ts',
         'src/lib/server/strategy-framework.test.ts',
         'src/lib/server/business-object-review.test.ts'],
       {

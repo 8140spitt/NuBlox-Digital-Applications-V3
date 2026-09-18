@@ -23,7 +23,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     product: 'SAP Cloud ERP / S/4HANA + Ariba + SuccessFactors + enterprise planning/asset capabilities',
     tier: 'mandatory-suite',
     category: ['enterprise-erp','finance','procurement','supply-chain','manufacturing','hcm','asset-management','planning'],
-    workspaces: ['F01','F03','F05','F07','F09','F10','F11','F13','F14','F15','F17','F20','F22','F23','F27','F29'],
+    workspaces: ['F01','F03','F04','F05','F07','F09','F10','F11','F13','F14','F15','F17','F20','F22','F23','F27','F29'],
     studyState: 'in-progress',
     officialSource: 'https://www.sap.com/uk/products/erp.html',
     challengeFocus: ['record-to-report','procure-to-pay','supply-chain','manufacturing','enterprise planning','asset lifecycle','master data','controls'],
@@ -100,6 +100,18 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     officialSource: 'https://www.servicenow.com/products-by-category.html',
     challengeFocus: ['work orchestration','case/request patterns','ITSM','risk/compliance','portfolio management','workplace services'],
     notes: 'Benchmark for enterprise workflow, request/case management, IT operations and cross-cutting controls.'
+  },
+  {
+    id: 'DILIGENT-ONE',
+    provider: 'Diligent',
+    product: 'Diligent One / Boards / GRC',
+    tier: 'specialist-depth',
+    category: ['governance','board-management','grc','audit','entity-management','investor-engagement'],
+    workspaces: ['F02','F19','F20','F25'],
+    studyState: 'registered',
+    officialSource: 'https://www.diligent.com/gb',
+    challengeFocus: ['board/committee governance','decision records','entity/subsidiary governance','risk/compliance/audit','investor engagement'],
+    notes: 'Specialist governance benchmark for board, corporate-secretariat and GRC evidence that broad ERP suites often underrepresent.'
   },
   {
     id: 'PROCORE',

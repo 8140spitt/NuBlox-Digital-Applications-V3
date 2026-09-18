@@ -887,3 +887,61 @@ export async function acknowledgeWorkItem(
     return id;
   });
 }
+
+
+export async function completeWorkflowInstance(
+  context: CommandContext,
+  workflowInstanceId: string,
+  expectedVersion: number,
+  completionReason: string
+) {
+  assertPermission(context, 'work.workflow.manage');
+  return dbTransaction(async (connection) => {
+    const workflow = await getWorkflow(context, workflowInstanceId, connection, true);
+    if (workflow.version !== expectedVersion) {
+      throw new Error('This Workflow Instance changed after you opened it.');
+    }
+    if (!['RUNNING', 'WAITING'].includes(workflow.status)) {
+      throw new Error('Only a running or waiting Workflow Instance can be completed.');
+    }
+
+    const openWork = await queryOne<RowDataPacket & { count: number }>(
+      "SELECT COUNT(*) AS count FROM work_items WHERE tenant_id = ? AND workflow_instance_id = ? AND status NOT IN ('COMPLETED', 'CANCELLED')",
+      [context.tenantId, workflow.id],
+      connection
+    );
+    if (Number(openWork?.count ?? 0) > 0) {
+      throw new Error('Workflow Instance cannot complete while open Work Items remain.');
+    }
+
+    const timestamp = now();
+    const reason = required(completionReason, 'Workflow completion reason');
+    const result = await executeMutation(
+      "UPDATE workflow_instances SET status = 'COMPLETED', version = version + 1, completed_at = ?, completion_reason = ?, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?",
+      [timestamp, reason, timestamp, workflow.id, context.tenantId, expectedVersion],
+      connection
+    );
+    if (result.affectedRows !== 1) {
+      throw new Error('Concurrent Workflow Instance completion detected.');
+    }
+
+    const completed = await getWorkflow(context, workflow.id, connection);
+    await evidence(
+      context,
+      completed,
+      'workflow_instance',
+      workflow.id,
+      'WORKFLOW_INSTANCE_COMPLETED',
+      workflow.status,
+      'COMPLETED',
+      {
+        completionReason: reason,
+        subjectType: completed.subjectType,
+        subjectId: completed.subjectId,
+        subjectVersion: completed.subjectVersion
+      },
+      connection
+    );
+    return completed;
+  });
+}

@@ -13,7 +13,7 @@ pnpm db:migrate:test
 pnpm db:status:test
 ```
 
-Production/development migrations use `DATABASE_URL` (or `MYSQL_URL`). Integration tests use `NUBLOX_TEST_DATABASE_URL`.
+Production/development migrations use `DATABASE_URL` (or `MYSQL_URL`). Integration tests use `NUBLOX_TEST_DATABASE_URL`; isolated migration tests may use `NUBLOX_TEST_ADMIN_DATABASE_URL` for schema creation/drop while application service tests continue to use the restricted test user.
 
 ## Ledger
 
@@ -49,6 +49,14 @@ Pending, drift or unknown migrations make `db:status` exit non-zero.
 
 - `0001_platform_foundation.sql` — Tenant, Party/Organisation, identity, membership, roles/permissions, platform audit, business events and transactional outbox.
 - `0002_strategy_and_architecture_review.sql` — Strategy Framework runtime plus the canonical architecture-review ledger.
+- `0003_party_specialisations.sql` — canonical Person and Legal Entity specialisations of Party.
+- `0004_outbox_delivery_controls.sql` — claim/retry/lock/failure/dead-letter controls for transactional outbox delivery.
+- `0005_tenant_version.sql` — monotonic aggregate versioning for AGG-01-TENANT authority/configuration changes.
 
-The next implementation wave must add `0003_...`; it must not append DDL to runtime TypeScript.
-\n## Validation and test contract\n\n`pnpm db:validate` verifies contiguous ordering and rejects business-table DDL in runtime server modules. `pnpm test:migrations` creates an isolated temporary MySQL database from `NUBLOX_TEST_DATABASE_URL` credentials, migrates it from zero, reapplies the migration set to prove repeat safety, verifies the migration ledger/checksums, runs the platform/Strategy services against that migrated schema, and drops the temporary database. The configured test database name must contain a standalone `test` segment; production databases are refused.\n\nDevelopment bootstrap records are application/test fixtures, not migration content. Migrations establish schema and required structural constraints only.\n
+Future schema changes start at `0006_...`; historical migrations remain immutable.
+
+## Validation and test contract
+
+`pnpm db:validate` verifies contiguous ordering and rejects business-table DDL in runtime server modules. `pnpm test:migrations` creates an isolated temporary MySQL database from `NUBLOX_TEST_DATABASE_URL` credentials, migrates it from zero, reapplies the migration set to prove repeat safety, verifies the migration ledger/checksums, runs the platform/Strategy services against that migrated schema, and drops the temporary database. The configured test database name must contain a standalone `test` segment; production databases are refused.
+
+Development bootstrap records are application/test fixtures, not migration content. Migrations establish schema and required structural constraints only.

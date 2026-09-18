@@ -2,7 +2,7 @@
   let { data, form } = $props();
 
   const kind = $derived<'approval' | 'delegated'>(
-    kind === 'delegated' ? 'delegated' : 'approval'
+    data.kind === 'delegated' ? 'delegated' : 'approval'
   );
   const selectedRule = $derived(
     kind === 'approval' ? data.selectedApprovalRule : data.selectedDelegatedRule

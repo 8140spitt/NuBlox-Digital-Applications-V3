@@ -71,6 +71,32 @@ export const platformPermissions = [
     'approve',
     'Approve Delegated Authority grants independently from the delegate.'
   ],
+  ['work.workflow.read', 'work.workflow', 'read', 'Read shared workflow runtime state.'],
+  [
+    'work.workflow.manage',
+    'work.workflow',
+    'manage',
+    'Create and control shared workflow runtime instances.'
+  ],
+  ['work.item.read', 'work.item', 'read', 'Read eligible shared work items.'],
+  [
+    'work.item.manage',
+    'work.item',
+    'manage',
+    'Create and maintain shared work coordination state.'
+  ],
+  [
+    'work.item.execute',
+    'work.item',
+    'execute',
+    'Start, acknowledge and complete work assigned to the current actor.'
+  ],
+  [
+    'work.assignment.manage',
+    'work.assignment',
+    'manage',
+    'Assign and reassign work to eligible Parties, identities, roles or queues.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

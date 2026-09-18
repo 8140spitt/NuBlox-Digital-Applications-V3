@@ -12,9 +12,10 @@ A workspace is **not** an independent application, database, bounded context or 
 
 ## Workspace specifications
 
-- [`F01 — Strategy & Enterprise Planning`](f01-strategy-enterprise-planning.md) — governing V3 workspace specification covering its eight L2 work areas, business objects, strategy lifecycle, work queues, roles, permissions, controls, evidence, cross-workspace relationships, reporting and acceptance criteria.
+- [`F01 — Strategy & Enterprise Planning`](f01-strategy-enterprise-planning.md) — detailed workspace specification covering its eight L2 work areas, business objects, lifecycle, queues, roles, permissions, controls, evidence and acceptance criteria.
+- [`L2/L3 Canonical Object & Action Map`](l2-l3-canonical-object-action-map.md) — governed architecture map for **all 29 workspaces, 353 L2 sub-functions and 1,510 source activities**, including primary aggregate/object ownership and cross-aggregate handoffs.
 
-Additional workspace specifications are added only after their business taxonomy and operating model have been revalidated for V3.
+Detailed per-workspace workflow/UI specifications are implementation deliverables built on top of this completed architecture map; the map does not imply those surfaces already exist.
 
 ## Purpose
 
@@ -81,7 +82,7 @@ The master coverage register will contain, at minimum:
 
 ## Definition of complete workspace coverage
 
-A sub-function is considered covered only when its function workspace provides a usable route into the work and NuBlox has traceable workflow behaviour, canonical data ownership, roles/permissions, controls/evidence and acceptance proof for the relevant business outcome.
+At the **architecture** level, all 353 L2 sub-functions and 1,510 source activities now have a primary workspace home plus canonical aggregate/object/action mapping. At the **runtime implementation** level, a sub-function is considered delivered only when its workspace provides a usable route into the work and NuBlox has traceable workflow behaviour, roles/permissions, controls/evidence and acceptance proof for the relevant business outcome.
 
 A workspace consisting only of a menu entry or dashboard is not coverage.
 

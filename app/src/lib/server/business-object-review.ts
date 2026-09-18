@@ -15,6 +15,7 @@ import { peopleHcmCanonicalization } from '$lib/data/people-hcm-canonicalization
 import { qhseAssuranceCanonicalization } from '$lib/data/qhse-assurance-canonicalization';
 import { buildingSafetyRegulatoryCanonicalization } from '$lib/data/building-safety-regulatory-canonicalization';
 import { sustainabilityCarbonCanonicalization } from '$lib/data/sustainability-carbon-canonicalization';
+import { riskComplianceAuditCanonicalization } from '$lib/data/risk-compliance-audit-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -119,7 +120,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...peopleHcmCanonicalization,
     ...qhseAssuranceCanonicalization,
     ...buildingSafetyRegulatoryCanonicalization,
-    ...sustainabilityCarbonCanonicalization
+    ...sustainabilityCarbonCanonicalization,
+    ...riskComplianceAuditCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

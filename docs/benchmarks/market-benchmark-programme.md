@@ -133,7 +133,7 @@ Challenge:
 - valuation/payment;
 - closeout/handover.
 
-### Wave 3 — Product, engineering and information lifecycle
+### Wave 3 — Product, engineering and information lifecycle — architecture challenge complete
 
 PTC Windchill, Siemens Teamcenter, Bentley ProjectWise/iTwin, Autodesk.
 
@@ -149,7 +149,7 @@ Challenge:
 - digital thread/twin;
 - handover continuity.
 
-### Wave 4 — Asset, property, facilities and service
+### Wave 4 — Asset, property, facilities and service — architecture challenge complete
 
 IBM Maximo, IFS, Planon, Thinkproject, Microsoft Field Service.
 
@@ -263,3 +263,33 @@ Detailed records:
 
 - `enterprise-suite-wave-1-oracle-microsoft-ifs-workday.md`;
 - `construction-delivery-wave.md`.
+
+
+## Product/engineering and asset/property wave completion — 18 September 2026
+
+The architecture challenge is now complete for:
+
+- PTC Windchill 13.1.2;
+- Siemens Teamcenter;
+- Bentley ProjectWise / iTwin;
+- IBM Maximo;
+- Planon IWMS;
+- Esri ArcGIS.
+
+Current programme state:
+
+- **18/23** benchmark products/suites challenged;
+- **0/23** in progress;
+- **5/23** queued;
+- **27** governed benchmark findings identified to date;
+- **27/27** resolved architecturally;
+- runtime parity remains explicitly unclaimed.
+
+Wave 3 added shared effectivity/configuration-baseline/structure-occurrence semantics plus as-maintained and digital-twin federation.
+
+Wave 4 added asset-investment appraisal/planning, infrastructure network connectivity/trace/linear-location semantics, and workplace reservations.
+
+Detailed records:
+
+- `product-engineering-information-wave.md`;
+- `asset-property-service-wave.md`.

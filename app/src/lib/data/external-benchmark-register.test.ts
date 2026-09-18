@@ -18,6 +18,7 @@ describe('external market benchmark register', () => {
     expect(sap?.tier).toBe('mandatory-suite');
     expect(sap?.studyState).toBe('in-progress');
     expect(marketBenchmarkSummary.legacySapCapabilityRows).toBe(64);
+    expect(marketBenchmarkSummary.sapV3MappedRows).toBe(64);
     expect(marketBenchmarkSummary.rule).toContain('vendor module boundaries never become automatic NuBlox architecture');
   });
 

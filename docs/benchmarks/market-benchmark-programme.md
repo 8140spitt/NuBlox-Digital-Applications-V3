@@ -16,7 +16,7 @@ The answer is evaluated across the **29 tenant workspaces**, canonical business 
 
 ## Benchmark portfolio
 
-The machine-readable register currently contains **22 benchmark products/suites**. It is intentionally split into two tiers.
+The machine-readable register currently contains **23 benchmark products/suites**. It is intentionally split into two tiers.
 
 ### Mandatory enterprise / platform suites
 
@@ -46,6 +46,7 @@ These challenge areas where a focused product can expose depth that broad suites
 - Asite — CDE, BIM coordination and project information management;
 - Thinkproject / CEMAR — contract administration, CDE and built-asset work;
 - Hexagon EcoSys — portfolio, project controls and contract performance;
+- Esri ArcGIS / Field Maps / GeoBIM — geospatial infrastructure, field mobility and network/asset context;
 - Planon — property, workplace, facilities and IWMS;
 - Sage Intacct Construction / Sage Construction Management — construction finance, job cost and WIP;
 - Causeway — estimating, commercial management, workforce, supply chain and infrastructure delivery.

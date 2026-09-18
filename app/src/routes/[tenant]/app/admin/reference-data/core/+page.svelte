@@ -181,7 +181,11 @@
               <label>Calendar key<input name="calendarKey" required placeholder="UK.STANDARD.WORKING" /></label>
               <label>Name<input name="name" required placeholder="UK Standard Working Calendar" /></label>
               <label>Timezone<input name="timezoneName" required value="Europe/London" /></label>
-              <label>Working pattern JSON<textarea name="workingPattern" rows="6" required placeholder={'{"monday":[["08:00","17:00"]],"tuesday":[["08:00","17:00"]]}'></textarea></label>
+              <label>
+                Working pattern JSON
+                <textarea name="workingPattern" rows="6" required></textarea>
+                <small>Example: Monday–Friday arrays of HH:MM start/end pairs.</small>
+              </label>
               <label>Holidays JSON<textarea name="holidays" rows="3" placeholder="[]"></textarea></label>
               <label>Exceptions JSON<textarea name="exceptions" rows="3" placeholder="[]"></textarea></label>
               <button type="submit">Create draft calendar</button>

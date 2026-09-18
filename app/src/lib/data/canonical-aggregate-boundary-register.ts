@@ -468,7 +468,7 @@ export const canonicalAggregateBoundaries: CanonicalAggregateBoundary[] = [
   agg('AGG-29-REFERENCE-DATA','BOF-29','REF-JURISDICTION','Reference Data',[],[],['REF-CURRENCY','REF-UOM','REF-CALENDAR','REF-TAX-REGIME','REF-CONTRACT-FORM-FAMILY'],
     'Reference-data stewardship.',
     'Reference changes are versioned/effective and historical transactions retain the version needed to interpret original meaning.',
-    ['Reference data defines meaning; it never becomes transactional truth.'])
+    ['Reference data defines meaning; it never becomes transactional truth.']),
   agg('AGG-02-ASSUMPTION','BOF-02','SGP-ASSUMPTION','Assumption',[],[],['AGG-02-STRATEGY'],
     'Commands for Assumption are authorised through its owning domain; other workspaces reference the stable record and invoke explicit commands.',
     'One Assumption aggregate transaction changes one identity/case/relationship at a time; cross-aggregate consequences are explicit events or follow-up commands.',

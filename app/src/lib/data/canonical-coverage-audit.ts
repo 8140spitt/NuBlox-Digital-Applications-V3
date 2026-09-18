@@ -191,6 +191,8 @@ export const coverageAuditSummary = {
     specialistDepthBenchmarks: marketBenchmarkSummary.specialistDepthCount,
     legacySapCapabilityRows: marketBenchmarkSummary.legacySapCapabilityRows,
     sapV3MappedRows: marketBenchmarkSummary.sapV3MappedRows,
+    sapV3ChallengedRows: marketBenchmarkSummary.sapV3ChallengedRows,
+    sapV3ClosedRows: marketBenchmarkSummary.sapV3ClosedRows,
     state: marketBenchmarkSummary.programmeState,
     rule: marketBenchmarkSummary.rule
   }

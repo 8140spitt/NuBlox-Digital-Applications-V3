@@ -99,6 +99,136 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'The HCM baseline covers recruitment, employment, skills, learning, performance, workforce planning and payroll, but succession/talent-pool and workforce-intelligence concepts may require additional semantics.',
     requiredOutcome: 'Challenge against Workday and Microsoft/SAP HCM outcomes before adding any new identity beyond Career Profile, Skill, Competency, Performance Review and Workforce Plan.'
+  },
+  {
+    id: 'BG-007',
+    title: 'Subscription and usage-based billing',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-01'],
+    affectedExternalRows: ['SAP-5'],
+    workspaces: ['F08', 'F12', 'F14', 'F22'],
+    canonicalFamilies: ['BOF-17', 'BOF-19'],
+    disposition: 'contextual-extension',
+    state: 'resolved',
+    rationale: 'Usage/subscription charging is material for utilities, managed services and consumption-based models but is not universal to every construction/built-environment business.',
+    requiredOutcome: 'When enabled, govern subscription/service billing arrangement, metered usage record, rating basis and rated charge while reusing Service Contract/Entitlement, Utility Consumption, Item/Rate and Invoice truth.'
+  },
+  {
+    id: 'BG-008',
+    title: 'Public-sector funds and budget availability control',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-05'],
+    affectedExternalRows: ['SAP-17'],
+    workspaces: ['F01', 'F14'],
+    canonicalFamilies: ['BOF-02', 'BOF-19'],
+    disposition: 'contextual-extension',
+    state: 'resolved',
+    rationale: 'Fund/funded-program accounting and active budget availability control are essential for public-sector/grant-funded organisations but are not a universal enterprise identity layer.',
+    requiredOutcome: 'Provide Fund/Funded Program dimensions, budget-consumption rules and availability-control evidence as a public-sector extension over canonical Budget, Commitment and Actual financial positions.'
+  },
+  {
+    id: 'BG-009',
+    title: 'Global trade compliance screening and authorisation',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-06'],
+    affectedExternalRows: ['SAP-18'],
+    workspaces: ['F09', 'F10', 'F20'],
+    canonicalFamilies: ['BOF-10', 'BOF-21', 'BOF-29'],
+    disposition: 'contextual-extension',
+    state: 'resolved',
+    rationale: 'Cross-border trade requires sanctioned-party/embargo screening, trade licences/authorisations and customs procedure/preference evidence beyond the existing Trade Declaration.',
+    requiredOutcome: 'Provide trade-compliance checks/decisions and trade-authorisation/procedure evidence as a cross-border extension reusing Party, Item, Shipment, Jurisdiction, Classification and Compliance Requirement.'
+  },
+  {
+    id: 'BG-010',
+    title: 'Sales incentive and commission management',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-07'],
+    affectedExternalRows: ['SAP-21'],
+    workspaces: ['F07', 'F14', 'F15'],
+    canonicalFamilies: ['BOF-03', 'BOF-18', 'BOF-19'],
+    disposition: 'contextual-extension',
+    state: 'resolved',
+    rationale: 'Commission/incentive plans and credited earnings are relevant to defined sales remuneration models but should not become universal HCM/finance structures.',
+    requiredOutcome: 'Provide incentive plan, eligibility/crediting, earning/calculation, approval/payment consequence and dispute evidence as an optional sales-performance extension.'
+  },
+  {
+    id: 'BG-011',
+    title: 'Retail, POS and omnichannel promotion semantics',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-11'],
+    affectedExternalRows: ['SAP-33', 'SAP-43', 'SAP-56'],
+    workspaces: ['F06', 'F07', 'F09', 'F10', 'F14'],
+    canonicalFamilies: ['BOF-03', 'BOF-10', 'BOF-19'],
+    disposition: 'contextual-extension',
+    state: 'resolved',
+    rationale: 'Till/session sale-return-payment, coupon/loyalty and omnichannel promotion mechanics are merchant/retail-specific and should not contaminate core project/construction sales semantics.',
+    requiredOutcome: 'Provide a merchant/retail extension over canonical Customer, Item, Price, Inventory, Payment and accounting truth when builders-merchant/distribution scenarios require it.'
+  },
+  {
+    id: 'BG-012',
+    title: 'Configurable product and service rule semantics',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE', 'PTC-WINDCHILL', 'SIEMENS-TEAMCENTER'],
+    sourceFindings: ['SAP-W2-18'],
+    affectedExternalRows: ['SAP-23', 'SAP-37', 'SAP-61'],
+    workspaces: ['F05', 'F07', 'F10', 'F11'],
+    canonicalFamilies: ['BOF-05', 'BOF-10', 'BOF-11', 'BOF-29'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Item Variant alone is insufficient for rule-driven configurable products/services across quote, planning, engineering and production. The semantics are cross-vendor PLM/ERP capability rather than SAP-specific.',
+    requiredOutcome: 'Govern versioned Product Configuration Model, Characteristics, Configuration Rules and resolved Product Configuration evidence while preserving Item, Variant, BOM, pricing and execution truth.'
+  },
+  {
+    id: 'BG-013',
+    title: 'Business travel lifecycle',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-16'],
+    affectedExternalRows: ['SAP-59'],
+    workspaces: ['F14', 'F15', 'F20'],
+    canonicalFamilies: ['BOF-18', 'BOF-19', 'BOF-21', 'BOF-23'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Expense Claim and Travel Risk Assessment do not provide the durable travel request/trip identity needed to connect approval, duty of care, itinerary/booking context and expense.',
+    requiredOutcome: 'Govern Travel Request, Business Trip and Travel Booking Evidence while allowing specialist booking platforms to remain integration sources.'
+  },
+  {
+    id: 'BG-014',
+    title: 'Data migration and protected test-data governance',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceFindings: ['SAP-W2-15'],
+    affectedExternalRows: ['SAP-54'],
+    workspaces: ['F16', 'F17', 'F21', 'F29'],
+    canonicalFamilies: ['BOF-22', 'BOF-24', 'BOF-28', 'BOF-29'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'World-class enterprise operation requires governed migration mappings/runs and protected non-production data provisioning with masking/anonymisation evidence.',
+    requiredOutcome: 'Govern Migration Project/Mapping/Run and Test Data Provisioning Profile/Run with source-target lineage, simulation/validation, privacy controls and retained audit evidence.'
+  },
+  {
+    id: 'BG-015',
+    title: 'Product requirements and systems-engineering traceability',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE', 'PTC-WINDCHILL', 'SIEMENS-TEAMCENTER'],
+    sourceFindings: ['SAP-W2-08'],
+    affectedExternalRows: ['SAP-23', 'SAP-37'],
+    workspaces: ['F05', 'F11', 'F13', 'F26', 'F27'],
+    canonicalFamilies: ['BOF-07', 'BOF-10', 'BOF-11', 'BOF-13'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Product functional/technical requirements and logical systems models are distinct from information-delivery requirements and from installed physical Systems/Assets.',
+    requiredOutcome: 'Govern Product Requirement, Requirement Set/baseline, traceability and Engineering System Model/Element semantics with explicit realisation links to Item/Component/System/Asset.'
+  },
+  {
+    id: 'BG-016',
+    title: 'Lease-accounting consequence semantics',
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE', 'PLANON-IWMS'],
+    sourceFindings: ['SAP-W2-04'],
+    affectedExternalRows: ['SAP-15', 'SAP-41'],
+    workspaces: ['F14', 'F19', 'F22'],
+    canonicalFamilies: ['BOF-16', 'BOF-17', 'BOF-19', 'BOF-22'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Canonical Lease/Property/Occupancy semantics require a separate finance-side lease-accounting layer for IFRS 16/ASC 842-style valuation and postings without conflating physical/property truth with accounting records.',
+    requiredOutcome: 'Govern Lease Accounting Record, immutable Lease Valuation and derived Lease Accounting Schedule linked to canonical Lease/Contract and finance postings.'
   }
 ];
 
@@ -106,6 +236,7 @@ export const benchmarkGapSummary = {
   gapCount: benchmarkGapRegister.length,
   acceptedRefinementCount: benchmarkGapRegister.filter((gap) => gap.disposition === 'accepted-refinement').length,
   crossBenchmarkRequiredCount: benchmarkGapRegister.filter((gap) => gap.disposition === 'cross-benchmark-required').length,
+  contextualExtensionCount: benchmarkGapRegister.filter((gap) => gap.disposition === 'contextual-extension').length,
   resolvedCount: benchmarkGapRegister.filter((gap) => gap.state === 'resolved').length,
   openCount: benchmarkGapRegister.filter((gap) => gap.state === 'open').length
 };
@@ -115,8 +246,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 6) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 11) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
-  if (benchmarkGapSummary.resolvedCount !== 6) return false;
+  if (benchmarkGapSummary.contextualExtensionCount !== 5) return false;
+  if (benchmarkGapSummary.resolvedCount !== 16) return false;
   return true;
 }

@@ -463,6 +463,11 @@
                   <strong>No monetary limit</strong>
                 {/if}
                 <small>{authority.validFrom} → {authority.validTo || 'Open'}</small>
+                {#if authority.policyRuleKey}
+                  <small class="policy-evidence">
+                    Policy · {authority.policyRuleKey} v{authority.policyVersionNo}
+                  </small>
+                {/if}
               </div>
               <span class:active-status={authority.status === 'ACTIVE'} class="status"
                 >{authority.status}</span
@@ -898,6 +903,10 @@
   .authority-basis span {
     color: var(--muted);
     font-size: 9.5px;
+  }
+  .policy-evidence {
+    color: var(--blue-700) !important;
+    font-weight: 750;
   }
   .authority-actions {
     display: flex;

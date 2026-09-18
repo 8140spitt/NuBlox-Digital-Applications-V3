@@ -34,6 +34,8 @@ export type WorkDecision = {
   authorityBasis: string;
   approvalPolicyRuleId: string | null;
   approvalPolicyVersionId: string | null;
+  approvalPolicyRuleKey: string | null;
+  approvalPolicyVersionNo: number | null;
   supersedesDecisionId: string | null;
   decidedAt: string;
 };
@@ -58,7 +60,7 @@ export type RecordDecisionInput = {
 };
 
 const decisionSelect =
-  'SELECT id, decision_type AS decisionType, request_type AS requestType, request_id AS requestId, subject_type AS subjectType, subject_id AS subjectId, subject_version AS subjectVersion, outcome, reason, decider_party_id AS deciderPartyId, authority_type AS authorityType, authority_grant_id AS authorityGrantId, authority_scope_type AS authorityScopeType, authority_scope_id AS authorityScopeId, authority_currency_code AS authorityCurrencyCode, authority_value AS authorityValue, authority_basis AS authorityBasis, approval_policy_rule_id AS approvalPolicyRuleId, approval_policy_version_id AS approvalPolicyVersionId, supersedes_decision_id AS supersedesDecisionId, decided_at AS decidedAt FROM work_decisions';
+  'SELECT wd.id, wd.decision_type AS decisionType, wd.request_type AS requestType, wd.request_id AS requestId, wd.subject_type AS subjectType, wd.subject_id AS subjectId, wd.subject_version AS subjectVersion, wd.outcome, wd.reason, wd.decider_party_id AS deciderPartyId, wd.authority_type AS authorityType, wd.authority_grant_id AS authorityGrantId, wd.authority_scope_type AS authorityScopeType, wd.authority_scope_id AS authorityScopeId, wd.authority_currency_code AS authorityCurrencyCode, wd.authority_value AS authorityValue, wd.authority_basis AS authorityBasis, wd.approval_policy_rule_id AS approvalPolicyRuleId, wd.approval_policy_version_id AS approvalPolicyVersionId, apr.rule_key AS approvalPolicyRuleKey, apv.version_no AS approvalPolicyVersionNo, wd.supersedes_decision_id AS supersedesDecisionId, wd.decided_at AS decidedAt FROM work_decisions wd LEFT JOIN approval_authority_rules apr ON apr.id = wd.approval_policy_rule_id AND apr.tenant_id = wd.tenant_id LEFT JOIN approval_authority_rule_versions apv ON apv.id = wd.approval_policy_version_id AND apv.approval_authority_rule_id = apr.id AND apv.tenant_id = wd.tenant_id';
 
 function now() {
   return new Date().toISOString();
@@ -80,7 +82,7 @@ function code(value: string, label: string, max = 64) {
 
 async function getDecision(context: CommandContext, decisionId: string, executor?: DbExecutor) {
   const row = await queryOne<RowDataPacket & WorkDecision>(
-    decisionSelect + ' WHERE id = ? AND tenant_id = ?',
+    decisionSelect + ' WHERE wd.id = ? AND wd.tenant_id = ?',
     [decisionId, context.tenantId],
     executor
   );
@@ -212,13 +214,13 @@ export async function listWorkDecisions(
   assertPermission(context, 'work.decision.read');
   if (!subject) {
     return queryRows<RowDataPacket & WorkDecision>(
-      decisionSelect + ' WHERE tenant_id = ? ORDER BY decided_at DESC, id DESC',
+      decisionSelect + ' WHERE wd.tenant_id = ? ORDER BY wd.decided_at DESC, wd.id DESC',
       [context.tenantId]
     );
   }
   return queryRows<RowDataPacket & WorkDecision>(
     decisionSelect +
-      ' WHERE tenant_id = ? AND subject_type = ? AND subject_id = ? ORDER BY decided_at DESC, id DESC',
+      ' WHERE wd.tenant_id = ? AND wd.subject_type = ? AND wd.subject_id = ? ORDER BY wd.decided_at DESC, wd.id DESC',
     [context.tenantId, required(subject.type, 'Subject type'), required(subject.id, 'Subject ID')]
   );
 }

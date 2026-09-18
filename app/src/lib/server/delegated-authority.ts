@@ -36,6 +36,8 @@ export type DelegatedAuthority = {
   revocationReason: string | null;
   policyRuleId: string | null;
   policyVersionId: string | null;
+  policyRuleKey: string | null;
+  policyVersionNo: number | null;
 };
 
 export type DelegatedAuthorityInput = {
@@ -53,7 +55,7 @@ export type DelegatedAuthorityInput = {
 };
 
 const selectAuthority =
-  'SELECT da.id, da.grantor_party_id AS grantorPartyId, gp.display_name AS grantorDisplayName, da.delegate_party_id AS delegatePartyId, dp.display_name AS delegateDisplayName, da.authority_type AS authorityType, da.basis, da.scope_type AS scopeType, da.scope_id AS scopeId, da.currency_code AS currencyCode, da.value_limit AS valueLimit, da.allow_subdelegation AS allowSubdelegation, da.status, da.version, da.valid_from AS validFrom, da.valid_to AS validTo, da.approved_at AS approvedAt, da.revoked_at AS revokedAt, da.revocation_reason AS revocationReason, da.policy_rule_id AS policyRuleId, da.policy_version_id AS policyVersionId FROM delegated_authorities da JOIN parties gp ON gp.id = da.grantor_party_id JOIN parties dp ON dp.id = da.delegate_party_id';
+  'SELECT da.id, da.grantor_party_id AS grantorPartyId, gp.display_name AS grantorDisplayName, da.delegate_party_id AS delegatePartyId, dp.display_name AS delegateDisplayName, da.authority_type AS authorityType, da.basis, da.scope_type AS scopeType, da.scope_id AS scopeId, da.currency_code AS currencyCode, da.value_limit AS valueLimit, da.allow_subdelegation AS allowSubdelegation, da.status, da.version, da.valid_from AS validFrom, da.valid_to AS validTo, da.approved_at AS approvedAt, da.revoked_at AS revokedAt, da.revocation_reason AS revocationReason, da.policy_rule_id AS policyRuleId, da.policy_version_id AS policyVersionId, pr.rule_key AS policyRuleKey, pv.version_no AS policyVersionNo FROM delegated_authorities da JOIN parties gp ON gp.id = da.grantor_party_id JOIN parties dp ON dp.id = da.delegate_party_id LEFT JOIN delegated_authority_rules pr ON pr.id = da.policy_rule_id AND pr.tenant_id = da.tenant_id LEFT JOIN delegated_authority_rule_versions pv ON pv.id = da.policy_version_id AND pv.delegated_authority_rule_id = pr.id AND pv.tenant_id = da.tenant_id';
 
 function now() {
   return new Date().toISOString();
@@ -129,7 +131,9 @@ async function evidence(
         validTo: row.validTo,
         status: row.status,
         policyRuleId: row.policyRuleId,
-        policyVersionId: row.policyVersionId
+        policyVersionId: row.policyVersionId,
+        policyRuleKey: row.policyRuleKey,
+        policyVersionNo: row.policyVersionNo
       }
     },
     executor

@@ -10,6 +10,7 @@ import {
   startWorkItem
 } from '$lib/server/shared-work';
 import { hasPermission } from '$lib/server/platform-context';
+import { listWorkDecisions } from '$lib/server/work-decision';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 
 function text(data: FormData, name: string) {
@@ -31,25 +32,33 @@ function problem(error: unknown) {
   });
 }
 
-function target(tenant: string) {
-  return `/${tenant}/app/work`;
+function target(tenant: string, view = 'work') {
+  const params = new URLSearchParams({ view });
+  return `/${tenant}/app/work?${params.toString()}`;
 }
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
-  const [work, escalations] = await Promise.all([
+  const canReadDecisions = hasPermission(context, 'work.decision.read');
+  const requestedView = url.searchParams.get('view') ?? 'work';
+  const view = requestedView === 'decisions' && canReadDecisions ? 'decisions' : 'work';
+  const [work, escalations, decisions] = await Promise.all([
     listMyWork(context),
-    listMyWorkEscalations(context)
+    listMyWorkEscalations(context),
+    canReadDecisions ? listWorkDecisions(context) : Promise.resolve([])
   ]);
   return {
     tenantSlug: params.tenant,
     actorDisplayName: context.actorDisplayName,
     currentTime: new Date().toISOString(),
+    view,
     work,
     escalations,
+    decisions,
     capabilities: {
       canExecute: hasPermission(context, 'work.item.execute'),
-      canManage: hasPermission(context, 'work.item.manage')
+      canManage: hasPermission(context, 'work.item.manage'),
+      canReadDecisions
     }
   };
 };

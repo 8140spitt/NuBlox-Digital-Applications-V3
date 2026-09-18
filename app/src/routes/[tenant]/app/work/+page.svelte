@@ -43,6 +43,14 @@
 
   {#if form?.message}<div class="message" role="alert">{form.message}</div>{/if}
 
+  {#if data.capabilities.canReadDecisions}
+    <nav class="work-tabs" aria-label="Shared work sections">
+      <a class:active={data.view === 'work'} href="?view=work">My work</a>
+      <a class:active={data.view === 'decisions'} href="?view=decisions">Decision register</a>
+    </nav>
+  {/if}
+
+  {#if data.view === 'work'}
   <section class="metrics" aria-label="My Work summary">
     <div class="metric section-card"><strong>{summary.total}</strong><span>open work</span></div>
     <div class="metric section-card"><strong>{summary.assigned}</strong><span>assigned</span></div>
@@ -185,6 +193,63 @@
       {/each}
     </div>
   </section>
+  {:else}
+    <section class="decision-register section-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">AGG-27-DECISION</span>
+          <h2>{data.decisions.length} immutable decisions</h2>
+        </div>
+        <p>
+          Attributable outcomes bound to an exact subject/version. Protected decisions retain the
+          exact Delegated Authority grant and Approval Policy version used at decision time.
+        </p>
+      </div>
+
+      <div class="decision-list">
+        {#each data.decisions as decision}
+          <article class="decision-item">
+            <div class="decision-head">
+              <div>
+                <span class="work-type">{decision.decisionType}</span>
+                <h3>{decision.outcome.replaceAll('_', ' ')}</h3>
+              </div>
+              <div class="due">
+                <small>Decided</small>
+                <strong>{formatDate(decision.decidedAt)}</strong>
+              </div>
+            </div>
+            <p>{decision.reason}</p>
+            <div class="subject">
+              <span><strong>Subject</strong>{decision.subjectType} · {decision.subjectId}</span>
+              {#if decision.subjectVersion}
+                <span><strong>Version</strong>{decision.subjectVersion}</span>
+              {/if}
+              <span><strong>Decider</strong>{decision.deciderPartyId.slice(0, 8)}</span>
+              {#if decision.authorityGrantId}
+                <span><strong>Authority grant</strong>{decision.authorityGrantId.slice(0, 8)}</span>
+              {/if}
+              {#if decision.approvalPolicyRuleKey}
+                <span>
+                  <strong>Approval policy</strong>
+                  {decision.approvalPolicyRuleKey} v{decision.approvalPolicyVersionNo}
+                </span>
+              {/if}
+              {#if decision.supersedesDecisionId}
+                <span><strong>Corrects</strong>{decision.supersedesDecisionId.slice(0, 8)}</span>
+              {/if}
+            </div>
+          </article>
+        {:else}
+          <div class="empty">
+            <span class="empty-mark">✓</span>
+            <h3>No decisions recorded</h3>
+            <p>Governed Decisions will appear here as business functions begin using the shared Decision aggregate.</p>
+          </div>
+        {/each}
+      </div>
+    </section>
+  {/if}
 </div>
 
 <style>
@@ -256,6 +321,23 @@
     color: #792f2f;
     font-size: 11px;
   }
+  .work-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid #dce5ea;
+  }
+  .work-tabs a {
+    padding: 8px 11px;
+    border-bottom: 2px solid transparent;
+    color: #617584;
+    font-size: 10px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+  .work-tabs a.active {
+    border-bottom-color: var(--blue-700);
+    color: #245876;
+  }
   .metrics {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -287,6 +369,27 @@
   }
   .section-heading p {
     max-width: 560px;
+  }
+  .decision-register {
+    padding: 14px;
+  }
+  .decision-list {
+    display: grid;
+    gap: 8px;
+  }
+  .decision-item {
+    padding: 11px;
+  }
+  .decision-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .decision-item > p {
+    margin: 7px 0;
+    color: #647989;
+    font-size: 10px;
+    line-height: 1.45;
   }
   .work-list {
     display: grid;

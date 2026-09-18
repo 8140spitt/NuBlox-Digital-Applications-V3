@@ -6,7 +6,7 @@ import mysql, {
   type RowDataPacket
 } from 'mysql2/promise';
 
-export const requiredMigration = '0004_outbox_delivery_controls.sql';
+export const requiredMigration = '0005_tenant_version.sql';
 
 function databaseUrl() {
   if (!process.env.DATABASE_URL && !process.env.MYSQL_URL && !process.env.NUBLOX_TEST_DATABASE_URL) {

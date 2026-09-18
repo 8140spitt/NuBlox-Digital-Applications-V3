@@ -403,6 +403,42 @@ describe('canonical business object review ledger', () => {
     expect(processCompliance?.decision).toBe('MERGE');
     expect(processCompliance?.targetCandidateKey).toBe('BOF-21-007');
 
+    const workArea = service.getBusinessObjectReview('BOF-12-004');
+    expect(workArea?.decision).toBe('VALIDATE_OBJECT');
+    expect(workArea?.proposedCanonicalName).toBe('Work Area');
+
+    const accessEvent = service.getBusinessObjectReview('BOF-12-007');
+    expect(accessEvent?.decision).toBe('RENAME');
+    expect(accessEvent?.proposedCanonicalName).toBe('Physical Access Event');
+
+    const fieldProgress = service.getBusinessObjectReview('BOF-12-009');
+    expect(fieldProgress?.decision).toBe('MERGE');
+    expect(fieldProgress?.targetCandidateKey).toBe('BOF-06-016');
+
+    const materialUsage = service.getBusinessObjectReview('BOF-12-012');
+    expect(materialUsage?.decision).toBe('MERGE');
+    expect(materialUsage?.targetCandidateKey).toBe('BOF-10-022');
+
+    const temporaryWorks = service.getBusinessObjectReview('BOF-12-014');
+    expect(temporaryWorks?.decision).toBe('RENAME');
+    expect(temporaryWorks?.proposedCanonicalName).toBe('Temporary Works Control Item');
+
+    const deliveryConstraint = service.getBusinessObjectReview('BOF-06-025');
+    expect(deliveryConstraint?.decision).toBe('RENAME');
+    expect(deliveryConstraint?.proposedCanonicalName).toBe('Delivery Constraint');
+
+    const fieldConstraint = service.getBusinessObjectReview('BOF-12-020');
+    expect(fieldConstraint?.decision).toBe('MERGE');
+    expect(fieldConstraint?.targetCandidateKey).toBe('BOF-06-025');
+
+    const photoEvidence = service.getBusinessObjectReview('BOF-12-022');
+    expect(photoEvidence?.decision).toBe('MERGE');
+    expect(photoEvidence?.targetCandidateKey).toBe('BOF-28-007');
+
+    const completion = service.getBusinessObjectReview('BOF-12-025');
+    expect(completion?.decision).toBe('EVENT_EVIDENCE');
+    expect(completion?.proposedCanonicalName).toBe('Field Completion Record');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

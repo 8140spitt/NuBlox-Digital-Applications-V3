@@ -13,8 +13,7 @@ import {
   updateStrategyFramework,
   type StrategyFrameworkInput
 } from '$lib/server/strategy-framework';
-
-const actor = 'Development User';
+import { resolveDevelopmentCommandContext } from '$lib/server/platform-context';
 
 function text(data: FormData, name: string) {
   const value = data.get(name);
@@ -41,23 +40,25 @@ function problem(error: unknown) {
 }
 
 export const load: PageServerLoad = ({ params, url }) => {
-  const frameworks = listStrategyFrameworks(params.tenant);
+  const context = resolveDevelopmentCommandContext(params.tenant);
+  const frameworks = listStrategyFrameworks(context);
   const requestedId = url.searchParams.get('framework');
   const selected = frameworks.find((item) => item.id === requestedId) ?? frameworks[0] ?? null;
   return {
     frameworks,
     selected,
-    versions: selected ? listStrategyFrameworkVersions(selected.id) : [],
-    audit: selected ? listStrategyFrameworkAudit(params.tenant, selected.id) : []
+    versions: selected ? listStrategyFrameworkVersions(context, selected.id) : [],
+    audit: selected ? listStrategyFrameworkAudit(context, selected.id) : []
   };
 };
 
 export const actions: Actions = {
   create: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     let id: string;
     try {
-      id = createStrategyFramework(params.tenant, input(data), actor);
+      id = createStrategyFramework(context, input(data));
     } catch (error) {
       return problem(error);
     }
@@ -65,9 +66,10 @@ export const actions: Actions = {
   },
   save: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      updateStrategyFramework(params.tenant, id, input(data), actor);
+      updateStrategyFramework(context, id, input(data));
     } catch (error) {
       return problem(error);
     }
@@ -75,9 +77,10 @@ export const actions: Actions = {
   },
   submit: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      submitStrategyFramework(params.tenant, id, actor);
+      submitStrategyFramework(context, id);
     } catch (error) {
       return problem(error);
     }
@@ -85,9 +88,10 @@ export const actions: Actions = {
   },
   return: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      returnStrategyFramework(params.tenant, id, actor, text(data, 'note'));
+      returnStrategyFramework(context, id, text(data, 'note'));
     } catch (error) {
       return problem(error);
     }
@@ -95,9 +99,10 @@ export const actions: Actions = {
   },
   approve: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      approveStrategyFramework(params.tenant, id, actor, text(data, 'note'));
+      approveStrategyFramework(context, id, text(data, 'note'));
     } catch (error) {
       return problem(error);
     }
@@ -105,9 +110,10 @@ export const actions: Actions = {
   },
   reject: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      rejectStrategyFramework(params.tenant, id, actor, text(data, 'note'));
+      rejectStrategyFramework(context, id, text(data, 'note'));
     } catch (error) {
       return problem(error);
     }
@@ -115,9 +121,10 @@ export const actions: Actions = {
   },
   publish: async ({ request, params }) => {
     const data = await request.formData();
+    const context = resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      publishStrategyFramework(params.tenant, id, actor, text(data, 'note'));
+      publishStrategyFramework(context, id, text(data, 'note'));
     } catch (error) {
       return problem(error);
     }

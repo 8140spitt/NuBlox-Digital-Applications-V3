@@ -198,6 +198,42 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     notes: 'Second PLM benchmark to prevent Windchill-specific bias and challenge product/configuration semantics independently.'
   },
   {
+    id: 'DELTEK-VANTAGEPOINT',
+    provider: 'Deltek',
+    product: 'Vantagepoint',
+    tier: 'specialist-depth',
+    category: ['aec-erp','crm','project-accounting','resource-management','project-management'],
+    workspaces: ['F03','F06','F07','F14','F15','F17','F27'],
+    studyState: 'registered',
+    officialSource: 'https://www.deltek.com/products/erp/vantagepoint/',
+    challengeFocus: ['A&E business development','project accounting','resource planning','billing','project profitability','professional-services delivery'],
+    notes: 'Important architecture/engineering consultancy benchmark connecting pursuit, people, projects and financial performance.'
+  },
+  {
+    id: 'ASITE-CDE',
+    provider: 'Asite',
+    product: 'Asite Common Data Environment / 3D Repo / Marketplace',
+    tier: 'specialist-depth',
+    category: ['cde','information-management','bim','procurement','construction'],
+    workspaces: ['F05','F09','F12','F13','F26','F27'],
+    studyState: 'registered',
+    officialSource: 'https://www.asite.com/',
+    challengeFocus: ['ISO-style CDE workflows','information delivery','BIM coordination','supply-chain marketplace','project data continuity'],
+    notes: 'Construction information-management benchmark with strong CDE and BIM collaboration focus.'
+  },
+  {
+    id: 'THINKPROJECT',
+    provider: 'Thinkproject',
+    product: 'Built Asset Lifecycle Platform / CDE / Contracts (CEMAR) / Asset & Work Manager',
+    tier: 'specialist-depth',
+    category: ['cde','contract-management','asset-work','construction'],
+    workspaces: ['F07','F09','F12','F13','F22','F26','F27'],
+    studyState: 'registered',
+    officialSource: 'https://www.thinkproject.com/login/',
+    challengeFocus: ['contract administration','NEC-style event workflows','CDE','field/document management','built-asset work management'],
+    notes: 'Built-environment lifecycle benchmark spanning project information, contract administration and operational asset work.'
+  },
+  {
     id: 'HEXAGON-ECOSYS',
     provider: 'Hexagon',
     product: 'EcoSys Enterprise Projects Performance',

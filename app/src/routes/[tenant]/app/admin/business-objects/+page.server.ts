@@ -9,12 +9,12 @@ import {
   seedFoundationCanonicalization,
   type BusinessObjectReviewDecision
 } from '$lib/server/business-object-review';
-import { resolveDevelopmentCommandContext } from '$lib/server/platform-context';
+import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import type { Actions, PageServerLoad } from './$types';
 
 
-export const load: PageServerLoad = async ({ url, params }) => {
-  await resolveDevelopmentCommandContext(params.tenant);
+export const load: PageServerLoad = async ({ url, params, locals }) => {
+  await resolveRequestCommandContext(params.tenant, locals);
   await seedFoundationCanonicalization(params.tenant);
 
   const q = (url.searchParams.get('q') ?? '').trim();
@@ -89,7 +89,7 @@ export const load: PageServerLoad = async ({ url, params }) => {
 };
 
 export const actions: Actions = {
-  review: async ({ request, params }) => {
+  review: async ({ request, params, locals }) => {
     const form = await request.formData();
     const candidateKey = String(form.get('candidateKey') ?? '').trim();
     const decision = String(form.get('decision') ?? '').trim() as BusinessObjectReviewDecision;
@@ -104,7 +104,7 @@ export const actions: Actions = {
     }
 
     try {
-      const context = await resolveDevelopmentCommandContext(params.tenant);
+      const context = await resolveRequestCommandContext(params.tenant, locals);
       await saveBusinessObjectReview(candidateKey, { decision, proposedCanonicalName, targetCandidateKey, notes }, context.actorDisplayName, params.tenant);
     } catch (error) {
       return fail(400, { message: error instanceof Error ? error.message : 'Unable to save review decision.' });

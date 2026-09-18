@@ -61,6 +61,18 @@ V3 carries the register forward under:
 
 `docs/benchmarks/sap-capability-coverage-register.csv`
 
+The complete V3 semantic remap is now held in:
+
+`docs/benchmarks/sap-v3-capability-map.csv`
+
+Current SAP benchmark state:
+
+- **64/64** legacy capability rows mapped to V3 workspaces, canonical families/object concepts and process chains;
+- **48** classified as native-core outcomes;
+- **8** classified as contextual extensions;
+- **8** classified as platform enablers;
+- **0/64** capability challenges closed — detailed outside-in challenge remains the next step.
+
 However:
 
 - the old NuBlox domain and delivery-slice columns are historical provenance;
@@ -189,7 +201,7 @@ Gate 3 is not complete until:
 - all 29 workspaces have been challenged by at least one relevant external benchmark;
 - each mandatory benchmark has a documented capability study;
 - specialist benchmark findings are resolved into canonical decisions or explicit integration/contextual treatments;
-- the 64 SAP rows have been remapped to V3;
+- the 64 SAP rows have been remapped to V3 **and each material capability challenge has a documented outcome/gap decision**;
 - Windchill is no longer the only deep semantic product study;
 - standards/interoperability challenges are documented;
 - every accepted benchmark gap has an owner and canonical impact;

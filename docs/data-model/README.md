@@ -184,7 +184,7 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Retention Rule is policy; Legal Hold and Retention Disposition Decision remain runtime control/evidence.
 - Numbering Scheme creates business identifiers but never replaces immutable system identity.
 - Canonical completeness is measured against five independent lenses: sector lifecycle, 29 workspaces, specialist overlays, end-to-end chains and external benchmarks.
-- Family-level coverage does not imply candidate-level completion; unresolved candidates and partial/candidate-only families remain visible architecture gaps.
+- Family-level and candidate-level convergence are both closed: all 29 families are governed and all 750 candidate occurrences have explicit baseline decisions. Duplicate/alias convergence, external benchmark challenge and aggregate-boundary freeze remain separate architecture gates.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.
@@ -206,12 +206,13 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 12. Shared work, workflow, decision, evidence, audit and retention semantics.
 13. Reference data, classification, jurisdiction and configuration/policy primitives.
 14. Convergence/coverage audit across the 750-candidate universe, all 29 workspaces, lifecycle stages, specialist overlays, E2E chains and external benchmarks.
-15. Close candidate-only and partial family gaps before treating physical aggregate/database/API patterns as enterprise-wide authority.
-16. Domain transactions, cases, plans and execution records are physically implemented only against accepted canonical semantics.
+15. Re-run cross-family duplicate/alias convergence and complete the external benchmark/standards challenge.
+16. Freeze canonical aggregate boundaries before treating physical aggregate/database/API patterns as enterprise-wide authority.
+17. Domain transactions, cases, plans and execution records are physically implemented only against accepted canonical semantics.
 
 ## Development hold
 
-Broad horizontal application expansion remains constrained until the convergence audit closes material candidate-only and partial-family gaps.
+Broad horizontal application expansion remains constrained until the remaining architecture gates close: cross-family duplicate/alias convergence, external benchmark/standards challenge and canonical aggregate-boundary freeze. Candidate/family semantic convergence itself is now complete.
 
 The current F01.01 slice remains a learning prototype. It must not establish platform-wide object, lifecycle, workflow, permissions or versioning patterns by accident.
 

@@ -108,7 +108,7 @@ export const l2AggregateRoutes: L2AggregateRoute[] = [
   r('F05-PORTFOLIO','F05','Portfolio Strategy|Business Case Development|Innovation Management','AGG-04-DEVELOPMENT','LDI-BUSINESS-CASE','Product / Service Business Case',['AGG-02-STRATEGY']),
   r('F05-NEEDS','F05','Market.*Customer Needs','AGG-03-OPPORTUNITY','CRM-MARKET-INSIGHT','Market / Customer Need',['AGG-07-ENGINEERING-REQUIREMENTS']),
   r('F05-IDEA','F05','Ideation','AGG-10-ITEM','CBO-ITEM','Product / Service Concept',['AGG-04-DEVELOPMENT']),
-  r('F05-DESIGN','F05','Product.*Service Design|^Development,'AGG-10-CONFIGURATION','CFG-PRODUCT-CONFIG-MODEL','Product / Service Definition',['AGG-07-ENGINEERING-REQUIREMENTS','AGG-07-ENGINEERING-MODEL']),
+  r('F05-DESIGN','F05','Product.*Service Design|^Development$','AGG-10-CONFIGURATION','CFG-PRODUCT-CONFIG-MODEL','Product / Service Definition',['AGG-07-ENGINEERING-REQUIREMENTS','AGG-07-ENGINEERING-MODEL']),
   r('F05-LAUNCH','F05','Launch Management','AGG-10-ITEM','CBO-ITEM','Item / Offering',['AGG-03-OPPORTUNITY','AGG-10-PLANNING']),
   r('F05-LIFE','F05','Lifecycle Management|Product Retirement','AGG-10-ITEM','CBO-ITEM','Item Lifecycle',['AGG-10-CONFIGURATION']),
 

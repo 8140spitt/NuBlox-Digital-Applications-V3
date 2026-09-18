@@ -38,7 +38,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}
       ><span>◈</span>Security & access</a
     >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisations`}
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}
       ><span>◎</span>Party master data</a
     >
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}

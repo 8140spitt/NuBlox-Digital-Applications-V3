@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { seedDevelopmentTenant } from './development-seed';
+import type { WorkItem } from './shared-work';
 
 let contextService: typeof import('./platform-context');
 let personService: typeof import('./foundation-person');
@@ -253,7 +254,7 @@ describe('shared foundation relationship, structure and authority aggregates', (
     });
 
     let myWork = await sharedWorkService.listMyWork(context);
-    let item = myWork.find((entry) => entry.id === workItemId)!;
+    let item: WorkItem = myWork.find((entry) => entry.id === workItemId)!;
     expect(item.status).toBe('ASSIGNED');
     expect(item.subjectId).toBe(subjectId);
     expect(item.subjectVersion).toBe('7');

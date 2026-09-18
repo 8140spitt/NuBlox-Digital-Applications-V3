@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-09-18",
   "source": "legacy NuBlox SAP capability coverage register",
-  "status": "V3 remap baseline — capability challenge not yet closed",
+  "status": "V3 remap complete; SAP Wave 1 enterprise-backbone challenge in progress",
   "rows": [
     {
       "sapNo": 1,
@@ -35,7 +35,7 @@
         "plan-to-perform",
         "procure-to-pay"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Advanced Planning & Optimization (APO) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Demand supply capacity and material planning plus project resource planning"
     },
@@ -64,7 +64,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Business Intelligence (BI) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Finance reporting exists; cross-domain BI and dashboards remain"
     },
@@ -96,7 +96,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Business Planning and Consolidation (BPC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Governed strategy-linked business planning, KPI targets/forecasts and scenarios now extend into F04 versioned corporate-development valuation/business cases with controlled assumptions and approval evidence; enterprise consolidation remains"
     },
@@ -124,7 +124,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Cash Management (CM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Bank-account and bank-reconciliation foundations now exist; cash position forecasting liquidity and treasury operations remain"
     },
@@ -189,7 +189,7 @@
         "estimate-to-project-control",
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Controlling (CO) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Project cost control exists; cost/profit centre and enterprise profitability remain"
     },
@@ -280,7 +280,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Data Services (DS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "ETL import export data quality and migration framework"
     },
@@ -347,7 +347,7 @@
         "asset-to-retirement",
         "service-request-to-resolution"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Enterprise Asset Management (EAM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Asset maintenance foundations exist; enterprise lifecycle and handover continuity remain"
     },
@@ -378,7 +378,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Event Management (EM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Audit/outbox foundations exist; enterprise business-event monitoring remains"
     },
@@ -410,7 +410,7 @@
         "supplier-progress-to-payment",
         "valuation-to-cash"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Extended Financial Management (EFM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "AR accounting AP supplier-payment and bank-reconciliation depth now exist; treasury fixed assets intercompany and consolidation remain"
     },
@@ -443,7 +443,7 @@
         "procure-to-pay",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Extended Warehouse Management (EWM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "No warehouse runtime at baseline"
     },
@@ -508,7 +508,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Financial Accounting (FI) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "AR GL periods AP supplier payments and bank reconciliation exist; fixed-asset accounting localisation foreign currency intercompany and full close remain"
     },
@@ -604,7 +604,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Governance Risk and Compliance (GRC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "RBAC audit SoD time-bounded access delegated access authority and access review exist; PR #135 adds corporate governance frameworks bodies business DoA quorum-controlled decisions policy attestations conflicts and ethics evidence; broader enterprise risk regulatory obligations control testing and assurance remain"
     },
@@ -638,7 +638,7 @@
         "hire-to-retire",
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Human Capital Management (HCM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Workforce time schedule foundations exist; full lifecycle training leave expenses payroll integration remain"
     },
@@ -705,7 +705,7 @@
         "plan-to-perform",
         "procure-to-pay"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Integrated Business Planning (IBP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Integrated demand supply capacity and scenario planning"
     },
@@ -800,7 +800,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Master Data Governance (MDG) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Canonical parties exist; stewardship duplicate/merge/governance remain"
     },
@@ -832,7 +832,7 @@
         "procure-to-pay",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material MDG for Material Data (MDG-M) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Material/product master required"
     },
@@ -864,7 +864,7 @@
       "processChains": [
         "procure-to-pay"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material MDG for Supplier Data (MDG-S) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Supplier parties exist; governed lifecycle onboarding/performance remain"
     },
@@ -896,7 +896,7 @@
         "procure-to-pay",
         "supplier-progress-to-payment"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Materials Management (MM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Procurement exists; inventory goods movement and stores remain"
     },
@@ -931,7 +931,7 @@
         "hire-to-retire",
         "service-request-to-resolution"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Multi-Resource Scheduling (MRS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "People schedule exists; plant service and cross-resource planning remain"
     },
@@ -962,7 +962,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material NetWeaver business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "NuBlox platform exists; extensible enterprise integration/runtime operations remain"
     },
@@ -1033,7 +1033,7 @@
         "asset-to-retirement",
         "service-request-to-resolution"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Plant Maintenance (PM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "PPM/reactive foundations exist; plant/fleet and lifecycle depth remain"
     },
@@ -1104,7 +1104,7 @@
         "estimate-to-project-control",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Portfolio and Project Management (PPM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Projects exist; portfolio WBS programme baseline risk and resource controls remain"
     },
@@ -1134,7 +1134,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Predictive Analytics business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Forecasting anomaly/risk prediction after governed data maturity"
     },
@@ -1165,7 +1165,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Process Integration (PI) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Versioned APIs webhooks adapters orchestration required"
     },
@@ -1233,7 +1233,7 @@
       "processChains": [
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Production Planning (PP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "BOM routing work-centre fabrication and capacity planning required"
     },
@@ -1267,7 +1267,7 @@
         "estimate-to-project-control",
         "change-to-commercial-position"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Project System (PS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Project/commercial foundations exist; WBS programme progress and portfolio depth remain"
     },
@@ -1436,7 +1436,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material S/4HANA Finance business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Accounting AR AP supplier payments and bank reconciliation now exist; treasury liquidity fixed assets intercompany consolidation and enterprise finance depth remain"
     },
@@ -1472,7 +1472,7 @@
         "procure-to-pay",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material S/4HANA Supply Chain business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Procurement exists; inventory warehouse transport planning manufacturing remain"
     },
@@ -1571,7 +1571,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Solution Manager (SolMan) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "CI/testing exists; enterprise runtime observability/admin/change operations remain"
     },
@@ -1603,7 +1603,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Strategic Enterprise Management (SEM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "F01 strategy/KPI/scenario foundations plus F03 governed performance frameworks/reporting/variance/benefits and F04 governed corporate-development opportunity, valuation, diligence, transaction, integration/divestiture and strategic-partnership control now exist with F02 approval and F03 benefit traceability; broader analytics and remaining enterprise-finance depth continue"
     },
@@ -1635,7 +1635,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material SEM Integrated Planning (SEM-IP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Native strategy-linked plans, KPI targets/forecasts and versioned scenario assumptions/projections now exist; broader enterprise-wide integrated planning remains"
     },
@@ -1665,7 +1665,7 @@
       "processChains": [
         "procure-to-pay"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Supplier Lifecycle Management (SLC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Supplier records/procurement exist; qualification onboarding performance and risk remain"
     },
@@ -1696,7 +1696,7 @@
       "processChains": [
         "procure-to-pay"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Supplier Relationship Management (SRM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "RFQ/PO foundations exist; strategic sourcing and lifecycle depth remain"
     },
@@ -1731,7 +1731,7 @@
         "procure-to-pay",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Supply Chain Management (SCM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Major materials inventory warehouse transport planning production gaps remain"
     },
@@ -1794,7 +1794,7 @@
         "hire-to-retire",
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Time and Attendance Management (TAM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Time foundations exist; attendance leave approvals and workforce lifecycle remain"
     },
@@ -1858,7 +1858,7 @@
         "procure-to-pay",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Transportation Management (TM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Delivery route fleet and project-logistics planning required"
     },
@@ -1888,7 +1888,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Treasury and Risk Management (TRM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Bank control foundations now exist; treasury liquidity forecasting financial risk and governed cash management remain"
     },
@@ -2045,7 +2045,7 @@
         "procure-to-pay",
         "plan-to-perform"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Warehouse Management (WM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "No warehouse runtime at baseline"
     },
@@ -2077,7 +2077,7 @@
       "processChains": [
         "record-to-report"
       ],
-      "benchmarkState": "mapped-not-challenged",
+      "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Xapps / Cross-Applications business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Shared cross-domain application foundation exists; supported extension framework remains"
     }

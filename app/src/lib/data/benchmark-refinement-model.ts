@@ -748,6 +748,116 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['twin context', 'physical subject', 'as-of time', 'as-maintained configuration', 'model/information versions', 'sensor/condition observations', 'geospatial/data-product versions', 'calculation/visualisation basis', 'published at'],
     lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
     governance: ['Twin State Snapshot is a federated projection, not authoritative physical condition by itself.', 'Decisions/actions reference exact source evidence where material.']
+  },
+  {
+    modelId: 'OPS-ASSET-INTERVENTION-OPTION',
+    originGapIds: ['BG-025'],
+    canonicalName: 'Asset Intervention Option',
+    kind: 'definition',
+    definition: 'Governed candidate lifecycle intervention for an Asset/System/cohort such as continue/run-to-fail, inspect, maintain, refurbish, renew, replace, upgrade, decommission or other approved treatment with explicit effects and constraints.',
+    identityRule: 'Stable option identity/version for a defined subject/context; it references canonical Asset/System, cost/resource assumptions, risk/condition effects and timing without becoming a Work Order, Project or Capex Request.',
+    keyData: ['option reference/type', 'asset/system/cohort scope', 'proposed timing', 'scope/treatment', 'cost/resource assumptions', 'condition/reliability effect', 'risk/service/KPI effect', 'residual life/value', 'constraints', 'effective version'],
+    lifecycle: ['Draft', 'Validated', 'Available', 'Superseded', 'Retired'],
+    governance: ['Asset Intervention Option is decision input, not an approved investment or executable Work Order.', 'Actual execution is created explicitly after governed decision/funding.']
+  },
+  {
+    modelId: 'OPS-ASSET-INVESTMENT-APPRAISAL',
+    originGapIds: ['BG-025'],
+    canonicalName: 'Asset Investment Appraisal',
+    kind: 'projection',
+    definition: 'Versioned/frozen decision-support appraisal comparing intervention options and portfolio/cohort scenarios using exact asset condition, criticality, failure risk, lifecycle cost, service/KPI, carbon/sustainability, resource and budget inputs.',
+    identityRule: 'Each material appraisal snapshot has a stable identity/as-of and pins source evidence, option versions, scenario/assumption versions, optimization method and constraints so recommendations are reproducible.',
+    keyData: ['scope/asset cohort', 'as-of/scenario', 'asset health/criticality inputs', 'intervention options', 'lifecycle cost/NPV', 'risk/service/KPI impacts', 'carbon/sustainability impacts', 'budget/resource constraints', 'method/model version', 'ranked/optimized result', 'sensitivity'],
+    lifecycle: ['Prepared', 'Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Appraisal is decision support, not Asset condition, Budget, Ledger, Work Order or approval Decision.', 'Optimization output retains assumptions and does not automatically authorize investment.']
+  },
+  {
+    modelId: 'OPS-ASSET-INVESTMENT-PLAN',
+    originGapIds: ['BG-025'],
+    canonicalName: 'Asset Investment Plan',
+    kind: 'plan',
+    definition: 'Governed approved multi-period plan of selected asset interventions and investment timing across an Asset/System portfolio, aligned to risk, performance, budget and resource objectives.',
+    identityRule: 'Stable plan identity/version with approved immutable baselines; each planned intervention retains its originating appraisal/decision and links to subsequent Capex Request, Project or Work Order when mobilized.',
+    keyData: ['plan reference', 'portfolio/cohort scope', 'planning horizon', 'selected interventions', 'timing/sequence', 'budget/capacity envelope', 'risk/KPI targets', 'appraisal references', 'decision/approval', 'version'],
+    lifecycle: ['Draft', 'Review', 'Approved', 'Current', 'Revised', 'Superseded', 'Closed'],
+    governance: ['Asset Investment Plan coordinates investment intent and never becomes a second Asset register or execution work system.', 'Approved revisions preserve prior investment rationale.']
+  },
+  {
+    modelId: 'NET-TERMINAL',
+    originGapIds: ['BG-026'],
+    canonicalName: 'Network Terminal',
+    kind: 'child',
+    definition: 'Governed connection port on a canonical Network element such as an Asset, Component, System or Infrastructure Entity, used when internal connection paths or directional/network behaviour must be modelled explicitly.',
+    identityRule: 'Terminal identity is subordinate to one canonical network element/type/configuration and retains port role, direction/path constraints and effectivity.',
+    keyData: ['network element', 'terminal/port reference', 'role/type', 'direction/flow context', 'valid internal paths', 'network/domain applicability', 'effectivity'],
+    lifecycle: ['Defined', 'Active', 'Superseded', 'Retired'],
+    governance: ['Terminal is not another Asset/Component identity.', 'Changes to terminals/configuration preserve historical connectivity/effectivity.']
+  },
+  {
+    modelId: 'NET-CONNECTIVITY-RELATIONSHIP',
+    originGapIds: ['BG-026'],
+    canonicalName: 'Network Connectivity Relationship',
+    kind: 'relationship',
+    definition: 'Governed effective connection/association between exact Network elements and, where applicable, terminals, representing topological connectivity independent of mere geometric proximity.',
+    identityRule: 'Stable effective relationship with endpoints/terminals, connection type, network/domain, directionality and validity/change provenance.',
+    keyData: ['network', 'from element/terminal', 'to element/terminal', 'connection/association type', 'directionality', 'network attributes/context', 'effective dates', 'change/evidence basis'],
+    lifecycle: ['Proposed', 'Validated', 'Active', 'Suspended', 'Superseded', 'Removed'],
+    governance: ['Connectivity does not duplicate Asset/System identities.', 'Geometric coincidence alone is not authoritative connectivity when explicit topology is required.']
+  },
+  {
+    modelId: 'NET-LINEAR-LOCATION-ASSIGNMENT',
+    originGapIds: ['BG-026'],
+    canonicalName: 'Linear Location Assignment',
+    kind: 'relationship',
+    definition: 'Governed relationship locating an Asset, condition, work, event or other subject at a point or extent along a canonical Linear Segment/Network using an explicit measure/reference system.',
+    identityRule: 'Stable effective relationship retaining route/segment, start/end measures or point measure, reference method/version, lateral/offset context and validity.',
+    keyData: ['subject', 'network/linear segment', 'reference method/version', 'start measure', 'end measure/point', 'offset/side/direction', 'effective dates', 'source/provenance'],
+    lifecycle: ['Proposed', 'Validated', 'Active', 'Superseded', 'Retired'],
+    governance: ['Linear Location Assignment locates an existing subject; it never creates duplicate Asset, condition or work identity.', 'Historical locations remain interpretable against the exact reference/version.']
+  },
+  {
+    modelId: 'NET-TRACE-CONFIGURATION',
+    originGapIds: ['BG-026'],
+    canonicalName: 'Network Trace Configuration',
+    kind: 'definition',
+    definition: 'Versioned governed definition of a network analysis/trace such as upstream, downstream, connected, isolation, loop, path or subnetwork, including traversability attributes, barriers, functions and output rules.',
+    identityRule: 'Stable configuration identity/version under a Network/domain/tier context; trace executions pin the exact topology/reference/configuration versions used.',
+    keyData: ['trace type', 'network/domain/tier', 'starting/stopping rules', 'barrier/filter rules', 'network attributes', 'terminal/path rules', 'functions/outputs', 'effective version'],
+    lifecycle: ['Draft', 'Validated', 'Published', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Trace Configuration is analysis policy, not network topology or an operational switching/isolating instruction by itself.']
+  },
+  {
+    modelId: 'NET-TRACE-RUN',
+    originGapIds: ['BG-026'],
+    canonicalName: 'Network Trace Run',
+    kind: 'event-evidence',
+    definition: 'Immutable execution evidence for tracing an exact Network topology/configuration from defined start/stop/barrier locations under a pinned Trace Configuration.',
+    identityRule: 'Stable run occurrence retaining topology/as-of version, starting/stopping/barrier inputs, configuration version, execution time, validation state and result provenance.',
+    keyData: ['network/topology version', 'trace configuration/version', 'start locations', 'stop locations', 'barriers', 'as-of/effectivity context', 'executed at/by', 'validation/dirty-area status', 'result reference'],
+    lifecycle: ['Prepared', 'Executed', 'Validated', 'Published', 'Superseded/Invalidated'],
+    governance: ['Trace Run is analysis evidence and never changes physical connectivity or Asset/System state.', 'Material decisions reference exact topology/trace evidence used.']
+  },
+  {
+    modelId: 'NET-TRACE-RESULT',
+    originGapIds: ['BG-026'],
+    canonicalName: 'Network Trace Result',
+    kind: 'projection',
+    definition: 'Reproducible result set/projection of Network elements, paths, extents and calculated functions returned by one Network Trace Run.',
+    identityRule: 'Projection or immutable published snapshot references one trace run and exact network/topology source versions.',
+    keyData: ['trace run', 'returned elements/paths', 'aggregated geometry/extent', 'network functions/summaries', 'exceptions', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Trace Result is not a new Network or asset hierarchy.', 'Live network edits never silently rewrite an issued trace result.']
+  },
+  {
+    modelId: 'OPS-WORKPLACE-RESERVATION',
+    originGapIds: ['BG-027'],
+    canonicalName: 'Workplace Reservation',
+    kind: 'transaction',
+    definition: 'Governed reservation of a canonical Space or bookable workplace/facility resource such as a room, desk, parking space or shared facility for a Party/worker and defined time window/purpose.',
+    identityRule: 'Stable reservation identity referencing existing Space/resource and Party identities; recurrence or changes retain governed occurrence/change history as policy requires.',
+    keyData: ['reservation reference', 'requester/attendees', 'space/resource', 'start/end', 'purpose', 'capacity/facility needs', 'access/eligibility policy', 'service add-ons', 'status', 'source/channel'],
+    lifecycle: ['Requested', 'Confirmed', 'Checked In/In Use', 'Completed', 'No-show', 'Cancelled'],
+    governance: ['Workplace Reservation is not inventory Reservation, Site Logistics Booking or Occupancy/Tenure.', 'Booking never changes Space or Party identity and respects access/security eligibility separately.']
   }
 ];
 
@@ -781,7 +891,12 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R27', from: 'CFG-CONFIGURATION-BASELINE', predicate: 'may contain', to: 'CFG-STRUCTURE-OCCURRENCE', governance: 'Baseline freezes exact occurrence membership and version/effectivity context.' },
   { id: 'BR-R28', from: 'TWIN-DATA-BINDING', predicate: 'belongs to', to: 'TWIN-FEDERATION-CONTEXT', governance: 'Bindings remain source-aware relationships within one federation context.' },
   { id: 'BR-R29', from: 'TWIN-STATE-SNAPSHOT', predicate: 'derives from', to: 'TWIN-FEDERATION-CONTEXT', governance: 'Snapshot pins exact context bindings and source versions.' },
-  { id: 'BR-R30', from: 'OPS-AS-MAINTAINED-CONFIGURATION', predicate: 'may reference', to: 'CFG-CONFIGURATION-BASELINE', governance: 'Operational configuration can compare to an exact approved design/configuration baseline without becoming it.' }
+  { id: 'BR-R30', from: 'OPS-AS-MAINTAINED-CONFIGURATION', predicate: 'may reference', to: 'CFG-CONFIGURATION-BASELINE', governance: 'Operational configuration can compare to an exact approved design/configuration baseline without becoming it.' },
+  { id: 'BR-R31', from: 'OPS-ASSET-INVESTMENT-APPRAISAL', predicate: 'compares', to: 'OPS-ASSET-INTERVENTION-OPTION', governance: 'Appraisal pins exact option versions and source evidence.' },
+  { id: 'BR-R32', from: 'OPS-ASSET-INVESTMENT-PLAN', predicate: 'is informed by', to: 'OPS-ASSET-INVESTMENT-APPRAISAL', governance: 'Approved investment plan retains appraisal/decision provenance.' },
+  { id: 'BR-R33', from: 'NET-CONNECTIVITY-RELATIONSHIP', predicate: 'may connect via', to: 'NET-TERMINAL', governance: 'Terminal-aware topology remains subordinate to canonical network elements.' },
+  { id: 'BR-R34', from: 'NET-TRACE-RUN', predicate: 'uses', to: 'NET-TRACE-CONFIGURATION', governance: 'Trace execution pins exact analysis rules and topology basis.' },
+  { id: 'BR-R35', from: 'NET-TRACE-RESULT', predicate: 'derives from', to: 'NET-TRACE-RUN', governance: 'Result pins exact trace execution and source topology versions.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -804,7 +919,10 @@ export const benchmarkRefinementRules = [
   'Contract value/payment breakdowns remain commercial structures mapped to delivery and cost classifications; they never become WBS or finance masters.',
   'Target-cost and gain/pain sharing preserve approved target baselines, formula versions and assessment evidence without rewriting actual cost or Contract truth.',
   'Effectivity, configuration baseline and structure-occurrence semantics are shared configuration governance rather than PLM-vendor-specific master copies.',
-  'Digital twins are governed federations over canonical physical Assets/Systems and authoritative source data; they never become a second asset register.'
+  'Digital twins are governed federations over canonical physical Assets/Systems and authoritative source data; they never become a second asset register.',
+  'Asset investment planning is auditable decision support over condition, risk, lifecycle cost, service and budget evidence; optimization never auto-authorizes capital work.',
+  'Infrastructure connectivity and trace semantics augment canonical Network/Asset/System/Linear Segment identity without replacing GIS or creating a second network master.',
+  'Workplace reservations are distinct from occupancy/tenure, inventory reservations and site logistics bookings.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -812,7 +930,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022', 'BG-023', 'BG-024']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022', 'BG-023', 'BG-024', 'BG-025', 'BG-026', 'BG-027']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

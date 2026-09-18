@@ -213,6 +213,57 @@ The SAP challenge also exposed legitimate capabilities that are not universal en
 
 They are governed as contextual extensions in the benchmark gap register. If activated for an applicable business model, they must reuse the canonical identities and controls named in that register rather than create parallel enterprise masters.
 
+
+## BG-017 — CPM schedule analysis
+
+NuBlox now governs Schedule Calendar, Schedule Calculation Run and Schedule Analysis Snapshot.
+
+Float, early/late dates and critical/longest-path membership are reproducible planning projections pinned to exact Schedule/Activity/Dependency/calendar versions. They are never hidden mutable flags on Schedule Activity.
+
+## BG-019 — quantitative project risk
+
+NuBlox now governs Project Risk Simulation Run and Project Risk Analysis Snapshot.
+
+Probabilistic cost/schedule outcomes retain exact risk, uncertainty, schedule, cost/forecast, scenario and analysis-method inputs. Simulation output never replaces Enterprise Risk, Risk Assessment, Schedule or Forecast truth.
+
+## BG-020 — construction project performance
+
+NuBlox now governs:
+
+- Progress Measurement Method;
+- Project Performance Calculation Run;
+- Project Controls Performance Snapshot.
+
+This provides a canonical analytical layer for earned value, productivity, PV/EV/AC, CPI/SPI, ETC/EAC, commitments/exposure, forecast cost/value, margin and CVR-style positions.
+
+All metrics remain projections over authoritative Progress Record, Budget, Forecast, Contract/Valuation, commitment and Ledger evidence.
+
+## BG-021 — contract value schedule
+
+NuBlox now governs Contract Value Schedule and Contract Value Line.
+
+These structures represent the agreed commercial/payment breakdown used by Schedule of Values, Activity Schedule, Bill of Quantities and equivalent contract mechanisms. They may map to WBS, Work Package, Cost Code and estimate structures, but they never become those identities.
+
+## BG-022 — target-cost and share mechanisms
+
+NuBlox now governs:
+
+- Target Cost Baseline;
+- Commercial Share Mechanism;
+- Commercial Share Assessment.
+
+The model supports NEC-style pain/gain and other target/incentive sharing without embedding the calculation as opaque clause text. Approved target versions, formula versions and assessment evidence are retained.
+
+## Construction benchmark governance consequence
+
+Construction vendor products validated several NuBlox decisions rather than forcing new objects:
+
+- Daily Site Diary remains an evidence envelope, not a replacement for Progress/Labour/Plant/Delivery/QHSE truth;
+- CDE/document repositories remain representations/views over controlled Information Container identity;
+- RFI, Submittal, Review, Coordination Issue and Design Change remain separate records;
+- Contract Notice, Commercial Change, Claim, Valuation/Certificate and Diary remain distinct from workflow orchestration;
+- Job Cost or cost-sheet structures do not replace WBS, Cost Code, Contract, Commitment or Ledger identity.
+
 ## Architecture rule
 
 A benchmark finding may extend the canonical model only when it represents a durable business concept that survives outside the vendor that exposed it.

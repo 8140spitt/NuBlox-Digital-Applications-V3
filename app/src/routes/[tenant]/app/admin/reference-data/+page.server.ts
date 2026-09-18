@@ -7,6 +7,14 @@ import {
   listApprovalAuthorityRules,
   listDelegatedAuthorityRules
 } from '$lib/server/authority-configuration';
+import {
+  listCurrencies,
+  listJurisdictions,
+  listUnitsOfMeasure,
+  listTaxRegimes,
+  listContractFormFamilies,
+  listReferenceCalendars
+} from '$lib/server/reference-data';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);

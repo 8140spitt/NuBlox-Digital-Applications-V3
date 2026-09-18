@@ -1,3 +1,4 @@
+import { loadEnvFile } from 'node:process';
 import mysql, {
   type Pool,
   type PoolConnection,
@@ -8,6 +9,10 @@ import mysql, {
 export const requiredMigration = '0002_strategy_and_architecture_review.sql';
 
 function databaseUrl() {
+  if (!process.env.DATABASE_URL && !process.env.MYSQL_URL && !process.env.NUBLOX_TEST_DATABASE_URL) {
+    try { loadEnvFile('.env'); } catch { /* environment may be injected by the runtime */ }
+  }
+
   const url =
     (process.env.NODE_ENV === 'test' ? process.env.NUBLOX_TEST_DATABASE_URL : undefined) ??
     process.env.DATABASE_URL ??

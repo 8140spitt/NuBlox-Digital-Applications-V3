@@ -31,6 +31,11 @@ describe('inventory and logistics semantic model', () => {
     expect(inventoryLogisticsRules.join(' ')).toContain('Asset hierarchies');
   });
 
+  it('does not create a second logistics call-off master', () => {
+    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-CALLOFF')).toBeUndefined();
+    expect(inventoryLogisticsRules.join(' ')).toContain('Call-off Order is commercial/procurement truth');
+  });
+
   it('keeps shipment transport and delivery distinct', () => {
     expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-SHIPMENT')?.kind).toBe('transaction');
     expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-TRANSPORT-ORDER')?.kind).toBe('transaction');

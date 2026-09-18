@@ -1,6 +1,11 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { enterpriseFunctions } from '$lib/enterprise/functions';
   let { tenantSlug } = $props();
+
+  function isCurrentFunction(functionId: string) {
+    return page.url.pathname.includes('/functions/' + functionId.toLowerCase());
+  }
 </script>
 
 <aside class="sidebar">
@@ -15,19 +20,15 @@
     <p class="label">Business functions</p>
     <div class="function-list">
       {#each enterpriseFunctions as fn}
-        {#if fn.state === 'active'}
-          <a
-            class="function active"
-            href={`/${tenantSlug}/app/functions/${fn.id.toLowerCase()}`}
-            title={fn.name}
-          >
-            <span class="fn-id">{fn.id}</span><span>{fn.shortName}</span>
-          </a>
-        {:else}
-          <div class="function planned" title={`${fn.name} — planned`}>
-            <span class="fn-id">{fn.id}</span><span>{fn.shortName}</span>
-          </div>
-        {/if}
+        <a
+          class="function"
+          class:active={isCurrentFunction(fn.id)}
+          class:mapped={fn.state === 'planned'}
+          href={`/${tenantSlug}/app/functions/${fn.id.toLowerCase()}`}
+          title={fn.state === 'active' ? fn.name : fn.name + ' — governed execution map'}
+        >
+          <span class="fn-id">{fn.id}</span><span>{fn.shortName}</span>
+        </a>
       {/each}
     </div>
   </section>
@@ -205,9 +206,19 @@
   .function.active {
     font-weight: 700;
   }
-  .function.planned {
-    color: #788794;
-    cursor: default;
+  .function.mapped {
+    color: #52697a;
+  }
+  .function.mapped:not(.active)::after {
+    content: 'map';
+    justify-self: end;
+    padding: 2px 4px;
+    border-radius: 999px;
+    background: #eef2f5;
+    color: #80909b;
+    font-size: 7px;
+    font-weight: 800;
+    text-transform: uppercase;
   }
   .fn-id {
     font-size: 10px;
@@ -269,7 +280,7 @@
       border: 1px solid var(--line);
       background: white;
     }
-    .function.planned {
+    .function.mapped:not(.active)::after {
       display: none;
     }
   }

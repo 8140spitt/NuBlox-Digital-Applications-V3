@@ -65,7 +65,8 @@ export const f01Workspace = {
         'Risks & opportunities',
         'Strategic choices',
         'Dependencies'
-      ]
+      ],
+      path: 'strategic-objectives'
     },
     {
       id: 'F01.04',

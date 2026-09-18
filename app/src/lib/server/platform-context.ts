@@ -251,6 +251,24 @@ export const platformPermissions = [
     'strategy.assumption',
     'assess',
     'Assess, challenge and invalidate strategic assumptions.'
+  ],
+  [
+    'strategy.objective.read',
+    'strategy.objective',
+    'read',
+    'Read governed Strategic Objectives and immutable versions.'
+  ],
+  [
+    'strategy.objective.manage',
+    'strategy.objective',
+    'manage',
+    'Create and revise Strategic Objectives against an exact Strategy Framework version.'
+  ],
+  [
+    'strategy.objective.approve',
+    'strategy.objective',
+    'approve',
+    'Approve, activate and close governed Strategic Objectives.'
   ]
 ] as const;
 

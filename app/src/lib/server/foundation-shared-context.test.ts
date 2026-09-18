@@ -425,7 +425,6 @@ describe('shared foundation relationship, structure and authority aggregates', (
       subjectVersion: '3',
       outcome: 'RETURNED',
       reason: 'A material evidence omission was discovered after the original decision.',
-      authorityBasis: 'Tenant governance role with work.decision.record permission.',
       supersedesDecisionId: originalId
     });
 

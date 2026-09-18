@@ -1,7 +1,6 @@
 const { assertDatabaseReady, closeDbPool, dbTransaction } = await import('../src/lib/server/db.ts');
-const { platformPermissions, seedPermissionDefinitions } = await import(
-  '../src/lib/server/platform-context.ts'
-);
+const { platformPermissions, seedPermissionDefinitions } =
+  await import('../src/lib/server/platform-context.ts');
 
 try {
   await assertDatabaseReady();

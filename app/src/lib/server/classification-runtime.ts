@@ -104,9 +104,7 @@ async function getSystem(
   forUpdate = false
 ) {
   const row = await queryOne<RowDataPacket & ClassificationSystem>(
-    systemSelect +
-      ' WHERE id = ? AND tenant_id = ?' +
-      (forUpdate ? ' FOR UPDATE' : ''),
+    systemSelect + ' WHERE id = ? AND tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [systemId, context.tenantId],
     executor
   );
@@ -143,7 +141,8 @@ async function bumpSystem(
     [timestamp, system.id, context.tenantId, system.version],
     executor
   );
-  if (result.affectedRows !== 1) throw new Error('Concurrent Classification System change detected.');
+  if (result.affectedRows !== 1)
+    throw new Error('Concurrent Classification System change detected.');
   return getSystem(context, system.id, executor);
 }
 
@@ -190,10 +189,7 @@ export async function listClassificationSystems(context: CommandContext) {
   );
 }
 
-export async function listClassificationReleases(
-  context: CommandContext,
-  systemId: string
-) {
+export async function listClassificationReleases(context: CommandContext, systemId: string) {
   assertPermission(context, 'reference.classification.read');
   await getSystem(context, systemId);
   return queryRows<RowDataPacket & ClassificationRelease>(
@@ -433,10 +429,7 @@ export async function importClassificationCodes(
         throw new Error('Classification Code already exists in this release: ' + entry.code);
       }
       byCode.set(canonicalCode, entry.id);
-      parentByCode.set(
-        canonicalCode,
-        entry.parentCode ? canonical(entry.parentCode) : null
-      );
+      parentByCode.set(canonicalCode, entry.parentCode ? canonical(entry.parentCode) : null);
     }
 
     for (const entry of normalised) {
@@ -564,7 +557,8 @@ export async function publishClassificationRelease(
       [timestamp, timestamp, release.id, context.tenantId, system.id],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Classification Release change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Classification Release change detected.');
 
     const updatedSystem = await bumpSystem(context, system, connection);
     await evidence(

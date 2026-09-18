@@ -345,7 +345,6 @@ describe('shared foundation relationship, structure and authority aggregates', (
     expect(evidenceRows.every((event) => event.aggregateId === 'AGG-27-WORKFLOW')).toBe(true);
   });
 
-
   it('records and resolves shared-work escalations as governed workflow evidence', async () => {
     const tenant = 'work-escalation-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);
@@ -400,7 +399,6 @@ describe('shared foundation relationship, structure and authority aggregates', (
     ]);
     expect(events.map((event) => Number(event.aggregateVersion))).toEqual([4, 5]);
   });
-
 
   it('records immutable authorised decisions and corrective supersession', async () => {
     const tenant = 'decision-' + randomUUID().slice(0, 8);
@@ -512,10 +510,12 @@ describe('shared foundation relationship, structure and authority aggregates', (
       }
     });
 
-    const decision = (await workDecisionService.listWorkDecisions(context, {
-      type: 'COMMERCIAL_COMMITMENT',
-      id: subjectId
-    })).find((entry) => entry.id === decisionId)!;
+    const decision = (
+      await workDecisionService.listWorkDecisions(context, {
+        type: 'COMMERCIAL_COMMITMENT',
+        id: subjectId
+      })
+    ).find((entry) => entry.id === decisionId)!;
     expect(decision.authorityGrantId).toBe(grantId);
     expect(decision.authorityType).toBe('COMMERCIAL_COMMITMENT');
     expect(Number(decision.authorityValue)).toBe(100000);
@@ -537,7 +537,6 @@ describe('shared foundation relationship, structure and authority aggregates', (
       })
     ).rejects.toThrow('Delegated Authority');
   });
-
 
   it('captures provenance-rich evidence and verifies it independently', async () => {
     const tenant = 'evidence-' + randomUUID().slice(0, 8);
@@ -573,10 +572,12 @@ describe('shared foundation relationship, structure and authority aggregates', (
       ]
     });
 
-    let evidence = (await evidenceService.listEvidenceItems(context, {
-      type: 'TEST_SUBJECT',
-      id: subjectId
-    })).find((entry) => entry.id === evidenceId)!;
+    let evidence = (
+      await evidenceService.listEvidenceItems(context, {
+        type: 'TEST_SUBJECT',
+        id: subjectId
+      })
+    ).find((entry) => entry.id === evidenceId)!;
     expect(evidence.status).toBe('CAPTURED');
     expect(evidence.version).toBe(1);
     expect(evidence.contentHash).toBe('a'.repeat(64));
@@ -634,5 +635,4 @@ describe('shared foundation relationship, structure and authority aggregates', (
       })
     ).rejects.toThrow('64 hexadecimal characters');
   });
-
 });

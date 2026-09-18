@@ -101,9 +101,7 @@ async function getDefinition(
   forUpdate = false
 ) {
   const row = await queryOne<RowDataPacket & LifecycleDefinition>(
-    definitionSelect +
-      ' WHERE id = ? AND tenant_id = ?' +
-      (forUpdate ? ' FOR UPDATE' : ''),
+    definitionSelect + ' WHERE id = ? AND tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [definitionId, context.tenantId],
     executor
   );
@@ -140,7 +138,8 @@ async function bumpDefinition(
     [timestamp, definition.id, context.tenantId, definition.version],
     executor
   );
-  if (result.affectedRows !== 1) throw new Error('Concurrent Lifecycle Definition change detected.');
+  if (result.affectedRows !== 1)
+    throw new Error('Concurrent Lifecycle Definition change detected.');
   return getDefinition(context, definition.id, executor);
 }
 
@@ -196,7 +195,8 @@ function validateConfiguration(input: LifecycleConfigurationInput) {
 
   const stateKeys = new Set<string>();
   for (const state of states) {
-    if (stateKeys.has(state.stateKey)) throw new Error('Duplicate Lifecycle state: ' + state.stateKey);
+    if (stateKeys.has(state.stateKey))
+      throw new Error('Duplicate Lifecycle state: ' + state.stateKey);
     stateKeys.add(state.stateKey);
   }
 
@@ -218,11 +218,15 @@ function validateConfiguration(input: LifecycleConfigurationInput) {
     }
     transitionKeys.add(transition.transitionKey);
     if (!stateKeys.has(transition.fromStateKey) || !stateKeys.has(transition.toStateKey)) {
-      throw new Error('Lifecycle transition references an undefined state: ' + transition.transitionKey);
+      throw new Error(
+        'Lifecycle transition references an undefined state: ' + transition.transitionKey
+      );
     }
     const from = states.find((state) => state.stateKey === transition.fromStateKey)!;
     if (from.terminal) {
-      throw new Error('Terminal Lifecycle state cannot have outgoing transitions: ' + from.stateKey);
+      throw new Error(
+        'Terminal Lifecycle state cannot have outgoing transitions: ' + from.stateKey
+      );
     }
   }
 
@@ -243,7 +247,8 @@ function validateConfiguration(input: LifecycleConfigurationInput) {
   const unreachable = states.filter((state) => !reachable.has(state.stateKey));
   if (unreachable.length) {
     throw new Error(
-      'Lifecycle contains unreachable state(s): ' + unreachable.map((state) => state.stateKey).join(', ')
+      'Lifecycle contains unreachable state(s): ' +
+        unreachable.map((state) => state.stateKey).join(', ')
     );
   }
 
@@ -262,8 +267,7 @@ export async function listLifecycleVersions(context: CommandContext, definitionI
   assertPermission(context, 'reference.lifecycle.read');
   await getDefinition(context, definitionId);
   return queryRows<RowDataPacket & LifecycleVersion>(
-    versionSelect +
-      ' WHERE tenant_id = ? AND lifecycle_definition_id = ? ORDER BY version_no DESC',
+    versionSelect + ' WHERE tenant_id = ? AND lifecycle_definition_id = ? ORDER BY version_no DESC',
     [context.tenantId, definitionId]
   );
 }

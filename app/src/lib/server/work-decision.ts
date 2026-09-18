@@ -72,11 +72,7 @@ function code(value: string, label: string, max = 64) {
   return clean;
 }
 
-async function getDecision(
-  context: CommandContext,
-  decisionId: string,
-  executor?: DbExecutor
-) {
+async function getDecision(context: CommandContext, decisionId: string, executor?: DbExecutor) {
   const row = await queryOne<RowDataPacket & WorkDecision>(
     decisionSelect + ' WHERE id = ? AND tenant_id = ?',
     [decisionId, context.tenantId],
@@ -120,12 +116,18 @@ async function resolveAuthority(
   ];
   let valueClause = '';
   if (value != null) {
-    valueClause = ' AND da.currency_code = ? AND da.value_limit IS NOT NULL AND da.value_limit >= ?';
+    valueClause =
+      ' AND da.currency_code = ? AND da.value_limit IS NOT NULL AND da.value_limit >= ?';
     params.push(currencyCode, value);
   }
 
   const grant = await queryOne<
-    RowDataPacket & { id: string; basis: string; currencyCode: string | null; valueLimit: string | null }
+    RowDataPacket & {
+      id: string;
+      basis: string;
+      currencyCode: string | null;
+      valueLimit: string | null;
+    }
   >(
     `SELECT da.id,
             da.basis,
@@ -147,7 +149,9 @@ async function resolveAuthority(
     executor
   );
   if (!grant) {
-    throw new Error('The current actor does not hold effective Delegated Authority for this decision.');
+    throw new Error(
+      'The current actor does not hold effective Delegated Authority for this decision.'
+    );
   }
 
   return {
@@ -179,10 +183,7 @@ export async function listWorkDecisions(
   );
 }
 
-export async function recordWorkDecision(
-  context: CommandContext,
-  input: RecordDecisionInput
-) {
+export async function recordWorkDecision(context: CommandContext, input: RecordDecisionInput) {
   assertPermission(context, 'work.decision.record');
 
   const decisionType = code(input.decisionType, 'Decision type');

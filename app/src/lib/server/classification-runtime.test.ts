@@ -121,7 +121,9 @@ describe('governed classification runtime', () => {
       ])
     ).rejects.toThrow('parent code');
 
-    expect(await classification.listClassificationCodes(context, systemId, releaseId)).toHaveLength(0);
+    expect(await classification.listClassificationCodes(context, systemId, releaseId)).toHaveLength(
+      0
+    );
   });
 
   it('rejects cyclic classification hierarchies before persistence', async () => {
@@ -147,7 +149,8 @@ describe('governed classification runtime', () => {
       ])
     ).rejects.toThrow('cycle');
 
-    expect(await classification.listClassificationCodes(context, systemId, releaseId)).toHaveLength(0);
+    expect(await classification.listClassificationCodes(context, systemId, releaseId)).toHaveLength(
+      0
+    );
   });
-
 });

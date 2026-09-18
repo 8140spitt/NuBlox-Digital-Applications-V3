@@ -45,20 +45,26 @@ describe('governed lifecycle configuration', () => {
     )!;
     expect(definition.version).toBe(2);
 
-    await lifecycle.configureLifecycleVersion(context, definitionId, versionId, definition.version, {
-      initialStateKey: 'DRAFT',
-      states: [
-        { stateKey: 'DRAFT', label: 'Draft', sortOrder: 10 },
-        { stateKey: 'IN_REVIEW', label: 'In review', sortOrder: 20 },
-        { stateKey: 'APPROVED', label: 'Approved', terminal: true, sortOrder: 30 },
-        { stateKey: 'REJECTED', label: 'Rejected', terminal: true, sortOrder: 40 }
-      ],
-      transitions: [
-        { transitionKey: 'SUBMIT', fromStateKey: 'DRAFT', toStateKey: 'IN_REVIEW' },
-        { transitionKey: 'APPROVE', fromStateKey: 'IN_REVIEW', toStateKey: 'APPROVED' },
-        { transitionKey: 'REJECT', fromStateKey: 'IN_REVIEW', toStateKey: 'REJECTED' }
-      ]
-    });
+    await lifecycle.configureLifecycleVersion(
+      context,
+      definitionId,
+      versionId,
+      definition.version,
+      {
+        initialStateKey: 'DRAFT',
+        states: [
+          { stateKey: 'DRAFT', label: 'Draft', sortOrder: 10 },
+          { stateKey: 'IN_REVIEW', label: 'In review', sortOrder: 20 },
+          { stateKey: 'APPROVED', label: 'Approved', terminal: true, sortOrder: 30 },
+          { stateKey: 'REJECTED', label: 'Rejected', terminal: true, sortOrder: 40 }
+        ],
+        transitions: [
+          { transitionKey: 'SUBMIT', fromStateKey: 'DRAFT', toStateKey: 'IN_REVIEW' },
+          { transitionKey: 'APPROVE', fromStateKey: 'IN_REVIEW', toStateKey: 'APPROVED' },
+          { transitionKey: 'REJECT', fromStateKey: 'IN_REVIEW', toStateKey: 'REJECTED' }
+        ]
+      }
+    );
 
     definition = (await lifecycle.listLifecycleDefinitions(context)).find(
       (entry) => entry.id === definitionId
@@ -127,9 +133,7 @@ describe('governed lifecycle configuration', () => {
           { stateKey: 'APPROVED', label: 'Approved', terminal: true },
           { stateKey: 'ORPHAN', label: 'Orphan' }
         ],
-        transitions: [
-          { transitionKey: 'APPROVE', fromStateKey: 'DRAFT', toStateKey: 'APPROVED' }
-        ]
+        transitions: [{ transitionKey: 'APPROVE', fromStateKey: 'DRAFT', toStateKey: 'APPROVED' }]
       })
     ).rejects.toThrow('unreachable');
 

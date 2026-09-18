@@ -24,8 +24,11 @@
 <header class="topbar">
   <div class="brand" aria-label="NuBlox"><span class="brand-mark">N</span><span>NuBlox</span></div>
   <nav class="topnav" aria-label="Global">
-    <a class:active={page.url.pathname === `/${tenantSlug}/app`} href={`/${tenantSlug}/app`}>Home</a>
-    <a class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}>My work</a>
+    <a class:active={page.url.pathname === `/${tenantSlug}/app`} href={`/${tenantSlug}/app`}>Home</a
+    >
+    <a class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}
+      >My work</a
+    >
     <a
       class:active={page.url.pathname.includes('/app/functions')}
       href={`/${tenantSlug}/app/functions`}>Functions</a

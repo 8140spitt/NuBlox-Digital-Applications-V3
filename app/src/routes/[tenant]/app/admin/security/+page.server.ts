@@ -1,11 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { listPersons } from '$lib/server/foundation-person';
-import {
-  platformPermissions,
-  assertPermission,
-  hasPermission
-} from '$lib/server/platform-context';
+import { platformPermissions, assertPermission, hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { queryOne } from '$lib/server/db';
 import { listPartyDirectory } from '$lib/server/foundation-party-directory';

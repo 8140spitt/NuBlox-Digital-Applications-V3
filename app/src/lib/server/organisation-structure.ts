@@ -389,7 +389,6 @@ export async function assignOrganisationUnitParent(
   });
 }
 
-
 export async function removeOrganisationUnitParent(
   context: CommandContext,
   childUnitId: string,

@@ -4,8 +4,18 @@ import { functionWorkspaceDirectory, getFunctionWorkspace } from './function-dir
 describe('governed function workspace directory', () => {
   it('covers all 29 functions, 353 subfunctions and 1510 activities', () => {
     expect(functionWorkspaceDirectory).toHaveLength(29);
-    expect(functionWorkspaceDirectory.reduce((sum, workspace) => sum + workspace.summary.subfunctionCount, 0)).toBe(353);
-    expect(functionWorkspaceDirectory.reduce((sum, workspace) => sum + workspace.summary.activityCount, 0)).toBe(1510);
+    expect(
+      functionWorkspaceDirectory.reduce(
+        (sum, workspace) => sum + workspace.summary.subfunctionCount,
+        0
+      )
+    ).toBe(353);
+    expect(
+      functionWorkspaceDirectory.reduce(
+        (sum, workspace) => sum + workspace.summary.activityCount,
+        0
+      )
+    ).toBe(1510);
   });
 
   it('keeps every activity bound to canonical object, aggregate and authority metadata', () => {

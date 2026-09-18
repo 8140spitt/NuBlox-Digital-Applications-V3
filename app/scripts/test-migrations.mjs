@@ -111,7 +111,13 @@ try {
   const accountUser = appAccount.user.replaceAll("'", "''");
   const accountHost = appAccount.host.replaceAll("'", "''");
   await admin.query(
-    "GRANT ALL PRIVILEGES ON `" + escapedDatabase + "`.* TO '" + accountUser + "'@'" + accountHost + "'"
+    'GRANT ALL PRIVILEGES ON `' +
+      escapedDatabase +
+      "`.* TO '" +
+      accountUser +
+      "'@'" +
+      accountHost +
+      "'"
   );
   temporaryGrantCreated = true;
 
@@ -144,7 +150,7 @@ try {
     }
 
     const [attempts] = await connection.query(
-      "SELECT migration_name AS name, status FROM schema_migration_attempts ORDER BY migration_name"
+      'SELECT migration_name AS name, status FROM schema_migration_attempts ORDER BY migration_name'
     );
     if (
       attempts.length !== migrations.length ||
@@ -184,7 +190,7 @@ try {
         const accountUser = appAccount.user.replaceAll("'", "''");
         const accountHost = appAccount.host.replaceAll("'", "''");
         await admin.query(
-          "REVOKE ALL PRIVILEGES ON `" +
+          'REVOKE ALL PRIVILEGES ON `' +
             escapedDatabase +
             "`.* FROM '" +
             accountUser +

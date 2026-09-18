@@ -71,21 +71,17 @@ Future schema changes start at `0013_...`; historical migrations remain immutabl
 
 Development bootstrap records are application/test fixtures, not migration content. Migrations establish schema and required structural constraints only; `pnpm db:seed:dev -- <tenant>` remains explicitly development-only.
 
-
 ## Migration 0009 — authorised decision runtime
 
 `0009_authorised_decision_runtime.sql` introduces the immutable `AGG-27-DECISION` runtime. Decisions bind an attributable outcome to an exact subject/version, retain permission/delegated-authority evidence at decision time, and support append-only corrective supersession without editing earlier decisions.
-
 
 ## Migration 0010 — governed evidence runtime
 
 `0010_governed_evidence_runtime.sql` introduces `AGG-28-EVIDENCE`: stable Evidence Items with exact subject/version binding, integrity hashes, immutable source/provenance references, attributable capture and independent verification. Evidence supports domain truth without becoming a duplicate business master.
 
-
 ## Migration 0011 — classification runtime
 
 `0011_classification_runtime.sql` introduces `AGG-29-CLASSIFICATION`: stable Classification Systems, draft-to-published immutable Releases, release-scoped Codes and hierarchical parent-code relationships. Bulk code loading is a governed aggregate command so large taxonomies such as Uniclass can be loaded efficiently without creating a parallel business-master architecture.
-
 
 ## Migration 0012 — lifecycle configuration runtime
 

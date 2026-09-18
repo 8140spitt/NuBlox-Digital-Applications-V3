@@ -389,10 +389,9 @@
   }
   .filters {
     display: grid;
-    grid-template-columns: minmax(220px, 1.2fr) minmax(190px, 1fr) minmax(170px, 0.8fr) minmax(
-        160px,
-        0.7fr
-      ) auto;
+    grid-template-columns:
+      minmax(220px, 1.2fr) minmax(190px, 1fr) minmax(170px, 0.8fr) minmax(160px, 0.7fr)
+      auto;
     gap: 10px;
     align-items: end;
     padding: 12px;

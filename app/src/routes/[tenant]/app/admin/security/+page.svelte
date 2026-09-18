@@ -342,7 +342,6 @@
         authentication directory.
       </p>
     </section>
-
   {:else}
     <section class="section-card card authority-card">
       <div class="section-heading">
@@ -350,8 +349,8 @@
           <p class="eyebrow">AGG-01-AUTHORITY</p>
           <h2>Delegated business authority</h2>
           <p>
-            Business decision authority is separate from system permissions. Grants are effective-dated,
-            scope-bound and can carry monetary limits with independent approval.
+            Business decision authority is separate from system permissions. Grants are
+            effective-dated, scope-bound and can carry monetary limits with independent approval.
           </p>
         </div>
         {#if data.authorityCapabilities.canManage}
@@ -379,24 +378,62 @@
                 </label>
               </div>
               <div class="form-row">
-                <label><span>Authority type</span><input name="authorityType" required placeholder="COMMERCIAL_COMMITMENT" /></label>
-                <label><span>Basis</span><input name="basis" required placeholder="Board-approved delegation matrix" /></label>
+                <label
+                  ><span>Authority type</span><input
+                    name="authorityType"
+                    required
+                    placeholder="COMMERCIAL_COMMITMENT"
+                  /></label
+                >
+                <label
+                  ><span>Basis</span><input
+                    name="basis"
+                    required
+                    placeholder="Board-approved delegation matrix"
+                  /></label
+                >
               </div>
               <div class="form-row">
-                <label><span>Scope type</span><input name="scopeType" value="TENANT" required /></label>
-                <label><span>Scope ID</span><input name="scopeId" placeholder="Blank = current tenant" /></label>
+                <label
+                  ><span>Scope type</span><input name="scopeType" value="TENANT" required /></label
+                >
+                <label
+                  ><span>Scope ID</span><input
+                    name="scopeId"
+                    placeholder="Blank = current tenant"
+                  /></label
+                >
               </div>
               <div class="form-row">
-                <label><span>Currency</span><input name="currencyCode" maxlength="3" placeholder="GBP" /></label>
-                <label><span>Value limit</span><input name="valueLimit" type="number" min="0" step="0.01" /></label>
+                <label
+                  ><span>Currency</span><input
+                    name="currencyCode"
+                    maxlength="3"
+                    placeholder="GBP"
+                  /></label
+                >
+                <label
+                  ><span>Value limit</span><input
+                    name="valueLimit"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                  /></label
+                >
               </div>
               <div class="form-row">
-                <label><span>Valid from</span><input name="validFrom" type="datetime-local" /></label>
+                <label
+                  ><span>Valid from</span><input name="validFrom" type="datetime-local" /></label
+                >
                 <label><span>Valid to</span><input name="validTo" type="datetime-local" /></label>
               </div>
               <label class="permission">
                 <input name="allowSubdelegation" type="checkbox" />
-                <span><strong>Allow subdelegation</strong><small>Permit this delegate to create subordinate authority where policy allows.</small></span>
+                <span
+                  ><strong>Allow subdelegation</strong><small
+                    >Permit this delegate to create subordinate authority where policy allows.</small
+                  ></span
+                >
               </label>
               <button type="submit">Create draft delegation</button>
             </form>
@@ -418,13 +455,18 @@
               </div>
               <div class="authority-limit">
                 {#if authority.valueLimit}
-                  <strong>{authority.currencyCode} {Number(authority.valueLimit).toLocaleString('en-GB')}</strong>
+                  <strong
+                    >{authority.currencyCode}
+                    {Number(authority.valueLimit).toLocaleString('en-GB')}</strong
+                  >
                 {:else}
                   <strong>No monetary limit</strong>
                 {/if}
                 <small>{authority.validFrom} → {authority.validTo || 'Open'}</small>
               </div>
-              <span class:active-status={authority.status === 'ACTIVE'} class="status">{authority.status}</span>
+              <span class:active-status={authority.status === 'ACTIVE'} class="status"
+                >{authority.status}</span
+              >
             </div>
 
             <div class="authority-actions">
@@ -840,7 +882,7 @@
   }
   .authority-main {
     display: grid;
-    grid-template-columns: minmax(170px, .8fr) minmax(220px, 1.15fr) minmax(180px, .8fr) auto;
+    grid-template-columns: minmax(170px, 0.8fr) minmax(220px, 1.15fr) minmax(180px, 0.8fr) auto;
     gap: 12px;
     align-items: center;
   }

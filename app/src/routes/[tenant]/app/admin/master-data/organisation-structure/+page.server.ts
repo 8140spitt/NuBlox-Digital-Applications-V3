@@ -58,7 +58,8 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
   const requestedId = url.searchParams.get('unit');
   const selected = units.find((unit) => unit.id === requestedId) ?? units[0] ?? null;
   const activeParent = selected
-    ? hierarchy.find((edge) => edge.childUnitId === selected.id && edge.status === 'ACTIVE') ?? null
+    ? (hierarchy.find((edge) => edge.childUnitId === selected.id && edge.status === 'ACTIVE') ??
+      null)
     : null;
 
   return {

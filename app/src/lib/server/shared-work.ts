@@ -111,9 +111,7 @@ async function getWorkflow(
   forUpdate = false
 ) {
   const row = await queryOne<RowDataPacket & WorkflowInstance>(
-    workflowSelect +
-      ' WHERE id = ? AND tenant_id = ?' +
-      (forUpdate ? ' FOR UPDATE' : ''),
+    workflowSelect + ' WHERE id = ? AND tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
     executor
   );
@@ -128,9 +126,7 @@ async function getWorkItem(
   forUpdate = false
 ) {
   const row = await queryOne<RowDataPacket & WorkItem>(
-    workItemSelect +
-      ' WHERE id = ? AND tenant_id = ?' +
-      (forUpdate ? ' FOR UPDATE' : ''),
+    workItemSelect + ' WHERE id = ? AND tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
     executor
   );
@@ -736,7 +732,8 @@ export async function changeWorkItemDueDate(
     const initial = await getWorkItem(context, workItemId, connection);
     const workflow = await getWorkflow(context, initial.workflowInstanceId, connection, true);
     const item = await getWorkItem(context, workItemId, connection, true);
-    if (item.version !== expectedVersion) throw new Error('This Work Item changed after you opened it.');
+    if (item.version !== expectedVersion)
+      throw new Error('This Work Item changed after you opened it.');
     if (['COMPLETED', 'CANCELLED'].includes(item.status)) {
       throw new Error('Completed or cancelled Work Items cannot change due date.');
     }
@@ -764,7 +761,8 @@ export async function changeWorkItemDueDate(
       [dueAt, timestamp, item.id, context.tenantId, expectedVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Work Item due-date change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Work Item due-date change detected.');
 
     const updated = await getWorkItem(context, item.id, connection);
     const updatedWorkflow = await bumpWorkflow(context, workflow, connection);
@@ -776,7 +774,12 @@ export async function changeWorkItemDueDate(
       'WORK_ITEM_DUE_DATE_CHANGED',
       item.dueAt ?? undefined,
       dueAt ?? undefined,
-      { workItemId: item.id, priorDueAt: item.dueAt, newDueAt: dueAt, workItemVersion: updated.version },
+      {
+        workItemId: item.id,
+        priorDueAt: item.dueAt,
+        newDueAt: dueAt,
+        workItemVersion: updated.version
+      },
       connection
     );
     return updated;
@@ -796,7 +799,8 @@ export async function changeWorkItemPriority(
     const initial = await getWorkItem(context, workItemId, connection);
     const workflow = await getWorkflow(context, initial.workflowInstanceId, connection, true);
     const item = await getWorkItem(context, workItemId, connection, true);
-    if (item.version !== expectedVersion) throw new Error('This Work Item changed after you opened it.');
+    if (item.version !== expectedVersion)
+      throw new Error('This Work Item changed after you opened it.');
     if (['COMPLETED', 'CANCELLED'].includes(item.status)) {
       throw new Error('Completed or cancelled Work Items cannot change priority.');
     }
@@ -824,7 +828,8 @@ export async function changeWorkItemPriority(
       [targetPriority, timestamp, item.id, context.tenantId, expectedVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Work Item priority change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Work Item priority change detected.');
 
     const updated = await getWorkItem(context, item.id, connection);
     const updatedWorkflow = await bumpWorkflow(context, workflow, connection);
@@ -902,7 +907,6 @@ export async function acknowledgeWorkItem(
   });
 }
 
-
 export async function completeWorkflowInstance(
   context: CommandContext,
   workflowInstanceId: string,
@@ -960,15 +964,12 @@ export async function completeWorkflowInstance(
   });
 }
 
-
 export async function listWorkEscalations(
   context: CommandContext,
   workItemId?: string
 ): Promise<WorkEscalation[]> {
   assertPermission(context, 'work.item.manage');
-  const where = workItemId
-    ? ' WHERE tenant_id = ? AND work_item_id = ?'
-    : ' WHERE tenant_id = ?';
+  const where = workItemId ? ' WHERE tenant_id = ? AND work_item_id = ?' : ' WHERE tenant_id = ?';
   const params = workItemId ? [context.tenantId, workItemId] : [context.tenantId];
   return queryRows<RowDataPacket & WorkEscalation>(
     `SELECT id,
@@ -987,8 +988,6 @@ export async function listWorkEscalations(
     params
   );
 }
-
-
 
 export async function listMyWorkEscalations(context: CommandContext): Promise<WorkEscalation[]> {
   assertPermission(context, 'work.item.read');

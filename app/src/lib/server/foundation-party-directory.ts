@@ -24,9 +24,10 @@ export type PartyDirectoryEntry = {
   updatedAt: string;
 };
 
-type PartyDirectoryRow = RowDataPacket & Omit<PartyDirectoryEntry, 'isLegalEntity'> & {
-  isLegalEntity: number;
-};
+type PartyDirectoryRow = RowDataPacket &
+  Omit<PartyDirectoryEntry, 'isLegalEntity'> & {
+    isLegalEntity: number;
+  };
 
 export type PartyDirectoryRelationship = {
   id: string;

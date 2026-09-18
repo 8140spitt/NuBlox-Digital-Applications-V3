@@ -127,9 +127,7 @@ async function getEvidence(
   forUpdate = false
 ) {
   const row = await queryOne<RowDataPacket & EvidenceItem>(
-    evidenceSelect +
-      ' WHERE id = ? AND tenant_id = ?' +
-      (forUpdate ? ' FOR UPDATE' : ''),
+    evidenceSelect + ' WHERE id = ? AND tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [evidenceId, context.tenantId],
     executor
   );
@@ -179,10 +177,7 @@ export async function listEvidenceProvenance(
   );
 }
 
-export async function captureEvidenceItem(
-  context: CommandContext,
-  input: CaptureEvidenceInput
-) {
+export async function captureEvidenceItem(context: CommandContext, input: CaptureEvidenceInput) {
   assertPermission(context, 'evidence.item.capture');
   const evidenceType = code(input.evidenceType, 'Evidence type');
   const subjectType = required(input.subjectType, 'Evidence subject type');
@@ -197,7 +192,8 @@ export async function captureEvidenceItem(
   }
   if (subjectType.length > 128) throw new Error('Evidence subject type is too long.');
   if (subjectId.length > 191) throw new Error('Evidence subject ID is too long.');
-  if (subjectVersion && subjectVersion.length > 64) throw new Error('Evidence subject version is too long.');
+  if (subjectVersion && subjectVersion.length > 64)
+    throw new Error('Evidence subject version is too long.');
   const { algorithm, hash } = integrity(input.hashAlgorithm, input.contentHash);
   const classification = input.classification?.trim() || null;
   if (classification && classification.length > 128) {
@@ -240,7 +236,8 @@ export async function captureEvidenceItem(
       const sourceVersion = source.sourceVersion?.trim() || null;
       if (sourceSystem.length > 191) throw new Error('Evidence source system is too long.');
       if (sourceIdentifier.length > 255) throw new Error('Evidence source identifier is too long.');
-      if (sourceVersion && sourceVersion.length > 128) throw new Error('Evidence source version is too long.');
+      if (sourceVersion && sourceVersion.length > 128)
+        throw new Error('Evidence source version is too long.');
       const sourceAsOf = source.sourceAsOf?.trim()
         ? timestamp(source.sourceAsOf, 'Evidence source as-of')
         : null;
@@ -269,14 +266,20 @@ export async function captureEvidenceItem(
     }
 
     for (const provenance of input.provenance ?? []) {
-      const sourceObjectType = required(provenance.sourceObjectType, 'Provenance source object type');
+      const sourceObjectType = required(
+        provenance.sourceObjectType,
+        'Provenance source object type'
+      );
       const sourceObjectId = required(provenance.sourceObjectId, 'Provenance source object ID');
       const sourceObjectVersion = provenance.sourceObjectVersion?.trim() || null;
       const transformation = provenance.transformation?.trim() || null;
-      if (sourceObjectType.length > 128) throw new Error('Provenance source object type is too long.');
+      if (sourceObjectType.length > 128)
+        throw new Error('Provenance source object type is too long.');
       if (sourceObjectId.length > 191) throw new Error('Provenance source object ID is too long.');
-      if (sourceObjectVersion && sourceObjectVersion.length > 64) throw new Error('Provenance source object version is too long.');
-      if (transformation && transformation.length > 500) throw new Error('Provenance transformation is too long.');
+      if (sourceObjectVersion && sourceObjectVersion.length > 64)
+        throw new Error('Provenance source object version is too long.');
+      if (transformation && transformation.length > 500)
+        throw new Error('Provenance transformation is too long.');
       await executeMutation(
         `INSERT INTO evidence_provenance_references
           (id, tenant_id, evidence_item_id, source_object_type, source_object_id,
@@ -372,7 +375,8 @@ export async function verifyEvidenceItem(
       ],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Evidence Item verification detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Evidence Item verification detected.');
 
     const verified = await getEvidence(context, evidence.id, connection);
     await recordPlatformAudit(

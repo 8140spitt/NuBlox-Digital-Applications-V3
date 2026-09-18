@@ -48,7 +48,8 @@ function parseCodeBatch(raw: string): ClassificationCodeInput[] {
     .filter((line) => line && !line.startsWith('#'));
 
   if (!rows.length) throw new Error('At least one classification code row is required.');
-  if (rows.length > 5000) throw new Error('A single classification import cannot exceed 5,000 rows.');
+  if (rows.length > 5000)
+    throw new Error('A single classification import cannot exceed 5,000 rows.');
 
   return rows.map((line, index) => {
     const separator = line.includes('\t') ? '\t' : '|';

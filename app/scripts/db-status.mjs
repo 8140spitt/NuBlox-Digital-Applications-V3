@@ -32,9 +32,7 @@ try {
         console.log(`APPLIED  ${migration.name}  ${String(row.appliedAt)}`);
       }
     } else if (dirtyRow) {
-      console.log(
-        `DIRTY    ${migration.name}  ${dirtyRow.status}  ${String(dirtyRow.startedAt)}`
-      );
+      console.log(`DIRTY    ${migration.name}  ${dirtyRow.status}  ${String(dirtyRow.startedAt)}`);
     } else {
       pending += 1;
       console.log(`PENDING  ${migration.name}`);

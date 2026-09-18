@@ -74,9 +74,7 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     parties,
     allParties,
     selected,
-    relationships: selected
-      ? await listPartyDirectoryRelationships(context, selected.id)
-      : [],
+    relationships: selected ? await listPartyDirectoryRelationships(context, selected.id) : [],
     authority: {
       canCreate: hasPermission(context, 'party.create'),
       canChange: hasPermission(context, 'party.change'),

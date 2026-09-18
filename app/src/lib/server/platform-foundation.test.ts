@@ -403,9 +403,9 @@ describe('platform foundation runtime on MySQL', () => {
 
     const firstClaim = await outboxService.claimOutboxMessages(workerId, 100);
     expect(firstClaim.some((message) => message.id === messageId)).toBe(true);
-    expect(await outboxService.markOutboxFailed(messageId, workerId, new Error('broker offline'), 2)).toBe(
-      'PENDING'
-    );
+    expect(
+      await outboxService.markOutboxFailed(messageId, workerId, new Error('broker offline'), 2)
+    ).toBe('PENDING');
 
     let state = (
       await dbModule.queryRows<any>(
@@ -440,7 +440,6 @@ describe('platform foundation runtime on MySQL', () => {
     expect(state.lastError).toContain('still offline');
     expect(state.deadLetteredAt).toBeTruthy();
   });
-
 
   it('projects Person, Organisation, Legal Entity and Party Relationship through one Party directory', async () => {
     const tenant = 'party-directory-' + randomUUID().slice(0, 8);
@@ -499,5 +498,4 @@ describe('platform foundation runtime on MySQL', () => {
     expect(directoryRelationship?.status).toBe('ACTIVE');
     expect(directoryRelationship?.toPartyId).toBe(organisationId);
   });
-
 });

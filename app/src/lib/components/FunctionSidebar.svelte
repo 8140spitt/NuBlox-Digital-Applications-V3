@@ -16,7 +16,11 @@
       class:active={page.url.pathname === `/${tenantSlug}/app`}
       href={`/${tenantSlug}/app`}>⌂ <span>Home</span></a
     >
-    <a class="utility" class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}>▣ <span>My work</span></a>
+    <a
+      class="utility"
+      class:active={page.url.pathname.includes('/app/work')}
+      href={`/${tenantSlug}/app/work`}>▣ <span>My work</span></a
+    >
   </section>
 
   <section class="functions">
@@ -38,44 +42,96 @@
 
   <section class="admin">
     <p class="label">Administration</p>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}><span>◈</span>Security & access</a>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}><span>◎</span>Party master data</a>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisation-structure`}><span>▦</span>Organisation structure</a>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/reference-data`}><span>⌁</span>Reference data</a>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}><span>◇</span>Business object model</a>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}><span>✓</span>Coverage audit</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}
+      ><span>◈</span>Security & access</a
+    >
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}
+      ><span>◎</span>Party master data</a
+    >
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisation-structure`}
+      ><span>▦</span>Organisation structure</a
+    >
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/reference-data`}
+      ><span>⌁</span>Reference data</a
+    >
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}
+      ><span>◇</span>Business object model</a
+    >
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}
+      ><span>✓</span>Coverage audit</a
+    >
     <a class="admin-item" href={`/${tenantSlug}/app/functions`}><span>◫</span>Function directory</a>
 
     <details class="admin-group">
       <summary>Architecture views</summary>
       <div class="admin-group-links">
         <a href={`/${tenantSlug}/app/admin/business-objects/foundation`}>Foundation semantics</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/authority`}>Authority & participation</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/authority`}>Authority & participation</a
+        >
         <a href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}>Delivery context</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/built-environment`}>Built environment</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}>Commercial & procurement</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/controlled-information`}>Controlled information</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/built-environment`}>Built environment</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}
+          >Commercial & procurement</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/controlled-information`}
+          >Controlled information</a
+        >
         <a href={`/${tenantSlug}/app/admin/business-objects/asset-operations`}>Asset operations</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/finance-accounting`}>Finance & accounting</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/item-manufacturing`}>Item & manufacturing</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/inventory-logistics`}>Inventory & logistics</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/crm-business-development`}>CRM & business development</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/estimating-tendering`}>Estimating & tendering</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/finance-accounting`}
+          >Finance & accounting</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/item-manufacturing`}
+          >Item & manufacturing</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/inventory-logistics`}
+          >Inventory & logistics</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/crm-business-development`}
+          >CRM & business development</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/estimating-tendering`}
+          >Estimating & tendering</a
+        >
         <a href={`/${tenantSlug}/app/admin/business-objects/people-hcm`}>People & HCM</a>
         <a href={`/${tenantSlug}/app/admin/business-objects/qhse-assurance`}>QHSE & assurance</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/building-safety-regulatory`}>Building safety & regulatory</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/sustainability-carbon`}>Sustainability & carbon</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/risk-compliance-audit`}>Risk, compliance & audit</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/building-safety-regulatory`}
+          >Building safety & regulatory</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/sustainability-carbon`}
+          >Sustainability & carbon</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/risk-compliance-audit`}
+          >Risk, compliance & audit</a
+        >
         <a href={`/${tenantSlug}/app/admin/business-objects/legal-privacy`}>Legal & privacy</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/knowledge-records-communications`}>Knowledge, records & communications</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/land-development-investment`}>Land & development</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/strategy-governance-performance`}>Strategy & governance</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/continuity-crisis-security`}>Continuity, crisis & security</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/technology-data-cyber-ai`}>IT, data, cyber & AI</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/transformation-process-improvement`}>Transformation & process</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/site-field-operations`}>Site & field operations</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/shared-work-evidence`}>Work, decisions & evidence</a>
-        <a href={`/${tenantSlug}/app/admin/business-objects/reference-configuration`}>Reference & configuration</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/knowledge-records-communications`}
+          >Knowledge, records & communications</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/land-development-investment`}
+          >Land & development</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/strategy-governance-performance`}
+          >Strategy & governance</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/continuity-crisis-security`}
+          >Continuity, crisis & security</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/technology-data-cyber-ai`}
+          >IT, data, cyber & AI</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/transformation-process-improvement`}
+          >Transformation & process</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/site-field-operations`}
+          >Site & field operations</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/shared-work-evidence`}
+          >Work, decisions & evidence</a
+        >
+        <a href={`/${tenantSlug}/app/admin/business-objects/reference-configuration`}
+          >Reference & configuration</a
+        >
       </div>
     </details>
   </section>

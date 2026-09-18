@@ -59,8 +59,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0009_authorised_decision_runtime.sql` — immutable AGG-27-DECISION records with exact subject/version and authority evidence.
 - `0010_governed_evidence_runtime.sql` — AGG-28-EVIDENCE items with integrity hashes, source references, provenance and independent verification.
 - `0011_classification_runtime.sql` — AGG-29-CLASSIFICATION systems, immutable releases and governed release-scoped codes.
+- `0012_lifecycle_configuration_runtime.sql` — AGG-29-LIFECYCLE-CONFIG stable definitions with immutable published versions, states and transition rules.
 
-Future schema changes start at `0012_...`; historical migrations remain immutable.
+Future schema changes start at `0013_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -84,3 +85,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0011 — classification runtime
 
 `0011_classification_runtime.sql` introduces `AGG-29-CLASSIFICATION`: stable Classification Systems, draft-to-published immutable Releases, release-scoped Codes and hierarchical parent-code relationships. Bulk code loading is a governed aggregate command so large taxonomies such as Uniclass can be loaded efficiently without creating a parallel business-master architecture.
+
+
+## Migration 0012 — lifecycle configuration runtime
+
+`0012_lifecycle_configuration_runtime.sql` introduces `AGG-29-LIFECYCLE-CONFIG`: stable Lifecycle Definition identities, versioned draft/published configurations, state definitions and transition-rule value rows. Published versions are immutable and runtime domain state remains owned by the relevant domain aggregate.

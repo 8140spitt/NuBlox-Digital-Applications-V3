@@ -135,6 +135,24 @@ export const platformPermissions = [
     'publish',
     'Publish immutable classification releases for business use.'
   ],
+  [
+    'reference.lifecycle.read',
+    'reference.lifecycle',
+    'read',
+    'Read governed lifecycle definitions and immutable published versions.'
+  ],
+  [
+    'reference.lifecycle.manage',
+    'reference.lifecycle',
+    'manage',
+    'Create lifecycle definitions and configure draft versions.'
+  ],
+  [
+    'reference.lifecycle.publish',
+    'reference.lifecycle',
+    'publish',
+    'Validate and publish immutable lifecycle definition versions.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

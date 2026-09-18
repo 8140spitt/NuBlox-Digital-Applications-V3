@@ -23,6 +23,7 @@ import { strategyGovernancePerformanceCanonicalization } from '$lib/data/strateg
 import { continuityCrisisSecurityCanonicalization } from '$lib/data/continuity-crisis-security-canonicalization';
 import { technologyDataCyberAiCanonicalization } from '$lib/data/technology-data-cyber-ai-canonicalization';
 import { transformationProcessImprovementCanonicalization } from '$lib/data/transformation-process-improvement-canonicalization';
+import { siteFieldOperationsCanonicalization } from '$lib/data/site-field-operations-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -135,7 +136,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...strategyGovernancePerformanceCanonicalization,
     ...continuityCrisisSecurityCanonicalization,
     ...technologyDataCyberAiCanonicalization,
-    ...transformationProcessImprovementCanonicalization
+    ...transformationProcessImprovementCanonicalization,
+    ...siteFieldOperationsCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

@@ -25,7 +25,7 @@
   <div class="brand" aria-label="NuBlox"><span class="brand-mark">N</span><span>NuBlox</span></div>
   <nav class="topnav" aria-label="Global">
     <a href={`/${tenantSlug}/app/functions/f01`}>Home</a>
-    <a href={`/${tenantSlug}/app/functions/f01`}>My work</a>
+    <a class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}>My work</a>
     <a
       class:active={!page.url.pathname.includes('/admin/')}
       href={`/${tenantSlug}/app/functions/f01`}>Functions</a

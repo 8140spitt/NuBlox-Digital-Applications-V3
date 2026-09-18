@@ -121,6 +121,11 @@ async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbExecutor
     executor
   );
   await executeMutation(
+    'INSERT INTO persons (party_id, given_name, family_name, preferred_name, created_at, updated_at) VALUES (?, \'Development\', \'User\', \'Development User\', ?, ?)',
+    [partyId, timestamp, timestamp],
+    executor
+  );
+  await executeMutation(
     'INSERT INTO user_identities (id, tenant_id, party_id, provider, provider_subject, display_name, status, created_at, updated_at) VALUES (?, ?, ?, \'development\', \'development-user\', \'Development User\', \'ACTIVE\', ?, ?)',
     [identityId, tenant.id, partyId, timestamp, timestamp],
     executor

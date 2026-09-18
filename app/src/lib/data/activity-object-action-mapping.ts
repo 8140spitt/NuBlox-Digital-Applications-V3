@@ -1,6 +1,7 @@
 import activitySource from '$lib/generated/enterprise-activity-source.json';
 import semanticInventory from '$lib/generated/semantic-model-inventory.json';
 import {
+  activityDrivenAggregateOwnership,
   canonicalAggregateBoundaries,
   canonicalAggregateFreezeSummary
 } from './canonical-aggregate-boundary-register';
@@ -299,7 +300,7 @@ export const l2AggregateRoutes: L2AggregateRoute[] = [
 
 const aggregateById = new Map(canonicalAggregateBoundaries.map((entry) => [entry.id, entry]));
 
-function inferAction(activityName: string): ActivityAction {
+function inferAction(activityName: string, subfunctionName: string): ActivityAction {
   const value = activityName.trim().toLowerCase();
   if (/^(view|read|search|find|retrieve|access|consult)/.test(value)) return 'read';
   if (/^(define|establish|create|develop|draft|build|set up|set|capture|register|appoint|open|raise|initiate)/.test(value)) return 'create';
@@ -320,6 +321,7 @@ function inferAction(activityName: string): ActivityAction {
   if (/^(analyse|analyze|model|calculate|forecast|project|compare|benchmark|determine|identify|investigate|discover|map|cost|defects|hand-offs|bottlenecks)/.test(value)) return 'analyse';
   if (/^(configure|administer|manage|govern|control)/.test(value)) return 'configure';
   if (/^(record|log|document|evidence)/.test(value)) return 'record';
+  if (/analytics|performance|benchmarking/i.test(subfunctionName)) return 'analyse';
   return 'execute';
 }
 
@@ -329,6 +331,71 @@ function matchingRoutes(functionId: string, subfunctionName: string) {
 
 function routeFor(functionId: string, subfunctionName: string) {
   return matchingRoutes(functionId, subfunctionName)[0];
+}
+
+function resolveActivityTarget(
+  subfunctionId: string,
+  activityName: string,
+  route: L2AggregateRoute
+) {
+  let objectModelId = route.objectModelId;
+  let objectName = route.objectName;
+  let aggregateId = activityDrivenAggregateOwnership[objectModelId] ?? route.aggregateId;
+
+  if (subfunctionId === 'F03.02' && /^collect performance data$/i.test(activityName)) {
+    objectModelId = 'SGP-PERFORMANCE-OBSERVATION';
+    objectName = 'Performance Observation';
+    aggregateId = 'AGG-02-PERFORMANCE';
+  } else if (subfunctionId === 'F03.05' && /^select benchmarks$/i.test(activityName)) {
+    objectModelId = 'SGP-PERFORMANCE-TARGET';
+    objectName = 'Performance Target / Benchmark Basis';
+    aggregateId = 'AGG-02-PERFORMANCE';
+  } else if (subfunctionId === 'F03.05' && /^collect comparable data$/i.test(activityName)) {
+    objectModelId = 'SGP-PERFORMANCE-OBSERVATION';
+    objectName = 'Performance Observation';
+    aggregateId = 'AGG-02-PERFORMANCE';
+  } else if (subfunctionId === 'F10.04') {
+    objectModelId = 'PLN-SUPPLY-PLAN';
+    objectName = 'Supply / Inventory Plan';
+    aggregateId = 'AGG-10-PLANNING';
+  } else if (subfunctionId === 'F10.07' && /^count inventory$/i.test(activityName)) {
+    objectModelId = 'INV-STOCK-COUNT';
+    objectName = 'Stock Count';
+    aggregateId = 'AGG-10-STOCK-COUNT';
+  } else if (subfunctionId === 'F10.07' && /reconcile variance|manage adjustments/i.test(activityName)) {
+    objectModelId = 'INV-ADJUSTMENT';
+    objectName = 'Inventory Adjustment';
+    aggregateId = 'AGG-10-INVENTORY-ADJUSTMENT';
+  } else if (subfunctionId === 'F10.07' && /quarantine stock/i.test(activityName)) {
+    objectModelId = 'INV-QUARANTINE';
+    objectName = 'Inventory Quarantine';
+    aggregateId = 'AGG-10-INVENTORY-QUARANTINE';
+  } else if (subfunctionId === 'F15.16' && /^conduct surveys$/i.test(activityName)) {
+    objectModelId = 'SGP-PERFORMANCE-OBSERVATION';
+    objectName = 'Employee Engagement Observation';
+    aggregateId = 'AGG-02-PERFORMANCE';
+  } else if (subfunctionId === 'F15.16' && /^develop engagement actions$/i.test(activityName)) {
+    objectModelId = 'WORK-FOLLOW-UP-ACTION';
+    objectName = 'Engagement Follow-up Action';
+    aggregateId = 'AGG-27-DECISION';
+  }
+
+  const secondaryAggregateIds = [...new Set([
+    ...(route.secondaryAggregateIds ?? []),
+    ...(aggregateId !== route.aggregateId ? [route.aggregateId] : [])
+  ])].filter((id) => id !== aggregateId);
+
+  return { aggregateId, objectModelId, objectName, secondaryAggregateIds };
+}
+
+function objectPlacement(aggregateId: string, objectModelId: string) {
+  const aggregate = aggregateById.get(aggregateId);
+  if (!aggregate) return 'missing-aggregate' as const;
+  if (aggregate.rootModelId === objectModelId) return 'root' as const;
+  if (aggregate.ownedMembers.includes(objectModelId)) return 'owned' as const;
+  if (aggregate.projections.includes(objectModelId)) return 'projection' as const;
+  if (aggregate.references.includes(objectModelId)) return 'reference' as const;
+  return 'unassigned' as const;
 }
 
 export const unmappedSubfunctions = activitySource.subfunctions.filter(
@@ -349,7 +416,10 @@ export const activityObjectActionMappings: ActivityObjectActionMapping[] = activ
   if (!aggregate) return [];
 
   return subfunction.activities.map((activityName, index) => {
-    const action = inferAction(activityName);
+    const target = resolveActivityTarget(subfunction.id, activityName, route);
+    const aggregate = aggregateById.get(target.aggregateId);
+    if (!aggregate) throw new Error(`Unknown aggregate ${target.aggregateId} for ${subfunction.id}`);
+    const action = inferAction(activityName, subfunction.name);
     const approvalRequired = action === 'approve' || /approval|authority|certif|release|publish/i.test(activityName);
     const decisionRequired = approvalRequired || /decid|select|adjudicat|go\/no-go|prioritis|prioritiz/i.test(activityName);
     const accessMode = action === 'read' || action === 'analyse' || action === 'monitor' ? 'query' : 'command';
@@ -362,12 +432,12 @@ export const activityObjectActionMappings: ActivityObjectActionMapping[] = activ
       subfunctionName: subfunction.name,
       activityName,
       routeId: route.routeId,
-      aggregateId: route.aggregateId,
+      aggregateId: target.aggregateId,
       aggregateRootModelId: aggregate.rootModelId,
       aggregateRootName: aggregate.rootName,
-      objectModelId: route.objectModelId,
-      objectName: route.objectName,
-      secondaryAggregateIds: route.secondaryAggregateIds ?? [],
+      objectModelId: target.objectModelId,
+      objectName: target.objectName,
+      secondaryAggregateIds: target.secondaryAggregateIds,
       action,
       accessMode,
       approvalRequired,
@@ -396,8 +466,10 @@ export const activityObjectActionSummary = {
   mappedActivityCount: activityObjectActionMappings.length,
   unmappedSubfunctionCount: unmappedSubfunctions.length,
   ambiguousSubfunctionCount: ambiguousSubfunctions.length,
-  invalidObjectModelRouteCount: l2AggregateRoutes.filter((route) => !knownSemanticModelIds.has(route.objectModelId)).length,
+  invalidObjectModelRouteCount: activityObjectActionMappings.filter((entry) => !knownSemanticModelIds.has(entry.objectModelId)).length,
   invalidAggregateRouteCount: l2AggregateRoutes.filter((route) => !knownAggregateIds.has(route.aggregateId)).length,
+  invalidObjectPlacementCount: activityObjectActionMappings.filter((entry) => !['root', 'owned', 'projection'].includes(objectPlacement(entry.aggregateId, entry.objectModelId))).length,
+  unsafeProjectionCommandCount: activityObjectActionMappings.filter((entry) => objectPlacement(entry.aggregateId, entry.objectModelId) === 'projection' && entry.accessMode === 'command' && !['publish', 'record', 'approve'].includes(entry.action)).length,
   commandCount: activityObjectActionMappings.filter((entry) => entry.accessMode === 'command').length,
   queryCount: activityObjectActionMappings.filter((entry) => entry.accessMode === 'query').length,
   approvalControlledCount: activityObjectActionMappings.filter((entry) => entry.approvalRequired).length,
@@ -417,6 +489,8 @@ export function validateActivityObjectActionMapping() {
   if (activityObjectActionSummary.ambiguousSubfunctionCount !== 0) return false;
   if (activityObjectActionSummary.invalidObjectModelRouteCount !== 0) return false;
   if (activityObjectActionSummary.invalidAggregateRouteCount !== 0) return false;
+  if (activityObjectActionSummary.invalidObjectPlacementCount !== 0) return false;
+  if (activityObjectActionSummary.unsafeProjectionCommandCount !== 0) return false;
   if (new Set(activityObjectActionMappings.map((entry) => entry.activityId)).size !== 1510) return false;
   if (!activityObjectActionMappings.every((entry) => knownAggregateIds.has(entry.aggregateId))) return false;
   if (!activityObjectActionMappings.every((entry) => knownSemanticModelIds.has(entry.objectModelId))) return false;

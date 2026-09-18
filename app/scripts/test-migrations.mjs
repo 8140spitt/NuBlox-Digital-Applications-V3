@@ -28,7 +28,9 @@ const admin = await mysql.createConnection({
 });
 const escapedDatabase = temporaryDatabase.replaceAll('`', '``');
 let temporaryDatabaseCreated = false;
-const tempUrl = new URL(adminBase);
+let temporaryGrantCreated = false;
+let appAccount = null;
+const tempUrl = new URL(base);
 tempUrl.pathname = '/' + temporaryDatabase;
 
 function runServiceTests() {
@@ -61,6 +63,26 @@ function runServiceTests() {
 }
 
 try {
+  const appProbe = await mysql.createConnection({
+    host: base.hostname,
+    port: base.port ? Number(base.port) : 3306,
+    user: decodeURIComponent(base.username),
+    password: decodeURIComponent(base.password),
+    database: originalDatabase,
+    ssl: process.env.MYSQL_SSL === 'true' ? {} : undefined
+  });
+  try {
+    const [accountRows] = await appProbe.query('SELECT CURRENT_USER() AS currentUser');
+    const currentUser = String(accountRows[0]?.currentUser ?? '');
+    const separator = currentUser.lastIndexOf('@');
+    if (separator <= 0 || separator === currentUser.length - 1) {
+      throw new Error('Could not resolve the existing MySQL application account.');
+    }
+    appAccount = { user: currentUser.slice(0, separator), host: currentUser.slice(separator + 1) };
+  } finally {
+    await appProbe.end();
+  }
+
   try {
     await admin.query(
       'CREATE DATABASE `' + escapedDatabase + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci'
@@ -77,11 +99,18 @@ try {
     }
     throw error;
   }
+  const accountUser = appAccount.user.replaceAll("'", "''");
+  const accountHost = appAccount.host.replaceAll("'", "''");
+  await admin.query(
+    "GRANT ALL PRIVILEGES ON `" + escapedDatabase + "`.* TO '" + accountUser + "'@'" + accountHost + "'"
+  );
+  temporaryGrantCreated = true;
+
   const connection = await mysql.createConnection({
-    host: adminBase.hostname,
-    port: adminBase.port ? Number(adminBase.port) : 3306,
-    user: decodeURIComponent(adminBase.username),
-    password: decodeURIComponent(adminBase.password),
+    host: base.hostname,
+    port: base.port ? Number(base.port) : 3306,
+    user: decodeURIComponent(base.username),
+    password: decodeURIComponent(base.password),
     database: temporaryDatabase,
     ssl: process.env.MYSQL_SSL === 'true' ? {} : undefined,
     multipleStatements: true
@@ -141,6 +170,13 @@ try {
   );
 } finally {
   try {
+    if (temporaryGrantCreated && appAccount) {
+      const accountUser = appAccount.user.replaceAll("'", "''");
+      const accountHost = appAccount.host.replaceAll("'", "''");
+      await admin.query(
+        "REVOKE ALL PRIVILEGES ON `" + escapedDatabase + "`.* FROM '" + accountUser + "'@'" + accountHost + "'"
+      );
+    }
     if (temporaryDatabaseCreated) {
       await admin.query('DROP DATABASE IF EXISTS `' + escapedDatabase + '`');
     }

@@ -41,7 +41,7 @@ They are user-facing navigation and work-context boundaries, but they are **not*
 
 ## Required V3 depth
 
-The prior taxonomy contained 353 L2 sub-functions and 1,510 source activities. V3 will preserve that depth only after each item is checked for:
+The prior taxonomy contained 353 L2 sub-functions and 1,510 source activities. The V3 architecture baseline now preserves and maps that full depth. Every source activity has been routed into the 29-workspace model against a frozen aggregate, canonical semantic object focus and governed action classification. The revalidation criteria remain:
 
 - clear business meaning;
 - duplication or overlap;
@@ -53,6 +53,8 @@ The prior taxonomy contained 353 L2 sub-functions and 1,510 source activities. V
 - canonical records and evidence;
 - measurable evidence of completion.
 
-Every L2 sub-function must have one primary workspace home. Cross-workspace visibility or action is allowed where the business process requires it, but the underlying record or process state must not be duplicated.
+Current architecture result: **29/29 workspaces, 353/353 L2 sub-functions and 1,510/1,510 source activities mapped**, with zero unmapped/ambiguous L2 routes, zero unknown semantic objects and zero invalid write placements.
+
+Every L2 sub-function has one primary workspace home. Cross-workspace visibility or action is allowed where the business process requires it, but the underlying record or process state must not be duplicated. This architecture result does not claim the corresponding workflows, permissions or UI surfaces are already implemented.
 
 The V3 function IDs are therefore also the stable workspace IDs. Underlying implementation technology, service boundaries or component structure may evolve without changing them.

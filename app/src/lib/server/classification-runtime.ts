@@ -404,27 +404,63 @@ export async function importClassificationCodes(
       throw new Error('Published or retired Classification Releases are immutable.');
     }
 
-    const existing = await queryRows<RowDataPacket & { id: string; code: string }>(
-      'SELECT id, code FROM classification_codes WHERE tenant_id = ? AND classification_system_id = ? AND classification_release_id = ?',
+    const existing = await queryRows<
+      RowDataPacket & { id: string; code: string; parentCode: string | null }
+    >(
+      `SELECT c.id, c.code, p.code AS parentCode
+         FROM classification_codes c
+         LEFT JOIN classification_codes p
+           ON p.id = c.parent_code_id
+          AND p.classification_release_id = c.classification_release_id
+        WHERE c.tenant_id = ?
+          AND c.classification_system_id = ?
+          AND c.classification_release_id = ?`,
       [context.tenantId, system.id, release.id],
       connection
     );
-    const byCode = new Map(existing.map((row) => [row.code, row.id]));
-    for (const entry of normalised) {
-      if (byCode.has(entry.code)) {
-        throw new Error('Classification Code already exists in this release: ' + entry.code);
-      }
-      byCode.set(entry.code, entry.id);
+
+    const canonical = (value: string) => value.toUpperCase();
+    const byCode = new Map<string, string>();
+    const parentByCode = new Map<string, string | null>();
+    for (const row of existing) {
+      byCode.set(canonical(row.code), row.id);
+      parentByCode.set(canonical(row.code), row.parentCode ? canonical(row.parentCode) : null);
     }
 
     for (const entry of normalised) {
-      if (entry.parentCode && entry.parentCode === entry.code) {
+      const canonicalCode = canonical(entry.code);
+      if (byCode.has(canonicalCode)) {
+        throw new Error('Classification Code already exists in this release: ' + entry.code);
+      }
+      byCode.set(canonicalCode, entry.id);
+      parentByCode.set(
+        canonicalCode,
+        entry.parentCode ? canonical(entry.parentCode) : null
+      );
+    }
+
+    for (const entry of normalised) {
+      const canonicalCode = canonical(entry.code);
+      const canonicalParent = entry.parentCode ? canonical(entry.parentCode) : null;
+      if (canonicalParent && canonicalParent === canonicalCode) {
         throw new Error('Classification Code cannot be its own parent: ' + entry.code);
       }
-      if (entry.parentCode && !byCode.has(entry.parentCode)) {
+      if (canonicalParent && !byCode.has(canonicalParent)) {
         throw new Error(
           'Classification parent code is not present in this release: ' + entry.parentCode
         );
+      }
+    }
+
+    for (const start of normalised.map((entry) => canonical(entry.code))) {
+      const seen = new Set<string>();
+      let cursor: string | null = start;
+      while (cursor) {
+        if (seen.has(cursor)) {
+          throw new Error('Classification hierarchy contains a cycle involving code: ' + cursor);
+        }
+        seen.add(cursor);
+        cursor = parentByCode.get(cursor) ?? null;
       }
     }
 
@@ -432,7 +468,7 @@ export async function importClassificationCodes(
     const chunkSize = 250;
     for (let offset = 0; offset < normalised.length; offset += chunkSize) {
       const chunk = normalised.slice(offset, offset + chunkSize);
-      const placeholders = chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
+      const placeholders = chunk.map(() => '(?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)').join(', ');
       const params: unknown[] = [];
       for (const entry of chunk) {
         params.push(
@@ -443,7 +479,6 @@ export async function importClassificationCodes(
           entry.code,
           entry.title,
           entry.description,
-          entry.parentCode ? byCode.get(entry.parentCode) ?? null : null,
           entry.status,
           timestamp
         );
@@ -454,6 +489,27 @@ export async function importClassificationCodes(
            description, parent_code_id, status, created_at)
          VALUES ${placeholders}`,
         params,
+        connection
+      );
+    }
+
+    const parented = normalised.filter((entry) => entry.parentCode);
+    for (let offset = 0; offset < parented.length; offset += chunkSize) {
+      const chunk = parented.slice(offset, offset + chunkSize);
+      const cases = chunk.map(() => 'WHEN ? THEN ?').join(' ');
+      const ids = chunk.map(() => '?').join(', ');
+      const params: unknown[] = [];
+      for (const entry of chunk) {
+        params.push(entry.id, byCode.get(canonical(entry.parentCode!))!);
+      }
+      params.push(...chunk.map((entry) => entry.id));
+      await executeMutation(
+        `UPDATE classification_codes
+            SET parent_code_id = CASE id ${cases} END
+          WHERE id IN (${ids})
+            AND tenant_id = ?
+            AND classification_release_id = ?`,
+        [...params, context.tenantId, release.id],
         connection
       );
     }

@@ -54,8 +54,8 @@ describe('governed classification runtime', () => {
     expect(system.version).toBe(2);
 
     await classification.importClassificationCodes(context, systemId, releaseId, system.version, [
-      { code: 'Ss_25', title: 'Wall systems' },
-      { code: 'Ss_25_10', title: 'External wall systems', parentCode: 'Ss_25' }
+      { code: 'Ss_25_10', title: 'External wall systems', parentCode: 'Ss_25' },
+      { code: 'Ss_25', title: 'Wall systems' }
     ]);
 
     system = (await classification.listClassificationSystems(context)).find(
@@ -123,4 +123,31 @@ describe('governed classification runtime', () => {
 
     expect(await classification.listClassificationCodes(context, systemId, releaseId)).toHaveLength(0);
   });
+
+  it('rejects cyclic classification hierarchies before persistence', async () => {
+    const tenant = 'classification-cycle-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const systemId = await classification.createClassificationSystem(context, {
+      systemKey: 'TEST.CYCLE',
+      name: 'Cycle Validation',
+      publisher: 'NuBlox'
+    });
+    const releaseId = await classification.createClassificationRelease(context, systemId, 1, {
+      releaseKey: '1',
+      sourceDigestAlgorithm: 'SHA256',
+      sourceDigest: 'd'.repeat(64)
+    });
+
+    await expect(
+      classification.importClassificationCodes(context, systemId, releaseId, 2, [
+        { code: 'A', title: 'A', parentCode: 'B' },
+        { code: 'B', title: 'B', parentCode: 'A' }
+      ])
+    ).rejects.toThrow('cycle');
+
+    expect(await classification.listClassificationCodes(context, systemId, releaseId)).toHaveLength(0);
+  });
+
 });

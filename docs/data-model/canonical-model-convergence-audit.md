@@ -156,7 +156,7 @@ Therefore the present family-level maturity split is:
 29 total families
 ```
 
-This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Physical aggregates/APIs are still not approved until canonical aggregate-boundary freeze and L2/L3 object-action mapping are complete.
+This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Canonical aggregate boundaries are now frozen. Broad physical aggregates/APIs are still not approved until L2/L3 activity → canonical object/action mapping is complete.
 
 ## Candidate decision coverage
 
@@ -220,6 +220,21 @@ Current SAP-driven/cross-market refinements include:
 
 The machine authority is `app/src/lib/data/benchmark-refinement-model.ts`.
 
+## Canonical aggregate-boundary freeze
+
+Gate 4 is now closed through `app/src/lib/data/canonical-aggregate-boundary-register.ts` and `docs/data-model/canonical-aggregate-boundary-freeze.md`.
+
+Current result:
+
+```text
+29/29 families covered
+100 frozen logical aggregate boundaries
+79/79 benchmark refinements assigned to one aggregate
+one-aggregate command transaction rule enforced
+```
+
+The freeze defines logical ownership/consistency boundaries, not database/service topology.
+
 ## Architecture gate
 
 Physical aggregate/database/API design must not use a family as enterprise-wide authority merely because:
@@ -252,9 +267,8 @@ Candidate-level convergence is now also closed at **750/750 decisions**.
 The next architecture gates are:
 
 ```text
-1. Freeze the canonical aggregate boundaries
-2. Complete the L2/L3 activity → canonical object/action mapping
-3. Only then approve physical schema / API implementation waves
+1. Complete the L2/L3 activity → canonical object/action mapping
+2. Only then approve physical schema / API implementation waves
 ```
 
 The audit must continue to expose benchmark status and must fail if candidate decision coverage ever drops below 100%.

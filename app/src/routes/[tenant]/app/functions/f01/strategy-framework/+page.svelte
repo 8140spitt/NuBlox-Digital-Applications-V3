@@ -11,7 +11,7 @@
     REJECTED: 'Rejected'
   };
 
-  const editable = data.selected && ['DRAFT', 'RETURNED'].includes(data.selected.status);
+  const editable = $derived(Boolean(data.selected && ['DRAFT', 'RETURNED'].includes(data.selected.status)));
   const formatDate = (value: string | null) => value ? new Date(value).toLocaleString('en-GB') : '—';
 </script>
 

@@ -42,7 +42,7 @@ function problem(error: unknown) {
   });
 }
 
-export const load: PageServerLoad = async ({ params, url }) => {
+export const load: PageServerLoad = async ({ params, url, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const organisations = await listOrganisations(context);
   const requestedId = url.searchParams.get('organisation');

@@ -5,7 +5,9 @@ export type BenchmarkRefinementKind =
   | 'event-evidence'
   | 'governance-case'
   | 'projection'
-  | 'reference-snapshot';
+  | 'reference-snapshot'
+  | 'execution-context'
+  | 'definition';
 
 export type BenchmarkRefinementDefinition = {
   modelId: string;
@@ -160,6 +162,149 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['source identity', 'survivor identity', 'merge decision', 'effective at', 'reason', 'status'],
     lifecycle: ['Active', 'Reversed', 'Superseded'],
     governance: ['Redirect preserves source identity provenance and does not rewrite historical business evidence.', 'Consumers resolve current identity without losing original references.']
+  },
+  {
+    modelId: 'LOG-HANDLING-UNIT',
+    originGapIds: ['BG-004'],
+    canonicalName: 'Handling Unit',
+    kind: 'execution-context',
+    definition: 'Traceable logistics handling identity grouping packed goods/items for warehouse and transport execution without replacing Item, Lot/Batch/Serial, Shipment or Asset identity.',
+    identityRule: 'Stable handling identity for one physical/logistical grouping; repacking creates governed predecessor/successor relationships rather than rewriting historic contents.',
+    keyData: ['handling-unit reference', 'handling-unit type', 'contents', 'quantities/UOM', 'parent/child handling units', 'current logistics context', 'status'],
+    lifecycle: ['Created', 'Packed', 'Staged', 'Loaded', 'In Transit', 'Received', 'Unpacked', 'Closed'],
+    governance: ['Handling Unit is a logistics identity only.', 'Its contents always reference canonical Item and traceability identities.', 'It never becomes Shipment or Asset identity.']
+  },
+  {
+    modelId: 'LOG-WAREHOUSE-WAVE',
+    originGapIds: ['BG-004'],
+    canonicalName: 'Warehouse Wave',
+    kind: 'plan',
+    definition: 'Governed warehouse execution batch grouping eligible outbound/inbound work for coordinated release, sequencing and resource use.',
+    identityRule: 'Stable wave identity tied to exact demand/source documents and planning criteria at release time; re-wave activity preserves prior release evidence.',
+    keyData: ['wave reference', 'warehouse', 'scope/source demand', 'release criteria', 'planned work', 'priority', 'planned/released time', 'resource assumptions'],
+    lifecycle: ['Draft', 'Planned', 'Released', 'In Execution', 'Completed', 'Cancelled'],
+    governance: ['Warehouse Wave coordinates execution and never replaces Sales Order, Purchase Order, Shipment, Pick or Inventory Movement truth.']
+  },
+  {
+    modelId: 'LOG-YARD-DOCK-APPOINTMENT',
+    originGapIds: ['BG-004'],
+    canonicalName: 'Yard/Dock Appointment',
+    kind: 'transaction',
+    definition: 'Governed appointment allocating yard, gate or dock time/capacity to an inbound or outbound logistics movement.',
+    identityRule: 'Stable appointment identity referencing canonical Site, Shipment/Transport Order and resource/location context.',
+    keyData: ['appointment reference', 'site/yard/dock', 'time window', 'shipment/transport order', 'carrier/vehicle', 'resource requirements', 'status'],
+    lifecycle: ['Requested', 'Confirmed', 'Arrived', 'In Service', 'Completed', 'No-show', 'Cancelled'],
+    governance: ['Appointment is logistics work context and does not redefine Site, Vehicle or Shipment identity.']
+  },
+  {
+    modelId: 'LOG-FREIGHT-TENDER',
+    originGapIds: ['BG-004'],
+    canonicalName: 'Freight Tender',
+    kind: 'transaction',
+    definition: 'Governed request/offer/acceptance record for carrier capacity and transport service against a planned shipment/load requirement.',
+    identityRule: 'Stable tender transaction preserving carrier Party, requirement, offered rate/terms, response and award/acceptance evidence.',
+    keyData: ['tender reference', 'transport requirement', 'carrier', 'route/mode', 'service level', 'rate/terms', 'response', 'decision/authority'],
+    lifecycle: ['Draft', 'Issued', 'Responded', 'Accepted', 'Rejected', 'Expired', 'Cancelled'],
+    governance: ['Freight Tender does not create a second carrier or Contract identity.', 'Accepted terms feed Transport Order/commitment without overwriting tender evidence.']
+  },
+  {
+    modelId: 'LOG-FREIGHT-SETTLEMENT',
+    originGapIds: ['BG-004'],
+    canonicalName: 'Freight Settlement',
+    kind: 'transaction',
+    definition: 'Governed commercial settlement basis comparing executed transport service, rated charges, agreed terms and payable consequence.',
+    identityRule: 'Stable settlement identity referencing exact Transport Order/Shipment, carrier agreement/rate basis and execution evidence.',
+    keyData: ['settlement reference', 'transport order/shipment', 'carrier', 'rate basis', 'actual services/charges', 'exceptions', 'approved amount', 'financial consequence'],
+    lifecycle: ['Calculated', 'Reviewed', 'Approved', 'Posted/Transferred', 'Disputed', 'Corrected'],
+    governance: ['Freight Settlement is not Supplier Invoice or Payment.', 'Accounting/payable consequences remain governed in Finance.']
+  },
+  {
+    modelId: 'REL-ASSET-CRITICALITY-ASSESSMENT',
+    originGapIds: ['BG-005'],
+    canonicalName: 'Asset Criticality Assessment',
+    kind: 'event-evidence',
+    definition: 'Dated attributable assessment of an Asset/System/Component criticality using an approved method and consequence dimensions.',
+    identityRule: 'Immutable assessment occurrence pinned to exact subject, methodology/version, scoring inputs and assessment time.',
+    keyData: ['asset/system subject', 'method/version', 'consequence dimensions', 'scores', 'criticality class', 'assessor', 'assessed at', 'evidence'],
+    lifecycle: ['Recorded', 'Reviewed', 'Approved', 'Superseded/Corrected'],
+    governance: ['Criticality is derived from retained assessments and is not an editable permanent asset flag.']
+  },
+  {
+    modelId: 'REL-FAILURE-MODE',
+    originGapIds: ['BG-005'],
+    canonicalName: 'Failure Mode Definition',
+    kind: 'definition',
+    definition: 'Governed reusable definition of a way in which an Asset/System/Component function can fail, including causes, effects and detection/mitigation context.',
+    identityRule: 'Stable definition identity with version/effectivity and applicability; actual Failure occurrences remain separate operational evidence.',
+    keyData: ['failure-mode code', 'function/subject applicability', 'description', 'causes', 'effects', 'detection method', 'severity/risk context', 'effective version'],
+    lifecycle: ['Draft', 'Approved', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Failure Mode Definition is not an actual Failure event.', 'It may be reused across Asset Models/Types where applicability is explicit.']
+  },
+  {
+    modelId: 'REL-RELIABILITY-STRATEGY',
+    originGapIds: ['BG-005'],
+    canonicalName: 'Reliability Strategy',
+    kind: 'plan',
+    definition: 'Governed reliability-centred strategy linking critical assets, failure modes, risk/condition evidence and selected preventive, predictive, detective or run-to-failure maintenance treatments.',
+    identityRule: 'Stable strategy identity/version for a defined asset population/context; approved revisions preserve prior maintenance decision basis.',
+    keyData: ['strategy reference', 'asset/type/model scope', 'criticality basis', 'failure modes', 'maintenance tactics', 'inspection/condition requirements', 'risk basis', 'effective version'],
+    lifecycle: ['Draft', 'Analysis', 'Approved', 'Effective', 'Reviewed', 'Superseded', 'Retired'],
+    governance: ['Reliability Strategy guides Maintenance Plan creation but never becomes the Maintenance Plan or Work Order itself.']
+  },
+  {
+    modelId: 'REL-ASSET-HEALTH-POSITION',
+    originGapIds: ['BG-005'],
+    canonicalName: 'Asset Health Position',
+    kind: 'projection',
+    definition: 'As-of derived health/reliability position calculated from condition, inspection, sensor, failure and maintenance evidence under an explicit method/model version.',
+    identityRule: 'Rebuildable projection with optional published snapshot; inputs and model version are pinned for auditability.',
+    keyData: ['asset/system', 'as-of time', 'input evidence', 'health/condition score', 'failure risk', 'method/model version', 'recommended attention'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Asset Health Position never overwrites Asset condition history or becomes a failure prediction fact.']
+  },
+  {
+    modelId: 'HCM-SUCCESSION-PLAN',
+    originGapIds: ['BG-006'],
+    canonicalName: 'Succession Plan',
+    kind: 'plan',
+    definition: 'Governed plan for continuity of critical Positions/roles by identifying readiness needs, successor options and development actions over a defined horizon.',
+    identityRule: 'Stable plan identity/version scoped to exact Position/role contexts; candidate inclusion is a relationship, not a change to Worker identity.',
+    keyData: ['plan reference', 'critical position/role', 'horizon', 'risk/need', 'successor options', 'readiness', 'development actions', 'owner', 'review date'],
+    lifecycle: ['Draft', 'Review', 'Approved', 'Active', 'Revised', 'Superseded', 'Closed'],
+    governance: ['Succession Plan does not promise promotion or alter Employment/Position assignment.', 'Sensitive talent data requires restricted access and retained decision provenance.']
+  },
+  {
+    modelId: 'HCM-TALENT-POOL',
+    originGapIds: ['BG-006'],
+    canonicalName: 'Talent Pool',
+    kind: 'execution-context',
+    definition: 'Governed grouping context for Workers/Candidates considered for a defined capability, role family, leadership pipeline or development purpose.',
+    identityRule: 'Stable pool identity; membership is separately effective and evidence-based so the Person/Worker master is never duplicated.',
+    keyData: ['pool reference', 'purpose', 'target role/capability', 'criteria', 'owner', 'effective dates', 'access classification'],
+    lifecycle: ['Proposed', 'Active', 'Paused', 'Retired'],
+    governance: ['Talent Pool is not an Organisation Unit or Team.', 'Membership does not itself confer role, employment, authority or entitlement.']
+  },
+  {
+    modelId: 'HCM-TALENT-POOL-MEMBERSHIP',
+    originGapIds: ['BG-006'],
+    canonicalName: 'Talent Pool Membership',
+    kind: 'relationship',
+    definition: 'Effective governed relationship between a Person/Worker/Candidate and a Talent Pool with evidence, readiness/context and review dates.',
+    identityRule: 'Stable effective relationship retaining source/reviewer and membership rationale; removal/supersession preserves history.',
+    keyData: ['talent pool', 'person/worker/candidate', 'basis/evidence', 'readiness/potential context', 'reviewer', 'effective dates', 'status'],
+    lifecycle: ['Proposed', 'Active', 'Reviewed', 'Superseded', 'Removed'],
+    governance: ['Membership is sensitive HCM context and never replaces Career Profile, Skill, Competency or Performance Review evidence.']
+  },
+  {
+    modelId: 'HCM-TALENT-REVIEW',
+    originGapIds: ['BG-006'],
+    canonicalName: 'Talent Review',
+    kind: 'event-evidence',
+    definition: 'Governed review occurrence evaluating talent, succession/readiness and development context using exact evidence and criteria.',
+    identityRule: 'Immutable review occurrence pinned to participants, criteria, Worker/Candidate evidence and resulting decisions/actions.',
+    keyData: ['review scope/date', 'participants', 'criteria', 'people/pools/positions reviewed', 'evidence versions', 'findings', 'decisions/actions'],
+    lifecycle: ['Planned', 'In Review', 'Completed', 'Published', 'Superseded/Corrected'],
+    governance: ['Talent Review is not Performance Review and does not silently change worker profile or succession membership.']
   }
 ];
 
@@ -169,7 +314,11 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R03', from: 'PLN-PLANNING-EXCEPTION', predicate: 'challenges', to: 'PLN-SUPPLY-PLAN', governance: 'Exception remains evidence even after plan revision.' },
   { id: 'BR-R04', from: 'TREASURY-HEDGE-RELATIONSHIP', predicate: 'hedges', to: 'TREASURY-EXPOSURE', governance: 'Designation/effectivity and hedge evidence are explicit.' },
   { id: 'BR-R05', from: 'MDG-DUPLICATE-CANDIDATE', predicate: 'may create', to: 'MDG-STEWARDSHIP-CASE', governance: 'Automated matching cannot merge identities without governed review.' },
-  { id: 'BR-R06', from: 'MDG-MERGE-DECISION', predicate: 'authorises', to: 'MDG-IDENTITY-REDIRECT', governance: 'Redirect exists only with decision provenance.' }
+  { id: 'BR-R06', from: 'MDG-MERGE-DECISION', predicate: 'authorises', to: 'MDG-IDENTITY-REDIRECT', governance: 'Redirect exists only with decision provenance.' },
+  { id: 'BR-R07', from: 'REL-ASSET-CRITICALITY-ASSESSMENT', predicate: 'informs', to: 'REL-RELIABILITY-STRATEGY', governance: 'Strategy pins the assessment/method basis used for maintenance decisions.' },
+  { id: 'BR-R08', from: 'REL-RELIABILITY-STRATEGY', predicate: 'addresses', to: 'REL-FAILURE-MODE', governance: 'Failure-mode applicability is explicit and versioned.' },
+  { id: 'BR-R09', from: 'HCM-SUCCESSION-PLAN', predicate: 'draws from', to: 'HCM-TALENT-POOL', governance: 'Succession planning references governed pool context without changing Worker identity.' },
+  { id: 'BR-R10', from: 'HCM-TALENT-POOL-MEMBERSHIP', predicate: 'participates in', to: 'HCM-TALENT-POOL', governance: 'Membership is effective-dated and evidence-based.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -177,7 +326,10 @@ export const benchmarkRefinementRules = [
   'A vendor feature is never added solely because a vendor implements it; each refinement must represent a durable business identity, relationship, plan, event/evidence or projection.',
   'Planning truth remains separate from execution truth.',
   'Treasury risk positions remain separate from accounting and bank evidence.',
-  'Master-data stewardship governs canonical identities but never creates a second master-data store.'
+  'Master-data stewardship governs canonical identities but never creates a second master-data store.',
+  'Advanced warehouse and freight execution must preserve Item, Inventory, Shipment, Contract and Finance truth boundaries.',
+  'Reliability engineering reuses canonical Asset and Failure evidence rather than creating a parallel asset register.',
+  'Succession and talent context reuses canonical Person/Worker/Position/Skill identity and remains access-controlled.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -185,7 +337,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

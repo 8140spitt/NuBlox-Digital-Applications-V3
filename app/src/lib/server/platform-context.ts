@@ -97,6 +97,13 @@ export const platformPermissions = [
     'manage',
     'Assign and reassign work to eligible Parties, identities, roles or queues.'
   ],
+  ['work.decision.read', 'work.decision', 'read', 'Read authorised immutable decision evidence.'],
+  [
+    'work.decision.record',
+    'work.decision',
+    'record',
+    'Record an attributable authorised decision against an exact business subject/version.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

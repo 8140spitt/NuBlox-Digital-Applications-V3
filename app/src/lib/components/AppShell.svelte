@@ -26,6 +26,7 @@
     <a href={`/${tenantSlug}/app/functions/f01`}>Reports</a>
     <a class:active={page.url.pathname.includes('/admin/business-objects')} href={`/${tenantSlug}/app/admin/business-objects`}>Architecture</a>
     <a class:active={page.url.pathname.includes('/admin/master-data')} href={`/${tenantSlug}/app/admin/master-data/organisations`}>Master data</a>
+    <a class:active={page.url.pathname.includes('/admin/security')} href={`/${tenantSlug}/app/admin/security`}>Security</a>
   </nav>
   <div class="profile">
     <span class="avatar">{initials}</span>

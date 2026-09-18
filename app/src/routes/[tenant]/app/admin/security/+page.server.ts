@@ -1,9 +1,22 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { listPersons } from '$lib/server/foundation-person';
-import { platformPermissions, assertPermission } from '$lib/server/platform-context';
+import {
+  platformPermissions,
+  assertPermission,
+  hasPermission
+} from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { queryOne } from '$lib/server/db';
+import { listPartyDirectory } from '$lib/server/foundation-party-directory';
+import {
+  activateDelegatedAuthority,
+  approveDelegatedAuthority,
+  createDelegatedAuthority,
+  listDelegatedAuthorities,
+  revokeDelegatedAuthority,
+  suspendDelegatedAuthority
+} from '$lib/server/delegated-authority';
 import {
   assignTenantRole,
   createTenantRole,
@@ -26,6 +39,20 @@ function text(data: FormData, name: string) {
   return typeof value === 'string' ? value.trim() : '';
 }
 
+function version(data: FormData) {
+  const value = Number(text(data, 'version'));
+  if (!Number.isInteger(value) || value < 1) throw new Error('A valid record version is required.');
+  return value;
+}
+
+function optionalNumber(data: FormData, name: string) {
+  const value = text(data, name);
+  if (!value) return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) throw new Error('A valid numeric value is required.');
+  return parsed;
+}
+
 function problem(error: unknown) {
   return fail(400, {
     message:
@@ -45,25 +72,41 @@ async function contextFor(params: { tenant: string }, locals: App.Locals) {
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await contextFor(params, locals);
-  const [people, memberships, roles, assignments, identities] = await Promise.all([
-    listPersons(context),
-    listTenantMemberships(context),
-    listTenantRoles(context),
-    listTenantRoleAssignments(context),
-    listTenantIdentities(context)
-  ]);
+  const [people, parties, memberships, roles, assignments, identities, delegatedAuthorities] =
+    await Promise.all([
+      listPersons(context),
+      listPartyDirectory(context),
+      listTenantMemberships(context),
+      listTenantRoles(context),
+      listTenantRoleAssignments(context),
+      listTenantIdentities(context),
+      listDelegatedAuthorities(context)
+    ]);
 
-  const view = ['access', 'roles', 'identities'].includes(url.searchParams.get('view') ?? '')
+  const view = ['access', 'roles', 'identities', 'authority'].includes(
+    url.searchParams.get('view') ?? ''
+  )
     ? url.searchParams.get('view')
     : 'access';
 
   return {
     view,
     people: people.map(({ id, displayName, status }) => ({ id, displayName, status })),
+    parties: parties.map(({ id, displayName, partyType, status }) => ({
+      id,
+      displayName,
+      partyType,
+      status
+    })),
     memberships,
     roles,
     assignments,
     identities,
+    delegatedAuthorities,
+    authorityCapabilities: {
+      canManage: hasPermission(context, 'authority.delegation.manage'),
+      canApprove: hasPermission(context, 'authority.delegation.approve')
+    },
     permissions: platformPermissions.map(([key, resource, action, description]) => ({
       key,
       resource,
@@ -195,5 +238,84 @@ export const actions: Actions = {
       return problem(error);
     }
     redirect(303, target(params.tenant, 'identities'));
+  },
+  createDelegatedAuthority: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    const context = await contextFor(params, locals);
+    try {
+      await createDelegatedAuthority(context, {
+        delegatePartyId: text(data, 'delegatePartyId'),
+        grantorPartyId: text(data, 'grantorPartyId') || undefined,
+        authorityType: text(data, 'authorityType'),
+        basis: text(data, 'basis'),
+        scopeType: text(data, 'scopeType') || 'TENANT',
+        scopeId: text(data, 'scopeId') || context.tenantId,
+        currencyCode: text(data, 'currencyCode') || undefined,
+        valueLimit: optionalNumber(data, 'valueLimit'),
+        allowSubdelegation: data.get('allowSubdelegation') === 'on',
+        validFrom: text(data, 'validFrom') || undefined,
+        validTo: text(data, 'validTo') || undefined
+      });
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant, 'authority'));
+  },
+
+  approveDelegatedAuthority: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await approveDelegatedAuthority(
+        await contextFor(params, locals),
+        text(data, 'authorityId'),
+        version(data)
+      );
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant, 'authority'));
+  },
+
+  activateDelegatedAuthority: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await activateDelegatedAuthority(
+        await contextFor(params, locals),
+        text(data, 'authorityId'),
+        version(data)
+      );
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant, 'authority'));
+  },
+
+  suspendDelegatedAuthority: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await suspendDelegatedAuthority(
+        await contextFor(params, locals),
+        text(data, 'authorityId'),
+        version(data)
+      );
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant, 'authority'));
+  },
+
+  revokeDelegatedAuthority: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await revokeDelegatedAuthority(
+        await contextFor(params, locals),
+        text(data, 'authorityId'),
+        version(data),
+        text(data, 'reason')
+      );
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant, 'authority'));
   }
 };

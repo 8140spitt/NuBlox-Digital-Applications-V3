@@ -1,101 +1,87 @@
-# Canonical Business Object Normalization Review
+# Canonical Business Object Duplicate & Alias Convergence
 
-**Status:** pre-review recommendations  
-**Review date:** 17 September 2026  
-**Input:** `canonical-business-object-duplicates.csv`  
+**Status:** governed — Gate 2 closed  
+**Closure date:** 18 September 2026  
+**Discovery input:** `canonical-business-object-duplicates.csv`  
+**Machine-checkable authority:** `app/src/lib/data/canonical-alias-convergence-audit.ts`
 
-The first generated candidate register exposes 26 exact duplicate-name groups. This document records the initial semantic recommendation for stakeholder review. These recommendations are not yet final canonical decisions.
+## Purpose
 
-## 1. Strong candidates for one shared canonical concept
+The generated 750-candidate register contains 26 exact duplicate-name groups plus a wider set of aliases and near-aliases. Duplicate spelling alone is not a reason to merge concepts. Gate 2 requires every collision to resolve to one of three outcomes:
 
-These duplicates appear to describe the same business concept reused by several functions. The preferred direction is one canonical identity with contextual relationships and workspace-specific views.
+1. **shared canonical identity** — the candidates represent the same business fact and converge on one canonical root;
+2. **explicitly distinct semantics** — similar/same words represent materially different identities, lifecycles or authority and are given explicit canonical meaning;
+3. **governed family pattern** — related domain objects reuse shared foundations/evidence rules without being collapsed into one generic master.
 
-| Candidate | Appears in | Initial recommendation |
-| --- | --- | --- |
-| Site | site/field operations; property/asset | one canonical spatial/site identity; construction operations act on the same site used by property and asset contexts |
-| Zone | site/field operations; property/asset | one canonical spatial zone/location concept, with type/classification and parent location controlling meaning |
-| Procurement Package | commercial; procurement | one canonical procurement/commercial package, with commercial and sourcing views rather than duplicate package masters |
-| Information Container | design/information; records management | one canonical governed information-container identity; records-management status/retention are overlays on the same controlled information |
-| Unit of Measure | product/inventory; reference configuration | one canonical reference-data concept |
-| Tax Code | finance; reference configuration | one canonical governed tax-code reference concept, scoped by tax regime/jurisdiction/effectivity |
-| Training Record | commissioning/handover; HCM | one canonical evidence record of training/briefing participation; project/asset context links it to commissioning/handover where applicable |
-| Compliance Requirement | QHSE; enterprise compliance | one canonical requirement/obligation model or common supertype with domain classification; avoid separate copies of the same requirement |
-| Isolation | field operations; HSE | one canonical controlled-work isolation record; safety rules govern its lifecycle and site operations consume it |
-| Completion Certificate | regulatory; commissioning/handover | one certificate identity where it is genuinely the same certificate; certificate type/jurisdiction/source distinguish regulatory and contractual certificates |
-| Call-off | procurement; logistics | one call-off commitment/request identity linked to the governing order/framework and downstream delivery/logistics |
-| Utility Consumption | facilities/service; sustainability | one measured consumption event/series feeding operational, financial and sustainability views |
+The executable audit verifies every exact duplicate group has a governed outcome and that the documented near-alias challenges remain covered by version-controlled canonicalisation decisions.
 
-## 2. Same word, likely different canonical semantics
+## Exact duplicate-name closure
 
-These should **not** be merged merely because the words match. They need explicit names or subtype/supertype modelling.
-
-| Candidate | Collision | Initial recommendation |
-| --- | --- | --- |
-| Activity | CRM activity vs project schedule activity | distinguish `Business Interaction/CRM Activity` from `Schedule Activity`; they have different identity, time, dependency and completion semantics |
-| Allocation | workforce/resource allocation vs accounting allocation | distinguish `Resource Allocation` from `Financial Allocation`; different aggregates and accounting consequences |
-| Valuation | property valuation vs contract/payment valuation | distinguish `Property Valuation` from `Contract Valuation/Payment Valuation`; do not share lifecycle or monetary basis |
-| Entitlement | contract/commercial entitlement vs service entitlement | distinguish `Commercial Entitlement/Claim Basis` from `Service Entitlement`; potentially common abstract concept only if useful |
-| Issue | project issue vs information/design issue | distinguish `Project Issue` from `Information/Coordination Issue`; allow common issue-management interface if required |
-| Phase | project phase vs site/construction phase | likely relate both to a common phase/stage classification, but preserve whether the phase is a project governance stage or a physical/site execution subdivision |
-| Response | technical/submittal response vs generic workflow response | domain response belongs to the governed domain exchange; workflow response is work/task evidence and must not replace it |
-| Risk Assessment | HSE task/risk assessment vs enterprise risk assessment | share risk concepts/reference scales where useful but preserve materially different assessment structures and regulatory evidence |
-| Defect | quality/construction defect vs service/asset failure defect | consider one `Defect` case with context/type if lifecycle/evidence can be generalized; otherwise explicit construction-quality and operational-service subtypes |
-| Constraint | development/site constraint vs project-control constraint | consider one contextual `Constraint` supertype only if source, impact, ownership and resolution semantics align |
-
-## 3. Shared platform concepts requiring deliberate abstraction
-
-These duplicates could become shared platform-level objects, but only after confirming that a generic object does not erase domain meaning.
-
-| Candidate | Initial recommendation |
+| Discovery collision | Governed outcome |
 | --- | --- |
-| Decision | evaluate one attributable `Decision` object with decision type, authority, governed-object link and evidence; domain state transition remains authoritative |
-| Action | evaluate one accountable `Action` object with owner, due date, status and source context; avoid using it as a substitute for domain work orders/tasks |
-| Responsibility Assignment | likely one contextual assignment pattern linking party/person/role to governed object and responsibility type |
-| Comparison | likely a shared analysis pattern only at UI/service level; estimate/tender and procurement comparisons may need distinct governed snapshots |
+| Action | **Shared:** Decision Action |
+| Activity | **Distinct:** CRM Activity vs Schedule Activity |
+| Allocation | **Distinct:** Workforce Allocation vs Settlement Allocation |
+| Call-off | **Shared:** one Call-off Order owned by commercial/procurement and consumed by logistics |
+| Comparison | **Shared:** Sourcing Evaluation |
+| Completion Certificate | **Distinct:** Statutory Completion Certificate vs Delivery Completion Certificate |
+| Compliance Requirement | **Shared:** enterprise Compliance Requirement |
+| Constraint | **Distinct:** Development Constraint vs Delivery Constraint |
+| Decision | **Shared:** immutable Decision evidence |
+| Defect | **Shared:** one governed Defect case identity |
+| Entitlement | **Distinct:** Claim Entitlement Basis vs Service Entitlement |
+| Information Container | **Shared:** controlled Information Container identity |
+| Isolation | **Shared:** QHSE-governed Isolation |
+| Issue | **Distinct:** Project Issue vs Information Issue |
+| Phase | **Shared:** Delivery Stage Assignment pattern |
+| Procurement Package | **Shared:** one Procurement Package |
+| Response | **Distinct:** Information Response vs Request Response |
+| Responsibility Assignment | **Shared:** contextual Responsibility Assignment |
+| Risk Assessment | **Shared:** Risk Assessment evidence pattern |
+| Site | **Shared:** built-environment Site identity |
+| Tax Code | **Shared:** jurisdictional Tax Code reference |
+| Training Record | **Shared:** Person Learning Record |
+| Unit of Measure | **Shared:** Unit of Measure reference |
+| Utility Consumption | **Shared:** Utility Consumption evidence |
+| Valuation | **Distinct:** Property Valuation vs Commercial Valuation |
+| Zone | **Shared:** spatial Zone identity |
 
-## 4. Review tests for every duplicate or alias
+Result: **26/26 exact duplicate groups resolved.**
 
-Before two concepts are merged, answer:
+## Near-alias challenge closure
 
-1. Do they represent the same real-world/business identity?
-2. Can one stable identifier survive every context in which the concept is used?
-3. Do they have compatible lifecycle semantics?
-4. Do they have compatible version/effectivity semantics?
-5. Do they have compatible ownership and permission rules?
-6. Do they require the same audit/evidence and retention treatment?
-7. Would merging them create fields that are meaningless in one context?
-8. Would splitting them force people to re-key or reconcile the same business fact?
+The Gate 2 audit also governs representative near-alias families that cannot be found by exact string matching alone.
 
-If the answers point in different directions, prefer explicit relationship/subtype modelling over either blind merging or blind duplication.
+| Challenge | Governed outcome |
+| --- | --- |
+| BOM / Bill of Material | one Bill of Material structure |
+| Project / Job | Job is an industry alias for Project in project controls |
+| Land / Land Parcel | one Land Parcel identity |
+| Product / Material / Service Item | one typed/classified Item identity |
+| Asset Type / Asset Model | deliberately distinct definition layers |
+| Permit / Permit to Work | one QHSE Permit to Work identity consumed by field operations |
+| Inspection variants | shared Inspection pattern where semantics align; specialist execution/result evidence remains explicit |
+| Change variants | Project, Design, Commercial, Regulatory and Technology change retain domain authority; Change Event is evidence |
+| Evidence variants | domain evidence retains meaning while sharing evidence/provenance foundations |
+| Certificate/certification variants | authority and legal/business basis remain explicit; no universal certificate master |
+| Risk variants | Enterprise Risk and Risk Assessment are shared foundations with specialist context/methods |
 
-## 5. Known alias normalization still to perform
+## Governing rules
 
-Exact-name duplicate detection is only the first pass. The register also contains likely aliases and near-duplicates that need semantic review, including examples such as:
+- Never merge because names look similar.
+- Never split the same real-world/business identity merely because different workspaces use it.
+- A shared root requires compatible identity, lifecycle, version/effectivity, ownership, permissions and evidence semantics.
+- Where business meaning differs, canonical naming must make the distinction explicit.
+- Shared evidence/workflow primitives coordinate domain truth but never replace it.
+- Reference/classification overlays do not create parallel master identities.
+- Every merge must retain provenance from the original discovery candidate key.
+- A future duplicate or near-alias without an explicit governed outcome reopens Gate 2 and must fail the convergence audit.
 
-- `BOM` and `Bill of Material`;
-- `Project` and `Job`;
-- `Land Parcel` and `Land`;
-- `Product Item`, `Material Item`, `Service Item` and broader item/master semantics;
-- `Asset Type` / `Asset Model` and product/manufacturer definitions;
-- `Permit`, `Permit to Work` and jurisdictional/statutory permit concepts;
-- `Inspection`, `Maintenance Inspection`, `Regulatory Inspection` and `Statutory Inspection`;
-- `Change`, `Change Request`, `Design Change`, `Controlled Change Record`, `IT Change Request` and contract change/variation semantics;
-- `Evidence Item`, `Technical Evidence`, `Compliance Evidence`, `Sourcing Evidence`, `Completion Evidence` and domain-specific evidence relationships;
-- `Certificate`, `Quality Certificate`, `Commissioning Certificate`, `Completion Certificate`, `Certification` and card/licence evidence;
-- `Risk`, `Project Risk`, `Supplier Risk`, `Climate Risk`, `Resilience Risk` and security risk concepts.
+## Architecture consequence
 
-These must be reviewed by business meaning, not string similarity alone.
+Duplicate/alias convergence is now closed, but this does **not** authorize physical schema/API implementation. Remaining gates are:
 
-## 6. Recommendation for the stakeholder review
-
-Do not ask stakeholders to approve 724 names one by one.
-
-Ask them to validate:
-
-1. the object families and missing concepts;
-2. the core identity graph;
-3. the modelling rules;
-4. representative normalization decisions from sections 1–3;
-5. the rule that detailed canonicalization proceeds family-by-family after the review.
-
-This allows tomorrow's session to establish architectural direction without pretending the complete semantic model can be finalized in one meeting.
+1. external benchmark / standards challenge;
+2. canonical aggregate-boundary freeze;
+3. L2/L3 activity → canonical object/action mapping;
+4. physical schema/API implementation waves only after those gates are satisfied.

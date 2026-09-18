@@ -21,6 +21,7 @@ import { legalPrivacyCanonicalization } from './legal-privacy-canonicalization';
 import { knowledgeRecordsCommunicationsCanonicalization } from './knowledge-records-communications-canonicalization';
 import { landDevelopmentInvestmentCanonicalization } from './land-development-investment-canonicalization';
 import { strategyGovernancePerformanceCanonicalization } from './strategy-governance-performance-canonicalization';
+import { continuityCrisisSecurityCanonicalization } from './continuity-crisis-security-canonicalization';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -91,7 +92,7 @@ export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
   { id: 'BOF-20', semanticModelState: 'governed-semantic-model', workspaces: ['F03','F09','F14','F22','F23','F27'], lifecycleStages: ['Estimate','Design','Procure','Produce','Construct','Control','Handover','Operate','Maintain','Refurbish','Dispose'], processChains: ['asset-to-retirement','record-to-report'], overlays: ['development','design','engineering','manufacturing','infrastructure','property-fm','retrofit','regulation'], note: 'Carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, environmental/social-value measures and climate/resilience risk semantics are governed.' },
   { id: 'BOF-21', semanticModelState: 'governed-semantic-model', workspaces: ['F02','F03','F13','F20','F29'], lifecycleStages: ['Plan','Procure','Construct','Control','Operate'], processChains: ['incident/defect/NCR-to-resolution','record-to-report'], overlays: ['commercial-management','contracting','manufacturing','infrastructure','property-fm','regulation'], note: 'Risk framework/identity/assessment/treatment, regulatory obligations, compliance requirements/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics are governed.' },
   { id: 'BOF-22', semanticModelState: 'governed-semantic-model', workspaces: ['F02','F19','F20','F21','F26'], lifecycleStages: ['Contract','Control','Account','Handover','Operate','Dispose'], processChains: ['record-to-report'], overlays: ['development','commercial-management','contracting','infrastructure','property-fm','regulation','heritage'], note: 'Legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, incidents, international transfer and assurance semantics are governed.' },
-  { id: 'BOF-23', semanticModelState: 'candidate-only', workspaces: ['F16','F18','F24'], lifecycleStages: ['Control','Operate'], processChains: [], overlays: ['infrastructure','property-fm','regulation'], note: 'Continuity, crisis and physical-security family remains to be canonicalized.' },
+  { id: 'BOF-23', semanticModelState: 'governed-semantic-model', workspaces: ['F16','F18','F24'], lifecycleStages: ['Control','Operate'], processChains: ['incident/defect/NCR-to-resolution','asset-to-retirement'], overlays: ['infrastructure','property-fm','regulation'], note: 'Business impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, DR invocation, physical-security zones/credentials/access events/incidents and specialist risk-assessment semantics are governed.' },
   { id: 'BOF-24', semanticModelState: 'candidate-only', workspaces: ['F16','F17','F18','F24'], lifecycleStages: ['Plan','Control','Operate','Maintain'], processChains: ['record-to-report'], overlays: ['engineering','manufacturing','infrastructure','property-fm','regulation'], note: 'IT, data, cyber, analytics and AI objects remain a convergence gap.' },
   { id: 'BOF-25', semanticModelState: 'governed-semantic-model', workspaces: ['F06','F21','F25','F26'], lifecycleStages: ['Market','Lead','Opportunity','Contract','Control','Handover','Operate','Dispose'], processChains: ['design-to-approved-information','record-to-report'], overlays: ['development','design','commercial-management','regulation','heritage'], note: 'Knowledge/article/collection, record declaration/series/file, retention/disposition, communications/publication, external-affairs and stakeholder-engagement semantics are governed around shared controlled-information and evidence foundations.' },
   { id: 'BOF-26', semanticModelState: 'candidate-only', workspaces: ['F01','F03','F15','F28','F29'], lifecycleStages: ['Plan','Construct','Control','Operate','Refurbish'], processChains: ['plan-to-perform','record-to-report'], overlays: ['development','contracting','manufacturing','infrastructure','property-fm','retrofit'], note: 'Transformation, organisation change and process-improvement family remains to be canonicalized.' },
@@ -121,7 +122,8 @@ export const governedCanonicalizationDecisions = [
   ...legalPrivacyCanonicalization,
   ...knowledgeRecordsCommunicationsCanonicalization,
   ...landDevelopmentInvestmentCanonicalization,
-  ...strategyGovernancePerformanceCanonicalization
+  ...strategyGovernancePerformanceCanonicalization,
+  ...continuityCrisisSecurityCanonicalization
 ];
 
 const decisionKeys = new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey));

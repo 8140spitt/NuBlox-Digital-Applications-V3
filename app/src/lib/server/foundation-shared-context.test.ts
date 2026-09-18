@@ -11,6 +11,7 @@ let relationshipService: typeof import('./foundation-party-relationship');
 let structureService: typeof import('./organisation-structure');
 let authorityService: typeof import('./delegated-authority');
 let sharedWorkService: typeof import('./shared-work');
+let workDecisionService: typeof import('./work-decision');
 let db: typeof import('./db');
 
 beforeAll(async () => {
@@ -22,6 +23,7 @@ beforeAll(async () => {
   structureService = await import('./organisation-structure');
   authorityService = await import('./delegated-authority');
   sharedWorkService = await import('./shared-work');
+  workDecisionService = await import('./work-decision');
   db = await import('./db');
 });
 
@@ -395,6 +397,145 @@ describe('shared foundation relationship, structure and authority aggregates', (
       'WORK_ITEM_ESCALATION_RESOLVED'
     ]);
     expect(events.map((event) => Number(event.aggregateVersion))).toEqual([4, 5]);
+  });
+
+
+  it('records immutable authorised decisions and corrective supersession', async () => {
+    const tenant = 'decision-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+    const subjectId = 'subject-' + randomUUID();
+
+    const originalId = await workDecisionService.recordWorkDecision(context, {
+      decisionType: 'GOVERNANCE',
+      subjectType: 'TEST_SUBJECT',
+      subjectId,
+      subjectVersion: '3',
+      outcome: 'APPROVED',
+      reason: 'The governed subject satisfies the stated decision criteria.',
+      authorityBasis: 'Tenant governance role with work.decision.record permission.'
+    });
+
+    const correctiveId = await workDecisionService.recordWorkDecision(context, {
+      decisionType: 'GOVERNANCE',
+      subjectType: 'TEST_SUBJECT',
+      subjectId,
+      subjectVersion: '3',
+      outcome: 'RETURNED',
+      reason: 'A material evidence omission was discovered after the original decision.',
+      authorityBasis: 'Tenant governance role with work.decision.record permission.',
+      supersedesDecisionId: originalId
+    });
+
+    const decisions = await workDecisionService.listWorkDecisions(context, {
+      type: 'TEST_SUBJECT',
+      id: subjectId
+    });
+    const original = decisions.find((decision) => decision.id === originalId)!;
+    const corrective = decisions.find((decision) => decision.id === correctiveId)!;
+
+    expect(original.outcome).toBe('APPROVED');
+    expect(original.supersedesDecisionId).toBeNull();
+    expect(corrective.outcome).toBe('RETURNED');
+    expect(corrective.supersedesDecisionId).toBe(originalId);
+
+    const events = await db.queryRows<any>(
+      "SELECT aggregate_id AS aggregateId, aggregate_object_id AS aggregateObjectId, aggregate_version AS aggregateVersion, event_type AS eventType FROM business_events WHERE tenant_id = ? AND aggregate_id = 'AGG-27-DECISION' AND aggregate_object_id IN (?, ?) ORDER BY occurred_at, id",
+      [context.tenantId, originalId, correctiveId]
+    );
+    expect(events).toHaveLength(2);
+    expect(events.every((event) => Number(event.aggregateVersion) === 1)).toBe(true);
+    expect(events.map((event) => event.eventType)).toEqual([
+      'WORK_DECISION_RECORDED',
+      'WORK_DECISION_CORRECTED'
+    ]);
+  });
+
+  it('enforces effective delegated authority for protected decisions', async () => {
+    const tenant = 'protected-decision-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+    const subjectId = 'commitment-' + randomUUID();
+
+    await expect(
+      workDecisionService.recordWorkDecision(context, {
+        decisionType: 'COMMERCIAL_APPROVAL',
+        subjectType: 'COMMERCIAL_COMMITMENT',
+        subjectId,
+        subjectVersion: '1',
+        outcome: 'APPROVED',
+        reason: 'Commitment is within commercial authority.',
+        authority: {
+          type: 'COMMERCIAL_COMMITMENT',
+          scopeType: 'TENANT',
+          scopeId: context.tenantId,
+          currencyCode: 'GBP',
+          value: 100000
+        }
+      })
+    ).rejects.toThrow('Delegated Authority');
+
+    const grantorPartyId = await personService.createPerson(context, {
+      givenName: 'Independent',
+      familyName: 'Grantor'
+    });
+    const grantId = randomUUID();
+    const timestamp = new Date().toISOString();
+    await db.executeMutation(
+      "INSERT INTO delegated_authorities (id, tenant_id, grantor_party_id, delegate_party_id, authority_type, basis, scope_type, scope_id, currency_code, value_limit, allow_subdelegation, status, version, valid_from, valid_to, approved_at, revoked_at, revocation_reason, created_at, updated_at) VALUES (?, ?, ?, ?, 'COMMERCIAL_COMMITMENT', 'Board-approved commercial delegation', 'TENANT', ?, 'GBP', 250000, 0, 'ACTIVE', 3, ?, NULL, ?, NULL, NULL, ?, ?)",
+      [
+        grantId,
+        context.tenantId,
+        grantorPartyId,
+        context.actorPartyId,
+        context.tenantId,
+        timestamp,
+        timestamp,
+        timestamp,
+        timestamp
+      ]
+    );
+
+    const decisionId = await workDecisionService.recordWorkDecision(context, {
+      decisionType: 'COMMERCIAL_APPROVAL',
+      subjectType: 'COMMERCIAL_COMMITMENT',
+      subjectId,
+      subjectVersion: '1',
+      outcome: 'APPROVED',
+      reason: 'Commitment is within commercial authority.',
+      authority: {
+        type: 'COMMERCIAL_COMMITMENT',
+        scopeType: 'TENANT',
+        scopeId: context.tenantId,
+        currencyCode: 'GBP',
+        value: 100000
+      }
+    });
+
+    const decision = (await workDecisionService.listWorkDecisions(context, {
+      type: 'COMMERCIAL_COMMITMENT',
+      id: subjectId
+    })).find((entry) => entry.id === decisionId)!;
+    expect(decision.authorityGrantId).toBe(grantId);
+    expect(decision.authorityType).toBe('COMMERCIAL_COMMITMENT');
+    expect(Number(decision.authorityValue)).toBe(100000);
+
+    await expect(
+      workDecisionService.recordWorkDecision(context, {
+        decisionType: 'COMMERCIAL_APPROVAL',
+        subjectType: 'COMMERCIAL_COMMITMENT',
+        subjectId: 'over-limit-' + randomUUID(),
+        outcome: 'APPROVED',
+        reason: 'This must be rejected by authority evaluation.',
+        authority: {
+          type: 'COMMERCIAL_COMMITMENT',
+          scopeType: 'TENANT',
+          scopeId: context.tenantId,
+          currencyCode: 'GBP',
+          value: 300000
+        }
+      })
+    ).rejects.toThrow('Delegated Authority');
   });
 
 });

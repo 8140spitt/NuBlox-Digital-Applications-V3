@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(48);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(51);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -81,6 +81,13 @@ describe('benchmark-driven canonical refinements', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-RISK-SIMULATION-RUN')?.kind).toBe('event-evidence');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-RISK-ANALYSIS-SNAPSHOT')?.kind).toBe('projection');
     expect(benchmarkRefinementRules.join(' ')).toContain('Quantitative project-risk results are reproducible');
+  });
+
+  it('adds reproducible construction performance analysis without a shadow cost ledger', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-PROGRESS-MEASUREMENT-METHOD')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-PERFORMANCE-CALCULATION-RUN')?.kind).toBe('event-evidence');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-PROJECT-PERFORMANCE-SNAPSHOT')?.kind).toBe('projection');
+    expect(benchmarkRefinementRules.join(' ')).toContain('reports never become a shadow cost ledger');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

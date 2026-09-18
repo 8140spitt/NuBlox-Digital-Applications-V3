@@ -12,7 +12,7 @@
   <section>
     <p class="label">Workspace</p>
     <a class="utility active" href={`/${tenantSlug}/app/functions/f01`}>⌂ <span>Home</span></a>
-    <a class="utility" href={`/${tenantSlug}/app/functions/f01`}>▣ <span>My work</span></a>
+    <a class="utility" class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}>▣ <span>My work</span></a>
     <a class="utility" href={`/${tenantSlug}/app/functions/f01`}>◌ <span>Notifications</span></a>
   </section>
 

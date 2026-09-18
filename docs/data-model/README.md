@@ -38,6 +38,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `continuity-crisis-security-semantics.md` — governed business-impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, disaster-recovery invocation and physical-security zone/credential/access/incident semantics.
 - `technology-data-cyber-ai-semantics.md` — governed technology-service/ITSM/configuration, disaster-recovery, data domain/product/dataset/quality/pipeline, analytics/AI, access-control and cybersecurity semantics.
 - `transformation-process-improvement-semantics.md` — governed transformation portfolio/initiative, impact/readiness/adoption/transition, enterprise process/model/version/ownership/measurement and continuous-improvement semantics.
+- `site-field-operations-semantics.md` — governed site/field execution, work-area, mobilisation/access, diary/progress/labour/plant/material/delivery, temporary-works, permit/isolation, instruction/constraint and completion/readiness semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -126,6 +127,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Change Action and Change Communication reuse shared Decision Action and Communication Item; Change Learning Plan coordinates HCM learning without replacing Learning Plan/Session/Record truth.
 - Enterprise Process identity remains stable across Process Model/Version/SOP/workflow changes; approved Process Versions are immutable.
 - Process Owner Assignment reuses Responsibility Assignment, Process Measure reuses enterprise KPI/metric semantics, SOP reuses Information Container and Process Compliance Assessment reuses Compliance Assessment.
+- Site operations reuse canonical Site, Delivery Stage and Zone; Work Area is a temporary execution overlay rather than permanent spatial/WBS identity.
+- Field Progress reuses Progress Record, Material Usage reuses Inventory Movement, Delivery Record reuses Delivery, and field labour/plant remain operational evidence around canonical Worker/Asset identities.
+- Temporary Works Control Item is a governed register/control identity distinct from Product/Material Item and permanent Asset; temporary-works design/check reuse Information Container and Design Review.
+- Field Permit/Isolation reuse QHSE controls; Field Constraint and project-controls Constraint converge on Delivery Constraint; field photos/geospatial captures reuse Evidence Item.
+- Field Completion and Handover Readiness are evidence and never automatically close Project, Contract, regulatory or handover lifecycle.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

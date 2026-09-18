@@ -171,7 +171,7 @@ export const estimatingTenderingRelationships: EstimatingTenderingRelationship[]
   { id: 'EST-R08', from: 'EST-RESOURCE-BUILDUP', predicate: 'produces/uses', to: 'EST-RATE', cardinality: 'one-to-many', governance: 'Rate retains its exact estimating basis.' },
   { id: 'EST-R09', from: 'EST-ESTIMATE-VERSION', predicate: 'contains', to: 'EST-PROVISION', cardinality: 'one-to-many', governance: 'Allowance/contingency basis is explicit and versioned.' },
   { id: 'EST-R10', from: 'EST-CUSTOMER-ENQUIRY', predicate: 'organised by', to: 'EST-TENDER-PACKAGE', cardinality: 'one-to-many', governance: 'Tender package is bid-side scope grouping only.' },
-  { id: 'EST-TENDER-PACKAGE', from: 'EST-TENDER-PACKAGE', predicate: 'market tested via', to: 'PROC-SOURCING-REQUEST', cardinality: 'many-to-many', governance: 'Estimating supplier/subcontract enquiries reuse shared sourcing request semantics.' },
+  { id: 'EST-R11', from: 'EST-TENDER-PACKAGE', predicate: 'market tested via', to: 'PROC-SOURCING-REQUEST', cardinality: 'many-to-many', governance: 'Estimating supplier/subcontract enquiries reuse shared sourcing request semantics.' },
   { id: 'EST-R12', from: 'PROC-SOURCING-REQUEST', predicate: 'answered by', to: 'PROC-SOURCING-RESPONSE', cardinality: 'one-to-many', governance: 'Quote/bid returns retain submission evidence in shared sourcing model.' },
   { id: 'EST-R13', from: 'PROC-SOURCING-RESPONSE', predicate: 'evaluated by', to: 'PROC-EVALUATION', cardinality: 'many-to-one-or-many', governance: 'Comparison is governed sourcing evaluation, not a separate estimate master.' },
   { id: 'EST-R14', from: 'EST-TENDER-ADJUDICATION', predicate: 'approves basis of', to: 'EST-ESTIMATE-VERSION', cardinality: 'many-to-one', governance: 'Adjudication binds exact frozen version and authority evidence.' },
@@ -208,7 +208,9 @@ export const estimatingTenderingRules = [
 export function validateEstimatingTenderingModel() {
   const ids = new Set(estimatingTenderingModel.map((item) => item.modelId));
   const external = new Set(['CRM-OPPORTUNITY', 'PROC-SOURCING-REQUEST', 'PROC-SOURCING-RESPONSE', 'PROC-EVALUATION', 'CBO-CONTRACT']);
+  const relationshipIds = new Set(estimatingTenderingRelationships.map((rel) => rel.id));
   if (ids.size !== estimatingTenderingModel.length) return false;
+  if (relationshipIds.size !== estimatingTenderingRelationships.length) return false;
   if (estimatingTenderingModel.some((item) => !item.canonicalName || !item.definition || !item.identityRule || !item.governance.length)) return false;
   if (estimatingTenderingRelationships.some((rel) => !ids.has(rel.from) && !external.has(rel.from))) return false;
   if (estimatingTenderingRelationships.some((rel) => !ids.has(rel.to) && !external.has(rel.to))) return false;

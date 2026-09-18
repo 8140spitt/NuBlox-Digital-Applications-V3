@@ -302,7 +302,7 @@ describe('shared foundation relationship, structure and authority aggregates', (
     const workflow = (await sharedWorkService.listWorkflowInstances(context)).find(
       (entry) => entry.id === workflowId
     )!;
-    expect(workflow.version).toBe(7);
+    expect(workflow.version).toBe(8);
     expect(workflow.subjectId).toBe(subjectId);
 
     const assignments = await db.queryRows<any>(

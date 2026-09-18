@@ -11,6 +11,8 @@ import {
 
 export const platformPermissions = [
   ['platform.audit.read', 'platform.audit', 'read', 'Read tenant-scoped platform audit evidence.'],
+  ['tenant.identity.read', 'tenant.identity', 'read', 'Read tenant authentication identity links.'],
+  ['tenant.identity.manage', 'tenant.identity', 'manage', 'Link and maintain authenticated identities for tenant Parties.'],
   ['tenant.membership.read', 'tenant.membership', 'read', 'Read tenant membership authority.'],
   ['tenant.membership.manage', 'tenant.membership', 'manage', 'Grant and revoke tenant membership authority.'],
   ['tenant.role.read', 'tenant.role', 'read', 'Read tenant roles and permission grants.'],
@@ -237,6 +239,25 @@ export async function resolveContextForIdentity(
     roleKeys: roleRows.map((role) => role.roleKey),
     permissions: [...permissions].sort()
   };
+}
+
+export async function resolveContextForAuthUser(
+  tenantSlug: string,
+  authUserId: string,
+  correlationId = randomUUID()
+): Promise<CommandContext> {
+  await assertDatabaseReady();
+  const tenant = await getTenant(tenantSlug.trim().toLowerCase());
+  if (!tenant || tenant.status !== 'ACTIVE') throw new Error('Tenant is not active.');
+
+  const identity = await queryOne<IdentityRow>(
+    "SELECT id, party_id AS partyId, display_name AS displayName, status FROM user_identities WHERE tenant_id = ? AND provider = 'better-auth' AND provider_subject = ?",
+    [tenant.id, authUserId]
+  );
+  if (!identity || identity.status !== 'ACTIVE') {
+    throw new Error('The authenticated user is not linked to an active identity in this tenant.');
+  }
+  return resolveContextForIdentity(tenant.slug, identity.id, correlationId);
 }
 
 export async function resolveDevelopmentCommandContext(

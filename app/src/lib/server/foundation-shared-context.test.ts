@@ -260,6 +260,15 @@ describe('shared foundation relationship, structure and authority aggregates', (
     expect(item.subjectVersion).toBe('7');
     expect(item.version).toBe(2);
 
+    await expect(
+      sharedWorkService.completeWorkflowInstance(
+        context,
+        workflowId,
+        3,
+        'Premature completion must be rejected.'
+      )
+    ).rejects.toThrow('open Work Items');
+
     item = await sharedWorkService.changeWorkItemDueDate(
       context,
       workItemId,
@@ -300,11 +309,21 @@ describe('shared foundation relationship, structure and authority aggregates', (
     myWork = await sharedWorkService.listMyWork(context);
     expect(myWork.some((entry) => entry.id === workItemId)).toBe(false);
 
-    const workflow = (await sharedWorkService.listWorkflowInstances(context)).find(
+    let workflow = (await sharedWorkService.listWorkflowInstances(context)).find(
       (entry) => entry.id === workflowId
     )!;
     expect(workflow.version).toBe(8);
     expect(workflow.subjectId).toBe(subjectId);
+
+    workflow = await sharedWorkService.completeWorkflowInstance(
+      context,
+      workflowId,
+      workflow.version,
+      'All governed review work is complete.'
+    );
+    expect(workflow.status).toBe('COMPLETED');
+    expect(workflow.version).toBe(9);
+    expect(workflow.completionReason).toBe('All governed review work is complete.');
 
     const assignments = await db.queryRows<any>(
       'SELECT status, valid_to AS validTo FROM work_assignments WHERE work_item_id = ?',

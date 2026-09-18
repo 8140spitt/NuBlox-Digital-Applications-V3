@@ -1,4 +1,5 @@
 import { enterpriseFunctions } from '$lib/enterprise/functions';
+import sapV3Map from '$lib/generated/sap-v3-benchmark-map.json';
 
 export type BenchmarkTier = 'mandatory-suite' | 'specialist-depth';
 export type BenchmarkStudyState = 'registered' | 'in-progress' | 'challenged' | 'closed';
@@ -306,6 +307,7 @@ export const marketBenchmarkSummary = {
   workspaceCount: enterpriseFunctions.length,
   programmeState: 'in-progress' as const,
   legacySapCapabilityRows: 64,
+  sapV3MappedRows: sapV3Map.rows.length,
   rule: 'External systems challenge completeness, semantics and user outcomes; vendor module boundaries never become automatic NuBlox architecture.'
 };
 

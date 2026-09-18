@@ -218,6 +218,25 @@ describe('canonical business object review ledger', () => {
     const costCarbon = service.getBusinessObjectReview('BOF-20-025');
     expect(costCarbon?.decision).toBe('PROJECTION');
 
+    const enterpriseRisk = service.getBusinessObjectReview('BOF-21-002');
+    expect(enterpriseRisk?.decision).toBe('VALIDATE_OBJECT');
+    expect(enterpriseRisk?.proposedCanonicalName).toBe('Enterprise Risk');
+
+    const riskAssessment21 = service.getBusinessObjectReview('BOF-21-003');
+    expect(riskAssessment21?.decision).toBe('EVENT_EVIDENCE');
+    expect(riskAssessment21?.proposedCanonicalName).toBe('Risk Assessment');
+
+    const auditPlan = service.getBusinessObjectReview('BOF-21-011');
+    expect(auditPlan?.decision).toBe('MERGE');
+    expect(auditPlan?.targetCandidateKey).toBe('BOF-21-010');
+
+    const conductCase = service.getBusinessObjectReview('BOF-21-016');
+    expect(conductCase?.decision).toBe('MERGE');
+    expect(conductCase?.targetCandidateKey).toBe('BOF-21-015');
+
+    const complianceEvidence = service.getBusinessObjectReview('BOF-21-017');
+    expect(complianceEvidence?.decision).toBe('EVENT_EVIDENCE');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

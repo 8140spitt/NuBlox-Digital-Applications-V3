@@ -1,5 +1,6 @@
 import { enterpriseFunctions } from '$lib/enterprise/functions';
 import sapV3Map from '$lib/generated/sap-v3-benchmark-map.json';
+import { benchmarkGapSummary } from './benchmark-gap-register';
 
 export type BenchmarkTier = 'mandatory-suite' | 'specialist-depth';
 export type BenchmarkStudyState = 'registered' | 'in-progress' | 'challenged' | 'closed';
@@ -310,6 +311,9 @@ export const marketBenchmarkSummary = {
   sapV3MappedRows: sapV3Map.rows.length,
   sapV3ChallengedRows: sapV3Map.rows.filter((row) => row.benchmarkState === 'challenged').length,
   sapV3ClosedRows: sapV3Map.rows.filter((row) => row.benchmarkState === 'closed').length,
+  benchmarkGapCount: benchmarkGapSummary.gapCount,
+  benchmarkGapResolvedCount: benchmarkGapSummary.resolvedCount,
+  benchmarkGapOpenCount: benchmarkGapSummary.openCount,
   rule: 'External systems challenge completeness, semantics and user outcomes; vendor module boundaries never become automatic NuBlox architecture.'
 };
 

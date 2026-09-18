@@ -39,7 +39,7 @@ function problem(error: unknown) {
   return fail(400, { message: error instanceof Error ? error.message : 'The requested action could not be completed.' });
 }
 
-export const load: PageServerLoad = async ({ params, url }) => {
+export const load: PageServerLoad = async ({ params, url, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const frameworks = await listStrategyFrameworks(context);
   const requestedId = url.searchParams.get('framework');

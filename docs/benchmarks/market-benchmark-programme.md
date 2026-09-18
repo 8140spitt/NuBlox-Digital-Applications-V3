@@ -68,10 +68,13 @@ The complete V3 semantic remap is now held in:
 Current SAP benchmark state:
 
 - **64/64** legacy capability rows mapped to V3 workspaces, canonical families/object concepts and process chains;
-- **48** classified as native-core outcomes;
-- **8** classified as contextual extensions;
+- **47** classified as native-core outcomes;
+- **9** classified as contextual extensions;
 - **8** classified as platform enablers;
-- **0/64** capability challenges closed — detailed outside-in challenge remains the next step.
+- **64/64** rows have now been challenged against current SAP capability evidence and NuBlox semantics;
+- SAP benchmark state is **challenged**, not runtime-proven/closed;
+- **16** architecture findings have governed dispositions: **11 accepted core refinements** and **5 explicit contextual extensions**;
+- **0** benchmark-decision gaps remain open from the SAP pass.
 
 However:
 
@@ -97,7 +100,7 @@ Each benchmark study must produce a version-controlled record containing:
 
 ## Benchmark waves
 
-### Wave 1 — Enterprise backbone
+### Wave 1 — Enterprise backbone — SAP complete, wider suite challenge next
 
 SAP, Oracle, Microsoft, IFS, Workday.
 
@@ -208,3 +211,21 @@ Gate 3 is not complete until:
 - every rejected vendor pattern has a recorded rationale.
 
 Only after this challenge can NuBlox freeze canonical aggregate boundaries with confidence.
+
+## SAP challenge completion record — 18 September 2026
+
+The SAP benchmark has now completed its **architecture challenge** across all 64 inherited capability rows.
+
+Detailed study records:
+
+- `sap-wave-1-enterprise-backbone.md` — first 39 enterprise-backbone rows;
+- `sap-wave-2-specialist-industry-experience.md` — remaining 25 rows;
+- `sap-v3-capability-map.csv` — 64/64 row-level V3 remap/challenge state;
+- `app/src/lib/data/benchmark-gap-register.ts` — governed findings/dispositions;
+- `app/src/lib/data/benchmark-refinement-model.ts` — accepted core semantic refinements.
+
+The SAP pass produced core semantic refinements for integrated planning, treasury risk, master-data stewardship, advanced logistics, reliability engineering, succession/talent, configurable products, business travel, migration/test-data governance, product requirements/systems engineering and lease accounting.
+
+It also explicitly kept usage/subscription billing, public-sector funds management, global-trade compliance depth, sales incentive compensation and merchant/retail/POS mechanics as **contextual extensions** rather than universal core architecture.
+
+This closes SAP as an architectural challenge source. It does **not** claim that all SAP-equivalent runtime features or user journeys are implemented in NuBlox.

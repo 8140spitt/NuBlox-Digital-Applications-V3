@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(56);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(64);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -99,6 +99,20 @@ describe('benchmark-driven canonical refinements', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-TARGET-COST-BASELINE')?.kind).toBe('plan');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-SHARE-MECHANISM')?.kind).toBe('definition');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-SHARE-ASSESSMENT')?.kind).toBe('event-evidence');
+  });
+
+  it('adds shared effectivity configuration baselines and occurrence semantics', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'CFG-EFFECTIVITY-STATEMENT')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'CFG-EFFECTIVITY-ASSIGNMENT')?.kind).toBe('relationship');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'CFG-CONFIGURATION-BASELINE')?.kind).toBe('event-evidence');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'CFG-STRUCTURE-OCCURRENCE')?.kind).toBe('child');
+  });
+
+  it('adds as-maintained and digital-twin federation without another asset master', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'OPS-AS-MAINTAINED-CONFIGURATION')?.kind).toBe('projection');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'TWIN-FEDERATION-CONTEXT')?.kind).toBe('execution-context');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'TWIN-DATA-BINDING')?.kind).toBe('relationship');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'TWIN-STATE-SNAPSHOT')?.kind).toBe('projection');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

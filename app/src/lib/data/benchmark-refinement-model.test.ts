@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(75);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(79);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -132,6 +132,17 @@ describe('benchmark-driven canonical refinements', () => {
 
   it('adds workplace reservations without reusing inventory reservation semantics', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'OPS-WORKPLACE-RESERVATION')?.kind).toBe('transaction');
+  });
+
+  it('adds statutory corporate-office and entity-register semantics without another entity master', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'CORP-OFFICE-APPOINTMENT')?.kind).toBe('relationship');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'CORP-ENTITY-REGISTER-SNAPSHOT')?.kind).toBe('projection');
+  });
+
+  it('adds construction WIP recognition while keeping billing and accounting consequences separate', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'FIN-RECOGNITION-POLICY')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'FIN-CONSTRUCTION-WIP-RUN')?.kind).toBe('event-evidence');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'FIN-CONSTRUCTION-WIP-POSITION')?.kind).toBe('projection');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

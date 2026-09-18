@@ -93,7 +93,7 @@ The governing programme is:
 
 The current baseline registers **23 relevant products/suites** spanning all **29 tenant workspaces**, including SAP, Oracle, Microsoft, IFS, Workday, ServiceNow, Procore, Autodesk, Bentley, Trimble, IBM Maximo, PTC Windchill, Siemens Teamcenter, Deltek, Asite, Thinkproject/CEMAR, Hexagon EcoSys, Planon, Sage, Causeway, Salesforce and Diligent.
 
-The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only; every SAP capability must be remapped to V3's 29 workspaces and canonical object model.
+The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only. The remap is now **64/64 complete** in `docs/benchmarks/sap-v3-capability-map.csv`; detailed capability challenge/closure remains outstanding.
 
 External benchmark coverage is deliberately not treated as complete merely because products are registered or several useful architectural findings have already been adopted. Benchmark systems challenge completeness, semantics, controls and end-to-end user outcomes; vendor module boundaries never become automatic NuBlox architecture.
 

@@ -35,6 +35,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `knowledge-records-communications-semantics.md` — governed Knowledge Article/Collection, record declaration/series/file, retention/disposition, communication planning/publication, media/external-affairs and stakeholder-engagement semantics.
 - `land-development-investment-semantics.md` — governed development opportunity/business case/appraisal, land option, property-interest, valuation/survey, planning/consent/conditions/obligations and funding-evidence semantics.
 - `strategy-governance-performance-semantics.md` — governed strategy framework/objectives/themes/initiatives, business planning/scenarios/assumptions, KPI/target/observation/snapshot, governance bodies/meetings and shared decision/authority semantics.
+- `continuity-crisis-security-semantics.md` — governed business-impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, disaster-recovery invocation and physical-security zone/credential/access/incident semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -108,6 +109,10 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - KPI Definition, Performance Target, Performance Observation and Performance Snapshot remain separate definition, plan, evidence and projection layers.
 - Strategic Review produces separately governed shared Decisions and Decision Actions; BOF-02 and BOF-06 converge on the same enterprise decision/action spine.
 - Policy and Governance Record reuse Information Container; Authority Framework is configuration/governance and remains distinct from Delegated Authority, permission, role and assignment.
+- Business Impact Assessment, Recovery Requirement, Continuity Strategy and Continuity Plan remain separate layers; exercises and invocations are occurrence evidence against exact versions.
+- Emergency Event is occurrence evidence while Crisis is the response case; Crisis Action and Crisis Communication reuse shared enterprise action/communication patterns.
+- Physical Security Zone overlays canonical spatial extents; Visitor Pass is a Physical Access Credential type and access events are immutable evidence.
+- Travel and Security Risk Assessments reuse enterprise Risk Assessment; BOF-23 DR Invocation links to BOF-24 Disaster Recovery Plan without duplicating it.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

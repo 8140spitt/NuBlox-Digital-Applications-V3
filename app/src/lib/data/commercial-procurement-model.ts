@@ -329,6 +329,22 @@ export const commercialProcurementModel: CommercialProcurementDefinition[] = [
     ]
   },
   {
+    modelId: 'PROC-CALLOFF',
+    candidateKeys: ['BOF-09-019', 'BOF-10-035'],
+    canonicalName: 'Call-off Order',
+    kind: 'transaction',
+    definition: 'A governed release of defined goods, service or scope under an existing framework, Contract or blanket procurement commitment.',
+    identityRule: 'One stable Call-off Order identity is created by procurement/commercial authority and reused by inventory/logistics for fulfilment; the logistics context never creates a second call-off master.',
+    scope: ['framework/contract', 'purchase order/commitment', 'project/site demand'],
+    keyData: ['call-off number', 'governing agreement/commitment', 'item/service/scope', 'quantity/value', 'required date/location', 'authority'],
+    lifecycle: ['Draft', 'Approved', 'Released', 'Acknowledged', 'Partially Fulfilled', 'Fulfilled', 'Closed', 'Cancelled'],
+    governance: [
+      'BOF-09 Call-off and BOF-10 Call-off are one canonical Call-off Order identity.',
+      'The Call-off Order preserves the governing agreement/commitment and authority basis.',
+      'Shipment, Delivery and Procurement Receipt reference fulfilment of the Call-off Order without redefining it.'
+    ]
+  },
+  {
     modelId: 'PROC-RECEIPT',
     candidateKeys: ['BOF-09-023', 'BOF-09-024'],
     canonicalName: 'Procurement Receipt',
@@ -370,6 +386,8 @@ export const commercialProcurementRelationships: CommercialProcurementRelationsh
   { id: 'CP-R21', from: 'PROC-AWARD', predicate: 'creates/bases', to: 'PROC-PURCHASE-ORDER', cardinality: '0..1 ↔ 0..*', governance: 'Award and commitment are distinct records.' },
   { id: 'CP-R22', from: 'PROC-AWARD', predicate: 'may create', to: 'CBO-CONTRACT', cardinality: '0..1 ↔ 0..*', governance: 'Subcontract/appointment/framework are Contract types linked back to Award.' },
   { id: 'CP-R23', from: 'PROC-PURCHASE-ORDER', predicate: 'fulfilled by', to: 'PROC-RECEIPT', cardinality: '1 ↔ 0..*', governance: 'Receipts evidence fulfilment and preserve corrections/reversals.' },
+  { id: 'CP-R25', from: 'PROC-PURCHASE-ORDER', predicate: 'may release through', to: 'PROC-CALLOFF', cardinality: '0..1 ↔ 0..*', governance: 'Call-off is one authorised release identity reused by downstream logistics.' },
+  { id: 'CP-R26', from: 'CBO-CONTRACT', predicate: 'may govern', to: 'PROC-CALLOFF', cardinality: '0..1 ↔ 0..*', governance: 'Framework/contract call-off retains governing agreement and authority provenance.' },
   { id: 'CP-R24', from: 'COM-PROCUREMENT-PACKAGE', predicate: 'maps to', to: 'DEL-WORK-PACKAGE', cardinality: '0..* ↔ 0..*', governance: 'Procurement and delivery structures remain distinct.' }
 ];
 
@@ -393,6 +411,7 @@ export const commercialProcurementRules = [
   'RFQ/RFP use one controlled Sourcing Request pattern; Bid/Tender responses use one Sourcing Response pattern.',
   'Evaluation/recommendation does not constitute Award; Award requires authority and retained decision evidence.',
   'Purchase Order Line is a child of Purchase Order; amendments retain commitment history.',
+  'BOF-09 and BOF-10 Call-off occurrences converge on one canonical Call-off Order owned by commercial/procurement truth and consumed by logistics.',
   'Goods/Service Receipt is immutable fulfilment evidence and does not itself approve an invoice.',
   'Every external commitment traces back to authorised sourcing/requisition/award or an explicit governed exception.'
 ];

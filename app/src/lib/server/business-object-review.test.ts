@@ -1,5 +1,4 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { seedDevelopmentTenant } from './development-seed';
 
 let service: typeof import('./business-object-review');
 let dbModule: typeof import('./db');

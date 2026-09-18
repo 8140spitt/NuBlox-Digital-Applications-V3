@@ -1,6 +1,6 @@
 <script lang="ts">
   let { data, form } = $props();
-  const basePath = `/${data.tenantSlug}/app/admin/business-objects`;
+  const basePath = $derived(`/${data.tenantSlug}/app/admin/business-objects`);
   let decision = $state('VALIDATE_OBJECT');
 
   $effect(() => {

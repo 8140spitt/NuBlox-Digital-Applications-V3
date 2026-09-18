@@ -23,7 +23,8 @@
     "test:all": "pnpm test:domain && pnpm test:integration",
     "db:validate": "node scripts/db-validate.mjs",
     "test:migrations": "node --env-file-if-exists=.env scripts/test-migrations.mjs",
-    "db:seed:dev": "tsx --env-file-if-exists=.env scripts/db-seed-dev.ts"
+    "db:seed:dev": "tsx --env-file-if-exists=.env scripts/db-seed-dev.ts",
+    "auth:bootstrap": "tsx --env-file-if-exists=.env scripts/auth-bootstrap.ts"
   },
   "dependencies": {
     "@fontsource-variable/noto-sans": "^5.3.0",

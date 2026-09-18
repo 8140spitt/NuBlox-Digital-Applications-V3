@@ -28,6 +28,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `estimating-tendering-semantics.md` — governed Estimate/version, breakdown, measurement, build-up/rate, provision, tender-package, adjudication, proposal/quotation and offer-acceptance semantics.
 - `people-hcm-semantics.md` — governed Person/Worker Relationship, Position/Job Profile, competence/credential, learning, workforce, time, payroll, recruitment and people-case semantics.
 - `qhse-assurance-semantics.md` — governed quality planning, inspection/test, NCR/Defect/CAPA, safe-work controls, incident/investigation, compliance and environmental-assurance semantics.
+- `building-safety-regulatory-semantics.md` — governed dutyholder, competence evidence, regulator case/application, controlled change, statutory inspection/finding, occurrence reporting, notices, decisions, completion and golden-thread semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -64,6 +65,13 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Method Statement/RAMS use controlled Information Container identity; Permit to Work and Isolation are shared with site operations.
 - Near Miss and Pollution Event are Incident classifications; Investigation/Cause/CAPA retain independent evidence and lifecycles.
 - Compliance Register is a projection of applicable requirements/evidence, not editable regulatory truth.
+- Dutyholder Assignment is statutory accountability context, distinct from organisational position, generic role assignment, permission and delegated authority.
+- Building Control Application is a Regulatory Application type; Regulatory Inspection reuses shared QHSE Inspection semantics.
+- Regulatory Controlled Change remains distinct from Design Change and Commercial Change.
+- Mandatory Occurrence Report is reporting evidence, not Incident identity; Regulatory Decision is immutable attributable evidence.
+- Statutory Completion Certificate remains distinct from Delivery Completion Certificate.
+- Golden Thread is a reconstructable source-linked information/evidence set, not one document, folder or duplicate truth store.
+- Regulatory Submission reuses shared External Submission semantics and pins exact information/evidence versions.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

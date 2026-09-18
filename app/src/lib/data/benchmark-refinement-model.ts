@@ -660,6 +660,94 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['contract', 'assessment period/final context', 'target baseline/version', 'share mechanism/version', 'actual/defined cost basis', 'adjustments/exclusions', 'variance', 'share calculation', 'party outcomes', 'approval/evidence'],
     lifecycle: ['Calculated', 'Reviewed', 'Agreed/Approved', 'Disputed', 'Superseded/Corrected', 'Final'],
     governance: ['Share Assessment never rewrites Ledger actuals, Contract terms or Target Cost Baseline.', 'Payment/accounting consequences are explicit downstream records.']
+  },
+  {
+    modelId: 'CFG-EFFECTIVITY-STATEMENT',
+    originGapIds: ['BG-023'],
+    canonicalName: 'Effectivity Statement',
+    kind: 'definition',
+    definition: 'Governed versioned applicability/effectivity statement defining when or for which unit/lot/serial/configuration/context an exact definition, revision, structure line or change outcome is valid.',
+    identityRule: 'Stable statement identity/version carrying effectivity type, context, qualifier and range/set; assignments reference the statement rather than copying ambiguous effective-from/to fields across objects.',
+    keyData: ['effectivity reference', 'type', 'context/end item', 'qualifier', 'date/time range', 'serial/unit/lot range or set', 'configuration/options context', 'jurisdiction/site applicability', 'status/version'],
+    lifecycle: ['Draft', 'Approved', 'Planned', 'Effective', 'Expired', 'Superseded', 'Cancelled'],
+    governance: ['Effectivity is applicability governance, not object lifecycle state.', 'Planned and actual effectivity are distinguished where change implementation requires it.', 'Historic assignments retain exact statement versions.']
+  },
+  {
+    modelId: 'CFG-EFFECTIVITY-ASSIGNMENT',
+    originGapIds: ['BG-023'],
+    canonicalName: 'Effectivity Assignment',
+    kind: 'relationship',
+    definition: 'Governed relationship assigning an Effectivity Statement to an exact version/revision, BOM/value/structure line, configuration rule, manufacturing definition, information revision or other configuration-managed subject.',
+    identityRule: 'Stable effective relationship with target identity/version, statement version, assignment basis and authority/change provenance.',
+    keyData: ['target identity/version', 'effectivity statement/version', 'assignment type', 'change/decision basis', 'assigned by/at', 'status'],
+    lifecycle: ['Proposed', 'Approved', 'Active', 'Superseded', 'Withdrawn'],
+    governance: ['Effectivity Assignment never changes the target master identity.', 'Changing applicability creates governed successor assignment/effectivity history.']
+  },
+  {
+    modelId: 'CFG-CONFIGURATION-BASELINE',
+    originGapIds: ['BG-023'],
+    canonicalName: 'Configuration Baseline',
+    kind: 'event-evidence',
+    definition: 'Immutable approved snapshot identifying the exact versions, revisions, structure lines, configuration choices/rules and effectivity context that constitute a product/system/engineering configuration at a defined point or release.',
+    identityRule: 'Stable baseline identity/version with frozen membership references; subsequent configuration changes create a new baseline or successor rather than rewriting the original.',
+    keyData: ['baseline reference', 'configuration subject', 'baseline purpose/type', 'member identities/versions', 'structure occurrence set', 'effectivity/configuration context', 'approved by/at', 'change/release basis'],
+    lifecycle: ['Proposed', 'Approved', 'Released', 'Superseded', 'Archived'],
+    governance: ['Configuration Baseline is not the live BOM or Item master.', 'It pins exact version membership for audit, comparison, manufacture, handover or service.']
+  },
+  {
+    modelId: 'CFG-STRUCTURE-OCCURRENCE',
+    originGapIds: ['BG-023'],
+    canonicalName: 'Product Structure Occurrence',
+    kind: 'child',
+    definition: 'Occurrence-specific use of a component Item/structure line in an exact BOM/configuration, allowing position/reference/location and occurrence-level applicability to be governed when repeated components are not interchangeable by context.',
+    identityRule: 'Stable occurrence identity subordinate to a BOM/configuration version and parent usage line; repeated uses of the same Item remain distinguishable without creating new Item masters.',
+    keyData: ['parent structure/version', 'usage/BOM line', 'component Item', 'occurrence/reference designator', 'position/location/transform', 'quantity/unit context', 'effectivity assignment', 'status'],
+    lifecycle: ['Defined', 'Effective', 'Superseded', 'Removed'],
+    governance: ['Occurrence is not Item, serial identity or installed Asset.', 'Actual manufactured/installed occurrences link explicitly to traceability/Asset identities.']
+  },
+  {
+    modelId: 'OPS-AS-MAINTAINED-CONFIGURATION',
+    originGapIds: ['BG-024'],
+    canonicalName: 'As-Maintained Configuration',
+    kind: 'projection',
+    definition: 'Rebuildable or published as-of configuration of an operational Asset/System showing installed components, replacements, traceability identities and applicable approved configuration/design basis after in-service changes.',
+    identityRule: 'Projection/snapshot derives from effective Installed-base Relationships, installation/removal/replacement work evidence and exact configuration baselines; it never replaces physical Asset/System identity.',
+    keyData: ['asset/system subject', 'as-of time', 'installed component/asset/serial relationships', 'source work/replacement evidence', 'configuration baseline/design basis', 'deviations', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['As-Maintained Configuration is operational truth projection, not approved design or As-Manufactured Configuration.', 'Historical as-of configurations remain reconstructable.']
+  },
+  {
+    modelId: 'TWIN-FEDERATION-CONTEXT',
+    originGapIds: ['BG-024'],
+    canonicalName: 'Digital Twin Federation Context',
+    kind: 'execution-context',
+    definition: 'Governed federation context binding one or more canonical physical Site/System/Asset subjects to their relevant engineering model revisions, geospatial context, datasets/data products, sensor/condition streams, work/maintenance and as-maintained configuration for a defined lifecycle purpose.',
+    identityRule: 'Stable federation-context identity references authoritative sources without copying ownership; the physical Asset/System remains the real-world identity.',
+    keyData: ['twin/federation reference', 'physical subject(s)', 'purpose/use case', 'model/information revisions', 'geospatial context', 'data products/datasets', 'sensor/condition sources', 'as-maintained configuration', 'access/governance', 'effective period'],
+    lifecycle: ['Proposed', 'Active', 'Reviewed', 'Superseded', 'Retired'],
+    governance: ['Digital Twin Federation Context is not another Asset master, document repository or telemetry database.', 'Every binding retains source authority and version/as-of provenance.']
+  },
+  {
+    modelId: 'TWIN-DATA-BINDING',
+    originGapIds: ['BG-024'],
+    canonicalName: 'Digital Twin Data Binding',
+    kind: 'relationship',
+    definition: 'Governed binding between a Digital Twin Federation Context/physical subject and an authoritative model element, information revision, dataset/data product, sensor/condition point, geospatial feature or external source.',
+    identityRule: 'Stable effective relationship with source system/object identifier, semantic role, transformation/mapping basis, validity and data-quality status.',
+    keyData: ['twin context', 'physical subject', 'source object/system', 'binding role/type', 'mapping/semantic key', 'effective dates', 'quality/status', 'provenance'],
+    lifecycle: ['Proposed', 'Validated', 'Active', 'Suspended', 'Superseded', 'Retired'],
+    governance: ['Binding preserves source authority and never copies external IDs into primary Asset identity.', 'Broken/ambiguous mappings remain explicit exceptions.']
+  },
+  {
+    modelId: 'TWIN-STATE-SNAPSHOT',
+    originGapIds: ['BG-024'],
+    canonicalName: 'Digital Twin State Snapshot',
+    kind: 'projection',
+    definition: 'Reproducible as-of view of a physical subject through a Digital Twin Federation Context, pinning exact configuration, models, spatial data, condition/telemetry and operational source versions used to present or analyse state.',
+    identityRule: 'Projection or immutable published snapshot references exact bindings/source versions and as-of time; live source updates never silently rewrite an issued snapshot.',
+    keyData: ['twin context', 'physical subject', 'as-of time', 'as-maintained configuration', 'model/information versions', 'sensor/condition observations', 'geospatial/data-product versions', 'calculation/visualisation basis', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Twin State Snapshot is a federated projection, not authoritative physical condition by itself.', 'Decisions/actions reference exact source evidence where material.']
   }
 ];
 
@@ -688,7 +776,12 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R22', from: 'DEL-PERFORMANCE-CALCULATION-RUN', predicate: 'uses', to: 'DEL-PROGRESS-MEASUREMENT-METHOD', governance: 'Performance calculation pins the exact approved progress-measurement method version.' },
   { id: 'BR-R23', from: 'COM-CONTRACT-VALUE-LINE', predicate: 'belongs to', to: 'COM-CONTRACT-VALUE-SCHEDULE', governance: 'Value lines remain subordinate to the agreed contract pricing schedule/version.' },
   { id: 'BR-R24', from: 'COM-SHARE-ASSESSMENT', predicate: 'uses', to: 'COM-TARGET-COST-BASELINE', governance: 'Assessment pins the exact approved target baseline/version.' },
-  { id: 'BR-R25', from: 'COM-SHARE-ASSESSMENT', predicate: 'uses', to: 'COM-SHARE-MECHANISM', governance: 'Assessment pins the exact contractual share formula/version.' }
+  { id: 'BR-R25', from: 'COM-SHARE-ASSESSMENT', predicate: 'uses', to: 'COM-SHARE-MECHANISM', governance: 'Assessment pins the exact contractual share formula/version.' },
+  { id: 'BR-R26', from: 'CFG-EFFECTIVITY-ASSIGNMENT', predicate: 'uses', to: 'CFG-EFFECTIVITY-STATEMENT', governance: 'Assignment pins the exact governed effectivity statement/version.' },
+  { id: 'BR-R27', from: 'CFG-CONFIGURATION-BASELINE', predicate: 'may contain', to: 'CFG-STRUCTURE-OCCURRENCE', governance: 'Baseline freezes exact occurrence membership and version/effectivity context.' },
+  { id: 'BR-R28', from: 'TWIN-DATA-BINDING', predicate: 'belongs to', to: 'TWIN-FEDERATION-CONTEXT', governance: 'Bindings remain source-aware relationships within one federation context.' },
+  { id: 'BR-R29', from: 'TWIN-STATE-SNAPSHOT', predicate: 'derives from', to: 'TWIN-FEDERATION-CONTEXT', governance: 'Snapshot pins exact context bindings and source versions.' },
+  { id: 'BR-R30', from: 'OPS-AS-MAINTAINED-CONFIGURATION', predicate: 'may reference', to: 'CFG-CONFIGURATION-BASELINE', governance: 'Operational configuration can compare to an exact approved design/configuration baseline without becoming it.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -709,7 +802,9 @@ export const benchmarkRefinementRules = [
   'Quantitative project-risk results are reproducible analysis evidence derived from explicit risk, schedule, cost, uncertainty and method inputs; they never replace source risk or plan truth.',
   'Earned value, productivity, EAC and CVR-style project-control positions are reproducible projections over governed progress, budget, commercial and accounting truth; reports never become a shadow cost ledger.',
   'Contract value/payment breakdowns remain commercial structures mapped to delivery and cost classifications; they never become WBS or finance masters.',
-  'Target-cost and gain/pain sharing preserve approved target baselines, formula versions and assessment evidence without rewriting actual cost or Contract truth.'
+  'Target-cost and gain/pain sharing preserve approved target baselines, formula versions and assessment evidence without rewriting actual cost or Contract truth.',
+  'Effectivity, configuration baseline and structure-occurrence semantics are shared configuration governance rather than PLM-vendor-specific master copies.',
+  'Digital twins are governed federations over canonical physical Assets/Systems and authoritative source data; they never become a second asset register.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -717,7 +812,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022', 'BG-023', 'BG-024']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

@@ -375,6 +375,34 @@ describe('canonical business object review ledger', () => {
     expect(cyberIncident?.decision).toBe('RENAME');
     expect(cyberIncident?.proposedCanonicalName).toBe('Cybersecurity Incident');
 
+    const transformationPortfolio = service.getBusinessObjectReview('BOF-26-001');
+    expect(transformationPortfolio?.decision).toBe('MERGE');
+    expect(transformationPortfolio?.targetCandidateKey).toBe('BOF-06-001');
+
+    const changeAction = service.getBusinessObjectReview('BOF-26-005');
+    expect(changeAction?.decision).toBe('MERGE');
+    expect(changeAction?.targetCandidateKey).toBe('BOF-06-024');
+
+    const changeCommunication = service.getBusinessObjectReview('BOF-26-006');
+    expect(changeCommunication?.decision).toBe('MERGE');
+    expect(changeCommunication?.targetCandidateKey).toBe('BOF-25-012');
+
+    const processVersion = service.getBusinessObjectReview('BOF-26-015');
+    expect(processVersion?.decision).toBe('CHILD');
+    expect(processVersion?.proposedCanonicalName).toBe('Process Version');
+
+    const processMeasure = service.getBusinessObjectReview('BOF-26-017');
+    expect(processMeasure?.decision).toBe('MERGE');
+    expect(processMeasure?.targetCandidateKey).toBe('BOF-02-008');
+
+    const sop = service.getBusinessObjectReview('BOF-26-021');
+    expect(sop?.decision).toBe('MERGE');
+    expect(sop?.targetCandidateKey).toBe('BOF-07-007');
+
+    const processCompliance = service.getBusinessObjectReview('BOF-26-022');
+    expect(processCompliance?.decision).toBe('MERGE');
+    expect(processCompliance?.targetCandidateKey).toBe('BOF-21-007');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

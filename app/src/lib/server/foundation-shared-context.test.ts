@@ -118,13 +118,33 @@ describe('shared foundation relationship, structure and authority aggregates', (
     );
     expect(relationId).toBeTruthy();
 
-    const team = (await structureService.listOrganisationUnits(context)).find(
+    let team = (await structureService.listOrganisationUnits(context)).find(
       (unit) => unit.id === teamId
     )!;
     expect(team.version).toBe(3);
+
+    let hierarchy = await structureService.listOrganisationUnitHierarchy(context);
+    expect(
+      hierarchy.some(
+        (edge) =>
+          edge.id === relationId &&
+          edge.childUnitId === teamId &&
+          edge.parentUnitId === divisionId &&
+          edge.status === 'ACTIVE'
+      )
+    ).toBe(true);
+
     await expect(
       structureService.assignOrganisationUnitParent(context, divisionId, teamId)
     ).rejects.toThrow('cycle');
+
+    await structureService.removeOrganisationUnitParent(context, teamId, team.version);
+    team = (await structureService.listOrganisationUnits(context)).find(
+      (unit) => unit.id === teamId
+    )!;
+    expect(team.version).toBe(4);
+    hierarchy = await structureService.listOrganisationUnitHierarchy(context);
+    expect(hierarchy.find((edge) => edge.id === relationId)?.status).toBe('ENDED');
   });
 
   it('enforces approved, effective and value-constrained Delegated Authority', async () => {

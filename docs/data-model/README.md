@@ -34,6 +34,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `legal-privacy-semantics.md` — governed legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, privacy incident, international-transfer and assurance semantics.
 - `knowledge-records-communications-semantics.md` — governed Knowledge Article/Collection, record declaration/series/file, retention/disposition, communication planning/publication, media/external-affairs and stakeholder-engagement semantics.
 - `land-development-investment-semantics.md` — governed development opportunity/business case/appraisal, land option, property-interest, valuation/survey, planning/consent/conditions/obligations and funding-evidence semantics.
+- `strategy-governance-performance-semantics.md` — governed strategy framework/objectives/themes/initiatives, business planning/scenarios/assumptions, KPI/target/observation/snapshot, governance bodies/meetings and shared decision/authority semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -103,6 +104,10 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Land Option reuses Contract; Ownership/Occupation are typed Property Interest relationships; Development Constraint remains distinct from Project Delivery Constraint.
 - Property Valuation is distinct from BOF-08 contract/payment Valuation; planning Application, Consent and Conditions remain separate layers.
 - Planning Obligation reuses Legal Obligation; Survey, Site Appraisal and Funding/Grant Evidence remain attributable evidence around canonical source objects.
+- Strategy Framework, Objective, Theme, Initiative and Business Plan remain distinct governed concepts; Strategic Initiative links to delivery vehicles rather than becoming Project/Programme identity.
+- KPI Definition, Performance Target, Performance Observation and Performance Snapshot remain separate definition, plan, evidence and projection layers.
+- Strategic Review produces separately governed shared Decisions and Decision Actions; BOF-02 and BOF-06 converge on the same enterprise decision/action spine.
+- Policy and Governance Record reuse Information Container; Authority Framework is configuration/governance and remains distinct from Delegated Authority, permission, role and assignment.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

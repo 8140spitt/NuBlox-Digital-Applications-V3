@@ -31,7 +31,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     workspaces: ['F01', 'F03', 'F10', 'F11', 'F27'],
     canonicalFamilies: ['BOF-02', 'BOF-06', 'BOF-10', 'BOF-11'],
     disposition: 'accepted-refinement',
-    state: 'open',
+    state: 'resolved',
     rationale: 'The current model has Business Plan, Scenario, Forecast, Production Plan and Capacity Plan but no explicit governed demand/supply planning identity. This is a cross-enterprise planning need rather than an SAP module artefact.',
     requiredOutcome: 'Define governed Demand Plan and Supply Plan semantics, planning horizon/version/effectivity, demand-source links, constrained/unconstrained supply response, scenario comparison and links to inventory/capacity/finance without creating duplicate operational truth.'
   },
@@ -44,7 +44,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     workspaces: ['F14', 'F20'],
     canonicalFamilies: ['BOF-19', 'BOF-21', 'BOF-29'],
     disposition: 'accepted-refinement',
-    state: 'open',
+    state: 'resolved',
     rationale: 'Cash and liquidity forecasting plus Treasury Deal are already governed, but financial exposure, hedge designation/instrument linkage, market-data basis and cash-pooling arrangements are not explicit enough for auditable treasury risk.',
     requiredOutcome: 'Define exposure, hedge relationship/instrument, market-data snapshot/rate source and cash-pool relationships while preserving immutable accounting and bank evidence.'
   },
@@ -57,7 +57,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     workspaces: ['F02', 'F05', 'F09', 'F17', 'F22', 'F29'],
     canonicalFamilies: ['BOF-01', 'BOF-10', 'BOF-16', 'BOF-24', 'BOF-29'],
     disposition: 'accepted-refinement',
-    state: 'open',
+    state: 'resolved',
     rationale: 'Canonical identities and data-quality rules exist, but stewardship case/change request, duplicate-candidate matching, controlled merge/unmerge and golden-record provenance need explicit governance semantics.',
     requiredOutcome: 'Define stewardship request/case, duplicate-match candidate, merge decision, survivor/redirect lineage, reversible unmerge/correction evidence and stewardship authority without creating a second master-data store.'
   },
@@ -117,6 +117,6 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
   if (benchmarkGapSummary.acceptedRefinementCount !== 3) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 3) return false;
-  if (benchmarkGapSummary.resolvedCount !== 0) return false;
+  if (benchmarkGapSummary.resolvedCount !== 3) return false;
   return true;
 }

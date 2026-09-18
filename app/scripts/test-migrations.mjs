@@ -4,14 +4,17 @@ import mysql from 'mysql2/promise';
 import { applyMigrations, readMigrations } from './db-migration-lib.mjs';
 
 const source = process.env.NUBLOX_TEST_DATABASE_URL;
-if (!source) throw new Error('NUBLOX_TEST_DATABASE_URL is required for migration integration tests.');
+if (!source)
+  throw new Error('NUBLOX_TEST_DATABASE_URL is required for migration integration tests.');
 const adminSource = process.env.NUBLOX_TEST_ADMIN_DATABASE_URL ?? source;
 
 const base = new URL(source);
 const adminBase = new URL(adminSource);
 const originalDatabase = decodeURIComponent(base.pathname.replace(/^\//, ''));
 if (!/(^|[_-])test([_-]|$)/i.test(originalDatabase)) {
-  throw new Error('NUBLOX_TEST_DATABASE_URL must target a database whose name contains a standalone test segment.');
+  throw new Error(
+    'NUBLOX_TEST_DATABASE_URL must target a database whose name contains a standalone test segment.'
+  );
 }
 
 const temporaryDatabase = 'nublox_migration_test_' + randomUUID().replaceAll('-', '').slice(0, 12);
@@ -28,17 +31,20 @@ let temporaryDatabaseCreated = false;
 const tempUrl = new URL(adminBase);
 tempUrl.pathname = '/' + temporaryDatabase;
 
-
 function runServiceTests() {
   return new Promise((resolve, reject) => {
     const child = spawn(
       process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-      ['exec', 'vitest', 'run',
+      [
+        'exec',
+        'vitest',
+        'run',
         'src/lib/server/platform-foundation.test.ts',
         'src/lib/server/authentication.test.ts',
         'src/lib/server/foundation-shared-context.test.ts',
         'src/lib/server/strategy-framework.test.ts',
-        'src/lib/server/business-object-review.test.ts'],
+        'src/lib/server/business-object-review.test.ts'
+      ],
       {
         cwd: process.cwd(),
         stdio: 'inherit',
@@ -46,16 +52,25 @@ function runServiceTests() {
       }
     );
     child.on('error', reject);
-    child.on('exit', (code) => code === 0 ? resolve() : reject(new Error('Service integration tests exited with code ' + code + '.')));
+    child.on('exit', (code) =>
+      code === 0
+        ? resolve()
+        : reject(new Error('Service integration tests exited with code ' + code + '.'))
+    );
   });
 }
 
 try {
   try {
-    await admin.query('CREATE DATABASE `' + escapedDatabase + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
+    await admin.query(
+      'CREATE DATABASE `' + escapedDatabase + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci'
+    );
     temporaryDatabaseCreated = true;
   } catch (error) {
-    if (error?.code === 'ER_DBACCESS_DENIED_ERROR' || error?.code === 'ER_SPECIFIC_ACCESS_DENIED_ERROR') {
+    if (
+      error?.code === 'ER_DBACCESS_DENIED_ERROR' ||
+      error?.code === 'ER_SPECIFIC_ACCESS_DENIED_ERROR'
+    ) {
       throw new Error(
         'Clean migration tests require NUBLOX_TEST_ADMIN_DATABASE_URL to use a test-only MySQL account with CREATE/DROP DATABASE privileges. The application database user should remain unprivileged.'
       );
@@ -79,9 +94,13 @@ try {
     const [ledger] = await connection.query(
       'SELECT migration_name AS name, checksum FROM schema_migrations ORDER BY migration_name'
     );
-    if (ledger.length !== migrations.length) throw new Error('Migration ledger count does not match repository migration count.');
+    if (ledger.length !== migrations.length)
+      throw new Error('Migration ledger count does not match repository migration count.');
     for (let index = 0; index < migrations.length; index += 1) {
-      if (ledger[index].name !== migrations[index].name || ledger[index].checksum !== migrations[index].checksum) {
+      if (
+        ledger[index].name !== migrations[index].name ||
+        ledger[index].checksum !== migrations[index].checksum
+      ) {
         throw new Error('Migration ledger mismatch at ' + migrations[index].name + '.');
       }
     }
@@ -90,7 +109,9 @@ try {
   }
 
   await runServiceTests();
-  console.log('Clean migration, repeat execution, ledger status and migrated-schema service tests passed.');
+  console.log(
+    'Clean migration, repeat execution, ledger status and migrated-schema service tests passed.'
+  );
 } finally {
   try {
     if (temporaryDatabaseCreated) {

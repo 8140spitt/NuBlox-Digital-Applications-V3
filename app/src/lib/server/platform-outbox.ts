@@ -10,7 +10,9 @@ export type OutboxMessage = {
   attempts: number;
 };
 
-function now() { return new Date().toISOString(); }
+function now() {
+  return new Date().toISOString();
+}
 function retryAt(attempts: number) {
   const delaySeconds = Math.min(3600, Math.max(5, 5 * 2 ** Math.min(attempts, 9)));
   return new Date(Date.now() + delaySeconds * 1000).toISOString();
@@ -24,7 +26,9 @@ export async function claimOutboxMessages(workerId: string, limit = 25): Promise
   return dbTransaction(async (connection) => {
     const timestamp = now();
     const rows = await queryRows<RowDataPacket & OutboxMessage>(
-      "SELECT id, tenant_id AS tenantId, business_event_id AS businessEventId, topic, payload_json AS payloadJson, attempts FROM outbox_messages WHERE status = 'PENDING' AND available_at <= ? AND (locked_at IS NULL OR locked_at < ?) ORDER BY created_at, id LIMIT " + batchSize + " FOR UPDATE SKIP LOCKED",
+      "SELECT id, tenant_id AS tenantId, business_event_id AS businessEventId, topic, payload_json AS payloadJson, attempts FROM outbox_messages WHERE status = 'PENDING' AND available_at <= ? AND (locked_at IS NULL OR locked_at < ?) ORDER BY created_at, id LIMIT " +
+        batchSize +
+        ' FOR UPDATE SKIP LOCKED',
       [timestamp, new Date(Date.now() - 5 * 60_000).toISOString()],
       connection
     );
@@ -48,7 +52,12 @@ export async function markOutboxPublished(messageId: string, workerId: string) {
   if (result.affectedRows !== 1) throw new Error('Outbox message is not owned by this worker.');
 }
 
-export async function markOutboxFailed(messageId: string, workerId: string, error: unknown, maxAttempts = 10) {
+export async function markOutboxFailed(
+  messageId: string,
+  workerId: string,
+  error: unknown,
+  maxAttempts = 10
+) {
   const rows = await queryRows<RowDataPacket & { attempts: number }>(
     "SELECT attempts FROM outbox_messages WHERE id = ? AND status = 'PROCESSING' AND locked_by = ?",
     [messageId, workerId]

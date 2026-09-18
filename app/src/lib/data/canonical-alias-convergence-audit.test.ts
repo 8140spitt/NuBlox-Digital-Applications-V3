@@ -12,11 +12,15 @@ describe('canonical duplicate and alias convergence audit', () => {
     expect(aliasConvergenceSummary.exactDuplicateGroups).toBe(26);
     expect(aliasConvergenceSummary.exactDuplicateGroupsResolved).toBe(26);
     expect(aliasConvergenceSummary.unresolvedExactDuplicateGroups).toEqual([]);
-    expect(exactDuplicateConvergenceAudit.every((entry) => entry.allBaselineDecided && entry.resolved)).toBe(true);
+    expect(
+      exactDuplicateConvergenceAudit.every((entry) => entry.allBaselineDecided && entry.resolved)
+    ).toBe(true);
   });
 
   it('keeps shared identities shared and same-word/different-meaning concepts distinct', () => {
-    const byName = new Map(exactDuplicateConvergenceAudit.map((entry) => [entry.canonicalName, entry]));
+    const byName = new Map(
+      exactDuplicateConvergenceAudit.map((entry) => [entry.canonicalName, entry])
+    );
     expect(byName.get('Site')?.rootKeys).toHaveLength(1);
     expect(byName.get('Call-off')?.rootKeys).toHaveLength(1);
     expect(byName.get('Risk Assessment')?.rootKeys).toHaveLength(1);
@@ -27,9 +31,13 @@ describe('canonical duplicate and alias convergence audit', () => {
 
   it('closes the documented near-alias challenge set', () => {
     expect(aliasConvergenceSummary.nearAliasChallenges).toBeGreaterThanOrEqual(10);
-    expect(aliasConvergenceSummary.nearAliasChallengesResolved).toBe(aliasConvergenceSummary.nearAliasChallenges);
+    expect(aliasConvergenceSummary.nearAliasChallengesResolved).toBe(
+      aliasConvergenceSummary.nearAliasChallenges
+    );
     expect(aliasConvergenceSummary.unresolvedNearAliasChallenges).toEqual([]);
-    expect(nearAliasConvergenceAudit.every((entry) => entry.allBaselineDecided && entry.resolved)).toBe(true);
+    expect(
+      nearAliasConvergenceAudit.every((entry) => entry.allBaselineDecided && entry.resolved)
+    ).toBe(true);
   });
 
   it('converges known aliases without collapsing materially different concepts', () => {

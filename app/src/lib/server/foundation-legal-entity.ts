@@ -1,7 +1,18 @@
 import type { RowDataPacket } from 'mysql2/promise';
-import { dbTransaction, executeMutation, queryOne, queryRows, type DbExecutor } from '$lib/server/db';
+import {
+  dbTransaction,
+  executeMutation,
+  queryOne,
+  queryRows,
+  type DbExecutor
+} from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
-import { emitBusinessEvent, listPlatformAudit, recordPlatformAudit, type PlatformAuditEvent } from '$lib/server/platform-evidence';
+import {
+  emitBusinessEvent,
+  listPlatformAudit,
+  recordPlatformAudit,
+  type PlatformAuditEvent
+} from '$lib/server/platform-evidence';
 
 export type LegalEntity = {
   id: string;
@@ -32,13 +43,17 @@ export type LegalEntityInput = {
 const selectLegalEntity =
   'SELECT p.id, p.display_name AS displayName, o.legal_name AS legalName, le.legal_entity_type AS legalEntityType, le.jurisdiction_code AS jurisdictionCode, le.statutory_identifier AS statutoryIdentifier, le.tax_registration_number AS taxRegistrationNumber, le.accounting_currency AS accountingCurrency, le.status AS legalEntityStatus, p.status AS partyStatus, p.version, le.effective_from AS effectiveFrom, le.effective_to AS effectiveTo FROM parties p JOIN organisations o ON o.party_id = p.id JOIN legal_entities le ON le.party_id = p.id';
 
-function now() { return new Date().toISOString(); }
+function now() {
+  return new Date().toISOString();
+}
 function required(value: string, label: string) {
   const clean = value.trim().toUpperCase();
   if (!clean) throw new Error(label + ' is required.');
   return clean;
 }
-function optional(value?: string) { return value?.trim() || null; }
+function optional(value?: string) {
+  return value?.trim() || null;
+}
 function isoDate(value?: string) {
   const clean = optional(value);
   if (!clean) return null;
@@ -47,32 +62,58 @@ function isoDate(value?: string) {
 }
 function currency(value?: string) {
   const clean = optional(value)?.toUpperCase() ?? null;
-  if (clean && !/^[A-Z]{3}$/.test(clean)) throw new Error('Accounting currency must be a three-letter code.');
+  if (clean && !/^[A-Z]{3}$/.test(clean))
+    throw new Error('Accounting currency must be a three-letter code.');
   return clean;
 }
 
 async function getRow(context: CommandContext, id: string, executor?: DbExecutor) {
   const row = await queryOne<RowDataPacket & LegalEntity>(
     selectLegalEntity + ' WHERE p.tenant_id = ? AND p.id = ?',
-    [context.tenantId, id], executor
+    [context.tenantId, id],
+    executor
   );
   if (!row) throw new Error('Legal entity not found.');
   return row;
 }
 
-async function evidence(context: CommandContext, entity: LegalEntity, action: string, executor: DbExecutor) {
-  await recordPlatformAudit(context, {
-    aggregateId: 'AGG-01-PARTY', objectType: 'legal_entity', objectId: entity.id,
-    action, fromState: entity.partyStatus, toState: entity.partyStatus
-  }, executor);
-  await emitBusinessEvent(context, {
-    aggregateId: 'AGG-01-PARTY', aggregateType: 'Party', aggregateObjectId: entity.id,
-    aggregateVersion: entity.version, eventType: action, topic: 'nublox.party.legal-entity',
-    payload: {
-      partyType: 'ORGANISATION', specialisation: 'LEGAL_ENTITY', displayName: entity.displayName,
-      legalEntityType: entity.legalEntityType, jurisdictionCode: entity.jurisdictionCode
-    }
-  }, executor);
+async function evidence(
+  context: CommandContext,
+  entity: LegalEntity,
+  action: string,
+  executor: DbExecutor
+) {
+  await recordPlatformAudit(
+    context,
+    {
+      aggregateId: 'AGG-01-PARTY',
+      objectType: 'legal_entity',
+      objectId: entity.id,
+      action,
+      fromState: entity.partyStatus,
+      toState: entity.partyStatus
+    },
+    executor
+  );
+  await emitBusinessEvent(
+    context,
+    {
+      aggregateId: 'AGG-01-PARTY',
+      aggregateType: 'Party',
+      aggregateObjectId: entity.id,
+      aggregateVersion: entity.version,
+      eventType: action,
+      topic: 'nublox.party.legal-entity',
+      payload: {
+        partyType: 'ORGANISATION',
+        specialisation: 'LEGAL_ENTITY',
+        displayName: entity.displayName,
+        legalEntityType: entity.legalEntityType,
+        jurisdictionCode: entity.jurisdictionCode
+      }
+    },
+    executor
+  );
 }
 
 export async function listLegalEntities(context: CommandContext) {
@@ -98,32 +139,56 @@ export async function designateLegalEntity(
   return dbTransaction(async (connection) => {
     const organisation = await queryOne<RowDataPacket & { version: number }>(
       "SELECT p.version FROM parties p JOIN organisations o ON o.party_id = p.id WHERE p.tenant_id = ? AND p.id = ? AND p.party_type = 'ORGANISATION'",
-      [context.tenantId, organisationId], connection
+      [context.tenantId, organisationId],
+      connection
     );
     if (!organisation) throw new Error('Organisation not found.');
-    if (organisation.version !== expectedVersion) throw new Error('This organisation changed after you opened it. Reload before saving.');
+    if (organisation.version !== expectedVersion)
+      throw new Error('This organisation changed after you opened it. Reload before saving.');
 
     const existing = await queryOne<RowDataPacket & { id: string }>(
-      'SELECT party_id AS id FROM legal_entities WHERE party_id = ?', [organisationId], connection
+      'SELECT party_id AS id FROM legal_entities WHERE party_id = ?',
+      [organisationId],
+      connection
     );
     if (existing) throw new Error('Organisation is already a legal entity.');
 
     const timestamp = now();
     await executeMutation(
-      'INSERT INTO legal_entities (party_id, legal_entity_type, jurisdiction_code, statutory_identifier, tax_registration_number, accounting_currency, status, effective_from, effective_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, \'ACTIVE\', ?, ?, ?, ?)',
-      [organisationId, required(input.legalEntityType, 'Legal entity type'), required(input.jurisdictionCode, 'Jurisdiction code'), optional(input.statutoryIdentifier), optional(input.taxRegistrationNumber), currency(input.accountingCurrency), isoDate(input.effectiveFrom), isoDate(input.effectiveTo), timestamp, timestamp],
+      "INSERT INTO legal_entities (party_id, legal_entity_type, jurisdiction_code, statutory_identifier, tax_registration_number, accounting_currency, status, effective_from, effective_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?)",
+      [
+        organisationId,
+        required(input.legalEntityType, 'Legal entity type'),
+        required(input.jurisdictionCode, 'Jurisdiction code'),
+        optional(input.statutoryIdentifier),
+        optional(input.taxRegistrationNumber),
+        currency(input.accountingCurrency),
+        isoDate(input.effectiveFrom),
+        isoDate(input.effectiveTo),
+        timestamp,
+        timestamp
+      ],
       connection
     );
     const result = await executeMutation(
       'UPDATE parties SET version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
-      [timestamp, organisationId, context.tenantId, expectedVersion], connection
+      [timestamp, organisationId, context.tenantId, expectedVersion],
+      connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent organisation update detected.');
-    await evidence(context, await getRow(context, organisationId, connection), 'LEGAL_ENTITY_DESIGNATED', connection);
+    await evidence(
+      context,
+      await getRow(context, organisationId, connection),
+      'LEGAL_ENTITY_DESIGNATED',
+      connection
+    );
   });
 }
 
-export async function listLegalEntityAudit(context: CommandContext, id: string): Promise<PlatformAuditEvent[]> {
+export async function listLegalEntityAudit(
+  context: CommandContext,
+  id: string
+): Promise<PlatformAuditEvent[]> {
   await getLegalEntity(context, id);
   return listPlatformAudit(context, 'legal_entity', id);
 }

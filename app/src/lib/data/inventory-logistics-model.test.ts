@@ -9,20 +9,28 @@ import {
 describe('inventory and logistics semantic model', () => {
   it('is internally valid and relationship-complete', () => {
     expect(validateInventoryLogisticsModel()).toBe(true);
-    expect(new Set(inventoryLogisticsModel.map((item) => item.modelId)).size).toBe(inventoryLogisticsModel.length);
+    expect(new Set(inventoryLogisticsModel.map((item) => item.modelId)).size).toBe(
+      inventoryLogisticsModel.length
+    );
     expect(inventoryLogisticsRelationships.length).toBeGreaterThanOrEqual(15);
   });
 
   it('keeps stock position as a projection rather than mutable truth', () => {
-    const position = inventoryLogisticsModel.find((entry) => entry.modelId === 'INV-STOCK-POSITION');
+    const position = inventoryLogisticsModel.find(
+      (entry) => entry.modelId === 'INV-STOCK-POSITION'
+    );
     expect(position?.kind).toBe('projection');
     expect(position?.governance.join(' ')).toContain('calculated from posted movements');
   });
 
   it('normalises issue return and transfer into inventory movement', () => {
     const movement = inventoryLogisticsModel.find((entry) => entry.modelId === 'INV-MOVEMENT');
-    expect(movement?.candidateKeys).toEqual(expect.arrayContaining(['BOF-10-022', 'BOF-10-023', 'BOF-10-024', 'BOF-10-025']));
-    expect(inventoryLogisticsRules.join(' ')).toContain('Issue, Return and Transfer are Inventory Movement types');
+    expect(movement?.candidateKeys).toEqual(
+      expect.arrayContaining(['BOF-10-022', 'BOF-10-023', 'BOF-10-024', 'BOF-10-025'])
+    );
+    expect(inventoryLogisticsRules.join(' ')).toContain(
+      'Issue, Return and Transfer are Inventory Movement types'
+    );
   });
 
   it('keeps storage hierarchy separate from project and asset structures', () => {
@@ -32,13 +40,23 @@ describe('inventory and logistics semantic model', () => {
   });
 
   it('does not create a second logistics call-off master', () => {
-    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-CALLOFF')).toBeUndefined();
-    expect(inventoryLogisticsRules.join(' ')).toContain('Call-off Order is commercial/procurement truth');
+    expect(
+      inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-CALLOFF')
+    ).toBeUndefined();
+    expect(inventoryLogisticsRules.join(' ')).toContain(
+      'Call-off Order is commercial/procurement truth'
+    );
   });
 
   it('keeps shipment transport and delivery distinct', () => {
-    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-SHIPMENT')?.kind).toBe('transaction');
-    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-TRANSPORT-ORDER')?.kind).toBe('transaction');
-    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-DELIVERY')?.kind).toBe('event-evidence');
+    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-SHIPMENT')?.kind).toBe(
+      'transaction'
+    );
+    expect(
+      inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-TRANSPORT-ORDER')?.kind
+    ).toBe('transaction');
+    expect(inventoryLogisticsModel.find((entry) => entry.modelId === 'LOG-DELIVERY')?.kind).toBe(
+      'event-evidence'
+    );
   });
 });

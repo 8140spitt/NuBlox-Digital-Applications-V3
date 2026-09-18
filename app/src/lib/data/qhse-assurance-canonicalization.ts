@@ -1,44 +1,292 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
 export const qhseAssuranceCanonicalization: FoundationCanonicalizationDecision[] = [
-  { candidateKey: 'BOF-13-001', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Quality Plan', notes: 'Governed quality-management plan for defined project/organisation/product/service scope; plan does not become Project or Contract truth.' },
-  { candidateKey: 'BOF-13-002', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Inspection and Test Plan', notes: 'Controlled ITP defining verification activities, acceptance criteria and hold/witness points for governed scope.' },
-  { candidateKey: 'BOF-13-003', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Inspection', notes: 'Governed inspection execution/evidence against defined subject, criteria, location and information revision.' },
-  { candidateKey: 'BOF-13-004', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Test', notes: 'Governed test execution/evidence retaining method, equipment/calibration, measurements, acceptance criteria and result.' },
-  { candidateKey: 'BOF-13-005', decision: 'RENAME', proposedCanonicalName: 'Verification Point', notes: 'Controlled ITP point with type Hold/Witness/Review/Surveillance and release/witness requirements.' },
-  { candidateKey: 'BOF-13-006', decision: 'MERGE', targetCandidateKey: 'BOF-13-005', proposedCanonicalName: 'Verification Point', notes: 'Witness Point is a Verification Point type; hold/witness semantics are configuration on one controlled point model.' },
-  { candidateKey: 'BOF-13-007', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Nonconformance Report', notes: 'Governed nonconformance case recording requirement, observed departure, disposition, responsibility and closure evidence.' },
-  { candidateKey: 'BOF-13-008', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Defect', notes: 'Shared defect/nonconforming-condition identity reused across quality, commissioning, aftercare and operations.' },
-  { candidateKey: 'BOF-13-009', decision: 'MERGE', targetCandidateKey: 'BOF-13-008', proposedCanonicalName: 'Defect', notes: 'Snag is a Defect type/classification, typically lower-severity/punch-list context, not a second defect master.' },
-  { candidateKey: 'BOF-13-010', decision: 'RENAME', proposedCanonicalName: 'CAPA Action', notes: 'Corrective action is a typed governed CAPA Action with owner, due date, verification and effectiveness evidence.' },
-  { candidateKey: 'BOF-13-011', decision: 'MERGE', targetCandidateKey: 'BOF-13-010', proposedCanonicalName: 'CAPA Action', notes: 'Preventive Action uses the same CAPA Action identity pattern with action type preserving semantics.' },
-  { candidateKey: 'BOF-13-012', decision: 'RENAME', proposedCanonicalName: 'CAPA Case', notes: 'Governed corrective/preventive action case linking causes, actions, responsibilities, verification and effectiveness review.' },
-  { candidateKey: 'BOF-13-013', decision: 'MERGE', targetCandidateKey: 'BOF-21-012', proposedCanonicalName: 'Audit Engagement', notes: 'QHSE Audit uses the shared enterprise Audit Engagement pattern with scope/standard/context distinguishing audit purpose.' },
-  { candidateKey: 'BOF-13-014', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Assurance Review', notes: 'Governed assurance/review occurrence distinct from formal Audit Engagement but using common findings/evidence principles.' },
-  { candidateKey: 'BOF-13-015', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Calibration Record', notes: 'Immutable calibration/verification evidence for measuring equipment, standard, result, uncertainty where applicable and validity.' },
-  { candidateKey: 'BOF-13-016', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Quality Certificate', notes: 'Immutable certification/conformity evidence linked to exact subject, criteria, issuer and supporting verification.' },
-  { candidateKey: 'BOF-13-017', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Hazard', notes: 'Stable governed hazard identity/description applicable to work, location, equipment, substance or activity; assessments reference rather than duplicate it.' },
-  { candidateKey: 'BOF-13-018', decision: 'MERGE', targetCandidateKey: 'BOF-21-003', proposedCanonicalName: 'Risk Assessment', notes: 'Safety/environmental/project Risk Assessment uses the shared assessment pattern with context, hazard/risk subject and methodology.' },
-  { candidateKey: 'BOF-13-019', decision: 'MERGE', targetCandidateKey: 'BOF-07-007', proposedCanonicalName: 'Information Container', notes: 'Method Statement is a typed controlled Information Container; revisions and issue status follow the controlled-information model.' },
-  { candidateKey: 'BOF-13-020', decision: 'MERGE', targetCandidateKey: 'BOF-07-007', proposedCanonicalName: 'Information Container', notes: 'RAMS is governed controlled information/composite issue context referencing exact Risk Assessment and Method Statement basis.' },
-  { candidateKey: 'BOF-13-021', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Permit to Work', notes: 'Governed temporary work authorisation with scope, hazards, controls, issuer/receiver, validity, isolations and closure/cancellation evidence.' },
-  { candidateKey: 'BOF-13-022', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Isolation', notes: 'Governed isolation/lockout state and verification record for equipment/system/energy source, with application, verification and restoration evidence.' },
-  { candidateKey: 'BOF-13-023', decision: 'RENAME', proposedCanonicalName: 'Safety Briefing Session', notes: 'Induction is a typed briefing/learning session; individual attendance/outcome is retained as Learning Record evidence.' },
-  { candidateKey: 'BOF-13-024', decision: 'MERGE', targetCandidateKey: 'BOF-13-023', proposedCanonicalName: 'Safety Briefing Session', notes: 'Briefing uses the shared session pattern with briefing type, subject, presenter, audience and controlled source information.' },
-  { candidateKey: 'BOF-13-025', decision: 'MERGE', targetCandidateKey: 'BOF-13-023', proposedCanonicalName: 'Safety Briefing Session', notes: 'Toolbox Talk is a Safety Briefing Session type rather than a separate technical-object master.' },
-  { candidateKey: 'BOF-13-026', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Safety / Quality Observation', notes: 'Attributed observation evidence of condition/behaviour/conformance, which may trigger a case/action but remains immutable source evidence.' },
-  { candidateKey: 'BOF-13-027', decision: 'MERGE', targetCandidateKey: 'BOF-13-028', proposedCanonicalName: 'Incident', notes: 'Near Miss is an Incident classification where harmful consequence did not occur; classification preserves near-miss semantics.' },
-  { candidateKey: 'BOF-13-028', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Incident', notes: 'Governed safety/environment/quality incident case around an occurrence, preserving event facts, consequence, notifications, investigation and closure.' },
-  { candidateKey: 'BOF-13-029', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Investigation', notes: 'Governed investigation case/work linked to incident/nonconformance/finding, with evidence, hypotheses, cause analysis and conclusions.' },
-  { candidateKey: 'BOF-13-030', decision: 'CHILD', proposedCanonicalName: 'Cause Finding', notes: 'Cause is a governed investigation finding/analysis result subordinate to an Investigation, with method and evidence basis.' },
-  { candidateKey: 'BOF-13-031', decision: 'MERGE', targetCandidateKey: 'BOF-13-003', proposedCanonicalName: 'Inspection', notes: 'Statutory Inspection uses the shared Inspection execution/evidence pattern with statutory requirement, competent person, jurisdiction and certificate links.' },
-  { candidateKey: 'BOF-13-032', decision: 'MERGE', targetCandidateKey: 'BOF-21-006', proposedCanonicalName: 'Compliance Requirement', notes: 'QHSE Compliance Requirement uses the shared enterprise compliance requirement/obligation pattern with applicability and jurisdiction.' },
-  { candidateKey: 'BOF-13-033', decision: 'PROJECTION', proposedCanonicalName: 'Compliance Register', notes: 'Governed read model of applicable compliance requirements, ownership, evidence and assessment status; authoritative requirements/evidence remain source records.' },
-  { candidateKey: 'BOF-13-034', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Environmental Aspect', notes: 'Governed aspect of activities/products/services that can interact with the environment, scoped and effective by context.' },
-  { candidateKey: 'BOF-13-035', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Environmental Impact', notes: 'Governed actual/potential environmental consequence related to one or more aspects, with significance/assessment context.' },
-  { candidateKey: 'BOF-13-036', decision: 'MERGE', targetCandidateKey: 'BOF-13-028', proposedCanonicalName: 'Incident', notes: 'Pollution Event is an environmental Incident classification with environmental consequence, notifications and response evidence.' },
-  { candidateKey: 'BOF-13-037', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Waste Consignment', notes: 'Immutable waste-transfer/consignment evidence retaining waste stream/classification, quantity, carrier, origin, destination and regulatory documentation.' },
+  {
+    candidateKey: 'BOF-13-001',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Quality Plan',
+    notes:
+      'Governed quality-management plan for defined project/organisation/product/service scope; plan does not become Project or Contract truth.'
+  },
+  {
+    candidateKey: 'BOF-13-002',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Inspection and Test Plan',
+    notes:
+      'Controlled ITP defining verification activities, acceptance criteria and hold/witness points for governed scope.'
+  },
+  {
+    candidateKey: 'BOF-13-003',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Inspection',
+    notes:
+      'Governed inspection execution/evidence against defined subject, criteria, location and information revision.'
+  },
+  {
+    candidateKey: 'BOF-13-004',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Test',
+    notes:
+      'Governed test execution/evidence retaining method, equipment/calibration, measurements, acceptance criteria and result.'
+  },
+  {
+    candidateKey: 'BOF-13-005',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Verification Point',
+    notes:
+      'Controlled ITP point with type Hold/Witness/Review/Surveillance and release/witness requirements.'
+  },
+  {
+    candidateKey: 'BOF-13-006',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-005',
+    proposedCanonicalName: 'Verification Point',
+    notes:
+      'Witness Point is a Verification Point type; hold/witness semantics are configuration on one controlled point model.'
+  },
+  {
+    candidateKey: 'BOF-13-007',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Nonconformance Report',
+    notes:
+      'Governed nonconformance case recording requirement, observed departure, disposition, responsibility and closure evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-008',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Defect',
+    notes:
+      'Shared defect/nonconforming-condition identity reused across quality, commissioning, aftercare and operations.'
+  },
+  {
+    candidateKey: 'BOF-13-009',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-008',
+    proposedCanonicalName: 'Defect',
+    notes:
+      'Snag is a Defect type/classification, typically lower-severity/punch-list context, not a second defect master.'
+  },
+  {
+    candidateKey: 'BOF-13-010',
+    decision: 'RENAME',
+    proposedCanonicalName: 'CAPA Action',
+    notes:
+      'Corrective action is a typed governed CAPA Action with owner, due date, verification and effectiveness evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-011',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-010',
+    proposedCanonicalName: 'CAPA Action',
+    notes:
+      'Preventive Action uses the same CAPA Action identity pattern with action type preserving semantics.'
+  },
+  {
+    candidateKey: 'BOF-13-012',
+    decision: 'RENAME',
+    proposedCanonicalName: 'CAPA Case',
+    notes:
+      'Governed corrective/preventive action case linking causes, actions, responsibilities, verification and effectiveness review.'
+  },
+  {
+    candidateKey: 'BOF-13-013',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-21-012',
+    proposedCanonicalName: 'Audit Engagement',
+    notes:
+      'QHSE Audit uses the shared enterprise Audit Engagement pattern with scope/standard/context distinguishing audit purpose.'
+  },
+  {
+    candidateKey: 'BOF-13-014',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Assurance Review',
+    notes:
+      'Governed assurance/review occurrence distinct from formal Audit Engagement but using common findings/evidence principles.'
+  },
+  {
+    candidateKey: 'BOF-13-015',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Calibration Record',
+    notes:
+      'Immutable calibration/verification evidence for measuring equipment, standard, result, uncertainty where applicable and validity.'
+  },
+  {
+    candidateKey: 'BOF-13-016',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Quality Certificate',
+    notes:
+      'Immutable certification/conformity evidence linked to exact subject, criteria, issuer and supporting verification.'
+  },
+  {
+    candidateKey: 'BOF-13-017',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Hazard',
+    notes:
+      'Stable governed hazard identity/description applicable to work, location, equipment, substance or activity; assessments reference rather than duplicate it.'
+  },
+  {
+    candidateKey: 'BOF-13-018',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-21-003',
+    proposedCanonicalName: 'Risk Assessment',
+    notes:
+      'Safety/environmental/project Risk Assessment uses the shared assessment pattern with context, hazard/risk subject and methodology.'
+  },
+  {
+    candidateKey: 'BOF-13-019',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-07-007',
+    proposedCanonicalName: 'Information Container',
+    notes:
+      'Method Statement is a typed controlled Information Container; revisions and issue status follow the controlled-information model.'
+  },
+  {
+    candidateKey: 'BOF-13-020',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-07-007',
+    proposedCanonicalName: 'Information Container',
+    notes:
+      'RAMS is governed controlled information/composite issue context referencing exact Risk Assessment and Method Statement basis.'
+  },
+  {
+    candidateKey: 'BOF-13-021',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Permit to Work',
+    notes:
+      'Governed temporary work authorisation with scope, hazards, controls, issuer/receiver, validity, isolations and closure/cancellation evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-022',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Isolation',
+    notes:
+      'Governed isolation/lockout state and verification record for equipment/system/energy source, with application, verification and restoration evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-023',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Safety Briefing Session',
+    notes:
+      'Induction is a typed briefing/learning session; individual attendance/outcome is retained as Learning Record evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-024',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-023',
+    proposedCanonicalName: 'Safety Briefing Session',
+    notes:
+      'Briefing uses the shared session pattern with briefing type, subject, presenter, audience and controlled source information.'
+  },
+  {
+    candidateKey: 'BOF-13-025',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-023',
+    proposedCanonicalName: 'Safety Briefing Session',
+    notes:
+      'Toolbox Talk is a Safety Briefing Session type rather than a separate technical-object master.'
+  },
+  {
+    candidateKey: 'BOF-13-026',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Safety / Quality Observation',
+    notes:
+      'Attributed observation evidence of condition/behaviour/conformance, which may trigger a case/action but remains immutable source evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-027',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-028',
+    proposedCanonicalName: 'Incident',
+    notes:
+      'Near Miss is an Incident classification where harmful consequence did not occur; classification preserves near-miss semantics.'
+  },
+  {
+    candidateKey: 'BOF-13-028',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Incident',
+    notes:
+      'Governed safety/environment/quality incident case around an occurrence, preserving event facts, consequence, notifications, investigation and closure.'
+  },
+  {
+    candidateKey: 'BOF-13-029',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Investigation',
+    notes:
+      'Governed investigation case/work linked to incident/nonconformance/finding, with evidence, hypotheses, cause analysis and conclusions.'
+  },
+  {
+    candidateKey: 'BOF-13-030',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Cause Finding',
+    notes:
+      'Cause is a governed investigation finding/analysis result subordinate to an Investigation, with method and evidence basis.'
+  },
+  {
+    candidateKey: 'BOF-13-031',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-003',
+    proposedCanonicalName: 'Inspection',
+    notes:
+      'Statutory Inspection uses the shared Inspection execution/evidence pattern with statutory requirement, competent person, jurisdiction and certificate links.'
+  },
+  {
+    candidateKey: 'BOF-13-032',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-21-006',
+    proposedCanonicalName: 'Compliance Requirement',
+    notes:
+      'QHSE Compliance Requirement uses the shared enterprise compliance requirement/obligation pattern with applicability and jurisdiction.'
+  },
+  {
+    candidateKey: 'BOF-13-033',
+    decision: 'PROJECTION',
+    proposedCanonicalName: 'Compliance Register',
+    notes:
+      'Governed read model of applicable compliance requirements, ownership, evidence and assessment status; authoritative requirements/evidence remain source records.'
+  },
+  {
+    candidateKey: 'BOF-13-034',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Environmental Aspect',
+    notes:
+      'Governed aspect of activities/products/services that can interact with the environment, scoped and effective by context.'
+  },
+  {
+    candidateKey: 'BOF-13-035',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Environmental Impact',
+    notes:
+      'Governed actual/potential environmental consequence related to one or more aspects, with significance/assessment context.'
+  },
+  {
+    candidateKey: 'BOF-13-036',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-028',
+    proposedCanonicalName: 'Incident',
+    notes:
+      'Pollution Event is an environmental Incident classification with environmental consequence, notifications and response evidence.'
+  },
+  {
+    candidateKey: 'BOF-13-037',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Waste Consignment',
+    notes:
+      'Immutable waste-transfer/consignment evidence retaining waste stream/classification, quantity, carrier, origin, destination and regulatory documentation.'
+  },
 
-  { candidateKey: 'BOF-12-017', decision: 'MERGE', targetCandidateKey: 'BOF-13-021', proposedCanonicalName: 'Permit to Work', notes: 'Site Permit to Work reuses the shared QHSE Permit to Work identity; field operations consume it rather than maintaining another permit master.' },
-  { candidateKey: 'BOF-12-018', decision: 'MERGE', targetCandidateKey: 'BOF-13-022', proposedCanonicalName: 'Isolation', notes: 'Site Isolation reuses the shared QHSE Isolation identity and evidence chain.' }
+  {
+    candidateKey: 'BOF-12-017',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-021',
+    proposedCanonicalName: 'Permit to Work',
+    notes:
+      'Site Permit to Work reuses the shared QHSE Permit to Work identity; field operations consume it rather than maintaining another permit master.'
+  },
+  {
+    candidateKey: 'BOF-12-018',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-022',
+    proposedCanonicalName: 'Isolation',
+    notes: 'Site Isolation reuses the shared QHSE Isolation identity and evidence chain.'
+  }
 ];

@@ -47,12 +47,17 @@ const familyCoverage = new Set(sapV3BenchmarkRows.flatMap((row) => row.canonical
 
 export const sapV3BenchmarkSummary = {
   rowCount: sapV3BenchmarkRows.length,
-  mappedRowCount: sapV3BenchmarkRows.filter((row) => row.benchmarkState === 'mapped-not-challenged').length,
-  challengedRowCount: sapV3BenchmarkRows.filter((row) => row.benchmarkState === 'challenged').length,
+  mappedRowCount: sapV3BenchmarkRows.filter((row) => row.benchmarkState === 'mapped-not-challenged')
+    .length,
+  challengedRowCount: sapV3BenchmarkRows.filter((row) => row.benchmarkState === 'challenged')
+    .length,
   closedRowCount: sapV3BenchmarkRows.filter((row) => row.benchmarkState === 'closed').length,
   nativeCoreCount: sapV3BenchmarkRows.filter((row) => row.v3Treatment === 'native-core').length,
-  contextualExtensionCount: sapV3BenchmarkRows.filter((row) => row.v3Treatment === 'contextual-extension').length,
-  platformEnablerCount: sapV3BenchmarkRows.filter((row) => row.v3Treatment === 'platform-enabler').length,
+  contextualExtensionCount: sapV3BenchmarkRows.filter(
+    (row) => row.v3Treatment === 'contextual-extension'
+  ).length,
+  platformEnablerCount: sapV3BenchmarkRows.filter((row) => row.v3Treatment === 'platform-enabler')
+    .length,
   coveredWorkspaceCount: workspaceCoverage.size,
   coveredCanonicalFamilyCount: familyCoverage.size,
   state: 'remapped-awaiting-capability-challenge' as const
@@ -64,10 +69,35 @@ export function validateSapV3BenchmarkMap() {
   if (numbers.some((value, index) => value !== index + 1)) return false;
   if (new Set(sapV3BenchmarkRows.map((row) => row.sapNo)).size !== 64) return false;
   if (!sapV3BenchmarkRows.every((row) => row.sapReference && row.challengeQuestion)) return false;
-  if (!sapV3BenchmarkRows.every((row) => row.workspaces.length && row.workspaces.every((workspace) => validWorkspaces.has(workspace)))) return false;
-  if (!sapV3BenchmarkRows.every((row) => row.canonicalFamilies.length && row.canonicalFamilies.every((family) => validFamilies.has(family)))) return false;
+  if (
+    !sapV3BenchmarkRows.every(
+      (row) =>
+        row.workspaces.length && row.workspaces.every((workspace) => validWorkspaces.has(workspace))
+    )
+  )
+    return false;
+  if (
+    !sapV3BenchmarkRows.every(
+      (row) =>
+        row.canonicalFamilies.length &&
+        row.canonicalFamilies.every((family) => validFamilies.has(family))
+    )
+  )
+    return false;
   if (!sapV3BenchmarkRows.every((row) => row.canonicalObjects.length > 0)) return false;
-  if (!sapV3BenchmarkRows.every((row) => row.processChains.length && row.processChains.every((chain) => validChains.has(chain)))) return false;
-  if (sapV3BenchmarkSummary.nativeCoreCount + sapV3BenchmarkSummary.contextualExtensionCount + sapV3BenchmarkSummary.platformEnablerCount !== 64) return false;
+  if (
+    !sapV3BenchmarkRows.every(
+      (row) =>
+        row.processChains.length && row.processChains.every((chain) => validChains.has(chain))
+    )
+  )
+    return false;
+  if (
+    sapV3BenchmarkSummary.nativeCoreCount +
+      sapV3BenchmarkSummary.contextualExtensionCount +
+      sapV3BenchmarkSummary.platformEnablerCount !==
+    64
+  )
+    return false;
   return true;
 }

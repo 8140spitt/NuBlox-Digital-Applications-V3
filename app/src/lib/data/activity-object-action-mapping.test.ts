@@ -28,8 +28,12 @@ describe('L2/L3 activity to canonical object/action mapping', () => {
     expect(activityObjectActionSummary.invalidObjectModelRouteCount).toBe(0);
     expect(activityObjectActionSummary.ambiguousSubfunctionCount).toBe(0);
     expect(l2AggregateRoutes.length).toBeGreaterThanOrEqual(150);
-    expect(activityObjectActionMappings.every((entry) => entry.aggregateId.startsWith('AGG-'))).toBe(true);
-    expect(activityObjectActionMappings.every((entry) => entry.objectModelId.length > 0)).toBe(true);
+    expect(
+      activityObjectActionMappings.every((entry) => entry.aggregateId.startsWith('AGG-'))
+    ).toBe(true);
+    expect(activityObjectActionMappings.every((entry) => entry.objectModelId.length > 0)).toBe(
+      true
+    );
   });
 
   it('encodes command/query and authority/evidence semantics', () => {
@@ -37,8 +41,12 @@ describe('L2/L3 activity to canonical object/action mapping', () => {
     expect(activityObjectActionSummary.queryCount).toBeGreaterThan(0);
     expect(activityObjectActionSummary.approvalControlledCount).toBeGreaterThan(0);
     expect(activityObjectActionSummary.decisionControlledCount).toBeGreaterThan(0);
-    expect(activityObjectActionMappings.every((entry) => entry.writeAuthority.length > 0)).toBe(true);
-    expect(activityObjectActionMappings.every((entry) => entry.transactionRule.length > 0)).toBe(true);
+    expect(activityObjectActionMappings.every((entry) => entry.writeAuthority.length > 0)).toBe(
+      true
+    );
+    expect(activityObjectActionMappings.every((entry) => entry.transactionRule.length > 0)).toBe(
+      true
+    );
   });
 
   it('preserves one stable primary workspace home per L2', () => {

@@ -14,7 +14,12 @@ export async function resolveRequestCommandContext(
     try {
       return await resolveContextForAuthUser(tenantSlug, locals.user.id);
     } catch (cause) {
-      error(403, cause instanceof Error ? cause.message : 'Authenticated user has no authority in this tenant.');
+      error(
+        403,
+        cause instanceof Error
+          ? cause.message
+          : 'Authenticated user has no authority in this tenant.'
+      );
     }
   }
 

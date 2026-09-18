@@ -12,7 +12,9 @@ describe('benchmark vendor-pattern rejection governance', () => {
     expect(benchmarkRejectionSummary.recordedCount).toBe(12);
     expect(benchmarkRejectionSummary.openCount).toBe(0);
     expect(benchmarkRejectionRegister.every((entry) => entry.rationale.length > 0)).toBe(true);
-    expect(benchmarkRejectionRegister.every((entry) => entry.preservedAuthority.length > 0)).toBe(true);
+    expect(benchmarkRejectionRegister.every((entry) => entry.preservedAuthority.length > 0)).toBe(
+      true
+    );
   });
 
   it('explicitly rejects duplicate identity and shadow-ledger patterns', () => {

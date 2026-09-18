@@ -1,50 +1,322 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
 export const financeAccountingCanonicalization: FoundationCanonicalizationDecision[] = [
-  { candidateKey: 'BOF-19-001', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Chart of Accounts', notes: 'Governed accounting classification structure used by Ledgers; it does not replace operational dimensions or business identities.' },
-  { candidateKey: 'BOF-19-002', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'GL Account', notes: 'Stable general-ledger account identity within a governed Chart of Accounts.' },
-  { candidateKey: 'BOF-19-003', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Financial Dimension', notes: 'Governed analytical dimension definition. Dimension members reference canonical Project, WBS, Contract, Asset, Party and organisation identities rather than shadow finance masters.' },
-  { candidateKey: 'BOF-19-004', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Cost Code', notes: 'Governed cost classification used across budget, commitment, accrual and actual analysis. Cost Code is not a WBS Element or GL Account.' },
-  { candidateKey: 'BOF-19-005', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Cost Centre', notes: 'Finance responsibility/accounting unit that may map to an Organisation Unit without duplicating organisational identity.' },
-  { candidateKey: 'BOF-19-006', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Profit Centre', notes: 'Finance responsibility unit for profit analysis; distinct from Legal Entity and Organisation Unit identity.' },
-  { candidateKey: 'BOF-19-007', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Accounting Period', notes: 'Governed posting/reporting period with explicit open/close state.' },
-  { candidateKey: 'BOF-19-008', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Budget', notes: 'Governed approved financial plan with retained versions/baselines; never becomes actual posting truth.' },
-  { candidateKey: 'BOF-19-009', decision: 'RENAME', proposedCanonicalName: 'Financial Forecast', notes: 'Governed time-stamped forward-looking financial estimate; separate from Budget and actual postings.' },
-  { candidateKey: 'BOF-19-010', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Journal', notes: 'Balanced accounting instruction grouping journal lines before immutable posting to a Ledger.' },
-  { candidateKey: 'BOF-19-011', decision: 'CHILD', proposedCanonicalName: 'Journal Line', notes: 'Journal Line is a child of Journal carrying account, dimensions, amount and debit/credit detail; it is not a standalone accounting transaction master.' },
-  { candidateKey: 'BOF-19-012', decision: 'RENAME', proposedCanonicalName: 'Ledger Entry', notes: 'Immutable posted debit/credit evidence in a Ledger with source provenance.' },
-  { candidateKey: 'BOF-19-013', decision: 'MERGE', targetCandidateKey: 'BOF-19-012', notes: 'Accounting Posting is represented by the canonical immutable Ledger Entry/posting pattern rather than a second posting store.' },
-  { candidateKey: 'BOF-19-014', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Supplier Invoice', notes: 'Governed AP invoice referencing canonical supplier Party and authoritative procurement/Contract basis.' },
-  { candidateKey: 'BOF-19-015', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Customer Invoice', notes: 'Governed AR invoice referencing canonical customer Party and authoritative commercial/Contract billing basis.' },
-  { candidateKey: 'BOF-19-016', decision: 'RENAME', proposedCanonicalName: 'Financial Adjustment Note', notes: 'Use one adjustment-document pattern with explicit credit/debit type and source invoice reference.' },
-  { candidateKey: 'BOF-19-017', decision: 'MERGE', targetCandidateKey: 'BOF-19-016', notes: 'Debit Note uses the same Financial Adjustment Note identity pattern as Credit Note; direction/type distinguishes behaviour.' },
-  { candidateKey: 'BOF-19-018', decision: 'RENAME', proposedCanonicalName: 'Open Item Position', notes: 'Payable open item is a derived settlement position from posted invoice/adjustment/settlement records, not an independently editable source record.' },
-  { candidateKey: 'BOF-19-019', decision: 'MERGE', targetCandidateKey: 'BOF-19-018', notes: 'Receivable Open Item uses the same derived Open Item Position pattern; payable/receivable direction is contextual.' },
-  { candidateKey: 'BOF-19-020', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Payment', notes: 'Governed outgoing settlement transaction; distinct from Bank Transaction evidence and from the invoice/open item settled.' },
-  { candidateKey: 'BOF-19-021', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Receipt', notes: 'Governed incoming settlement transaction; distinct from Customer Invoice and Bank Transaction evidence.' },
-  { candidateKey: 'BOF-19-022', decision: 'RENAME', proposedCanonicalName: 'Settlement Allocation', notes: 'Finance-specific settlement relationship allocating Payment/Receipt value to open items. It is explicitly distinct from workforce/resource Allocation.' },
-  { candidateKey: 'BOF-19-023', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Bank Account', notes: 'Governed treasury bank-account identity owned/controlled by canonical Legal Entity.' },
-  { candidateKey: 'BOF-19-024', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Bank Statement', notes: 'Immutable controlled external bank statement evidence with source sequence and provenance.' },
-  { candidateKey: 'BOF-19-025', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Bank Transaction', notes: 'Immutable external bank-movement evidence; Payment/Receipt remains the internal settlement identity.' },
-  { candidateKey: 'BOF-19-026', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Reconciliation', notes: 'Governed control record linking authoritative positions and retaining matched items/exceptions without mutating source evidence.' },
-  { candidateKey: 'BOF-19-027', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Accrual', notes: 'Governed recognition transaction for incurred value before final invoice/settlement; source obligation remains authoritative.' },
-  { candidateKey: 'BOF-19-028', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Prepayment', notes: 'Governed deferred cost/revenue transaction with controlled recognition schedule and source provenance.' },
-  { candidateKey: 'BOF-19-029', decision: 'MERGE', targetCandidateKey: 'BOF-29-009', notes: 'Finance reuses the shared jurisdiction/reference Tax Code rather than owning a duplicate tax-code master.' },
-  { candidateKey: 'BOF-19-030', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Tax Transaction', notes: 'Traceable tax consequence linked to source transaction, canonical Tax Code, jurisdiction and accounting period.' },
-  { candidateKey: 'BOF-19-031', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Tax Return', notes: 'Governed statutory filing identity with controlled submissions/amendments and retained evidence.' },
-  { candidateKey: 'BOF-19-032', decision: 'RENAME', proposedCanonicalName: 'Fixed Asset Accounting Record', notes: 'Accounting identity for capitalisation/depreciation/carrying value. It links to canonical physical Asset when applicable and must never replace whole-life Asset identity.' },
-  { candidateKey: 'BOF-19-033', decision: 'CHILD', proposedCanonicalName: 'Depreciation Schedule', notes: 'Controlled depreciation schedule subordinate to a Fixed Asset Accounting Record; it defines future calculation logic, not a physical Asset lifecycle.' },
-  { candidateKey: 'BOF-19-034', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Depreciation Run', notes: 'Retained calculation/posting transaction producing depreciation Ledger Entries for a governed period/scope.' },
-  { candidateKey: 'BOF-19-035', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Exchange Rate', notes: 'Governed effective-dated/reference rate observation with rate type and source provenance.' },
-  { candidateKey: 'BOF-19-036', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Revaluation', notes: 'Governed remeasurement transaction/run producing attributable accounting adjustments while retaining original amounts and rates.' },
-  { candidateKey: 'BOF-19-037', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Intercompany Transaction', notes: 'Governed transaction between canonical Legal Entities; no finance-specific entity duplicates.' },
-  { candidateKey: 'BOF-19-038', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Consolidation Run', notes: 'Governed group consolidation run/snapshot reading source Ledgers without rewriting entity-level accounting truth.' },
-  { candidateKey: 'BOF-19-039', decision: 'CHILD', proposedCanonicalName: 'Consolidation Elimination', notes: 'Controlled elimination adjustment within a Consolidation Run; source Legal Entity Ledgers remain unchanged.' },
-  { candidateKey: 'BOF-19-040', decision: 'RENAME', proposedCanonicalName: 'Financial Close Cycle', notes: 'Governed close control cycle coordinating period cut-off, reconciliations, adjustments and approvals. It does not replace Accounting Period state.' },
-  { candidateKey: 'BOF-19-041', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Capex Request', notes: 'Governed capital-expenditure authority request referencing canonical Project/Asset context; approval does not create Project, PO or Fixed Asset identities.' },
-  { candidateKey: 'BOF-19-042', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Cash Forecast', notes: 'Time-stamped forward-looking cash-flow forecast, distinct from actual bank evidence and derived Cash Position.' },
-  { candidateKey: 'BOF-19-043', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Liquidity Forecast', notes: 'Governed forward-looking liquidity/headroom forecast consuming cash, facilities and expected flows.' },
-  { candidateKey: 'BOF-19-044', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Treasury Facility', notes: 'Governed financing/credit facility identity with provider Party, borrower Legal Entities, limits, covenants and effectivity.' },
-  { candidateKey: 'BOF-19-045', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Treasury Deal', notes: 'Governed treasury transaction/deal with counterparty Party, terms, dates, authority and settlement/posting provenance.' },
-  { candidateKey: 'BOF-19-046', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Controlled Reporting Snapshot', notes: 'Immutable attributable financial reporting snapshot with fixed source Ledgers/data versions and as-of time; it is not a substitute Ledger.' }
+  {
+    candidateKey: 'BOF-19-001',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Chart of Accounts',
+    notes:
+      'Governed accounting classification structure used by Ledgers; it does not replace operational dimensions or business identities.'
+  },
+  {
+    candidateKey: 'BOF-19-002',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'GL Account',
+    notes: 'Stable general-ledger account identity within a governed Chart of Accounts.'
+  },
+  {
+    candidateKey: 'BOF-19-003',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Financial Dimension',
+    notes:
+      'Governed analytical dimension definition. Dimension members reference canonical Project, WBS, Contract, Asset, Party and organisation identities rather than shadow finance masters.'
+  },
+  {
+    candidateKey: 'BOF-19-004',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Cost Code',
+    notes:
+      'Governed cost classification used across budget, commitment, accrual and actual analysis. Cost Code is not a WBS Element or GL Account.'
+  },
+  {
+    candidateKey: 'BOF-19-005',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Cost Centre',
+    notes:
+      'Finance responsibility/accounting unit that may map to an Organisation Unit without duplicating organisational identity.'
+  },
+  {
+    candidateKey: 'BOF-19-006',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Profit Centre',
+    notes:
+      'Finance responsibility unit for profit analysis; distinct from Legal Entity and Organisation Unit identity.'
+  },
+  {
+    candidateKey: 'BOF-19-007',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Accounting Period',
+    notes: 'Governed posting/reporting period with explicit open/close state.'
+  },
+  {
+    candidateKey: 'BOF-19-008',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Budget',
+    notes:
+      'Governed approved financial plan with retained versions/baselines; never becomes actual posting truth.'
+  },
+  {
+    candidateKey: 'BOF-19-009',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Financial Forecast',
+    notes:
+      'Governed time-stamped forward-looking financial estimate; separate from Budget and actual postings.'
+  },
+  {
+    candidateKey: 'BOF-19-010',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Journal',
+    notes:
+      'Balanced accounting instruction grouping journal lines before immutable posting to a Ledger.'
+  },
+  {
+    candidateKey: 'BOF-19-011',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Journal Line',
+    notes:
+      'Journal Line is a child of Journal carrying account, dimensions, amount and debit/credit detail; it is not a standalone accounting transaction master.'
+  },
+  {
+    candidateKey: 'BOF-19-012',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Ledger Entry',
+    notes: 'Immutable posted debit/credit evidence in a Ledger with source provenance.'
+  },
+  {
+    candidateKey: 'BOF-19-013',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-19-012',
+    notes:
+      'Accounting Posting is represented by the canonical immutable Ledger Entry/posting pattern rather than a second posting store.'
+  },
+  {
+    candidateKey: 'BOF-19-014',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Supplier Invoice',
+    notes:
+      'Governed AP invoice referencing canonical supplier Party and authoritative procurement/Contract basis.'
+  },
+  {
+    candidateKey: 'BOF-19-015',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Customer Invoice',
+    notes:
+      'Governed AR invoice referencing canonical customer Party and authoritative commercial/Contract billing basis.'
+  },
+  {
+    candidateKey: 'BOF-19-016',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Financial Adjustment Note',
+    notes:
+      'Use one adjustment-document pattern with explicit credit/debit type and source invoice reference.'
+  },
+  {
+    candidateKey: 'BOF-19-017',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-19-016',
+    notes:
+      'Debit Note uses the same Financial Adjustment Note identity pattern as Credit Note; direction/type distinguishes behaviour.'
+  },
+  {
+    candidateKey: 'BOF-19-018',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Open Item Position',
+    notes:
+      'Payable open item is a derived settlement position from posted invoice/adjustment/settlement records, not an independently editable source record.'
+  },
+  {
+    candidateKey: 'BOF-19-019',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-19-018',
+    notes:
+      'Receivable Open Item uses the same derived Open Item Position pattern; payable/receivable direction is contextual.'
+  },
+  {
+    candidateKey: 'BOF-19-020',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Payment',
+    notes:
+      'Governed outgoing settlement transaction; distinct from Bank Transaction evidence and from the invoice/open item settled.'
+  },
+  {
+    candidateKey: 'BOF-19-021',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Receipt',
+    notes:
+      'Governed incoming settlement transaction; distinct from Customer Invoice and Bank Transaction evidence.'
+  },
+  {
+    candidateKey: 'BOF-19-022',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Settlement Allocation',
+    notes:
+      'Finance-specific settlement relationship allocating Payment/Receipt value to open items. It is explicitly distinct from workforce/resource Allocation.'
+  },
+  {
+    candidateKey: 'BOF-19-023',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Bank Account',
+    notes: 'Governed treasury bank-account identity owned/controlled by canonical Legal Entity.'
+  },
+  {
+    candidateKey: 'BOF-19-024',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Bank Statement',
+    notes:
+      'Immutable controlled external bank statement evidence with source sequence and provenance.'
+  },
+  {
+    candidateKey: 'BOF-19-025',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Bank Transaction',
+    notes:
+      'Immutable external bank-movement evidence; Payment/Receipt remains the internal settlement identity.'
+  },
+  {
+    candidateKey: 'BOF-19-026',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Reconciliation',
+    notes:
+      'Governed control record linking authoritative positions and retaining matched items/exceptions without mutating source evidence.'
+  },
+  {
+    candidateKey: 'BOF-19-027',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Accrual',
+    notes:
+      'Governed recognition transaction for incurred value before final invoice/settlement; source obligation remains authoritative.'
+  },
+  {
+    candidateKey: 'BOF-19-028',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Prepayment',
+    notes:
+      'Governed deferred cost/revenue transaction with controlled recognition schedule and source provenance.'
+  },
+  {
+    candidateKey: 'BOF-19-029',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-29-009',
+    notes:
+      'Finance reuses the shared jurisdiction/reference Tax Code rather than owning a duplicate tax-code master.'
+  },
+  {
+    candidateKey: 'BOF-19-030',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Tax Transaction',
+    notes:
+      'Traceable tax consequence linked to source transaction, canonical Tax Code, jurisdiction and accounting period.'
+  },
+  {
+    candidateKey: 'BOF-19-031',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Tax Return',
+    notes:
+      'Governed statutory filing identity with controlled submissions/amendments and retained evidence.'
+  },
+  {
+    candidateKey: 'BOF-19-032',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Fixed Asset Accounting Record',
+    notes:
+      'Accounting identity for capitalisation/depreciation/carrying value. It links to canonical physical Asset when applicable and must never replace whole-life Asset identity.'
+  },
+  {
+    candidateKey: 'BOF-19-033',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Depreciation Schedule',
+    notes:
+      'Controlled depreciation schedule subordinate to a Fixed Asset Accounting Record; it defines future calculation logic, not a physical Asset lifecycle.'
+  },
+  {
+    candidateKey: 'BOF-19-034',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Depreciation Run',
+    notes:
+      'Retained calculation/posting transaction producing depreciation Ledger Entries for a governed period/scope.'
+  },
+  {
+    candidateKey: 'BOF-19-035',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Exchange Rate',
+    notes:
+      'Governed effective-dated/reference rate observation with rate type and source provenance.'
+  },
+  {
+    candidateKey: 'BOF-19-036',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Revaluation',
+    notes:
+      'Governed remeasurement transaction/run producing attributable accounting adjustments while retaining original amounts and rates.'
+  },
+  {
+    candidateKey: 'BOF-19-037',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Intercompany Transaction',
+    notes:
+      'Governed transaction between canonical Legal Entities; no finance-specific entity duplicates.'
+  },
+  {
+    candidateKey: 'BOF-19-038',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Consolidation Run',
+    notes:
+      'Governed group consolidation run/snapshot reading source Ledgers without rewriting entity-level accounting truth.'
+  },
+  {
+    candidateKey: 'BOF-19-039',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Consolidation Elimination',
+    notes:
+      'Controlled elimination adjustment within a Consolidation Run; source Legal Entity Ledgers remain unchanged.'
+  },
+  {
+    candidateKey: 'BOF-19-040',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Financial Close Cycle',
+    notes:
+      'Governed close control cycle coordinating period cut-off, reconciliations, adjustments and approvals. It does not replace Accounting Period state.'
+  },
+  {
+    candidateKey: 'BOF-19-041',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Capex Request',
+    notes:
+      'Governed capital-expenditure authority request referencing canonical Project/Asset context; approval does not create Project, PO or Fixed Asset identities.'
+  },
+  {
+    candidateKey: 'BOF-19-042',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Cash Forecast',
+    notes:
+      'Time-stamped forward-looking cash-flow forecast, distinct from actual bank evidence and derived Cash Position.'
+  },
+  {
+    candidateKey: 'BOF-19-043',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Liquidity Forecast',
+    notes:
+      'Governed forward-looking liquidity/headroom forecast consuming cash, facilities and expected flows.'
+  },
+  {
+    candidateKey: 'BOF-19-044',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Treasury Facility',
+    notes:
+      'Governed financing/credit facility identity with provider Party, borrower Legal Entities, limits, covenants and effectivity.'
+  },
+  {
+    candidateKey: 'BOF-19-045',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Treasury Deal',
+    notes:
+      'Governed treasury transaction/deal with counterparty Party, terms, dates, authority and settlement/posting provenance.'
+  },
+  {
+    candidateKey: 'BOF-19-046',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Controlled Reporting Snapshot',
+    notes:
+      'Immutable attributable financial reporting snapshot with fixed source Ledgers/data versions and as-of time; it is not a substitute Ledger.'
+  }
 ];

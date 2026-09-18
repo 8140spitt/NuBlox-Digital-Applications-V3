@@ -72,7 +72,11 @@ describe('platform foundation runtime on MySQL', () => {
 
     const audit = await organisationService.listOrganisationAudit(context, id);
     expect(audit.map((event) => event.action)).toEqual(
-      expect.arrayContaining(['ORGANISATION_CREATED', 'ORGANISATION_ACTIVATED', 'ORGANISATION_CHANGED'])
+      expect.arrayContaining([
+        'ORGANISATION_CREATED',
+        'ORGANISATION_ACTIVATED',
+        'ORGANISATION_CHANGED'
+      ])
     );
 
     const events = await dbModule.queryRows<any>(
@@ -99,7 +103,9 @@ describe('platform foundation runtime on MySQL', () => {
     const first = await contextService.resolveDevelopmentCommandContext(firstTenant);
     const second = await contextService.resolveDevelopmentCommandContext(secondTenant);
 
-    const id = await organisationService.createOrganisation(first, { legalName: 'Tenant A Organisation' });
+    const id = await organisationService.createOrganisation(first, {
+      legalName: 'Tenant A Organisation'
+    });
     const secondRows = await organisationService.listOrganisations(second);
     expect(secondRows.find((row) => row.id === id)).toBeUndefined();
 
@@ -126,15 +132,21 @@ describe('platform foundation runtime on MySQL', () => {
     expect(person.displayName).toBe('Ada');
     expect(person.version).toBe(1);
 
-    await personService.updatePerson(context, personId, {
-      givenName: 'Ada',
-      familyName: 'Lovelace',
-      preferredName: 'Ada Lovelace'
-    }, person.version);
+    await personService.updatePerson(
+      context,
+      personId,
+      {
+        givenName: 'Ada',
+        familyName: 'Lovelace',
+        preferredName: 'Ada Lovelace'
+      },
+      person.version
+    );
     person = await personService.getPerson(context, personId);
     expect(person.version).toBe(2);
-    expect((await personService.listPersonAudit(context, personId)).map((event) => event.action))
-      .toEqual(expect.arrayContaining(['PERSON_CREATED', 'PERSON_CHANGED']));
+    expect(
+      (await personService.listPersonAudit(context, personId)).map((event) => event.action)
+    ).toEqual(expect.arrayContaining(['PERSON_CREATED', 'PERSON_CHANGED']));
 
     const organisationId = await organisationService.createOrganisation(context, {
       legalName: 'NuBlox Construction Limited',
@@ -142,12 +154,17 @@ describe('platform foundation runtime on MySQL', () => {
       countryCode: 'GB'
     });
     const organisation = await organisationService.getOrganisation(context, organisationId);
-    await legalEntityService.designateLegalEntity(context, organisationId, {
-      legalEntityType: 'LIMITED_COMPANY',
-      jurisdictionCode: 'GB',
-      statutoryIdentifier: 'SC-' + randomUUID().slice(0, 8),
-      accountingCurrency: 'GBP'
-    }, organisation.version);
+    await legalEntityService.designateLegalEntity(
+      context,
+      organisationId,
+      {
+        legalEntityType: 'LIMITED_COMPANY',
+        jurisdictionCode: 'GB',
+        statutoryIdentifier: 'SC-' + randomUUID().slice(0, 8),
+        accountingCurrency: 'GBP'
+      },
+      organisation.version
+    );
 
     const legalEntity = await legalEntityService.getLegalEntity(context, organisationId);
     expect(legalEntity.id).toBe(organisationId);
@@ -162,15 +179,21 @@ describe('platform foundation runtime on MySQL', () => {
     expect(partyRows.find((row) => row.id === organisationId)?.partyType).toBe('ORGANISATION');
   });
 
-
   it('governs tenant membership and role assignment through AGG-01-TENANT commands', async () => {
     const tenant = 'authority-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
-    const personId = await personService.createPerson(context, { givenName: 'Grace', familyName: 'Hopper' });
+    const personId = await personService.createPerson(context, {
+      givenName: 'Grace',
+      familyName: 'Hopper'
+    });
 
     const membershipId = await tenantAuthority.grantTenantMembership(context, personId);
-    expect((await tenantAuthority.listTenantMemberships(context)).some((item) => item.id === membershipId)).toBe(true);
+    expect(
+      (await tenantAuthority.listTenantMemberships(context)).some(
+        (item) => item.id === membershipId
+      )
+    ).toBe(true);
 
     const roleId = await tenantAuthority.createTenantRole(
       context,
@@ -180,21 +203,26 @@ describe('platform foundation runtime on MySQL', () => {
     );
     const assignmentId = await tenantAuthority.assignTenantRole(context, personId, roleId);
     expect(assignmentId).toBeTruthy();
-    expect((await tenantAuthority.listTenantRoles(context)).find((role) => role.id === roleId)?.permissions)
-      .toEqual(['party.change', 'party.create', 'party.read']);
+    expect(
+      (await tenantAuthority.listTenantRoles(context)).find((role) => role.id === roleId)
+        ?.permissions
+    ).toEqual(['party.change', 'party.create', 'party.read']);
 
     const assignmentRows = await dbModule.queryRows<any>(
-      "SELECT assignment_source AS source FROM role_assignments WHERE id = ? AND tenant_id = ?",
+      'SELECT assignment_source AS source FROM role_assignments WHERE id = ? AND tenant_id = ?',
       [assignmentId, context.tenantId]
     );
     expect(assignmentRows[0]?.source).toBe('tenant-authority-command');
 
     await tenantAuthority.revokeTenantMembership(context, membershipId);
-    expect((await tenantAuthority.listTenantMemberships(context)).find((item) => item.id === membershipId)?.status)
-      .toBe('INACTIVE');
+    expect(
+      (await tenantAuthority.listTenantMemberships(context)).find(
+        (item) => item.id === membershipId
+      )?.status
+    ).toBe('INACTIVE');
 
     const endedAssignments = await dbModule.queryRows<any>(
-      "SELECT status, valid_to AS validTo FROM role_assignments WHERE id = ? AND tenant_id = ?",
+      'SELECT status, valid_to AS validTo FROM role_assignments WHERE id = ? AND tenant_id = ?',
       [assignmentId, context.tenantId]
     );
     expect(endedAssignments[0]?.status).toBe('INACTIVE');
@@ -210,24 +238,32 @@ describe('platform foundation runtime on MySQL', () => {
       "SELECT action FROM platform_audit_events WHERE tenant_id = ? AND aggregate_id = 'AGG-01-TENANT'",
       [context.tenantId]
     );
-    expect(audit.map((row) => row.action)).toEqual(expect.arrayContaining([
-      'TENANT_MEMBERSHIP_GRANTED',
-      'TENANT_ROLE_CREATED',
-      'TENANT_ROLE_ASSIGNED',
-      'TENANT_MEMBERSHIP_REVOKED'
-    ]));
+    expect(audit.map((row) => row.action)).toEqual(
+      expect.arrayContaining([
+        'TENANT_MEMBERSHIP_GRANTED',
+        'TENANT_ROLE_CREATED',
+        'TENANT_ROLE_ASSIGNED',
+        'TENANT_MEMBERSHIP_REVOKED'
+      ])
+    );
   });
-
-
 
   it('maintains the full tenant role lifecycle without allowing administrative self-lockout', async () => {
     const tenant = 'role-lifecycle-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
-    const personId = await personService.createPerson(context, { givenName: 'Evelyn', familyName: 'Steward' });
+    const personId = await personService.createPerson(context, {
+      givenName: 'Evelyn',
+      familyName: 'Steward'
+    });
     await tenantAuthority.grantTenantMembership(context, personId);
 
-    const roleId = await tenantAuthority.createTenantRole(context, 'commercial-reader', 'Commercial Reader', ['party.read']);
+    const roleId = await tenantAuthority.createTenantRole(
+      context,
+      'commercial-reader',
+      'Commercial Reader',
+      ['party.read']
+    );
     const firstAssignment = await tenantAuthority.assignTenantRole(context, personId, roleId);
 
     await tenantAuthority.updateTenantRole(context, roleId, {
@@ -252,27 +288,40 @@ describe('platform foundation runtime on MySQL', () => {
     expect(secondAssignment).not.toBe(firstAssignment);
     await tenantAuthority.unassignTenantRole(context, secondAssignment);
 
-    const adminRole = (await tenantAuthority.listTenantRoles(context)).find((item) => item.roleKey === 'tenant-admin');
+    const adminRole = (await tenantAuthority.listTenantRoles(context)).find(
+      (item) => item.roleKey === 'tenant-admin'
+    );
     expect(adminRole).toBeTruthy();
-    await expect(tenantAuthority.deactivateTenantRole(context, adminRole!.id))
-      .rejects.toThrow('currently assigned to themselves');
-    await expect(tenantAuthority.updateTenantRole(context, adminRole!.id, {
-      name: adminRole!.name,
-      permissions: adminRole!.permissions.filter((permission) => permission !== 'tenant.role.manage')
-    })).rejects.toThrow("final tenant.role.manage authority");
+    await expect(tenantAuthority.deactivateTenantRole(context, adminRole!.id)).rejects.toThrow(
+      'currently assigned to themselves'
+    );
+    await expect(
+      tenantAuthority.updateTenantRole(context, adminRole!.id, {
+        name: adminRole!.name,
+        permissions: adminRole!.permissions.filter(
+          (permission) => permission !== 'tenant.role.manage'
+        )
+      })
+    ).rejects.toThrow('final tenant.role.manage authority');
   });
 
   it('claims and publishes transactional outbox messages exactly once per worker claim', async () => {
     const tenant = 'outbox-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
-    const organisationId = await organisationService.createOrganisation(context, { legalName: 'Outbox Test Organisation' });
+    const organisationId = await organisationService.createOrganisation(context, {
+      legalName: 'Outbox Test Organisation'
+    });
     const workerId = 'test-worker-' + randomUUID();
     const delivered: string[] = [];
 
-    const result = await outboxService.publishOutboxBatch(workerId, async (message) => {
-      delivered.push(message.businessEventId);
-    }, 100);
+    const result = await outboxService.publishOutboxBatch(
+      workerId,
+      async (message) => {
+        delivered.push(message.businessEventId);
+      },
+      100
+    );
 
     expect(result.claimed).toBeGreaterThan(0);
     expect(result.published).toBe(result.claimed);
@@ -280,11 +329,18 @@ describe('platform foundation runtime on MySQL', () => {
     expect(new Set(delivered).size).toBe(delivered.length);
 
     const rows = await dbModule.queryRows<any>(
-      "SELECT status, attempts, published_at AS publishedAt, locked_by AS lockedBy FROM outbox_messages WHERE tenant_id = ? AND business_event_id IN (SELECT id FROM business_events WHERE aggregate_object_id = ?)",
+      'SELECT status, attempts, published_at AS publishedAt, locked_by AS lockedBy FROM outbox_messages WHERE tenant_id = ? AND business_event_id IN (SELECT id FROM business_events WHERE aggregate_object_id = ?)',
       [context.tenantId, organisationId]
     );
     expect(rows.length).toBeGreaterThan(0);
-    expect(rows.every((row) => row.status === 'PUBLISHED' && row.attempts === 1 && row.publishedAt && row.lockedBy === null)).toBe(true);
+    expect(
+      rows.every(
+        (row) =>
+          row.status === 'PUBLISHED' &&
+          row.attempts === 1 &&
+          row.publishedAt &&
+          row.lockedBy === null
+      )
+    ).toBe(true);
   });
-
 });

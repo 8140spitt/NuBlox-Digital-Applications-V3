@@ -20,7 +20,9 @@ describe('estimating, measurement, tendering, proposals and sales semantic model
 
   it('keeps estimate versioning subordinate to stable Estimate identity', () => {
     const estimate = estimatingTenderingModel.find((entry) => entry.modelId === 'EST-ESTIMATE');
-    const version = estimatingTenderingModel.find((entry) => entry.modelId === 'EST-ESTIMATE-VERSION');
+    const version = estimatingTenderingModel.find(
+      (entry) => entry.modelId === 'EST-ESTIMATE-VERSION'
+    );
     expect(estimate?.canonicalName).toBe('Estimate');
     expect(version?.kind).toBe('version');
     expect(version?.governance.join(' ')).toContain('not a duplicate Estimate master');
@@ -36,24 +38,45 @@ describe('estimating, measurement, tendering, proposals and sales semantic model
 
   it('reuses shared sourcing semantics for estimating market testing', () => {
     for (const key of ['BOF-05-014', 'BOF-05-015']) {
-      const decision = estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === key);
+      const decision = estimatingTenderingCanonicalization.find(
+        (entry) => entry.candidateKey === key
+      );
       expect(decision?.decision).toBe('MERGE');
       expect(decision?.targetCandidateKey).toBe('BOF-09-009');
     }
     for (const key of ['BOF-05-016', 'BOF-05-017']) {
-      expect(estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === key)?.targetCandidateKey).toBe('BOF-09-012');
+      expect(
+        estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === key)
+          ?.targetCandidateKey
+      ).toBe('BOF-09-012');
     }
-    expect(estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-018')?.targetCandidateKey).toBe('BOF-09-014');
+    expect(
+      estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-018')
+        ?.targetCandidateKey
+    ).toBe('BOF-09-014');
   });
 
   it('normalizes preliminaries and estimate provisions without losing semantics', () => {
-    expect(estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-010')?.targetCandidateKey).toBe('BOF-05-005');
-    expect(estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-011')?.proposedCanonicalName).toBe('Estimate Provision');
-    expect(estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-012')?.targetCandidateKey).toBe('BOF-05-011');
+    expect(
+      estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-010')
+        ?.targetCandidateKey
+    ).toBe('BOF-05-005');
+    expect(
+      estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-011')
+        ?.proposedCanonicalName
+    ).toBe('Estimate Provision');
+    expect(
+      estimatingTenderingCanonicalization.find((entry) => entry.candidateKey === 'BOF-05-012')
+        ?.targetCandidateKey
+    ).toBe('BOF-05-011');
   });
 
   it('treats adjudication and acceptance as evidence rather than mutable masters', () => {
-    expect(estimatingTenderingModel.find((entry) => entry.modelId === 'EST-TENDER-ADJUDICATION')?.kind).toBe('event-evidence');
-    expect(estimatingTenderingModel.find((entry) => entry.modelId === 'EST-OFFER-ACCEPTANCE')?.kind).toBe('event-evidence');
+    expect(
+      estimatingTenderingModel.find((entry) => entry.modelId === 'EST-TENDER-ADJUDICATION')?.kind
+    ).toBe('event-evidence');
+    expect(
+      estimatingTenderingModel.find((entry) => entry.modelId === 'EST-OFFER-ACCEPTANCE')?.kind
+    ).toBe('event-evidence');
   });
 });

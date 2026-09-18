@@ -27,7 +27,9 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.activityMapping.invalidObjectPlacementCount).toBe(0);
     expect(coverageAuditSummary.activityMapping.unsafeProjectionCommandCount).toBe(0);
     expect(coverageAuditSummary.architectureConvergenceState).toBe('complete');
-    expect(coverageAuditSummary.implementationAuthority).toBe('controlled-aggregate-waves-authorized');
+    expect(coverageAuditSummary.implementationAuthority).toBe(
+      'controlled-aggregate-waves-authorized'
+    );
     expect(familyCoverageAudit).toHaveLength(29);
     expect(coverageAuditSummary.workspaceCount).toBe(29);
     expect(coverageAuditSummary.coveredWorkspaceCount).toBe(29);
@@ -40,7 +42,11 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.governedFamilyCount).toBe(29);
     expect(coverageAuditSummary.partialFamilyCount).toBe(0);
     expect(coverageAuditSummary.candidateOnlyFamilyCount).toBe(0);
-    expect(coverageAuditSummary.governedFamilyCount + coverageAuditSummary.partialFamilyCount + coverageAuditSummary.candidateOnlyFamilyCount).toBe(29);
+    expect(
+      coverageAuditSummary.governedFamilyCount +
+        coverageAuditSummary.partialFamilyCount +
+        coverageAuditSummary.candidateOnlyFamilyCount
+    ).toBe(29);
   });
 
   it('proves every candidate in the real register has a governed baseline decision', () => {
@@ -48,7 +54,9 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.baselineDecisionCount).toBe(750);
     expect(coverageAuditSummary.baselineUndecidedCount).toBe(0);
     expect(coverageAuditSummary.baselineDecisionCoveragePct).toBe(100);
-    expect(new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey)).size).toBe(750);
+    expect(new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey)).size).toBe(
+      750
+    );
   });
 
   it('proves the external benchmark and standards architecture challenge is complete', () => {
@@ -74,7 +82,9 @@ describe('canonical model convergence and coverage audit', () => {
   });
 
   it('keeps known convergence gaps visible while promoting governed families', () => {
-    const states = new Map(familyCoverageAudit.map((family) => [family.id, family.semanticModelState]));
+    const states = new Map(
+      familyCoverageAudit.map((family) => [family.id, family.semanticModelState])
+    );
     expect(states.get('BOF-03')).toBe('governed-semantic-model');
     expect(states.get('BOF-05')).toBe('governed-semantic-model');
     expect(states.get('BOF-12')).toBe('governed-semantic-model');

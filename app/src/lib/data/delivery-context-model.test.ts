@@ -33,15 +33,31 @@ describe('delivery context semantic model', () => {
   });
 
   it('connects schedule activities to scope rather than collapsing the structures', () => {
-    expect(deliveryContextRelationships).toEqual(expect.arrayContaining([
-      expect.objectContaining({ from: 'DEL-SCHEDULE-ACTIVITY', predicate: 'maps to', to: 'DEL-WBS-ELEMENT' }),
-      expect.objectContaining({ from: 'DEL-SCHEDULE-ACTIVITY', predicate: 'executes', to: 'DEL-WORK-PACKAGE' }),
-      expect.objectContaining({ from: 'DEL-SCHEDULE', predicate: 'baselined by', to: 'DEL-SCHEDULE-BASELINE' })
-    ]));
+    expect(deliveryContextRelationships).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          from: 'DEL-SCHEDULE-ACTIVITY',
+          predicate: 'maps to',
+          to: 'DEL-WBS-ELEMENT'
+        }),
+        expect.objectContaining({
+          from: 'DEL-SCHEDULE-ACTIVITY',
+          predicate: 'executes',
+          to: 'DEL-WORK-PACKAGE'
+        }),
+        expect.objectContaining({
+          from: 'DEL-SCHEDULE',
+          predicate: 'baselined by',
+          to: 'DEL-SCHEDULE-BASELINE'
+        })
+      ])
+    );
   });
 
   it('records the delivery canonicalization decisions in the architecture baseline', () => {
-    const decisions = new Map(foundationCanonicalization.map((entry) => [entry.candidateKey, entry]));
+    const decisions = new Map(
+      foundationCanonicalization.map((entry) => [entry.candidateKey, entry])
+    );
     expect(decisions.get('BOF-06-001')?.decision).toBe('VALIDATE_OBJECT');
     expect(decisions.get('BOF-06-002')?.decision).toBe('VALIDATE_OBJECT');
     expect(decisions.get('BOF-06-006')?.targetCandidateKey).toBe('BOF-06-007');

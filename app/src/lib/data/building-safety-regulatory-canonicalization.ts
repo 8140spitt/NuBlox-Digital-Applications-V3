@@ -1,19 +1,112 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
 export const buildingSafetyRegulatoryCanonicalization: FoundationCanonicalizationDecision[] = [
-  { candidateKey: 'BOF-14-001', decision: 'RELATIONSHIP', proposedCanonicalName: 'Dutyholder Assignment', notes: 'Effective statutory/regulatory Party-to-role assignment for a defined Building/Project/regulatory scope. Legal duty is distinct from job title, generic Role Assignment, permission and delegated authority.' },
-  { candidateKey: 'BOF-14-002', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Regulatory Competence Evidence', notes: 'Immutable/evidenced competence assertion for a statutory role/scope, referencing canonical Person/Party competence, credentials, organisational capability and exact evidence basis.' },
-  { candidateKey: 'BOF-14-003', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Regulator Case', notes: 'Governed external-regulatory case/context linking authority, regime, Building/Project scope, applications, inspections, notices, decisions and submissions.' },
-  { candidateKey: 'BOF-14-004', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Regulatory Application', notes: 'Governed application/request to a regulator or statutory authority, retaining exact scope, basis, submitted information, fees where relevant, status and decision provenance.' },
-  { candidateKey: 'BOF-14-005', decision: 'MERGE', targetCandidateKey: 'BOF-14-004', proposedCanonicalName: 'Regulatory Application', notes: 'Building Control Application is a Regulatory Application type with building-control regime/jurisdiction context rather than a second application engine.' },
-  { candidateKey: 'BOF-14-006', decision: 'RENAME', proposedCanonicalName: 'Regulatory Controlled Change', notes: 'Governed regulatory change case/record for a controlled design/building/safety change, classification, notification/approval route and regulator outcome. It is distinct from Design Change and Commercial Change.' },
-  { candidateKey: 'BOF-14-007', decision: 'MERGE', targetCandidateKey: 'BOF-13-003', proposedCanonicalName: 'Inspection', notes: 'Regulatory Inspection uses the shared Inspection execution/evidence pattern with regulator, regime, statutory criteria and competence/authority context.' },
-  { candidateKey: 'BOF-14-008', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Regulatory Finding', notes: 'Governed finding/noncompliance/observation raised by a regulator or statutory inspection/review, with requirement, severity, response and closure evidence.' },
-  { candidateKey: 'BOF-14-009', decision: 'RENAME', proposedCanonicalName: 'Mandatory Occurrence Report', notes: 'Immutable statutory occurrence-reporting evidence linked to underlying Incident/condition, reporting threshold, authority, submission and acknowledgement. The report is not the Incident itself.' },
-  { candidateKey: 'BOF-14-010', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Statutory Notice', notes: 'Governed formal statutory/regulatory notice with issuer, recipient, legal basis, requirements, dates, service evidence and compliance/appeal status.' },
-  { candidateKey: 'BOF-14-011', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Regulatory Decision', notes: 'Immutable attributable regulator/authority decision bound to exact application/case/change/submission scope, evidence, conditions, authority basis and decision time.' },
-  { candidateKey: 'BOF-14-012', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Regulatory Completion Evidence', notes: 'Immutable completion/conformity evidence set proving satisfaction of defined statutory/regulatory completion requirements.' },
-  { candidateKey: 'BOF-14-013', decision: 'RENAME', proposedCanonicalName: 'Statutory Completion Certificate', notes: 'Statutory/regulatory completion certificate issued under a defined regime and scope. It is explicitly distinct from BOF-15 Delivery Completion Certificate.' },
-  { candidateKey: 'BOF-14-014', decision: 'PROJECTION', proposedCanonicalName: 'Golden Thread Information Set', notes: 'Governed reconstructable view/index over authoritative building-safety information, decisions, dutyholders, changes and evidence. It does not become one duplicate document/master record.' },
-  { candidateKey: 'BOF-14-015', decision: 'MERGE', targetCandidateKey: 'BOF-27-013', proposedCanonicalName: 'External Submission', notes: 'Regulatory Submission uses the shared immutable External Submission evidence pattern, retaining exact content/revision set, authority, channel, external reference and response status.' }
+  {
+    candidateKey: 'BOF-14-001',
+    decision: 'RELATIONSHIP',
+    proposedCanonicalName: 'Dutyholder Assignment',
+    notes:
+      'Effective statutory/regulatory Party-to-role assignment for a defined Building/Project/regulatory scope. Legal duty is distinct from job title, generic Role Assignment, permission and delegated authority.'
+  },
+  {
+    candidateKey: 'BOF-14-002',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Regulatory Competence Evidence',
+    notes:
+      'Immutable/evidenced competence assertion for a statutory role/scope, referencing canonical Person/Party competence, credentials, organisational capability and exact evidence basis.'
+  },
+  {
+    candidateKey: 'BOF-14-003',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Regulator Case',
+    notes:
+      'Governed external-regulatory case/context linking authority, regime, Building/Project scope, applications, inspections, notices, decisions and submissions.'
+  },
+  {
+    candidateKey: 'BOF-14-004',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Regulatory Application',
+    notes:
+      'Governed application/request to a regulator or statutory authority, retaining exact scope, basis, submitted information, fees where relevant, status and decision provenance.'
+  },
+  {
+    candidateKey: 'BOF-14-005',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-14-004',
+    proposedCanonicalName: 'Regulatory Application',
+    notes:
+      'Building Control Application is a Regulatory Application type with building-control regime/jurisdiction context rather than a second application engine.'
+  },
+  {
+    candidateKey: 'BOF-14-006',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Regulatory Controlled Change',
+    notes:
+      'Governed regulatory change case/record for a controlled design/building/safety change, classification, notification/approval route and regulator outcome. It is distinct from Design Change and Commercial Change.'
+  },
+  {
+    candidateKey: 'BOF-14-007',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-13-003',
+    proposedCanonicalName: 'Inspection',
+    notes:
+      'Regulatory Inspection uses the shared Inspection execution/evidence pattern with regulator, regime, statutory criteria and competence/authority context.'
+  },
+  {
+    candidateKey: 'BOF-14-008',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Regulatory Finding',
+    notes:
+      'Governed finding/noncompliance/observation raised by a regulator or statutory inspection/review, with requirement, severity, response and closure evidence.'
+  },
+  {
+    candidateKey: 'BOF-14-009',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Mandatory Occurrence Report',
+    notes:
+      'Immutable statutory occurrence-reporting evidence linked to underlying Incident/condition, reporting threshold, authority, submission and acknowledgement. The report is not the Incident itself.'
+  },
+  {
+    candidateKey: 'BOF-14-010',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Statutory Notice',
+    notes:
+      'Governed formal statutory/regulatory notice with issuer, recipient, legal basis, requirements, dates, service evidence and compliance/appeal status.'
+  },
+  {
+    candidateKey: 'BOF-14-011',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Regulatory Decision',
+    notes:
+      'Immutable attributable regulator/authority decision bound to exact application/case/change/submission scope, evidence, conditions, authority basis and decision time.'
+  },
+  {
+    candidateKey: 'BOF-14-012',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Regulatory Completion Evidence',
+    notes:
+      'Immutable completion/conformity evidence set proving satisfaction of defined statutory/regulatory completion requirements.'
+  },
+  {
+    candidateKey: 'BOF-14-013',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Statutory Completion Certificate',
+    notes:
+      'Statutory/regulatory completion certificate issued under a defined regime and scope. It is explicitly distinct from BOF-15 Delivery Completion Certificate.'
+  },
+  {
+    candidateKey: 'BOF-14-014',
+    decision: 'PROJECTION',
+    proposedCanonicalName: 'Golden Thread Information Set',
+    notes:
+      'Governed reconstructable view/index over authoritative building-safety information, decisions, dutyholders, changes and evidence. It does not become one duplicate document/master record.'
+  },
+  {
+    candidateKey: 'BOF-14-015',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-27-013',
+    proposedCanonicalName: 'External Submission',
+    notes:
+      'Regulatory Submission uses the shared immutable External Submission evidence pattern, retaining exact content/revision set, authority, channel, external reference and response status.'
+  }
 ];

@@ -11,21 +11,26 @@ describe('land, development, investment and property acquisition semantic model'
     expect(validateLandDevelopmentInvestmentModel()).toBe(true);
     const decided = new Set(landDevelopmentInvestmentCanonicalization.map((x) => x.candidateKey));
     expect(decided.size).toBe(19);
-    for (let i=1;i<=19;i+=1) expect(decided.has(`BOF-04-${String(i).padStart(3,'0')}`)).toBe(true);
+    for (let i = 1; i <= 19; i += 1)
+      expect(decided.has(`BOF-04-${String(i).padStart(3, '0')}`)).toBe(true);
   });
 
   it('reuses canonical Land Parcel and Contract identities', () => {
-    const parcel = landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === 'BOF-04-007');
+    const parcel = landDevelopmentInvestmentCanonicalization.find(
+      (x) => x.candidateKey === 'BOF-04-007'
+    );
     expect(parcel?.decision).toBe('MERGE');
     expect(parcel?.targetCandidateKey).toBe('BOF-16-004');
 
-    const option = landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === 'BOF-04-005');
+    const option = landDevelopmentInvestmentCanonicalization.find(
+      (x) => x.candidateKey === 'BOF-04-005'
+    );
     expect(option?.decision).toBe('MERGE');
     expect(option?.targetCandidateKey).toBe('BOF-08-002');
   });
 
   it('normalizes ownership and occupation to Property Interest', () => {
-    for (const key of ['BOF-04-009','BOF-04-010']) {
+    for (const key of ['BOF-04-009', 'BOF-04-010']) {
       const d = landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === key);
       expect(d?.decision).toBe('MERGE');
       expect(d?.targetCandidateKey).toBe('BOF-04-008');
@@ -33,20 +38,31 @@ describe('land, development, investment and property acquisition semantic model'
   });
 
   it('distinguishes property valuation from contract valuation', () => {
-    const d = landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === 'BOF-04-012');
+    const d = landDevelopmentInvestmentCanonicalization.find(
+      (x) => x.candidateKey === 'BOF-04-012'
+    );
     expect(d?.decision).toBe('RENAME');
     expect(d?.proposedCanonicalName).toBe('Property Valuation');
     expect(landDevelopmentInvestmentRules.join(' ')).toContain('contract/payment Valuation');
   });
 
   it('separates application, consent and condition', () => {
-    expect(landDevelopmentInvestmentModel.find((x) => x.modelId === 'LDI-PLANNING-APPLICATION')?.kind).toBe('case');
-    expect(landDevelopmentInvestmentModel.find((x) => x.modelId === 'LDI-PLANNING-CONSENT')?.kind).toBe('authorization');
-    expect(landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === 'BOF-04-016')?.decision).toBe('CHILD');
+    expect(
+      landDevelopmentInvestmentModel.find((x) => x.modelId === 'LDI-PLANNING-APPLICATION')?.kind
+    ).toBe('case');
+    expect(
+      landDevelopmentInvestmentModel.find((x) => x.modelId === 'LDI-PLANNING-CONSENT')?.kind
+    ).toBe('authorization');
+    expect(
+      landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === 'BOF-04-016')
+        ?.decision
+    ).toBe('CHILD');
   });
 
   it('reuses shared Legal Obligation for planning obligations', () => {
-    const d = landDevelopmentInvestmentCanonicalization.find((x) => x.candidateKey === 'BOF-04-017');
+    const d = landDevelopmentInvestmentCanonicalization.find(
+      (x) => x.candidateKey === 'BOF-04-017'
+    );
     expect(d?.decision).toBe('MERGE');
     expect(d?.targetCandidateKey).toBe('BOF-22-003');
   });

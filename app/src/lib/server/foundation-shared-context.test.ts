@@ -31,8 +31,12 @@ describe('shared foundation relationship, structure and authority aggregates', (
     const tenant = 'relationship-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
-    const customer = await organisationService.createOrganisation(context, { legalName: 'Customer One Limited' });
-    const supplier = await organisationService.createOrganisation(context, { legalName: 'Supplier One Limited' });
+    const customer = await organisationService.createOrganisation(context, {
+      legalName: 'Customer One Limited'
+    });
+    const supplier = await organisationService.createOrganisation(context, {
+      legalName: 'Supplier One Limited'
+    });
 
     await organisationService.activateOrganisation(context, customer, 1);
     await organisationService.activateOrganisation(context, supplier, 1);
@@ -43,12 +47,16 @@ describe('shared foundation relationship, structure and authority aggregates', (
       relationshipType: 'SUPPLIER',
       contextType: 'TENANT'
     });
-    let relationship = (await relationshipService.listPartyRelationships(context)).find((item) => item.id === id)!;
+    let relationship = (await relationshipService.listPartyRelationships(context)).find(
+      (item) => item.id === id
+    )!;
     expect(relationship.status).toBe('PROPOSED');
     expect(relationship.relationshipType).toBe('SUPPLIER');
 
     await relationshipService.activatePartyRelationship(context, id, relationship.version);
-    relationship = (await relationshipService.listPartyRelationships(context)).find((item) => item.id === id)!;
+    relationship = (await relationshipService.listPartyRelationships(context)).find(
+      (item) => item.id === id
+    )!;
     expect(relationship.status).toBe('ACTIVE');
 
     const parties = await db.queryRows<any>(
@@ -58,7 +66,7 @@ describe('shared foundation relationship, structure and authority aggregates', (
     expect(parties).toHaveLength(2);
 
     const events = await db.queryRows<any>(
-      "SELECT aggregate_id AS aggregateId FROM business_events WHERE tenant_id = ? AND aggregate_object_id = ?",
+      'SELECT aggregate_id AS aggregateId FROM business_events WHERE tenant_id = ? AND aggregate_object_id = ?',
       [context.tenantId, id]
     );
     expect(events.every((event) => event.aggregateId === 'AGG-01-PARTY-RELATIONSHIP')).toBe(true);
@@ -76,12 +84,17 @@ describe('shared foundation relationship, structure and authority aggregates', (
     });
     await organisationService.activateOrganisation(context, legalEntityId, 1);
     const organisation = await organisationService.getOrganisation(context, legalEntityId);
-    await legalEntityService.designateLegalEntity(context, legalEntityId, {
-      legalEntityType: 'LIMITED_COMPANY',
-      jurisdictionCode: 'GB',
-      statutoryIdentifier: 'STAT-' + randomUUID().slice(0, 8),
-      accountingCurrency: 'GBP'
-    }, organisation.version);
+    await legalEntityService.designateLegalEntity(
+      context,
+      legalEntityId,
+      {
+        legalEntityType: 'LIMITED_COMPANY',
+        jurisdictionCode: 'GB',
+        statutoryIdentifier: 'STAT-' + randomUUID().slice(0, 8),
+        accountingCurrency: 'GBP'
+      },
+      organisation.version
+    );
 
     const divisionId = await structureService.createOrganisationUnit(context, {
       unitCode: 'DIV-' + randomUUID().slice(0, 6),
@@ -98,13 +111,20 @@ describe('shared foundation relationship, structure and authority aggregates', (
 
     await structureService.activateOrganisationUnit(context, divisionId, 1);
     await structureService.activateOrganisationUnit(context, teamId, 1);
-    const relationId = await structureService.assignOrganisationUnitParent(context, teamId, divisionId);
+    const relationId = await structureService.assignOrganisationUnitParent(
+      context,
+      teamId,
+      divisionId
+    );
     expect(relationId).toBeTruthy();
 
-    const team = (await structureService.listOrganisationUnits(context)).find((unit) => unit.id === teamId)!;
+    const team = (await structureService.listOrganisationUnits(context)).find(
+      (unit) => unit.id === teamId
+    )!;
     expect(team.version).toBe(3);
-    await expect(structureService.assignOrganisationUnitParent(context, divisionId, teamId))
-      .rejects.toThrow('cycle');
+    await expect(
+      structureService.assignOrganisationUnitParent(context, divisionId, teamId)
+    ).rejects.toThrow('cycle');
   });
 
   it('enforces approved, effective and value-constrained Delegated Authority', async () => {
@@ -127,12 +147,18 @@ describe('shared foundation relationship, structure and authority aggregates', (
       allowSubdelegation: false
     });
 
-    let grant = (await authorityService.listDelegatedAuthorities(context)).find((item) => item.id === id)!;
+    let grant = (await authorityService.listDelegatedAuthorities(context)).find(
+      (item) => item.id === id
+    )!;
     expect(grant.status).toBe('DRAFT');
     await authorityService.approveDelegatedAuthority(context, id, grant.version);
-    grant = (await authorityService.listDelegatedAuthorities(context)).find((item) => item.id === id)!;
+    grant = (await authorityService.listDelegatedAuthorities(context)).find(
+      (item) => item.id === id
+    )!;
     await authorityService.activateDelegatedAuthority(context, id, grant.version);
-    grant = (await authorityService.listDelegatedAuthorities(context)).find((item) => item.id === id)!;
+    grant = (await authorityService.listDelegatedAuthorities(context)).find(
+      (item) => item.id === id
+    )!;
     expect(grant.status).toBe('ACTIVE');
 
     const withinLimit = await authorityService.findEffectiveDelegatedAuthority(context, {
@@ -155,9 +181,16 @@ describe('shared foundation relationship, structure and authority aggregates', (
     });
     expect(overLimit).toBeNull();
 
-    await authorityService.revokeDelegatedAuthority(context, id, grant.version, 'Delegation withdrawn.');
-    expect((await authorityService.listDelegatedAuthorities(context)).find((item) => item.id === id)?.status)
-      .toBe('REVOKED');
+    await authorityService.revokeDelegatedAuthority(
+      context,
+      id,
+      grant.version,
+      'Delegation withdrawn.'
+    );
+    expect(
+      (await authorityService.listDelegatedAuthorities(context)).find((item) => item.id === id)
+        ?.status
+    ).toBe('REVOKED');
 
     const revoked = await authorityService.findEffectiveDelegatedAuthority(context, {
       delegatePartyId,

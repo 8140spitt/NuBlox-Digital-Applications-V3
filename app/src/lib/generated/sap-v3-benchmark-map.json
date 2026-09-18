@@ -10,20 +10,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F01",
-        "F10",
-        "F11",
-        "F15",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-06",
-        "BOF-10",
-        "BOF-11",
-        "BOF-18"
-      ],
+      "workspaces": ["F01", "F10", "F11", "F15", "F27"],
+      "canonicalFamilies": ["BOF-02", "BOF-06", "BOF-10", "BOF-11", "BOF-18"],
       "canonicalObjects": [
         "Demand Plan",
         "Supply Plan",
@@ -31,10 +19,7 @@
         "Inventory/Material Requirement",
         "Resource Plan"
       ],
-      "processChains": [
-        "plan-to-perform",
-        "procure-to-pay"
-      ],
+      "processChains": ["plan-to-perform", "procure-to-pay"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Advanced Planning & Optimization (APO) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Demand supply capacity and material planning plus project resource planning"
@@ -46,24 +31,15 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F03",
-        "F17"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-19",
-        "BOF-24"
-      ],
+      "workspaces": ["F03", "F17"],
+      "canonicalFamilies": ["BOF-02", "BOF-19", "BOF-24"],
       "canonicalObjects": [
         "KPI Definition",
         "KPI Observation",
         "Analytics Dataset",
         "Report/Projection"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Business Intelligence (BI) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Finance reporting exists; cross-domain BI and dashboards remain"
@@ -75,17 +51,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F01",
-        "F03",
-        "F14",
-        "F17"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-19",
-        "BOF-24"
-      ],
+      "workspaces": ["F01", "F03", "F14", "F17"],
+      "canonicalFamilies": ["BOF-02", "BOF-19", "BOF-24"],
       "canonicalObjects": [
         "Business Plan",
         "Scenario",
@@ -93,9 +60,7 @@
         "Financial Consolidation",
         "KPI Target"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Business Planning and Consolidation (BPC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Governed strategy-linked business planning, KPI targets/forecasts and scenarios now extend into F04 versioned corporate-development valuation/business cases with controlled assumptions and approval evidence; enterprise consolidation remains"
@@ -107,13 +72,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F14",
-        "F03"
-      ],
-      "canonicalFamilies": [
-        "BOF-19"
-      ],
+      "workspaces": ["F14", "F03"],
+      "canonicalFamilies": ["BOF-19"],
       "canonicalObjects": [
         "Bank Account",
         "Cash Position",
@@ -121,9 +81,7 @@
         "Settlement",
         "Treasury Transaction"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Cash Management (CM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Bank-account and bank-reconciliation foundations now exist; cash position forecasting liquidity and treasury operations remain"
@@ -135,26 +93,10 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F08",
-        "F12",
-        "F14",
-        "F22"
-      ],
-      "canonicalFamilies": [
-        "BOF-17",
-        "BOF-19"
-      ],
-      "canonicalObjects": [
-        "Service Entitlement",
-        "Usage Record",
-        "Billing Charge",
-        "Invoice"
-      ],
-      "processChains": [
-        "service-request-to-resolution",
-        "valuation-to-cash"
-      ],
+      "workspaces": ["F08", "F12", "F14", "F22"],
+      "canonicalFamilies": ["BOF-17", "BOF-19"],
+      "canonicalObjects": ["Service Entitlement", "Usage Record", "Billing Charge", "Invoice"],
+      "processChains": ["service-request-to-resolution", "valuation-to-cash"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Convergent Charging (CC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Recurring or usage billing where service/utility models require it"
@@ -166,17 +108,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F03",
-        "F07",
-        "F14",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-06",
-        "BOF-08",
-        "BOF-19"
-      ],
+      "workspaces": ["F03", "F07", "F14", "F27"],
+      "canonicalFamilies": ["BOF-06", "BOF-08", "BOF-19"],
       "canonicalObjects": [
         "Cost Centre",
         "Profit Centre",
@@ -185,10 +118,7 @@
         "Forecast",
         "Profitability Projection"
       ],
-      "processChains": [
-        "estimate-to-project-control",
-        "record-to-report"
-      ],
+      "processChains": ["estimate-to-project-control", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Controlling (CO) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Project cost control exists; cost/profit centre and enterprise profitability remain"
@@ -200,15 +130,8 @@
       "legacyCurrentState": "activated",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F06",
-        "F07",
-        "F08"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-01"
-      ],
+      "workspaces": ["F06", "F07", "F08"],
+      "canonicalFamilies": ["BOF-03", "BOF-01"],
       "canonicalObjects": [
         "Party Relationship",
         "Lead",
@@ -216,9 +139,7 @@
         "CRM Activity",
         "Customer Case"
       ],
-      "processChains": [
-        "market-to-contract"
-      ],
+      "processChains": ["market-to-contract"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Customer Relationship Management (CRM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "CRM parties contacts opportunities and activities exist"
@@ -230,15 +151,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F08",
-        "F12",
-        "F22"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-17"
-      ],
+      "workspaces": ["F08", "F12", "F22"],
+      "canonicalFamilies": ["BOF-03", "BOF-17"],
       "canonicalObjects": [
         "Customer Case",
         "Service Request",
@@ -246,9 +160,7 @@
         "Work Order",
         "SLA"
       ],
-      "processChains": [
-        "service-request-to-resolution"
-      ],
+      "processChains": ["service-request-to-resolution"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Customer Service (CS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Customer requests callouts SLAs dispatch and service history"
@@ -260,16 +172,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-24",
-        "BOF-28",
-        "BOF-29"
-      ],
+      "workspaces": ["F16", "F17", "F29"],
+      "canonicalFamilies": ["BOF-24", "BOF-28", "BOF-29"],
       "canonicalObjects": [
         "Integration Definition",
         "Data Pipeline",
@@ -277,9 +181,7 @@
         "Import/Export Job",
         "Data Mapping"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Data Services (DS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "ETL import export data quality and migration framework"
@@ -291,18 +193,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F23",
-        "F12",
-        "F20",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-12",
-        "BOF-13",
-        "BOF-20",
-        "BOF-21"
-      ],
+      "workspaces": ["F23", "F12", "F20", "F27"],
+      "canonicalFamilies": ["BOF-12", "BOF-13", "BOF-20", "BOF-21"],
       "canonicalObjects": [
         "Hazard/Risk Assessment",
         "Permit to Work",
@@ -310,10 +202,7 @@
         "Environmental Aspect",
         "Compliance Evidence"
       ],
-      "processChains": [
-        "incident/defect/NCR-to-resolution",
-        "plan-to-perform"
-      ],
+      "processChains": ["incident/defect/NCR-to-resolution", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Environment Health and Safety (EHS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Site safety foundations exist; RAMS permits incidents environmental depth remain"
@@ -325,16 +214,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F22",
-        "F12",
-        "F10"
-      ],
-      "canonicalFamilies": [
-        "BOF-16",
-        "BOF-17",
-        "BOF-10"
-      ],
+      "workspaces": ["F22", "F12", "F10"],
+      "canonicalFamilies": ["BOF-16", "BOF-17", "BOF-10"],
       "canonicalObjects": [
         "Asset",
         "Asset Model",
@@ -343,10 +224,7 @@
         "Meter/Condition Reading",
         "Spare/Inventory Item"
       ],
-      "processChains": [
-        "asset-to-retirement",
-        "service-request-to-resolution"
-      ],
+      "processChains": ["asset-to-retirement", "service-request-to-resolution"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Enterprise Asset Management (EAM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Asset maintenance foundations exist; enterprise lifecycle and handover continuity remain"
@@ -358,16 +236,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-24",
-        "BOF-27",
-        "BOF-28"
-      ],
+      "workspaces": ["F16", "F17", "F29"],
+      "canonicalFamilies": ["BOF-24", "BOF-27", "BOF-28"],
       "canonicalObjects": [
         "Business Event",
         "Outbox Event",
@@ -375,9 +245,7 @@
         "Automation Rule",
         "Event Subscription"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Event Management (EM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Audit/outbox foundations exist; enterprise business-event monitoring remains"
@@ -389,13 +257,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F14",
-        "F03"
-      ],
-      "canonicalFamilies": [
-        "BOF-19"
-      ],
+      "workspaces": ["F14", "F03"],
+      "canonicalFamilies": ["BOF-19"],
       "canonicalObjects": [
         "Ledger",
         "Account",
@@ -405,11 +268,7 @@
         "Fixed Asset Accounting",
         "Financial Period"
       ],
-      "processChains": [
-        "record-to-report",
-        "supplier-progress-to-payment",
-        "valuation-to-cash"
-      ],
+      "processChains": ["record-to-report", "supplier-progress-to-payment", "valuation-to-cash"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Extended Financial Management (EFM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "AR accounting AP supplier-payment and bank-reconciliation depth now exist; treasury fixed assets intercompany and consolidation remain"
@@ -421,15 +280,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F10",
-        "F09",
-        "F12"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-09"
-      ],
+      "workspaces": ["F10", "F09", "F12"],
+      "canonicalFamilies": ["BOF-10", "BOF-09"],
       "canonicalObjects": [
         "Warehouse",
         "Store",
@@ -439,10 +291,7 @@
         "Pack",
         "Shipment"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "plan-to-perform"
-      ],
+      "processChains": ["procure-to-pay", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Extended Warehouse Management (EWM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "No warehouse runtime at baseline"
@@ -454,17 +303,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F22",
-        "F14",
-        "F19"
-      ],
-      "canonicalFamilies": [
-        "BOF-16",
-        "BOF-17",
-        "BOF-19",
-        "BOF-22"
-      ],
+      "workspaces": ["F22", "F14", "F19"],
+      "canonicalFamilies": ["BOF-16", "BOF-17", "BOF-19", "BOF-22"],
       "canonicalObjects": [
         "Property",
         "Space",
@@ -473,10 +313,7 @@
         "Rent/Charge",
         "Service Request"
       ],
-      "processChains": [
-        "asset-to-retirement",
-        "record-to-report"
-      ],
+      "processChains": ["asset-to-retirement", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Flexible Real Estate Management (RE-FX) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "No lease occupancy estate runtime at baseline"
@@ -488,13 +325,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F14",
-        "F03"
-      ],
-      "canonicalFamilies": [
-        "BOF-19"
-      ],
+      "workspaces": ["F14", "F03"],
+      "canonicalFamilies": ["BOF-19"],
       "canonicalObjects": [
         "Ledger",
         "Journal",
@@ -505,9 +337,7 @@
         "Financial Period",
         "Fixed Asset Accounting"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Financial Accounting (FI) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "AR GL periods AP supplier payments and bank reconciliation exist; fixed-asset accounting localisation foreign currency intercompany and full close remain"
@@ -519,24 +349,10 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F14",
-        "F01"
-      ],
-      "canonicalFamilies": [
-        "BOF-19",
-        "BOF-02"
-      ],
-      "canonicalObjects": [
-        "Fund/Budget",
-        "Budget Control",
-        "Commitment",
-        "Actual",
-        "Forecast"
-      ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "workspaces": ["F14", "F01"],
+      "canonicalFamilies": ["BOF-19", "BOF-02"],
+      "canonicalObjects": ["Fund/Budget", "Budget Control", "Commitment", "Actual", "Forecast"],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Funds Management (FM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Fund accounting and public-sector budget control extension"
@@ -548,16 +364,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F09",
-        "F10",
-        "F20"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-21",
-        "BOF-29"
-      ],
+      "workspaces": ["F09", "F10", "F20"],
+      "canonicalFamilies": ["BOF-10", "BOF-21", "BOF-29"],
       "canonicalObjects": [
         "Trade Declaration",
         "Shipment",
@@ -565,9 +373,7 @@
         "Compliance Requirement",
         "Jurisdiction"
       ],
-      "processChains": [
-        "procure-to-pay"
-      ],
+      "processChains": ["procure-to-pay"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Global Trade Services (GTS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Cross-border trade compliance extension"
@@ -579,19 +385,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "mandatory-enabler",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F02",
-        "F20",
-        "F19",
-        "F21"
-      ],
-      "canonicalFamilies": [
-        "BOF-01",
-        "BOF-21",
-        "BOF-22",
-        "BOF-28",
-        "BOF-29"
-      ],
+      "workspaces": ["F02", "F20", "F19", "F21"],
+      "canonicalFamilies": ["BOF-01", "BOF-21", "BOF-22", "BOF-28", "BOF-29"],
       "canonicalObjects": [
         "Delegated Authority",
         "Enterprise Risk",
@@ -601,9 +396,7 @@
         "Policy",
         "Evidence Item"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Governance Risk and Compliance (GRC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "RBAC audit SoD time-bounded access delegated access authority and access review exist; PR #135 adds corporate governance frameworks bodies business DoA quorum-controlled decisions policy attestations conflicts and ethics evidence; broader enterprise risk regulatory obligations control testing and assurance remain"
@@ -615,16 +408,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F15",
-        "F14",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-18",
-        "BOF-01",
-        "BOF-19"
-      ],
+      "workspaces": ["F15", "F14", "F27"],
+      "canonicalFamilies": ["BOF-18", "BOF-01", "BOF-19"],
       "canonicalObjects": [
         "Worker Relationship",
         "Position",
@@ -634,10 +419,7 @@
         "Leave/Absence",
         "Payroll Result"
       ],
-      "processChains": [
-        "hire-to-retire",
-        "record-to-report"
-      ],
+      "processChains": ["hire-to-retire", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Human Capital Management (HCM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Workforce time schedule foundations exist; full lifecycle training leave expenses payroll integration remain"
@@ -649,26 +431,15 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F07",
-        "F15",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-18",
-        "BOF-19",
-        "BOF-03"
-      ],
+      "workspaces": ["F07", "F15", "F14"],
+      "canonicalFamilies": ["BOF-18", "BOF-19", "BOF-03"],
       "canonicalObjects": [
         "Incentive Plan",
         "Commission Rule",
         "Sales Performance",
         "Commission Accrual/Payment"
       ],
-      "processChains": [
-        "market-to-contract",
-        "record-to-report"
-      ],
+      "processChains": ["market-to-contract", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Incentive and Commission Management (ICM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Commission and incentive extension"
@@ -680,19 +451,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F01",
-        "F03",
-        "F10",
-        "F11",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-06",
-        "BOF-10",
-        "BOF-11"
-      ],
+      "workspaces": ["F01", "F03", "F10", "F11", "F27"],
+      "canonicalFamilies": ["BOF-02", "BOF-06", "BOF-10", "BOF-11"],
       "canonicalObjects": [
         "Demand Plan",
         "Supply Plan",
@@ -701,10 +461,7 @@
         "Inventory Projection",
         "Production Plan"
       ],
-      "processChains": [
-        "plan-to-perform",
-        "procure-to-pay"
-      ],
+      "processChains": ["plan-to-perform", "procure-to-pay"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Integrated Business Planning (IBP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Integrated demand supply capacity and scenario planning"
@@ -716,16 +473,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F05",
-        "F11",
-        "F26"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-11",
-        "BOF-07"
-      ],
+      "workspaces": ["F05", "F11", "F26"],
+      "canonicalFamilies": ["BOF-10", "BOF-11", "BOF-07"],
       "canonicalObjects": [
         "Item",
         "Item Specification",
@@ -734,10 +483,7 @@
         "Process Plan",
         "Information Container"
       ],
-      "processChains": [
-        "design-to-approved-information",
-        "plan-to-perform"
-      ],
+      "processChains": ["design-to-approved-information", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Integrated Product and Process Engineering (IPPE) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "F05 now provides governed product/service portfolio, needs, investment, design-review, development, launch, lifecycle, retirement and innovation control; product/process engineering, BOM/routing, material and production execution remain"
@@ -749,16 +495,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F26",
-        "F05",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-07",
-        "BOF-25",
-        "BOF-28"
-      ],
+      "workspaces": ["F26", "F05", "F27"],
+      "canonicalFamilies": ["BOF-07", "BOF-25", "BOF-28"],
       "canonicalObjects": [
         "Information Container",
         "Revision",
@@ -766,9 +504,7 @@
         "Record Classification",
         "Retention Evidence"
       ],
-      "processChains": [
-        "design-to-approved-information"
-      ],
+      "processChains": ["design-to-approved-information"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Library / Documentation business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Controlled project documents exist; enterprise knowledge/library layer remains"
@@ -780,16 +516,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "mandatory-enabler",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F17",
-        "F29",
-        "F02"
-      ],
-      "canonicalFamilies": [
-        "BOF-01",
-        "BOF-24",
-        "BOF-29"
-      ],
+      "workspaces": ["F17", "F29", "F02"],
+      "canonicalFamilies": ["BOF-01", "BOF-24", "BOF-29"],
       "canonicalObjects": [
         "Party Master",
         "Reference Data",
@@ -797,9 +525,7 @@
         "Data Quality Rule",
         "Merge/Stewardship Decision"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Master Data Governance (MDG) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Canonical parties exist; stewardship duplicate/merge/governance remain"
@@ -811,16 +537,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F05",
-        "F10",
-        "F11",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-29"
-      ],
+      "workspaces": ["F05", "F10", "F11", "F29"],
+      "canonicalFamilies": ["BOF-10", "BOF-29"],
       "canonicalObjects": [
         "Item",
         "Item Specification",
@@ -828,10 +546,7 @@
         "Classification",
         "Manufacturer/Supplier Relationship"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "plan-to-perform"
-      ],
+      "processChains": ["procure-to-pay", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material MDG for Material Data (MDG-M) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Material/product master required"
@@ -843,17 +558,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F09",
-        "F20",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-01",
-        "BOF-09",
-        "BOF-21",
-        "BOF-29"
-      ],
+      "workspaces": ["F09", "F20", "F29"],
+      "canonicalFamilies": ["BOF-01", "BOF-09", "BOF-21", "BOF-29"],
       "canonicalObjects": [
         "Supplier Relationship",
         "Supplier Qualification",
@@ -861,9 +567,7 @@
         "Supplier Performance Review",
         "Enterprise Risk"
       ],
-      "processChains": [
-        "procure-to-pay"
-      ],
+      "processChains": ["procure-to-pay"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material MDG for Supplier Data (MDG-S) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Supplier parties exist; governed lifecycle onboarding/performance remain"
@@ -875,16 +579,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F09",
-        "F10",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-09",
-        "BOF-10",
-        "BOF-19"
-      ],
+      "workspaces": ["F09", "F10", "F14"],
+      "canonicalFamilies": ["BOF-09", "BOF-10", "BOF-19"],
       "canonicalObjects": [
         "Requisition",
         "Purchase Order",
@@ -892,10 +588,7 @@
         "Inventory Movement",
         "Invoice/Payable"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "supplier-progress-to-payment"
-      ],
+      "processChains": ["procure-to-pay", "supplier-progress-to-payment"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Materials Management (MM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Procurement exists; inventory goods movement and stores remain"
@@ -907,18 +600,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F12",
-        "F15",
-        "F22",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-06",
-        "BOF-16",
-        "BOF-17",
-        "BOF-18"
-      ],
+      "workspaces": ["F12", "F15", "F22", "F27"],
+      "canonicalFamilies": ["BOF-06", "BOF-16", "BOF-17", "BOF-18"],
       "canonicalObjects": [
         "Resource Requirement",
         "Workforce Allocation",
@@ -926,11 +609,7 @@
         "Schedule Assignment",
         "Dispatch"
       ],
-      "processChains": [
-        "plan-to-perform",
-        "hire-to-retire",
-        "service-request-to-resolution"
-      ],
+      "processChains": ["plan-to-perform", "hire-to-retire", "service-request-to-resolution"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Multi-Resource Scheduling (MRS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "People schedule exists; plant service and cross-resource planning remain"
@@ -942,16 +621,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-24",
-        "BOF-27",
-        "BOF-28"
-      ],
+      "workspaces": ["F16", "F17", "F29"],
+      "canonicalFamilies": ["BOF-24", "BOF-27", "BOF-28"],
       "canonicalObjects": [
         "Integration Endpoint",
         "Workflow/Automation",
@@ -959,9 +630,7 @@
         "Monitoring Record",
         "Extension Configuration"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material NetWeaver business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "NuBlox platform exists; extensible enterprise integration/runtime operations remain"
@@ -973,21 +642,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F22",
-        "F23",
-        "F12",
-        "F27",
-        "F20"
-      ],
-      "canonicalFamilies": [
-        "BOF-12",
-        "BOF-13",
-        "BOF-16",
-        "BOF-17",
-        "BOF-20",
-        "BOF-21"
-      ],
+      "workspaces": ["F22", "F23", "F12", "F27", "F20"],
+      "canonicalFamilies": ["BOF-12", "BOF-13", "BOF-16", "BOF-17", "BOF-20", "BOF-21"],
       "canonicalObjects": [
         "Network/Asset",
         "Work Order",
@@ -996,10 +652,7 @@
         "Environmental Evidence",
         "Enterprise Risk"
       ],
-      "processChains": [
-        "asset-to-retirement",
-        "plan-to-perform"
-      ],
+      "processChains": ["asset-to-retirement", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Oil & Gas business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Applicable as energy/utilities/infrastructure professional extension"
@@ -1011,16 +664,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F22",
-        "F12",
-        "F10"
-      ],
-      "canonicalFamilies": [
-        "BOF-16",
-        "BOF-17",
-        "BOF-10"
-      ],
+      "workspaces": ["F22", "F12", "F10"],
+      "canonicalFamilies": ["BOF-16", "BOF-17", "BOF-10"],
       "canonicalObjects": [
         "Asset",
         "Maintenance Plan",
@@ -1029,10 +674,7 @@
         "Meter Reading",
         "Spare/Inventory Item"
       ],
-      "processChains": [
-        "asset-to-retirement",
-        "service-request-to-resolution"
-      ],
+      "processChains": ["asset-to-retirement", "service-request-to-resolution"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Plant Maintenance (PM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "PPM/reactive foundations exist; plant/fleet and lifecycle depth remain"
@@ -1044,16 +686,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F07",
-        "F10",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-10",
-        "BOF-19"
-      ],
+      "workspaces": ["F07", "F10", "F14"],
+      "canonicalFamilies": ["BOF-03", "BOF-10", "BOF-19"],
       "canonicalObjects": [
         "Customer/Sale",
         "Item",
@@ -1062,10 +696,7 @@
         "Payment/Receipt",
         "Inventory Movement"
       ],
-      "processChains": [
-        "market-to-contract",
-        "record-to-report"
-      ],
+      "processChains": ["market-to-contract", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Point of Sale (POS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Builders merchant branch-sales extension"
@@ -1077,19 +708,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F27",
-        "F01",
-        "F03",
-        "F14",
-        "F20"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-06",
-        "BOF-19",
-        "BOF-21"
-      ],
+      "workspaces": ["F27", "F01", "F03", "F14", "F20"],
+      "canonicalFamilies": ["BOF-02", "BOF-06", "BOF-19", "BOF-21"],
       "canonicalObjects": [
         "Portfolio",
         "Programme",
@@ -1100,10 +720,7 @@
         "Project Risk",
         "Project Cost"
       ],
-      "processChains": [
-        "estimate-to-project-control",
-        "plan-to-perform"
-      ],
+      "processChains": ["estimate-to-project-control", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Portfolio and Project Management (PPM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Projects exist; portfolio WBS programme baseline risk and resource controls remain"
@@ -1115,25 +732,10 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F17",
-        "F03",
-        "F20"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-21",
-        "BOF-24"
-      ],
-      "canonicalObjects": [
-        "Analytical Model",
-        "Forecast",
-        "Anomaly/Risk Signal",
-        "KPI Projection"
-      ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "workspaces": ["F17", "F03", "F20"],
+      "canonicalFamilies": ["BOF-02", "BOF-21", "BOF-24"],
+      "canonicalObjects": ["Analytical Model", "Forecast", "Anomaly/Risk Signal", "KPI Projection"],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Predictive Analytics business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Forecasting anomaly/risk prediction after governed data maturity"
@@ -1145,16 +747,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-24",
-        "BOF-27",
-        "BOF-28"
-      ],
+      "workspaces": ["F16", "F17", "F29"],
+      "canonicalFamilies": ["BOF-24", "BOF-27", "BOF-28"],
       "canonicalObjects": [
         "Integration Definition",
         "API/Webhook",
@@ -1162,9 +756,7 @@
         "Message/Event",
         "Transformation Mapping"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Process Integration (PI) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Versioned APIs webhooks adapters orchestration required"
@@ -1176,18 +768,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F05",
-        "F11",
-        "F26",
-        "F13"
-      ],
-      "canonicalFamilies": [
-        "BOF-07",
-        "BOF-10",
-        "BOF-11",
-        "BOF-13"
-      ],
+      "workspaces": ["F05", "F11", "F26", "F13"],
+      "canonicalFamilies": ["BOF-07", "BOF-10", "BOF-11", "BOF-13"],
       "canonicalObjects": [
         "Requirement",
         "Information Container",
@@ -1197,10 +779,7 @@
         "Design Change",
         "Quality Evidence"
       ],
-      "processChains": [
-        "design-to-approved-information",
-        "plan-to-perform"
-      ],
+      "processChains": ["design-to-approved-information", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Product Lifecycle Management (PLM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "F05 now provides governed need-to-design-to-launch-to-retirement lifecycle evidence with versioned business cases and controlled design review; BIM/configuration, BOM/material and production continuity remain"
@@ -1212,16 +791,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F11",
-        "F10",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-11",
-        "BOF-06"
-      ],
+      "workspaces": ["F11", "F10", "F27"],
+      "canonicalFamilies": ["BOF-10", "BOF-11", "BOF-06"],
       "canonicalObjects": [
         "Production Plan",
         "Production Order",
@@ -1230,9 +801,7 @@
         "Capacity Plan",
         "Material Requirement"
       ],
-      "processChains": [
-        "plan-to-perform"
-      ],
+      "processChains": ["plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Production Planning (PP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "BOM routing work-centre fabrication and capacity planning required"
@@ -1244,16 +813,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F27",
-        "F07",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-06",
-        "BOF-08",
-        "BOF-19"
-      ],
+      "workspaces": ["F27", "F07", "F14"],
+      "canonicalFamilies": ["BOF-06", "BOF-08", "BOF-19"],
       "canonicalObjects": [
         "Project",
         "WBS Element",
@@ -1263,10 +824,7 @@
         "Project Cost",
         "Forecast"
       ],
-      "processChains": [
-        "estimate-to-project-control",
-        "change-to-commercial-position"
-      ],
+      "processChains": ["estimate-to-project-control", "change-to-commercial-position"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Project System (PS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Project/commercial foundations exist; WBS programme progress and portfolio depth remain"
@@ -1278,15 +836,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F13",
-        "F23",
-        "F12"
-      ],
-      "canonicalFamilies": [
-        "BOF-13",
-        "BOF-15"
-      ],
+      "workspaces": ["F13", "F23", "F12"],
+      "canonicalFamilies": ["BOF-13", "BOF-15"],
       "canonicalObjects": [
         "Inspection and Test Plan",
         "Inspection",
@@ -1295,10 +846,7 @@
         "Quality Certificate",
         "Calibration/Testing Evidence"
       ],
-      "processChains": [
-        "incident/defect/NCR-to-resolution",
-        "commissioning-to-operation"
-      ],
+      "processChains": ["incident/defect/NCR-to-resolution", "commissioning-to-operation"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Quality Management (QM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Inspection/defect foundations exist; ITP testing calibration certification depth remain"
@@ -1310,17 +858,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F22",
-        "F14",
-        "F19"
-      ],
-      "canonicalFamilies": [
-        "BOF-16",
-        "BOF-17",
-        "BOF-19",
-        "BOF-22"
-      ],
+      "workspaces": ["F22", "F14", "F19"],
+      "canonicalFamilies": ["BOF-16", "BOF-17", "BOF-19", "BOF-22"],
       "canonicalObjects": [
         "Property",
         "Estate",
@@ -1330,10 +869,7 @@
         "Charge",
         "Service Request"
       ],
-      "processChains": [
-        "asset-to-retirement",
-        "record-to-report"
-      ],
+      "processChains": ["asset-to-retirement", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Real Estate Management (RE) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Property/lease/occupancy domain required"
@@ -1345,16 +881,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F07",
-        "F06",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-05",
-        "BOF-19"
-      ],
+      "workspaces": ["F07", "F06", "F14"],
+      "canonicalFamilies": ["BOF-03", "BOF-05", "BOF-19"],
       "canonicalObjects": [
         "Opportunity",
         "Estimate",
@@ -1362,9 +890,7 @@
         "Price/Rate",
         "Offer/Acceptance"
       ],
-      "processChains": [
-        "market-to-contract"
-      ],
+      "processChains": ["market-to-contract"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Real-Time Offer Management (RTOM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Estimates quotations exist; dynamic offer/pricing extension remains"
@@ -1376,19 +902,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F06",
-        "F07",
-        "F09",
-        "F10",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-09",
-        "BOF-10",
-        "BOF-19"
-      ],
+      "workspaces": ["F06", "F07", "F09", "F10", "F14"],
+      "canonicalFamilies": ["BOF-03", "BOF-09", "BOF-10", "BOF-19"],
       "canonicalObjects": [
         "Customer",
         "Item",
@@ -1398,11 +913,7 @@
         "Supplier",
         "Payment"
       ],
-      "processChains": [
-        "market-to-contract",
-        "procure-to-pay",
-        "record-to-report"
-      ],
+      "processChains": ["market-to-contract", "procure-to-pay", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Retail business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Builders merchant/distribution extension"
@@ -1414,15 +925,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F14",
-        "F03",
-        "F01"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-19"
-      ],
+      "workspaces": ["F14", "F03", "F01"],
+      "canonicalFamilies": ["BOF-02", "BOF-19"],
       "canonicalObjects": [
         "Ledger",
         "Journal",
@@ -1433,9 +937,7 @@
         "Fixed Asset Accounting",
         "Consolidation"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material S/4HANA Finance business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Accounting AR AP supplier payments and bank reconciliation now exist; treasury liquidity fixed assets intercompany consolidation and enterprise finance depth remain"
@@ -1447,18 +949,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F09",
-        "F10",
-        "F11",
-        "F12"
-      ],
-      "canonicalFamilies": [
-        "BOF-09",
-        "BOF-10",
-        "BOF-11",
-        "BOF-12"
-      ],
+      "workspaces": ["F09", "F10", "F11", "F12"],
+      "canonicalFamilies": ["BOF-09", "BOF-10", "BOF-11", "BOF-12"],
       "canonicalObjects": [
         "Requisition",
         "Purchase Order",
@@ -1468,10 +960,7 @@
         "Production Plan/Order",
         "Delivery"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "plan-to-perform"
-      ],
+      "processChains": ["procure-to-pay", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material S/4HANA Supply Chain business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Procurement exists; inventory warehouse transport planning manufacturing remain"
@@ -1483,18 +972,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F07",
-        "F08",
-        "F10",
-        "F14"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-05",
-        "BOF-10",
-        "BOF-19"
-      ],
+      "workspaces": ["F07", "F08", "F10", "F14"],
+      "canonicalFamilies": ["BOF-03", "BOF-05", "BOF-10", "BOF-19"],
       "canonicalObjects": [
         "Customer",
         "Quotation",
@@ -1503,10 +982,7 @@
         "Invoice",
         "Receipt"
       ],
-      "processChains": [
-        "market-to-contract",
-        "valuation-to-cash"
-      ],
+      "processChains": ["market-to-contract", "valuation-to-cash"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Sales and Distribution (SD) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "CRM estimates quotes exist; sales/service order and logistics execution remain"
@@ -1518,16 +994,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F10",
-        "F12",
-        "F22"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-16",
-        "BOF-17"
-      ],
+      "workspaces": ["F10", "F12", "F22"],
+      "canonicalFamilies": ["BOF-10", "BOF-16", "BOF-17"],
       "canonicalObjects": [
         "Service Part Item",
         "Inventory Position",
@@ -1535,10 +1003,7 @@
         "Maintenance Plan",
         "Work Order"
       ],
-      "processChains": [
-        "service-request-to-resolution",
-        "asset-to-retirement"
-      ],
+      "processChains": ["service-request-to-resolution", "asset-to-retirement"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Service Parts Planning (SPP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Parts planning linked to field service/inventory required"
@@ -1550,17 +1015,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F20",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-21",
-        "BOF-24",
-        "BOF-28"
-      ],
+      "workspaces": ["F16", "F17", "F20", "F29"],
+      "canonicalFamilies": ["BOF-21", "BOF-24", "BOF-28"],
       "canonicalObjects": [
         "System/Service Configuration",
         "Change Record",
@@ -1568,9 +1024,7 @@
         "Test Evidence",
         "Audit Evidence"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Solution Manager (SolMan) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "CI/testing exists; enterprise runtime observability/admin/change operations remain"
@@ -1582,17 +1036,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F01",
-        "F03",
-        "F14",
-        "F17"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-19",
-        "BOF-24"
-      ],
+      "workspaces": ["F01", "F03", "F14", "F17"],
+      "canonicalFamilies": ["BOF-02", "BOF-19", "BOF-24"],
       "canonicalObjects": [
         "Strategy Framework",
         "KPI Definition",
@@ -1600,9 +1045,7 @@
         "Scenario",
         "Financial Projection"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Strategic Enterprise Management (SEM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "F01 strategy/KPI/scenario foundations plus F03 governed performance frameworks/reporting/variance/benefits and F04 governed corporate-development opportunity, valuation, diligence, transaction, integration/divestiture and strategic-partnership control now exist with F02 approval and F03 benefit traceability; broader analytics and remaining enterprise-finance depth continue"
@@ -1614,17 +1057,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F01",
-        "F03",
-        "F14",
-        "F17"
-      ],
-      "canonicalFamilies": [
-        "BOF-02",
-        "BOF-19",
-        "BOF-24"
-      ],
+      "workspaces": ["F01", "F03", "F14", "F17"],
+      "canonicalFamilies": ["BOF-02", "BOF-19", "BOF-24"],
       "canonicalObjects": [
         "Business Plan",
         "Scenario",
@@ -1632,9 +1066,7 @@
         "KPI Target",
         "Financial Projection"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material SEM Integrated Planning (SEM-IP) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Native strategy-linked plans, KPI targets/forecasts and versioned scenario assumptions/projections now exist; broader enterprise-wide integrated planning remains"
@@ -1646,15 +1078,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F09",
-        "F20"
-      ],
-      "canonicalFamilies": [
-        "BOF-01",
-        "BOF-09",
-        "BOF-21"
-      ],
+      "workspaces": ["F09", "F20"],
+      "canonicalFamilies": ["BOF-01", "BOF-09", "BOF-21"],
       "canonicalObjects": [
         "Supplier Relationship",
         "Supplier Qualification",
@@ -1662,9 +1087,7 @@
         "Supplier Performance Review",
         "Supplier Risk"
       ],
-      "processChains": [
-        "procure-to-pay"
-      ],
+      "processChains": ["procure-to-pay"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Supplier Lifecycle Management (SLC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Supplier records/procurement exist; qualification onboarding performance and risk remain"
@@ -1676,15 +1099,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F09",
-        "F07"
-      ],
-      "canonicalFamilies": [
-        "BOF-01",
-        "BOF-08",
-        "BOF-09"
-      ],
+      "workspaces": ["F09", "F07"],
+      "canonicalFamilies": ["BOF-01", "BOF-08", "BOF-09"],
       "canonicalObjects": [
         "Supplier Relationship",
         "Procurement Package",
@@ -1693,9 +1109,7 @@
         "Award",
         "Contract"
       ],
-      "processChains": [
-        "procure-to-pay"
-      ],
+      "processChains": ["procure-to-pay"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Supplier Relationship Management (SRM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "RFQ/PO foundations exist; strategic sourcing and lifecycle depth remain"
@@ -1707,17 +1121,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F09",
-        "F10",
-        "F11",
-        "F12"
-      ],
-      "canonicalFamilies": [
-        "BOF-09",
-        "BOF-10",
-        "BOF-11"
-      ],
+      "workspaces": ["F09", "F10", "F11", "F12"],
+      "canonicalFamilies": ["BOF-09", "BOF-10", "BOF-11"],
       "canonicalObjects": [
         "Demand/Supply Plan",
         "Requisition",
@@ -1727,10 +1132,7 @@
         "Shipment",
         "Production Plan"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "plan-to-perform"
-      ],
+      "processChains": ["procure-to-pay", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Supply Chain Management (SCM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Major materials inventory warehouse transport planning production gaps remain"
@@ -1742,17 +1144,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F21",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-22",
-        "BOF-24",
-        "BOF-28"
-      ],
+      "workspaces": ["F16", "F17", "F21", "F29"],
+      "canonicalFamilies": ["BOF-22", "BOF-24", "BOF-28"],
       "canonicalObjects": [
         "Migration Job",
         "Data Mapping",
@@ -1760,9 +1153,7 @@
         "Test Dataset",
         "Audit Evidence"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Test Data Migration Server (TDMS) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Controlled migration masking test-data/environment tooling required"
@@ -1774,15 +1165,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F15",
-        "F14",
-        "F27"
-      ],
-      "canonicalFamilies": [
-        "BOF-18",
-        "BOF-19"
-      ],
+      "workspaces": ["F15", "F14", "F27"],
+      "canonicalFamilies": ["BOF-18", "BOF-19"],
       "canonicalObjects": [
         "Worker Relationship",
         "Time Record",
@@ -1790,10 +1174,7 @@
         "Leave/Absence",
         "Payroll Input"
       ],
-      "processChains": [
-        "hire-to-retire",
-        "record-to-report"
-      ],
+      "processChains": ["hire-to-retire", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Time and Attendance Management (TAM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Time foundations exist; attendance leave approvals and workforce lifecycle remain"
@@ -1805,17 +1186,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "contextual-only",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F06",
-        "F07",
-        "F14",
-        "F10"
-      ],
-      "canonicalFamilies": [
-        "BOF-03",
-        "BOF-10",
-        "BOF-19"
-      ],
+      "workspaces": ["F06", "F07", "F14", "F10"],
+      "canonicalFamilies": ["BOF-03", "BOF-10", "BOF-19"],
       "canonicalObjects": [
         "Promotion",
         "Price/Discount Rule",
@@ -1823,10 +1195,7 @@
         "Sales Transaction",
         "Accrual"
       ],
-      "processChains": [
-        "market-to-contract",
-        "record-to-report"
-      ],
+      "processChains": ["market-to-contract", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Trade Promotion Management (TPM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Merchant/distribution promotion extension"
@@ -1838,15 +1207,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F10",
-        "F12",
-        "F22"
-      ],
-      "canonicalFamilies": [
-        "BOF-10",
-        "BOF-16"
-      ],
+      "workspaces": ["F10", "F12", "F22"],
+      "canonicalFamilies": ["BOF-10", "BOF-16"],
       "canonicalObjects": [
         "Transport Order",
         "Shipment",
@@ -1854,10 +1216,7 @@
         "Route/Booking",
         "Vehicle/Asset"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "plan-to-perform"
-      ],
+      "processChains": ["procure-to-pay", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Transportation Management (TM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Delivery route fleet and project-logistics planning required"
@@ -1869,15 +1228,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F14",
-        "F20",
-        "F03"
-      ],
-      "canonicalFamilies": [
-        "BOF-19",
-        "BOF-21"
-      ],
+      "workspaces": ["F14", "F20", "F03"],
+      "canonicalFamilies": ["BOF-19", "BOF-21"],
       "canonicalObjects": [
         "Treasury Position",
         "Cash Forecast",
@@ -1885,9 +1237,7 @@
         "Hedge/Exposure",
         "Bank Account"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Treasury and Risk Management (TRM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Bank control foundations now exist; treasury liquidity forecasting financial risk and governed cash management remain"
@@ -1899,16 +1249,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F15",
-        "F14",
-        "F20"
-      ],
-      "canonicalFamilies": [
-        "BOF-18",
-        "BOF-19",
-        "BOF-21"
-      ],
+      "workspaces": ["F15", "F14", "F20"],
+      "canonicalFamilies": ["BOF-18", "BOF-19", "BOF-21"],
       "canonicalObjects": [
         "Travel Request",
         "Expense Claim",
@@ -1916,10 +1258,7 @@
         "Reimbursement",
         "Travel Risk Assessment"
       ],
-      "processChains": [
-        "hire-to-retire",
-        "record-to-report"
-      ],
+      "processChains": ["hire-to-retire", "record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Travel Management business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Expenses travel approvals and reimbursement required"
@@ -1931,23 +1270,15 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-24",
-        "BOF-27"
-      ],
+      "workspaces": ["F16", "F29"],
+      "canonicalFamilies": ["BOF-24", "BOF-27"],
       "canonicalObjects": [
         "Application Experience",
         "Work Queue",
         "Navigation Context",
         "Accessibility/Preference Configuration"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material User Experience (UX) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Context-first shell exists; full task-first responsive accessibility standard continues"
@@ -1959,17 +1290,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F05",
-        "F07",
-        "F10",
-        "F11"
-      ],
-      "canonicalFamilies": [
-        "BOF-05",
-        "BOF-10",
-        "BOF-11"
-      ],
+      "workspaces": ["F05", "F07", "F10", "F11"],
+      "canonicalFamilies": ["BOF-05", "BOF-10", "BOF-11"],
       "canonicalObjects": [
         "Item Variant",
         "Configuration Rule",
@@ -1977,10 +1299,7 @@
         "Configured Offer",
         "Production Definition"
       ],
-      "processChains": [
-        "market-to-contract",
-        "plan-to-perform"
-      ],
+      "processChains": ["market-to-contract", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Variant Configuration (VC) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Configurable products assemblies and productised-service options"
@@ -1992,21 +1311,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "active-stream-depth",
       "v3Treatment": "contextual-extension",
-      "workspaces": [
-        "F05",
-        "F07",
-        "F09",
-        "F10",
-        "F14",
-        "F22"
-      ],
-      "canonicalFamilies": [
-        "BOF-05",
-        "BOF-09",
-        "BOF-10",
-        "BOF-16",
-        "BOF-19"
-      ],
+      "workspaces": ["F05", "F07", "F09", "F10", "F14", "F22"],
+      "canonicalFamilies": ["BOF-05", "BOF-09", "BOF-10", "BOF-16", "BOF-19"],
       "canonicalObjects": [
         "Vehicle",
         "Item/Variant",
@@ -2016,11 +1322,7 @@
         "Invoice",
         "Maintenance/Service"
       ],
-      "processChains": [
-        "market-to-contract",
-        "procure-to-pay",
-        "asset-to-retirement"
-      ],
+      "processChains": ["market-to-contract", "procure-to-pay", "asset-to-retirement"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox need the automotive importer/dealer vehicle lifecycle represented by SAP VMS, or should it remain a contextual sector extension over canonical Vehicle, Item, sales, procurement, logistics and service identities?",
       "legacyNotes": "Generic asset foundation exists; vehicle/fleet lifecycle and logistics remain"
@@ -2032,14 +1334,8 @@
       "legacyCurrentState": "planned",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "native-core",
-      "workspaces": [
-        "F10",
-        "F09"
-      ],
-      "canonicalFamilies": [
-        "BOF-09",
-        "BOF-10"
-      ],
+      "workspaces": ["F10", "F09"],
+      "canonicalFamilies": ["BOF-09", "BOF-10"],
       "canonicalObjects": [
         "Warehouse",
         "Store",
@@ -2048,10 +1344,7 @@
         "Reservation",
         "Pick/Pack"
       ],
-      "processChains": [
-        "procure-to-pay",
-        "plan-to-perform"
-      ],
+      "processChains": ["procure-to-pay", "plan-to-perform"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Warehouse Management (WM) business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "No warehouse runtime at baseline"
@@ -2063,17 +1356,8 @@
       "legacyCurrentState": "partial",
       "legacyDeliveryTreatment": "sequential-priority",
       "v3Treatment": "platform-enabler",
-      "workspaces": [
-        "F16",
-        "F17",
-        "F29"
-      ],
-      "canonicalFamilies": [
-        "BOF-24",
-        "BOF-27",
-        "BOF-28",
-        "BOF-29"
-      ],
+      "workspaces": ["F16", "F17", "F29"],
+      "canonicalFamilies": ["BOF-24", "BOF-27", "BOF-28", "BOF-29"],
       "canonicalObjects": [
         "Extension Definition",
         "Integration/API",
@@ -2081,9 +1365,7 @@
         "Configuration/Policy",
         "Audit Evidence"
       ],
-      "processChains": [
-        "record-to-report"
-      ],
+      "processChains": ["record-to-report"],
       "benchmarkState": "challenged",
       "challengeQuestion": "Does NuBlox deliver the material Xapps / Cross-Applications business outcome with canonical identity, lifecycle, controls, evidence and cross-workspace continuity without copying SAP module boundaries?",
       "legacyNotes": "Shared cross-domain application foundation exists; supported extension framework remains"

@@ -30,9 +30,27 @@ import { canonicalAggregateFreezeSummary } from './canonical-aggregate-boundary-
 import { activityObjectActionSummary } from './activity-object-action-mapping';
 
 export const sectorLifecycle = [
-  'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
-  'Procure', 'Produce', 'Construct', 'Control', 'Invoice', 'Account', 'Handover', 'Operate', 'Maintain',
-  'Refurbish', 'Dispose'
+  'Market',
+  'Lead',
+  'Opportunity',
+  'Bid',
+  'Estimate',
+  'Proposal',
+  'Quote',
+  'Contract',
+  'Design',
+  'Plan',
+  'Procure',
+  'Produce',
+  'Construct',
+  'Control',
+  'Invoice',
+  'Account',
+  'Handover',
+  'Operate',
+  'Maintain',
+  'Refurbish',
+  'Dispose'
 ] as const;
 
 export const endToEndChains = [
@@ -53,11 +71,22 @@ export const endToEndChains = [
 ] as const;
 
 export const specialistOverlays = [
-  'development', 'design', 'engineering', 'commercial-management', 'contracting', 'trades',
-  'manufacturing', 'infrastructure', 'property-fm', 'retrofit', 'regulation', 'heritage'
+  'development',
+  'design',
+  'engineering',
+  'commercial-management',
+  'contracting',
+  'trades',
+  'manufacturing',
+  'infrastructure',
+  'property-fm',
+  'retrofit',
+  'regulation',
+  'heritage'
 ] as const;
 
-export type SemanticModelState = 'governed-semantic-model' | 'partial-semantic-model' | 'candidate-only';
+export type SemanticModelState =
+  'governed-semantic-model' | 'partial-semantic-model' | 'candidate-only';
 export type SectorLifecycleStage = (typeof sectorLifecycle)[number];
 export type EndToEndChain = (typeof endToEndChains)[number];
 export type SpecialistOverlay = (typeof specialistOverlays)[number];
@@ -76,35 +105,453 @@ const ALL_WORKSPACES = enterpriseFunctions.map((fn) => fn.id);
 const ALL_STAGES = [...sectorLifecycle];
 
 export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
-  { id: 'BOF-01', semanticModelState: 'governed-semantic-model', workspaces: ['F02','F15','F16','F19','F20','F27'], lifecycleStages: ['Market','Contract','Construct','Operate','Maintain'], processChains: ['hire-to-retire','record-to-report'], overlays: ['development','contracting','infrastructure','property-fm'], note: 'Foundation identity, Party, organisation, membership and authority spine is governed.' },
-  { id: 'BOF-02', semanticModelState: 'governed-semantic-model', workspaces: ['F01','F02','F03'], lifecycleStages: ['Plan','Control','Account'], processChains: ['record-to-report'], overlays: ['development','commercial-management'], note: 'Strategy framework/objectives/themes/initiatives, business planning/scenarios/assumptions, KPI/target/observation/snapshot, strategic review, governance body/meeting/agenda, shared decision/action, policy and authority-framework semantics are governed.' },
-  { id: 'BOF-03', semanticModelState: 'governed-semantic-model', workspaces: ['F06','F07','F08'], lifecycleStages: ['Market','Lead','Opportunity','Bid','Proposal','Quote','Contract'], processChains: ['market-to-contract'], overlays: ['development','commercial-management','contracting'], note: 'Market insight, Party Relationship/account context, Lead, Opportunity, Pursuit, decision, interaction, onboarding and customer-case semantics are governed.' },
-  { id: 'BOF-04', semanticModelState: 'governed-semantic-model', workspaces: ['F04','F14','F19','F22','F27'], lifecycleStages: ['Opportunity','Estimate','Plan','Contract','Design','Construct','Operate','Refurbish','Dispose'], processChains: ['market-to-contract','asset-to-retirement'], overlays: ['development','infrastructure','property-fm','retrofit','regulation','heritage'], note: 'Development opportunity/business case/appraisal, land option, parcel/property-interest, development constraint, property valuation/survey, planning application/consent/conditions/obligations and funding evidence semantics are governed.' },
-  { id: 'BOF-05', semanticModelState: 'governed-semantic-model', workspaces: ['F07','F09','F14','F27'], lifecycleStages: ['Bid','Estimate','Proposal','Quote','Contract','Control'], processChains: ['market-to-contract','estimate-to-project-control'], overlays: ['commercial-management','contracting','trades'], note: 'Estimate/version, breakdown, take-off, resource build-up, provisions, tender adjudication and customer-offer semantics are governed with shared sourcing reuse.' },
-  { id: 'BOF-06', semanticModelState: 'governed-semantic-model', workspaces: ['F03','F27'], lifecycleStages: ['Plan','Construct','Control','Handover','Refurbish'], processChains: ['estimate-to-project-control','plan-to-perform','change-to-commercial-position'], overlays: ['development','design','engineering','commercial-management','contracting','infrastructure','retrofit'], note: 'Portfolio/programme/project, WBS, schedule, project issue/change, gate-review, handover and closure semantics are governed with shared risk and controlled-information reuse.' },
-  { id: 'BOF-07', semanticModelState: 'governed-semantic-model', workspaces: ['F05','F13','F26','F27'], lifecycleStages: ['Design','Plan','Construct','Control','Handover','Operate','Maintain','Refurbish'], processChains: ['design-to-approved-information','commissioning-to-operation'], overlays: ['design','engineering','infrastructure','retrofit','regulation','heritage'], note: 'Controlled information identity, revision, issue and technical-query semantics are governed.' },
-  { id: 'BOF-08', semanticModelState: 'governed-semantic-model', workspaces: ['F07','F09','F14','F19','F20','F27'], lifecycleStages: ['Quote','Contract','Construct','Control','Invoice','Account','Handover'], processChains: ['market-to-contract','change-to-commercial-position','valuation-to-cash','supplier-progress-to-payment'], overlays: ['commercial-management','contracting','trades','infrastructure'], note: 'Agreement/commercial package/change and payment-chain semantics are governed.' },
-  { id: 'BOF-09', semanticModelState: 'governed-semantic-model', workspaces: ['F09','F10','F14','F27'], lifecycleStages: ['Plan','Procure','Construct','Control','Invoice','Account'], processChains: ['procure-to-pay','supplier-progress-to-payment'], overlays: ['commercial-management','contracting','trades','manufacturing','infrastructure'], note: 'Supplier sourcing, procurement package, award, PO and receipt semantics are governed.' },
-  { id: 'BOF-10', semanticModelState: 'governed-semantic-model', workspaces: ['F05','F09','F10','F11','F12','F22'], lifecycleStages: ['Procure','Produce','Construct','Operate','Maintain'], processChains: ['procure-to-pay','plan-to-perform','service-request-to-resolution','asset-to-retirement'], overlays: ['trades','manufacturing','infrastructure','property-fm','retrofit'], note: 'Item identity, traceability, inventory and logistics semantics are governed.' },
-  { id: 'BOF-11', semanticModelState: 'governed-semantic-model', workspaces: ['F05','F11','F13'], lifecycleStages: ['Produce','Control','Handover'], processChains: ['plan-to-perform'], overlays: ['manufacturing','trades','infrastructure'], note: 'Manufacturing definition, production execution and as-manufactured configuration are governed.' },
-  { id: 'BOF-12', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F13','F23','F27'], lifecycleStages: ['Construct','Control','Handover'], processChains: ['plan-to-perform','incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['engineering','contracting','trades','infrastructure','regulation'], note: 'Site/stage/zone reuse, Work Area, site establishment/mobilisation/access, daily diary, progress/labour/plant/material/delivery evidence, temporary works, permits/isolations, instructions/constraints, field evidence, completion and handover-readiness semantics are governed.' },
-  { id: 'BOF-13', semanticModelState: 'governed-semantic-model', workspaces: ['F13','F20','F23','F27'], lifecycleStages: ['Design','Produce','Construct','Control','Handover','Operate','Maintain'], processChains: ['incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['engineering','contracting','trades','manufacturing','infrastructure','property-fm','regulation'], note: 'Quality planning, verification, nonconformance/CAPA, safe-work controls, incidents, compliance and environmental assurance semantics are governed.' },
-  { id: 'BOF-14', semanticModelState: 'governed-semantic-model', workspaces: ['F13','F19','F20','F23','F27'], lifecycleStages: ['Design','Construct','Control','Handover','Operate'], processChains: ['design-to-approved-information','incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['design','engineering','infrastructure','regulation','heritage'], note: 'Dutyholder, competence evidence, regulator case/application, controlled change, inspection/finding, mandatory occurrence, notice, decision, completion, golden-thread and submission semantics are governed.' },
-  { id: 'BOF-15', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F13','F22','F27'], lifecycleStages: ['Construct','Control','Handover','Operate'], processChains: ['commissioning-to-operation'], overlays: ['engineering','contracting','trades','infrastructure','property-fm','regulation'], note: 'Commissioning, acceptance and handover semantics are governed around persistent System/Asset identity.' },
-  { id: 'BOF-16', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F14','F22','F23','F27'], lifecycleStages: ['Design','Construct','Handover','Operate','Maintain','Refurbish','Dispose'], processChains: ['commissioning-to-operation','asset-to-retirement'], overlays: ['development','design','engineering','infrastructure','property-fm','retrofit','heritage'], note: 'Built-environment spatial and physical identity model is governed.' },
-  { id: 'BOF-17', semanticModelState: 'governed-semantic-model', workspaces: ['F08','F12','F22','F23'], lifecycleStages: ['Operate','Maintain','Refurbish','Dispose'], processChains: ['service-request-to-resolution','asset-to-retirement','incident/defect/NCR-to-resolution'], overlays: ['property-fm','infrastructure','retrofit','regulation'], note: 'Maintenance, service, warranty, condition and whole-life history semantics are governed.' },
-  { id: 'BOF-18', semanticModelState: 'governed-semantic-model', workspaces: ['F15','F27'], lifecycleStages: ['Plan','Construct','Operate','Maintain'], processChains: ['hire-to-retire'], overlays: ['contracting','trades','manufacturing','infrastructure','property-fm'], note: 'Person/worker relationship, position/job, competence/credential, learning, workforce planning, time, payroll, recruitment and employee-case semantics are governed.' },
-  { id: 'BOF-19', semanticModelState: 'governed-semantic-model', workspaces: ['F03','F07','F09','F14','F27'], lifecycleStages: ['Estimate','Quote','Contract','Procure','Produce','Construct','Control','Invoice','Account','Operate','Maintain','Dispose'], processChains: ['estimate-to-project-control','procure-to-pay','change-to-commercial-position','valuation-to-cash','supplier-progress-to-payment','record-to-report'], overlays: ['development','commercial-management','contracting','manufacturing','infrastructure','property-fm'], note: 'Finance, accounting, tax, treasury and project financial-control semantics are governed.' },
-  { id: 'BOF-20', semanticModelState: 'governed-semantic-model', workspaces: ['F03','F09','F14','F22','F23','F27'], lifecycleStages: ['Estimate','Design','Procure','Produce','Construct','Control','Handover','Operate','Maintain','Refurbish','Dispose'], processChains: ['asset-to-retirement','record-to-report'], overlays: ['development','design','engineering','manufacturing','infrastructure','property-fm','retrofit','regulation'], note: 'Carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, environmental/social-value measures and climate/resilience risk semantics are governed.' },
-  { id: 'BOF-21', semanticModelState: 'governed-semantic-model', workspaces: ['F02','F03','F13','F20','F29'], lifecycleStages: ['Plan','Procure','Construct','Control','Operate'], processChains: ['incident/defect/NCR-to-resolution','record-to-report'], overlays: ['commercial-management','contracting','manufacturing','infrastructure','property-fm','regulation'], note: 'Risk framework/identity/assessment/treatment, regulatory obligations, compliance requirements/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics are governed.' },
-  { id: 'BOF-22', semanticModelState: 'governed-semantic-model', workspaces: ['F02','F19','F20','F21','F26'], lifecycleStages: ['Contract','Control','Account','Handover','Operate','Dispose'], processChains: ['record-to-report'], overlays: ['development','commercial-management','contracting','infrastructure','property-fm','regulation','heritage'], note: 'Legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, incidents, international transfer and assurance semantics are governed.' },
-  { id: 'BOF-23', semanticModelState: 'governed-semantic-model', workspaces: ['F16','F18','F24'], lifecycleStages: ['Control','Operate'], processChains: ['incident/defect/NCR-to-resolution','asset-to-retirement'], overlays: ['infrastructure','property-fm','regulation'], note: 'Business impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, DR invocation, physical-security zones/credentials/access events/incidents and specialist risk-assessment semantics are governed.' },
-  { id: 'BOF-24', semanticModelState: 'governed-semantic-model', workspaces: ['F16','F17','F18','F24'], lifecycleStages: ['Plan','Control','Operate','Maintain'], processChains: ['record-to-report','service-request-to-resolution','asset-to-retirement'], overlays: ['engineering','manufacturing','infrastructure','property-fm','regulation'], note: 'Technology services/resources/configuration and ITSM, disaster recovery, data domain/product/dataset/quality/pipeline, analytics/AI, access-control and cyber vulnerability/alert/incident/testing/finding semantics are governed.' },
-  { id: 'BOF-25', semanticModelState: 'governed-semantic-model', workspaces: ['F06','F21','F25','F26'], lifecycleStages: ['Market','Lead','Opportunity','Contract','Control','Handover','Operate','Dispose'], processChains: ['design-to-approved-information','record-to-report'], overlays: ['development','design','commercial-management','regulation','heritage'], note: 'Knowledge/article/collection, record declaration/series/file, retention/disposition, communications/publication, external-affairs and stakeholder-engagement semantics are governed around shared controlled-information and evidence foundations.' },
-  { id: 'BOF-26', semanticModelState: 'governed-semantic-model', workspaces: ['F01','F03','F15','F28','F29'], lifecycleStages: ['Plan','Construct','Control','Operate','Refurbish'], processChains: ['plan-to-perform','record-to-report'], overlays: ['development','contracting','manufacturing','infrastructure','property-fm','retrofit'], note: 'Transformation portfolio/initiative, impact/readiness/adoption/transition, process architecture/model/version/ownership/measurement, analysis, improvement/redesign, SOP and process-compliance semantics are governed with shared portfolio, HCM, communication, decision, information and compliance reuse.' },
-  { id: 'BOF-27', semanticModelState: 'governed-semantic-model', workspaces: ALL_WORKSPACES, lifecycleStages: ALL_STAGES, processChains: [...endToEndChains], overlays: [...specialistOverlays], note: 'Shared work/request/decision primitives are governed cross-workspace and do not replace domain truth.' },
-  { id: 'BOF-28', semanticModelState: 'governed-semantic-model', workspaces: ALL_WORKSPACES, lifecycleStages: ALL_STAGES, processChains: [...endToEndChains], overlays: [...specialistOverlays], note: 'Evidence, audit, correction/reversal, retention and outbox primitives are governed cross-workspace.' },
-  { id: 'BOF-29', semanticModelState: 'governed-semantic-model', workspaces: ALL_WORKSPACES, lifecycleStages: ALL_STAGES, processChains: [...endToEndChains], overlays: [...specialistOverlays], note: 'Reference, classification, jurisdiction and policy/configuration primitives are governed cross-workspace.' }
+  {
+    id: 'BOF-01',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F02', 'F15', 'F16', 'F19', 'F20', 'F27'],
+    lifecycleStages: ['Market', 'Contract', 'Construct', 'Operate', 'Maintain'],
+    processChains: ['hire-to-retire', 'record-to-report'],
+    overlays: ['development', 'contracting', 'infrastructure', 'property-fm'],
+    note: 'Foundation identity, Party, organisation, membership and authority spine is governed.'
+  },
+  {
+    id: 'BOF-02',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F01', 'F02', 'F03'],
+    lifecycleStages: ['Plan', 'Control', 'Account'],
+    processChains: ['record-to-report'],
+    overlays: ['development', 'commercial-management'],
+    note: 'Strategy framework/objectives/themes/initiatives, business planning/scenarios/assumptions, KPI/target/observation/snapshot, strategic review, governance body/meeting/agenda, shared decision/action, policy and authority-framework semantics are governed.'
+  },
+  {
+    id: 'BOF-03',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F06', 'F07', 'F08'],
+    lifecycleStages: ['Market', 'Lead', 'Opportunity', 'Bid', 'Proposal', 'Quote', 'Contract'],
+    processChains: ['market-to-contract'],
+    overlays: ['development', 'commercial-management', 'contracting'],
+    note: 'Market insight, Party Relationship/account context, Lead, Opportunity, Pursuit, decision, interaction, onboarding and customer-case semantics are governed.'
+  },
+  {
+    id: 'BOF-04',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F04', 'F14', 'F19', 'F22', 'F27'],
+    lifecycleStages: [
+      'Opportunity',
+      'Estimate',
+      'Plan',
+      'Contract',
+      'Design',
+      'Construct',
+      'Operate',
+      'Refurbish',
+      'Dispose'
+    ],
+    processChains: ['market-to-contract', 'asset-to-retirement'],
+    overlays: [
+      'development',
+      'infrastructure',
+      'property-fm',
+      'retrofit',
+      'regulation',
+      'heritage'
+    ],
+    note: 'Development opportunity/business case/appraisal, land option, parcel/property-interest, development constraint, property valuation/survey, planning application/consent/conditions/obligations and funding evidence semantics are governed.'
+  },
+  {
+    id: 'BOF-05',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F07', 'F09', 'F14', 'F27'],
+    lifecycleStages: ['Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Control'],
+    processChains: ['market-to-contract', 'estimate-to-project-control'],
+    overlays: ['commercial-management', 'contracting', 'trades'],
+    note: 'Estimate/version, breakdown, take-off, resource build-up, provisions, tender adjudication and customer-offer semantics are governed with shared sourcing reuse.'
+  },
+  {
+    id: 'BOF-06',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F03', 'F27'],
+    lifecycleStages: ['Plan', 'Construct', 'Control', 'Handover', 'Refurbish'],
+    processChains: [
+      'estimate-to-project-control',
+      'plan-to-perform',
+      'change-to-commercial-position'
+    ],
+    overlays: [
+      'development',
+      'design',
+      'engineering',
+      'commercial-management',
+      'contracting',
+      'infrastructure',
+      'retrofit'
+    ],
+    note: 'Portfolio/programme/project, WBS, schedule, project issue/change, gate-review, handover and closure semantics are governed with shared risk and controlled-information reuse.'
+  },
+  {
+    id: 'BOF-07',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F05', 'F13', 'F26', 'F27'],
+    lifecycleStages: [
+      'Design',
+      'Plan',
+      'Construct',
+      'Control',
+      'Handover',
+      'Operate',
+      'Maintain',
+      'Refurbish'
+    ],
+    processChains: ['design-to-approved-information', 'commissioning-to-operation'],
+    overlays: ['design', 'engineering', 'infrastructure', 'retrofit', 'regulation', 'heritage'],
+    note: 'Controlled information identity, revision, issue and technical-query semantics are governed.'
+  },
+  {
+    id: 'BOF-08',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F07', 'F09', 'F14', 'F19', 'F20', 'F27'],
+    lifecycleStages: [
+      'Quote',
+      'Contract',
+      'Construct',
+      'Control',
+      'Invoice',
+      'Account',
+      'Handover'
+    ],
+    processChains: [
+      'market-to-contract',
+      'change-to-commercial-position',
+      'valuation-to-cash',
+      'supplier-progress-to-payment'
+    ],
+    overlays: ['commercial-management', 'contracting', 'trades', 'infrastructure'],
+    note: 'Agreement/commercial package/change and payment-chain semantics are governed.'
+  },
+  {
+    id: 'BOF-09',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F09', 'F10', 'F14', 'F27'],
+    lifecycleStages: ['Plan', 'Procure', 'Construct', 'Control', 'Invoice', 'Account'],
+    processChains: ['procure-to-pay', 'supplier-progress-to-payment'],
+    overlays: ['commercial-management', 'contracting', 'trades', 'manufacturing', 'infrastructure'],
+    note: 'Supplier sourcing, procurement package, award, PO and receipt semantics are governed.'
+  },
+  {
+    id: 'BOF-10',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F05', 'F09', 'F10', 'F11', 'F12', 'F22'],
+    lifecycleStages: ['Procure', 'Produce', 'Construct', 'Operate', 'Maintain'],
+    processChains: [
+      'procure-to-pay',
+      'plan-to-perform',
+      'service-request-to-resolution',
+      'asset-to-retirement'
+    ],
+    overlays: ['trades', 'manufacturing', 'infrastructure', 'property-fm', 'retrofit'],
+    note: 'Item identity, traceability, inventory and logistics semantics are governed.'
+  },
+  {
+    id: 'BOF-11',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F05', 'F11', 'F13'],
+    lifecycleStages: ['Produce', 'Control', 'Handover'],
+    processChains: ['plan-to-perform'],
+    overlays: ['manufacturing', 'trades', 'infrastructure'],
+    note: 'Manufacturing definition, production execution and as-manufactured configuration are governed.'
+  },
+  {
+    id: 'BOF-12',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F12', 'F13', 'F23', 'F27'],
+    lifecycleStages: ['Construct', 'Control', 'Handover'],
+    processChains: [
+      'plan-to-perform',
+      'incident/defect/NCR-to-resolution',
+      'commissioning-to-operation'
+    ],
+    overlays: ['engineering', 'contracting', 'trades', 'infrastructure', 'regulation'],
+    note: 'Site/stage/zone reuse, Work Area, site establishment/mobilisation/access, daily diary, progress/labour/plant/material/delivery evidence, temporary works, permits/isolations, instructions/constraints, field evidence, completion and handover-readiness semantics are governed.'
+  },
+  {
+    id: 'BOF-13',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F13', 'F20', 'F23', 'F27'],
+    lifecycleStages: [
+      'Design',
+      'Produce',
+      'Construct',
+      'Control',
+      'Handover',
+      'Operate',
+      'Maintain'
+    ],
+    processChains: ['incident/defect/NCR-to-resolution', 'commissioning-to-operation'],
+    overlays: [
+      'engineering',
+      'contracting',
+      'trades',
+      'manufacturing',
+      'infrastructure',
+      'property-fm',
+      'regulation'
+    ],
+    note: 'Quality planning, verification, nonconformance/CAPA, safe-work controls, incidents, compliance and environmental assurance semantics are governed.'
+  },
+  {
+    id: 'BOF-14',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F13', 'F19', 'F20', 'F23', 'F27'],
+    lifecycleStages: ['Design', 'Construct', 'Control', 'Handover', 'Operate'],
+    processChains: [
+      'design-to-approved-information',
+      'incident/defect/NCR-to-resolution',
+      'commissioning-to-operation'
+    ],
+    overlays: ['design', 'engineering', 'infrastructure', 'regulation', 'heritage'],
+    note: 'Dutyholder, competence evidence, regulator case/application, controlled change, inspection/finding, mandatory occurrence, notice, decision, completion, golden-thread and submission semantics are governed.'
+  },
+  {
+    id: 'BOF-15',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F12', 'F13', 'F22', 'F27'],
+    lifecycleStages: ['Construct', 'Control', 'Handover', 'Operate'],
+    processChains: ['commissioning-to-operation'],
+    overlays: [
+      'engineering',
+      'contracting',
+      'trades',
+      'infrastructure',
+      'property-fm',
+      'regulation'
+    ],
+    note: 'Commissioning, acceptance and handover semantics are governed around persistent System/Asset identity.'
+  },
+  {
+    id: 'BOF-16',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F12', 'F14', 'F22', 'F23', 'F27'],
+    lifecycleStages: [
+      'Design',
+      'Construct',
+      'Handover',
+      'Operate',
+      'Maintain',
+      'Refurbish',
+      'Dispose'
+    ],
+    processChains: ['commissioning-to-operation', 'asset-to-retirement'],
+    overlays: [
+      'development',
+      'design',
+      'engineering',
+      'infrastructure',
+      'property-fm',
+      'retrofit',
+      'heritage'
+    ],
+    note: 'Built-environment spatial and physical identity model is governed.'
+  },
+  {
+    id: 'BOF-17',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F08', 'F12', 'F22', 'F23'],
+    lifecycleStages: ['Operate', 'Maintain', 'Refurbish', 'Dispose'],
+    processChains: [
+      'service-request-to-resolution',
+      'asset-to-retirement',
+      'incident/defect/NCR-to-resolution'
+    ],
+    overlays: ['property-fm', 'infrastructure', 'retrofit', 'regulation'],
+    note: 'Maintenance, service, warranty, condition and whole-life history semantics are governed.'
+  },
+  {
+    id: 'BOF-18',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F15', 'F27'],
+    lifecycleStages: ['Plan', 'Construct', 'Operate', 'Maintain'],
+    processChains: ['hire-to-retire'],
+    overlays: ['contracting', 'trades', 'manufacturing', 'infrastructure', 'property-fm'],
+    note: 'Person/worker relationship, position/job, competence/credential, learning, workforce planning, time, payroll, recruitment and employee-case semantics are governed.'
+  },
+  {
+    id: 'BOF-19',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F03', 'F07', 'F09', 'F14', 'F27'],
+    lifecycleStages: [
+      'Estimate',
+      'Quote',
+      'Contract',
+      'Procure',
+      'Produce',
+      'Construct',
+      'Control',
+      'Invoice',
+      'Account',
+      'Operate',
+      'Maintain',
+      'Dispose'
+    ],
+    processChains: [
+      'estimate-to-project-control',
+      'procure-to-pay',
+      'change-to-commercial-position',
+      'valuation-to-cash',
+      'supplier-progress-to-payment',
+      'record-to-report'
+    ],
+    overlays: [
+      'development',
+      'commercial-management',
+      'contracting',
+      'manufacturing',
+      'infrastructure',
+      'property-fm'
+    ],
+    note: 'Finance, accounting, tax, treasury and project financial-control semantics are governed.'
+  },
+  {
+    id: 'BOF-20',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F03', 'F09', 'F14', 'F22', 'F23', 'F27'],
+    lifecycleStages: [
+      'Estimate',
+      'Design',
+      'Procure',
+      'Produce',
+      'Construct',
+      'Control',
+      'Handover',
+      'Operate',
+      'Maintain',
+      'Refurbish',
+      'Dispose'
+    ],
+    processChains: ['asset-to-retirement', 'record-to-report'],
+    overlays: [
+      'development',
+      'design',
+      'engineering',
+      'manufacturing',
+      'infrastructure',
+      'property-fm',
+      'retrofit',
+      'regulation'
+    ],
+    note: 'Carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, environmental/social-value measures and climate/resilience risk semantics are governed.'
+  },
+  {
+    id: 'BOF-21',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F02', 'F03', 'F13', 'F20', 'F29'],
+    lifecycleStages: ['Plan', 'Procure', 'Construct', 'Control', 'Operate'],
+    processChains: ['incident/defect/NCR-to-resolution', 'record-to-report'],
+    overlays: [
+      'commercial-management',
+      'contracting',
+      'manufacturing',
+      'infrastructure',
+      'property-fm',
+      'regulation'
+    ],
+    note: 'Risk framework/identity/assessment/treatment, regulatory obligations, compliance requirements/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics are governed.'
+  },
+  {
+    id: 'BOF-22',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F02', 'F19', 'F20', 'F21', 'F26'],
+    lifecycleStages: ['Contract', 'Control', 'Account', 'Handover', 'Operate', 'Dispose'],
+    processChains: ['record-to-report'],
+    overlays: [
+      'development',
+      'commercial-management',
+      'contracting',
+      'infrastructure',
+      'property-fm',
+      'regulation',
+      'heritage'
+    ],
+    note: 'Legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, incidents, international transfer and assurance semantics are governed.'
+  },
+  {
+    id: 'BOF-23',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F16', 'F18', 'F24'],
+    lifecycleStages: ['Control', 'Operate'],
+    processChains: ['incident/defect/NCR-to-resolution', 'asset-to-retirement'],
+    overlays: ['infrastructure', 'property-fm', 'regulation'],
+    note: 'Business impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, DR invocation, physical-security zones/credentials/access events/incidents and specialist risk-assessment semantics are governed.'
+  },
+  {
+    id: 'BOF-24',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F16', 'F17', 'F18', 'F24'],
+    lifecycleStages: ['Plan', 'Control', 'Operate', 'Maintain'],
+    processChains: ['record-to-report', 'service-request-to-resolution', 'asset-to-retirement'],
+    overlays: ['engineering', 'manufacturing', 'infrastructure', 'property-fm', 'regulation'],
+    note: 'Technology services/resources/configuration and ITSM, disaster recovery, data domain/product/dataset/quality/pipeline, analytics/AI, access-control and cyber vulnerability/alert/incident/testing/finding semantics are governed.'
+  },
+  {
+    id: 'BOF-25',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F06', 'F21', 'F25', 'F26'],
+    lifecycleStages: [
+      'Market',
+      'Lead',
+      'Opportunity',
+      'Contract',
+      'Control',
+      'Handover',
+      'Operate',
+      'Dispose'
+    ],
+    processChains: ['design-to-approved-information', 'record-to-report'],
+    overlays: ['development', 'design', 'commercial-management', 'regulation', 'heritage'],
+    note: 'Knowledge/article/collection, record declaration/series/file, retention/disposition, communications/publication, external-affairs and stakeholder-engagement semantics are governed around shared controlled-information and evidence foundations.'
+  },
+  {
+    id: 'BOF-26',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ['F01', 'F03', 'F15', 'F28', 'F29'],
+    lifecycleStages: ['Plan', 'Construct', 'Control', 'Operate', 'Refurbish'],
+    processChains: ['plan-to-perform', 'record-to-report'],
+    overlays: [
+      'development',
+      'contracting',
+      'manufacturing',
+      'infrastructure',
+      'property-fm',
+      'retrofit'
+    ],
+    note: 'Transformation portfolio/initiative, impact/readiness/adoption/transition, process architecture/model/version/ownership/measurement, analysis, improvement/redesign, SOP and process-compliance semantics are governed with shared portfolio, HCM, communication, decision, information and compliance reuse.'
+  },
+  {
+    id: 'BOF-27',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ALL_WORKSPACES,
+    lifecycleStages: ALL_STAGES,
+    processChains: [...endToEndChains],
+    overlays: [...specialistOverlays],
+    note: 'Shared work/request/decision primitives are governed cross-workspace and do not replace domain truth.'
+  },
+  {
+    id: 'BOF-28',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ALL_WORKSPACES,
+    lifecycleStages: ALL_STAGES,
+    processChains: [...endToEndChains],
+    overlays: [...specialistOverlays],
+    note: 'Evidence, audit, correction/reversal, retention and outbox primitives are governed cross-workspace.'
+  },
+  {
+    id: 'BOF-29',
+    semanticModelState: 'governed-semantic-model',
+    workspaces: ALL_WORKSPACES,
+    lifecycleStages: ALL_STAGES,
+    processChains: [...endToEndChains],
+    overlays: [...specialistOverlays],
+    note: 'Reference, classification, jurisdiction and policy/configuration primitives are governed cross-workspace.'
+  }
 ];
 
 export const governedCanonicalizationDecisions = [
@@ -142,7 +589,9 @@ export const familyCoverageAudit = familyCoverageDefinitions.map((definition) =>
   const family = familyById.get(definition.id);
   if (!family) throw new Error(`Unknown business-object family ${definition.id}`);
   const candidates = register.objects.filter((object) => object.family_id === definition.id);
-  const decidedCandidateCount = candidates.filter((object) => decisionKeys.has(object.candidate_key)).length;
+  const decidedCandidateCount = candidates.filter((object) =>
+    decisionKeys.has(object.candidate_key)
+  ).length;
   const undecidedCandidateCount = candidates.length - decidedCandidateCount;
   return {
     ...definition,
@@ -150,19 +599,26 @@ export const familyCoverageAudit = familyCoverageDefinitions.map((definition) =>
     candidateCount: candidates.length,
     decidedCandidateCount,
     undecidedCandidateCount,
-    decisionCoveragePct: candidates.length ? Math.round((decidedCandidateCount / candidates.length) * 1000) / 10 : 0
+    decisionCoveragePct: candidates.length
+      ? Math.round((decidedCandidateCount / candidates.length) * 1000) / 10
+      : 0
   };
 });
 
 const workspaceCoverage = new Set(familyCoverageDefinitions.flatMap((family) => family.workspaces));
-const lifecycleCoverage = new Set(familyCoverageDefinitions.flatMap((family) => family.lifecycleStages));
-const processCoverage = new Set(familyCoverageDefinitions.flatMap((family) => family.processChains));
+const lifecycleCoverage = new Set(
+  familyCoverageDefinitions.flatMap((family) => family.lifecycleStages)
+);
+const processCoverage = new Set(
+  familyCoverageDefinitions.flatMap((family) => family.processChains)
+);
 const overlayCoverage = new Set(familyCoverageDefinitions.flatMap((family) => family.overlays));
 
 export const convergenceGapFamilies = familyCoverageAudit
   .filter((family) => family.semanticModelState !== 'governed-semantic-model')
   .sort((a, b) => {
-    if (a.semanticModelState !== b.semanticModelState) return a.semanticModelState === 'candidate-only' ? -1 : 1;
+    if (a.semanticModelState !== b.semanticModelState)
+      return a.semanticModelState === 'candidate-only' ? -1 : 1;
     return b.undecidedCandidateCount - a.undecidedCandidateCount;
   });
 
@@ -172,11 +628,18 @@ export const coverageAuditSummary = {
   duplicateGroups: register.summary.duplicateGroups,
   baselineDecisionCount: decisionKeys.size,
   baselineUndecidedCount: register.objects.length - decisionKeys.size,
-  baselineDecisionCoveragePct: Math.round((decisionKeys.size / register.objects.length) * 1000) / 10,
+  baselineDecisionCoveragePct:
+    Math.round((decisionKeys.size / register.objects.length) * 1000) / 10,
   familyCount: familyCoverageAudit.length,
-  governedFamilyCount: familyCoverageAudit.filter((family) => family.semanticModelState === 'governed-semantic-model').length,
-  partialFamilyCount: familyCoverageAudit.filter((family) => family.semanticModelState === 'partial-semantic-model').length,
-  candidateOnlyFamilyCount: familyCoverageAudit.filter((family) => family.semanticModelState === 'candidate-only').length,
+  governedFamilyCount: familyCoverageAudit.filter(
+    (family) => family.semanticModelState === 'governed-semantic-model'
+  ).length,
+  partialFamilyCount: familyCoverageAudit.filter(
+    (family) => family.semanticModelState === 'partial-semantic-model'
+  ).length,
+  candidateOnlyFamilyCount: familyCoverageAudit.filter(
+    (family) => family.semanticModelState === 'candidate-only'
+  ).length,
   workspaceCount: enterpriseFunctions.length,
   coveredWorkspaceCount: workspaceCoverage.size,
   lifecycleStageCount: sectorLifecycle.length,
@@ -223,14 +686,24 @@ export function validateCanonicalCoverageAudit() {
   if (coverageAuditSummary.coveredWorkspaceCount !== enterpriseFunctions.length) return false;
   if (coverageAuditSummary.coveredLifecycleStageCount !== sectorLifecycle.length) return false;
   if (coverageAuditSummary.coveredProcessChainCount !== endToEndChains.length) return false;
-  if (coverageAuditSummary.coveredSpecialistOverlayCount !== specialistOverlays.length) return false;
-  if (![...decisionKeys].every((key) => register.objects.some((object) => object.candidate_key === key))) return false;
+  if (coverageAuditSummary.coveredSpecialistOverlayCount !== specialistOverlays.length)
+    return false;
+  if (
+    ![...decisionKeys].every((key) =>
+      register.objects.some((object) => object.candidate_key === key)
+    )
+  )
+    return false;
   if (coverageAuditSummary.baselineDecisionCount !== register.objects.length) return false;
   if (coverageAuditSummary.baselineUndecidedCount !== 0) return false;
   if (coverageAuditSummary.baselineDecisionCoveragePct !== 100) return false;
   if (coverageAuditSummary.aggregateFreeze.state !== 'frozen') return false;
   if (coverageAuditSummary.aggregateFreeze.frozenFamilyCount !== 29) return false;
-  if (coverageAuditSummary.aggregateFreeze.benchmarkRefinementsAssigned !== coverageAuditSummary.aggregateFreeze.benchmarkRefinementCount) return false;
+  if (
+    coverageAuditSummary.aggregateFreeze.benchmarkRefinementsAssigned !==
+    coverageAuditSummary.aggregateFreeze.benchmarkRefinementCount
+  )
+    return false;
   if (coverageAuditSummary.activityMapping.state !== 'mapped') return false;
   if (coverageAuditSummary.activityMapping.mappedFunctionCount !== 29) return false;
   if (coverageAuditSummary.activityMapping.mappedSubfunctionCount !== 353) return false;
@@ -242,6 +715,7 @@ export function validateCanonicalCoverageAudit() {
   if (coverageAuditSummary.activityMapping.invalidObjectPlacementCount !== 0) return false;
   if (coverageAuditSummary.activityMapping.unsafeProjectionCommandCount !== 0) return false;
   if (coverageAuditSummary.architectureConvergenceState !== 'complete') return false;
-  if (coverageAuditSummary.implementationAuthority !== 'controlled-aggregate-waves-authorized') return false;
+  if (coverageAuditSummary.implementationAuthority !== 'controlled-aggregate-waves-authorized')
+    return false;
   return true;
 }

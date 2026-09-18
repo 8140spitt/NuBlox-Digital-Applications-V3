@@ -43,8 +43,12 @@ export async function bootstrapTenantAdministrator(input: BootstrapInput) {
     if (!identity) {
       partyId = randomUUID();
       identityId = randomUUID();
-      const givenName = input.givenName?.trim() || input.displayName.trim().split(/\s+/)[0] || 'Tenant';
-      const familyName = input.familyName?.trim() || input.displayName.trim().split(/\s+/).slice(1).join(' ') || 'Administrator';
+      const givenName =
+        input.givenName?.trim() || input.displayName.trim().split(/\s+/)[0] || 'Tenant';
+      const familyName =
+        input.familyName?.trim() ||
+        input.displayName.trim().split(/\s+/).slice(1).join(' ') ||
+        'Administrator';
 
       await executeMutation(
         "INSERT INTO parties (id, tenant_id, party_type, display_name, status, version, created_at, updated_at) VALUES (?, ?, 'PERSON', ?, 'ACTIVE', 1, ?, ?)",
@@ -58,7 +62,15 @@ export async function bootstrapTenantAdministrator(input: BootstrapInput) {
       );
       await executeMutation(
         "INSERT INTO user_identities (id, tenant_id, party_id, provider, provider_subject, display_name, status, created_at, updated_at) VALUES (?, ?, ?, 'better-auth', ?, ?, 'ACTIVE', ?, ?)",
-        [identityId, tenant.id, partyId, input.authUserId, input.displayName.trim(), timestamp, timestamp],
+        [
+          identityId,
+          tenant.id,
+          partyId,
+          input.authUserId,
+          input.displayName.trim(),
+          timestamp,
+          timestamp
+        ],
         connection
       );
       changed = true;
@@ -160,23 +172,31 @@ export async function bootstrapTenantAdministrator(input: BootstrapInput) {
         permissions: platformPermissions.map(([permissionKey]) => permissionKey)
       };
 
-      await recordPlatformAudit(context, {
-        aggregateId: 'AGG-01-TENANT',
-        objectType: 'tenant',
-        objectId: tenant.id,
-        action: 'TENANT_ADMINISTRATOR_BOOTSTRAPPED',
-        toState: 'ACTIVE',
-        note: 'Controlled platform bootstrap established the initial tenant administrator.'
-      }, connection);
-      await emitBusinessEvent(context, {
-        aggregateId: 'AGG-01-TENANT',
-        aggregateType: 'Tenant',
-        aggregateObjectId: tenant.id,
-        aggregateVersion,
-        eventType: 'TENANT_ADMINISTRATOR_BOOTSTRAPPED',
-        topic: 'nublox.tenant.authority',
-        payload: { identityId, partyId, roleId: role.id }
-      }, connection);
+      await recordPlatformAudit(
+        context,
+        {
+          aggregateId: 'AGG-01-TENANT',
+          objectType: 'tenant',
+          objectId: tenant.id,
+          action: 'TENANT_ADMINISTRATOR_BOOTSTRAPPED',
+          toState: 'ACTIVE',
+          note: 'Controlled platform bootstrap established the initial tenant administrator.'
+        },
+        connection
+      );
+      await emitBusinessEvent(
+        context,
+        {
+          aggregateId: 'AGG-01-TENANT',
+          aggregateType: 'Tenant',
+          aggregateObjectId: tenant.id,
+          aggregateVersion,
+          eventType: 'TENANT_ADMINISTRATOR_BOOTSTRAPPED',
+          topic: 'nublox.tenant.authority',
+          payload: { identityId, partyId, roleId: role.id }
+        },
+        connection
+      );
     }
 
     return { tenantId: tenant.id, tenantSlug: tenant.slug, partyId, identityId, changed };

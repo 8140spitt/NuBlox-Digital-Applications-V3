@@ -8,11 +8,18 @@ import {
 } from '$lib/server/platform-context';
 
 function displayName(slug: string) {
-  return slug.split('-').filter(Boolean).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ') || 'NuBlox Tenant';
+  return (
+    slug
+      .split('-')
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ') || 'NuBlox Tenant'
+  );
 }
 
 export async function seedDevelopmentTenant(tenantSlug: string) {
-  if (process.env.NODE_ENV === 'production') throw new Error('Development seeding is disabled in production.');
+  if (process.env.NODE_ENV === 'production')
+    throw new Error('Development seeding is disabled in production.');
   await assertDatabaseReady();
   const slug = tenantSlug.trim().toLowerCase();
   if (!slug) throw new Error('Tenant slug is required.');
@@ -28,7 +35,8 @@ export async function seedDevelopmentTenant(tenantSlug: string) {
     // Repair development identities created before Person became a canonical specialisation.
     const person = await queryOne<RowDataPacket & { partyId: string }>(
       'SELECT party_id AS partyId FROM persons WHERE party_id = ?',
-      [identity.partyId], connection
+      [identity.partyId],
+      connection
     );
     if (!person) {
       const timestamp = new Date().toISOString();

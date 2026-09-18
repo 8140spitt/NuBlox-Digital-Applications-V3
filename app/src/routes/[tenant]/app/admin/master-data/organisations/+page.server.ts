@@ -46,7 +46,8 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const organisations = await listOrganisations(context);
   const requestedId = url.searchParams.get('organisation');
-  const selected = organisations.find((item) => item.id === requestedId) ?? organisations[0] ?? null;
+  const selected =
+    organisations.find((item) => item.id === requestedId) ?? organisations[0] ?? null;
 
   return {
     tenantSlug: params.tenant,

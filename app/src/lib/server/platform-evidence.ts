@@ -52,11 +52,22 @@ export async function recordPlatformAudit(
   await executeMutation(
     'INSERT INTO platform_audit_events (id, tenant_id, tenant_slug, aggregate_id, object_type, object_id, action, from_state, to_state, actor_identity_id, actor_party_id, actor_display_name, correlation_id, authority_snapshot_json, note, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [
-      randomUUID(), context.tenantId, context.tenantSlug, input.aggregateId, input.objectType,
-      input.objectId, input.action, input.fromState ?? null, input.toState ?? null,
-      context.userIdentityId, context.actorPartyId, context.actorDisplayName,
-      context.correlationId, JSON.stringify(authoritySnapshot(context)),
-      input.note?.trim() || null, now()
+      randomUUID(),
+      context.tenantId,
+      context.tenantSlug,
+      input.aggregateId,
+      input.objectType,
+      input.objectId,
+      input.action,
+      input.fromState ?? null,
+      input.toState ?? null,
+      context.userIdentityId,
+      context.actorPartyId,
+      context.actorDisplayName,
+      context.correlationId,
+      JSON.stringify(authoritySnapshot(context)),
+      input.note?.trim() || null,
+      now()
     ],
     executor
   );
@@ -85,13 +96,33 @@ export async function emitBusinessEvent(
 
   await executeMutation(
     'INSERT INTO business_events (id, tenant_id, aggregate_id, aggregate_type, aggregate_object_id, event_type, aggregate_version, actor_identity_id, correlation_id, payload_json, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [eventId, context.tenantId, input.aggregateId, input.aggregateType, input.aggregateObjectId, input.eventType, input.aggregateVersion, context.userIdentityId, context.correlationId, payload, timestamp],
+    [
+      eventId,
+      context.tenantId,
+      input.aggregateId,
+      input.aggregateType,
+      input.aggregateObjectId,
+      input.eventType,
+      input.aggregateVersion,
+      context.userIdentityId,
+      context.correlationId,
+      payload,
+      timestamp
+    ],
     executor
   );
 
   await executeMutation(
-    'INSERT INTO outbox_messages (id, tenant_id, business_event_id, topic, payload_json, status, attempts, available_at, created_at) VALUES (?, ?, ?, ?, ?, \'PENDING\', 0, ?, ?)',
-    [randomUUID(), context.tenantId, eventId, input.topic ?? 'nublox.' + input.aggregateType.toLowerCase(), payload, timestamp, timestamp],
+    "INSERT INTO outbox_messages (id, tenant_id, business_event_id, topic, payload_json, status, attempts, available_at, created_at) VALUES (?, ?, ?, ?, ?, 'PENDING', 0, ?, ?)",
+    [
+      randomUUID(),
+      context.tenantId,
+      eventId,
+      input.topic ?? 'nublox.' + input.aggregateType.toLowerCase(),
+      payload,
+      timestamp,
+      timestamp
+    ],
     executor
   );
 

@@ -15,13 +15,7 @@ import {
 } from '$lib/server/platform-evidence';
 
 export type StrategyFrameworkStatus =
-  | 'DRAFT'
-  | 'IN_REVIEW'
-  | 'RETURNED'
-  | 'APPROVED'
-  | 'PUBLISHED'
-  | 'SUPERSEDED'
-  | 'REJECTED';
+  'DRAFT' | 'IN_REVIEW' | 'RETURNED' | 'APPROVED' | 'PUBLISHED' | 'SUPERSEDED' | 'REJECTED';
 
 export type StrategyFramework = {
   id: string;
@@ -144,7 +138,9 @@ async function evidence(
   );
 }
 
-export async function listStrategyFrameworks(context: CommandContext): Promise<StrategyFramework[]> {
+export async function listStrategyFrameworks(
+  context: CommandContext
+): Promise<StrategyFramework[]> {
   assertPermission(context, 'strategy.framework.read');
   return queryRows<RowDataPacket & StrategyFramework>(
     frameworkSelect + ' WHERE tenant_id = ? ORDER BY updated_at DESC',
@@ -161,7 +157,7 @@ export async function createStrategyFramework(
     const id = randomUUID();
     const timestamp = now();
     await executeMutation(
-      'INSERT INTO strategy_frameworks (id, tenant_id, title, purpose, vision, mission, direction, review_cadence, status, current_version, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, \'DRAFT\', 0, ?, ?)',
+      "INSERT INTO strategy_frameworks (id, tenant_id, title, purpose, vision, mission, direction, review_cadence, status, current_version, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'DRAFT', 0, ?, ?)",
       [
         id,
         context.tenantId,
@@ -209,7 +205,14 @@ export async function updateStrategyFramework(
       connection
     );
     const updated = await getFramework(context, id, connection);
-    await evidence(context, updated, 'STRATEGY_FRAMEWORK_CHANGED', framework.status, updated.status, connection);
+    await evidence(
+      context,
+      updated,
+      'STRATEGY_FRAMEWORK_CHANGED',
+      framework.status,
+      updated.status,
+      connection
+    );
   });
 }
 
@@ -223,17 +226,24 @@ export async function submitStrategyFramework(context: CommandContext, id: strin
     const versionNo = framework.currentVersion + 1;
     const timestamp = now();
     await executeMutation(
-      'INSERT INTO strategy_framework_versions (id, framework_id, version_no, snapshot_json, status, created_at, created_by) VALUES (?, ?, ?, ?, \'IN_REVIEW\', ?, ?)',
+      "INSERT INTO strategy_framework_versions (id, framework_id, version_no, snapshot_json, status, created_at, created_by) VALUES (?, ?, ?, ?, 'IN_REVIEW', ?, ?)",
       [randomUUID(), id, versionNo, snapshot(framework), timestamp, context.actorDisplayName],
       connection
     );
     await executeMutation(
-      'UPDATE strategy_frameworks SET status = \'IN_REVIEW\', current_version = ?, submitted_at = ?, updated_at = ? WHERE tenant_id = ? AND id = ?',
+      "UPDATE strategy_frameworks SET status = 'IN_REVIEW', current_version = ?, submitted_at = ?, updated_at = ? WHERE tenant_id = ? AND id = ?",
       [versionNo, timestamp, timestamp, context.tenantId, id],
       connection
     );
     const updated = await getFramework(context, id, connection);
-    await evidence(context, updated, 'STRATEGY_FRAMEWORK_SUBMITTED', framework.status, 'IN_REVIEW', connection);
+    await evidence(
+      context,
+      updated,
+      'STRATEGY_FRAMEWORK_SUBMITTED',
+      framework.status,
+      'IN_REVIEW',
+      connection
+    );
   });
 }
 
@@ -243,20 +253,29 @@ export async function returnStrategyFramework(context: CommandContext, id: strin
   if (!cleanNote) throw new Error('A return reason is required.');
   return dbTransaction(async (connection) => {
     const framework = await getFramework(context, id, connection);
-    if (framework.status !== 'IN_REVIEW') throw new Error('Only in-review frameworks can be returned.');
+    if (framework.status !== 'IN_REVIEW')
+      throw new Error('Only in-review frameworks can be returned.');
     const timestamp = now();
     await executeMutation(
-      'UPDATE strategy_frameworks SET status = \'RETURNED\', updated_at = ? WHERE tenant_id = ? AND id = ?',
+      "UPDATE strategy_frameworks SET status = 'RETURNED', updated_at = ? WHERE tenant_id = ? AND id = ?",
       [timestamp, context.tenantId, id],
       connection
     );
     await executeMutation(
-      'UPDATE strategy_framework_versions SET status = \'RETURNED\', decision_note = ? WHERE framework_id = ? AND version_no = ?',
+      "UPDATE strategy_framework_versions SET status = 'RETURNED', decision_note = ? WHERE framework_id = ? AND version_no = ?",
       [cleanNote, id, framework.currentVersion],
       connection
     );
     const updated = await getFramework(context, id, connection);
-    await evidence(context, updated, 'STRATEGY_FRAMEWORK_RETURNED', 'IN_REVIEW', 'RETURNED', connection, cleanNote);
+    await evidence(
+      context,
+      updated,
+      'STRATEGY_FRAMEWORK_RETURNED',
+      'IN_REVIEW',
+      'RETURNED',
+      connection,
+      cleanNote
+    );
   });
 }
 
@@ -264,20 +283,29 @@ export async function approveStrategyFramework(context: CommandContext, id: stri
   assertPermission(context, 'strategy.framework.approve');
   return dbTransaction(async (connection) => {
     const framework = await getFramework(context, id, connection);
-    if (framework.status !== 'IN_REVIEW') throw new Error('Only in-review frameworks can be approved.');
+    if (framework.status !== 'IN_REVIEW')
+      throw new Error('Only in-review frameworks can be approved.');
     const timestamp = now();
     await executeMutation(
-      'UPDATE strategy_frameworks SET status = \'APPROVED\', approved_at = ?, updated_at = ? WHERE tenant_id = ? AND id = ?',
+      "UPDATE strategy_frameworks SET status = 'APPROVED', approved_at = ?, updated_at = ? WHERE tenant_id = ? AND id = ?",
       [timestamp, timestamp, context.tenantId, id],
       connection
     );
     await executeMutation(
-      'UPDATE strategy_framework_versions SET status = \'APPROVED\', decision_note = ? WHERE framework_id = ? AND version_no = ?',
+      "UPDATE strategy_framework_versions SET status = 'APPROVED', decision_note = ? WHERE framework_id = ? AND version_no = ?",
       [note?.trim() || null, id, framework.currentVersion],
       connection
     );
     const updated = await getFramework(context, id, connection);
-    await evidence(context, updated, 'STRATEGY_FRAMEWORK_APPROVED', 'IN_REVIEW', 'APPROVED', connection, note);
+    await evidence(
+      context,
+      updated,
+      'STRATEGY_FRAMEWORK_APPROVED',
+      'IN_REVIEW',
+      'APPROVED',
+      connection,
+      note
+    );
   });
 }
 
@@ -287,20 +315,29 @@ export async function rejectStrategyFramework(context: CommandContext, id: strin
   if (!cleanNote) throw new Error('A rejection reason is required.');
   return dbTransaction(async (connection) => {
     const framework = await getFramework(context, id, connection);
-    if (framework.status !== 'IN_REVIEW') throw new Error('Only in-review frameworks can be rejected.');
+    if (framework.status !== 'IN_REVIEW')
+      throw new Error('Only in-review frameworks can be rejected.');
     const timestamp = now();
     await executeMutation(
-      'UPDATE strategy_frameworks SET status = \'REJECTED\', updated_at = ? WHERE tenant_id = ? AND id = ?',
+      "UPDATE strategy_frameworks SET status = 'REJECTED', updated_at = ? WHERE tenant_id = ? AND id = ?",
       [timestamp, context.tenantId, id],
       connection
     );
     await executeMutation(
-      'UPDATE strategy_framework_versions SET status = \'REJECTED\', decision_note = ? WHERE framework_id = ? AND version_no = ?',
+      "UPDATE strategy_framework_versions SET status = 'REJECTED', decision_note = ? WHERE framework_id = ? AND version_no = ?",
       [cleanNote, id, framework.currentVersion],
       connection
     );
     const updated = await getFramework(context, id, connection);
-    await evidence(context, updated, 'STRATEGY_FRAMEWORK_REJECTED', 'IN_REVIEW', 'REJECTED', connection, cleanNote);
+    await evidence(
+      context,
+      updated,
+      'STRATEGY_FRAMEWORK_REJECTED',
+      'IN_REVIEW',
+      'REJECTED',
+      connection,
+      cleanNote
+    );
   });
 }
 
@@ -308,23 +345,24 @@ export async function publishStrategyFramework(context: CommandContext, id: stri
   assertPermission(context, 'strategy.framework.publish');
   return dbTransaction(async (connection) => {
     const framework = await getFramework(context, id, connection);
-    if (framework.status !== 'APPROVED') throw new Error('Only approved frameworks can be published.');
+    if (framework.status !== 'APPROVED')
+      throw new Error('Only approved frameworks can be published.');
 
     const timestamp = now();
     const existing = await queryRows<RowDataPacket & StrategyFramework>(
-      frameworkSelect + ' WHERE tenant_id = ? AND status = \'PUBLISHED\' AND id <> ?',
+      frameworkSelect + " WHERE tenant_id = ? AND status = 'PUBLISHED' AND id <> ?",
       [context.tenantId, id],
       connection
     );
 
     for (const previous of existing) {
       await executeMutation(
-        'UPDATE strategy_frameworks SET status = \'SUPERSEDED\', updated_at = ? WHERE tenant_id = ? AND id = ?',
+        "UPDATE strategy_frameworks SET status = 'SUPERSEDED', updated_at = ? WHERE tenant_id = ? AND id = ?",
         [timestamp, context.tenantId, previous.id],
         connection
       );
       await executeMutation(
-        'UPDATE strategy_framework_versions SET status = \'SUPERSEDED\' WHERE framework_id = ? AND version_no = ?',
+        "UPDATE strategy_framework_versions SET status = 'SUPERSEDED' WHERE framework_id = ? AND version_no = ?",
         [previous.id, previous.currentVersion],
         connection
       );
@@ -341,17 +379,25 @@ export async function publishStrategyFramework(context: CommandContext, id: stri
     }
 
     await executeMutation(
-      'UPDATE strategy_frameworks SET status = \'PUBLISHED\', published_at = ?, updated_at = ? WHERE tenant_id = ? AND id = ?',
+      "UPDATE strategy_frameworks SET status = 'PUBLISHED', published_at = ?, updated_at = ? WHERE tenant_id = ? AND id = ?",
       [timestamp, timestamp, context.tenantId, id],
       connection
     );
     await executeMutation(
-      'UPDATE strategy_framework_versions SET status = \'PUBLISHED\', decision_note = COALESCE(?, decision_note) WHERE framework_id = ? AND version_no = ?',
+      "UPDATE strategy_framework_versions SET status = 'PUBLISHED', decision_note = COALESCE(?, decision_note) WHERE framework_id = ? AND version_no = ?",
       [note?.trim() || null, id, framework.currentVersion],
       connection
     );
     const published = await getFramework(context, id, connection);
-    await evidence(context, published, 'STRATEGY_FRAMEWORK_PUBLISHED', 'APPROVED', 'PUBLISHED', connection, note);
+    await evidence(
+      context,
+      published,
+      'STRATEGY_FRAMEWORK_PUBLISHED',
+      'APPROVED',
+      'PUBLISHED',
+      connection,
+      note
+    );
   });
 }
 

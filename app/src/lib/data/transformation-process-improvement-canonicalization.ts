@@ -1,27 +1,174 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
-export const transformationProcessImprovementCanonicalization: FoundationCanonicalizationDecision[] = [
-  { candidateKey: 'BOF-26-001', decision: 'MERGE', targetCandidateKey: 'BOF-06-001', proposedCanonicalName: 'Portfolio', notes: 'Transformation Portfolio reuses the shared Portfolio governance context. Transformation is a portfolio purpose/type, not a second portfolio master.' },
-  { candidateKey: 'BOF-26-002', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Transformation Initiative', notes: 'Governed organisational/process transformation intervention with outcomes, sponsor, affected scope, benefits, impacts, readiness and delivery links. It is distinct from Strategic Initiative and from the Programme/Project used to deliver it.' },
-  { candidateKey: 'BOF-26-003', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Change Impact Assessment', notes: 'Dated assessment evidence evaluating impacts of a proposed transformation/change on Parties, roles, processes, organisation, technology, locations and controls.' },
-  { candidateKey: 'BOF-26-004', decision: 'RELATIONSHIP', proposedCanonicalName: 'Stakeholder Cohort', notes: 'Governed cohort/grouping relationship over canonical Parties or organisational populations for change impact, engagement and adoption planning. It never creates duplicate Person/Organisation identities.' },
-  { candidateKey: 'BOF-26-005', decision: 'MERGE', targetCandidateKey: 'BOF-06-024', proposedCanonicalName: 'Decision Action', notes: 'Change Action reuses the shared Decision Action pattern with transformation/assessment/decision source, accountable owner, due date and closure evidence.' },
-  { candidateKey: 'BOF-26-006', decision: 'MERGE', targetCandidateKey: 'BOF-25-012', proposedCanonicalName: 'Communication Item', notes: 'Change Communication reuses shared Communication Item execution semantics; exact message/content remains controlled Information Container content.' },
-  { candidateKey: 'BOF-26-007', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Readiness Plan', notes: 'Versioned plan coordinating readiness outcomes, affected cohorts, actions, communications, learning, support and acceptance criteria for a Transformation Initiative or transition.' },
-  { candidateKey: 'BOF-26-008', decision: 'RENAME', proposedCanonicalName: 'Change Learning Plan', notes: 'Transformation-scoped learning rollout plan defining cohorts, capability gaps, courses/sessions, timing and completion expectations. It is distinct from an individual/team HCM Learning Plan and from actual Learning Records.' },
-  { candidateKey: 'BOF-26-009', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Readiness Assessment', notes: 'Dated assessment evidence measuring readiness of exact stakeholder/organisation/process scope against defined readiness criteria before or after transition.' },
-  { candidateKey: 'BOF-26-010', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Adoption Intervention', notes: 'Governed change/adoption intervention such as coaching, reinforcement, champions, support or targeted engagement with defined audience, objective and outcome evidence.' },
-  { candidateKey: 'BOF-26-011', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Organisation Transition', notes: 'Governed transition case/event coordinating effective movement from current to target organisation/process operating state, including cutover, assignments, responsibilities and evidence.' },
-  { candidateKey: 'BOF-26-012', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Process Architecture', notes: 'Governed enterprise process architecture/framework organising process domains, hierarchy, ownership and relationships without becoming the organisation chart or workflow engine.' },
-  { candidateKey: 'BOF-26-013', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Enterprise Process', notes: 'Stable identity for a business process/capability flow across organisational and system boundaries, independent of any one process model, SOP or workflow implementation.' },
-  { candidateKey: 'BOF-26-014', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Process Model', notes: 'Governed structured process model/definition representing an Enterprise Process through controlled versions. Renderings/files may use Information Container representations without replacing the structured model.' },
-  { candidateKey: 'BOF-26-015', decision: 'CHILD', proposedCanonicalName: 'Process Version', notes: 'Controlled version of one Process Model/Enterprise Process definition preserving effective dates, approved structure, rules and predecessor/successor traceability.' },
-  { candidateKey: 'BOF-26-016', decision: 'MERGE', targetCandidateKey: 'BOF-06-020', proposedCanonicalName: 'Responsibility Assignment', notes: 'Process Owner Assignment reuses the shared Responsibility Assignment pattern with Enterprise Process as target and process-owner responsibility type.' },
-  { candidateKey: 'BOF-26-017', decision: 'MERGE', targetCandidateKey: 'BOF-02-008', proposedCanonicalName: 'KPI Definition', notes: 'Process Measure reuses the enterprise metric/KPI definition pattern for process-scoped measures; observations and targets remain separately governed.' },
-  { candidateKey: 'BOF-26-018', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Process Analysis', notes: 'Dated analytical assessment of an exact Process Version and evidence set covering performance, variation, bottlenecks, controls, waste, risk and improvement findings.' },
-  { candidateKey: 'BOF-26-019', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Improvement Opportunity', notes: 'Governed opportunity/case identifying a potential process/operating improvement with problem/opportunity statement, evidence, expected benefit, scope and prioritisation.' },
-  { candidateKey: 'BOF-26-020', decision: 'RENAME', proposedCanonicalName: 'Process Redesign Proposal', notes: 'Governed proposal for a future-state process design linked to exact current Process Version, analysis, assumptions, impacts, expected benefits and approval/decision evidence.' },
-  { candidateKey: 'BOF-26-021', decision: 'MERGE', targetCandidateKey: 'BOF-07-007', proposedCanonicalName: 'Information Container', notes: 'Standard Operating Procedure is a controlled Information Container type/profile with exact process/version applicability, approval, issue and supersession.' },
-  { candidateKey: 'BOF-26-022', decision: 'MERGE', targetCandidateKey: 'BOF-21-007', proposedCanonicalName: 'Compliance Assessment', notes: 'Process Compliance Assessment reuses shared Compliance Assessment evidence against exact Process Version, requirements, controls and evidence.' },
-  { candidateKey: 'BOF-26-023', decision: 'MERGE', targetCandidateKey: 'BOF-26-002', proposedCanonicalName: 'Transformation Initiative', notes: 'Improvement Initiative uses the Transformation Initiative/change-initiative pattern with improvement type/scale. It does not require a second initiative master.' }
-];
+export const transformationProcessImprovementCanonicalization: FoundationCanonicalizationDecision[] =
+  [
+    {
+      candidateKey: 'BOF-26-001',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-06-001',
+      proposedCanonicalName: 'Portfolio',
+      notes:
+        'Transformation Portfolio reuses the shared Portfolio governance context. Transformation is a portfolio purpose/type, not a second portfolio master.'
+    },
+    {
+      candidateKey: 'BOF-26-002',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Transformation Initiative',
+      notes:
+        'Governed organisational/process transformation intervention with outcomes, sponsor, affected scope, benefits, impacts, readiness and delivery links. It is distinct from Strategic Initiative and from the Programme/Project used to deliver it.'
+    },
+    {
+      candidateKey: 'BOF-26-003',
+      decision: 'EVENT_EVIDENCE',
+      proposedCanonicalName: 'Change Impact Assessment',
+      notes:
+        'Dated assessment evidence evaluating impacts of a proposed transformation/change on Parties, roles, processes, organisation, technology, locations and controls.'
+    },
+    {
+      candidateKey: 'BOF-26-004',
+      decision: 'RELATIONSHIP',
+      proposedCanonicalName: 'Stakeholder Cohort',
+      notes:
+        'Governed cohort/grouping relationship over canonical Parties or organisational populations for change impact, engagement and adoption planning. It never creates duplicate Person/Organisation identities.'
+    },
+    {
+      candidateKey: 'BOF-26-005',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-06-024',
+      proposedCanonicalName: 'Decision Action',
+      notes:
+        'Change Action reuses the shared Decision Action pattern with transformation/assessment/decision source, accountable owner, due date and closure evidence.'
+    },
+    {
+      candidateKey: 'BOF-26-006',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-25-012',
+      proposedCanonicalName: 'Communication Item',
+      notes:
+        'Change Communication reuses shared Communication Item execution semantics; exact message/content remains controlled Information Container content.'
+    },
+    {
+      candidateKey: 'BOF-26-007',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Readiness Plan',
+      notes:
+        'Versioned plan coordinating readiness outcomes, affected cohorts, actions, communications, learning, support and acceptance criteria for a Transformation Initiative or transition.'
+    },
+    {
+      candidateKey: 'BOF-26-008',
+      decision: 'RENAME',
+      proposedCanonicalName: 'Change Learning Plan',
+      notes:
+        'Transformation-scoped learning rollout plan defining cohorts, capability gaps, courses/sessions, timing and completion expectations. It is distinct from an individual/team HCM Learning Plan and from actual Learning Records.'
+    },
+    {
+      candidateKey: 'BOF-26-009',
+      decision: 'EVENT_EVIDENCE',
+      proposedCanonicalName: 'Readiness Assessment',
+      notes:
+        'Dated assessment evidence measuring readiness of exact stakeholder/organisation/process scope against defined readiness criteria before or after transition.'
+    },
+    {
+      candidateKey: 'BOF-26-010',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Adoption Intervention',
+      notes:
+        'Governed change/adoption intervention such as coaching, reinforcement, champions, support or targeted engagement with defined audience, objective and outcome evidence.'
+    },
+    {
+      candidateKey: 'BOF-26-011',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Organisation Transition',
+      notes:
+        'Governed transition case/event coordinating effective movement from current to target organisation/process operating state, including cutover, assignments, responsibilities and evidence.'
+    },
+    {
+      candidateKey: 'BOF-26-012',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Process Architecture',
+      notes:
+        'Governed enterprise process architecture/framework organising process domains, hierarchy, ownership and relationships without becoming the organisation chart or workflow engine.'
+    },
+    {
+      candidateKey: 'BOF-26-013',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Enterprise Process',
+      notes:
+        'Stable identity for a business process/capability flow across organisational and system boundaries, independent of any one process model, SOP or workflow implementation.'
+    },
+    {
+      candidateKey: 'BOF-26-014',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Process Model',
+      notes:
+        'Governed structured process model/definition representing an Enterprise Process through controlled versions. Renderings/files may use Information Container representations without replacing the structured model.'
+    },
+    {
+      candidateKey: 'BOF-26-015',
+      decision: 'CHILD',
+      proposedCanonicalName: 'Process Version',
+      notes:
+        'Controlled version of one Process Model/Enterprise Process definition preserving effective dates, approved structure, rules and predecessor/successor traceability.'
+    },
+    {
+      candidateKey: 'BOF-26-016',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-06-020',
+      proposedCanonicalName: 'Responsibility Assignment',
+      notes:
+        'Process Owner Assignment reuses the shared Responsibility Assignment pattern with Enterprise Process as target and process-owner responsibility type.'
+    },
+    {
+      candidateKey: 'BOF-26-017',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-02-008',
+      proposedCanonicalName: 'KPI Definition',
+      notes:
+        'Process Measure reuses the enterprise metric/KPI definition pattern for process-scoped measures; observations and targets remain separately governed.'
+    },
+    {
+      candidateKey: 'BOF-26-018',
+      decision: 'EVENT_EVIDENCE',
+      proposedCanonicalName: 'Process Analysis',
+      notes:
+        'Dated analytical assessment of an exact Process Version and evidence set covering performance, variation, bottlenecks, controls, waste, risk and improvement findings.'
+    },
+    {
+      candidateKey: 'BOF-26-019',
+      decision: 'VALIDATE_OBJECT',
+      proposedCanonicalName: 'Improvement Opportunity',
+      notes:
+        'Governed opportunity/case identifying a potential process/operating improvement with problem/opportunity statement, evidence, expected benefit, scope and prioritisation.'
+    },
+    {
+      candidateKey: 'BOF-26-020',
+      decision: 'RENAME',
+      proposedCanonicalName: 'Process Redesign Proposal',
+      notes:
+        'Governed proposal for a future-state process design linked to exact current Process Version, analysis, assumptions, impacts, expected benefits and approval/decision evidence.'
+    },
+    {
+      candidateKey: 'BOF-26-021',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-07-007',
+      proposedCanonicalName: 'Information Container',
+      notes:
+        'Standard Operating Procedure is a controlled Information Container type/profile with exact process/version applicability, approval, issue and supersession.'
+    },
+    {
+      candidateKey: 'BOF-26-022',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-21-007',
+      proposedCanonicalName: 'Compliance Assessment',
+      notes:
+        'Process Compliance Assessment reuses shared Compliance Assessment evidence against exact Process Version, requirements, controls and evidence.'
+    },
+    {
+      candidateKey: 'BOF-26-023',
+      decision: 'MERGE',
+      targetCandidateKey: 'BOF-26-002',
+      proposedCanonicalName: 'Transformation Initiative',
+      notes:
+        'Improvement Initiative uses the Transformation Initiative/change-initiative pattern with improvement type/scale. It does not require a second initiative master.'
+    }
+  ];

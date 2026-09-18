@@ -51,11 +51,9 @@ Production authentication is integrated through Better Auth with MySQL-backed us
 
 The UI is data-driven from canonical workspace definitions. Function workspaces may have different business content, but they use shared shell and interaction primitives rather than creating independent mini-applications.
 
-
 ## Foundation master data
 
 Open `/[tenant]/app/admin/master-data/organisations` for canonical Party/Organisation master data and `/[tenant]/app/admin/security` for tenant identities, memberships, RBAC and access administration. Organisation is implemented once and reused by CRM, procurement, contracts, HCM, finance and project delivery through governed Party Relationships rather than duplicate company masters.
-
 
 ## MySQL migrations
 

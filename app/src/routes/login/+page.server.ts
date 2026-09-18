@@ -16,11 +16,16 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 export const actions: Actions = {
   default: async ({ request, url }) => {
     const form = await request.formData();
-    const email = String(form.get('email') ?? '').trim().toLowerCase();
+    const email = String(form.get('email') ?? '')
+      .trim()
+      .toLowerCase();
     const password = String(form.get('password') ?? '');
-    const returnTo = safeReturnTo(String(form.get('returnTo') ?? url.searchParams.get('returnTo') ?? '/'));
+    const returnTo = safeReturnTo(
+      String(form.get('returnTo') ?? url.searchParams.get('returnTo') ?? '/')
+    );
 
-    if (!email || !password) return fail(400, { message: 'Email and password are required.', email, returnTo });
+    if (!email || !password)
+      return fail(400, { message: 'Email and password are required.', email, returnTo });
 
     try {
       await auth.api.signInEmail({

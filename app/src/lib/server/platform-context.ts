@@ -12,30 +12,110 @@ import {
 export const platformPermissions = [
   ['platform.audit.read', 'platform.audit', 'read', 'Read tenant-scoped platform audit evidence.'],
   ['tenant.identity.read', 'tenant.identity', 'read', 'Read tenant authentication identity links.'],
-  ['tenant.identity.manage', 'tenant.identity', 'manage', 'Link and maintain authenticated identities for tenant Parties.'],
+  [
+    'tenant.identity.manage',
+    'tenant.identity',
+    'manage',
+    'Link and maintain authenticated identities for tenant Parties.'
+  ],
   ['tenant.membership.read', 'tenant.membership', 'read', 'Read tenant membership authority.'],
-  ['tenant.membership.manage', 'tenant.membership', 'manage', 'Grant and revoke tenant membership authority.'],
+  [
+    'tenant.membership.manage',
+    'tenant.membership',
+    'manage',
+    'Grant and revoke tenant membership authority.'
+  ],
   ['tenant.role.read', 'tenant.role', 'read', 'Read tenant roles and permission grants.'],
   ['tenant.role.manage', 'tenant.role', 'manage', 'Create and maintain tenant role definitions.'],
   ['tenant.role.assign', 'tenant.role', 'assign', 'Assign tenant roles to active tenant members.'],
   ['party.read', 'party', 'read', 'Read canonical Party, Person and Organisation master data.'],
-  ['party.relationship.read', 'party.relationship', 'read', 'Read governed relationships between canonical Parties.'],
-  ['party.relationship.manage', 'party.relationship', 'manage', 'Create and maintain effective Party Relationships.'],
-  ['org.structure.read', 'org.structure', 'read', 'Read Organisation Units and effective hierarchy.'],
-  ['org.structure.manage', 'org.structure', 'manage', 'Create and maintain Organisation Units and hierarchy.'],
-  ['authority.delegation.read', 'authority.delegation', 'read', 'Read effective Delegated Authority grants.'],
-  ['authority.delegation.manage', 'authority.delegation', 'manage', 'Create, activate, suspend and revoke Delegated Authority grants.'],
-  ['authority.delegation.approve', 'authority.delegation', 'approve', 'Approve Delegated Authority grants independently from the delegate.'],
+  [
+    'party.relationship.read',
+    'party.relationship',
+    'read',
+    'Read governed relationships between canonical Parties.'
+  ],
+  [
+    'party.relationship.manage',
+    'party.relationship',
+    'manage',
+    'Create and maintain effective Party Relationships.'
+  ],
+  [
+    'org.structure.read',
+    'org.structure',
+    'read',
+    'Read Organisation Units and effective hierarchy.'
+  ],
+  [
+    'org.structure.manage',
+    'org.structure',
+    'manage',
+    'Create and maintain Organisation Units and hierarchy.'
+  ],
+  [
+    'authority.delegation.read',
+    'authority.delegation',
+    'read',
+    'Read effective Delegated Authority grants.'
+  ],
+  [
+    'authority.delegation.manage',
+    'authority.delegation',
+    'manage',
+    'Create, activate, suspend and revoke Delegated Authority grants.'
+  ],
+  [
+    'authority.delegation.approve',
+    'authority.delegation',
+    'approve',
+    'Approve Delegated Authority grants independently from the delegate.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],
-  ['strategy.framework.read', 'strategy.framework', 'read', 'Read strategy frameworks and immutable versions.'],
-  ['strategy.framework.create', 'strategy.framework', 'create', 'Create a strategy framework draft.'],
-  ['strategy.framework.change', 'strategy.framework', 'change', 'Edit a draft or returned strategy framework.'],
-  ['strategy.framework.submit', 'strategy.framework', 'submit', 'Submit a strategy framework version for review.'],
-  ['strategy.framework.review', 'strategy.framework', 'review', 'Return or reject a strategy framework review.'],
-  ['strategy.framework.approve', 'strategy.framework', 'approve', 'Approve a strategy framework version.'],
-  ['strategy.framework.publish', 'strategy.framework', 'publish', 'Publish an approved strategy framework.']
+  [
+    'strategy.framework.read',
+    'strategy.framework',
+    'read',
+    'Read strategy frameworks and immutable versions.'
+  ],
+  [
+    'strategy.framework.create',
+    'strategy.framework',
+    'create',
+    'Create a strategy framework draft.'
+  ],
+  [
+    'strategy.framework.change',
+    'strategy.framework',
+    'change',
+    'Edit a draft or returned strategy framework.'
+  ],
+  [
+    'strategy.framework.submit',
+    'strategy.framework',
+    'submit',
+    'Submit a strategy framework version for review.'
+  ],
+  [
+    'strategy.framework.review',
+    'strategy.framework',
+    'review',
+    'Return or reject a strategy framework review.'
+  ],
+  [
+    'strategy.framework.approve',
+    'strategy.framework',
+    'approve',
+    'Approve a strategy framework version.'
+  ],
+  [
+    'strategy.framework.publish',
+    'strategy.framework',
+    'publish',
+    'Publish an approved strategy framework.'
+  ]
 ] as const;
 
 export type PlatformPermission = (typeof platformPermissions)[number][0];
@@ -70,7 +150,13 @@ function now() {
 }
 
 function tenantName(slug: string) {
-  return slug.split('-').filter(Boolean).map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ') || 'NuBlox Tenant';
+  return (
+    slug
+      .split('-')
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ') || 'NuBlox Tenant'
+  );
 }
 
 async function getTenant(tenantSlug: string, executor?: DbExecutor) {
@@ -81,7 +167,11 @@ async function getTenant(tenantSlug: string, executor?: DbExecutor) {
   );
 }
 
-export async function ensureTenant(tenantSlug: string, displayName: string, executor: DbExecutor): Promise<TenantRow> {
+export async function ensureTenant(
+  tenantSlug: string,
+  displayName: string,
+  executor: DbExecutor
+): Promise<TenantRow> {
   const slug = tenantSlug.trim().toLowerCase();
   if (!slug) throw new Error('Tenant slug is required.');
   const existing = await getTenant(slug, executor);
@@ -93,7 +183,7 @@ export async function ensureTenant(tenantSlug: string, displayName: string, exec
   const id = randomUUID();
   const timestamp = now();
   await executeMutation(
-    'INSERT INTO tenants (id, slug, display_name, status, created_at, updated_at) VALUES (?, ?, ?, \'ACTIVE\', ?, ?)',
+    "INSERT INTO tenants (id, slug, display_name, status, created_at, updated_at) VALUES (?, ?, ?, 'ACTIVE', ?, ?)",
     [id, slug, displayName.trim() || tenantName(slug), timestamp, timestamp],
     executor
   );
@@ -112,7 +202,7 @@ export async function seedPermissionDefinitions(executor: DbExecutor) {
 
 export async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbExecutor) {
   const existing = await queryOne<IdentityRow>(
-    'SELECT id, party_id AS partyId, display_name AS displayName, status FROM user_identities WHERE tenant_id = ? AND provider = \'development\' AND provider_subject = \'development-user\'',
+    "SELECT id, party_id AS partyId, display_name AS displayName, status FROM user_identities WHERE tenant_id = ? AND provider = 'development' AND provider_subject = 'development-user'",
     [tenant.id],
     executor
   );
@@ -125,49 +215,58 @@ export async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbE
   const identityId = randomUUID();
   const timestamp = now();
   await executeMutation(
-    'INSERT INTO parties (id, tenant_id, party_type, display_name, status, version, created_at, updated_at) VALUES (?, ?, \'PERSON\', \'Development User\', \'ACTIVE\', 1, ?, ?)',
+    "INSERT INTO parties (id, tenant_id, party_type, display_name, status, version, created_at, updated_at) VALUES (?, ?, 'PERSON', 'Development User', 'ACTIVE', 1, ?, ?)",
     [partyId, tenant.id, timestamp, timestamp],
     executor
   );
   await executeMutation(
-    'INSERT INTO persons (party_id, given_name, family_name, preferred_name, created_at, updated_at) VALUES (?, \'Development\', \'User\', \'Development User\', ?, ?)',
+    "INSERT INTO persons (party_id, given_name, family_name, preferred_name, created_at, updated_at) VALUES (?, 'Development', 'User', 'Development User', ?, ?)",
     [partyId, timestamp, timestamp],
     executor
   );
   await executeMutation(
-    'INSERT INTO user_identities (id, tenant_id, party_id, provider, provider_subject, display_name, status, created_at, updated_at) VALUES (?, ?, ?, \'development\', \'development-user\', \'Development User\', \'ACTIVE\', ?, ?)',
+    "INSERT INTO user_identities (id, tenant_id, party_id, provider, provider_subject, display_name, status, created_at, updated_at) VALUES (?, ?, ?, 'development', 'development-user', 'Development User', 'ACTIVE', ?, ?)",
     [identityId, tenant.id, partyId, timestamp, timestamp],
     executor
   );
-  return { id: identityId, partyId, displayName: 'Development User', status: 'ACTIVE' } as IdentityRow;
+  return {
+    id: identityId,
+    partyId,
+    displayName: 'Development User',
+    status: 'ACTIVE'
+  } as IdentityRow;
 }
 
-export async function ensureDevelopmentAuthority(tenant: TenantRow, identity: IdentityRow, executor: DbExecutor) {
+export async function ensureDevelopmentAuthority(
+  tenant: TenantRow,
+  identity: IdentityRow,
+  executor: DbExecutor
+) {
   await seedPermissionDefinitions(executor);
   const timestamp = now();
 
   const membership = await queryOne<RowDataPacket & { id: string }>(
-    'SELECT id FROM memberships WHERE tenant_id = ? AND party_id = ? AND context_type = \'TENANT\' AND context_id = ? AND status = \'ACTIVE\' LIMIT 1',
+    "SELECT id FROM memberships WHERE tenant_id = ? AND party_id = ? AND context_type = 'TENANT' AND context_id = ? AND status = 'ACTIVE' LIMIT 1",
     [tenant.id, identity.partyId, tenant.id],
     executor
   );
   if (!membership) {
     await executeMutation(
-      'INSERT INTO memberships (id, tenant_id, party_id, context_type, context_id, membership_type, status, valid_from, valid_to, created_at) VALUES (?, ?, ?, \'TENANT\', ?, \'INTERNAL\', \'ACTIVE\', ?, NULL, ?)',
+      "INSERT INTO memberships (id, tenant_id, party_id, context_type, context_id, membership_type, status, valid_from, valid_to, created_at) VALUES (?, ?, ?, 'TENANT', ?, 'INTERNAL', 'ACTIVE', ?, NULL, ?)",
       [randomUUID(), tenant.id, identity.partyId, tenant.id, timestamp, timestamp],
       executor
     );
   }
 
   let role = await queryOne<RowDataPacket & { id: string }>(
-    'SELECT id FROM role_definitions WHERE tenant_id = ? AND role_key = \'tenant-admin\'',
+    "SELECT id FROM role_definitions WHERE tenant_id = ? AND role_key = 'tenant-admin'",
     [tenant.id],
     executor
   );
   if (!role) {
     const id = randomUUID();
     await executeMutation(
-      'INSERT INTO role_definitions (id, tenant_id, role_key, name, status, created_at, updated_at) VALUES (?, ?, \'tenant-admin\', \'Tenant Administrator\', \'ACTIVE\', ?, ?)',
+      "INSERT INTO role_definitions (id, tenant_id, role_key, name, status, created_at, updated_at) VALUES (?, ?, 'tenant-admin', 'Tenant Administrator', 'ACTIVE', ?, ?)",
       [id, tenant.id, timestamp, timestamp],
       executor
     );
@@ -183,13 +282,13 @@ export async function ensureDevelopmentAuthority(tenant: TenantRow, identity: Id
   }
 
   const assignment = await queryOne<RowDataPacket & { id: string }>(
-    'SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ? AND role_id = ? AND scope_type = \'TENANT\' AND scope_id = ? AND status = \'ACTIVE\' LIMIT 1',
+    "SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ? AND role_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE' LIMIT 1",
     [tenant.id, identity.partyId, role.id, tenant.id],
     executor
   );
   if (!assignment) {
     await executeMutation(
-      'INSERT INTO role_assignments (id, tenant_id, party_id, role_id, scope_type, scope_id, status, valid_from, valid_to, assignment_source, created_at) VALUES (?, ?, ?, ?, \'TENANT\', ?, \'ACTIVE\', ?, NULL, \'development-bootstrap\', ?)',
+      "INSERT INTO role_assignments (id, tenant_id, party_id, role_id, scope_type, scope_id, status, valid_from, valid_to, assignment_source, created_at) VALUES (?, ?, ?, ?, 'TENANT', ?, 'ACTIVE', ?, NULL, 'development-bootstrap', ?)",
       [randomUUID(), tenant.id, identity.partyId, role.id, tenant.id, timestamp, timestamp],
       executor
     );
@@ -215,13 +314,13 @@ export async function resolveContextForIdentity(
 
   const timestamp = now();
   const membership = await queryOne<RowDataPacket & { id: string }>(
-    'SELECT id FROM memberships WHERE tenant_id = ? AND party_id = ? AND context_type = \'TENANT\' AND context_id = ? AND status = \'ACTIVE\' AND valid_from <= ? AND (valid_to IS NULL OR valid_to > ?) LIMIT 1',
+    "SELECT id FROM memberships WHERE tenant_id = ? AND party_id = ? AND context_type = 'TENANT' AND context_id = ? AND status = 'ACTIVE' AND valid_from <= ? AND (valid_to IS NULL OR valid_to > ?) LIMIT 1",
     [tenant.id, identity.partyId, tenant.id, timestamp, timestamp]
   );
   if (!membership) throw new Error('The actor is not an active member of this tenant.');
 
   const roleRows = await queryRows<RowDataPacket & { id: string; roleKey: string }>(
-    'SELECT DISTINCT rd.id, rd.role_key AS roleKey FROM role_assignments ra JOIN role_definitions rd ON rd.id = ra.role_id WHERE ra.tenant_id = ? AND ra.party_id = ? AND ra.scope_type = \'TENANT\' AND ra.scope_id = ? AND ra.status = \'ACTIVE\' AND rd.status = \'ACTIVE\' AND ra.valid_from <= ? AND (ra.valid_to IS NULL OR ra.valid_to > ?)',
+    "SELECT DISTINCT rd.id, rd.role_key AS roleKey FROM role_assignments ra JOIN role_definitions rd ON rd.id = ra.role_id WHERE ra.tenant_id = ? AND ra.party_id = ? AND ra.scope_type = 'TENANT' AND ra.scope_id = ? AND ra.status = 'ACTIVE' AND rd.status = 'ACTIVE' AND ra.valid_from <= ? AND (ra.valid_to IS NULL OR ra.valid_to > ?)",
     [tenant.id, identity.partyId, tenant.id, timestamp, timestamp]
   );
 
@@ -230,7 +329,9 @@ export async function resolveContextForIdentity(
   if (roleIds.length) {
     const placeholders = roleIds.map(() => '?').join(',');
     const rows = await queryRows<RowDataPacket & { permissionKey: string }>(
-      'SELECT DISTINCT permission_key AS permissionKey FROM role_permissions WHERE role_id IN (' + placeholders + ')',
+      'SELECT DISTINCT permission_key AS permissionKey FROM role_permissions WHERE role_id IN (' +
+        placeholders +
+        ')',
       roleIds
     );
     for (const row of rows) permissions.add(row.permissionKey);

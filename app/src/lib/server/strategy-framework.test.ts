@@ -41,7 +41,9 @@ describe('F01.01 strategy framework lifecycle on MySQL', () => {
     await service.approveStrategyFramework(context, first, 'Approved by executive review.');
     await service.publishStrategyFramework(context, first, 'Enterprise baseline.');
 
-    const firstRecord = (await service.listStrategyFrameworks(context)).find((item) => item.id === first);
+    const firstRecord = (await service.listStrategyFrameworks(context)).find(
+      (item) => item.id === first
+    );
     expect(firstRecord?.status).toBe('PUBLISHED');
     expect(firstRecord?.currentVersion).toBe(2);
 

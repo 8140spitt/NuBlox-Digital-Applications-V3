@@ -1,37 +1,229 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
 export const sharedWorkEvidenceCanonicalization: FoundationCanonicalizationDecision[] = [
-  { candidateKey: 'BOF-06-023', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Decision', notes: 'Project/governance Decision uses the shared immutable Decision evidence pattern. Domain state changes consume a valid Decision but do not turn the Decision into the domain object.' },
-  { candidateKey: 'BOF-06-024', decision: 'RENAME', proposedCanonicalName: 'Decision Action', notes: 'Project/governance Action uses the shared Decision Action pattern with accountable owner, due date and closure evidence; workflow Work Items may coordinate it but do not replace it.' },
-  { candidateKey: 'BOF-27-001', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Work Item', notes: 'Reusable actionable work identity linked to an authoritative business subject. A Work Item coordinates human/system work but never replaces the domain object, case, transaction or lifecycle state it concerns.' },
-  { candidateKey: 'BOF-27-002', decision: 'RELATIONSHIP', proposedCanonicalName: 'Work Assignment', notes: 'Effective assignment relationship linking a Work Item to a Party, User Identity or governed Role/queue. Assignment is not identity, responsibility, permission or delegated authority.' },
-  { candidateKey: 'BOF-27-003', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Review Request', notes: 'Governed request for review of an exact subject/version/configuration. Review outcome/evidence is retained separately from the request.' },
-  { candidateKey: 'BOF-27-004', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Approval Request', notes: 'Governed request for an approval decision against an exact subject/version and authority context. Approval workflow must not directly become business truth.' },
-  { candidateKey: 'BOF-27-005', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Decision Request', notes: 'Governed request asking an authorised actor/body to decide a defined question; the immutable Decision is a separate outcome/evidence record.' },
-  { candidateKey: 'BOF-27-006', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Acknowledgement', notes: 'Attributed acknowledgement evidence proving that a Party/User received, read or accepted receipt of a defined subject; it is not approval unless the governed business rule explicitly says so.' },
-  { candidateKey: 'BOF-27-007', decision: 'RENAME', proposedCanonicalName: 'Escalation Record', notes: 'Retained control/event record that a Work Item or request was escalated under a defined rule; escalation does not silently transfer business authority.' },
-  { candidateKey: 'BOF-27-008', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Due Date Change Record', notes: 'Immutable history of due-date changes with actor, reason and prior/new values. The current due date is derived from the Work Item plus retained change records.' },
-  { candidateKey: 'BOF-27-009', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Priority Change Record', notes: 'Immutable history of priority changes with actor, reason and prior/new values; priority is work-routing context rather than domain lifecycle state.' },
-  { candidateKey: 'BOF-27-010', decision: 'RELATIONSHIP', proposedCanonicalName: 'Work Delegation', notes: 'Temporary delegation of assigned work to another eligible actor. Work Delegation never grants Delegated Authority and must pass permission/authority checks independently.' },
-  { candidateKey: 'BOF-27-011', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Collaboration Invitation', notes: 'Governed invitation to participate in a collaboration context. Acceptance may create Membership/participation but does not automatically confer unrestricted permission or authority.' },
-  { candidateKey: 'BOF-27-012', decision: 'MERGE', targetCandidateKey: 'BOF-27-011', notes: 'Project Participation Invitation is a typed Collaboration Invitation. Acceptance creates the appropriate Project-scoped Membership/participation relationship rather than a second invitation model.' },
-  { candidateKey: 'BOF-27-013', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'External Submission', notes: 'Immutable attributable evidence of material submitted to an external Party/system/regulator, retaining exact content/version, recipient, channel and timestamp.' },
-  { candidateKey: 'BOF-27-014', decision: 'RENAME', proposedCanonicalName: 'Request Response', notes: 'Generic attributable response to a governed work/review/approval/decision request. It is explicitly distinguished from the Information Response used for technical queries/submittals.' },
-  { candidateKey: 'BOF-27-015', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Notification Preference', notes: 'User-scoped communication preference/configuration. It controls delivery channels and digest behaviour but cannot suppress legally required notices, assignments or authoritative business events.' },
+  {
+    candidateKey: 'BOF-06-023',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Decision',
+    notes:
+      'Project/governance Decision uses the shared immutable Decision evidence pattern. Domain state changes consume a valid Decision but do not turn the Decision into the domain object.'
+  },
+  {
+    candidateKey: 'BOF-06-024',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Decision Action',
+    notes:
+      'Project/governance Action uses the shared Decision Action pattern with accountable owner, due date and closure evidence; workflow Work Items may coordinate it but do not replace it.'
+  },
+  {
+    candidateKey: 'BOF-27-001',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Work Item',
+    notes:
+      'Reusable actionable work identity linked to an authoritative business subject. A Work Item coordinates human/system work but never replaces the domain object, case, transaction or lifecycle state it concerns.'
+  },
+  {
+    candidateKey: 'BOF-27-002',
+    decision: 'RELATIONSHIP',
+    proposedCanonicalName: 'Work Assignment',
+    notes:
+      'Effective assignment relationship linking a Work Item to a Party, User Identity or governed Role/queue. Assignment is not identity, responsibility, permission or delegated authority.'
+  },
+  {
+    candidateKey: 'BOF-27-003',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Review Request',
+    notes:
+      'Governed request for review of an exact subject/version/configuration. Review outcome/evidence is retained separately from the request.'
+  },
+  {
+    candidateKey: 'BOF-27-004',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Approval Request',
+    notes:
+      'Governed request for an approval decision against an exact subject/version and authority context. Approval workflow must not directly become business truth.'
+  },
+  {
+    candidateKey: 'BOF-27-005',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Decision Request',
+    notes:
+      'Governed request asking an authorised actor/body to decide a defined question; the immutable Decision is a separate outcome/evidence record.'
+  },
+  {
+    candidateKey: 'BOF-27-006',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Acknowledgement',
+    notes:
+      'Attributed acknowledgement evidence proving that a Party/User received, read or accepted receipt of a defined subject; it is not approval unless the governed business rule explicitly says so.'
+  },
+  {
+    candidateKey: 'BOF-27-007',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Escalation Record',
+    notes:
+      'Retained control/event record that a Work Item or request was escalated under a defined rule; escalation does not silently transfer business authority.'
+  },
+  {
+    candidateKey: 'BOF-27-008',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Due Date Change Record',
+    notes:
+      'Immutable history of due-date changes with actor, reason and prior/new values. The current due date is derived from the Work Item plus retained change records.'
+  },
+  {
+    candidateKey: 'BOF-27-009',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Priority Change Record',
+    notes:
+      'Immutable history of priority changes with actor, reason and prior/new values; priority is work-routing context rather than domain lifecycle state.'
+  },
+  {
+    candidateKey: 'BOF-27-010',
+    decision: 'RELATIONSHIP',
+    proposedCanonicalName: 'Work Delegation',
+    notes:
+      'Temporary delegation of assigned work to another eligible actor. Work Delegation never grants Delegated Authority and must pass permission/authority checks independently.'
+  },
+  {
+    candidateKey: 'BOF-27-011',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Collaboration Invitation',
+    notes:
+      'Governed invitation to participate in a collaboration context. Acceptance may create Membership/participation but does not automatically confer unrestricted permission or authority.'
+  },
+  {
+    candidateKey: 'BOF-27-012',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-27-011',
+    notes:
+      'Project Participation Invitation is a typed Collaboration Invitation. Acceptance creates the appropriate Project-scoped Membership/participation relationship rather than a second invitation model.'
+  },
+  {
+    candidateKey: 'BOF-27-013',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'External Submission',
+    notes:
+      'Immutable attributable evidence of material submitted to an external Party/system/regulator, retaining exact content/version, recipient, channel and timestamp.'
+  },
+  {
+    candidateKey: 'BOF-27-014',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Request Response',
+    notes:
+      'Generic attributable response to a governed work/review/approval/decision request. It is explicitly distinguished from the Information Response used for technical queries/submittals.'
+  },
+  {
+    candidateKey: 'BOF-27-015',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Notification Preference',
+    notes:
+      'User-scoped communication preference/configuration. It controls delivery channels and digest behaviour but cannot suppress legally required notices, assignments or authoritative business events.'
+  },
 
-  { candidateKey: 'BOF-28-001', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Business Event', notes: 'Immutable semantic occurrence emitted when authoritative business state changes or a material business fact occurs. Event identity does not replace the source aggregate.' },
-  { candidateKey: 'BOF-28-002', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Audit Event', notes: 'Append-only security/accountability evidence recording who/what performed an auditable action, when, in which tenant/context and against which object/version.' },
-  { candidateKey: 'BOF-28-003', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Change Event', notes: 'Immutable before/after change evidence for governed mutable state. It complements domain history and does not become the current record itself.' },
-  { candidateKey: 'BOF-28-004', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Approval Evidence', notes: 'Immutable evidence of an approval/rejection/return decision, linked to exact request, subject/version, actor, authority basis and timestamp.' },
-  { candidateKey: 'BOF-28-005', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Signature', notes: 'Cryptographically or procedurally attributable signature evidence bound to exact content/version and signer identity; signature is not the signed business object.' },
-  { candidateKey: 'BOF-28-006', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Attestation', notes: 'Attributed statement that specified facts/conditions are asserted as true under a defined basis. Attestation evidence remains immutable after submission.' },
-  { candidateKey: 'BOF-28-007', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Evidence Item', notes: 'Generic governed evidence object with provenance, integrity metadata, subject links and retention classification. It references representations/content rather than duplicating domain state.' },
-  { candidateKey: 'BOF-28-008', decision: 'RELATIONSHIP', proposedCanonicalName: 'Provenance Reference', notes: 'Traceability relationship connecting evidence/derived information to the authoritative source object, event, version, dataset or external origin from which it was produced.' },
-  { candidateKey: 'BOF-28-009', decision: 'RELATIONSHIP', proposedCanonicalName: 'Source Reference', notes: 'Explicit relationship to the originating internal/external source identifier or object. Source references support traceability without importing a duplicate master.' },
-  { candidateKey: 'BOF-28-010', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Correction Record', notes: 'Immutable evidence that a prior record was corrected, carrying reason, authority and references to original and corrective records. Corrections never erase prior evidence.' },
-  { candidateKey: 'BOF-28-011', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Reversal Record', notes: 'Immutable evidence that a prior posting/event/effect was reversed by a new governed record. Reversal preserves the original record and full causal chain.' },
-  { candidateKey: 'BOF-28-012', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Archive Package', notes: 'Governed preservation package containing exact records/evidence plus manifest, provenance, integrity and retention metadata. It is not a substitute for the live canonical business objects.' },
-  { candidateKey: 'BOF-28-013', decision: 'RENAME', proposedCanonicalName: 'Retention Disposition Decision', notes: 'Authorised, evidenced decision to retain, transfer, archive or destroy eligible records under applicable retention rules and holds.' },
-  { candidateKey: 'BOF-28-014', decision: 'RELATIONSHIP', proposedCanonicalName: 'Legal Hold Link', notes: 'Effective relationship placing an object/record/evidence set under a Legal Hold. A hold suspends otherwise-eligible disposition without changing the object identity.' },
-  { candidateKey: 'BOF-28-015', decision: 'RENAME', proposedCanonicalName: 'Outbox Message', notes: 'Immutable integration-delivery envelope derived from a Business Event for reliable publication. It is transport evidence, not a second authoritative business event stream.' }
+  {
+    candidateKey: 'BOF-28-001',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Business Event',
+    notes:
+      'Immutable semantic occurrence emitted when authoritative business state changes or a material business fact occurs. Event identity does not replace the source aggregate.'
+  },
+  {
+    candidateKey: 'BOF-28-002',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Audit Event',
+    notes:
+      'Append-only security/accountability evidence recording who/what performed an auditable action, when, in which tenant/context and against which object/version.'
+  },
+  {
+    candidateKey: 'BOF-28-003',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Change Event',
+    notes:
+      'Immutable before/after change evidence for governed mutable state. It complements domain history and does not become the current record itself.'
+  },
+  {
+    candidateKey: 'BOF-28-004',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Approval Evidence',
+    notes:
+      'Immutable evidence of an approval/rejection/return decision, linked to exact request, subject/version, actor, authority basis and timestamp.'
+  },
+  {
+    candidateKey: 'BOF-28-005',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Signature',
+    notes:
+      'Cryptographically or procedurally attributable signature evidence bound to exact content/version and signer identity; signature is not the signed business object.'
+  },
+  {
+    candidateKey: 'BOF-28-006',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Attestation',
+    notes:
+      'Attributed statement that specified facts/conditions are asserted as true under a defined basis. Attestation evidence remains immutable after submission.'
+  },
+  {
+    candidateKey: 'BOF-28-007',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Evidence Item',
+    notes:
+      'Generic governed evidence object with provenance, integrity metadata, subject links and retention classification. It references representations/content rather than duplicating domain state.'
+  },
+  {
+    candidateKey: 'BOF-28-008',
+    decision: 'RELATIONSHIP',
+    proposedCanonicalName: 'Provenance Reference',
+    notes:
+      'Traceability relationship connecting evidence/derived information to the authoritative source object, event, version, dataset or external origin from which it was produced.'
+  },
+  {
+    candidateKey: 'BOF-28-009',
+    decision: 'RELATIONSHIP',
+    proposedCanonicalName: 'Source Reference',
+    notes:
+      'Explicit relationship to the originating internal/external source identifier or object. Source references support traceability without importing a duplicate master.'
+  },
+  {
+    candidateKey: 'BOF-28-010',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Correction Record',
+    notes:
+      'Immutable evidence that a prior record was corrected, carrying reason, authority and references to original and corrective records. Corrections never erase prior evidence.'
+  },
+  {
+    candidateKey: 'BOF-28-011',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Reversal Record',
+    notes:
+      'Immutable evidence that a prior posting/event/effect was reversed by a new governed record. Reversal preserves the original record and full causal chain.'
+  },
+  {
+    candidateKey: 'BOF-28-012',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Archive Package',
+    notes:
+      'Governed preservation package containing exact records/evidence plus manifest, provenance, integrity and retention metadata. It is not a substitute for the live canonical business objects.'
+  },
+  {
+    candidateKey: 'BOF-28-013',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Retention Disposition Decision',
+    notes:
+      'Authorised, evidenced decision to retain, transfer, archive or destroy eligible records under applicable retention rules and holds.'
+  },
+  {
+    candidateKey: 'BOF-28-014',
+    decision: 'RELATIONSHIP',
+    proposedCanonicalName: 'Legal Hold Link',
+    notes:
+      'Effective relationship placing an object/record/evidence set under a Legal Hold. A hold suspends otherwise-eligible disposition without changing the object identity.'
+  },
+  {
+    candidateKey: 'BOF-28-015',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Outbox Message',
+    notes:
+      'Immutable integration-delivery envelope derived from a Business Event for reliable publication. It is transport evidence, not a second authoritative business event stream.'
+  }
 ];

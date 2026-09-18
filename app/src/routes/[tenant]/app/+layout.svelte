@@ -3,6 +3,10 @@
   let { data, children } = $props();
 </script>
 
-<AppShell tenantSlug={data.tenantSlug} actorDisplayName={data.actorDisplayName} authenticated={data.authenticated}>
+<AppShell
+  tenantSlug={data.tenantSlug}
+  actorDisplayName={data.actorDisplayName}
+  authenticated={data.authenticated}
+>
   {@render children()}
 </AppShell>

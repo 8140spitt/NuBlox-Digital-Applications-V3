@@ -1,10 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { listPersons } from '$lib/server/foundation-person';
-import {
-  platformPermissions,
-  assertPermission
-} from '$lib/server/platform-context';
+import { platformPermissions, assertPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { queryOne } from '$lib/server/db';
 import {
@@ -31,7 +28,10 @@ function text(data: FormData, name: string) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The requested security administration action could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The requested security administration action could not be completed.'
   });
 }
 
@@ -116,11 +116,10 @@ export const actions: Actions = {
   updateRole: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      await updateTenantRole(
-        await contextFor(params, locals),
-        text(data, 'roleId'),
-        { name: text(data, 'name'), permissions: data.getAll('permission').map(String) }
-      );
+      await updateTenantRole(await contextFor(params, locals), text(data, 'roleId'), {
+        name: text(data, 'name'),
+        permissions: data.getAll('permission').map(String)
+      });
     } catch (error) {
       return problem(error);
     }
@@ -177,17 +176,11 @@ export const actions: Actions = {
     try {
       assertPermission(context, 'tenant.identity.manage');
       const email = text(data, 'email').toLowerCase();
-      const user = await queryOne<{ id: string; name: string } & import('mysql2/promise').RowDataPacket>(
-        'SELECT id, name FROM `user` WHERE email = ? LIMIT 1',
-        [email]
-      );
+      const user = await queryOne<
+        { id: string; name: string } & import('mysql2/promise').RowDataPacket
+      >('SELECT id, name FROM `user` WHERE email = ? LIMIT 1', [email]);
       if (!user) throw new Error('No authentication account exists for that exact email address.');
-      await linkAuthenticatedIdentity(
-        context,
-        text(data, 'partyId'),
-        user.id,
-        user.name
-      );
+      await linkAuthenticatedIdentity(context, text(data, 'partyId'), user.id, user.name);
     } catch (error) {
       return problem(error);
     }
@@ -197,10 +190,7 @@ export const actions: Actions = {
   deactivateIdentity: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      await deactivateTenantIdentity(
-        await contextFor(params, locals),
-        text(data, 'identityId')
-      );
+      await deactivateTenantIdentity(await contextFor(params, locals), text(data, 'identityId'));
     } catch (error) {
       return problem(error);
     }

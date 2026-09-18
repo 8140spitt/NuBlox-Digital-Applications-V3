@@ -18,14 +18,22 @@ describe('canonical business object review ledger', () => {
   it('persists the current decision and immutable review history', async () => {
     await service.saveBusinessObjectReview(
       'BOF-16-003',
-      { decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Site', notes: 'Stable spatial identity.' },
+      {
+        decision: 'VALIDATE_OBJECT',
+        proposedCanonicalName: 'Site',
+        notes: 'Stable spatial identity.'
+      },
       'Reviewer One',
       'review-tenant'
     );
 
     await service.saveBusinessObjectReview(
       'BOF-16-003',
-      { decision: 'RENAME', proposedCanonicalName: 'Built Environment Site', notes: 'Differentiate from project site usage.' },
+      {
+        decision: 'RENAME',
+        proposedCanonicalName: 'Built Environment Site',
+        notes: 'Differentiate from project site usage.'
+      },
       'Reviewer Two',
       'review-tenant'
     );
@@ -42,19 +50,23 @@ describe('canonical business object review ledger', () => {
   });
 
   it('requires a merge target and prevents self merge', async () => {
-    await expect(service.saveBusinessObjectReview(
-      'BOF-09-006',
-      { decision: 'MERGE' },
-      'Reviewer',
-      'review-tenant'
-    )).rejects.toThrow('A merge target is required.');
+    await expect(
+      service.saveBusinessObjectReview(
+        'BOF-09-006',
+        { decision: 'MERGE' },
+        'Reviewer',
+        'review-tenant'
+      )
+    ).rejects.toThrow('A merge target is required.');
 
-    await expect(service.saveBusinessObjectReview(
-      'BOF-09-006',
-      { decision: 'MERGE', targetCandidateKey: 'BOF-09-006' },
-      'Reviewer',
-      'review-tenant'
-    )).rejects.toThrow('An object cannot be merged into itself.');
+    await expect(
+      service.saveBusinessObjectReview(
+        'BOF-09-006',
+        { decision: 'MERGE', targetCandidateKey: 'BOF-09-006' },
+        'Reviewer',
+        'review-tenant'
+      )
+    ).rejects.toThrow('An object cannot be merged into itself.');
   });
 
   it('seeds the governed foundation baseline without overwriting an existing human decision', async () => {

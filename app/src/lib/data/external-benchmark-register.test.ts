@@ -33,13 +33,39 @@ describe('external market benchmark register', () => {
     expect(marketBenchmarkSummary.rejectedVendorPatternCount).toBe(12);
     expect(marketBenchmarkSummary.rejectedVendorPatternRecordedCount).toBe(12);
     expect(marketBenchmarkSummary.rejectedVendorPatternOpenCount).toBe(0);
-    expect(marketBenchmarkSummary.rule).toContain('vendor module boundaries never become automatic NuBlox architecture');
+    expect(marketBenchmarkSummary.rule).toContain(
+      'vendor module boundaries never become automatic NuBlox architecture'
+    );
   });
 
   it('covers enterprise suites and construction/asset specialist depth', () => {
     const ids = new Set(externalBenchmarkRegister.map((entry) => entry.id));
     const states = new Map(externalBenchmarkRegister.map((entry) => [entry.id, entry.studyState]));
-    for (const id of ['SAP-BUSINESS-SUITE', 'ORACLE-CLOUD-CX', 'MICROSOFT-D365', 'IFS-CLOUD', 'WORKDAY', 'PROCORE', 'AUTODESK-CONSTRUCTION', 'TRIMBLE-CONSTRUCTION-ONE', 'HEXAGON-ECOSYS', 'CAUSEWAY', 'THINKPROJECT', 'ASITE-CDE', 'PTC-WINDCHILL', 'SIEMENS-TEAMCENTER', 'BENTLEY-PROJECTWISE-ITWIN', 'IBM-MAXIMO', 'PLANON-IWMS', 'ESRI-ARCGIS', 'SERVICENOW', 'DILIGENT-ONE', 'SALESFORCE', 'DELTEK-VANTAGEPOINT', 'SAGE-CONSTRUCTION']) {
+    for (const id of [
+      'SAP-BUSINESS-SUITE',
+      'ORACLE-CLOUD-CX',
+      'MICROSOFT-D365',
+      'IFS-CLOUD',
+      'WORKDAY',
+      'PROCORE',
+      'AUTODESK-CONSTRUCTION',
+      'TRIMBLE-CONSTRUCTION-ONE',
+      'HEXAGON-ECOSYS',
+      'CAUSEWAY',
+      'THINKPROJECT',
+      'ASITE-CDE',
+      'PTC-WINDCHILL',
+      'SIEMENS-TEAMCENTER',
+      'BENTLEY-PROJECTWISE-ITWIN',
+      'IBM-MAXIMO',
+      'PLANON-IWMS',
+      'ESRI-ARCGIS',
+      'SERVICENOW',
+      'DILIGENT-ONE',
+      'SALESFORCE',
+      'DELTEK-VANTAGEPOINT',
+      'SAGE-CONSTRUCTION'
+    ]) {
       expect(states.get(id)).toBe('challenged');
     }
     for (const id of [
@@ -62,7 +88,9 @@ describe('external market benchmark register', () => {
 
   it('closes Gate 3 only when every product, standard, gap and rejection decision is governed', () => {
     expect(marketBenchmarkSummary.programmeState).toBe('architecture-challenge-complete');
-    expect(externalBenchmarkRegister.every((entry) => entry.studyState === 'challenged')).toBe(true);
+    expect(externalBenchmarkRegister.every((entry) => entry.studyState === 'challenged')).toBe(
+      true
+    );
     expect(marketBenchmarkSummary.registeredBenchmarkCount).toBe(0);
     expect(marketBenchmarkSummary.inProgressBenchmarkCount).toBe(0);
   });

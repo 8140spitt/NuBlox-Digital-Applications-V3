@@ -15,17 +15,31 @@ describe('standards and interoperability challenge', () => {
 
   it('keeps openBIM exchange formats at the interoperability boundary', () => {
     for (const id of ['BUILDINGSMART-IFC', 'BUILDINGSMART-BCF', 'BUILDINGSMART-IDS']) {
-      expect(standardsChallengeRegister.find((entry) => entry.id === id)?.decision).toBe('interoperability-boundary');
+      expect(standardsChallengeRegister.find((entry) => entry.id === id)?.decision).toBe(
+        'interoperability-boundary'
+      );
     }
   });
 
   it('keeps Uniclass as reference classification rather than object identity', () => {
-    expect(standardsChallengeRegister.find((entry) => entry.id === 'UNICLASS')?.decision).toBe('reference-data-boundary');
+    expect(standardsChallengeRegister.find((entry) => entry.id === 'UNICLASS')?.decision).toBe(
+      'reference-data-boundary'
+    );
   });
 
   it('does not create duplicate management-system masters for ISO standards', () => {
-    for (const id of ['ISO-55001', 'ISO-9001', 'ISO-45001', 'ISO-14001', 'ISO-IEC-27001', 'ISO-31000', 'ISO-22301']) {
-      expect(standardsChallengeRegister.find((entry) => entry.id === id)?.decision).toBe('covered-existing-semantics');
+    for (const id of [
+      'ISO-55001',
+      'ISO-9001',
+      'ISO-45001',
+      'ISO-14001',
+      'ISO-IEC-27001',
+      'ISO-31000',
+      'ISO-22301'
+    ]) {
+      expect(standardsChallengeRegister.find((entry) => entry.id === id)?.decision).toBe(
+        'covered-existing-semantics'
+      );
     }
   });
 });

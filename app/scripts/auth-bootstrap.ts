@@ -18,19 +18,17 @@ const { bootstrapTenantAdministrator } = await import('../src/lib/server/platfor
 const { closeDbPool, queryOne } = await import('../src/lib/server/db.ts');
 
 try {
-  let authUser = await queryOne(
-    'SELECT id, name, email FROM `user` WHERE email = ? LIMIT 1',
-    [email]
-  );
+  let authUser = await queryOne('SELECT id, name, email FROM `user` WHERE email = ? LIMIT 1', [
+    email
+  ]);
 
   if (!authUser) {
     await auth.api.signUpEmail({
       body: { email, password, name: displayName }
     });
-    authUser = await queryOne(
-      'SELECT id, name, email FROM `user` WHERE email = ? LIMIT 1',
-      [email]
-    );
+    authUser = await queryOne('SELECT id, name, email FROM `user` WHERE email = ? LIMIT 1', [
+      email
+    ]);
   }
 
   if (!authUser?.id) throw new Error('Authentication account could not be created or resolved.');

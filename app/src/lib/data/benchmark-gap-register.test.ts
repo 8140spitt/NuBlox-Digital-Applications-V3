@@ -11,16 +11,28 @@ describe('benchmark gap governance', () => {
     expect(benchmarkGapSummary.gapCount).toBe(29);
     expect(benchmarkGapSummary.resolvedCount).toBe(29);
     expect(benchmarkGapSummary.openCount).toBe(0);
-    expect(benchmarkGapRegister.every((gap) => gap.owner === 'NuBlox canonical architecture')).toBe(true);
+    expect(benchmarkGapRegister.every((gap) => gap.owner === 'NuBlox canonical architecture')).toBe(
+      true
+    );
   });
 
   it('accepts only the cross-enterprise semantic gaps that are already justified', () => {
     expect(benchmarkGapSummary.acceptedRefinementCount).toBe(23);
     expect(benchmarkGapSummary.contextualExtensionCount).toBe(6);
-    expect(benchmarkGapRegister.filter((gap) => gap.disposition === 'accepted-refinement').every((gap) => gap.state === 'resolved')).toBe(true);
-    expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-001')?.disposition).toBe('accepted-refinement');
-    expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-002')?.disposition).toBe('accepted-refinement');
-    expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-003')?.disposition).toBe('accepted-refinement');
+    expect(
+      benchmarkGapRegister
+        .filter((gap) => gap.disposition === 'accepted-refinement')
+        .every((gap) => gap.state === 'resolved')
+    ).toBe(true);
+    expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-001')?.disposition).toBe(
+      'accepted-refinement'
+    );
+    expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-002')?.disposition).toBe(
+      'accepted-refinement'
+    );
+    expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-003')?.disposition).toBe(
+      'accepted-refinement'
+    );
   });
 
   it('records cross-market corroboration before promoting previously vendor-sensitive gaps', () => {
@@ -29,7 +41,7 @@ describe('benchmark gap governance', () => {
       const gap = benchmarkGapRegister.find((entry) => entry.id === id);
       expect(gap?.disposition).toBe('accepted-refinement');
       expect(gap?.state).toBe('resolved');
-      expect((gap?.sourceBenchmarks.length ?? 0)).toBeGreaterThanOrEqual(2);
+      expect(gap?.sourceBenchmarks.length ?? 0).toBeGreaterThanOrEqual(2);
     }
   });
 });

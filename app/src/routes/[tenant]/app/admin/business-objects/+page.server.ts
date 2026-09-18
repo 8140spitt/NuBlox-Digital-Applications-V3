@@ -12,7 +12,6 @@ import {
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import type { Actions, PageServerLoad } from './$types';
 
-
 export const load: PageServerLoad = async ({ url, params, locals }) => {
   await resolveRequestCommandContext(params.tenant, locals);
   await seedFoundationCanonicalization(params.tenant);
@@ -22,7 +21,9 @@ export const load: PageServerLoad = async ({ url, params, locals }) => {
   const kind = url.searchParams.get('kind') ?? '';
   const review = url.searchParams.get('review') ?? '';
   const selectedKey = url.searchParams.get('object') ?? '';
-  const duplicateNames = new Set(register.duplicates.map((item) => item.canonical_name.toLowerCase()));
+  const duplicateNames = new Set(
+    register.duplicates.map((item) => item.canonical_name.toLowerCase())
+  );
   const reviews = await listBusinessObjectReviews();
   const reviewMap = new Map(reviews.map((item) => [item.candidateKey, item]));
 
@@ -30,20 +31,28 @@ export const load: PageServerLoad = async ({ url, params, locals }) => {
     const currentReview = reviewMap.get(object.candidate_key);
     if (family && object.family_id !== family) return false;
     if (kind && object.semantic_kind !== kind) return false;
-    if (review === 'duplicates' && !duplicateNames.has(object.canonical_name.toLowerCase())) return false;
+    if (review === 'duplicates' && !duplicateNames.has(object.canonical_name.toLowerCase()))
+      return false;
     if (review === 'reviewed' && !currentReview) return false;
     if (review === 'unreviewed' && currentReview) return false;
     if (!q) return true;
-    return [object.candidate_key, object.canonical_name, object.family_id, object.family_name, object.semantic_kind]
+    return [
+      object.candidate_key,
+      object.canonical_name,
+      object.family_id,
+      object.family_name,
+      object.semantic_kind
+    ]
       .join(' ')
       .toLowerCase()
       .includes(q.toLowerCase());
   });
 
-  filtered = filtered.sort((a, b) =>
-    a.canonical_name.localeCompare(b.canonical_name) ||
-    a.family_id.localeCompare(b.family_id) ||
-    a.candidate_key.localeCompare(b.candidate_key)
+  filtered = filtered.sort(
+    (a, b) =>
+      a.canonical_name.localeCompare(b.canonical_name) ||
+      a.family_id.localeCompare(b.family_id) ||
+      a.candidate_key.localeCompare(b.candidate_key)
   );
 
   const pageSize = 50;
@@ -51,12 +60,20 @@ export const load: PageServerLoad = async ({ url, params, locals }) => {
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
   const page = Number.isFinite(requestedPage) ? Math.min(Math.max(requestedPage, 1), pageCount) : 1;
   const pageObjects = filtered.slice((page - 1) * pageSize, page * pageSize);
-  const rows = pageObjects.map((object) => ({ ...object, review: reviewMap.get(object.candidate_key) ?? null }));
+  const rows = pageObjects.map((object) => ({
+    ...object,
+    review: reviewMap.get(object.candidate_key) ?? null
+  }));
   const selected =
-    (selectedKey ? register.objects.find((object) => object.candidate_key === selectedKey) : null) ??
-    pageObjects[0] ?? null;
+    (selectedKey
+      ? register.objects.find((object) => object.candidate_key === selectedKey)
+      : null) ??
+    pageObjects[0] ??
+    null;
   const duplicate = selected
-    ? register.duplicates.find((item) => item.canonical_name.toLowerCase() === selected.canonical_name.toLowerCase()) ?? null
+    ? (register.duplicates.find(
+        (item) => item.canonical_name.toLowerCase() === selected.canonical_name.toLowerCase()
+      ) ?? null)
     : null;
   const selectedReview = selected ? await getBusinessObjectReview(selected.candidate_key) : null;
   const reviewEvents = selected ? await listBusinessObjectReviewEvents(selected.candidate_key) : [];
@@ -83,7 +100,11 @@ export const load: PageServerLoad = async ({ url, params, locals }) => {
     duplicate,
     mergeTargets: register.objects
       .filter((object) => object.candidate_key !== selected?.candidate_key)
-      .map((object) => ({ key: object.candidate_key, name: object.canonical_name, family: object.family_id }))
+      .map((object) => ({
+        key: object.candidate_key,
+        name: object.canonical_name,
+        family: object.family_id
+      }))
       .sort((a, b) => a.name.localeCompare(b.name) || a.key.localeCompare(b.key))
   };
 };
@@ -98,18 +119,32 @@ export const actions: Actions = {
     const notes = String(form.get('notes') ?? '');
     const candidate = register.objects.find((object) => object.candidate_key === candidateKey);
     if (!candidate) return fail(400, { message: 'Candidate object not found.' });
-    if (!reviewDecisions.includes(decision)) return fail(400, { message: 'Choose a valid review decision.' });
-    if (decision === 'MERGE' && !register.objects.some((object) => object.candidate_key === targetCandidateKey.trim())) {
+    if (!reviewDecisions.includes(decision))
+      return fail(400, { message: 'Choose a valid review decision.' });
+    if (
+      decision === 'MERGE' &&
+      !register.objects.some((object) => object.candidate_key === targetCandidateKey.trim())
+    ) {
       return fail(400, { message: 'Choose a valid merge target.' });
     }
 
     try {
       const context = await resolveRequestCommandContext(params.tenant, locals);
-      await saveBusinessObjectReview(candidateKey, { decision, proposedCanonicalName, targetCandidateKey, notes }, context.actorDisplayName, params.tenant);
+      await saveBusinessObjectReview(
+        candidateKey,
+        { decision, proposedCanonicalName, targetCandidateKey, notes },
+        context.actorDisplayName,
+        params.tenant
+      );
     } catch (error) {
-      return fail(400, { message: error instanceof Error ? error.message : 'Unable to save review decision.' });
+      return fail(400, {
+        message: error instanceof Error ? error.message : 'Unable to save review decision.'
+      });
     }
 
-    throw redirect(303, `/${params.tenant}/app/admin/business-objects?object=${encodeURIComponent(candidateKey)}`);
+    throw redirect(
+      303,
+      `/${params.tenant}/app/admin/business-objects?object=${encodeURIComponent(candidateKey)}`
+    );
   }
 };

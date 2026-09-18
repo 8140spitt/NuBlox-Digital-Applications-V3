@@ -158,7 +158,17 @@ export async function seedFoundationCanonicalization(contextTenantSlug: string) 
       );
       await executeMutation(
         'INSERT INTO business_object_review_events (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [randomUUID(), entry.candidateKey, decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp],
+        [
+          randomUUID(),
+          entry.candidateKey,
+          decision,
+          canonicalName,
+          target,
+          notes,
+          actor,
+          contextTenantSlug,
+          timestamp
+        ],
         connection
       );
       inserted += 1;
@@ -173,7 +183,9 @@ export async function listBusinessObjectReviews(): Promise<BusinessObjectReview[
   );
 }
 
-export async function getBusinessObjectReview(candidateKey: string): Promise<BusinessObjectReview | null> {
+export async function getBusinessObjectReview(
+  candidateKey: string
+): Promise<BusinessObjectReview | null> {
   return (
     (await queryOne<RowDataPacket & BusinessObjectReview>(
       reviewSelect + ' WHERE candidate_key = ?',
@@ -211,7 +223,17 @@ export async function saveBusinessObjectReview(
     );
     await executeMutation(
       'INSERT INTO business_object_review_events (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [randomUUID(), candidateKey, input.decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp],
+      [
+        randomUUID(),
+        candidateKey,
+        input.decision,
+        canonicalName,
+        target,
+        notes,
+        actor,
+        contextTenantSlug,
+        timestamp
+      ],
       connection
     );
   });

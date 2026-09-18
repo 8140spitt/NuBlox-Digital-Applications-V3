@@ -72,7 +72,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'workflow-definition',
     'Versioned orchestration configuration describing permitted steps, routing, timers, conditions and completion rules around canonical business work.',
     'Stable definition identity with immutable published versions. Running instances retain the exact definition version used.',
-    ['definition key', 'version', 'trigger/subject types', 'steps', 'routing rules', 'timers', 'completion rules'],
+    [
+      'definition key',
+      'version',
+      'trigger/subject types',
+      'steps',
+      'routing rules',
+      'timers',
+      'completion rules'
+    ],
     ['Draft', 'Validated', 'Published', 'Retired'],
     [
       'Workflow configuration never defines the authoritative lifecycle of every domain object.',
@@ -88,7 +96,14 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'workflow-runtime',
     'Runtime orchestration instance coordinating work around one or more exact canonical subjects using a fixed Workflow Definition version.',
     'Unique runtime identity linked to the exact definition version and subject references; it never becomes the business object being coordinated.',
-    ['workflow definition/version', 'subject references', 'started by', 'started at', 'current orchestration state', 'completion reason'],
+    [
+      'workflow definition/version',
+      'subject references',
+      'started by',
+      'started at',
+      'current orchestration state',
+      'completion reason'
+    ],
     ['Pending', 'Running', 'Waiting', 'Completed', 'Cancelled', 'Failed'],
     [
       'Runtime state is orchestration state, not domain lifecycle state.',
@@ -103,7 +118,16 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'work',
     'Reusable actionable unit of shared human/system work linked to an authoritative subject, request or workflow instance.',
     'Stable Work Item identity independent of the domain object, Schedule Activity, Work Order or service task it may reference.',
-    ['subject', 'work type', 'assignment', 'status', 'due date', 'priority', 'instructions', 'completion evidence'],
+    [
+      'subject',
+      'work type',
+      'assignment',
+      'status',
+      'due date',
+      'priority',
+      'instructions',
+      'completion evidence'
+    ],
     ['Ready', 'Assigned', 'In Progress', 'Blocked', 'Completed', 'Cancelled'],
     [
       'Work Items coordinate action but never replace domain truth.',
@@ -133,7 +157,14 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'request',
     'Governed request to review an exact subject, revision, version, configuration or evidence set against stated criteria.',
     'Stable request identity bound to exact subject/version references; a resubmission/re-review is separately traceable.',
-    ['subject/version', 'review criteria', 'requester', 'reviewers', 'due date', 'required response form'],
+    [
+      'subject/version',
+      'review criteria',
+      'requester',
+      'reviewers',
+      'due date',
+      'required response form'
+    ],
     ['Draft', 'Issued', 'In Review', 'Responded', 'Closed', 'Cancelled'],
     [
       'Review is advisory/evaluative unless a domain rule explicitly gives its outcome business effect.',
@@ -148,7 +179,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'request',
     'Governed request for an authorised approve/reject/return decision against an exact business subject and version/configuration.',
     'Stable request identity bound to the exact subject/version and approval basis. A new approval cycle creates a new request or governed cycle occurrence.',
-    ['subject/version', 'approval rule', 'required authority', 'requester', 'eligible approver', 'decision options', 'due date'],
+    [
+      'subject/version',
+      'approval rule',
+      'required authority',
+      'requester',
+      'eligible approver',
+      'decision options',
+      'due date'
+    ],
     ['Draft', 'Submitted', 'Pending Decision', 'Decided', 'Withdrawn', 'Expired'],
     [
       'Approval Request does not itself change domain state.',
@@ -163,7 +202,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'request',
     'Governed request asking an authorised person, role or decision body to resolve a defined question.',
     'Stable request identity containing the question, options and exact supporting context; the Decision is a separate immutable outcome.',
-    ['question', 'options', 'subject/context', 'requester', 'decision authority', 'required-by date', 'supporting evidence'],
+    [
+      'question',
+      'options',
+      'subject/context',
+      'requester',
+      'decision authority',
+      'required-by date',
+      'supporting evidence'
+    ],
     ['Draft', 'Submitted', 'Under Consideration', 'Decided', 'Withdrawn', 'Expired'],
     [
       'A Decision Request is not the Decision.',
@@ -178,7 +225,16 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'decision-evidence',
     'Immutable attributable outcome resolving an Approval Request, Decision Request or other governed decision point.',
     'Unique decision occurrence identity bound to the exact request/subject/version, actor/body and authority basis at decision time.',
-    ['request', 'subject/version', 'outcome', 'reason', 'decider', 'authority basis', 'decided at', 'conditions/actions'],
+    [
+      'request',
+      'subject/version',
+      'outcome',
+      'reason',
+      'decider',
+      'authority basis',
+      'decided at',
+      'conditions/actions'
+    ],
     ['Recorded', 'Superseded', 'Corrected'],
     [
       'Decisions are append-only evidence; they are never silently edited.',
@@ -193,7 +249,14 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'work',
     'Action/obligation created by a Decision, review outcome, audit finding or other governed event.',
     'Stable action identity with accountable owner, due date and closure evidence; it does not become the source Decision.',
-    ['source decision/event', 'action description', 'owner', 'due date', 'status', 'closure evidence'],
+    [
+      'source decision/event',
+      'action description',
+      'owner',
+      'due date',
+      'status',
+      'closure evidence'
+    ],
     ['Open', 'In Progress', 'Blocked', 'Completed', 'Cancelled'],
     [
       'Actions preserve traceability to the decision/event that created them.',
@@ -240,7 +303,10 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'Unique change occurrence retaining prior/new values, actor and rationale.',
     ['target work/request', 'prior due date', 'new due date', 'actor', 'reason', 'occurred at'],
     ['Recorded'],
-    ['Current due date is derived from authoritative work state plus retained changes.', 'Changes are auditable and cannot erase previous due dates.']
+    [
+      'Current due date is derived from authoritative work state plus retained changes.',
+      'Changes are auditable and cannot erase previous due dates.'
+    ]
   ),
   def(
     'WORK-PRIORITY-CHANGE',
@@ -251,7 +317,10 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'Unique change occurrence retaining prior/new priority, actor, rationale and time.',
     ['target work/request', 'prior priority', 'new priority', 'actor', 'reason', 'occurred at'],
     ['Recorded'],
-    ['Priority is work-routing context, not business-object lifecycle state.', 'Priority history remains queryable.']
+    [
+      'Priority is work-routing context, not business-object lifecycle state.',
+      'Priority history remains queryable.'
+    ]
   ),
   def(
     'WORK-DELEGATION',
@@ -290,7 +359,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'event-evidence',
     'Immutable attributable evidence that exact governed content/data was submitted to an external Party, authority or system.',
     'Unique submission occurrence preserving exact subject/content version, recipient, channel, external reference and timestamp.',
-    ['subject/content version', 'sender', 'recipient', 'channel', 'external reference', 'submitted at', 'delivery evidence'],
+    [
+      'subject/content version',
+      'sender',
+      'recipient',
+      'channel',
+      'external reference',
+      'submitted at',
+      'delivery evidence'
+    ],
     ['Prepared', 'Submitted', 'Accepted', 'Rejected', 'Failed'],
     [
       'The submission references the canonical content/object; it does not clone it.',
@@ -337,7 +414,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'event-evidence',
     'Immutable semantic occurrence emitted when an authoritative business fact occurs or governed state transition is committed.',
     'Globally unique event occurrence linked to source aggregate/object, event type, source version and transaction/correlation context.',
-    ['event id', 'event type', 'source object', 'source version', 'occurred at', 'actor/system', 'correlation/causation'],
+    [
+      'event id',
+      'event type',
+      'source object',
+      'source version',
+      'occurred at',
+      'actor/system',
+      'correlation/causation'
+    ],
     ['Recorded', 'Published'],
     [
       'A Business Event describes committed business truth but is not a second mutable copy of the source object.',
@@ -352,7 +437,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'event-evidence',
     'Append-only accountability/security evidence recording an auditable action or access against a governed object/context.',
     'Unique immutable occurrence containing actor/principal, action, target, tenant/context, timestamp and result.',
-    ['actor/principal', 'action', 'target', 'tenant/context', 'timestamp', 'result', 'request/session correlation'],
+    [
+      'actor/principal',
+      'action',
+      'target',
+      'tenant/context',
+      'timestamp',
+      'result',
+      'request/session correlation'
+    ],
     ['Recorded'],
     [
       'Audit Events are append-only and protected from ordinary application editing.',
@@ -367,7 +460,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'event-evidence',
     'Immutable before/after evidence of an authorised change to mutable business state or configuration.',
     'Unique change occurrence linked to target object/version and change command/actor.',
-    ['target', 'prior version/value', 'new version/value', 'actor', 'reason', 'changed at', 'command/correlation'],
+    [
+      'target',
+      'prior version/value',
+      'new version/value',
+      'actor',
+      'reason',
+      'changed at',
+      'command/correlation'
+    ],
     ['Recorded'],
     [
       'Change evidence complements domain history; it does not replace current state.',
@@ -382,7 +483,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'decision-evidence',
     'Immutable evidence proving an approval/rejection/return decision against an exact subject/version and approval request.',
     'Unique approval evidence occurrence bound to Decision, request, actor, authority basis and exact subject/version hash/reference.',
-    ['decision', 'approval request', 'subject/version', 'actor', 'authority basis', 'timestamp', 'statement/signature'],
+    [
+      'decision',
+      'approval request',
+      'subject/version',
+      'actor',
+      'authority basis',
+      'timestamp',
+      'statement/signature'
+    ],
     ['Recorded'],
     [
       'Approval Evidence is immutable.',
@@ -397,7 +506,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'event-evidence',
     'Cryptographic or procedurally attributable evidence that a signer signed exact content/data under a defined signature policy.',
     'Unique signature occurrence bound to signer identity and exact signed payload/version digest.',
-    ['signer', 'signed subject/version', 'digest', 'signature method', 'certificate/provider reference', 'signed at', 'policy'],
+    [
+      'signer',
+      'signed subject/version',
+      'digest',
+      'signature method',
+      'certificate/provider reference',
+      'signed at',
+      'policy'
+    ],
     ['Recorded', 'Invalidated'],
     [
       'Signature evidence cannot float independently from the exact signed content/version.',
@@ -427,7 +544,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'event-evidence',
     'Generic governed evidence identity for a file, dataset extract, measurement, statement, photograph or other evidential artefact linked to business truth.',
     'Stable evidence identity with immutable captured content/version, provenance and integrity metadata.',
-    ['evidence type', 'subject links', 'captured by', 'captured at', 'content/reference', 'hash/integrity', 'classification'],
+    [
+      'evidence type',
+      'subject links',
+      'captured by',
+      'captured at',
+      'content/reference',
+      'hash/integrity',
+      'classification'
+    ],
     ['Captured', 'Verified', 'Superseded', 'Archived'],
     [
       'Evidence references/supports domain facts; it does not replace structured domain state.',
@@ -442,9 +567,18 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'relationship',
     'Traceability relationship linking evidence, derived information or projections to the authoritative inputs/origins that produced them.',
     'Stable provenance edge with source identity/version, transformation/context and effectivity.',
-    ['derived/evidence object', 'source object/version', 'provenance type', 'transformation/process', 'captured at'],
+    [
+      'derived/evidence object',
+      'source object/version',
+      'provenance type',
+      'transformation/process',
+      'captured at'
+    ],
     ['Active'],
-    ['Provenance never creates a duplicate source master.', 'Derived outputs should remain explainable back to authoritative sources.']
+    [
+      'Provenance never creates a duplicate source master.',
+      'Derived outputs should remain explainable back to authoritative sources.'
+    ]
   ),
   def(
     'EVID-SOURCE-REFERENCE',
@@ -453,9 +587,18 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'relationship',
     'Explicit traceability link to an originating internal or external source identifier/object/system.',
     'Stable source link containing source system/authority, identifier, version/time and retrieval/context metadata.',
-    ['target/evidence', 'source system/authority', 'external/internal identifier', 'version/as-of', 'reference URI/key'],
+    [
+      'target/evidence',
+      'source system/authority',
+      'external/internal identifier',
+      'version/as-of',
+      'reference URI/key'
+    ],
     ['Active', 'Superseded'],
-    ['A Source Reference adapts external identity to NuBlox without redefining canonical identity.', 'Source changes are historically retained where evidentially relevant.']
+    [
+      'A Source Reference adapts external identity to NuBlox without redefining canonical identity.',
+      'Source changes are historically retained where evidentially relevant.'
+    ]
   ),
   def(
     'EVID-CORRECTION',
@@ -466,7 +609,10 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'Unique correction occurrence linking original and corrective records plus reason and authority.',
     ['original record', 'corrective record', 'reason', 'actor', 'authority', 'corrected at'],
     ['Recorded'],
-    ['Correction never erases or edits the original evidence.', 'The corrected current view is derived from the complete correction chain.']
+    [
+      'Correction never erases or edits the original evidence.',
+      'The corrected current view is derived from the complete correction chain.'
+    ]
   ),
   def(
     'EVID-REVERSAL',
@@ -477,7 +623,10 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'Unique reversal occurrence linking the original effect and reversing record with reason/authority.',
     ['original record/effect', 'reversing record', 'reason', 'actor', 'authority', 'reversed at'],
     ['Recorded'],
-    ['Reversal preserves the original record.', 'A reversal is not destructive deletion and must retain causal traceability.']
+    [
+      'Reversal preserves the original record.',
+      'A reversal is not destructive deletion and must retain causal traceability.'
+    ]
   ),
   def(
     'EVID-ARCHIVE-PACKAGE',
@@ -486,7 +635,14 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'retention-control',
     'Governed preservation package containing exact records/evidence plus a manifest, provenance, integrity and retention metadata.',
     'Stable package identity with immutable package versions/manifests once sealed.',
-    ['package manifest', 'record/evidence references', 'integrity digests', 'retention class', 'created/sealed by', 'custody/location'],
+    [
+      'package manifest',
+      'record/evidence references',
+      'integrity digests',
+      'retention class',
+      'created/sealed by',
+      'custody/location'
+    ],
     ['Preparing', 'Sealed', 'Transferred', 'Preserved', 'Disposed'],
     [
       'Archive Package preserves records; it is not a second operational master.',
@@ -502,7 +658,15 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'retention-control',
     'Authorised evidenced decision to retain, transfer, archive or destroy eligible records/evidence under applicable retention rules.',
     'Unique decision occurrence covering exact record/evidence scope, rule basis, hold evaluation, authority and execution evidence.',
-    ['scope', 'retention rule/schedule', 'eligibility date', 'hold check', 'decision', 'authoriser', 'execution evidence'],
+    [
+      'scope',
+      'retention rule/schedule',
+      'eligibility date',
+      'hold check',
+      'decision',
+      'authoriser',
+      'execution evidence'
+    ],
     ['Proposed', 'Approved', 'Executed', 'Cancelled'],
     [
       'No disposition can execute while an applicable Legal Hold Link is active.',
@@ -517,7 +681,13 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'relationship',
     'Effective relationship placing exact business objects, records or evidence scope under a legal/regulatory preservation hold.',
     'Stable hold link with hold matter/reference, scope, effectivity and release history.',
-    ['hold/matter reference', 'subject/record/evidence scope', 'effective from/to', 'basis', 'placed/released by'],
+    [
+      'hold/matter reference',
+      'subject/record/evidence scope',
+      'effective from/to',
+      'basis',
+      'placed/released by'
+    ],
     ['Active', 'Released'],
     [
       'Active hold blocks otherwise-eligible disposition.',
@@ -532,7 +702,14 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
     'integration-evidence',
     'Immutable reliable-publication envelope created transactionally from a committed Business Event for downstream delivery.',
     'Unique message identity referencing exactly one source Business Event plus destination/topic and delivery metadata.',
-    ['business event', 'topic/destination', 'payload/schema version', 'created at', 'delivery attempts', 'published at'],
+    [
+      'business event',
+      'topic/destination',
+      'payload/schema version',
+      'created at',
+      'delivery attempts',
+      'published at'
+    ],
     ['Pending', 'Published', 'Failed', 'Dead Lettered'],
     [
       'Outbox Message is transport evidence, not a second authoritative Business Event.',
@@ -544,71 +721,356 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
 ];
 
 export const sharedWorkEvidenceRelationships: SharedWorkEvidenceRelationship[] = [
-  { id: 'SWE-R01', from: 'WORK-WORKFLOW-DEFINITION', predicate: 'instantiates', to: 'WORK-WORKFLOW-INSTANCE', cardinality: '1:N', governance: 'Each instance records the exact published definition version used.' },
-  { id: 'SWE-R02', from: 'WORK-WORKFLOW-INSTANCE', predicate: 'coordinates', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:N', governance: 'Workflow runtime references canonical subjects; it never becomes their authoritative record.' },
-  { id: 'SWE-R03', from: 'WORK-WORKFLOW-INSTANCE', predicate: 'creates', to: 'WORK-WORK-ITEM', cardinality: '1:N', governance: 'Generated work remains traceable to workflow instance and subject.' },
-  { id: 'SWE-R04', from: 'WORK-WORK-ITEM', predicate: 'assigned via', to: 'WORK-ASSIGNMENT', cardinality: '1:N', governance: 'Assignment history is retained across reassignments.' },
-  { id: 'SWE-R05', from: 'WORK-ASSIGNMENT', predicate: 'assigns to', to: 'AUTH-USER-IDENTITY', cardinality: 'N:1', governance: 'Assignment to a user never bypasses membership, permission or authority checks.' },
-  { id: 'SWE-R06', from: 'WORK-REVIEW-REQUEST', predicate: 'reviews', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Request binds to an exact subject/version/configuration.' },
-  { id: 'SWE-R07', from: 'WORK-APPROVAL-REQUEST', predicate: 'seeks approval of', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Request identifies exact subject/version and approval basis.' },
-  { id: 'SWE-R08', from: 'WORK-DECISION-REQUEST', predicate: 'seeks decision about', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Question/options remain fixed for the governed decision occurrence.' },
-  { id: 'SWE-R09', from: 'WORK-APPROVAL-REQUEST', predicate: 'requires authority under', to: 'AUTH-DELEGATED-AUTHORITY', cardinality: 'N:N', governance: 'Applicable delegated/statutory authority is validated at decision time.' },
-  { id: 'SWE-R10', from: 'WORK-DECISION-REQUEST', predicate: 'results in', to: 'WORK-DECISION', cardinality: '1:N', governance: 'A Decision is separate immutable outcome evidence.' },
-  { id: 'SWE-R11', from: 'WORK-APPROVAL-REQUEST', predicate: 'results in', to: 'WORK-DECISION', cardinality: '1:N', governance: 'Approval/rejection/return outcome remains separately evidenced.' },
-  { id: 'SWE-R12', from: 'WORK-DECISION', predicate: 'creates', to: 'WORK-FOLLOW-UP-ACTION', cardinality: '1:N', governance: 'Actions reference the decision that created them.' },
-  { id: 'SWE-R13', from: 'WORK-ACKNOWLEDGEMENT', predicate: 'acknowledges', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Acknowledgement records exact subject/version and actor.' },
-  { id: 'SWE-R14', from: 'WORK-ESCALATION', predicate: 'escalates', to: 'WORK-WORK-ITEM', cardinality: 'N:1', governance: 'Escalation affects routing/attention but does not transfer authority.' },
-  { id: 'SWE-R15', from: 'WORK-DUE-DATE-CHANGE', predicate: 'changes due date of', to: 'WORK-WORK-ITEM', cardinality: 'N:1', governance: 'Prior/new values are immutable evidence.' },
-  { id: 'SWE-R16', from: 'WORK-PRIORITY-CHANGE', predicate: 'changes priority of', to: 'WORK-WORK-ITEM', cardinality: 'N:1', governance: 'Priority is routing context, not domain lifecycle.' },
-  { id: 'SWE-R17', from: 'WORK-DELEGATION', predicate: 'delegates', to: 'WORK-ASSIGNMENT', cardinality: 'N:1', governance: 'Work delegation remains separate from Delegated Authority.' },
-  { id: 'SWE-R18', from: 'WORK-COLLABORATION-INVITATION', predicate: 'may create on acceptance', to: 'AUTH-MEMBERSHIP', cardinality: '1:0..1', governance: 'Acceptance creates explicit membership/participation; permissions remain separately governed.' },
-  { id: 'SWE-R19', from: 'WORK-EXTERNAL-SUBMISSION', predicate: 'submits', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Submission points to exact canonical content/object version rather than cloning it.' },
-  { id: 'SWE-R20', from: 'WORK-REQUEST-RESPONSE', predicate: 'responds to', to: 'WORK-REVIEW-REQUEST', cardinality: 'N:1', governance: 'Response is attributable and retained separately from request.' },
-  { id: 'SWE-R21', from: 'WORK-REQUEST-RESPONSE', predicate: 'responds to', to: 'WORK-APPROVAL-REQUEST', cardinality: 'N:1', governance: 'Response may inform a Decision but is not automatically the Decision.' },
-  { id: 'SWE-R22', from: 'WORK-REQUEST-RESPONSE', predicate: 'responds to', to: 'WORK-DECISION-REQUEST', cardinality: 'N:1', governance: 'Response supports decision evidence without replacing it.' },
-  { id: 'SWE-R23', from: 'WORK-NOTIFICATION-PREFERENCE', predicate: 'belongs to', to: 'AUTH-USER-IDENTITY', cardinality: 'N:1', governance: 'Preference is user configuration only; mandatory notices/work remain authoritative.' },
-  { id: 'SWE-R24', from: 'EVID-BUSINESS-EVENT', predicate: 'describes committed occurrence on', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Event records a committed fact while source aggregate remains authoritative.' },
-  { id: 'SWE-R25', from: 'EVID-AUDIT-EVENT', predicate: 'records action by', to: 'AUTH-USER-IDENTITY', cardinality: 'N:0..1', governance: 'System actors are supported; human actions retain principal identity.' },
-  { id: 'SWE-R26', from: 'EVID-AUDIT-EVENT', predicate: 'targets', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:0..1', governance: 'Audit target/context is explicit without duplicating target state.' },
-  { id: 'SWE-R27', from: 'EVID-CHANGE-EVENT', predicate: 'records change to', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Before/after evidence remains distinct from current state.' },
-  { id: 'SWE-R28', from: 'EVID-APPROVAL', predicate: 'proves', to: 'WORK-DECISION', cardinality: '1:1', governance: 'Approval evidence binds decision, subject/version and authority basis.' },
-  { id: 'SWE-R29', from: 'EVID-SIGNATURE', predicate: 'signs', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Signature binds exact payload/version digest.' },
-  { id: 'SWE-R30', from: 'EVID-ATTESTATION', predicate: 'attests to', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Statement, subject and attestor are fixed for the occurrence.' },
-  { id: 'SWE-R31', from: 'EVID-EVIDENCE-ITEM', predicate: 'evidences', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:N', governance: 'Evidence supports facts without becoming structured domain truth.' },
-  { id: 'SWE-R32', from: 'EVID-EVIDENCE-ITEM', predicate: 'traced through', to: 'EVID-PROVENANCE-REFERENCE', cardinality: '1:N', governance: 'Evidence keeps source/transformation traceability.' },
-  { id: 'SWE-R33', from: 'EVID-EVIDENCE-ITEM', predicate: 'references source via', to: 'EVID-SOURCE-REFERENCE', cardinality: '1:N', governance: 'External/internal source keys are adapters, not duplicate masters.' },
-  { id: 'SWE-R34', from: 'EVID-CORRECTION', predicate: 'corrects', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Original remains immutable and discoverable.' },
-  { id: 'SWE-R35', from: 'EVID-REVERSAL', predicate: 'reverses effect of', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:1', governance: 'Reversal adds a compensating record and preserves the original.' },
-  { id: 'SWE-R36', from: 'EVID-ARCHIVE-PACKAGE', predicate: 'preserves', to: 'EVID-EVIDENCE-ITEM', cardinality: 'N:N', governance: 'Sealed manifest identifies exact evidence/records and integrity metadata.' },
-  { id: 'SWE-R37', from: 'EVID-RETENTION-DISPOSITION', predicate: 'is blocked by active', to: 'EVID-LEGAL-HOLD-LINK', cardinality: 'N:N', governance: 'Disposition execution is prohibited while applicable holds are active.' },
-  { id: 'SWE-R38', from: 'EVID-LEGAL-HOLD-LINK', predicate: 'holds', to: 'CBO-GOVERNED-SUBJECT', cardinality: 'N:N', governance: 'Hold changes retention eligibility, not object identity/lifecycle.' },
-  { id: 'SWE-R39', from: 'EVID-OUTBOX-MESSAGE', predicate: 'publishes', to: 'EVID-BUSINESS-EVENT', cardinality: 'N:1', governance: 'Outbox is a transport envelope referencing one authoritative event occurrence.' }
+  {
+    id: 'SWE-R01',
+    from: 'WORK-WORKFLOW-DEFINITION',
+    predicate: 'instantiates',
+    to: 'WORK-WORKFLOW-INSTANCE',
+    cardinality: '1:N',
+    governance: 'Each instance records the exact published definition version used.'
+  },
+  {
+    id: 'SWE-R02',
+    from: 'WORK-WORKFLOW-INSTANCE',
+    predicate: 'coordinates',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:N',
+    governance:
+      'Workflow runtime references canonical subjects; it never becomes their authoritative record.'
+  },
+  {
+    id: 'SWE-R03',
+    from: 'WORK-WORKFLOW-INSTANCE',
+    predicate: 'creates',
+    to: 'WORK-WORK-ITEM',
+    cardinality: '1:N',
+    governance: 'Generated work remains traceable to workflow instance and subject.'
+  },
+  {
+    id: 'SWE-R04',
+    from: 'WORK-WORK-ITEM',
+    predicate: 'assigned via',
+    to: 'WORK-ASSIGNMENT',
+    cardinality: '1:N',
+    governance: 'Assignment history is retained across reassignments.'
+  },
+  {
+    id: 'SWE-R05',
+    from: 'WORK-ASSIGNMENT',
+    predicate: 'assigns to',
+    to: 'AUTH-USER-IDENTITY',
+    cardinality: 'N:1',
+    governance: 'Assignment to a user never bypasses membership, permission or authority checks.'
+  },
+  {
+    id: 'SWE-R06',
+    from: 'WORK-REVIEW-REQUEST',
+    predicate: 'reviews',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Request binds to an exact subject/version/configuration.'
+  },
+  {
+    id: 'SWE-R07',
+    from: 'WORK-APPROVAL-REQUEST',
+    predicate: 'seeks approval of',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Request identifies exact subject/version and approval basis.'
+  },
+  {
+    id: 'SWE-R08',
+    from: 'WORK-DECISION-REQUEST',
+    predicate: 'seeks decision about',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Question/options remain fixed for the governed decision occurrence.'
+  },
+  {
+    id: 'SWE-R09',
+    from: 'WORK-APPROVAL-REQUEST',
+    predicate: 'requires authority under',
+    to: 'AUTH-DELEGATED-AUTHORITY',
+    cardinality: 'N:N',
+    governance: 'Applicable delegated/statutory authority is validated at decision time.'
+  },
+  {
+    id: 'SWE-R10',
+    from: 'WORK-DECISION-REQUEST',
+    predicate: 'results in',
+    to: 'WORK-DECISION',
+    cardinality: '1:N',
+    governance: 'A Decision is separate immutable outcome evidence.'
+  },
+  {
+    id: 'SWE-R11',
+    from: 'WORK-APPROVAL-REQUEST',
+    predicate: 'results in',
+    to: 'WORK-DECISION',
+    cardinality: '1:N',
+    governance: 'Approval/rejection/return outcome remains separately evidenced.'
+  },
+  {
+    id: 'SWE-R12',
+    from: 'WORK-DECISION',
+    predicate: 'creates',
+    to: 'WORK-FOLLOW-UP-ACTION',
+    cardinality: '1:N',
+    governance: 'Actions reference the decision that created them.'
+  },
+  {
+    id: 'SWE-R13',
+    from: 'WORK-ACKNOWLEDGEMENT',
+    predicate: 'acknowledges',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Acknowledgement records exact subject/version and actor.'
+  },
+  {
+    id: 'SWE-R14',
+    from: 'WORK-ESCALATION',
+    predicate: 'escalates',
+    to: 'WORK-WORK-ITEM',
+    cardinality: 'N:1',
+    governance: 'Escalation affects routing/attention but does not transfer authority.'
+  },
+  {
+    id: 'SWE-R15',
+    from: 'WORK-DUE-DATE-CHANGE',
+    predicate: 'changes due date of',
+    to: 'WORK-WORK-ITEM',
+    cardinality: 'N:1',
+    governance: 'Prior/new values are immutable evidence.'
+  },
+  {
+    id: 'SWE-R16',
+    from: 'WORK-PRIORITY-CHANGE',
+    predicate: 'changes priority of',
+    to: 'WORK-WORK-ITEM',
+    cardinality: 'N:1',
+    governance: 'Priority is routing context, not domain lifecycle.'
+  },
+  {
+    id: 'SWE-R17',
+    from: 'WORK-DELEGATION',
+    predicate: 'delegates',
+    to: 'WORK-ASSIGNMENT',
+    cardinality: 'N:1',
+    governance: 'Work delegation remains separate from Delegated Authority.'
+  },
+  {
+    id: 'SWE-R18',
+    from: 'WORK-COLLABORATION-INVITATION',
+    predicate: 'may create on acceptance',
+    to: 'AUTH-MEMBERSHIP',
+    cardinality: '1:0..1',
+    governance:
+      'Acceptance creates explicit membership/participation; permissions remain separately governed.'
+  },
+  {
+    id: 'SWE-R19',
+    from: 'WORK-EXTERNAL-SUBMISSION',
+    predicate: 'submits',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance:
+      'Submission points to exact canonical content/object version rather than cloning it.'
+  },
+  {
+    id: 'SWE-R20',
+    from: 'WORK-REQUEST-RESPONSE',
+    predicate: 'responds to',
+    to: 'WORK-REVIEW-REQUEST',
+    cardinality: 'N:1',
+    governance: 'Response is attributable and retained separately from request.'
+  },
+  {
+    id: 'SWE-R21',
+    from: 'WORK-REQUEST-RESPONSE',
+    predicate: 'responds to',
+    to: 'WORK-APPROVAL-REQUEST',
+    cardinality: 'N:1',
+    governance: 'Response may inform a Decision but is not automatically the Decision.'
+  },
+  {
+    id: 'SWE-R22',
+    from: 'WORK-REQUEST-RESPONSE',
+    predicate: 'responds to',
+    to: 'WORK-DECISION-REQUEST',
+    cardinality: 'N:1',
+    governance: 'Response supports decision evidence without replacing it.'
+  },
+  {
+    id: 'SWE-R23',
+    from: 'WORK-NOTIFICATION-PREFERENCE',
+    predicate: 'belongs to',
+    to: 'AUTH-USER-IDENTITY',
+    cardinality: 'N:1',
+    governance:
+      'Preference is user configuration only; mandatory notices/work remain authoritative.'
+  },
+  {
+    id: 'SWE-R24',
+    from: 'EVID-BUSINESS-EVENT',
+    predicate: 'describes committed occurrence on',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Event records a committed fact while source aggregate remains authoritative.'
+  },
+  {
+    id: 'SWE-R25',
+    from: 'EVID-AUDIT-EVENT',
+    predicate: 'records action by',
+    to: 'AUTH-USER-IDENTITY',
+    cardinality: 'N:0..1',
+    governance: 'System actors are supported; human actions retain principal identity.'
+  },
+  {
+    id: 'SWE-R26',
+    from: 'EVID-AUDIT-EVENT',
+    predicate: 'targets',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:0..1',
+    governance: 'Audit target/context is explicit without duplicating target state.'
+  },
+  {
+    id: 'SWE-R27',
+    from: 'EVID-CHANGE-EVENT',
+    predicate: 'records change to',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Before/after evidence remains distinct from current state.'
+  },
+  {
+    id: 'SWE-R28',
+    from: 'EVID-APPROVAL',
+    predicate: 'proves',
+    to: 'WORK-DECISION',
+    cardinality: '1:1',
+    governance: 'Approval evidence binds decision, subject/version and authority basis.'
+  },
+  {
+    id: 'SWE-R29',
+    from: 'EVID-SIGNATURE',
+    predicate: 'signs',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Signature binds exact payload/version digest.'
+  },
+  {
+    id: 'SWE-R30',
+    from: 'EVID-ATTESTATION',
+    predicate: 'attests to',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Statement, subject and attestor are fixed for the occurrence.'
+  },
+  {
+    id: 'SWE-R31',
+    from: 'EVID-EVIDENCE-ITEM',
+    predicate: 'evidences',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:N',
+    governance: 'Evidence supports facts without becoming structured domain truth.'
+  },
+  {
+    id: 'SWE-R32',
+    from: 'EVID-EVIDENCE-ITEM',
+    predicate: 'traced through',
+    to: 'EVID-PROVENANCE-REFERENCE',
+    cardinality: '1:N',
+    governance: 'Evidence keeps source/transformation traceability.'
+  },
+  {
+    id: 'SWE-R33',
+    from: 'EVID-EVIDENCE-ITEM',
+    predicate: 'references source via',
+    to: 'EVID-SOURCE-REFERENCE',
+    cardinality: '1:N',
+    governance: 'External/internal source keys are adapters, not duplicate masters.'
+  },
+  {
+    id: 'SWE-R34',
+    from: 'EVID-CORRECTION',
+    predicate: 'corrects',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Original remains immutable and discoverable.'
+  },
+  {
+    id: 'SWE-R35',
+    from: 'EVID-REVERSAL',
+    predicate: 'reverses effect of',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:1',
+    governance: 'Reversal adds a compensating record and preserves the original.'
+  },
+  {
+    id: 'SWE-R36',
+    from: 'EVID-ARCHIVE-PACKAGE',
+    predicate: 'preserves',
+    to: 'EVID-EVIDENCE-ITEM',
+    cardinality: 'N:N',
+    governance: 'Sealed manifest identifies exact evidence/records and integrity metadata.'
+  },
+  {
+    id: 'SWE-R37',
+    from: 'EVID-RETENTION-DISPOSITION',
+    predicate: 'is blocked by active',
+    to: 'EVID-LEGAL-HOLD-LINK',
+    cardinality: 'N:N',
+    governance: 'Disposition execution is prohibited while applicable holds are active.'
+  },
+  {
+    id: 'SWE-R38',
+    from: 'EVID-LEGAL-HOLD-LINK',
+    predicate: 'holds',
+    to: 'CBO-GOVERNED-SUBJECT',
+    cardinality: 'N:N',
+    governance: 'Hold changes retention eligibility, not object identity/lifecycle.'
+  },
+  {
+    id: 'SWE-R39',
+    from: 'EVID-OUTBOX-MESSAGE',
+    predicate: 'publishes',
+    to: 'EVID-BUSINESS-EVENT',
+    cardinality: 'N:1',
+    governance: 'Outbox is a transport envelope referencing one authoritative event occurrence.'
+  }
 ];
 
 export const sharedWorkEvidenceBoundaries: SharedWorkEvidenceBoundary[] = [
   {
     name: 'Work orchestration',
     structure: 'Subject → Workflow Instance → Work Item → Assignment',
-    purpose: 'Coordinate cross-workspace work while keeping canonical business objects authoritative.',
-    mustNotBecome: 'a universal domain-state engine, a duplicate Work Order/Schedule Activity model or a screen exposing every lifecycle step to every user'
+    purpose:
+      'Coordinate cross-workspace work while keeping canonical business objects authoritative.',
+    mustNotBecome:
+      'a universal domain-state engine, a duplicate Work Order/Schedule Activity model or a screen exposing every lifecycle step to every user'
   },
   {
     name: 'Decision & authority',
     structure: 'Request → Response → Decision → Domain Command / Action',
-    purpose: 'Separate requests, opinions/responses, authorised decisions and resulting business effects.',
-    mustNotBecome: 'approval-by-assignment, role-equals-authority or a mutable request record that overwrites decision evidence'
+    purpose:
+      'Separate requests, opinions/responses, authorised decisions and resulting business effects.',
+    mustNotBecome:
+      'approval-by-assignment, role-equals-authority or a mutable request record that overwrites decision evidence'
   },
   {
     name: 'Evidence & audit',
     structure: 'Business Event / Change Event / Audit Event → Evidence / Signature / Attestation',
-    purpose: 'Retain attributable, immutable proof of what happened, what changed, who acted and what exact content was involved.',
-    mustNotBecome: 'a second mutable truth store or an undifferentiated event log with no semantic ownership'
+    purpose:
+      'Retain attributable, immutable proof of what happened, what changed, who acted and what exact content was involved.',
+    mustNotBecome:
+      'a second mutable truth store or an undifferentiated event log with no semantic ownership'
   },
   {
     name: 'Retention & traceability',
     structure: 'Evidence / Records → Archive Package → Disposition, constrained by Legal Hold',
-    purpose: 'Preserve provenance, correction/reversal chains, retention decisions and defensible disposition.',
-    mustNotBecome: 'destructive history rewriting, an uncontrolled archive folder or automatic deletion that ignores active holds'
+    purpose:
+      'Preserve provenance, correction/reversal chains, retention decisions and defensible disposition.',
+    mustNotBecome:
+      'destructive history rewriting, an uncontrolled archive folder or automatic deletion that ignores active holds'
   }
 ];
 
@@ -646,7 +1108,13 @@ export function validateSharedWorkEvidenceModel() {
     if (!entry.modelId || ids.has(entry.modelId)) return false;
     ids.add(entry.modelId);
     if (!entry.canonicalName || !entry.definition || !entry.identityRule) return false;
-    if (!entry.scope.length || !entry.keyData.length || !entry.lifecycle.length || !entry.governance.length) return false;
+    if (
+      !entry.scope.length ||
+      !entry.keyData.length ||
+      !entry.lifecycle.length ||
+      !entry.governance.length
+    )
+      return false;
     for (const key of entry.candidateKeys) {
       if (candidateKeys.has(key)) return false;
       candidateKeys.add(key);
@@ -665,7 +1133,8 @@ export function validateSharedWorkEvidenceModel() {
     relationshipIds.add(relationship.id);
     if (!ids.has(relationship.from) && !externalModelIds.has(relationship.from)) return false;
     if (!ids.has(relationship.to) && !externalModelIds.has(relationship.to)) return false;
-    if (!relationship.predicate || !relationship.cardinality || !relationship.governance) return false;
+    if (!relationship.predicate || !relationship.cardinality || !relationship.governance)
+      return false;
   }
 
   return true;

@@ -28,11 +28,27 @@
   --shadow: 0 6px 20px rgba(18, 47, 70, 0.07);
 }
 
-* { box-sizing: border-box; }
-html { min-width: 320px; background: #f4f7fa; }
-body { margin: 0; min-width: 320px; min-height: 100vh; }
-button, input, select, textarea { font: inherit; }
-a { color: inherit; }
+* {
+  box-sizing: border-box;
+}
+html {
+  min-width: 320px;
+  background: #f4f7fa;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+a {
+  color: inherit;
+}
 
 .sr-only {
   position: absolute;
@@ -60,5 +76,7 @@ a { color: inherit; }
 }
 
 @media (max-width: 900px) {
-  .workspace-page { gap: 10px; }
+  .workspace-page {
+    gap: 10px;
+  }
 }

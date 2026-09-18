@@ -13,7 +13,9 @@ describe('canonical aggregate-boundary freeze', () => {
     expect(canonicalAggregateFreezeSummary.familyCount).toBe(29);
     expect(canonicalAggregateFreezeSummary.frozenFamilyCount).toBe(29);
     expect(canonicalAggregateFreezeSummary.aggregateBoundaryCount).toBe(174);
-    expect(canonicalAggregateFreezeSummary.frozenAggregateBoundaryCount).toBe(canonicalAggregateFreezeSummary.aggregateBoundaryCount);
+    expect(canonicalAggregateFreezeSummary.frozenAggregateBoundaryCount).toBe(
+      canonicalAggregateFreezeSummary.aggregateBoundaryCount
+    );
     expect(canonicalAggregateFreezeSummary.activityDrivenOwnershipCount).toBe(75);
     expect(canonicalAggregateFreezeSummary.state).toBe('frozen');
   });
@@ -32,12 +34,20 @@ describe('canonical aggregate-boundary freeze', () => {
     expect(new Set(owned).size).toBe(owned.length);
     expect(new Set(projections).size).toBe(projections.length);
     expect(owned.some((member) => roots.includes(member))).toBe(false);
-    expect(projections.some((projection) => roots.includes(projection) || owned.includes(projection))).toBe(false);
+    expect(
+      projections.some((projection) => roots.includes(projection) || owned.includes(projection))
+    ).toBe(false);
   });
 
   it('requires one-aggregate command transactions and read-only projections', () => {
-    expect(canonicalAggregateRules.join(' ')).toContain('single command transaction writes one aggregate boundary');
-    expect(canonicalAggregateRules.join(' ')).toContain('Published projections/read models are read-only');
-    expect(canonicalAggregateRules.join(' ')).toContain('Workflow coordinates domain commands but never owns business state');
+    expect(canonicalAggregateRules.join(' ')).toContain(
+      'single command transaction writes one aggregate boundary'
+    );
+    expect(canonicalAggregateRules.join(' ')).toContain(
+      'Published projections/read models are read-only'
+    );
+    expect(canonicalAggregateRules.join(' ')).toContain(
+      'Workflow coordinates domain commands but never owns business state'
+    );
   });
 });

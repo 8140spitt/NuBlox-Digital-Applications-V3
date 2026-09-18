@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { foundationObjectByCandidateKey, foundationObjects, foundationRelationships, validateFoundationObjectModel } from './foundation-object-model';
+import {
+  foundationObjectByCandidateKey,
+  foundationObjects,
+  foundationRelationships,
+  validateFoundationObjectModel
+} from './foundation-object-model';
 
 describe('foundation canonical object model', () => {
   it('has unique governed identities and valid relationship endpoints', () => {
@@ -23,12 +28,18 @@ describe('foundation canonical object model', () => {
   });
 
   it('models shared identity relationships rather than duplicate masters', () => {
-    expect(foundationRelationships).toEqual(expect.arrayContaining([
-      expect.objectContaining({ from: 'CBO-PERSON', predicate: 'specializes', to: 'CBO-PARTY' }),
-      expect.objectContaining({ from: 'CBO-ORGANISATION', predicate: 'specializes', to: 'CBO-PARTY' }),
-      expect.objectContaining({ from: 'CBO-ASSET', predicate: 'instance of', to: 'CBO-ITEM' }),
-      expect.objectContaining({ from: 'CBO-ASSET', predicate: 'member of', to: 'CBO-SYSTEM' }),
-      expect.objectContaining({ from: 'CBO-PROJECT', predicate: 'occurs at', to: 'CBO-SITE' })
-    ]));
+    expect(foundationRelationships).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ from: 'CBO-PERSON', predicate: 'specializes', to: 'CBO-PARTY' }),
+        expect.objectContaining({
+          from: 'CBO-ORGANISATION',
+          predicate: 'specializes',
+          to: 'CBO-PARTY'
+        }),
+        expect.objectContaining({ from: 'CBO-ASSET', predicate: 'instance of', to: 'CBO-ITEM' }),
+        expect.objectContaining({ from: 'CBO-ASSET', predicate: 'member of', to: 'CBO-SYSTEM' }),
+        expect.objectContaining({ from: 'CBO-PROJECT', predicate: 'occurs at', to: 'CBO-SITE' })
+      ])
+    );
   });
 });

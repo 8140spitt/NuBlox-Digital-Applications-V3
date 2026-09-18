@@ -9,13 +9,23 @@ import mysql, {
 export const requiredMigration = '0007_foundation_relationship_structure_authority.sql';
 
 function databaseUrl() {
-  if (!process.env.DATABASE_URL && !process.env.MYSQL_URL && !process.env.NUBLOX_TEST_DATABASE_URL) {
-    try { loadEnvFile('.env'); } catch { /* environment may be injected by the runtime */ }
+  if (
+    !process.env.DATABASE_URL &&
+    !process.env.MYSQL_URL &&
+    !process.env.NUBLOX_TEST_DATABASE_URL
+  ) {
+    try {
+      loadEnvFile('.env');
+    } catch {
+      /* environment may be injected by the runtime */
+    }
   }
 
   if (process.env.NODE_ENV === 'test') {
     if (!process.env.NUBLOX_TEST_DATABASE_URL) {
-      throw new Error('Tests require NUBLOX_TEST_DATABASE_URL. Refusing to fall back to a development database.');
+      throw new Error(
+        'Tests require NUBLOX_TEST_DATABASE_URL. Refusing to fall back to a development database.'
+      );
     }
     return process.env.NUBLOX_TEST_DATABASE_URL;
   }

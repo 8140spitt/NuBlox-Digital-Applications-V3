@@ -36,7 +36,9 @@ function target(tenant: string, id: string) {
 }
 
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'The requested action could not be completed.' });
+  return fail(400, {
+    message: error instanceof Error ? error.message : 'The requested action could not be completed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {

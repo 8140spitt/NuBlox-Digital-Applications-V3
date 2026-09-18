@@ -1,8 +1,4 @@
-import {
-  ensureMigrationLedger,
-  migrationConnection,
-  readMigrations
-} from './db-migration-lib.mjs';
+import { ensureMigrationLedger, migrationConnection, readMigrations } from './db-migration-lib.mjs';
 
 const useTestDatabase = process.argv.includes('--test');
 const connection = await migrationConnection(useTestDatabase);

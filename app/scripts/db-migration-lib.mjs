@@ -6,7 +6,7 @@ import mysql from 'mysql2/promise';
 export function getDatabaseUrl(useTestDatabase = false) {
   const url = useTestDatabase
     ? process.env.NUBLOX_TEST_DATABASE_URL
-    : process.env.DATABASE_URL ?? process.env.MYSQL_URL;
+    : (process.env.DATABASE_URL ?? process.env.MYSQL_URL);
   if (!url) {
     const name = useTestDatabase ? 'NUBLOX_TEST_DATABASE_URL' : 'DATABASE_URL (or MYSQL_URL)';
     throw new Error(`Missing ${name}.`);
@@ -17,10 +17,12 @@ export function getDatabaseUrl(useTestDatabase = false) {
 export async function readMigrations() {
   const directory = resolve(process.cwd(), 'migrations');
   const names = (await readdir(directory)).filter((name) => /^\d{4}_.+\.sql$/.test(name)).sort();
-  return Promise.all(names.map(async (name) => {
-    const sql = await readFile(resolve(directory, name), 'utf8');
-    return { name, sql, checksum: createHash('sha256').update(sql).digest('hex') };
-  }));
+  return Promise.all(
+    names.map(async (name) => {
+      const sql = await readFile(resolve(directory, name), 'utf8');
+      return { name, sql, checksum: createHash('sha256').update(sql).digest('hex') };
+    })
+  );
 }
 
 export function connectionOptions(databaseUrl) {
@@ -53,7 +55,8 @@ export async function ensureMigrationLedger(connection) {
 export async function withMigrationLock(connection, work) {
   const lockName = 'nublox:schema-migrations';
   const [rows] = await connection.execute('SELECT GET_LOCK(?, 30) AS acquired', [lockName]);
-  if (Number(rows[0]?.acquired) !== 1) throw new Error('Could not acquire the NuBlox schema migration lock.');
+  if (Number(rows[0]?.acquired) !== 1)
+    throw new Error('Could not acquire the NuBlox schema migration lock.');
   try {
     return await work();
   } finally {
@@ -65,22 +68,31 @@ export async function applyMigrations(connection, { log = console.log } = {}) {
   return withMigrationLock(connection, async () => {
     await ensureMigrationLedger(connection);
     const migrations = await readMigrations();
-    const [rows] = await connection.query('SELECT migration_name AS name, checksum FROM schema_migrations ORDER BY migration_name');
+    const [rows] = await connection.query(
+      'SELECT migration_name AS name, checksum FROM schema_migrations ORDER BY migration_name'
+    );
     const repositoryNames = new Set(migrations.map((migration) => migration.name));
     for (const row of rows) {
-      if (!repositoryNames.has(row.name)) throw new Error(`Applied migration ${row.name} is missing from the repository.`);
+      if (!repositoryNames.has(row.name))
+        throw new Error(`Applied migration ${row.name} is missing from the repository.`);
     }
     const applied = new Map(rows.map((row) => [row.name, row.checksum]));
     for (const migration of migrations) {
       const existingChecksum = applied.get(migration.name);
       if (existingChecksum) {
-        if (existingChecksum !== migration.checksum) throw new Error(`Migration drift detected for ${migration.name}. Applied checksum differs from repository checksum.`);
+        if (existingChecksum !== migration.checksum)
+          throw new Error(
+            `Migration drift detected for ${migration.name}. Applied checksum differs from repository checksum.`
+          );
         log?.(`✓ ${migration.name} already applied`);
         continue;
       }
       log?.(`→ applying ${migration.name}`);
       await connection.query(migration.sql);
-      await connection.execute('INSERT INTO schema_migrations (migration_name, checksum) VALUES (?, ?)', [migration.name, migration.checksum]);
+      await connection.execute(
+        'INSERT INTO schema_migrations (migration_name, checksum) VALUES (?, ?)',
+        [migration.name, migration.checksum]
+      );
       log?.(`✓ applied ${migration.name}`);
     }
     return migrations;

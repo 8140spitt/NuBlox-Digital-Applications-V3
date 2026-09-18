@@ -1,27 +1,172 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
 export const estimatingTenderingCanonicalization: FoundationCanonicalizationDecision[] = [
-  { candidateKey: 'BOF-05-001', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Customer Enquiry', notes: 'Governed inbound commercial request/opportunity context. It references canonical Party/Opportunity identities and does not create a customer master.' },
-  { candidateKey: 'BOF-05-002', decision: 'MERGE', targetCandidateKey: 'BOF-05-001', proposedCanonicalName: 'Customer Enquiry', notes: 'Invitation to Tender is a formal Customer Enquiry type with controlled issue/deadline requirements rather than a parallel enquiry architecture.' },
-  { candidateKey: 'BOF-05-003', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Estimate', notes: 'Stable estimating aggregate identity linked to Opportunity/Enquiry. It is distinct from Project, WBS, Contract and accounting structures.' },
-  { candidateKey: 'BOF-05-004', decision: 'CHILD', proposedCanonicalName: 'Estimate Version', notes: 'Controlled immutable/frozen version under one Estimate identity. Revision/version is not a duplicate Estimate master.' },
-  { candidateKey: 'BOF-05-005', decision: 'CHILD', proposedCanonicalName: 'Estimate Breakdown Item', notes: 'Hierarchical estimating breakdown node within an Estimate Version. It is not automatically a WBS Element, Cost Code or BOQ identity.' },
-  { candidateKey: 'BOF-05-006', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Take-off', notes: 'Governed measurement/take-off set with source information and revision provenance, linked to an Estimate Version.' },
-  { candidateKey: 'BOF-05-007', decision: 'CHILD', proposedCanonicalName: 'Measurement Item', notes: 'Measured quantity line under a Take-off, retaining method, unit, source and geometry/evidence references.' },
-  { candidateKey: 'BOF-05-008', decision: 'CHILD', proposedCanonicalName: 'Resource Build-up', notes: 'Estimate-level build-up of labour, plant, material, subcontract and other resources; references canonical Items/resources without duplicating them.' },
-  { candidateKey: 'BOF-05-009', decision: 'CHILD', proposedCanonicalName: 'Estimate Rate', notes: 'Contextual estimated rate derived or entered within a build-up/breakdown, with source and currency/UOM provenance. It is not a standalone commercial master rate.' },
-  { candidateKey: 'BOF-05-010', decision: 'MERGE', targetCandidateKey: 'BOF-05-005', proposedCanonicalName: 'Estimate Breakdown Item', notes: 'Preliminaries are represented as typed estimating breakdown items/sections rather than a separate root master.' },
-  { candidateKey: 'BOF-05-011', decision: 'RENAME', proposedCanonicalName: 'Estimate Provision', notes: 'Governed provision within an Estimate Version for allowance/risk/uncertainty with explicit basis and ownership.' },
-  { candidateKey: 'BOF-05-012', decision: 'MERGE', targetCandidateKey: 'BOF-05-011', proposedCanonicalName: 'Estimate Provision', notes: 'Contingency is a governed Estimate Provision type; type and basis preserve semantics without a parallel root object.' },
-  { candidateKey: 'BOF-05-013', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Tender Package', notes: 'Bid-side grouping of customer tender scope/information for estimating and submission. It is distinct from Procurement Package, Commercial Package and Work Package.' },
-  { candidateKey: 'BOF-05-014', decision: 'MERGE', targetCandidateKey: 'BOF-09-009', proposedCanonicalName: 'Sourcing Request', notes: 'Supplier enquiry during estimating uses the shared Sourcing Request pattern with purpose/context = estimating or market testing.' },
-  { candidateKey: 'BOF-05-015', decision: 'MERGE', targetCandidateKey: 'BOF-09-009', proposedCanonicalName: 'Sourcing Request', notes: 'Subcontract enquiry during estimating uses the same controlled Sourcing Request pattern rather than a second tendering engine.' },
-  { candidateKey: 'BOF-05-016', decision: 'MERGE', targetCandidateKey: 'BOF-09-012', proposedCanonicalName: 'Sourcing Response', notes: 'Quote Return is a supplier/subcontractor Sourcing Response retaining submission evidence and qualifications.' },
-  { candidateKey: 'BOF-05-017', decision: 'MERGE', targetCandidateKey: 'BOF-09-012', proposedCanonicalName: 'Sourcing Response', notes: 'Bid Return uses the shared Sourcing Response pattern with estimating/tender context.' },
-  { candidateKey: 'BOF-05-018', decision: 'MERGE', targetCandidateKey: 'BOF-09-014', proposedCanonicalName: 'Sourcing Evaluation', notes: 'Supplier/subcontract quote comparison is a governed Sourcing Evaluation output rather than a separate comparison master.' },
-  { candidateKey: 'BOF-05-019', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Tender Adjudication', notes: 'Immutable attributable internal adjudication/approval evidence for the bid price, assumptions, risk and submission basis.' },
-  { candidateKey: 'BOF-05-020', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Proposal', notes: 'Controlled customer-facing solution/offer identity linked to Opportunity, Enquiry, Estimate and supporting information.' },
-  { candidateKey: 'BOF-05-021', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Quotation', notes: 'Customer-facing priced commercial offer with validity, terms and immutable issued versions. It is distinct from Estimate and Contract.' },
-  { candidateKey: 'BOF-05-022', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Sales Order', notes: 'Governed customer commitment/order record resulting from accepted offer or direct order. It remains distinct from Contract and Project identity.' },
-  { candidateKey: 'BOF-05-023', decision: 'EVENT_EVIDENCE', proposedCanonicalName: 'Offer Acceptance', notes: 'Immutable attributable evidence that a defined Proposal/Quotation/offer version was accepted; acceptance may trigger downstream Contract/Sales Order creation but is not itself those identities.' }
+  {
+    candidateKey: 'BOF-05-001',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Customer Enquiry',
+    notes:
+      'Governed inbound commercial request/opportunity context. It references canonical Party/Opportunity identities and does not create a customer master.'
+  },
+  {
+    candidateKey: 'BOF-05-002',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-05-001',
+    proposedCanonicalName: 'Customer Enquiry',
+    notes:
+      'Invitation to Tender is a formal Customer Enquiry type with controlled issue/deadline requirements rather than a parallel enquiry architecture.'
+  },
+  {
+    candidateKey: 'BOF-05-003',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Estimate',
+    notes:
+      'Stable estimating aggregate identity linked to Opportunity/Enquiry. It is distinct from Project, WBS, Contract and accounting structures.'
+  },
+  {
+    candidateKey: 'BOF-05-004',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Estimate Version',
+    notes:
+      'Controlled immutable/frozen version under one Estimate identity. Revision/version is not a duplicate Estimate master.'
+  },
+  {
+    candidateKey: 'BOF-05-005',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Estimate Breakdown Item',
+    notes:
+      'Hierarchical estimating breakdown node within an Estimate Version. It is not automatically a WBS Element, Cost Code or BOQ identity.'
+  },
+  {
+    candidateKey: 'BOF-05-006',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Take-off',
+    notes:
+      'Governed measurement/take-off set with source information and revision provenance, linked to an Estimate Version.'
+  },
+  {
+    candidateKey: 'BOF-05-007',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Measurement Item',
+    notes:
+      'Measured quantity line under a Take-off, retaining method, unit, source and geometry/evidence references.'
+  },
+  {
+    candidateKey: 'BOF-05-008',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Resource Build-up',
+    notes:
+      'Estimate-level build-up of labour, plant, material, subcontract and other resources; references canonical Items/resources without duplicating them.'
+  },
+  {
+    candidateKey: 'BOF-05-009',
+    decision: 'CHILD',
+    proposedCanonicalName: 'Estimate Rate',
+    notes:
+      'Contextual estimated rate derived or entered within a build-up/breakdown, with source and currency/UOM provenance. It is not a standalone commercial master rate.'
+  },
+  {
+    candidateKey: 'BOF-05-010',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-05-005',
+    proposedCanonicalName: 'Estimate Breakdown Item',
+    notes:
+      'Preliminaries are represented as typed estimating breakdown items/sections rather than a separate root master.'
+  },
+  {
+    candidateKey: 'BOF-05-011',
+    decision: 'RENAME',
+    proposedCanonicalName: 'Estimate Provision',
+    notes:
+      'Governed provision within an Estimate Version for allowance/risk/uncertainty with explicit basis and ownership.'
+  },
+  {
+    candidateKey: 'BOF-05-012',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-05-011',
+    proposedCanonicalName: 'Estimate Provision',
+    notes:
+      'Contingency is a governed Estimate Provision type; type and basis preserve semantics without a parallel root object.'
+  },
+  {
+    candidateKey: 'BOF-05-013',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Tender Package',
+    notes:
+      'Bid-side grouping of customer tender scope/information for estimating and submission. It is distinct from Procurement Package, Commercial Package and Work Package.'
+  },
+  {
+    candidateKey: 'BOF-05-014',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-09-009',
+    proposedCanonicalName: 'Sourcing Request',
+    notes:
+      'Supplier enquiry during estimating uses the shared Sourcing Request pattern with purpose/context = estimating or market testing.'
+  },
+  {
+    candidateKey: 'BOF-05-015',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-09-009',
+    proposedCanonicalName: 'Sourcing Request',
+    notes:
+      'Subcontract enquiry during estimating uses the same controlled Sourcing Request pattern rather than a second tendering engine.'
+  },
+  {
+    candidateKey: 'BOF-05-016',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-09-012',
+    proposedCanonicalName: 'Sourcing Response',
+    notes:
+      'Quote Return is a supplier/subcontractor Sourcing Response retaining submission evidence and qualifications.'
+  },
+  {
+    candidateKey: 'BOF-05-017',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-09-012',
+    proposedCanonicalName: 'Sourcing Response',
+    notes: 'Bid Return uses the shared Sourcing Response pattern with estimating/tender context.'
+  },
+  {
+    candidateKey: 'BOF-05-018',
+    decision: 'MERGE',
+    targetCandidateKey: 'BOF-09-014',
+    proposedCanonicalName: 'Sourcing Evaluation',
+    notes:
+      'Supplier/subcontract quote comparison is a governed Sourcing Evaluation output rather than a separate comparison master.'
+  },
+  {
+    candidateKey: 'BOF-05-019',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Tender Adjudication',
+    notes:
+      'Immutable attributable internal adjudication/approval evidence for the bid price, assumptions, risk and submission basis.'
+  },
+  {
+    candidateKey: 'BOF-05-020',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Proposal',
+    notes:
+      'Controlled customer-facing solution/offer identity linked to Opportunity, Enquiry, Estimate and supporting information.'
+  },
+  {
+    candidateKey: 'BOF-05-021',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Quotation',
+    notes:
+      'Customer-facing priced commercial offer with validity, terms and immutable issued versions. It is distinct from Estimate and Contract.'
+  },
+  {
+    candidateKey: 'BOF-05-022',
+    decision: 'VALIDATE_OBJECT',
+    proposedCanonicalName: 'Sales Order',
+    notes:
+      'Governed customer commitment/order record resulting from accepted offer or direct order. It remains distinct from Contract and Project identity.'
+  },
+  {
+    candidateKey: 'BOF-05-023',
+    decision: 'EVENT_EVIDENCE',
+    proposedCanonicalName: 'Offer Acceptance',
+    notes:
+      'Immutable attributable evidence that a defined Proposal/Quotation/offer version was accepted; acceptance may trigger downstream Contract/Sales Order creation but is not itself those identities.'
+  }
 ];

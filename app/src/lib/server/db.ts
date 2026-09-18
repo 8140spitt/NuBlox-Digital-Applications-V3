@@ -6,7 +6,7 @@ import mysql, {
   type RowDataPacket
 } from 'mysql2/promise';
 
-export const requiredMigration = '0017_authority_policy_traceability.sql';
+export const requiredMigration = '0018_strategic_assumption_runtime.sql';
 
 function databaseUrl() {
   if (

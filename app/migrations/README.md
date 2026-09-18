@@ -65,8 +65,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0015_strategy_decision_reference.sql` — F01 Strategy review versions retain immutable AGG-27-DECISION references for governed review outcomes.
 - `0016_reference_data_history.sql` — immutable snapshots for every typed reference-data revision plus historical backfill.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
+- `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0018_...`; historical migrations remain immutable.
+Future schema changes start at `0019_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -116,3 +117,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0017 — authority-policy traceability
 
 `0017_authority_policy_traceability.sql` makes policy-as-applied explicit. A protected `AGG-27-DECISION` retains the exact published Approval Authority Rule version used, and an approved `AGG-01-AUTHORITY` Delegated Authority retains the exact Delegated Authority Rule version used. Composite foreign keys prevent mismatched rule/version pairs while historical pre-policy records remain valid with null policy references.
+
+
+## Migration 0018 — strategic assumption runtime
+
+`0018_strategic_assumption_runtime.sql` implements F01.02 Environmental Analysis through `AGG-02-ASSUMPTION`. Stable Strategic Assumption identities retain immutable content versions, confidence, scope/effectivity and optional governed `AGG-28-EVIDENCE` references. Assessment/challenge/invalidation changes lifecycle state without rewriting prior versions; analytical F01.02 activities query the same governed evidence base by lens/category.

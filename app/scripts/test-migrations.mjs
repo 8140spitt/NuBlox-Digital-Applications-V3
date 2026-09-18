@@ -49,6 +49,7 @@ function runServiceTests() {
         'src/lib/server/authority-configuration.test.ts',
         'src/lib/server/reference-data.test.ts',
         'src/lib/server/strategy-framework.test.ts',
+        'src/lib/server/strategic-assumption.test.ts',
         'src/lib/server/business-object-review.test.ts',
         '--fileParallelism=false',
         '--maxWorkers=1'

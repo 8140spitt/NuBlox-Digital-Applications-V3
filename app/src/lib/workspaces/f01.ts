@@ -50,7 +50,8 @@ export const f01Workspace = {
         'Competitors',
         'Regulatory landscape',
         'Insights library'
-      ]
+      ],
+      path: 'environmental-analysis'
     },
     {
       id: 'F01.03',

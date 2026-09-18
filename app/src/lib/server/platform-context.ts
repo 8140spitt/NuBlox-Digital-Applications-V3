@@ -233,6 +233,24 @@ export const platformPermissions = [
     'strategy.framework',
     'publish',
     'Publish an approved strategy framework.'
+  ],
+  [
+    'strategy.assumption.read',
+    'strategy.assumption',
+    'read',
+    'Read governed strategic assumptions and environmental-analysis evidence.'
+  ],
+  [
+    'strategy.assumption.manage',
+    'strategy.assumption',
+    'manage',
+    'Create and revise governed strategic assumptions.'
+  ],
+  [
+    'strategy.assumption.assess',
+    'strategy.assumption',
+    'assess',
+    'Assess, challenge and invalidate strategic assumptions.'
   ]
 ] as const;
 

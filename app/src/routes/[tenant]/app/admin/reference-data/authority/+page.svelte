@@ -1,10 +1,13 @@
 <script lang="ts">
   let { data, form } = $props();
 
-  const selectedRule = $derived(
-    data.kind === 'approval' ? data.selectedApprovalRule : data.selectedDelegatedRule
+  const kind = $derived<'approval' | 'delegated'>(
+    kind === 'delegated' ? 'delegated' : 'approval'
   );
-  const rules = $derived(data.kind === 'approval' ? data.approvalRules : data.delegatedRules);
+  const selectedRule = $derived(
+    kind === 'approval' ? data.selectedApprovalRule : data.selectedDelegatedRule
+  );
+  const rules = $derived(kind === 'approval' ? data.approvalRules : data.delegatedRules);
   const draftVersion = $derived(data.versions.find((version) => version.status === 'DRAFT') ?? null);
 
   function ruleHref(kind: 'approval' | 'delegated', ruleId?: string) {
@@ -40,25 +43,25 @@
   {/if}
 
   <div class="tabs">
-    <a class:active={data.kind === 'approval'} href={ruleHref('approval')}>Approval authority</a>
-    <a class:active={data.kind === 'delegated'} href={ruleHref('delegated')}>Delegated authority</a>
+    <a class:active={kind === 'approval'} href={ruleHref('approval')}>Approval authority</a>
+    <a class:active={kind === 'delegated'} href={ruleHref('delegated')}>Delegated authority</a>
   </div>
 
   <div class="workspace-grid">
     <aside class="rule-list section-card">
       <div class="panel-heading">
         <div>
-          <span class="eyebrow">{data.kind === 'approval' ? 'Approval rules' : 'Delegation rules'}</span>
+          <span class="eyebrow">{kind === 'approval' ? 'Approval rules' : 'Delegation rules'}</span>
           <h2>{rules.length} policies</h2>
         </div>
       </div>
 
       <nav aria-label="Authority policy rules">
         {#each rules as rule}
-          <a class:active={selectedRule?.id === rule.id} href={ruleHref(data.kind, rule.id)}>
+          <a class:active={selectedRule?.id === rule.id} href={ruleHref(kind, rule.id)}>
             <strong>{rule.ruleKey}</strong>
             <span>
-              {data.kind === 'approval'
+              {kind === 'approval'
                 ? data.approvalRules.find((entry) => entry.id === rule.id)?.actionKey
                 : data.delegatedRules.find((entry) => entry.id === rule.id)?.authorityType}
             </span>
@@ -71,8 +74,8 @@
 
       {#if data.capabilities.canManage}
         <details class="command-panel">
-          <summary>New {data.kind === 'approval' ? 'approval' : 'delegation'} policy</summary>
-          {#if data.kind === 'approval'}
+          <summary>New {kind === 'approval' ? 'approval' : 'delegation'} policy</summary>
+          {#if kind === 'approval'}
             <form method="POST" action="?/createApproval">
               <label>Rule key<input name="ruleKey" required placeholder="COMMERCIAL.APPROVAL.TIER1" /></label>
               <label>Protected action<input name="actionKey" required placeholder="COMMERCIAL_APPROVAL" /></label>
@@ -110,10 +113,10 @@
       {#if selectedRule}
         <section class="rule-header section-card">
           <div>
-            <span class="eyebrow">{data.kind === 'approval' ? 'Approval Authority Rule' : 'Delegated Authority Rule'}</span>
+            <span class="eyebrow">{kind === 'approval' ? 'Approval Authority Rule' : 'Delegated Authority Rule'}</span>
             <h2>{selectedRule.ruleKey}</h2>
             <p>
-              {data.kind === 'approval'
+              {kind === 'approval'
                 ? `${data.selectedApprovalRule?.actionKey} · ${data.selectedApprovalRule?.objectType}`
                 : data.selectedDelegatedRule?.authorityType}
             </p>
@@ -134,7 +137,7 @@
             {#if data.capabilities.canManage && !draftVersion}
               <details class="command-panel compact">
                 <summary>Create revision</summary>
-                {#if data.kind === 'approval'}
+                {#if kind === 'approval'}
                   <form method="POST" action="?/reviseApproval">
                     <input type="hidden" name="ruleId" value={selectedRule.id} />
                     <input type="hidden" name="ruleVersion" value={selectedRule.version} />
@@ -174,7 +177,7 @@
                   <strong>v{version.versionNo}</strong>
                   <span class:published={version.status === 'PUBLISHED'} class="status">{version.status}</span>
                 </div>
-                {#if data.kind === 'approval'}
+                {#if kind === 'approval'}
                   <p>
                     {version.requiredAuthorityType} ·
                     {version.currencyCode || 'non-monetary'}
@@ -188,7 +191,7 @@
                   </p>
                 {/if}
                 {#if version.status === 'DRAFT' && data.capabilities.canPublish}
-                  <form method="POST" action={data.kind === 'approval' ? '?/publishApproval' : '?/publishDelegated'}>
+                  <form method="POST" action={kind === 'approval' ? '?/publishApproval' : '?/publishDelegated'}>
                     <input type="hidden" name="ruleId" value={selectedRule.id} />
                     <input type="hidden" name="versionId" value={version.id} />
                     <input type="hidden" name="ruleVersion" value={selectedRule.version} />

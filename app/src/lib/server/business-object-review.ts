@@ -17,6 +17,7 @@ import { buildingSafetyRegulatoryCanonicalization } from '$lib/data/building-saf
 import { sustainabilityCarbonCanonicalization } from '$lib/data/sustainability-carbon-canonicalization';
 import { riskComplianceAuditCanonicalization } from '$lib/data/risk-compliance-audit-canonicalization';
 import { legalPrivacyCanonicalization } from '$lib/data/legal-privacy-canonicalization';
+import { knowledgeRecordsCommunicationsCanonicalization } from '$lib/data/knowledge-records-communications-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -123,7 +124,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...buildingSafetyRegulatoryCanonicalization,
     ...sustainabilityCarbonCanonicalization,
     ...riskComplianceAuditCanonicalization,
-    ...legalPrivacyCanonicalization
+    ...legalPrivacyCanonicalization,
+    ...knowledgeRecordsCommunicationsCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

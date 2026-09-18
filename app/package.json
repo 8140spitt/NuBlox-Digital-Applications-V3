@@ -22,7 +22,8 @@
     "test:integration": "pnpm db:validate && pnpm test:migrations",
     "test:all": "pnpm test:domain && pnpm test:integration",
     "db:validate": "node scripts/db-validate.mjs",
-    "test:migrations": "node --env-file-if-exists=.env scripts/test-migrations.mjs"
+    "test:migrations": "node --env-file-if-exists=.env scripts/test-migrations.mjs",
+    "db:seed:dev": "tsx --env-file-if-exists=.env scripts/db-seed-dev.ts"
   },
   "dependencies": {
     "@fontsource-variable/noto-sans": "^5.3.0",
@@ -39,7 +40,8 @@
     "svelte-check": "^4.6.0",
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.8",
+    "tsx": "^4.20.6"
   },
   "engines": {
     "node": ">=22.9.0"

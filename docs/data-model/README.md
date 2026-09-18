@@ -11,6 +11,8 @@ This directory governs the NuBlox V3 canonical information model.
 - `canonical-business-object-normalization-review.md` — governed Gate 2 record for exact duplicate and near-alias convergence.
 - `app/src/lib/data/canonical-alias-convergence-audit.ts` — machine-checkable proof that all 26 exact duplicate groups and the documented near-alias challenge set are resolved.
 - `canonical-model-convergence-audit.md` — machine-checkable convergence and five-lens coverage gate across all 29 discovery families.
+- `../benchmarks/market-benchmark-programme.md` — governed Gate 3 market benchmark across enterprise suites and Construction & Built Environment specialist products.
+- `../benchmarks/sap-capability-coverage-register.csv` — preserved 64-line SAP outside-in completeness benchmark awaiting V3 workspace/object remapping.
 - `foundation-canonicalization-baseline.md` — reviewed first-pass decisions for the foundation identity spine.
 - `foundation-object-semantics.md` — governed identity, scope, lifecycle, versioning and relationship semantics for the foundation objects.
 - `authority-participation-model.md` — governed authentication, membership, role, responsibility and delegated-authority semantics.

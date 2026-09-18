@@ -6,9 +6,10 @@ This directory governs the NuBlox V3 canonical information model.
 
 - `canonical-business-object-discovery.md` — discovery method, modelling rules and the 29 business-object families.
 - `canonical-business-object-register.csv` — generated machine-readable candidate-object register.
-- `canonical-business-object-duplicates.csv` — exact duplicate-name review queue used to normalize cross-domain concepts.
+- `canonical-business-object-duplicates.csv` — generated discovery signal listing the 26 exact duplicate-name groups; governed resolution is held in the alias-convergence audit.
 - `canonical-business-object-summary.md` — generated counts and review sequence.
-- `canonical-business-object-normalization-review.md` — first semantic recommendations for duplicate/alias normalization.
+- `canonical-business-object-normalization-review.md` — governed Gate 2 record for exact duplicate and near-alias convergence.
+- `app/src/lib/data/canonical-alias-convergence-audit.ts` — machine-checkable proof that all 26 exact duplicate groups and the documented near-alias challenge set are resolved.
 - `canonical-model-convergence-audit.md` — machine-checkable convergence and five-lens coverage gate across all 29 discovery families.
 - `foundation-canonicalization-baseline.md` — reviewed first-pass decisions for the foundation identity spine.
 - `foundation-object-semantics.md` — governed identity, scope, lifecycle, versioning and relationship semantics for the foundation objects.
@@ -206,13 +207,14 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 12. Shared work, workflow, decision, evidence, audit and retention semantics.
 13. Reference data, classification, jurisdiction and configuration/policy primitives.
 14. Convergence/coverage audit across the 750-candidate universe, all 29 workspaces, lifecycle stages, specialist overlays, E2E chains and external benchmarks.
-15. Re-run cross-family duplicate/alias convergence and complete the external benchmark/standards challenge.
-16. Freeze canonical aggregate boundaries before treating physical aggregate/database/API patterns as enterprise-wide authority.
-17. Domain transactions, cases, plans and execution records are physically implemented only against accepted canonical semantics.
+15. Cross-family duplicate/alias convergence — **closed**: 26/26 exact duplicate groups plus the governed near-alias challenge set.
+16. Complete the external benchmark/standards challenge.
+17. Freeze canonical aggregate boundaries and complete L2/L3 object-action mapping before treating physical aggregate/database/API patterns as enterprise-wide authority.
+18. Domain transactions, cases, plans and execution records are physically implemented only against accepted canonical semantics.
 
 ## Development hold
 
-Broad horizontal application expansion remains constrained until the remaining architecture gates close: cross-family duplicate/alias convergence, external benchmark/standards challenge and canonical aggregate-boundary freeze. Candidate/family semantic convergence itself is now complete.
+Broad horizontal application expansion remains constrained until the remaining architecture gates close: external benchmark/standards challenge, canonical aggregate-boundary freeze and L2/L3 object-action mapping. Candidate/family semantic convergence and duplicate/alias convergence are now complete.
 
 The current F01.01 slice remains a learning prototype. It must not establish platform-wide object, lifecycle, workflow, permissions or versioning patterns by accident.
 

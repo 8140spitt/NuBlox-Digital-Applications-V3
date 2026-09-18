@@ -191,6 +191,13 @@ export async function captureEvidenceItem(
   const capturedAt = timestamp(input.capturedAt, 'Evidence captured-at');
   const contentReference = required(input.contentReference, 'Evidence content reference');
   if (contentReference.length > 2048) throw new Error('Evidence content reference is too long.');
+  const contentMediaType = input.contentMediaType?.trim() || null;
+  if (contentMediaType && contentMediaType.length > 191) {
+    throw new Error('Evidence content media type is too long.');
+  }
+  if (subjectType.length > 128) throw new Error('Evidence subject type is too long.');
+  if (subjectId.length > 191) throw new Error('Evidence subject ID is too long.');
+  if (subjectVersion && subjectVersion.length > 64) throw new Error('Evidence subject version is too long.');
   const { algorithm, hash } = integrity(input.hashAlgorithm, input.contentHash);
   const classification = input.classification?.trim() || null;
   if (classification && classification.length > 128) {
@@ -217,7 +224,7 @@ export async function captureEvidenceItem(
         context.actorPartyId,
         capturedAt,
         contentReference,
-        input.contentMediaType?.trim() || null,
+        contentMediaType,
         algorithm,
         hash,
         classification,
@@ -228,6 +235,12 @@ export async function captureEvidenceItem(
     );
 
     for (const source of input.sources ?? []) {
+      const sourceSystem = required(source.sourceSystem, 'Evidence source system');
+      const sourceIdentifier = required(source.sourceIdentifier, 'Evidence source identifier');
+      const sourceVersion = source.sourceVersion?.trim() || null;
+      if (sourceSystem.length > 191) throw new Error('Evidence source system is too long.');
+      if (sourceIdentifier.length > 255) throw new Error('Evidence source identifier is too long.');
+      if (sourceVersion && sourceVersion.length > 128) throw new Error('Evidence source version is too long.');
       const sourceAsOf = source.sourceAsOf?.trim()
         ? timestamp(source.sourceAsOf, 'Evidence source as-of')
         : null;
@@ -244,9 +257,9 @@ export async function captureEvidenceItem(
           randomUUID(),
           context.tenantId,
           id,
-          required(source.sourceSystem, 'Evidence source system'),
-          required(source.sourceIdentifier, 'Evidence source identifier'),
-          source.sourceVersion?.trim() || null,
+          sourceSystem,
+          sourceIdentifier,
+          sourceVersion,
           sourceAsOf,
           referenceUri,
           createdAt
@@ -256,6 +269,14 @@ export async function captureEvidenceItem(
     }
 
     for (const provenance of input.provenance ?? []) {
+      const sourceObjectType = required(provenance.sourceObjectType, 'Provenance source object type');
+      const sourceObjectId = required(provenance.sourceObjectId, 'Provenance source object ID');
+      const sourceObjectVersion = provenance.sourceObjectVersion?.trim() || null;
+      const transformation = provenance.transformation?.trim() || null;
+      if (sourceObjectType.length > 128) throw new Error('Provenance source object type is too long.');
+      if (sourceObjectId.length > 191) throw new Error('Provenance source object ID is too long.');
+      if (sourceObjectVersion && sourceObjectVersion.length > 64) throw new Error('Provenance source object version is too long.');
+      if (transformation && transformation.length > 500) throw new Error('Provenance transformation is too long.');
       await executeMutation(
         `INSERT INTO evidence_provenance_references
           (id, tenant_id, evidence_item_id, source_object_type, source_object_id,
@@ -265,11 +286,11 @@ export async function captureEvidenceItem(
           randomUUID(),
           context.tenantId,
           id,
-          required(provenance.sourceObjectType, 'Provenance source object type'),
-          required(provenance.sourceObjectId, 'Provenance source object ID'),
-          provenance.sourceObjectVersion?.trim() || null,
-          code(provenance.provenanceType, 'Provenance type'),
-          provenance.transformation?.trim() || null,
+          sourceObjectType,
+          sourceObjectId,
+          sourceObjectVersion,
+          code(provenance.provenanceType, 'Provenance type', 64),
+          transformation,
           timestamp(provenance.capturedAt, 'Provenance captured-at', capturedAt),
           createdAt
         ],
@@ -306,7 +327,7 @@ export async function captureEvidenceItem(
           capturedByPartyId: context.actorPartyId,
           capturedAt,
           contentReference,
-          contentMediaType: input.contentMediaType?.trim() || null,
+          contentMediaType,
           hashAlgorithm: algorithm,
           contentHash: hash,
           classification,

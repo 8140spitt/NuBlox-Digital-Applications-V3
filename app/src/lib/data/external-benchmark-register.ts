@@ -308,6 +308,8 @@ export const marketBenchmarkSummary = {
   programmeState: 'in-progress' as const,
   legacySapCapabilityRows: 64,
   sapV3MappedRows: sapV3Map.rows.length,
+  sapV3ChallengedRows: sapV3Map.rows.filter((row) => row.benchmarkState === 'challenged').length,
+  sapV3ClosedRows: sapV3Map.rows.filter((row) => row.benchmarkState === 'closed').length,
   rule: 'External systems challenge completeness, semantics and user outcomes; vendor module boundaries never become automatic NuBlox architecture.'
 };
 

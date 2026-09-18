@@ -8,7 +8,8 @@
     urgent: data.work.filter((item) => item.priority === 'URGENT').length,
     overdue: data.work.filter(
       (item) => item.dueAt && new Date(item.dueAt).getTime() < new Date(data.currentTime).getTime()
-    ).length
+    ).length,
+    escalations: data.escalations.filter((item) => item.status === 'OPEN').length
   });
 
   function formatDate(value: string | null) {
@@ -46,6 +47,7 @@
     <div class="metric section-card"><strong>{summary.inProgress}</strong><span>in progress</span></div>
     <div class="metric section-card"><strong>{summary.urgent}</strong><span>urgent</span></div>
     <div class="metric section-card"><strong>{summary.overdue}</strong><span>overdue</span></div>
+    <div class="metric section-card"><strong>{summary.escalations}</strong><span>open escalations</span></div>
   </section>
 
   <section class="work-register section-card">
@@ -82,6 +84,28 @@
             </div>
           </div>
 
+          {#if data.escalations.some((escalation) => escalation.workItemId === item.id && escalation.status === 'OPEN')}
+            <div class="escalations">
+              <strong>Open escalation</strong>
+              {#each data.escalations.filter((escalation) => escalation.workItemId === item.id && escalation.status === 'OPEN') as escalation}
+                <div class="escalation-row">
+                  <div>
+                    <span>{escalation.triggerCode}</span>
+                    <p>{escalation.reason}</p>
+                    {#if escalation.ruleKey}<small>Rule · {escalation.ruleKey}</small>{/if}
+                  </div>
+                  {#if data.capabilities.canManage}
+                    <form method="POST" action="?/resolveEscalation">
+                      <input type="hidden" name="escalationId" value={escalation.id} />
+                      <input name="resolutionNote" required placeholder="Resolution note" />
+                      <button class="quiet" type="submit">Resolve</button>
+                    </form>
+                  {/if}
+                </div>
+              {/each}
+            </div>
+          {/if}
+
           <div class="actions">
             {#if item.status === 'ASSIGNED' || item.status === 'BLOCKED'}
               <form method="POST" action="?/start">
@@ -100,6 +124,19 @@
                 <button class="quiet" type="submit">Record acknowledgement</button>
               </form>
             </details>
+
+            {#if data.capabilities.canExecute}
+              <details class="escalate">
+                <summary>Escalate</summary>
+                <form method="POST" action="?/escalate">
+                  <input type="hidden" name="workItemId" value={item.id} />
+                  <input name="triggerCode" required placeholder="Trigger code, e.g. SLA.BREACH" />
+                  <input name="ruleKey" placeholder="Optional rule key" />
+                  <textarea name="reason" rows="2" required placeholder="Why does this work require escalation?"></textarea>
+                  <button class="quiet" type="submit">Raise escalation</button>
+                </form>
+              </details>
+            {/if}
 
             <details class="complete">
               <summary>Complete</summary>
@@ -140,7 +177,7 @@
   .principle span { color: #456275; font-size: 10px; }
   .principle small { color: #788b98; font-size: 9px; line-height: 1.35; }
   .message { padding: 9px 12px; border: 1px solid #dd8a8a; border-radius: 8px; background: #fff3f3; color: #792f2f; font-size: 11px; }
-  .metrics { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; }
+  .metrics { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 8px; }
   .metric { display: grid; gap: 2px; padding: 10px 12px; }
   .metric strong { color: #1d4f70; font-size: 19px; }
   .metric span { color: #718492; font-size: 9px; text-transform: uppercase; }
@@ -170,6 +207,13 @@
   .due small { color: #83929c; font-size: 8px; text-transform: uppercase; }
   .due strong { color: #425e70; font-size: 10px; }
   .due span { color: #8a98a1; font-size: 8px; }
+  .escalations { display: grid; gap: 7px; padding: 9px 11px; border-top: 1px solid #efd9b2; background: #fffaf1; }
+  .escalations > strong { color: #79541a; font-size: 9px; text-transform: uppercase; letter-spacing: .05em; }
+  .escalation-row { display: grid; grid-template-columns: minmax(0,1fr) minmax(230px,.55fr); gap: 10px; align-items: start; }
+  .escalation-row span { color: #7a5315; font-size: 9px; font-weight: 850; }
+  .escalation-row p { margin: 2px 0; color: #6d5a3a; font-size: 9.5px; }
+  .escalation-row small { color: #958263; font-size: 8px; }
+  .escalation-row form { display: flex; gap: 5px; }
   .actions { display: flex; gap: 6px; justify-content: end; align-items: start; padding: 8px 10px; border-top: 1px solid #e8edef; background: #fafcfd; }
   button, summary { border: 0; border-radius: 6px; padding: 7px 9px; background: var(--blue-700); color: white; font-size: 9px; font-weight: 800; cursor: pointer; }
   button.quiet, details > summary { border: 1px solid #d7e0e6; background: white; color: #50697b; }
@@ -185,5 +229,5 @@
   .empty h3 { margin-top: 9px; }
   .empty p { margin: 0; max-width: 470px; color: #71838f; font-size: 10.5px; }
   @media(max-width:1050px) { .metrics { grid-template-columns: repeat(3,1fr); } .work-main { grid-template-columns: 80px minmax(0,1fr); } .due { grid-column: 2; justify-items: start; text-align: left; } }
-  @media(max-width:760px) { .hero { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2,1fr); } .section-heading { display: grid; align-items: start; } .work-main { grid-template-columns: 1fr; } .due { grid-column: auto; } .actions { justify-content: stretch; flex-direction: column; } .actions form, .actions details, details[open] { width: 100%; min-width: 0; } }
+  @media(max-width:760px) { .hero { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2,1fr); } .escalation-row { grid-template-columns: 1fr; } .escalation-row form { display: grid; } .section-heading { display: grid; align-items: start; } .work-main { grid-template-columns: 1fr; } .due { grid-column: auto; } .actions { justify-content: stretch; flex-direction: column; } .actions form, .actions details, details[open] { width: 100%; min-width: 0; } }
 </style>

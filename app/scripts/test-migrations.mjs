@@ -104,6 +104,33 @@ try {
         throw new Error('Migration ledger mismatch at ' + migrations[index].name + '.');
       }
     }
+
+    const [attempts] = await connection.query(
+      "SELECT migration_name AS name, status FROM schema_migration_attempts ORDER BY migration_name"
+    );
+    if (
+      attempts.length !== migrations.length ||
+      attempts.some((attempt) => attempt.status !== 'APPLIED')
+    ) {
+      throw new Error('Migration attempt ledger is not fully APPLIED.');
+    }
+
+    await connection.execute(
+      "INSERT INTO schema_migration_attempts (migration_name, checksum, status, error_message) VALUES ('9999_dirty_state_probe.sql', ?, 'FAILED', 'intentional test probe')",
+      ['0'.repeat(64)]
+    );
+    let dirtyBlocked = false;
+    try {
+      await applyMigrations(connection, { log: null });
+    } catch (error) {
+      dirtyBlocked = /migration state is dirty/i.test(
+        error instanceof Error ? error.message : String(error)
+      );
+    }
+    if (!dirtyBlocked) throw new Error('Dirty migration state did not block migration execution.');
+    await connection.execute(
+      "DELETE FROM schema_migration_attempts WHERE migration_name = '9999_dirty_state_probe.sql'"
+    );
   } finally {
     await connection.end();
   }

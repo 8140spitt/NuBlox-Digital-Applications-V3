@@ -25,7 +25,7 @@ const admin = await mysql.createConnection({
 });
 const escapedDatabase = temporaryDatabase.replaceAll('`', '``');
 let temporaryDatabaseCreated = false;
-const tempUrl = new URL(base);
+const tempUrl = new URL(adminBase);
 tempUrl.pathname = '/' + temporaryDatabase;
 
 
@@ -62,15 +62,11 @@ try {
     }
     throw error;
   }
-  if (adminSource !== source) {
-    const appUser = decodeURIComponent(base.username).replaceAll("'", "''");
-    await admin.query("GRANT ALL PRIVILEGES ON `" + escapedDatabase + "`.* TO '" + appUser + "'@'%'");
-  }
   const connection = await mysql.createConnection({
-    host: base.hostname,
-    port: base.port ? Number(base.port) : 3306,
-    user: decodeURIComponent(base.username),
-    password: decodeURIComponent(base.password),
+    host: adminBase.hostname,
+    port: adminBase.port ? Number(adminBase.port) : 3306,
+    user: decodeURIComponent(adminBase.username),
+    password: decodeURIComponent(adminBase.password),
     database: temporaryDatabase,
     ssl: process.env.MYSQL_SSL === 'true' ? {} : undefined,
     multipleStatements: true

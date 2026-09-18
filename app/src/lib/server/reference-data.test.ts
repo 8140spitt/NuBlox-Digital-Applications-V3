@@ -194,4 +194,56 @@ describe('typed governed reference data', () => {
     ]);
     expect(events.map((row) => Number(row.aggregateVersion))).toEqual([1, 2, 3, 4]);
   });
+
+  it('rejects reference hierarchy cycles and indirect UOM chains', async () => {
+    const tenant = 'reference-invariants-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const countryId = await reference.createJurisdiction(context, {
+      jurisdictionKey: 'GB',
+      name: 'United Kingdom'
+    });
+    const regionId = await reference.createJurisdiction(context, {
+      jurisdictionKey: 'GB-SCT',
+      name: 'Scotland',
+      parentJurisdictionId: countryId
+    });
+    const country = (await reference.listJurisdictions(context)).find(
+      (row) => row.id === countryId
+    )!;
+    await expect(
+      reference.reviseJurisdiction(context, countryId, country.version, {
+        name: country.name,
+        parentJurisdictionId: regionId,
+        reason: 'Cycle must be rejected.'
+      })
+    ).rejects.toThrow('cycle');
+
+    const metreId = await reference.createUnitOfMeasure(context, {
+      unitCode: 'M',
+      symbol: 'm',
+      name: 'metre',
+      dimensionKey: 'LENGTH'
+    });
+    const centimetreId = await reference.createUnitOfMeasure(context, {
+      unitCode: 'CM',
+      symbol: 'cm',
+      name: 'centimetre',
+      dimensionKey: 'LENGTH',
+      baseUnitId: metreId,
+      conversionMultiplier: 0.01
+    });
+    await expect(
+      reference.createUnitOfMeasure(context, {
+        unitCode: 'MM',
+        symbol: 'mm',
+        name: 'millimetre',
+        dimensionKey: 'LENGTH',
+        baseUnitId: centimetreId,
+        conversionMultiplier: 0.1
+      })
+    ).rejects.toThrow('base unit directly');
+  });
+
 });

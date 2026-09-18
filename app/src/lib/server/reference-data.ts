@@ -314,6 +314,37 @@ function validateArrayConfiguration(value: unknown, label: string) {
   return value ?? [];
 }
 
+async function assertJurisdictionParent(
+  context: CommandContext,
+  jurisdictionId: string,
+  parentJurisdictionId: string | null,
+  executor: DbExecutor
+) {
+  if (!parentJurisdictionId) return;
+  if (parentJurisdictionId === jurisdictionId) {
+    throw new Error('Jurisdiction cannot be its own parent.');
+  }
+
+  let cursor: string | null = parentJurisdictionId;
+  const visited = new Set<string>();
+  while (cursor) {
+    if (cursor === jurisdictionId) {
+      throw new Error('Jurisdiction hierarchy cannot contain a cycle.');
+    }
+    if (visited.has(cursor)) {
+      throw new Error('Existing Jurisdiction hierarchy contains a cycle.');
+    }
+    visited.add(cursor);
+    const row = await queryOne<RowDataPacket & { parentJurisdictionId: string | null }>(
+      "SELECT parent_jurisdiction_id AS parentJurisdictionId FROM reference_jurisdictions WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
+      [cursor, context.tenantId],
+      executor
+    );
+    if (!row) throw new Error('Active parent Jurisdiction not found.');
+    cursor = row.parentJurisdictionId;
+  }
+}
+
 async function assertJurisdiction(context: CommandContext, id: string, executor: DbExecutor) {
   const row = await queryOne<RowDataPacket & { id: string }>(
     "SELECT id FROM reference_jurisdictions WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
@@ -348,14 +379,13 @@ export async function createJurisdiction(
   const name = required(input.name, 'Jurisdiction name');
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
-    if (input.parentJurisdictionId) {
-      await assertJurisdiction(context, input.parentJurisdictionId, connection);
-    }
     const id = randomUUID();
+    const parentJurisdictionId = input.parentJurisdictionId?.trim() || null;
+    await assertJurisdictionParent(context, id, parentJurisdictionId, connection);
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_jurisdictions (id, tenant_id, jurisdiction_key, name, country_region_code, parent_jurisdiction_id, authority_context, status, version, valid_from, valid_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 1, ?, ?, ?, ?)",
-      [id, context.tenantId, jurisdictionKey, name, input.countryRegionCode?.trim() || null, input.parentJurisdictionId?.trim() || null, input.authorityContext?.trim() || null, validity.validFrom, validity.validTo, timestamp, timestamp],
+      [id, context.tenantId, jurisdictionKey, name, input.countryRegionCode?.trim() || null, parentJurisdictionId, input.authorityContext?.trim() || null, validity.validFrom, validity.validTo, timestamp, timestamp],
       connection
     );
     await recordReferenceVersion(context, 'JURISDICTION', id, 'Initial governed reference version.', connection);
@@ -430,13 +460,18 @@ export async function createUnitOfMeasure(
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
     if (input.baseUnitId) {
-      const base = await queryOne<RowDataPacket & { id: string; dimensionKey: string }>(
-        "SELECT id, dimension_key AS dimensionKey FROM reference_units_of_measure WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
+      const base = await queryOne<
+        RowDataPacket & { id: string; dimensionKey: string; baseUnitId: string | null }
+      >(
+        "SELECT id, dimension_key AS dimensionKey, base_unit_id AS baseUnitId FROM reference_units_of_measure WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
         [input.baseUnitId, context.tenantId],
         connection
       );
       if (!base) throw new Error('Active base Unit of Measure not found.');
       if (base.dimensionKey !== dimensionKey) throw new Error('Base Unit of Measure must share the same dimension.');
+      if (base.baseUnitId) throw new Error('Unit conversions must reference the dimension base unit directly.');
+    } else if (multiplier !== 1 || offset !== 0) {
+      throw new Error('A dimension base unit must use multiplier 1 and offset 0.');
     }
     const id = randomUUID();
     const timestamp = now();
@@ -534,8 +569,7 @@ export async function reviseJurisdiction(
     if (current.version !== expectedVersion) throw new Error('This Jurisdiction changed after you opened it.');
     if (current.status !== 'ACTIVE') throw new Error('Only an active Jurisdiction can be revised.');
     const parentId = input.parentJurisdictionId?.trim() || null;
-    if (parentId === id) throw new Error('Jurisdiction cannot be its own parent.');
-    if (parentId) await assertJurisdiction(context, parentId, connection);
+    await assertJurisdictionParent(context, id, parentId, connection);
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE reference_jurisdictions SET name = ?, country_region_code = ?, parent_jurisdiction_id = ?, authority_context = ?, valid_from = ?, valid_to = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
@@ -613,6 +647,8 @@ export async function reviseUnitOfMeasure(
       if (!base) throw new Error('Active base Unit of Measure not found.');
       if (base.dimensionKey !== current.dimensionKey) throw new Error('Base Unit of Measure must share the same dimension.');
       if (base.baseUnitId) throw new Error('Unit conversions must reference the dimension base unit directly.');
+    } else if (multiplier !== 1 || offset !== 0) {
+      throw new Error('A dimension base unit must use multiplier 1 and offset 0.');
     }
     const timestamp = now();
     const result = await executeMutation(

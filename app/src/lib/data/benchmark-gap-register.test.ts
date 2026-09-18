@@ -11,6 +11,7 @@ describe('benchmark gap governance', () => {
     expect(benchmarkGapSummary.gapCount).toBe(29);
     expect(benchmarkGapSummary.resolvedCount).toBe(29);
     expect(benchmarkGapSummary.openCount).toBe(0);
+    expect(benchmarkGapRegister.every((gap) => gap.owner === 'NuBlox canonical architecture')).toBe(true);
   });
 
   it('accepts only the cross-enterprise semantic gaps that are already justified', () => {

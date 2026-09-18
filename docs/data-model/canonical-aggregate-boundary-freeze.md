@@ -14,9 +14,11 @@ It does **not** mandate one database table, one API, one microservice or one UI 
 
 ## Freeze result
 
+The initial semantic freeze identified 100 coarse logical boundaries. The complete 353-L2 / 1,510-activity mapping exposed independently operated records that could not safely remain mere references inside those coarse boundaries. The freeze was therefore refined **before physical implementation** to 174 boundaries. This is deliberate convergence, not schema proliferation: each added root has independent create/change/approve/execute/close behaviour in the governed operating model.
+
 - **29/29** canonical business-object families covered;
-- **100** explicit logical aggregate boundaries;
-- **100/100** boundaries frozen;
+- **174** explicit logical aggregate boundaries after the final L2/L3 activity challenge;
+- **174/174** boundaries frozen;
 - **79/79** benchmark-driven refinement constructs assigned to one frozen owning aggregate;
 - no duplicated aggregate root IDs;
 - no governed owned member appears under two aggregates;
@@ -303,7 +305,7 @@ A projection may be rebuilt. If published for evidence, its source versions and 
 
 ## Physical implementation consequence
 
-The freeze authorises the next design activity: mapping every L2/L3 business activity to:
+The activity mapping is now complete. Every L2/L3 business activity is mapped to:
 
 - canonical object/aggregate;
 - command or query;
@@ -313,7 +315,7 @@ The freeze authorises the next design activity: mapping every L2/L3 business act
 - evidence/retention requirements;
 - cross-aggregate handoff.
 
-It does **not yet authorise broad physical schema/API implementation**. That approval follows completion of the L2/L3 object/action mapping.
+With the L2/L3 mapping complete, **controlled aggregate-aligned physical schema/API implementation waves are now authorised**. This does not imply one service/table per aggregate and does not imply runtime capability has already been delivered.
 
 ## Change control
 

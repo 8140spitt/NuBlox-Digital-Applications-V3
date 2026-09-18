@@ -7,6 +7,8 @@ let organisationService: typeof import('./foundation-organisation');
 let personService: typeof import('./foundation-person');
 let legalEntityService: typeof import('./foundation-legal-entity');
 let tenantAuthority: typeof import('./tenant-authority');
+let partyDirectory: typeof import('./foundation-party-directory');
+let partyRelationship: typeof import('./foundation-party-relationship');
 let outboxService: typeof import('./platform-outbox');
 let dbModule: typeof import('./db');
 
@@ -16,6 +18,8 @@ beforeAll(async () => {
   personService = await import('./foundation-person');
   legalEntityService = await import('./foundation-legal-entity');
   tenantAuthority = await import('./tenant-authority');
+  partyDirectory = await import('./foundation-party-directory');
+  partyRelationship = await import('./foundation-party-relationship');
   outboxService = await import('./platform-outbox');
   dbModule = await import('./db');
 });
@@ -435,6 +439,65 @@ describe('platform foundation runtime on MySQL', () => {
     expect(state.lockedBy).toBeNull();
     expect(state.lastError).toContain('still offline');
     expect(state.deadLetteredAt).toBeTruthy();
+  });
+
+
+  it('projects Person, Organisation, Legal Entity and Party Relationship through one Party directory', async () => {
+    const tenant = 'party-directory-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const personId = await personService.createPerson(context, {
+      givenName: 'Mary',
+      familyName: 'Jackson'
+    });
+    const organisationId = await organisationService.createOrganisation(context, {
+      legalName: 'Canonical Construction Group Limited',
+      registrationNumber: 'CCG-' + randomUUID().slice(0, 8),
+      countryCode: 'GB'
+    });
+    let organisation = await organisationService.getOrganisation(context, organisationId);
+    await organisationService.activateOrganisation(context, organisationId, organisation.version);
+    organisation = await organisationService.getOrganisation(context, organisationId);
+    await legalEntityService.designateLegalEntity(
+      context,
+      organisationId,
+      {
+        legalEntityType: 'LIMITED_COMPANY',
+        jurisdictionCode: 'GB',
+        accountingCurrency: 'GBP'
+      },
+      organisation.version
+    );
+
+    const relationshipId = await partyRelationship.createPartyRelationship(context, {
+      fromPartyId: personId,
+      toPartyId: organisationId,
+      relationshipType: 'EMPLOYED_BY'
+    });
+    let relationship = (await partyRelationship.listPartyRelationships(context)).find(
+      (item) => item.id === relationshipId
+    );
+    expect(relationship).toBeTruthy();
+    await partyRelationship.activatePartyRelationship(
+      context,
+      relationshipId,
+      relationship!.version
+    );
+
+    const directory = await partyDirectory.listPartyDirectory(context);
+    const person = directory.find((entry) => entry.id === personId);
+    const legalEntity = directory.find((entry) => entry.id === organisationId);
+    expect(person?.partyType).toBe('PERSON');
+    expect(person?.givenName).toBe('Mary');
+    expect(legalEntity?.partyType).toBe('ORGANISATION');
+    expect(legalEntity?.isLegalEntity).toBe(true);
+    expect(legalEntity?.legalEntityType).toBe('LIMITED_COMPANY');
+
+    const relationships = await partyDirectory.listPartyDirectoryRelationships(context, personId);
+    relationship = relationships.find((item) => item.id === relationshipId);
+    expect(relationship?.status).toBe('ACTIVE');
+    expect(relationship?.toPartyId).toBe(organisationId);
   });
 
 });

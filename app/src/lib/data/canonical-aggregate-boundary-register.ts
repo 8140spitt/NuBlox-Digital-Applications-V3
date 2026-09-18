@@ -122,7 +122,7 @@ export const canonicalAggregateBoundaries: CanonicalAggregateBoundary[] = [
     'Project-controls scheduling commands.',
     'Schedule network/version changes commit within one schedule; published analysis is derived from an immutable calculation run.',
     ['Baselines are immutable.','Float and critical path are projections, not editable Activity state.']),
-  agg('AGG-06-PROJECT-CONTROLS','BOF-06','DEL-PERFORMANCE-CALCULATION-RUN',['Project Controls Calculation'].toString(),['DEL-PROGRESS-MEASUREMENT-METHOD','DEL-RISK-SIMULATION-RUN'],['DEL-PROJECT-PERFORMANCE-SNAPSHOT','DEL-RISK-ANALYSIS-SNAPSHOT'],['DEL-SCHEDULE','FIN-BUDGET','FIN-FORECAST','CBO-CONTRACT','FIN-LEDGER'],
+  agg('AGG-06-PROJECT-CONTROLS','BOF-06','DEL-PERFORMANCE-CALCULATION-RUN','Project Controls Calculation',['DEL-PROGRESS-MEASUREMENT-METHOD','DEL-RISK-SIMULATION-RUN'],['DEL-PROJECT-PERFORMANCE-SNAPSHOT','DEL-RISK-ANALYSIS-SNAPSHOT'],['DEL-SCHEDULE','FIN-BUDGET','FIN-FORECAST','CBO-CONTRACT','FIN-LEDGER'],
     'Project-controls calculation services; source records remain owned elsewhere.',
     'Calculation runs pin exact source versions and publish projections without writing back to source aggregates.',
     ['EVM/CVR/risk simulation never becomes a shadow cost ledger.']),
@@ -242,7 +242,7 @@ export const canonicalAggregateBoundaries: CanonicalAggregateBoundary[] = [
     'Regulatory/building-safety commands.',
     'Case coordinates statutory evidence; application/decision/notice occurrences remain attributable and immutable when issued.',
     ['Regulatory change is distinct from Design and Commercial Change.']),
-  agg('AGG-14-GOLDEN-THREAD','BOF-14','REG-GOLDEN-THREAD','Golden Thread',[],['CORP-ENTITY-REGISTER-SNAPSHOT'],['CBO-INFORMATION-CONTAINER','CBO-ASSET','CBO-SYSTEM','EVID-EVIDENCE-ITEM'],
+  agg('AGG-14-GOLDEN-THREAD','BOF-14','REG-GOLDEN-THREAD','Golden Thread',[],[],['CORP-ENTITY-REGISTER-SNAPSHOT','CBO-INFORMATION-CONTAINER','CBO-ASSET','CBO-SYSTEM','EVID-EVIDENCE-ITEM'],
     'Building-safety information governance.',
     'Golden Thread is reconstructed from source-linked records rather than edited as a single document/store.',
     ['Golden Thread never duplicates canonical source truth.']),
@@ -357,7 +357,7 @@ export const canonicalAggregateBoundaries: CanonicalAggregateBoundary[] = [
     'Commitment, evidence and outcome remain separate lifecycle/evidence layers.',
     ['Climate/resilience risks reuse Enterprise Risk.']),
 
-  agg('AGG-21-RISK','BOF-21','RISK-ENTERPRISE-RISK',['Enterprise Risk'].toString(),['RISK-TREATMENT-PLAN'],[],['RISK-ASSESSMENT','CTRL-INTERNAL-CONTROL','CBO-PROJECT','CBO-ASSET'],
+  agg('AGG-21-RISK','BOF-21','RISK-ENTERPRISE-RISK','Enterprise Risk',['RISK-TREATMENT-PLAN'],[],['RISK-ASSESSMENT','CTRL-INTERNAL-CONTROL','CBO-PROJECT','CBO-ASSET'],
     'Risk governance commands.',
     'Risk identity persists; assessments/treatments create new evidence/plans rather than overwriting history.',
     ['Current risk rating is derived from retained assessments.']),
@@ -590,8 +590,11 @@ export function validateCanonicalAggregateBoundaryFreeze() {
   if (canonicalAggregateFreezeSummary.frozenAggregateBoundaryCount !== canonicalAggregateBoundaries.length) return false;
 
   const owned = canonicalAggregateBoundaries.flatMap((boundary) => boundary.ownedMembers.map((member) => [member, boundary.id] as const));
+  const projections = canonicalAggregateBoundaries.flatMap((boundary) => boundary.projections.map((projection) => [projection, boundary.id] as const));
   if (new Set(owned.map(([member]) => member)).size !== owned.length) return false;
+  if (new Set(projections.map(([projection]) => projection)).size !== projections.length) return false;
   if (owned.some(([member]) => canonicalAggregateBoundaries.some((boundary) => boundary.rootModelId === member))) return false;
+  if (projections.some(([projection]) => canonicalAggregateBoundaries.some((boundary) => boundary.rootModelId === projection) || owned.some(([member]) => member === projection))) return false;
 
   if (Object.keys(refinementAggregateOwnership).length !== refinementIds.size) return false;
   if (![...refinementIds].every((id) => refinementAggregateOwnership[id] && aggregateIds.has(refinementAggregateOwnership[id]))) return false;

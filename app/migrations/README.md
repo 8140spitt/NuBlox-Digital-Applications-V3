@@ -70,3 +70,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0009 — authorised decision runtime
 
 `0009_authorised_decision_runtime.sql` introduces the immutable `AGG-27-DECISION` runtime. Decisions bind an attributable outcome to an exact subject/version, retain permission/delegated-authority evidence at decision time, and support append-only corrective supersession without editing earlier decisions.
+
+
+## Migration 0010 — governed evidence runtime
+
+`0010_governed_evidence_runtime.sql` introduces `AGG-28-EVIDENCE`: stable Evidence Items with exact subject/version binding, integrity hashes, immutable source/provenance references, attributable capture and independent verification. Evidence supports domain truth without becoming a duplicate business master.

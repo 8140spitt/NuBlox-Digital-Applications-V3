@@ -1,4 +1,5 @@
 import activitySource from '$lib/generated/enterprise-activity-source.json';
+import semanticInventory from '$lib/generated/semantic-model-inventory.json';
 import {
   canonicalAggregateBoundaries,
   canonicalAggregateFreezeSummary
@@ -322,13 +323,24 @@ function inferAction(activityName: string): ActivityAction {
   return 'execute';
 }
 
+function matchingRoutes(functionId: string, subfunctionName: string) {
+  return l2AggregateRoutes.filter((route) => route.functionId === functionId && route.match.test(subfunctionName));
+}
+
 function routeFor(functionId: string, subfunctionName: string) {
-  return l2AggregateRoutes.find((route) => route.functionId === functionId && route.match.test(subfunctionName));
+  return matchingRoutes(functionId, subfunctionName)[0];
 }
 
 export const unmappedSubfunctions = activitySource.subfunctions.filter(
-  (subfunction) => !routeFor(subfunction.functionId, subfunction.name)
+  (subfunction) => matchingRoutes(subfunction.functionId, subfunction.name).length === 0
 );
+
+export const ambiguousSubfunctions = activitySource.subfunctions
+  .map((subfunction) => ({
+    subfunction,
+    routes: matchingRoutes(subfunction.functionId, subfunction.name)
+  }))
+  .filter((entry) => entry.routes.length > 1);
 
 export const activityObjectActionMappings: ActivityObjectActionMapping[] = activitySource.subfunctions.flatMap((subfunction) => {
   const route = routeFor(subfunction.functionId, subfunction.name);
@@ -369,6 +381,7 @@ export const activityObjectActionMappings: ActivityObjectActionMapping[] = activ
 });
 
 const knownAggregateIds = new Set(canonicalAggregateBoundaries.map((entry) => entry.id));
+const knownSemanticModelIds = new Set(semanticInventory.items.map((entry) => entry.id));
 const sourceActivityCount = activitySource.subfunctions.reduce(
   (sum, subfunction) => sum + subfunction.activities.length,
   0
@@ -382,6 +395,8 @@ export const activityObjectActionSummary = {
   mappedSubfunctionCount: new Set(activityObjectActionMappings.map((entry) => entry.subfunctionId)).size,
   mappedActivityCount: activityObjectActionMappings.length,
   unmappedSubfunctionCount: unmappedSubfunctions.length,
+  ambiguousSubfunctionCount: ambiguousSubfunctions.length,
+  invalidObjectModelRouteCount: l2AggregateRoutes.filter((route) => !knownSemanticModelIds.has(route.objectModelId)).length,
   invalidAggregateRouteCount: l2AggregateRoutes.filter((route) => !knownAggregateIds.has(route.aggregateId)).length,
   commandCount: activityObjectActionMappings.filter((entry) => entry.accessMode === 'command').length,
   queryCount: activityObjectActionMappings.filter((entry) => entry.accessMode === 'query').length,
@@ -399,9 +414,12 @@ export function validateActivityObjectActionMapping() {
   if (activityObjectActionSummary.mappedSubfunctionCount !== 353) return false;
   if (activityObjectActionSummary.mappedActivityCount !== 1510) return false;
   if (activityObjectActionSummary.unmappedSubfunctionCount !== 0) return false;
+  if (activityObjectActionSummary.ambiguousSubfunctionCount !== 0) return false;
+  if (activityObjectActionSummary.invalidObjectModelRouteCount !== 0) return false;
   if (activityObjectActionSummary.invalidAggregateRouteCount !== 0) return false;
   if (new Set(activityObjectActionMappings.map((entry) => entry.activityId)).size !== 1510) return false;
   if (!activityObjectActionMappings.every((entry) => knownAggregateIds.has(entry.aggregateId))) return false;
+  if (!activityObjectActionMappings.every((entry) => knownSemanticModelIds.has(entry.objectModelId))) return false;
   if (!activityObjectActionMappings.every((entry) => entry.writeAuthority && entry.transactionRule && entry.objectModelId)) return false;
   if (!activityObjectActionMappings.every((entry) => entry.state === 'mapped')) return false;
   return true;

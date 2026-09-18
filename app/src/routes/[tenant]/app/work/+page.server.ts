@@ -3,9 +3,13 @@ import type { Actions, PageServerLoad } from './$types';
 import {
   acknowledgeWorkItem,
   completeWorkItem,
+  escalateWorkItem,
   listMyWork,
+  listWorkEscalations,
+  resolveWorkEscalation,
   startWorkItem
 } from '$lib/server/shared-work';
+import { hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 
 function text(data: FormData, name: string) {
@@ -31,11 +35,20 @@ function target(tenant: string) {
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
+  const [work, escalations] = await Promise.all([
+    listMyWork(context),
+    listWorkEscalations(context)
+  ]);
   return {
     tenantSlug: params.tenant,
     actorDisplayName: context.actorDisplayName,
     currentTime: new Date().toISOString(),
-    work: await listMyWork(context)
+    work,
+    escalations,
+    capabilities: {
+      canExecute: hasPermission(context, 'work.item.execute'),
+      canManage: hasPermission(context, 'work.item.manage')
+    }
   };
 };
 
@@ -80,6 +93,38 @@ export const actions: Actions = {
           statement: text(data, 'statement'),
           channel: 'NUBLOX'
         }
+      );
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant));
+  },
+
+  escalate: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await escalateWorkItem(
+        await resolveRequestCommandContext(params.tenant, locals),
+        text(data, 'workItemId'),
+        {
+          triggerCode: text(data, 'triggerCode'),
+          ruleKey: text(data, 'ruleKey') || undefined,
+          reason: text(data, 'reason')
+        }
+      );
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant));
+  },
+
+  resolveEscalation: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await resolveWorkEscalation(
+        await resolveRequestCommandContext(params.tenant, locals),
+        text(data, 'escalationId'),
+        text(data, 'resolutionNote')
       );
     } catch (error) {
       return problem(error);

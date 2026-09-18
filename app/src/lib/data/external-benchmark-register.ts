@@ -26,7 +26,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['enterprise-erp','finance','procurement','supply-chain','manufacturing','hcm','asset-management','planning'],
     workspaces: ['F01','F03','F04','F05','F07','F09','F10','F11','F13','F14','F15','F17','F20','F22','F23','F27','F29'],
-    studyState: 'in-progress',
+    studyState: 'challenged',
     officialSource: 'https://www.sap.com/uk/products/erp.html',
     challengeFocus: ['record-to-report','procure-to-pay','supply-chain','manufacturing','enterprise planning','asset lifecycle','master data','controls'],
     notes: 'Primary enterprise completeness benchmark. The 64-line legacy SAP capability register is retained under docs/benchmarks as provenance and must be remapped to V3 workspaces/canonical objects rather than copied as module boundaries.'

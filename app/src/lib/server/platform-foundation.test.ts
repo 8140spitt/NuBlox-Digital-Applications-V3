@@ -343,4 +343,98 @@ describe('platform foundation runtime on MySQL', () => {
       )
     ).toBe(true);
   });
+
+  it('recovers stale processing outbox locks after a worker dies', async () => {
+    const tenant = 'outbox-recovery-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const organisationId = await organisationService.createOrganisation(context, {
+      legalName: 'Outbox Recovery Organisation'
+    });
+    const rows = await dbModule.queryRows<any>(
+      'SELECT om.id FROM outbox_messages om JOIN business_events be ON be.id = om.business_event_id WHERE om.tenant_id = ? AND be.aggregate_object_id = ?',
+      [context.tenantId, organisationId]
+    );
+    expect(rows).toHaveLength(1);
+    const messageId = rows[0].id;
+
+    await dbModule.executeMutation(
+      "UPDATE outbox_messages SET status = 'PROCESSING', locked_by = 'dead-worker', locked_at = ?, attempts = 1 WHERE id = ?",
+      [new Date(Date.now() - 10 * 60_000).toISOString(), messageId]
+    );
+
+    const workerId = 'recovery-worker-' + randomUUID();
+    const claimed = await outboxService.claimOutboxMessages(workerId, 100);
+    const recovered = claimed.find((message) => message.id === messageId);
+    expect(recovered).toBeTruthy();
+    expect(recovered?.attempts).toBe(2);
+
+    await outboxService.markOutboxPublished(messageId, workerId);
+    const recoveredRows = await dbModule.queryRows<any>(
+      'SELECT status, attempts, locked_by AS lockedBy, published_at AS publishedAt FROM outbox_messages WHERE id = ?',
+      [messageId]
+    );
+    expect(recoveredRows[0]?.status).toBe('PUBLISHED');
+    expect(recoveredRows[0]?.attempts).toBe(2);
+    expect(recoveredRows[0]?.lockedBy).toBeNull();
+    expect(recoveredRows[0]?.publishedAt).toBeTruthy();
+  });
+
+  it('retries failed outbox delivery and dead-letters after the configured attempt limit', async () => {
+    const tenant = 'outbox-failure-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const organisationId = await organisationService.createOrganisation(context, {
+      legalName: 'Outbox Failure Organisation'
+    });
+    const rows = await dbModule.queryRows<any>(
+      'SELECT om.id FROM outbox_messages om JOIN business_events be ON be.id = om.business_event_id WHERE om.tenant_id = ? AND be.aggregate_object_id = ?',
+      [context.tenantId, organisationId]
+    );
+    expect(rows).toHaveLength(1);
+    const messageId = rows[0].id;
+    const workerId = 'failure-worker-' + randomUUID();
+
+    const firstClaim = await outboxService.claimOutboxMessages(workerId, 100);
+    expect(firstClaim.some((message) => message.id === messageId)).toBe(true);
+    expect(await outboxService.markOutboxFailed(messageId, workerId, new Error('broker offline'), 2)).toBe(
+      'PENDING'
+    );
+
+    let state = (
+      await dbModule.queryRows<any>(
+        'SELECT status, attempts, last_error AS lastError, available_at AS availableAt FROM outbox_messages WHERE id = ?',
+        [messageId]
+      )
+    )[0];
+    expect(state.status).toBe('PENDING');
+    expect(state.attempts).toBe(1);
+    expect(state.lastError).toContain('broker offline');
+    expect(new Date(state.availableAt).getTime()).toBeGreaterThan(Date.now());
+
+    await dbModule.executeMutation('UPDATE outbox_messages SET available_at = ? WHERE id = ?', [
+      new Date(Date.now() - 1_000).toISOString(),
+      messageId
+    ]);
+    const secondClaim = await outboxService.claimOutboxMessages(workerId, 100);
+    expect(secondClaim.find((message) => message.id === messageId)?.attempts).toBe(2);
+    expect(await outboxService.markOutboxFailed(messageId, workerId, 'still offline', 2)).toBe(
+      'DEAD_LETTER'
+    );
+
+    state = (
+      await dbModule.queryRows<any>(
+        'SELECT status, attempts, locked_by AS lockedBy, last_error AS lastError, dead_lettered_at AS deadLetteredAt FROM outbox_messages WHERE id = ?',
+        [messageId]
+      )
+    )[0];
+    expect(state.status).toBe('DEAD_LETTER');
+    expect(state.attempts).toBe(2);
+    expect(state.lockedBy).toBeNull();
+    expect(state.lastError).toContain('still offline');
+    expect(state.deadLetteredAt).toBeTruthy();
+  });
+
 });

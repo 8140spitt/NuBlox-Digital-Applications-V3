@@ -11,9 +11,14 @@ The application now establishes:
 - the canonical 29-function workspace directory;
 - F01 — Strategy & Enterprise Planning as the first active workspace;
 - F01.01 — Strategy Framework as the first operational persisted business slice;
+- canonical Organisation master data as the first shared `AGG-01-PARTY` runtime;
+- tenant, User Identity, Membership, Role, Permission and Role Assignment runtime foundations;
+- deny-by-default server command permission checks;
 - SQLite persistence using the Node 22 built-in `node:sqlite` runtime;
-- controlled Draft → Review → Approved → Published lifecycle transitions;
-- immutable submitted versions, return/rejection decisions and audit evidence;
+- append-only platform audit evidence with actor/authority snapshots;
+- canonical business events plus transactional outbox messages;
+- optimistic version control for Organisation master-data commands;
+- controlled Draft → Review → Approved → Published Strategy Framework lifecycle transitions using the shared platform authority/evidence spine;
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
@@ -33,8 +38,15 @@ The local database is created automatically at `app/data/nublox-v3.db`. Set `NUB
 
 ## Current security boundary
 
-F01.01 records tenant scope in every persisted framework and audit event, but authentication and authorisation are not yet implemented. Audit events therefore use a clearly identified `Development User` actor. This must be replaced by authenticated identity before the slice is considered production-ready.
+Runtime authorization foundations are now implemented: active tenant, User Identity → Party linkage, effective tenant Membership, Role Assignment, Role Definition and Permission Definition are resolved before protected commands execute. Material commands retain an authority snapshot in audit evidence.
+
+Production authentication is **not yet integrated**. Local development uses a clearly identified development-only principal which is automatically denied when `NODE_ENV=production`. A production identity/session adapter is therefore the next security implementation step; no development identity fallback is permitted in production.
 
 ## Engineering rule
 
 The UI is data-driven from canonical workspace definitions. Function workspaces may have different business content, but they use shared shell and interaction primitives rather than creating independent mini-applications.
+
+
+## Foundation master data
+
+Open `/[tenant]/app/admin/master-data/organisations` to use the first canonical shared master-data runtime. Organisation is implemented once and is intended to be reused by CRM, procurement, contracts, HCM, finance and project delivery through relationships rather than duplicate company masters.

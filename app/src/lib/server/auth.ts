@@ -1,3 +1,4 @@
+import { building } from '$app/environment';
 import { getRequestEvent } from '$app/server';
 import { betterAuth } from 'better-auth';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
@@ -6,6 +7,7 @@ import { getDbPool } from '$lib/server/db';
 function authSecret() {
   const secret = process.env.BETTER_AUTH_SECRET;
   if (secret) return secret;
+  if (building) return 'nublox-build-analysis-only-secret-not-valid-at-runtime';
   if (process.env.NODE_ENV === 'production') {
     throw new Error('BETTER_AUTH_SECRET is required in production.');
   }

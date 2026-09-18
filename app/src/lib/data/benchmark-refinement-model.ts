@@ -571,6 +571,39 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['simulation run', 'target/scenario', 'schedule outcome distribution', 'cost outcome distribution', 'confidence levels', 'P-values', 'sensitivity/contributors', 'contingency basis', 'published at'],
     lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
     governance: ['Probability outputs are analytical positions, not guaranteed completion dates/costs.', 'Accepted contingency or response decisions remain explicit downstream decisions/plans.']
+  },
+  {
+    modelId: 'DEL-PROGRESS-MEASUREMENT-METHOD',
+    originGapIds: ['BG-020'],
+    canonicalName: 'Progress Measurement Method',
+    kind: 'definition',
+    definition: 'Versioned governed method defining how physical or deliverable progress is translated from attributable field/project evidence into comparable completion and earned-performance measures for a defined work scope.',
+    identityRule: 'Stable method identity/version with explicit applicable work types, measurement basis and rules; Work Packages/Activities pin the exact method version used for each reporting period.',
+    keyData: ['method reference', 'method type', 'applicable work scope', 'measurement basis', 'weighting/rules', 'quantity/UOM basis', 'validation criteria', 'effective version'],
+    lifecycle: ['Draft', 'Validated', 'Approved', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Progress Measurement Method is calculation policy, not Progress Record or actual completion truth.', 'Method changes never rewrite previously issued performance snapshots.']
+  },
+  {
+    modelId: 'DEL-PERFORMANCE-CALCULATION-RUN',
+    originGapIds: ['BG-020'],
+    canonicalName: 'Project Performance Calculation Run',
+    kind: 'event-evidence',
+    definition: 'Immutable execution evidence combining exact baseline/budget, progress, cost, commitment, forecast, revenue/value and measurement-method inputs to calculate construction/project performance for a defined as-of period.',
+    identityRule: 'Stable run occurrence pinned to exact source versions and as-of period so earned-value, productivity, forecast and cost/value outcomes are reproducible.',
+    keyData: ['project/WBS/work package scope', 'as-of period', 'schedule baseline/version', 'budget/version', 'progress records', 'measurement-method version', 'actual costs', 'commitments', 'forecast/version', 'contract/value/revenue basis', 'calculation rules/version', 'executed at/by'],
+    lifecycle: ['Prepared', 'Calculated', 'Validated', 'Published', 'Superseded/Corrected'],
+    governance: ['Calculation Run never edits Progress, Budget, Contract, Commitment, Forecast or Ledger truth.', 'Manual overrides/management adjustments are explicit inputs with actor/reason/evidence.']
+  },
+  {
+    modelId: 'DEL-PROJECT-PERFORMANCE-SNAPSHOT',
+    originGapIds: ['BG-020'],
+    canonicalName: 'Project Controls Performance Snapshot',
+    kind: 'projection',
+    definition: 'Rebuildable or published as-of project-controls position derived from one Project Performance Calculation Run, supporting earned value, productivity, forecast-at-completion, margin and construction cost/value reconciliation views.',
+    identityRule: 'Projection or immutable published snapshot references one calculation run and exact reporting scope; every reported metric retains its source/calculation basis.',
+    keyData: ['calculation run', 'scope', 'planned value', 'earned value', 'actual cost', 'schedule/cost variance', 'SPI/CPI', 'ETC/EAC', 'commitment/exposure', 'forecast cost/value', 'margin', 'installed/budget quantities', 'labour/plant productivity', 'CVR/value position', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Performance Snapshot is analytical/project-control evidence, not a second cost ledger, progress register or Contract valuation.', 'Earned value and CVR are views over canonical source facts and policies, not independently editable balances.']
   }
 ];
 
@@ -594,7 +627,9 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R17', from: 'FIN-LEASE-VALUATION', predicate: 'values', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Every valuation is immutable evidence against one accounting record/basis.' },
   { id: 'BR-R18', from: 'FIN-LEASE-PAYMENT-SCHEDULE', predicate: 'derives from', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Schedule remains a projection and never replaces contract terms.' },
   { id: 'BR-R19', from: 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-SCHEDULE-CALCULATION-RUN', governance: 'Analysis pins the exact calculation evidence and scheduling basis.' },
-  { id: 'BR-R20', from: 'DEL-RISK-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-RISK-SIMULATION-RUN', governance: 'Probabilistic outcome snapshot pins the exact risk simulation evidence and assumptions.' }
+  { id: 'BR-R20', from: 'DEL-RISK-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-RISK-SIMULATION-RUN', governance: 'Probabilistic outcome snapshot pins the exact risk simulation evidence and assumptions.' },
+  { id: 'BR-R21', from: 'DEL-PROJECT-PERFORMANCE-SNAPSHOT', predicate: 'derives from', to: 'DEL-PERFORMANCE-CALCULATION-RUN', governance: 'Published performance pins the exact calculation run and source versions.' },
+  { id: 'BR-R22', from: 'DEL-PERFORMANCE-CALCULATION-RUN', predicate: 'uses', to: 'DEL-PROGRESS-MEASUREMENT-METHOD', governance: 'Performance calculation pins the exact approved progress-measurement method version.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -612,7 +647,8 @@ export const benchmarkRefinementRules = [
   'Product requirements and engineering models remain distinct from information-delivery requirements and installed physical Systems.',
   'Lease accounting records financial consequences without replacing Lease, Contract, Property or physical Asset identity.',
   'CPM dates, float and critical-path status are reproducible schedule projections derived from explicit calendars, network logic and calculation evidence.',
-  'Quantitative project-risk results are reproducible analysis evidence derived from explicit risk, schedule, cost, uncertainty and method inputs; they never replace source risk or plan truth.'
+  'Quantitative project-risk results are reproducible analysis evidence derived from explicit risk, schedule, cost, uncertainty and method inputs; they never replace source risk or plan truth.',
+  'Earned value, productivity, EAC and CVR-style project-control positions are reproducible projections over governed progress, budget, commercial and accounting truth; reports never become a shadow cost ledger.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -620,7 +656,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

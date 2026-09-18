@@ -11,8 +11,10 @@ The application now establishes:
 - the canonical 29-function workspace directory;
 - F01 — Strategy & Enterprise Planning as the first active workspace;
 - F01.01 — Strategy Framework as the first operational persisted business slice;
-- canonical Organisation master data as the first shared `AGG-01-PARTY` runtime;
+- canonical Party / Person / Organisation / Legal Entity master data through the shared `AGG-01-PARTY` runtime;
+- Party Relationship, Organisation Unit/effective hierarchy and Delegated Authority shared foundation aggregates;
 - tenant, User Identity, Membership, Role, Permission and Role Assignment runtime foundations;
+- Better Auth production authentication with tenant-scoped identity mapping and controlled first-administrator bootstrap;
 - deny-by-default server command permission checks;
 - MySQL 8.0+ persistence through the `mysql2` promise client and pooled prepared statements;
 - append-only platform audit evidence with actor/authority snapshots;
@@ -22,7 +24,7 @@ The application now establishes:
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
-F02–F29 remain visible as the canonical future workspace set but intentionally non-navigable until each workspace specification is revalidated and implemented.
+F02–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
 ## Run locally
 
@@ -43,7 +45,7 @@ NuBlox does **not** create application databases implicitly. Copy `.env.example`
 
 Runtime authorization foundations are now implemented: active tenant, User Identity → Party linkage, effective tenant Membership, Role Assignment, Role Definition and Permission Definition are resolved before protected commands execute. Material commands retain an authority snapshot in audit evidence.
 
-Production authentication is **not yet integrated**. Local development uses a clearly identified development-only principal which is automatically denied when `NODE_ENV=production`. A production identity/session adapter is therefore the next security implementation step; no development identity fallback is permitted in production.
+Production authentication is integrated through Better Auth with MySQL-backed users, accounts, sessions and verification records. Authentication does not grant business authority by itself: the authenticated user must map to a tenant-scoped NuBlox User Identity linked to a Party with effective Membership and Role Assignment. Public registration is disabled by default, production has no development-identity fallback, and the first administrator is established explicitly with `pnpm auth:bootstrap`.
 
 ## Engineering rule
 
@@ -52,7 +54,7 @@ The UI is data-driven from canonical workspace definitions. Function workspaces 
 
 ## Foundation master data
 
-Open `/[tenant]/app/admin/master-data/organisations` to use the first canonical shared master-data runtime. Organisation is implemented once and is intended to be reused by CRM, procurement, contracts, HCM, finance and project delivery through relationships rather than duplicate company masters.
+Open `/[tenant]/app/admin/master-data/organisations` for canonical Party/Organisation master data and `/[tenant]/app/admin/security` for tenant identities, memberships, RBAC and access administration. Organisation is implemented once and reused by CRM, procurement, contracts, HCM, finance and project delivery through governed Party Relationships rather than duplicate company masters.
 
 
 ## MySQL migrations

@@ -858,6 +858,61 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['reservation reference', 'requester/attendees', 'space/resource', 'start/end', 'purpose', 'capacity/facility needs', 'access/eligibility policy', 'service add-ons', 'status', 'source/channel'],
     lifecycle: ['Requested', 'Confirmed', 'Checked In/In Use', 'Completed', 'No-show', 'Cancelled'],
     governance: ['Workplace Reservation is not inventory Reservation, Site Logistics Booking or Occupancy/Tenure.', 'Booking never changes Space or Party identity and respects access/security eligibility separately.']
+  },
+  {
+    modelId: 'CORP-OFFICE-APPOINTMENT',
+    originGapIds: ['BG-028'],
+    canonicalName: 'Corporate Office Appointment',
+    kind: 'relationship',
+    definition: 'Governed statutory/corporate-secretariat appointment of a canonical Person/Party to a formal office of a Legal Entity, such as director, company secretary or other jurisdiction-defined officer, with appointment and cessation evidence.',
+    identityRule: 'Stable effective relationship between one Legal Entity and Party/Person with office type, jurisdiction, appointment/cessation dates, authority/resolution basis and registry/filing provenance.',
+    keyData: ['legal entity', 'person/party', 'office type', 'jurisdiction', 'appointed at', 'appointment resolution/authority', 'identity-verification evidence where required', 'registry/filing reference', 'ceased at/reason'],
+    lifecycle: ['Proposed', 'Appointed', 'Active', 'Suspended', 'Ceased', 'Corrected/Superseded'],
+    governance: ['Corporate Office Appointment is not generic Role Assignment, HCM Position or Governance Body membership.', 'It carries statutory/legal-office provenance while business permissions and delegated authority remain separately governed.']
+  },
+  {
+    modelId: 'CORP-ENTITY-REGISTER-SNAPSHOT',
+    originGapIds: ['BG-028'],
+    canonicalName: 'Corporate Entity Register Snapshot',
+    kind: 'projection',
+    definition: 'Reproducible or published statutory/corporate-secretariat view of a Legal Entity at an as-of time, assembling exact office appointments, ownership/control relationships, registrations, statutory filings and governance references.',
+    identityRule: 'Projection or immutable published snapshot pins source records/versions and as-of/jurisdiction basis; it is never independently edited as a competing entity master.',
+    keyData: ['legal entity', 'jurisdiction/register type', 'as-of time', 'office appointments', 'ownership/control relationships', 'external registrations/identifiers', 'statutory filings', 'governance references', 'completeness/status', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Snapshot is evidence/read model over canonical Legal Entity and source records.', 'External company-register numbers remain External Identifiers and never replace canonical identity.']
+  },
+  {
+    modelId: 'FIN-RECOGNITION-POLICY',
+    originGapIds: ['BG-029'],
+    canonicalName: 'Financial Recognition Policy',
+    kind: 'definition',
+    definition: 'Versioned governed accounting policy/rule defining how revenue or cost is recognised for a class of contracts/projects, including performance-obligation or completion basis, measurement method, thresholds and accounting-basis applicability.',
+    identityRule: 'Stable policy identity/version scoped to accounting principle, legal entity/ledger and contract/project class; calculations pin the exact effective version used.',
+    keyData: ['policy reference', 'accounting basis/principle', 'legal entity/ledger scope', 'contract/project applicability', 'recognition method', 'progress/cost basis', 'thresholds/exclusions', 'account mappings', 'effective version'],
+    lifecycle: ['Draft', 'Approved', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Recognition Policy is accounting configuration, not Contract terms, Progress truth or a posted Journal.', 'Policy changes never rewrite prior recognition evidence/postings.']
+  },
+  {
+    modelId: 'FIN-CONSTRUCTION-WIP-RUN',
+    originGapIds: ['BG-029'],
+    canonicalName: 'Construction WIP Calculation Run',
+    kind: 'event-evidence',
+    definition: 'Immutable period/as-of calculation evidence reconciling contract value, approved changes, progress/earned basis, actual cost, forecast cost, billings and prior recognition under an exact Financial Recognition Policy.',
+    identityRule: 'Stable run occurrence pinned to exact Contract/Contract Value Schedule, progress/performance, actual-cost postings, Forecast, Customer Invoice/billing, prior recognition and policy versions.',
+    keyData: ['legal entity/ledger', 'period/as-of', 'contract/project scope', 'recognition policy/version', 'contract value/change basis', 'progress/earned basis', 'actual cost', 'forecast cost', 'billed-to-date', 'prior recognised amounts', 'calculation version', 'executed/reviewed by'],
+    lifecycle: ['Prepared', 'Calculated', 'Reviewed', 'Approved', 'Posted/Transferred', 'Superseded/Corrected'],
+    governance: ['WIP Run never edits Contract, Progress, Forecast, Invoice or Ledger truth.', 'Adjustments are explicit inputs and resulting accounting effects post through Financial Recognition Event/Journal evidence.']
+  },
+  {
+    modelId: 'FIN-CONSTRUCTION-WIP-POSITION',
+    originGapIds: ['BG-029'],
+    canonicalName: 'Construction WIP Position',
+    kind: 'projection',
+    definition: 'Rebuildable or published accounting/control position derived from one Construction WIP Calculation Run, showing earned/recognised revenue or cost, billings, margin and contract asset/liability or over/under-billing position.',
+    identityRule: 'Projection or immutable published snapshot references one WIP run and exact contract/project/period scope; every amount retains calculation and source provenance.',
+    keyData: ['WIP run', 'contract/project', 'period/as-of', 'earned/recognised revenue', 'recognised cost', 'gross margin', 'billed-to-date', 'unbilled/contract asset', 'overbilling/contract liability', 'cost-to-complete/EAC reference', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['WIP Position is a derived accounting/control view, not a second contract ledger or customer invoice.', 'Posted recognition remains immutable finance evidence and billing remains separate receivable evidence.']
   }
 ];
 
@@ -896,7 +951,9 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R32', from: 'OPS-ASSET-INVESTMENT-PLAN', predicate: 'is informed by', to: 'OPS-ASSET-INVESTMENT-APPRAISAL', governance: 'Approved investment plan retains appraisal/decision provenance.' },
   { id: 'BR-R33', from: 'NET-CONNECTIVITY-RELATIONSHIP', predicate: 'may connect via', to: 'NET-TERMINAL', governance: 'Terminal-aware topology remains subordinate to canonical network elements.' },
   { id: 'BR-R34', from: 'NET-TRACE-RUN', predicate: 'uses', to: 'NET-TRACE-CONFIGURATION', governance: 'Trace execution pins exact analysis rules and topology basis.' },
-  { id: 'BR-R35', from: 'NET-TRACE-RESULT', predicate: 'derives from', to: 'NET-TRACE-RUN', governance: 'Result pins exact trace execution and source topology versions.' }
+  { id: 'BR-R35', from: 'NET-TRACE-RESULT', predicate: 'derives from', to: 'NET-TRACE-RUN', governance: 'Result pins exact trace execution and source topology versions.' },
+  { id: 'BR-R36', from: 'FIN-CONSTRUCTION-WIP-RUN', predicate: 'uses', to: 'FIN-RECOGNITION-POLICY', governance: 'WIP calculation pins the exact accounting policy/version.' },
+  { id: 'BR-R37', from: 'FIN-CONSTRUCTION-WIP-POSITION', predicate: 'derives from', to: 'FIN-CONSTRUCTION-WIP-RUN', governance: 'Published WIP position pins exact run and source versions.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -922,7 +979,9 @@ export const benchmarkRefinementRules = [
   'Digital twins are governed federations over canonical physical Assets/Systems and authoritative source data; they never become a second asset register.',
   'Asset investment planning is auditable decision support over condition, risk, lifecycle cost, service and budget evidence; optimization never auto-authorizes capital work.',
   'Infrastructure connectivity and trace semantics augment canonical Network/Asset/System/Linear Segment identity without replacing GIS or creating a second network master.',
-  'Workplace reservations are distinct from occupancy/tenure, inventory reservations and site logistics bookings.'
+  'Workplace reservations are distinct from occupancy/tenure, inventory reservations and site logistics bookings.',
+  'Statutory corporate offices are effective legal appointments around canonical Legal Entity and Person/Party identity; they are not generic business roles or HCM positions.',
+  'Construction WIP and revenue-recognition positions are reproducible accounting projections over contract, progress, cost, forecast and billing truth; recognition and billing remain separate.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -930,7 +989,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022', 'BG-023', 'BG-024', 'BG-025', 'BG-026', 'BG-027']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022', 'BG-023', 'BG-024', 'BG-025', 'BG-026', 'BG-027', 'BG-028', 'BG-029']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

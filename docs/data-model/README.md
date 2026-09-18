@@ -27,6 +27,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `crm-business-development-semantics.md` — governed market, CRM, Lead, Opportunity, Pursuit, interaction, onboarding and customer-case semantics.
 - `estimating-tendering-semantics.md` — governed Estimate/version, breakdown, measurement, build-up/rate, provision, tender-package, adjudication, proposal/quotation and offer-acceptance semantics.
 - `people-hcm-semantics.md` — governed Person/Worker Relationship, Position/Job Profile, competence/credential, learning, workforce, time, payroll, recruitment and people-case semantics.
+- `qhse-assurance-semantics.md` — governed quality planning, inspection/test, NCR/Defect/CAPA, safe-work controls, incident/investigation, compliance and environmental-assurance semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -57,6 +58,12 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Skill/Competence definitions, Person Competence, Credentials, Training Sessions and Learning Records remain distinct evidence layers.
 - Worker Availability is derived; Attendance, Time Entry, Timesheet and Payroll Result are separate truth layers.
 - Payroll/expense financial consequences post through Finance without turning finance into the worker, time or payroll master.
+- Quality Plan/ITP definitions remain separate from Inspection/Test execution evidence; Hold/Witness use one Verification Point pattern.
+- NCR, Defect and CAPA remain separate semantic layers; Snag is a Defect classification and corrective/preventive work uses one CAPA Action pattern.
+- QHSE Risk Assessment, Audit Engagement and Compliance Requirement reuse enterprise-shared semantics rather than local duplicates.
+- Method Statement/RAMS use controlled Information Container identity; Permit to Work and Isolation are shared with site operations.
+- Near Miss and Pollution Event are Incident classifications; Investigation/Cause/CAPA retain independent evidence and lifecycles.
+- Compliance Register is a projection of applicable requirements/evidence, not editable regulatory truth.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

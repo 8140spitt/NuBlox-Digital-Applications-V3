@@ -999,13 +999,16 @@ export async function escalateWorkItem(
     toAssignmentRef?: string;
   }
 ) {
-  assertPermission(context, 'work.item.manage');
+  assertPermission(context, 'work.item.execute');
   return dbTransaction(async (connection) => {
     const initial = await getWorkItem(context, workItemId, connection);
     const workflow = await getWorkflow(context, initial.workflowInstanceId, connection, true);
     const item = await getWorkItem(context, workItemId, connection, true);
     if (['COMPLETED', 'CANCELLED'].includes(item.status)) {
       throw new Error('Completed or cancelled Work Items cannot be escalated.');
+    }
+    if (!(await actorHasActiveAssignment(context, item.id, connection))) {
+      throw new Error('The current actor does not hold an active assignment for this Work Item.');
     }
 
     const id = randomUUID();

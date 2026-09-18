@@ -121,20 +121,29 @@ export async function dbTransaction<T>(
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const connection = await getDbPool().getConnection();
+    let failed: unknown;
+
     try {
       await connection.beginTransaction();
       const result = await work(connection);
       await connection.commit();
       return result;
     } catch (error) {
-      await connection.rollback();
-      if (!isRetryableTransactionError(error) || attempt === maxAttempts) {
-        throw error;
+      failed = error;
+      try {
+        await connection.rollback();
+      } catch {
+        // Preserve the original transaction failure; the connection is released below.
       }
-      await transactionRetryDelay(attempt);
     } finally {
       connection.release();
     }
+
+    if (!isRetryableTransactionError(failed) || attempt === maxAttempts) {
+      throw failed;
+    }
+
+    await transactionRetryDelay(attempt);
   }
 
   throw new Error('Database transaction retry loop exhausted unexpectedly.');

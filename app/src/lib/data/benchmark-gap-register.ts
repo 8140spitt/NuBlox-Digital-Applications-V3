@@ -64,39 +64,39 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
   {
     id: 'BG-004',
     title: 'Advanced warehouse and freight execution depth',
-    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE', 'ORACLE-CLOUD-CX', 'MICROSOFT-D365'],
     sourceFindings: ['SAP-W1-07'],
     affectedExternalRows: ['SAP-14', 'SAP-45', 'SAP-53', 'SAP-57', 'SAP-63'],
     workspaces: ['F09', 'F10', 'F12'],
     canonicalFamilies: ['BOF-09', 'BOF-10'],
-    disposition: 'cross-benchmark-required',
-    state: 'open',
+    disposition: 'accepted-refinement',
+    state: 'resolved',
     rationale: 'Core warehouse/inventory/shipment/transport semantics are strong, but SAP exposes handling-unit, wave, yard, slotting, cross-docking, freight tendering and settlement concepts that may be material for sophisticated logistics operations.',
     requiredOutcome: 'Challenge these concepts against Oracle, IFS, Trimble and construction logistics use cases before deciding which are core canonical records, typed execution records, projections or contextual extensions.'
   },
   {
     id: 'BG-005',
     title: 'Asset reliability, criticality and failure-mode semantics',
-    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE', 'IBM-MAXIMO', 'IFS-CLOUD'],
     sourceFindings: ['SAP-W1-09'],
     affectedExternalRows: ['SAP-11', 'SAP-29', 'SAP-32'],
     workspaces: ['F12', 'F22'],
     canonicalFamilies: ['BOF-16', 'BOF-17'],
-    disposition: 'cross-benchmark-required',
-    state: 'open',
+    disposition: 'accepted-refinement',
+    state: 'resolved',
     rationale: 'Asset, condition, maintenance plan and work-order semantics are governed, but explicit reliability/criticality/failure-mode engineering is not yet represented as a first-class semantic layer.',
     requiredOutcome: 'Challenge against IBM Maximo, IFS and asset-management standards before deciding the minimum canonical reliability model.'
   },
   {
     id: 'BG-006',
     title: 'Talent, succession and workforce-intelligence depth',
-    sourceBenchmarks: ['SAP-BUSINESS-SUITE'],
+    sourceBenchmarks: ['SAP-BUSINESS-SUITE', 'WORKDAY'],
     sourceFindings: ['SAP-W1-10'],
     affectedExternalRows: ['SAP-20', 'SAP-29', 'SAP-55'],
     workspaces: ['F15', 'F17'],
     canonicalFamilies: ['BOF-18', 'BOF-24'],
-    disposition: 'cross-benchmark-required',
-    state: 'open',
+    disposition: 'accepted-refinement',
+    state: 'resolved',
     rationale: 'The HCM baseline covers recruitment, employment, skills, learning, performance, workforce planning and payroll, but succession/talent-pool and workforce-intelligence concepts may require additional semantics.',
     requiredOutcome: 'Challenge against Workday and Microsoft/SAP HCM outcomes before adding any new identity beyond Career Profile, Skill, Competency, Performance Review and Workforce Plan.'
   }
@@ -115,8 +115,8 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 3) return false;
-  if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 3) return false;
-  if (benchmarkGapSummary.resolvedCount !== 3) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 6) return false;
+  if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
+  if (benchmarkGapSummary.resolvedCount !== 6) return false;
   return true;
 }

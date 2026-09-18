@@ -281,6 +281,32 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'Construction leaders independently converge on time-phased budget/progress/actual/commitment/forecast analysis, earned value, production productivity and cost-value reconciliation. NuBlox has the authoritative source facts but lacked one governed reproducible calculation/snapshot layer.',
     requiredOutcome: 'Govern Progress Measurement Method, Project Performance Calculation Run and Project Controls Performance Snapshot while preserving Progress Record, Budget, Forecast, Contract/Valuation, Commitment and Ledger as source truth.'
+  },
+  {
+    id: 'BG-021',
+    title: 'Contract value schedule and progress-payment breakdown',
+    sourceBenchmarks: ['ORACLE-CLOUD-CX', 'PROCORE', 'CAUSEWAY'],
+    sourceFindings: ['CON-W2-ORACLE-01', 'CON-W2-PROCORE-03', 'CON-W2-CAUSEWAY-02'],
+    affectedExternalRows: ['ORACLE-SOV', 'PROCORE-SOV', 'CAUSEWAY-BOQ-ACTIVITY'],
+    workspaces: ['F07', 'F09', 'F14', 'F27'],
+    canonicalFamilies: ['BOF-05', 'BOF-06', 'BOF-08', 'BOF-19'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Construction contracts require an agreed line-level value/payment basis such as a Schedule of Values, Activity Schedule or Bill of Quantities. Estimate, WBS and valuation identities do not substitute for the counterparty-agreed contract pricing structure.',
+    requiredOutcome: 'Govern Contract Value Schedule and Contract Value Line with explicit mappings to WBS/Work Package, Cost Code and estimate sources; applications/valuations reference exact value-line versions.'
+  },
+  {
+    id: 'BG-022',
+    title: 'Target-cost and gain/pain share contract mechanisms',
+    sourceBenchmarks: ['THINKPROJECT', 'CAUSEWAY', 'ORACLE-CLOUD-CX'],
+    sourceFindings: ['CON-W2-THINKPROJECT-02', 'CON-W2-CAUSEWAY-03', 'CON-W2-ORACLE-02'],
+    affectedExternalRows: ['THINKPROJECT-PAIN-GAIN', 'CAUSEWAY-NEC-TARGET', 'ORACLE-NEC4'],
+    workspaces: ['F07', 'F14', 'F27'],
+    canonicalFamilies: ['BOF-08', 'BOF-19'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'NEC target-cost and other incentive-based contracts require governed target/reference baselines and share formulas. Treating these solely as unstructured clause text would prevent reproducible assessments and commercial forecasting.',
+    requiredOutcome: 'Govern Target Cost Baseline, Commercial Share Mechanism and Commercial Share Assessment while reusing Contract, Commercial Change, actual-cost, valuation/payment and Final Account truth.'
   }
 ];
 
@@ -298,9 +324,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 14) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 16) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
-  if (benchmarkGapSummary.resolvedCount !== 20) return false;
+  if (benchmarkGapSummary.resolvedCount !== 22) return false;
   return true;
 }

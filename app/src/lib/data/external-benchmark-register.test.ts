@@ -10,7 +10,7 @@ describe('external market benchmark register', () => {
     expect(validateExternalBenchmarkRegister()).toBe(true);
     expect(marketBenchmarkSummary.workspaceCount).toBe(29);
     expect(marketBenchmarkSummary.coveredWorkspaceCount).toBe(29);
-    expect(marketBenchmarkSummary.benchmarkCount).toBeGreaterThanOrEqual(22);
+    expect(marketBenchmarkSummary.benchmarkCount).toBeGreaterThanOrEqual(23);
   });
 
   it('retains SAP as an enterprise completeness benchmark without making SAP the architecture', () => {

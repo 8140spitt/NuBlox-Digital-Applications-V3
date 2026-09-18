@@ -47,12 +47,19 @@ function runServiceTests() {
         'src/lib/server/classification-runtime.test.ts',
         'src/lib/server/lifecycle-configuration.test.ts',
         'src/lib/server/strategy-framework.test.ts',
-        'src/lib/server/business-object-review.test.ts'
+        'src/lib/server/business-object-review.test.ts',
+        '--fileParallelism=false',
+        '--maxWorkers=1'
       ],
       {
         cwd: process.cwd(),
         stdio: 'inherit',
-        env: { ...process.env, NODE_ENV: 'test', NUBLOX_TEST_DATABASE_URL: tempUrl.toString() }
+        env: {
+          ...process.env,
+          NODE_ENV: 'test',
+          NUBLOX_TEST_DATABASE_URL: tempUrl.toString(),
+          BETTER_AUTH_URL: process.env.BETTER_AUTH_URL ?? 'http://127.0.0.1:5173'
+        }
       }
     );
     child.on('error', reject);

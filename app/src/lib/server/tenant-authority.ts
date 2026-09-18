@@ -496,14 +496,30 @@ export async function updateTenantRole(
         throw new Error("This change would remove the actor's final tenant.role.manage authority.");
     }
 
+    const existingPermissions = await queryRows<RowDataPacket & { permissionKey: string }>(
+      'SELECT permission_key AS permissionKey FROM role_permissions WHERE role_id = ? ORDER BY permission_key FOR UPDATE',
+      [roleId],
+      connection
+    );
+    const existing = new Set(existingPermissions.map((row) => row.permissionKey));
+    const selectedSet = new Set(selected);
+    const removed = [...existing].filter((permission) => !selectedSet.has(permission)).sort();
+    const added = selected.filter((permission) => !existing.has(permission));
+
     const timestamp = now();
     await executeMutation(
       'UPDATE role_definitions SET name = ?, updated_at = ? WHERE id = ? AND tenant_id = ?',
       [required(input.name, 'Role name'), timestamp, roleId, context.tenantId],
       connection
     );
-    await executeMutation('DELETE FROM role_permissions WHERE role_id = ?', [roleId], connection);
-    for (const permission of selected) {
+    for (const permission of removed) {
+      await executeMutation(
+        'DELETE FROM role_permissions WHERE role_id = ? AND permission_key = ?',
+        [roleId, permission],
+        connection
+      );
+    }
+    for (const permission of added) {
       await executeMutation(
         'INSERT INTO role_permissions (role_id, permission_key) VALUES (?, ?)',
         [roleId, permission],

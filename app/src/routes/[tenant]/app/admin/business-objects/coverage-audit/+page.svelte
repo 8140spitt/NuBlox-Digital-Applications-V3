@@ -29,7 +29,7 @@
       <a href={`/${data.tenantSlug}/app/admin/business-objects`}>← Canonicalization workbench</a>
       <strong>{coverageAuditSummary.baselineDecisionCoveragePct}% decision coverage</strong>
       <span>{coverageAuditSummary.baselineDecisionCount} / {coverageAuditSummary.candidateOccurrences} candidate occurrences</span>
-      <span>External benchmark: {coverageAuditSummary.externalBenchmark.state}</span>
+      <span>External benchmark: {coverageAuditSummary.externalBenchmark.registeredBenchmarks} tools · {coverageAuditSummary.externalBenchmark.state}</span>
     </div>
   </header>
 
@@ -53,7 +53,7 @@
       <article><strong>2 · 29 workspaces</strong><p>Every function is represented in the family-to-workspace usage map; later L2/L3 object-action mapping remains required.</p></article>
       <article><strong>3 · Specialist overlays</strong><p>{specialistOverlays.join(' · ')}</p></article>
       <article><strong>4 · End-to-end chains</strong><p>{endToEndChains.join(' · ')}</p></article>
-      <article><strong>5 · External benchmark</strong><p>{coverageAuditSummary.externalBenchmark.name}: {coverageAuditSummary.externalBenchmark.requiredDomains} required study domains; status remains {coverageAuditSummary.externalBenchmark.state}.</p></article>
+      <article><strong>5 · External benchmark</strong><p>{coverageAuditSummary.externalBenchmark.name}: {coverageAuditSummary.externalBenchmark.registeredBenchmarks} registered tools across {coverageAuditSummary.externalBenchmark.requiredDomains} workspaces; {coverageAuditSummary.externalBenchmark.mandatorySuites} mandatory suites + {coverageAuditSummary.externalBenchmark.specialistDepthBenchmarks} specialist depth benchmarks. Status remains {coverageAuditSummary.externalBenchmark.state}.</p></article>
     </div>
   </section>
 

@@ -16,6 +16,9 @@ export async function seedDevelopmentTenant(tenantSlug: string) {
   await assertDatabaseReady();
   const slug = tenantSlug.trim().toLowerCase();
   if (!slug) throw new Error('Tenant slug is required.');
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    throw new Error('Tenant slug must contain lowercase letters, numbers and single hyphens only.');
+  }
 
   return dbTransaction(async (connection) => {
     const tenant = await ensureTenant(slug, displayName(slug), connection);

@@ -42,9 +42,9 @@ function problem(error: unknown) {
   });
 }
 
-export const load: PageServerLoad = ({ params, url }) => {
-  const context = resolveDevelopmentCommandContext(params.tenant);
-  const organisations = listOrganisations(context);
+export const load: PageServerLoad = async ({ params, url }) => {
+  const context = await resolveDevelopmentCommandContext(params.tenant);
+  const organisations = await listOrganisations(context);
   const requestedId = url.searchParams.get('organisation');
   const selected = organisations.find((item) => item.id === requestedId) ?? organisations[0] ?? null;
 
@@ -53,17 +53,17 @@ export const load: PageServerLoad = ({ params, url }) => {
     actorDisplayName: context.actorDisplayName,
     organisations,
     selected,
-    audit: selected ? listOrganisationAudit(context, selected.id) : []
+    audit: selected ? await listOrganisationAudit(context, selected.id) : []
   };
 };
 
 export const actions: Actions = {
   create: async ({ request, params }) => {
     const data = await request.formData();
-    const context = resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveDevelopmentCommandContext(params.tenant);
     let id: string;
     try {
-      id = createOrganisation(context, input(data));
+      id = await createOrganisation(context, input(data));
     } catch (error) {
       return problem(error);
     }
@@ -72,10 +72,10 @@ export const actions: Actions = {
 
   save: async ({ request, params }) => {
     const data = await request.formData();
-    const context = resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      updateOrganisation(context, id, input(data), version(data));
+      await updateOrganisation(context, id, input(data), version(data));
     } catch (error) {
       return problem(error);
     }
@@ -84,10 +84,10 @@ export const actions: Actions = {
 
   activate: async ({ request, params }) => {
     const data = await request.formData();
-    const context = resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      activateOrganisation(context, id, version(data));
+      await activateOrganisation(context, id, version(data));
     } catch (error) {
       return problem(error);
     }
@@ -96,10 +96,10 @@ export const actions: Actions = {
 
   deactivate: async ({ request, params }) => {
     const data = await request.formData();
-    const context = resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveDevelopmentCommandContext(params.tenant);
     const id = text(data, 'id');
     try {
-      deactivateOrganisation(context, id, version(data));
+      await deactivateOrganisation(context, id, version(data));
     } catch (error) {
       return problem(error);
     }

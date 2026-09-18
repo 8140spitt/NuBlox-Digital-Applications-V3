@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(64);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(75);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -113,6 +113,25 @@ describe('benchmark-driven canonical refinements', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'TWIN-FEDERATION-CONTEXT')?.kind).toBe('execution-context');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'TWIN-DATA-BINDING')?.kind).toBe('relationship');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'TWIN-STATE-SNAPSHOT')?.kind).toBe('projection');
+  });
+
+  it('adds asset investment decision support above health risk and execution truth', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'OPS-ASSET-INTERVENTION-OPTION')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'OPS-ASSET-INVESTMENT-APPRAISAL')?.kind).toBe('projection');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'OPS-ASSET-INVESTMENT-PLAN')?.kind).toBe('plan');
+  });
+
+  it('adds infrastructure topology linear location and trace semantics without another network master', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'NET-TERMINAL')?.kind).toBe('child');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'NET-CONNECTIVITY-RELATIONSHIP')?.kind).toBe('relationship');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'NET-LINEAR-LOCATION-ASSIGNMENT')?.kind).toBe('relationship');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'NET-TRACE-CONFIGURATION')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'NET-TRACE-RUN')?.kind).toBe('event-evidence');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'NET-TRACE-RESULT')?.kind).toBe('projection');
+  });
+
+  it('adds workplace reservations without reusing inventory reservation semantics', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'OPS-WORKPLACE-RESERVATION')?.kind).toBe('transaction');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

@@ -30,6 +30,8 @@
 
   <section class="admin">
     <p class="label">Administration</p>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}><span>◈</span>Security & access</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisations`}><span>◎</span>Party master data</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}><span>◇</span>Business object model</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}><span>✓</span>Coverage audit</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/foundation`}><span>⌘</span>Foundation semantics</a>

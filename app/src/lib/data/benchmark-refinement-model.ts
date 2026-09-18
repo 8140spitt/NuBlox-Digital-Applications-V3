@@ -486,7 +486,7 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
   },
   {
     modelId: 'FIN-LEASE-ACCOUNTING-RECORD',
-    originGapIds: ['BG-016', 'BG-017'],
+    originGapIds: ['BG-016'],
     canonicalName: 'Lease Accounting Record',
     kind: 'accounting-record',
     definition: 'Finance-side accounting identity linking an exact Lease/Contract relationship to the governed accounting treatment, valuation basis and right-of-use/liability consequences required by the applicable accounting standard.',

@@ -106,6 +106,7 @@ Current governed families:
 - BOF-09 Procurement, supplier and subcontract sourcing;
 - BOF-10 Product, material, catalogue, inventory and logistics;
 - BOF-11 Manufacturing, fabrication and off-site production;
+- BOF-12 Site, field and construction operations;
 - BOF-13 Quality, health, safety, environment and assurance;
 - BOF-14 Building safety, regulatory control and statutory assurance;
 - BOF-15 Commissioning, completion, handover and closeout;
@@ -126,26 +127,24 @@ Current governed families:
 
 ### Partial semantic model
 
-Some canonical patterns exist and are reusable, but the family is not yet sufficiently governed to approve physical design for the whole family.
-
-Current partial families:
-
-- BOF-12 Site, field and construction operations.
+There are currently **no partial families**.
 
 ### Candidate-only
 
-There are currently **no candidate-only families**. Every discovery family now has a governed family-level semantic architecture or, in the case of BOF-12, a partial semantic model still requiring completion.
+There are currently **no candidate-only families**.
 
-Therefore the present maturity split is:
+Every one of the 29 discovery families now has a governed family-level semantic architecture.
+
+Therefore the present family-level maturity split is:
 
 ```text
-28 governed families
- 1 partial family
+29 governed families
+ 0 partial families
  0 candidate-only families
 29 total families
 ```
 
-This is intentionally visible. The audit must expose incompleteness rather than manufacture a false 100% score.
+This closes the family-level semantic-convergence backlog. It does **not** by itself mean every one of the 750 candidate occurrences has an individual decision, that physical aggregates/APIs are approved, or that benchmark/standards challenge is complete. Those gates remain separately measured.
 
 ## Candidate decision coverage
 
@@ -188,10 +187,16 @@ Before a family can be treated as physically authoritative, it must have:
 
 ## Immediate convergence queue
 
-The candidate-only backlog is closed. The remaining family-level convergence task is:
+The **family-level convergence queue is closed**.
+
+The next architecture gates are:
 
 ```text
-BOF-12 Site / Field Operations — complete remaining transaction and execution semantics
+1. Close remaining individual candidate decisions across the 750-source register
+2. Re-run duplicate/alias convergence across all families
+3. Complete the external benchmark / standards challenge
+4. Freeze the canonical aggregate boundaries
+5. Only then approve physical schema / API implementation waves
 ```
 
-BOF-12 must remain visible as partial until its remaining site/field/construction execution objects have explicit canonical decisions and a complete family-level semantic model.
+The audit must continue to expose residual candidate-decision gaps and benchmark status even though all 29 family semantic architectures are governed.

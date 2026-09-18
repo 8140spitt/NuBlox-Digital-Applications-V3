@@ -9,11 +9,13 @@ describe('benchmark gap governance', () => {
   it('keeps benchmark findings as explicit controlled architecture decisions', () => {
     expect(validateBenchmarkGapRegister()).toBe(true);
     expect(benchmarkGapSummary.gapCount).toBe(6);
-    expect(benchmarkGapSummary.openCount).toBe(6);
+    expect(benchmarkGapSummary.resolvedCount).toBe(3);
+    expect(benchmarkGapSummary.openCount).toBe(3);
   });
 
   it('accepts only the cross-enterprise semantic gaps that are already justified', () => {
     expect(benchmarkGapSummary.acceptedRefinementCount).toBe(3);
+    expect(benchmarkGapRegister.filter((gap) => gap.disposition === 'accepted-refinement').every((gap) => gap.state === 'resolved')).toBe(true);
     expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-001')?.disposition).toBe('accepted-refinement');
     expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-002')?.disposition).toBe('accepted-refinement');
     expect(benchmarkGapRegister.find((gap) => gap.id === 'BG-003')?.disposition).toBe('accepted-refinement');

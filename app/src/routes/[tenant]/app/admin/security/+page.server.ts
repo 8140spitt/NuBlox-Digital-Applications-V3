@@ -72,6 +72,7 @@ async function contextFor(params: { tenant: string }, locals: App.Locals) {
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await contextFor(params, locals);
+  const canReadDelegatedAuthority = hasPermission(context, 'authority.delegation.read');
   const [people, parties, memberships, roles, assignments, identities, delegatedAuthorities] =
     await Promise.all([
       listPersons(context),
@@ -80,7 +81,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
       listTenantRoles(context),
       listTenantRoleAssignments(context),
       listTenantIdentities(context),
-      listDelegatedAuthorities(context)
+      canReadDelegatedAuthority ? listDelegatedAuthorities(context) : Promise.resolve([])
     ]);
 
   const view = ['access', 'roles', 'identities', 'authority'].includes(
@@ -104,6 +105,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     identities,
     delegatedAuthorities,
     authorityCapabilities: {
+      canRead: canReadDelegatedAuthority,
       canManage: hasPermission(context, 'authority.delegation.manage'),
       canApprove: hasPermission(context, 'authority.delegation.approve')
     },

@@ -48,6 +48,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/continuity-crisis-security`}><span>◈</span>Continuity, crisis & security</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/technology-data-cyber-ai`}><span>⌘</span>IT, data, cyber & AI</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/transformation-process-improvement`}><span>↻</span>Transformation & process</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/site-field-operations`}><span>▰</span>Site & field operations</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}><span>▤</span>Delivery context</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/built-environment`}><span>▧</span>Built environment</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}><span>▥</span>Commercial & procurement</a>

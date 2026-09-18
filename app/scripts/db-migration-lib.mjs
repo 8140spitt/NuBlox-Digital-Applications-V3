@@ -30,9 +30,15 @@ export async function readMigrations() {
 }
 
 export async function migrationConnection(useTestDatabase = false) {
+  const target = new URL(getDatabaseUrl(useTestDatabase));
   return mysql.createConnection({
-    uri: getDatabaseUrl(useTestDatabase),
-    multipleStatements: true
+    host: target.hostname,
+    port: target.port ? Number(target.port) : 3306,
+    user: decodeURIComponent(target.username),
+    password: decodeURIComponent(target.password),
+    database: decodeURIComponent(target.pathname.replace(/^\//, '')),
+    multipleStatements: true,
+    ssl: process.env.MYSQL_SSL === 'true' ? {} : undefined
   });
 }
 

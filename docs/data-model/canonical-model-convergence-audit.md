@@ -116,6 +116,7 @@ Current governed families:
 - BOF-20 Sustainability, carbon, energy, circularity and social value;
 - BOF-21 Enterprise risk, compliance, internal control and audit;
 - BOF-22 Legal, corporate secretariat, privacy and records obligations;
+- BOF-23 Business continuity, crisis and physical security;
 - BOF-25 Knowledge, document/records management, communications and stakeholder engagement;
 - BOF-27 Shared work, workflow, decision and collaboration;
 - BOF-28 Evidence, audit, retention and legal traceability;
@@ -135,16 +136,15 @@ Discovery candidates exist, but no complete family-level semantic architecture h
 
 Current candidate-only families:
 
-- BOF-23 Business continuity, crisis and physical security;
 - BOF-24 IT, data, cyber, analytics and AI;
 - BOF-26 Organisation change, transformation and continuous improvement.
 
 Therefore the present maturity split is:
 
 ```text
-25 governed families
+26 governed families
  1 partial family
- 3 candidate-only families
+ 2 candidate-only families
 29 total families
 ```
 
@@ -194,7 +194,6 @@ Before a family can be treated as physically authoritative, it must have:
 The next canonicalization passes should address the remaining candidate-only families in operating-model dependency order, while completing the one partial family. A practical sequence is:
 
 ```text
-BOF-23 Continuity / Crisis / Physical Security
 BOF-24 IT / Data / Cyber / AI
 BOF-26 Change / Transformation / Process Improvement
 BOF-12 Site / Field Operations (complete remaining transactions)

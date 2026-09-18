@@ -153,6 +153,24 @@ export const platformPermissions = [
     'publish',
     'Validate and publish immutable lifecycle definition versions.'
   ],
+  [
+    'reference.authority.read',
+    'reference.authority',
+    'read',
+    'Read governed approval and delegated-authority policy configuration.'
+  ],
+  [
+    'reference.authority.manage',
+    'reference.authority',
+    'manage',
+    'Create and maintain draft authority-policy versions.'
+  ],
+  [
+    'reference.authority.publish',
+    'reference.authority',
+    'publish',
+    'Publish immutable authority-policy versions for runtime evaluation.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

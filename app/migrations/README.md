@@ -60,8 +60,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0010_governed_evidence_runtime.sql` — AGG-28-EVIDENCE items with integrity hashes, source references, provenance and independent verification.
 - `0011_classification_runtime.sql` — AGG-29-CLASSIFICATION systems, immutable releases and governed release-scoped codes.
 - `0012_lifecycle_configuration_runtime.sql` — AGG-29-LIFECYCLE-CONFIG stable definitions with immutable published versions, states and transition rules.
+- `0013_authority_configuration_runtime.sql` — AGG-29-AUTHORITY-CONFIG approval and delegated-authority policy rules with immutable published versions.
 
-Future schema changes start at `0013_...`; historical migrations remain immutable.
+Future schema changes start at `0014_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -86,3 +87,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0012 — lifecycle configuration runtime
 
 `0012_lifecycle_configuration_runtime.sql` introduces `AGG-29-LIFECYCLE-CONFIG`: stable Lifecycle Definition identities, versioned draft/published configurations, state definitions and transition-rule value rows. Published versions are immutable and runtime domain state remains owned by the relevant domain aggregate.
+
+
+## Migration 0013 — authority configuration runtime
+
+`0013_authority_configuration_runtime.sql` introduces `AGG-29-AUTHORITY-CONFIG`: stable Approval Authority Rule and Delegated Authority Rule identities with draft/published immutable versions, scope/value/effectivity constraints and attributable configuration governance. Policy does not itself grant runtime authority; effective grants remain in `AUTH-DELEGATED-AUTHORITY`.

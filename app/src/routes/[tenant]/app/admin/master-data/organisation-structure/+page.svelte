@@ -103,6 +103,36 @@
             <div><dt>Current parent</dt><dd>{data.activeParent?.parentUnitName || 'Root unit'}</dd></div>
           </dl>
 
+          {#if data.canManage && data.selected.status !== 'CLOSED'}
+            <details class="edit-panel">
+              <summary>Edit organisation unit</summary>
+              <form method="POST" action="?/save">
+                <input type="hidden" name="unitId" value={data.selected.id} />
+                <input type="hidden" name="version" value={data.selected.version} />
+                <label>Unit code<input name="unitCode" value={data.selected.unitCode} required /></label>
+                <label>Unit name<input name="name" value={data.selected.name} required /></label>
+                <label>Unit type<input name="unitType" value={data.selected.unitType} required /></label>
+                <label>
+                  Accountable legal entity
+                  <select name="accountableLegalEntityPartyId">
+                    <option value="">Not assigned</option>
+                    {#each data.legalEntities as entity}
+                      <option
+                        value={entity.id}
+                        selected={data.selected.accountableLegalEntityPartyId === entity.id}
+                      >
+                        {entity.displayName}
+                      </option>
+                    {/each}
+                  </select>
+                </label>
+                <label>Valid from<input type="date" name="validFrom" value={data.selected.validFrom.slice(0, 10)} /></label>
+                <label>Valid to<input type="date" name="validTo" value={data.selected.validTo?.slice(0, 10) ?? ''} /></label>
+                <button type="submit">Save unit</button>
+              </form>
+            </details>
+          {/if}
+
           {#if data.canManage}
             <div class="lifecycle-actions">
               {#if data.selected.status === 'PLANNED' || data.selected.status === 'INACTIVE'}
@@ -261,6 +291,9 @@
   dl div { display: grid; gap: 2px; }
   dt { color: #7c8d99; font-size: 8px; text-transform: uppercase; }
   dd { margin: 0; color: #3f596b; font-size: 10px; }
+  .edit-panel { margin-bottom: 10px; }
+  .edit-panel form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding: 9px; border-top: 1px solid #e6ecef; }
+  .edit-panel button { align-self: end; }
   .lifecycle-actions, .relationship-actions { display: flex; gap: 5px; }
   .hierarchy-summary { display: grid; grid-template-columns: .65fr 1.35fr; gap: 8px; }
   .parent-box, .children-box { display: grid; gap: 5px; padding: 10px; border: 1px solid #e2e8ec; border-radius: 8px; background: #fafcfd; }
@@ -280,5 +313,5 @@
   .empty-state { min-height: 230px; display: grid; place-content: center; text-align: center; }
   .empty-state p { max-width: 520px; margin: 7px 0 0; }
   @media(max-width:1100px) { .workspace-grid { grid-template-columns: 280px minmax(0,1fr); } dl { grid-template-columns: repeat(2,1fr); } .hierarchy-actions form { grid-template-columns: 1fr 1fr; } }
-  @media(max-width:760px) { .hero, .workspace-grid, .hierarchy-summary { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2,1fr); } .unit-register { position: static; max-height: none; } dl { grid-template-columns: 1fr 1fr; } .hierarchy-actions form, .hierarchy-actions .remove-parent { grid-template-columns: 1fr; justify-content: stretch; } }
+  @media(max-width:760px) { .hero, .workspace-grid, .hierarchy-summary { grid-template-columns: 1fr; } .edit-panel form { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2,1fr); } .unit-register { position: static; max-height: none; } dl { grid-template-columns: 1fr 1fr; } .hierarchy-actions form, .hierarchy-actions .remove-parent { grid-template-columns: 1fr; justify-content: stretch; } }
 </style>

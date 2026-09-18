@@ -122,7 +122,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['construction','preconstruction','project-management','field','quality-safety','project-financials'],
     workspaces: ['F07','F09','F12','F13','F14','F23','F26','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.procore.com/en-gb/platform',
     challengeFocus: ['preconstruction','project execution','RFIs/submittals','daily records','resource management','quality/safety','project financials'],
     notes: 'Construction-native benchmark for office-to-field continuity and project collaboration.'
@@ -134,7 +134,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['construction','cde','bim','cost','takeoff','field'],
     workspaces: ['F05','F07','F09','F12','F13','F23','F26','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://construction.autodesk.com/',
     challengeFocus: ['design-to-construction continuity','model/document control','takeoff/estimating','cost management','field execution'],
     notes: 'Benchmark for BIM-centric project information and connected construction delivery.'
@@ -158,7 +158,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['construction-erp','project-management','field-service','estimating','finance'],
     workspaces: ['F06','F07','F09','F10','F12','F14','F15','F22','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.trimble.com/en/products/viewpoint/vista/field-service',
     challengeFocus: ['construction ERP','job cost','field service','project management','estimating/procurement','office-field integration'],
     notes: 'Construction ERP and project-operations benchmark linking commercial back office and field delivery.'
@@ -218,7 +218,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['cde','information-management','bim','procurement','construction'],
     workspaces: ['F05','F09','F12','F13','F26','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.asite.com/',
     challengeFocus: ['ISO-style CDE workflows','information delivery','BIM coordination','supply-chain marketplace','project data continuity'],
     notes: 'Construction information-management benchmark with strong CDE and BIM collaboration focus.'
@@ -230,7 +230,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['cde','contract-management','asset-work','construction'],
     workspaces: ['F07','F09','F12','F13','F22','F26','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.thinkproject.com/login/',
     challengeFocus: ['contract administration','NEC-style event workflows','CDE','field/document management','built-asset work management'],
     notes: 'Built-environment lifecycle benchmark spanning project information, contract administration and operational asset work.'
@@ -242,7 +242,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['portfolio','project-controls','cost-control','contracts'],
     workspaces: ['F01','F03','F07','F14','F20','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://aliresources.hexagon.com/project-management-control/ecosys-enterprise-projects-performance-software',
     challengeFocus: ['portfolio selection','project controls','forecasting','earned value','contract management','enterprise project performance'],
     notes: 'Specialist benchmark for capital/project controls and enterprise portfolio performance.'
@@ -290,7 +290,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['estimating','commercial','supply-chain','workforce','infrastructure'],
     workspaces: ['F07','F09','F10','F12','F14','F15','F22','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.causeway.com/',
     challengeFocus: ['takeoff/estimating','commercial management','project accounting','supply chain','workforce','infrastructure maintenance'],
     notes: 'UK construction-specialist challenge benchmark for contractor commercial, supply-chain and infrastructure workflows.'

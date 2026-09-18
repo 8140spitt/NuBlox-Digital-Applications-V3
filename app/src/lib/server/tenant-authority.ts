@@ -108,14 +108,19 @@ export async function listTenantRoles(context: CommandContext): Promise<TenantRo
     'SELECT id, role_key AS roleKey, name, status FROM role_definitions WHERE tenant_id = ? ORDER BY name',
     [context.tenantId]
   );
-  const result: TenantRole[] = [];
-  for (const role of roles) {
-    const permissions = await queryRows<RowDataPacket & { permissionKey: string }>(
-      'SELECT permission_key AS permissionKey FROM role_permissions WHERE role_id = ? ORDER BY permission_key', [role.id]
-    );
-    result.push({ ...role, permissions: permissions.map((item) => item.permissionKey) });
+  if (!roles.length) return [];
+  const placeholders = roles.map(() => '?').join(',');
+  const permissionRows = await queryRows<RowDataPacket & { roleId: string; permissionKey: string }>(
+    'SELECT role_id AS roleId, permission_key AS permissionKey FROM role_permissions WHERE role_id IN (' + placeholders + ') ORDER BY permission_key',
+    roles.map((role) => role.id)
+  );
+  const byRole = new Map<string, string[]>();
+  for (const row of permissionRows) {
+    const permissions = byRole.get(row.roleId) ?? [];
+    permissions.push(row.permissionKey);
+    byRole.set(row.roleId, permissions);
   }
-  return result;
+  return roles.map((role) => ({ ...role, permissions: byRole.get(role.id) ?? [] }));
 }
 
 export async function createTenantRole(context: CommandContext, roleKey: string, name: string, permissions: string[]) {
@@ -135,6 +140,100 @@ export async function createTenantRole(context: CommandContext, roleKey: string,
     await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role', objectId: id, action: 'TENANT_ROLE_CREATED', toState: 'ACTIVE' }, connection);
     await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_CREATED', topic: 'nublox.tenant.authority', payload: { roleId: id, roleKey: validateRoleKey(roleKey), permissions: selected } }, connection);
     return id;
+  });
+}
+
+
+export async function updateTenantRole(
+  context: CommandContext,
+  roleId: string,
+  input: { name: string; permissions: string[] }
+) {
+  assertPermission(context, 'tenant.role.manage');
+  const allowed = new Set(platformPermissions.map(([key]) => key as string));
+  const selected = [...new Set(input.permissions)].sort();
+  for (const permission of selected) if (!allowed.has(permission)) throw new Error('Unknown permission: ' + permission);
+
+  return dbTransaction(async (connection) => {
+    const role = await queryOne<RowDataPacket & { id: string; roleKey: string; status: string }>(
+      'SELECT id, role_key AS roleKey, status FROM role_definitions WHERE id = ? AND tenant_id = ? FOR UPDATE',
+      [roleId, context.tenantId], connection
+    );
+    if (!role) throw new Error('Tenant role not found.');
+    if (role.status !== 'ACTIVE') throw new Error('Only an active tenant role can be changed.');
+
+    const actorAssignment = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ? AND role_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE' LIMIT 1",
+      [context.tenantId, context.actorPartyId, roleId, context.tenantId], connection
+    );
+    if (actorAssignment && !selected.includes('tenant.role.manage')) {
+      const alternate = await queryOne<RowDataPacket & { id: string }>(
+        "SELECT ra.id FROM role_assignments ra JOIN role_definitions rd ON rd.id = ra.role_id JOIN role_permissions rp ON rp.role_id = rd.id WHERE ra.tenant_id = ? AND ra.party_id = ? AND ra.scope_type = 'TENANT' AND ra.scope_id = ? AND ra.status = 'ACTIVE' AND rd.status = 'ACTIVE' AND ra.role_id <> ? AND rp.permission_key = 'tenant.role.manage' LIMIT 1",
+        [context.tenantId, context.actorPartyId, context.tenantId, roleId], connection
+      );
+      if (!alternate) throw new Error('This change would remove the actor\'s final tenant.role.manage authority.');
+    }
+
+    const timestamp = now();
+    await executeMutation('UPDATE role_definitions SET name = ?, updated_at = ? WHERE id = ? AND tenant_id = ?', [required(input.name, 'Role name'), timestamp, roleId, context.tenantId], connection);
+    await executeMutation('DELETE FROM role_permissions WHERE role_id = ?', [roleId], connection);
+    for (const permission of selected) {
+      await executeMutation('INSERT INTO role_permissions (role_id, permission_key) VALUES (?, ?)', [roleId, permission], connection);
+    }
+    const aggregateVersion = await nextTenantVersion(context, connection);
+    await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role', objectId: roleId, action: 'TENANT_ROLE_CHANGED', fromState: 'ACTIVE', toState: 'ACTIVE' }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_CHANGED', topic: 'nublox.tenant.authority', payload: { roleId, roleKey: role.roleKey, permissions: selected } }, connection);
+  });
+}
+
+export async function deactivateTenantRole(context: CommandContext, roleId: string) {
+  assertPermission(context, 'tenant.role.manage');
+  return dbTransaction(async (connection) => {
+    const role = await queryOne<RowDataPacket & { id: string; roleKey: string; status: string }>(
+      'SELECT id, role_key AS roleKey, status FROM role_definitions WHERE id = ? AND tenant_id = ? FOR UPDATE',
+      [roleId, context.tenantId], connection
+    );
+    if (!role) throw new Error('Tenant role not found.');
+    if (role.status !== 'ACTIVE') return;
+
+    const actorAssignment = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ? AND role_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE' LIMIT 1",
+      [context.tenantId, context.actorPartyId, roleId, context.tenantId], connection
+    );
+    if (actorAssignment) throw new Error('An actor cannot deactivate a tenant role currently assigned to themselves.');
+
+    const timestamp = now();
+    const assignments = await queryRows<RowDataPacket & { id: string }>(
+      "SELECT id FROM role_assignments WHERE tenant_id = ? AND role_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE' FOR UPDATE",
+      [context.tenantId, roleId, context.tenantId], connection
+    );
+    await executeMutation("UPDATE role_definitions SET status = 'INACTIVE', updated_at = ? WHERE id = ? AND tenant_id = ?", [timestamp, roleId, context.tenantId], connection);
+    await executeMutation(
+      "UPDATE role_assignments SET status = 'INACTIVE', valid_to = ? WHERE tenant_id = ? AND role_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE'",
+      [timestamp, context.tenantId, roleId, context.tenantId], connection
+    );
+    const aggregateVersion = await nextTenantVersion(context, connection);
+    await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role', objectId: roleId, action: 'TENANT_ROLE_DEACTIVATED', fromState: 'ACTIVE', toState: 'INACTIVE', note: assignments.length ? `${assignments.length} active assignment(s) ended.` : undefined }, connection);
+    for (const assignment of assignments) {
+      await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role_assignment', objectId: assignment.id, action: 'TENANT_ROLE_UNASSIGNED_BY_ROLE_DEACTIVATION', fromState: 'ACTIVE', toState: 'INACTIVE' }, connection);
+    }
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_DEACTIVATED', topic: 'nublox.tenant.authority', payload: { roleId, roleKey: role.roleKey, endedRoleAssignmentIds: assignments.map((assignment) => assignment.id) } }, connection);
+  });
+}
+
+export async function reactivateTenantRole(context: CommandContext, roleId: string) {
+  assertPermission(context, 'tenant.role.manage');
+  return dbTransaction(async (connection) => {
+    const role = await queryOne<RowDataPacket & { id: string; roleKey: string; status: string }>(
+      'SELECT id, role_key AS roleKey, status FROM role_definitions WHERE id = ? AND tenant_id = ? FOR UPDATE',
+      [roleId, context.tenantId], connection
+    );
+    if (!role) throw new Error('Tenant role not found.');
+    if (role.status === 'ACTIVE') return;
+    await executeMutation("UPDATE role_definitions SET status = 'ACTIVE', updated_at = ? WHERE id = ? AND tenant_id = ?", [now(), roleId, context.tenantId], connection);
+    const aggregateVersion = await nextTenantVersion(context, connection);
+    await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role', objectId: roleId, action: 'TENANT_ROLE_REACTIVATED', fromState: role.status, toState: 'ACTIVE' }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_REACTIVATED', topic: 'nublox.tenant.authority', payload: { roleId, roleKey: role.roleKey } }, connection);
   });
 }
 

@@ -34,11 +34,12 @@ These structures are deliberately connected without being collapsed into one hie
 8. **Traceability survives movement.** Item + Lot/Batch/Serial provenance remains connected through procurement, production, storage, shipment, installation and operations.
 9. **Logistics records stay distinct.** Pick, Pack, Shipment, Transport Order and Delivery are separate execution/evidence objects.
 10. **Delivery and procurement receipt differ.** Proof of delivery does not replace Goods Receipt/Service Receipt where procurement, ownership or accounting semantics require those records.
-11. **Trade declarations are typed compliance records.** Import and Export declarations use the governed Trade Declaration pattern with jurisdictional configuration.
+11. **Call-off is not logistics-owned truth.** Logistics consumes the canonical commercial/procurement `Call-off Order` and must not create a second call-off identity.
+12. **Trade declarations are typed compliance records.** Import and Export declarations use the governed Trade Declaration pattern with jurisdictional configuration.
 
 ## Canonical constructs
 
-The application model defines Warehouse, Store, Bin Location, Inventory Reservation, Inventory Movement, derived Stock Position, Stock Count, Inventory Adjustment, Inventory Quarantine, Pick, Pack, Shipment, Transport Order, Delivery, Site Logistics Booking, Call-off and Trade Declaration.
+The application model defines Warehouse, Store, Bin Location, Inventory Reservation, Inventory Movement, derived Stock Position, Stock Count, Inventory Adjustment, Inventory Quarantine, Pick, Pack, Shipment, Transport Order, Delivery, Site Logistics Booking and Trade Declaration. `Call-off Order` is referenced from the commercial/procurement model rather than redefined here.
 
 ## Inventory truth
 
@@ -68,7 +69,7 @@ Inventory and logistics reuse canonical:
 - `Party` / `Organisation` for supplier, carrier and custodian roles;
 - `Site` / `Facility` for physical context;
 - `Project`, `WBS` and `Work Package` only as demand/allocation references;
-- `Contract`, `Purchase Order`, `Call-off`, Goods/Service Receipt and commercial commitments where applicable;
+- `Contract`, `Purchase Order`, `Call-off Order`, Goods/Service Receipt and commercial commitments where applicable;
 - `Asset` only when an installed/operational asset identity is established through governed registration/installation.
 
 ## Physical-schema hold

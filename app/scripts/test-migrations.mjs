@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import mysql from 'mysql2/promise';
-import { readMigrations } from './db-migration-lib.mjs';
+import { applyMigrations, readMigrations } from './db-migration-lib.mjs';
 
 const source = process.env.NUBLOX_TEST_DATABASE_URL;
 if (!source) throw new Error('NUBLOX_TEST_DATABASE_URL is required for migration integration tests.');
@@ -25,27 +25,6 @@ const escapedDatabase = temporaryDatabase.replaceAll('`', '``');
 const tempUrl = new URL(base);
 tempUrl.pathname = '/' + temporaryDatabase;
 
-async function migrate(connection, migrations) {
-  await connection.query(
-    'CREATE TABLE IF NOT EXISTS schema_migrations (' +
-    'migration_name VARCHAR(255) PRIMARY KEY, ' +
-    'checksum CHAR(64) NOT NULL, ' +
-    'applied_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)' +
-    ') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'
-  );
-  const [rows] = await connection.query('SELECT migration_name AS name, checksum FROM schema_migrations');
-  const applied = new Map(rows.map((row) => [row.name, row.checksum]));
-  for (const migration of migrations) {
-    const checksum = applied.get(migration.name);
-    if (checksum && checksum !== migration.checksum) throw new Error('Migration drift: ' + migration.name);
-    if (checksum) continue;
-    await connection.query(migration.sql);
-    await connection.execute(
-      'INSERT INTO schema_migrations (migration_name, checksum) VALUES (?, ?)',
-      [migration.name, migration.checksum]
-    );
-  }
-}
 
 function runServiceTests() {
   return new Promise((resolve, reject) => {
@@ -79,8 +58,8 @@ try {
   });
   try {
     const migrations = await readMigrations();
-    await migrate(connection, migrations);
-    await migrate(connection, migrations);
+    await applyMigrations(connection, { log: null });
+    await applyMigrations(connection, { log: null });
 
     const [ledger] = await connection.query(
       'SELECT migration_name AS name, checksum FROM schema_migrations ORDER BY migration_name'

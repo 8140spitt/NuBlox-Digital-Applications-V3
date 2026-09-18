@@ -5,8 +5,10 @@ import { applyMigrations, readMigrations } from './db-migration-lib.mjs';
 
 const source = process.env.NUBLOX_TEST_DATABASE_URL;
 if (!source) throw new Error('NUBLOX_TEST_DATABASE_URL is required for migration integration tests.');
+const adminSource = process.env.NUBLOX_TEST_ADMIN_DATABASE_URL ?? source;
 
 const base = new URL(source);
+const adminBase = new URL(adminSource);
 const originalDatabase = decodeURIComponent(base.pathname.replace(/^\//, ''));
 if (!/(^|[_-])test([_-]|$)/i.test(originalDatabase)) {
   throw new Error('NUBLOX_TEST_DATABASE_URL must target a database whose name contains a standalone test segment.');
@@ -14,10 +16,10 @@ if (!/(^|[_-])test([_-]|$)/i.test(originalDatabase)) {
 
 const temporaryDatabase = 'nublox_migration_test_' + randomUUID().replaceAll('-', '').slice(0, 12);
 const admin = await mysql.createConnection({
-  host: base.hostname,
-  port: base.port ? Number(base.port) : 3306,
-  user: decodeURIComponent(base.username),
-  password: decodeURIComponent(base.password),
+  host: adminBase.hostname,
+  port: adminBase.port ? Number(adminBase.port) : 3306,
+  user: decodeURIComponent(adminBase.username),
+  password: decodeURIComponent(adminBase.password),
   ssl: process.env.MYSQL_SSL === 'true' ? {} : undefined,
   multipleStatements: true
 });
@@ -47,6 +49,10 @@ function runServiceTests() {
 
 try {
   await admin.query('CREATE DATABASE `' + escapedDatabase + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
+  if (adminSource !== source) {
+    const appUser = decodeURIComponent(base.username).replaceAll("'", "''");
+    await admin.query("GRANT ALL PRIVILEGES ON `" + escapedDatabase + "`.* TO '" + appUser + "'@'%'");
+  }
   const connection = await mysql.createConnection({
     host: base.hostname,
     port: base.port ? Number(base.port) : 3306,

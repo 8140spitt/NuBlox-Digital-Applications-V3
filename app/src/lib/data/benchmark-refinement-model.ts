@@ -7,7 +7,9 @@ export type BenchmarkRefinementKind =
   | 'projection'
   | 'reference-snapshot'
   | 'execution-context'
-  | 'definition';
+  | 'definition'
+  | 'configuration'
+  | 'accounting-record';
 
 export type BenchmarkRefinementDefinition = {
   modelId: string;
@@ -305,6 +307,215 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['review scope/date', 'participants', 'criteria', 'people/pools/positions reviewed', 'evidence versions', 'findings', 'decisions/actions'],
     lifecycle: ['Planned', 'In Review', 'Completed', 'Published', 'Superseded/Corrected'],
     governance: ['Talent Review is not Performance Review and does not silently change worker profile or succession membership.']
+  },
+  {
+    modelId: 'CFG-PRODUCT-CONFIG-MODEL',
+    originGapIds: ['BG-012'],
+    canonicalName: 'Product Configuration Model',
+    kind: 'configuration',
+    definition: 'Versioned governed configuration definition for a configurable Item/product/service, specifying applicable characteristics, option/value domains and rule-set versions used to derive valid configurations.',
+    identityRule: 'Stable configuration-model identity/version attached to canonical Item/Variant definitions; published versions are immutable and historic quote/order/production configurations pin the exact version used.',
+    keyData: ['model reference', 'item/variant scope', 'characteristics', 'rule-set version', 'applicability/effectivity', 'published version'],
+    lifecycle: ['Draft', 'Validate', 'Published', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Configuration Model is not Item, Item Variant, BOM or configured transaction truth.', 'Effectivity/version changes never rewrite configurations already used in quotes, orders or production.']
+  },
+  {
+    modelId: 'CFG-CHARACTERISTIC-DEFINITION',
+    originGapIds: ['BG-012'],
+    canonicalName: 'Configuration Characteristic',
+    kind: 'definition',
+    definition: 'Reusable versioned definition of a configurable property, option or parameter with governed value domain, unit, constraints and applicability.',
+    identityRule: 'Stable characteristic identity/version reused across compatible configuration models; chosen values on a configuration do not mutate the definition.',
+    keyData: ['characteristic code', 'name', 'data type', 'unit', 'allowed value/domain', 'defaulting policy', 'applicability', 'effective version'],
+    lifecycle: ['Draft', 'Published', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Characteristic is configuration metadata, not an Asset reading or Item Specification itself.', 'Reference data/UOM are reused rather than duplicated.']
+  },
+  {
+    modelId: 'CFG-CONFIGURATION-RULE',
+    originGapIds: ['BG-012'],
+    canonicalName: 'Configuration Rule',
+    kind: 'definition',
+    definition: 'Versioned rule or constraint controlling valid/default/derived combinations of characteristics, options, BOM components, routing/process choices or commercial configuration outcomes.',
+    identityRule: 'Stable rule identity/version with explicit rule type, operands/dependencies, priority and applicability; runtime evaluation records pin the exact version.',
+    keyData: ['rule reference', 'rule type', 'inputs/dependencies', 'condition/expression', 'result/action', 'priority', 'applicability', 'version'],
+    lifecycle: ['Draft', 'Validated', 'Published', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Configuration Rule does not silently edit Item/BOM/Price data.', 'Commercial and manufacturing consequences remain explicit downstream records.']
+  },
+  {
+    modelId: 'CFG-CONFIGURATION-INSTANCE',
+    originGapIds: ['BG-012'],
+    canonicalName: 'Product Configuration',
+    kind: 'execution-context',
+    definition: 'Governed resolved configuration of a configurable Item for an exact business context such as quotation, Sales Order, Production Order or Asset provenance.',
+    identityRule: 'Stable configuration identity referencing the exact configuration-model/rule versions and selected/derived values; later reconfiguration creates a successor/version rather than rewriting accepted transaction history.',
+    keyData: ['configuration reference', 'item/variant', 'model/version', 'selected/derived characteristic values', 'business context', 'validation result', 'configured at/by'],
+    lifecycle: ['Draft', 'Valid', 'Accepted', 'Superseded', 'Cancelled'],
+    governance: ['Product Configuration is not Item Variant or BOM identity.', 'Accepted quotes/orders/production preserve the configuration evidence actually used.']
+  },
+  {
+    modelId: 'HCM-TRAVEL-REQUEST',
+    originGapIds: ['BG-013'],
+    canonicalName: 'Travel Request',
+    kind: 'governance-case',
+    definition: 'Governed request for business travel before commitment, including business purpose, traveller, itinerary intent, cost estimate, policy checks, risk context and approval.',
+    identityRule: 'Stable request identity independent of external bookings and Expense Claim; changes retain approval/version history.',
+    keyData: ['request reference', 'traveller', 'business purpose', 'planned itinerary', 'dates', 'cost estimate', 'project/cost context', 'policy exceptions', 'risk assessment', 'approval'],
+    lifecycle: ['Draft', 'Submitted', 'In Review', 'Approved', 'Rejected', 'Cancelled', 'Converted to Trip'],
+    governance: ['Travel Request is not Business Trip, booking or Expense Claim.', 'Approval/authority and Travel Risk Assessment remain explicit evidence.']
+  },
+  {
+    modelId: 'HCM-BUSINESS-TRIP',
+    originGapIds: ['BG-013'],
+    canonicalName: 'Business Trip',
+    kind: 'execution-context',
+    definition: 'Stable business-travel occurrence connecting an approved travel purpose to itinerary/booking references, duty-of-care context, actual travel and resulting expenses.',
+    identityRule: 'Stable trip identity for one governed journey context; itinerary/booking changes preserve supplier references and change evidence.',
+    keyData: ['trip reference', 'traveller', 'source request', 'actual itinerary', 'booking references', 'travel risk', 'project/cost context', 'status', 'expense links'],
+    lifecycle: ['Planned', 'Booked', 'In Progress', 'Completed', 'Cancelled', 'Closed'],
+    governance: ['Business Trip does not duplicate Person, external booking-provider record or Expense Claim.', 'Duty-of-care/risk context remains linked throughout travel.']
+  },
+  {
+    modelId: 'HCM-TRAVEL-BOOKING-EVIDENCE',
+    originGapIds: ['BG-013'],
+    canonicalName: 'Travel Booking Evidence',
+    kind: 'event-evidence',
+    definition: 'Controlled evidence/reference for externally or internally booked air, rail, accommodation, vehicle or other travel segment associated with a Business Trip.',
+    identityRule: 'Immutable booking/version evidence preserving provider reference, segment, traveller, cost and change/cancellation history.',
+    keyData: ['trip', 'provider', 'booking reference', 'segment/type', 'dates/times', 'locations', 'cost/currency', 'status', 'source/provenance'],
+    lifecycle: ['Reserved', 'Ticketed/Confirmed', 'Changed', 'Consumed', 'Cancelled'],
+    governance: ['Booking evidence may be integrated from specialist travel platforms; provider identifiers never replace NuBlox Business Trip identity.']
+  },
+  {
+    modelId: 'DATA-MIGRATION-PROJECT',
+    originGapIds: ['BG-014'],
+    canonicalName: 'Data Migration Project',
+    kind: 'plan',
+    definition: 'Governed migration plan defining source/target systems, scope, migration objects/datasets, mappings, quality controls, cutover approach and accountable approvals.',
+    identityRule: 'Stable project identity/version; execution runs reference the exact approved scope/mappings rather than redefining them.',
+    keyData: ['project reference', 'source systems', 'target system', 'scope', 'migration objects/datasets', 'mapping versions', 'quality criteria', 'cutover plan', 'owners/approvals'],
+    lifecycle: ['Draft', 'Approved', 'In Preparation', 'Executing', 'Validated', 'Closed', 'Cancelled'],
+    governance: ['Migration Project is platform/data governance work and never becomes business-domain source truth.', 'Scope and mappings are version-controlled.']
+  },
+  {
+    modelId: 'DATA-MIGRATION-MAPPING',
+    originGapIds: ['BG-014'],
+    canonicalName: 'Migration Mapping',
+    kind: 'definition',
+    definition: 'Versioned field/object/value transformation mapping from a defined source representation to canonical target semantics.',
+    identityRule: 'Stable mapping identity/version with source/target schema, transformation rules, reference mappings and quality expectations.',
+    keyData: ['mapping reference', 'source object/fields', 'target canonical object/fields', 'transformations', 'reference mappings', 'validation rules', 'version'],
+    lifecycle: ['Draft', 'Validated', 'Approved', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Mapping never changes the canonical business definition to accommodate a legacy source.', 'Migration runs pin the exact mapping version.']
+  },
+  {
+    modelId: 'DATA-MIGRATION-RUN',
+    originGapIds: ['BG-014'],
+    canonicalName: 'Data Migration Run',
+    kind: 'event-evidence',
+    definition: 'Attributed execution evidence for extraction/staging/validation/simulation/load/reconciliation of a defined migration project scope.',
+    identityRule: 'Immutable run occurrence referencing exact project/mapping versions, source snapshot, target environment and result evidence.',
+    keyData: ['run reference', 'migration project/version', 'source snapshot', 'mapping versions', 'target environment', 'counts', 'validation/errors', 'simulation/load mode', 'started/completed at'],
+    lifecycle: ['Prepared', 'Simulated', 'Executed', 'Validated', 'Failed', 'Reconciled', 'Superseded'],
+    governance: ['Migration Run evidence is retained even after correction/re-run.', 'Loads must be traceable to source snapshot and transformations.']
+  },
+  {
+    modelId: 'DATA-TEST-DATA-PROFILE',
+    originGapIds: ['BG-014'],
+    canonicalName: 'Test Data Provisioning Profile',
+    kind: 'configuration',
+    definition: 'Versioned policy/configuration for selecting, subsetting, synthesising, masking or anonymising data for non-production use.',
+    identityRule: 'Stable profile identity/version with environment, data-domain, selection and protection rules; executions retain the exact profile used.',
+    keyData: ['profile reference', 'source/target environment', 'data domains', 'selection/subsetting rules', 'mask/anonymise/synthetic rules', 'referential-integrity rules', 'retention', 'version'],
+    lifecycle: ['Draft', 'Validated', 'Approved', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Profile must respect Privacy/Information Governance and Security policies.', 'Production personal/sensitive data is not copied to lower environments without governed protection.']
+  },
+  {
+    modelId: 'DATA-TEST-DATA-RUN',
+    originGapIds: ['BG-014'],
+    canonicalName: 'Test Data Provisioning Run',
+    kind: 'event-evidence',
+    definition: 'Auditable execution producing or refreshing a non-production dataset under an exact Test Data Provisioning Profile.',
+    identityRule: 'Immutable run evidence linking source snapshot, applied rules, target environment, validation results and approvals/exceptions.',
+    keyData: ['run reference', 'profile/version', 'source snapshot', 'target environment', 'applied protection', 'record counts', 'validation', 'exceptions', 'executed at/by'],
+    lifecycle: ['Prepared', 'Executing', 'Validated', 'Released', 'Failed', 'Superseded'],
+    governance: ['Run evidence proves data protection and lineage; it is not a business-domain dataset authority.']
+  },
+  {
+    modelId: 'ENG-PRODUCT-REQUIREMENT',
+    originGapIds: ['BG-015'],
+    canonicalName: 'Product Requirement',
+    kind: 'definition',
+    definition: 'Versioned governed statement of required function, performance, interface, constraint, compliance or other behaviour for a product/service/system under development.',
+    identityRule: 'Stable requirement identity/version independent of documents; requirement text, rationale, source, priority and verification criteria are governed and traceable.',
+    keyData: ['requirement reference', 'type', 'statement', 'source/stakeholder', 'rationale', 'priority', 'acceptance/verification criteria', 'applicability', 'version'],
+    lifecycle: ['Proposed', 'Reviewed', 'Approved', 'Allocated', 'Verified', 'Validated', 'Superseded', 'Retired'],
+    governance: ['Product Requirement is not Information Requirement.', 'Documents may represent requirements but never replace structured requirement identity/history.']
+  },
+  {
+    modelId: 'ENG-REQUIREMENT-SET',
+    originGapIds: ['BG-015'],
+    canonicalName: 'Requirement Set',
+    kind: 'definition',
+    definition: 'Governed versioned collection/baseline of Product Requirements for a defined product, system, release or development scope.',
+    identityRule: 'Stable set identity with immutable approved baselines; membership/version changes create successor baselines.',
+    keyData: ['set reference', 'scope/product/system', 'requirement versions', 'baseline/version', 'owner', 'approval', 'effective/release context'],
+    lifecycle: ['Draft', 'Review', 'Baselined', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Requirement Set is not a generic document bundle or Information Container.', 'Baselines pin exact requirement versions used by design/test decisions.']
+  },
+  {
+    modelId: 'ENG-SYSTEM-MODEL',
+    originGapIds: ['BG-015'],
+    canonicalName: 'Engineering System Model',
+    kind: 'definition',
+    definition: 'Version-controlled logical/functional systems-engineering model used to describe architecture, interfaces, behaviour and requirement allocation before or alongside physical product/asset realisation.',
+    identityRule: 'Stable model identity/version separate from the physical built-environment System or installed Asset identity.',
+    keyData: ['model reference', 'model type/language', 'scope/product', 'elements', 'interfaces', 'requirement allocations', 'version', 'tool/source provenance'],
+    lifecycle: ['Draft', 'Review', 'Approved', 'Released', 'Superseded', 'Retired'],
+    governance: ['Engineering System Model must not be confused with BOF-16 physical System identity.', 'Authoring-tool IDs map to canonical model identity and version.']
+  },
+  {
+    modelId: 'ENG-SYSTEM-MODEL-ELEMENT',
+    originGapIds: ['BG-015'],
+    canonicalName: 'Engineering Model Element',
+    kind: 'definition',
+    definition: 'Versioned logical/functional element within an Engineering System Model, carrying interfaces, behaviours and allocations used for traceability and architecture reasoning.',
+    identityRule: 'Identity is scoped to the canonical Engineering System Model and version lineage; it does not automatically create Item, Component or Asset identity.',
+    keyData: ['model', 'element reference', 'element type', 'name', 'interfaces', 'relationships', 'allocated requirements', 'version'],
+    lifecycle: ['Draft', 'Approved', 'Released', 'Superseded', 'Retired'],
+    governance: ['Realisation links to Item/Component/System/Asset are explicit relationships rather than identity substitution.']
+  },
+  {
+    modelId: 'FIN-LEASE-ACCOUNTING-RECORD',
+    originGapIds: ['BG-016'],
+    canonicalName: 'Lease Accounting Record',
+    kind: 'accounting-record',
+    definition: 'Finance-side accounting identity linking an exact Lease/Contract relationship to the governed accounting treatment, valuation basis and right-of-use/liability consequences required by the applicable accounting standard.',
+    identityRule: 'Stable accounting record per governed lease/accounting basis/legal entity; it references canonical Lease/Contract/Property/Asset subjects and never replaces them.',
+    keyData: ['lease/contract reference', 'legal entity/ledger', 'accounting principle', 'commencement/end', 'valuation parameters', 'right-of-use asset accounting reference', 'lease liability reference', 'status'],
+    lifecycle: ['Proposed', 'Classified', 'Active', 'Modified', 'Terminated', 'Closed'],
+    governance: ['Lease Accounting Record is financial consequence, not Property, physical Asset or Lease relationship truth.', 'Parallel accounting principles can coexist without duplicating the underlying lease.']
+  },
+  {
+    modelId: 'FIN-LEASE-VALUATION',
+    originGapIds: ['BG-016'],
+    canonicalName: 'Lease Valuation',
+    kind: 'event-evidence',
+    definition: 'Dated attributable valuation/calculation evidence for a Lease Accounting Record under an exact accounting principle, contract terms, discount assumptions and effective date.',
+    identityRule: 'Immutable valuation occurrence; modifications/reassessments create new valuations and accounting consequences rather than overwriting prior calculations.',
+    keyData: ['lease accounting record', 'valuation date', 'accounting principle', 'payment/term basis', 'discount rate/source', 'right-of-use value', 'liability value', 'calculation evidence'],
+    lifecycle: ['Calculated', 'Reviewed', 'Approved', 'Posted', 'Superseded/Corrected'],
+    governance: ['Valuation pins exact lease terms and market/reference assumptions.', 'Generated postings remain immutable finance evidence.']
+  },
+  {
+    modelId: 'FIN-LEASE-PAYMENT-SCHEDULE',
+    originGapIds: ['BG-016'],
+    canonicalName: 'Lease Accounting Schedule',
+    kind: 'projection',
+    definition: 'Rebuildable period schedule of lease payments, interest/accretion, liability movement and right-of-use depreciation derived from approved lease valuation parameters.',
+    identityRule: 'Versioned/as-of projection tied to exact approved valuation; posted periods remain traceable to their generating schedule/version.',
+    keyData: ['lease accounting record', 'valuation/version', 'period', 'payment', 'interest', 'principal/liability movement', 'right-of-use depreciation', 'currency'],
+    lifecycle: ['Calculated', 'Approved', 'Current', 'Superseded', 'Completed'],
+    governance: ['Schedule is not the contractual payment term itself and never rewrites the Lease/Contract.', 'Accounting entries reference exact schedule/valuation evidence.']
   }
 ];
 
@@ -318,7 +529,15 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R07', from: 'REL-ASSET-CRITICALITY-ASSESSMENT', predicate: 'informs', to: 'REL-RELIABILITY-STRATEGY', governance: 'Strategy pins the assessment/method basis used for maintenance decisions.' },
   { id: 'BR-R08', from: 'REL-RELIABILITY-STRATEGY', predicate: 'addresses', to: 'REL-FAILURE-MODE', governance: 'Failure-mode applicability is explicit and versioned.' },
   { id: 'BR-R09', from: 'HCM-SUCCESSION-PLAN', predicate: 'draws from', to: 'HCM-TALENT-POOL', governance: 'Succession planning references governed pool context without changing Worker identity.' },
-  { id: 'BR-R10', from: 'HCM-TALENT-POOL-MEMBERSHIP', predicate: 'participates in', to: 'HCM-TALENT-POOL', governance: 'Membership is effective-dated and evidence-based.' }
+  { id: 'BR-R10', from: 'HCM-TALENT-POOL-MEMBERSHIP', predicate: 'participates in', to: 'HCM-TALENT-POOL', governance: 'Membership is effective-dated and evidence-based.' },
+  { id: 'BR-R11', from: 'CFG-CONFIGURATION-INSTANCE', predicate: 'uses', to: 'CFG-PRODUCT-CONFIG-MODEL', governance: 'Accepted configurations pin the exact published model version.' },
+  { id: 'BR-R12', from: 'HCM-BUSINESS-TRIP', predicate: 'originates from', to: 'HCM-TRAVEL-REQUEST', governance: 'The approved request remains distinct governance evidence.' },
+  { id: 'BR-R13', from: 'HCM-TRAVEL-BOOKING-EVIDENCE', predicate: 'supports', to: 'HCM-BUSINESS-TRIP', governance: 'External booking evidence attaches without redefining trip identity.' },
+  { id: 'BR-R14', from: 'DATA-MIGRATION-RUN', predicate: 'executes', to: 'DATA-MIGRATION-PROJECT', governance: 'Run pins the approved project and mapping versions.' },
+  { id: 'BR-R15', from: 'DATA-TEST-DATA-RUN', predicate: 'uses', to: 'DATA-TEST-DATA-PROFILE', governance: 'Protection profile version is retained as audit evidence.' },
+  { id: 'BR-R16', from: 'ENG-SYSTEM-MODEL-ELEMENT', predicate: 'belongs to', to: 'ENG-SYSTEM-MODEL', governance: 'Model-element identity remains scoped to its engineering model/version.' },
+  { id: 'BR-R17', from: 'FIN-LEASE-VALUATION', predicate: 'values', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Every valuation is immutable evidence against one accounting record/basis.' },
+  { id: 'BR-R18', from: 'FIN-LEASE-PAYMENT-SCHEDULE', predicate: 'derives from', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Schedule remains a projection and never replaces contract terms.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -329,7 +548,12 @@ export const benchmarkRefinementRules = [
   'Master-data stewardship governs canonical identities but never creates a second master-data store.',
   'Advanced warehouse and freight execution must preserve Item, Inventory, Shipment, Contract and Finance truth boundaries.',
   'Reliability engineering reuses canonical Asset and Failure evidence rather than creating a parallel asset register.',
-  'Succession and talent context reuses canonical Person/Worker/Position/Skill identity and remains access-controlled.'
+  'Succession and talent context reuses canonical Person/Worker/Position/Skill identity and remains access-controlled.',
+  'Product configuration preserves Item, Variant, BOM and transaction history while pinning exact configuration-rule versions.',
+  'Business travel connects approval, duty-of-care and expense without replacing specialist booking-provider truth.',
+  'Migration and test-data operations are auditable platform evidence and never redefine canonical business semantics.',
+  'Product requirements and engineering models remain distinct from information-delivery requirements and installed physical Systems.',
+  'Lease accounting records financial consequences without replacing Lease, Contract, Property or physical Asset identity.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -337,7 +561,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

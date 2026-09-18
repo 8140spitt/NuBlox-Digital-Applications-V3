@@ -34,6 +34,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   return {
     tenantSlug: params.tenant,
     actorDisplayName: context.actorDisplayName,
+    currentTime: new Date().toISOString(),
     work: await listMyWork(context)
   };
 };

@@ -171,6 +171,24 @@ export const platformPermissions = [
     'publish',
     'Publish immutable authority-policy versions for runtime evaluation.'
   ],
+  [
+    'reference.data.read',
+    'reference.data',
+    'read',
+    'Read governed enterprise reference data and published calendar versions.'
+  ],
+  [
+    'reference.data.manage',
+    'reference.data',
+    'manage',
+    'Create and maintain effective enterprise reference data and draft calendar versions.'
+  ],
+  [
+    'reference.data.publish',
+    'reference.data',
+    'publish',
+    'Publish immutable reference-configuration versions such as working calendars.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

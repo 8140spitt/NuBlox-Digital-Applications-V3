@@ -61,8 +61,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0011_classification_runtime.sql` — AGG-29-CLASSIFICATION systems, immutable releases and governed release-scoped codes.
 - `0012_lifecycle_configuration_runtime.sql` — AGG-29-LIFECYCLE-CONFIG stable definitions with immutable published versions, states and transition rules.
 - `0013_authority_configuration_runtime.sql` — AGG-29-AUTHORITY-CONFIG approval and delegated-authority policy rules with immutable published versions.
+- `0014_reference_data_runtime.sql` — AGG-29-REFERENCE-DATA typed jurisdictions, currencies, units, tax regimes, contract-form families and versioned calendars.
 
-Future schema changes start at `0014_...`; historical migrations remain immutable.
+Future schema changes start at `0015_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -92,3 +93,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0013 — authority configuration runtime
 
 `0013_authority_configuration_runtime.sql` introduces `AGG-29-AUTHORITY-CONFIG`: stable Approval Authority Rule and Delegated Authority Rule identities with draft/published immutable versions, scope/value/effectivity constraints and attributable configuration governance. Policy does not itself grant runtime authority; effective grants remain in `AUTH-DELEGATED-AUTHORITY`.
+
+
+## Migration 0014 — reference data runtime
+
+`0014_reference_data_runtime.sql` introduces `AGG-29-REFERENCE-DATA` as typed governed reference semantics rather than a generic lookup bucket: Jurisdiction, Currency, Unit of Measure, Tax Regime, Contract Form Family and versioned Calendar configuration. Reference identities are effective-dated/versioned so historical transactions can retain the exact meaning used originally.

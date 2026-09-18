@@ -21,6 +21,9 @@ describe('external market benchmark register', () => {
     expect(marketBenchmarkSummary.sapV3MappedRows).toBe(64);
     expect(marketBenchmarkSummary.sapV3ChallengedRows).toBe(39);
     expect(marketBenchmarkSummary.sapV3ClosedRows).toBe(0);
+    expect(marketBenchmarkSummary.benchmarkGapCount).toBe(6);
+    expect(marketBenchmarkSummary.benchmarkGapResolvedCount).toBe(3);
+    expect(marketBenchmarkSummary.benchmarkGapOpenCount).toBe(3);
     expect(marketBenchmarkSummary.rule).toContain('vendor module boundaries never become automatic NuBlox architecture');
   });
 

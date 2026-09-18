@@ -30,6 +30,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `qhse-assurance-semantics.md` — governed quality planning, inspection/test, NCR/Defect/CAPA, safe-work controls, incident/investigation, compliance and environmental-assurance semantics.
 - `building-safety-regulatory-semantics.md` — governed dutyholder, competence evidence, regulator case/application, controlled change, statutory inspection/finding, occurrence reporting, notices, decisions, completion and golden-thread semantics.
 - `sustainability-carbon-semantics.md` — governed carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, biodiversity/environmental measures and social-value semantics.
+- `risk-compliance-audit-semantics.md` — governed Enterprise Risk, Risk Assessment/Treatment, regulatory obligation, compliance requirement/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -79,6 +80,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Waste Stream, Waste Consignment, Recovery, Reuse and Circularity Assessment remain distinct layers.
 - EPD and Material Provenance retain source/version/provenance while preserving Item/Organisation/inventory identity.
 - Social Value Commitment, Evidence and Outcome are distinct; Climate/Resilience Risk reuse Enterprise Risk.
+- Enterprise Risk identity remains separate from dated Risk Assessments and Treatment Plans; current risk position is derived from retained evidence.
+- Regulatory Obligation is source duty while Compliance Requirement is the actionable/testable requirement; assessment and evidence remain separate.
+- Internal Control is a persistent controlled definition; Control Test is a dated execution/evidence occurrence against an exact version.
+- Audit Plan is an Assurance Plan type; Audit Engagement, Audit Finding and Remediation Action retain independent identities/lifecycles.
+- Fraud and Conduct use one restricted Integrity Case architecture; workflow Work Items coordinate remediation but never replace domain truth.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

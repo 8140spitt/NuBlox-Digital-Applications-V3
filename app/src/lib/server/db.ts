@@ -94,21 +94,50 @@ export async function executeMutation(
   return result;
 }
 
+type MySqlTransactionError = {
+  code?: unknown;
+  errno?: unknown;
+};
+
+function isRetryableTransactionError(error: unknown) {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as MySqlTransactionError;
+  return (
+    candidate.code === 'ER_LOCK_DEADLOCK' ||
+    candidate.code === 'ER_LOCK_WAIT_TIMEOUT' ||
+    candidate.errno === 1213 ||
+    candidate.errno === 1205
+  );
+}
+
+function transactionRetryDelay(attempt: number) {
+  return new Promise((resolve) => setTimeout(resolve, Math.min(250, 25 * 2 ** (attempt - 1))));
+}
+
 export async function dbTransaction<T>(
   work: (connection: PoolConnection) => Promise<T>
 ): Promise<T> {
-  const connection = await getDbPool().getConnection();
-  try {
-    await connection.beginTransaction();
-    const result = await work(connection);
-    await connection.commit();
-    return result;
-  } catch (error) {
-    await connection.rollback();
-    throw error;
-  } finally {
-    connection.release();
+  const maxAttempts = 4;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const connection = await getDbPool().getConnection();
+    try {
+      await connection.beginTransaction();
+      const result = await work(connection);
+      await connection.commit();
+      return result;
+    } catch (error) {
+      await connection.rollback();
+      if (!isRetryableTransactionError(error) || attempt === maxAttempts) {
+        throw error;
+      }
+      await transactionRetryDelay(attempt);
+    } finally {
+      connection.release();
+    }
   }
+
+  throw new Error('Database transaction retry loop exhausted unexpectedly.');
 }
 
 export async function assertDatabaseReady() {

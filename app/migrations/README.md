@@ -65,3 +65,8 @@ Future schema changes start at `0008_...`; historical migrations remain immutabl
 `pnpm db:seed:platform` idempotently synchronises required platform reference definitions such as the permission catalog after schema migration. It is production-safe and creates no tenant, user or development fixture.
 
 Development bootstrap records are application/test fixtures, not migration content. Migrations establish schema and required structural constraints only; `pnpm db:seed:dev -- <tenant>` remains explicitly development-only.
+
+
+## Migration 0009 — authorised decision runtime
+
+`0009_authorised_decision_runtime.sql` introduces the immutable `AGG-27-DECISION` runtime. Decisions bind an attributable outcome to an exact subject/version, retain permission/delegated-authority evidence at decision time, and support append-only corrective supersession without editing earlier decisions.

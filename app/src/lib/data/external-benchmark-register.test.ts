@@ -16,14 +16,14 @@ describe('external market benchmark register', () => {
   it('retains SAP as an enterprise completeness benchmark without making SAP the architecture', () => {
     const sap = externalBenchmarkRegister.find((entry) => entry.id === 'SAP-BUSINESS-SUITE');
     expect(sap?.tier).toBe('mandatory-suite');
-    expect(sap?.studyState).toBe('in-progress');
+    expect(sap?.studyState).toBe('challenged');
     expect(marketBenchmarkSummary.legacySapCapabilityRows).toBe(64);
     expect(marketBenchmarkSummary.sapV3MappedRows).toBe(64);
-    expect(marketBenchmarkSummary.sapV3ChallengedRows).toBe(39);
+    expect(marketBenchmarkSummary.sapV3ChallengedRows).toBe(64);
     expect(marketBenchmarkSummary.sapV3ClosedRows).toBe(0);
-    expect(marketBenchmarkSummary.benchmarkGapCount).toBe(6);
-    expect(marketBenchmarkSummary.benchmarkGapResolvedCount).toBe(3);
-    expect(marketBenchmarkSummary.benchmarkGapOpenCount).toBe(3);
+    expect(marketBenchmarkSummary.benchmarkGapCount).toBe(16);
+    expect(marketBenchmarkSummary.benchmarkGapResolvedCount).toBe(16);
+    expect(marketBenchmarkSummary.benchmarkGapOpenCount).toBe(0);
     expect(marketBenchmarkSummary.rule).toContain('vendor module boundaries never become automatic NuBlox architecture');
   });
 

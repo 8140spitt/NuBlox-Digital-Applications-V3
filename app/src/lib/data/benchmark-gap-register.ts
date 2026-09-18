@@ -17,6 +17,7 @@ export type BenchmarkGap = {
   canonicalFamilies: string[];
   disposition: BenchmarkGapDisposition;
   state: BenchmarkGapState;
+  owner: string;
   rationale: string;
   requiredOutcome: string;
 };
@@ -32,6 +33,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-02', 'BOF-06', 'BOF-10', 'BOF-11'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'The current model has Business Plan, Scenario, Forecast, Production Plan and Capacity Plan but no explicit governed demand/supply planning identity. This is a cross-enterprise planning need rather than an SAP module artefact.',
     requiredOutcome: 'Define governed Demand Plan and Supply Plan semantics, planning horizon/version/effectivity, demand-source links, constrained/unconstrained supply response, scenario comparison and links to inventory/capacity/finance without creating duplicate operational truth.'
   },
@@ -45,6 +47,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-19', 'BOF-21', 'BOF-29'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Cash and liquidity forecasting plus Treasury Deal are already governed, but financial exposure, hedge designation/instrument linkage, market-data basis and cash-pooling arrangements are not explicit enough for auditable treasury risk.',
     requiredOutcome: 'Define exposure, hedge relationship/instrument, market-data snapshot/rate source and cash-pool relationships while preserving immutable accounting and bank evidence.'
   },
@@ -58,6 +61,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-01', 'BOF-10', 'BOF-16', 'BOF-24', 'BOF-29'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Canonical identities and data-quality rules exist, but stewardship case/change request, duplicate-candidate matching, controlled merge/unmerge and golden-record provenance need explicit governance semantics.',
     requiredOutcome: 'Define stewardship request/case, duplicate-match candidate, merge decision, survivor/redirect lineage, reversible unmerge/correction evidence and stewardship authority without creating a second master-data store.'
   },
@@ -71,6 +75,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-09', 'BOF-10'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Core warehouse/inventory/shipment/transport semantics are strong, but SAP exposes handling-unit, wave, yard, slotting, cross-docking, freight tendering and settlement concepts that may be material for sophisticated logistics operations.',
     requiredOutcome: 'Challenge these concepts against Oracle, IFS, Trimble and construction logistics use cases before deciding which are core canonical records, typed execution records, projections or contextual extensions.'
   },
@@ -84,6 +89,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-16', 'BOF-17'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Asset, condition, maintenance plan and work-order semantics are governed, but explicit reliability/criticality/failure-mode engineering is not yet represented as a first-class semantic layer.',
     requiredOutcome: 'Challenge against IBM Maximo, IFS and asset-management standards before deciding the minimum canonical reliability model.'
   },
@@ -97,6 +103,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-18', 'BOF-24'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'The HCM baseline covers recruitment, employment, skills, learning, performance, workforce planning and payroll, but succession/talent-pool and workforce-intelligence concepts may require additional semantics.',
     requiredOutcome: 'Challenge against Workday and Microsoft/SAP HCM outcomes before adding any new identity beyond Career Profile, Skill, Competency, Performance Review and Workforce Plan.'
   },
@@ -110,6 +117,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-17', 'BOF-19'],
     disposition: 'contextual-extension',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Usage/subscription charging is material for utilities, managed services and consumption-based models but is not universal to every construction/built-environment business.',
     requiredOutcome: 'When enabled, govern subscription/service billing arrangement, metered usage record, rating basis and rated charge while reusing Service Contract/Entitlement, Utility Consumption, Item/Rate and Invoice truth.'
   },
@@ -123,6 +131,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-02', 'BOF-19'],
     disposition: 'contextual-extension',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Fund/funded-program accounting and active budget availability control are essential for public-sector/grant-funded organisations but are not a universal enterprise identity layer.',
     requiredOutcome: 'Provide Fund/Funded Program dimensions, budget-consumption rules and availability-control evidence as a public-sector extension over canonical Budget, Commitment and Actual financial positions.'
   },
@@ -136,6 +145,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-10', 'BOF-21', 'BOF-29'],
     disposition: 'contextual-extension',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Cross-border trade requires sanctioned-party/embargo screening, trade licences/authorisations and customs procedure/preference evidence beyond the existing Trade Declaration.',
     requiredOutcome: 'Provide trade-compliance checks/decisions and trade-authorisation/procedure evidence as a cross-border extension reusing Party, Item, Shipment, Jurisdiction, Classification and Compliance Requirement.'
   },
@@ -149,6 +159,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-03', 'BOF-18', 'BOF-19'],
     disposition: 'contextual-extension',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Commission/incentive plans and credited earnings are relevant to defined sales remuneration models but should not become universal HCM/finance structures.',
     requiredOutcome: 'Provide incentive plan, eligibility/crediting, earning/calculation, approval/payment consequence and dispute evidence as an optional sales-performance extension.'
   },
@@ -162,6 +173,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-03', 'BOF-10', 'BOF-19'],
     disposition: 'contextual-extension',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Till/session sale-return-payment, coupon/loyalty and omnichannel promotion mechanics are merchant/retail-specific and should not contaminate core project/construction sales semantics.',
     requiredOutcome: 'Provide a merchant/retail extension over canonical Customer, Item, Price, Inventory, Payment and accounting truth when builders-merchant/distribution scenarios require it.'
   },
@@ -175,6 +187,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-05', 'BOF-10', 'BOF-11', 'BOF-29'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Item Variant alone is insufficient for rule-driven configurable products/services across quote, planning, engineering and production. The semantics are cross-vendor PLM/ERP capability rather than SAP-specific.',
     requiredOutcome: 'Govern versioned Product Configuration Model, Characteristics, Configuration Rules and resolved Product Configuration evidence while preserving Item, Variant, BOM, pricing and execution truth.'
   },
@@ -188,6 +201,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-18', 'BOF-19', 'BOF-21', 'BOF-23'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Expense Claim and Travel Risk Assessment do not provide the durable travel request/trip identity needed to connect approval, duty of care, itinerary/booking context and expense.',
     requiredOutcome: 'Govern Travel Request, Business Trip and Travel Booking Evidence while allowing specialist booking platforms to remain integration sources.'
   },
@@ -201,6 +215,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-22', 'BOF-24', 'BOF-28', 'BOF-29'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'World-class enterprise operation requires governed migration mappings/runs and protected non-production data provisioning with masking/anonymisation evidence.',
     requiredOutcome: 'Govern Migration Project/Mapping/Run and Test Data Provisioning Profile/Run with source-target lineage, simulation/validation, privacy controls and retained audit evidence.'
   },
@@ -214,6 +229,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-07', 'BOF-10', 'BOF-11', 'BOF-13'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Product functional/technical requirements and logical systems models are distinct from information-delivery requirements and from installed physical Systems/Assets.',
     requiredOutcome: 'Govern Product Requirement, Requirement Set/baseline, traceability and Engineering System Model/Element semantics with explicit realisation links to Item/Component/System/Asset.'
   },
@@ -227,6 +243,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-16', 'BOF-17', 'BOF-19', 'BOF-22'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Canonical Lease/Property/Occupancy semantics require a separate finance-side lease-accounting layer for IFRS 16/ASC 842-style valuation and postings without conflating physical/property truth with accounting records.',
     requiredOutcome: 'Govern Lease Accounting Record, immutable Lease Valuation and derived Lease Accounting Schedule linked to canonical Lease/Contract and finance postings.'
   },
@@ -240,6 +257,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-06'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'A world-class construction schedule requires explicit working calendars and reproducible CPM calculation evidence; total/free float and critical/longest-path status are derived planning positions, not editable activity flags.',
     requiredOutcome: 'Govern Schedule Calendar, Schedule Calculation Run and Schedule Analysis Snapshot around the existing Schedule/Activity/Dependency/Baseline model.'
   },
@@ -253,6 +271,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-08', 'BOF-09', 'BOF-19', 'BOF-21', 'BOF-22'],
     disposition: 'contextual-extension',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Textura exposes jurisdiction-specific lien-waiver, sworn-statement, payment-hold and downstream-payment compliance. These are real construction-payment controls but should be configured by jurisdiction/contract regime rather than become universal global payment objects.',
     requiredOutcome: 'Reuse Contract, Payment Application/Valuation/Certificate, Compliance Requirement, Evidence Item, Payment Hold/withholding semantics and jurisdiction policy; add regime-specific waiver/release evidence only where legally applicable.'
   },
@@ -266,6 +285,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-06', 'BOF-19', 'BOF-21'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Large construction and capital programmes require reproducible probabilistic schedule/cost risk analysis. Existing Risk Assessment and project Schedule/Forecast semantics do not retain quantitative simulation inputs, method versions and outcome distributions.',
     requiredOutcome: 'Govern Project Risk Simulation Run and Project Risk Analysis Snapshot around existing Enterprise Risk/Risk Assessment, Schedule, cost/Forecast and Scenario identities.'
   },
@@ -279,6 +299,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-06', 'BOF-08', 'BOF-12', 'BOF-19'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Construction leaders independently converge on time-phased budget/progress/actual/commitment/forecast analysis, earned value, production productivity and cost-value reconciliation. NuBlox has the authoritative source facts but lacked one governed reproducible calculation/snapshot layer.',
     requiredOutcome: 'Govern Progress Measurement Method, Project Performance Calculation Run and Project Controls Performance Snapshot while preserving Progress Record, Budget, Forecast, Contract/Valuation, Commitment and Ledger as source truth.'
   },
@@ -292,6 +313,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-05', 'BOF-06', 'BOF-08', 'BOF-19'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Construction contracts require an agreed line-level value/payment basis such as a Schedule of Values, Activity Schedule or Bill of Quantities. Estimate, WBS and valuation identities do not substitute for the counterparty-agreed contract pricing structure.',
     requiredOutcome: 'Govern Contract Value Schedule and Contract Value Line with explicit mappings to WBS/Work Package, Cost Code and estimate sources; applications/valuations reference exact value-line versions.'
   },
@@ -305,6 +327,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-08', 'BOF-19'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'NEC target-cost and other incentive-based contracts require governed target/reference baselines and share formulas. Treating these solely as unstructured clause text would prevent reproducible assessments and commercial forecasting.',
     requiredOutcome: 'Govern Target Cost Baseline, Commercial Share Mechanism and Commercial Share Assessment while reusing Contract, Commercial Change, actual-cost, valuation/payment and Final Account truth.'
   },
@@ -318,6 +341,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-07', 'BOF-10', 'BOF-11', 'BOF-29'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Configuration-managed engineering requires explicit date/unit/serial/lot/context effectivity, exact released configuration baselines and occurrence-level structure identity. Scattered effective-date fields cannot prove historical/future product configurations reliably.',
     requiredOutcome: 'Govern Effectivity Statement/Assignment, Configuration Baseline and Product Structure Occurrence while preserving stable Item, BOM, Information Container and manufacturing-definition identities.'
   },
@@ -331,6 +355,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-07', 'BOF-16', 'BOF-17', 'BOF-24'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Whole-life built-asset operation requires a traceable as-maintained configuration and a governed way to federate physical asset identity with engineering models, GIS, datasets, sensors and operational evidence. A digital twin must not become a second Asset master.',
     requiredOutcome: 'Govern As-Maintained Configuration, Digital Twin Federation Context, source-aware Data Bindings and reproducible Twin State Snapshots over canonical physical Asset/System and controlled source data.'
   },
@@ -344,6 +369,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-02', 'BOF-06', 'BOF-16', 'BOF-17', 'BOF-19', 'BOF-21'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Asset-intensive organisations need repeatable long-range decisions about maintain/refurbish/replace/decommission interventions using condition, criticality, failure risk, service/KPI, lifecycle cost and constrained budget evidence. Existing Maintenance/Lifecycle Replacement plans lack explicit option appraisal and portfolio investment optimization evidence.',
     requiredOutcome: 'Govern Asset Intervention Option, Asset Investment Appraisal and Asset Investment Plan, reusing Asset Health/Criticality, Scenario/Assumption, Business Case/Decision, Capex Request, Project and Work Order truth.'
   },
@@ -357,6 +383,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-12', 'BOF-16', 'BOF-17', 'BOF-24'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Network and Linear Segment identities alone do not prove topological connectivity, terminal-level paths, trace analysis or measure-based point/extent locations for infrastructure assets, condition and work.',
     requiredOutcome: 'Govern Network Terminal, Network Connectivity Relationship, Linear Location Assignment, Network Trace Configuration/Run/Result while retaining canonical Network, Asset/System and Linear Segment identity and treating GIS as an authoritative spatial source/integration where configured.'
   },
@@ -370,6 +397,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-16', 'BOF-17', 'BOF-18', 'BOF-23'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'A sophisticated facilities/workplace function needs governed time-bound booking of rooms, desks and shared facilities. Inventory Reservation, Site Logistics Booking and Occupancy/Tenure have materially different semantics.',
     requiredOutcome: 'Govern Workplace Reservation over canonical Space/resource and Party/worker identity with eligibility/access, calendar and optional facilities-service relationships.'
   },
@@ -383,6 +411,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-01', 'BOF-02', 'BOF-22'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Legal Entity, Ownership Relationship, Role Assignment and Statutory Filing exist, but formal statutory officer/director appointments require legal-office provenance and as-of register evidence distinct from generic organisational roles.',
     requiredOutcome: 'Govern Corporate Office Appointment and Corporate Entity Register Snapshot over canonical Legal Entity, Person/Party, Ownership Relationship, External Identifier, Decision/authority and Statutory Filing truth.'
   },
@@ -396,6 +425,7 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     canonicalFamilies: ['BOF-06', 'BOF-08', 'BOF-19', 'BOF-24'],
     disposition: 'accepted-refinement',
     state: 'resolved',
+    owner: 'NuBlox canonical architecture',
     rationale: 'Construction/professional-services accounting requires period-end recognition and WIP analysis distinct from project-control CVR and from customer billing. Existing Financial Recognition Event lacked explicit policy and reproducible WIP calculation/position semantics.',
     requiredOutcome: 'Govern Financial Recognition Policy, Construction WIP Calculation Run and Construction WIP Position while retaining Contract, progress/performance, Actual/Forecast, Customer Invoice and Ledger postings as source truth.'
   }
@@ -414,7 +444,7 @@ export function validateBenchmarkGapRegister() {
   if (new Set(benchmarkGapRegister.map((gap) => gap.id)).size !== benchmarkGapRegister.length) return false;
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
-  if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
+  if (!benchmarkGapRegister.every((gap) => gap.owner && gap.rationale && gap.requiredOutcome)) return false;
   if (benchmarkGapSummary.acceptedRefinementCount !== 23) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;

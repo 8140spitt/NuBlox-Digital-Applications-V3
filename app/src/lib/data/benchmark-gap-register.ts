@@ -229,6 +229,32 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'Canonical Lease/Property/Occupancy semantics require a separate finance-side lease-accounting layer for IFRS 16/ASC 842-style valuation and postings without conflating physical/property truth with accounting records.',
     requiredOutcome: 'Govern Lease Accounting Record, immutable Lease Valuation and derived Lease Accounting Schedule linked to canonical Lease/Contract and finance postings.'
+  },
+  {
+    id: 'BG-017',
+    title: 'CPM schedule calendar, calculation and float/critical-path semantics',
+    sourceBenchmarks: ['ORACLE-CLOUD-CX'],
+    sourceFindings: ['ENT-W1-ORACLE-01'],
+    affectedExternalRows: ['ORACLE-PRIMAVERA-CLOUD'],
+    workspaces: ['F27', 'F03'],
+    canonicalFamilies: ['BOF-06'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'A world-class construction schedule requires explicit working calendars and reproducible CPM calculation evidence; total/free float and critical/longest-path status are derived planning positions, not editable activity flags.',
+    requiredOutcome: 'Govern Schedule Calendar, Schedule Calculation Run and Schedule Analysis Snapshot around the existing Schedule/Activity/Dependency/Baseline model.'
+  },
+  {
+    id: 'BG-018',
+    title: 'Jurisdictional construction payment compliance evidence',
+    sourceBenchmarks: ['ORACLE-CLOUD-CX'],
+    sourceFindings: ['ENT-W1-ORACLE-04'],
+    affectedExternalRows: ['ORACLE-TEXTURA'],
+    workspaces: ['F07', 'F09', 'F14', 'F19', 'F20', 'F27'],
+    canonicalFamilies: ['BOF-08', 'BOF-09', 'BOF-19', 'BOF-21', 'BOF-22'],
+    disposition: 'contextual-extension',
+    state: 'resolved',
+    rationale: 'Textura exposes jurisdiction-specific lien-waiver, sworn-statement, payment-hold and downstream-payment compliance. These are real construction-payment controls but should be configured by jurisdiction/contract regime rather than become universal global payment objects.',
+    requiredOutcome: 'Reuse Contract, Payment Application/Valuation/Certificate, Compliance Requirement, Evidence Item, Payment Hold/withholding semantics and jurisdiction policy; add regime-specific waiver/release evidence only where legally applicable.'
   }
 ];
 
@@ -246,9 +272,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 11) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 12) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
-  if (benchmarkGapSummary.contextualExtensionCount !== 5) return false;
-  if (benchmarkGapSummary.resolvedCount !== 16) return false;
+  if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
+  if (benchmarkGapSummary.resolvedCount !== 18) return false;
   return true;
 }

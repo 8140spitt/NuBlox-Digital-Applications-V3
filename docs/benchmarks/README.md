@@ -19,8 +19,12 @@ The purpose is **enterprise and built-environment completeness**, not vendor imi
 - `construction-delivery-wave.md` — construction-native challenge across Procore, Autodesk, Trimble, EcoSys, Causeway, Thinkproject and Asite.
 - `product-engineering-information-wave.md` — Windchill, Teamcenter and Bentley configuration/digital-thread challenge.
 - `asset-property-service-wave.md` — Maximo, Planon and Esri asset/property/network challenge.
+- `enterprise-control-specialist-wave.md` — ServiceNow, Diligent, Salesforce, Deltek and Sage specialist back-office challenge.
+- `standards-interoperability-challenge.md` — ISO/openBIM/Uniclass independent standards challenge.
 - `app/src/lib/data/external-benchmark-register.ts` — machine-checkable V3 benchmark registry mapped to the 29 tenant workspaces.
 - `app/src/lib/data/external-benchmark-register.test.ts` — regression gate proving benchmark breadth and 29-workspace coverage.
+- `app/src/lib/data/standards-challenge-register.ts` — machine-checkable standards/interoperability challenge.
+- `app/src/lib/data/benchmark-rejection-register.ts` — deliberate vendor-pattern non-adoptions with recorded rationale and preserved NuBlox authority.
 
 ## Rule
 

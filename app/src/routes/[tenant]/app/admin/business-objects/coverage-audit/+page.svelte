@@ -86,7 +86,7 @@
   <section class="section-card gaps">
     <div class="section-heading">
       <div><span class="eyebrow">Convergence queue</span><h2>What remains before physical schema authority</h2></div>
-      <p>The audit intentionally exposes gaps. “Candidate only” means discovery exists but family-level canonical semantics are not yet governed.</p>
+      <p>Candidate/family convergence and duplicate/alias convergence are closed. This section will expose any regression if a future candidate, family or alias reopens those gates.</p>
     </div>
     {#if convergenceGapFamilies.length}
       <div class="gap-grid">

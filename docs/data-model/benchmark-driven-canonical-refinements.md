@@ -102,6 +102,117 @@ A Master Merge Decision requires immutable decision/authority evidence identifyi
 
 Master Identity Redirect keeps historic/source identities resolvable to the survivor with retained provenance. Correction/unmerge uses governed successor/reversal evidence rather than destructive edit.
 
+
+## BG-004 — Advanced warehouse and freight execution
+
+Independent Oracle/Microsoft corroboration confirmed that sophisticated logistics requires more than Warehouse, Bin, Inventory Movement, Shipment and Transport Order.
+
+NuBlox now governs:
+
+- Handling Unit;
+- Warehouse Wave;
+- Yard/Dock Appointment;
+- Freight Tender;
+- Freight Settlement.
+
+These records coordinate execution without replacing Item, inventory, shipment, commercial commitment or finance truth.
+
+## BG-005 — Reliability engineering
+
+IBM Maximo and IFS independently corroborated the SAP-exposed reliability gap.
+
+NuBlox now governs:
+
+- Asset Criticality Assessment;
+- Failure Mode Definition;
+- Reliability Strategy;
+- Asset Health Position.
+
+Criticality and health are evidence/projections, not editable master flags. Reliability strategy guides maintenance planning without becoming the Maintenance Plan or Work Order.
+
+## BG-006 — Succession and talent planning
+
+Workday independently corroborated the need for governed succession/talent semantics.
+
+NuBlox now governs:
+
+- Succession Plan;
+- Talent Pool;
+- Talent Pool Membership;
+- Talent Review.
+
+These reuse Person, Worker Relationship, Position, Career Profile, Skill, Competency and Performance Review. Talent classification never creates another person/workforce master.
+
+## BG-012 — Configurable product and service semantics
+
+NuBlox now governs:
+
+- Product Configuration Model;
+- Configuration Characteristic;
+- Configuration Rule;
+- Product Configuration.
+
+A Product Configuration pins the exact model/rule versions used by a quotation, Sales Order, Production Order or other governed context. Item, Item Variant, BOM, price and execution records remain separate authoritative identities.
+
+## BG-013 — Business travel lifecycle
+
+NuBlox now governs:
+
+- Travel Request;
+- Business Trip;
+- Travel Booking Evidence.
+
+This closes the semantic chain from travel approval and duty-of-care risk into actual trip context and Expense Claim. Specialist booking providers may remain integration sources.
+
+## BG-014 — Migration and test-data governance
+
+NuBlox now governs:
+
+- Data Migration Project;
+- Migration Mapping;
+- Data Migration Run;
+- Test Data Provisioning Profile;
+- Test Data Provisioning Run.
+
+Migration mappings never redefine canonical business semantics to match a legacy system. Non-production data provisioning must retain source/target lineage and governed privacy/masking/anonymisation evidence.
+
+## BG-015 — Product requirements and systems engineering
+
+NuBlox now distinguishes product/technical requirements from information-delivery requirements.
+
+It governs:
+
+- Product Requirement;
+- Requirement Set/baseline;
+- Engineering System Model;
+- Engineering Model Element.
+
+Requirement/model traceability may realise into Item, Component, physical System or Asset, but none of those identities are silently substituted for the engineering model.
+
+## BG-016 — Lease-accounting consequences
+
+Property/lease truth and finance consequences are explicitly separated.
+
+NuBlox now governs:
+
+- Lease Accounting Record;
+- Lease Valuation;
+- Lease Accounting Schedule.
+
+These reference the canonical Lease/Contract/Property context and create financial consequences without turning right-of-use/liability accounting records into physical assets or rewriting contractual terms.
+
+## Contextual SAP findings retained outside universal core
+
+The SAP challenge also exposed legitimate capabilities that are not universal enough to become NuBlox core semantics:
+
+- BG-007 — subscription/usage-based billing;
+- BG-008 — public-sector funds and budget availability control;
+- BG-009 — global-trade screening/authorisation depth;
+- BG-010 — sales incentive/commission management;
+- BG-011 — retail/POS/omnichannel promotion mechanics.
+
+They are governed as contextual extensions in the benchmark gap register. If activated for an applicable business model, they must reuse the canonical identities and controls named in that register rather than create parallel enterprise masters.
+
 ## Architecture rule
 
 A benchmark finding may extend the canonical model only when it represents a durable business concept that survives outside the vendor that exposed it.

@@ -1,6 +1,8 @@
 import { enterpriseFunctions } from '$lib/enterprise/functions';
 import sapV3Map from '$lib/generated/sap-v3-benchmark-map.json';
 import { benchmarkGapSummary } from './benchmark-gap-register';
+import { standardsChallengeSummary } from './standards-challenge-register';
+import { benchmarkRejectionSummary } from './benchmark-rejection-register';
 
 export type BenchmarkTier = 'mandatory-suite' | 'specialist-depth';
 export type BenchmarkStudyState = 'registered' | 'in-progress' | 'challenged' | 'closed';
@@ -309,7 +311,7 @@ export const marketBenchmarkSummary = {
   registeredBenchmarkCount: externalBenchmarkRegister.filter((entry) => entry.studyState === 'registered').length,
   coveredWorkspaceCount: benchmarkWorkspaceCoverage.size,
   workspaceCount: enterpriseFunctions.length,
-  programmeState: 'in-progress' as const,
+  programmeState: 'architecture-challenge-complete' as const,
   legacySapCapabilityRows: 64,
   sapV3MappedRows: sapV3Map.rows.length,
   sapV3ChallengedRows: sapV3Map.rows.filter((row) => row.benchmarkState === 'challenged').length,
@@ -317,6 +319,12 @@ export const marketBenchmarkSummary = {
   benchmarkGapCount: benchmarkGapSummary.gapCount,
   benchmarkGapResolvedCount: benchmarkGapSummary.resolvedCount,
   benchmarkGapOpenCount: benchmarkGapSummary.openCount,
+  standardsChallengeCount: standardsChallengeSummary.standardCount,
+  standardsChallengedCount: standardsChallengeSummary.challengedCount,
+  standardsOpenCount: standardsChallengeSummary.openCount,
+  rejectedVendorPatternCount: benchmarkRejectionSummary.rejectionCount,
+  rejectedVendorPatternRecordedCount: benchmarkRejectionSummary.recordedCount,
+  rejectedVendorPatternOpenCount: benchmarkRejectionSummary.openCount,
   rule: 'External systems challenge completeness, semantics and user outcomes; vendor module boundaries never become automatic NuBlox architecture.'
 };
 
@@ -330,5 +338,11 @@ export function validateExternalBenchmarkRegister() {
   if (!externalBenchmarkRegister.some((entry) => entry.id === 'PTC-WINDCHILL')) return false;
   if (!externalBenchmarkRegister.some((entry) => entry.id === 'PROCORE')) return false;
   if (!externalBenchmarkRegister.some((entry) => entry.id === 'IBM-MAXIMO')) return false;
+  if (!externalBenchmarkRegister.every((entry) => entry.studyState === 'challenged')) return false;
+  if (marketBenchmarkSummary.benchmarkGapOpenCount !== 0) return false;
+  if (marketBenchmarkSummary.standardsOpenCount !== 0) return false;
+  if (marketBenchmarkSummary.standardsChallengedCount !== marketBenchmarkSummary.standardsChallengeCount) return false;
+  if (marketBenchmarkSummary.rejectedVendorPatternOpenCount !== 0) return false;
+  if (marketBenchmarkSummary.rejectedVendorPatternRecordedCount !== marketBenchmarkSummary.rejectedVendorPatternCount) return false;
   return true;
 }

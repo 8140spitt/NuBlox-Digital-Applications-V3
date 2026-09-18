@@ -86,7 +86,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['crm','sales','customer-service','field-service'],
     workspaces: ['F06','F07','F08','F12','F17'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.salesforce.com/uk/service/cloud/',
     challengeFocus: ['lead-to-opportunity','account management','case management','omnichannel service','field service'],
     notes: 'CRM/customer-service depth benchmark; not an authority for NuBlox enterprise or construction object boundaries.'
@@ -98,7 +98,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['workflow','itsm','risk','security','portfolio','workplace'],
     workspaces: ['F02','F03','F08','F16','F18','F20','F21','F22','F24','F26','F27','F28','F29'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.servicenow.com/products-by-category.html',
     challengeFocus: ['work orchestration','case/request patterns','ITSM','risk/compliance','portfolio management','workplace services'],
     notes: 'Benchmark for enterprise workflow, request/case management, IT operations and cross-cutting controls.'
@@ -110,7 +110,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['governance','board-management','grc','audit','entity-management','investor-engagement'],
     workspaces: ['F02','F19','F20','F25'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.diligent.com/gb',
     challengeFocus: ['board/committee governance','decision records','entity/subsidiary governance','risk/compliance/audit','investor engagement'],
     notes: 'Specialist governance benchmark for board, corporate-secretariat and GRC evidence that broad ERP suites often underrepresent.'
@@ -206,7 +206,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['aec-erp','crm','project-accounting','resource-management','project-management'],
     workspaces: ['F03','F06','F07','F14','F15','F17','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.deltek.com/products/erp/vantagepoint/',
     challengeFocus: ['A&E business development','project accounting','resource planning','billing','project profitability','professional-services delivery'],
     notes: 'Important architecture/engineering consultancy benchmark connecting pursuit, people, projects and financial performance.'
@@ -278,7 +278,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['construction-finance','job-cost','wip','project-management','preconstruction'],
     workspaces: ['F06','F07','F09','F12','F14','F15','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.sage.com/en-gb/industry/construction/',
     challengeFocus: ['construction accounting','job costing','WIP','CIS/UK finance','estimating','project management'],
     notes: 'Important construction-finance benchmark, particularly for contractor job cost/WIP and UK operational accounting.'

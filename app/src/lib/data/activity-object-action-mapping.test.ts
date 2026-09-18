@@ -3,6 +3,7 @@ import {
   activityObjectActionMappings,
   activityObjectActionSummary,
   l2AggregateRoutes,
+  ambiguousSubfunctions,
   unmappedSubfunctions,
   validateActivityObjectActionMapping
 } from './activity-object-action-mapping';
@@ -17,10 +18,13 @@ describe('L2/L3 activity to canonical object/action mapping', () => {
     expect(activityObjectActionSummary.mappedSubfunctionCount).toBe(353);
     expect(activityObjectActionSummary.mappedActivityCount).toBe(1510);
     expect(unmappedSubfunctions).toEqual([]);
+    expect(ambiguousSubfunctions).toEqual([]);
   });
 
   it('routes every L2 rule to a frozen aggregate and every activity to a canonical object focus', () => {
     expect(activityObjectActionSummary.invalidAggregateRouteCount).toBe(0);
+    expect(activityObjectActionSummary.invalidObjectModelRouteCount).toBe(0);
+    expect(activityObjectActionSummary.ambiguousSubfunctionCount).toBe(0);
     expect(l2AggregateRoutes.length).toBeGreaterThanOrEqual(150);
     expect(activityObjectActionMappings.every((entry) => entry.aggregateId.startsWith('AGG-'))).toBe(true);
     expect(activityObjectActionMappings.every((entry) => entry.objectModelId.length > 0)).toBe(true);

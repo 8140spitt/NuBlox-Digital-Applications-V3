@@ -50,6 +50,17 @@ export async function ensureMigrationLedger(connection) {
       applied_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
   `);
+  await connection.query(`
+    CREATE TABLE IF NOT EXISTS schema_migration_attempts (
+      migration_name VARCHAR(255) PRIMARY KEY,
+      checksum CHAR(64) NOT NULL,
+      status VARCHAR(16) NOT NULL,
+      started_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+      completed_at TIMESTAMP(3) NULL,
+      error_message TEXT NULL,
+      INDEX idx_schema_migration_attempt_status (status, started_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+  `);
 }
 
 export async function withMigrationLock(connection, work) {
@@ -64,10 +75,29 @@ export async function withMigrationLock(connection, work) {
   }
 }
 
+export async function readDirtyMigrationAttempts(connection) {
+  const [rows] = await connection.query(
+    "SELECT migration_name AS name, checksum, status, started_at AS startedAt, completed_at AS completedAt, error_message AS errorMessage FROM schema_migration_attempts WHERE status IN ('APPLYING', 'FAILED') ORDER BY started_at, migration_name"
+  );
+  return rows;
+}
+
+function dirtyMigrationError(rows) {
+  const summary = rows.map((row) => `${row.name} [${row.status}]`).join(', ');
+  return new Error(
+    'Database migration state is dirty: ' +
+      summary +
+      '. Inspect the partial schema change and repair it explicitly before retrying migrations.'
+  );
+}
+
 export async function applyMigrations(connection, { log = console.log } = {}) {
   return withMigrationLock(connection, async () => {
     await ensureMigrationLedger(connection);
     const migrations = await readMigrations();
+    const dirty = await readDirtyMigrationAttempts(connection);
+    if (dirty.length) throw dirtyMigrationError(dirty);
+
     const [rows] = await connection.query(
       'SELECT migration_name AS name, checksum FROM schema_migrations ORDER BY migration_name'
     );
@@ -76,6 +106,7 @@ export async function applyMigrations(connection, { log = console.log } = {}) {
       if (!repositoryNames.has(row.name))
         throw new Error(`Applied migration ${row.name} is missing from the repository.`);
     }
+
     const applied = new Map(rows.map((row) => [row.name, row.checksum]));
     for (const migration of migrations) {
       const existingChecksum = applied.get(migration.name);
@@ -87,12 +118,65 @@ export async function applyMigrations(connection, { log = console.log } = {}) {
         log?.(`✓ ${migration.name} already applied`);
         continue;
       }
+
       log?.(`→ applying ${migration.name}`);
-      await connection.query(migration.sql);
       await connection.execute(
-        'INSERT INTO schema_migrations (migration_name, checksum) VALUES (?, ?)',
+        `INSERT INTO schema_migration_attempts
+           (migration_name, checksum, status, started_at, completed_at, error_message)
+         VALUES (?, ?, 'APPLYING', CURRENT_TIMESTAMP(3), NULL, NULL)
+         ON DUPLICATE KEY UPDATE
+           checksum = VALUES(checksum),
+           status = 'APPLYING',
+           started_at = CURRENT_TIMESTAMP(3),
+           completed_at = NULL,
+           error_message = NULL`,
         [migration.name, migration.checksum]
       );
+
+      try {
+        await connection.query(migration.sql);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        await connection.execute(
+          `UPDATE schema_migration_attempts
+              SET status = 'FAILED',
+                  completed_at = CURRENT_TIMESTAMP(3),
+                  error_message = ?
+            WHERE migration_name = ?`,
+          [message.slice(0, 16000), migration.name]
+        );
+        throw new Error(
+          `Migration ${migration.name} failed and the database is now marked dirty. ` +
+            'Because MySQL DDL may have committed partially, inspect and repair the schema before retrying.',
+          { cause: error }
+        );
+      }
+
+      await connection.beginTransaction();
+      try {
+        await connection.execute(
+          'INSERT INTO schema_migrations (migration_name, checksum) VALUES (?, ?)',
+          [migration.name, migration.checksum]
+        );
+        await connection.execute(
+          `UPDATE schema_migration_attempts
+              SET status = 'APPLIED',
+                  completed_at = CURRENT_TIMESTAMP(3),
+                  error_message = NULL
+            WHERE migration_name = ? AND status = 'APPLYING'`,
+          [migration.name]
+        );
+        await connection.commit();
+      } catch (error) {
+        await connection.rollback();
+        throw new Error(
+          `Migration ${migration.name} changed the schema but its completion metadata could not be committed. ` +
+            'The APPLYING marker has been preserved; inspect the database before retrying.',
+          { cause: error }
+        );
+      }
+
+      applied.set(migration.name, migration.checksum);
       log?.(`✓ applied ${migration.name}`);
     }
     return migrations;

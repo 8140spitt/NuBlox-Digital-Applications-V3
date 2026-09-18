@@ -951,6 +951,7 @@ export const canonicalAggregateFreezeSummary = {
   frozenAggregateBoundaryCount: canonicalAggregateBoundaries.filter((boundary) => boundary.state === 'frozen').length,
   benchmarkRefinementCount: refinementIds.size,
   benchmarkRefinementsAssigned: Object.keys(refinementAggregateOwnership).filter((id) => refinementIds.has(id)).length,
+  activityDrivenOwnershipCount: Object.keys(activityDrivenAggregateOwnership).length,
   state: 'frozen' as const
 };
 
@@ -973,6 +974,11 @@ export function validateCanonicalAggregateBoundaryFreeze() {
   if (Object.keys(refinementAggregateOwnership).length !== refinementIds.size) return false;
   if (![...refinementIds].every((id) => refinementAggregateOwnership[id] && aggregateIds.has(refinementAggregateOwnership[id]))) return false;
   if (!Object.keys(refinementAggregateOwnership).every((id) => refinementIds.has(id))) return false;
+  if (Object.keys(activityDrivenAggregateOwnership).length !== 75) return false;
+  if (!Object.entries(activityDrivenAggregateOwnership).every(([modelId, aggregateId]) => {
+    const aggregate = canonicalAggregateBoundaries.find((boundary) => boundary.id === aggregateId);
+    return aggregate?.rootModelId === modelId;
+  })) return false;
 
   return true;
 }

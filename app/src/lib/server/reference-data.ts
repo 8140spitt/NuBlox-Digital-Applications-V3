@@ -335,13 +335,14 @@ async function assertJurisdictionParent(
       throw new Error('Existing Jurisdiction hierarchy contains a cycle.');
     }
     visited.add(cursor);
-    const row = await queryOne<RowDataPacket & { parentJurisdictionId: string | null }>(
-      "SELECT parent_jurisdiction_id AS parentJurisdictionId FROM reference_jurisdictions WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
-      [cursor, context.tenantId],
-      executor
-    );
-    if (!row) throw new Error('Active parent Jurisdiction not found.');
-    cursor = row.parentJurisdictionId;
+    const parentRow: (RowDataPacket & { parentJurisdictionId: string | null }) | undefined =
+      await queryOne<RowDataPacket & { parentJurisdictionId: string | null }>(
+        "SELECT parent_jurisdiction_id AS parentJurisdictionId FROM reference_jurisdictions WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
+        [cursor, context.tenantId],
+        executor
+      );
+    if (!parentRow) throw new Error('Active parent Jurisdiction not found.');
+    cursor = parentRow.parentJurisdictionId;
   }
 }
 

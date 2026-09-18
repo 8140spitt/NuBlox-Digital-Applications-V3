@@ -372,6 +372,32 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'A sophisticated facilities/workplace function needs governed time-bound booking of rooms, desks and shared facilities. Inventory Reservation, Site Logistics Booking and Occupancy/Tenure have materially different semantics.',
     requiredOutcome: 'Govern Workplace Reservation over canonical Space/resource and Party/worker identity with eligibility/access, calendar and optional facilities-service relationships.'
+  },
+  {
+    id: 'BG-028',
+    title: 'Corporate statutory office and entity-register governance',
+    sourceBenchmarks: ['DILIGENT-GRC'],
+    sourceFindings: ['CTRL-W5-DILIGENT-01'],
+    affectedExternalRows: ['DILIGENT-ENTITY-MANAGEMENT'],
+    workspaces: ['F02', 'F19', 'F20', 'F21'],
+    canonicalFamilies: ['BOF-01', 'BOF-02', 'BOF-22'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Legal Entity, Ownership Relationship, Role Assignment and Statutory Filing exist, but formal statutory officer/director appointments require legal-office provenance and as-of register evidence distinct from generic organisational roles.',
+    requiredOutcome: 'Govern Corporate Office Appointment and Corporate Entity Register Snapshot over canonical Legal Entity, Person/Party, Ownership Relationship, External Identifier, Decision/authority and Statutory Filing truth.'
+  },
+  {
+    id: 'BG-029',
+    title: 'Construction WIP and revenue-recognition control',
+    sourceBenchmarks: ['SAGE-CONSTRUCTION', 'DELTEK-VANTAGEPOINT'],
+    sourceFindings: ['CTRL-W5-SAGE-01', 'CTRL-W5-DELTEK-02'],
+    affectedExternalRows: ['SAGE-CONSTRUCTION-WIP', 'DELTEK-PROJECT-BILLING-RECOGNITION'],
+    workspaces: ['F03', 'F07', 'F14', 'F17', 'F27'],
+    canonicalFamilies: ['BOF-06', 'BOF-08', 'BOF-19', 'BOF-24'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Construction/professional-services accounting requires period-end recognition and WIP analysis distinct from project-control CVR and from customer billing. Existing Financial Recognition Event lacked explicit policy and reproducible WIP calculation/position semantics.',
+    requiredOutcome: 'Govern Financial Recognition Policy, Construction WIP Calculation Run and Construction WIP Position while retaining Contract, progress/performance, Actual/Forecast, Customer Invoice and Ledger postings as source truth.'
   }
 ];
 
@@ -389,9 +415,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 21) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 23) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
-  if (benchmarkGapSummary.resolvedCount !== 27) return false;
+  if (benchmarkGapSummary.resolvedCount !== 29) return false;
   return true;
 }

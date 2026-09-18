@@ -23,6 +23,19 @@ export type OrganisationUnit = {
   validTo: string | null;
 };
 
+export type OrganisationUnitHierarchyEdge = {
+  id: string;
+  childUnitId: string;
+  childUnitCode: string;
+  childUnitName: string;
+  parentUnitId: string;
+  parentUnitCode: string;
+  parentUnitName: string;
+  status: string;
+  validFrom: string;
+  validTo: string | null;
+};
+
 export type OrganisationUnitInput = {
   unitCode: string;
   name: string;
@@ -118,6 +131,31 @@ export async function listOrganisationUnits(context: CommandContext) {
   assertPermission(context, 'org.structure.read');
   return queryRows<RowDataPacket & OrganisationUnit>(
     selectUnit + ' WHERE ou.tenant_id = ? ORDER BY ou.name',
+    [context.tenantId]
+  );
+}
+
+export async function listOrganisationUnitHierarchy(context: CommandContext) {
+  assertPermission(context, 'org.structure.read');
+  return queryRows<RowDataPacket & OrganisationUnitHierarchyEdge>(
+    `SELECT h.id,
+            h.child_unit_id AS childUnitId,
+            c.unit_code AS childUnitCode,
+            c.name AS childUnitName,
+            h.parent_unit_id AS parentUnitId,
+            p.unit_code AS parentUnitCode,
+            p.name AS parentUnitName,
+            h.status,
+            h.valid_from AS validFrom,
+            h.valid_to AS validTo
+       FROM organisation_unit_hierarchy h
+       JOIN organisation_units c ON c.id = h.child_unit_id
+       JOIN organisation_units p ON p.id = h.parent_unit_id
+      WHERE h.tenant_id = ?
+      ORDER BY CASE h.status WHEN 'ACTIVE' THEN 0 ELSE 1 END,
+               p.name,
+               c.name,
+               h.valid_from DESC`,
     [context.tenantId]
   );
 }
@@ -348,5 +386,73 @@ export async function assignOrganisationUnitParent(
       connection
     );
     return relationId;
+  });
+}
+
+
+export async function removeOrganisationUnitParent(
+  context: CommandContext,
+  childUnitId: string,
+  expectedVersion: number,
+  effectiveTo?: string
+) {
+  assertPermission(context, 'org.structure.manage');
+  return dbTransaction(async (connection) => {
+    const child = await getRow(context, childUnitId, connection);
+    if (child.version !== expectedVersion) {
+      throw new Error('This Organisation Unit changed after you opened it.');
+    }
+    const current = await queryOne<RowDataPacket & { id: string; parentUnitId: string }>(
+      "SELECT id, parent_unit_id AS parentUnitId FROM organisation_unit_hierarchy WHERE tenant_id = ? AND child_unit_id = ? AND status = 'ACTIVE' LIMIT 1 FOR UPDATE",
+      [context.tenantId, childUnitId],
+      connection
+    );
+    if (!current) return;
+
+    const timestamp = iso(effectiveTo, now(), 'Hierarchy effective-to') as string;
+    await executeMutation(
+      "UPDATE organisation_unit_hierarchy SET status = 'ENDED', valid_to = ? WHERE id = ? AND tenant_id = ?",
+      [timestamp, current.id, context.tenantId],
+      connection
+    );
+    const result = await executeMutation(
+      'UPDATE organisation_units SET version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
+      [now(), childUnitId, context.tenantId, expectedVersion],
+      connection
+    );
+    if (result.affectedRows !== 1) {
+      throw new Error('Concurrent Organisation Unit hierarchy change detected.');
+    }
+    const updated = await getRow(context, childUnitId, connection);
+    await recordPlatformAudit(
+      context,
+      {
+        aggregateId: 'AGG-01-ORG-STRUCTURE',
+        objectType: 'organisation_unit_hierarchy',
+        objectId: current.id,
+        action: 'ORGANISATION_UNIT_PARENT_REMOVED',
+        fromState: 'ACTIVE',
+        toState: 'ENDED'
+      },
+      connection
+    );
+    await emitBusinessEvent(
+      context,
+      {
+        aggregateId: 'AGG-01-ORG-STRUCTURE',
+        aggregateType: 'OrganisationUnit',
+        aggregateObjectId: childUnitId,
+        aggregateVersion: updated.version,
+        eventType: 'ORGANISATION_UNIT_PARENT_REMOVED',
+        topic: 'nublox.organisation.structure',
+        payload: {
+          relationId: current.id,
+          childUnitId,
+          parentUnitId: current.parentUnitId,
+          effectiveTo: timestamp
+        }
+      },
+      connection
+    );
   });
 }

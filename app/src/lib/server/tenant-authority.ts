@@ -20,6 +20,20 @@ function validateRoleKey(value: string) {
   }
   return key;
 }
+async function nextTenantVersion(context: CommandContext, executor: DbExecutor) {
+  const tenant = await queryOne<RowDataPacket & { version: number }>(
+    "SELECT version FROM tenants WHERE id = ? AND status = 'ACTIVE' FOR UPDATE",
+    [context.tenantId], executor
+  );
+  if (!tenant) throw new Error('Active tenant not found.');
+  const nextVersion = tenant.version + 1;
+  const updated = await executeMutation(
+    'UPDATE tenants SET version = ?, updated_at = ? WHERE id = ? AND version = ?',
+    [nextVersion, now(), context.tenantId, tenant.version], executor
+  );
+  if (updated.affectedRows !== 1) throw new Error('Tenant authority changed concurrently. Retry the command.');
+  return nextVersion;
+}
 async function assertParty(context: CommandContext, partyId: string, executor?: DbExecutor) {
   const party = await queryOne<RowDataPacket & { id: string; displayName: string }>(
     "SELECT id, display_name AS displayName FROM parties WHERE tenant_id = ? AND id = ? AND status = 'ACTIVE'",
@@ -52,8 +66,9 @@ export async function grantTenantMembership(context: CommandContext, partyId: st
       "INSERT INTO memberships (id, tenant_id, party_id, context_type, context_id, membership_type, status, valid_from, valid_to, created_at) VALUES (?, ?, ?, 'TENANT', ?, ?, 'ACTIVE', ?, NULL, ?)",
       [id, context.tenantId, partyId, context.tenantId, required(membershipType, 'Membership type').toUpperCase(), timestamp, timestamp], connection
     );
+    const aggregateVersion = await nextTenantVersion(context, connection);
     await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_membership', objectId: id, action: 'TENANT_MEMBERSHIP_GRANTED', toState: 'ACTIVE', note: party.displayName }, connection);
-    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_MEMBERSHIP_GRANTED', topic: 'nublox.tenant.membership', payload: { membershipId: id, partyId } }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_MEMBERSHIP_GRANTED', topic: 'nublox.tenant.membership', payload: { membershipId: id, partyId } }, connection);
     return id;
   });
 }
@@ -68,9 +83,22 @@ export async function revokeTenantMembership(context: CommandContext, membership
     if (!row) throw new Error('Tenant membership not found.');
     if (row.partyId === context.actorPartyId) throw new Error('An actor cannot revoke their own tenant membership.');
     if (row.status !== 'ACTIVE') return;
-    await executeMutation("UPDATE memberships SET status = 'INACTIVE', valid_to = ? WHERE id = ? AND tenant_id = ?", [now(), membershipId, context.tenantId], connection);
-    await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_membership', objectId: membershipId, action: 'TENANT_MEMBERSHIP_REVOKED', fromState: 'ACTIVE', toState: 'INACTIVE' }, connection);
-    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_MEMBERSHIP_REVOKED', topic: 'nublox.tenant.membership', payload: { membershipId, partyId: row.partyId } }, connection);
+    const timestamp = now();
+    const assignments = await queryRows<RowDataPacket & { id: string }>(
+      "SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE' FOR UPDATE",
+      [context.tenantId, row.partyId, context.tenantId], connection
+    );
+    await executeMutation("UPDATE memberships SET status = 'INACTIVE', valid_to = ? WHERE id = ? AND tenant_id = ?", [timestamp, membershipId, context.tenantId], connection);
+    await executeMutation(
+      "UPDATE role_assignments SET status = 'INACTIVE', valid_to = ? WHERE tenant_id = ? AND party_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE'",
+      [timestamp, context.tenantId, row.partyId, context.tenantId], connection
+    );
+    const aggregateVersion = await nextTenantVersion(context, connection);
+    await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_membership', objectId: membershipId, action: 'TENANT_MEMBERSHIP_REVOKED', fromState: 'ACTIVE', toState: 'INACTIVE', note: assignments.length ? `${assignments.length} active role assignment(s) ended.` : undefined }, connection);
+    for (const assignment of assignments) {
+      await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role_assignment', objectId: assignment.id, action: 'TENANT_ROLE_UNASSIGNED_BY_MEMBERSHIP_REVOKE', fromState: 'ACTIVE', toState: 'INACTIVE' }, connection);
+    }
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_MEMBERSHIP_REVOKED', topic: 'nublox.tenant.membership', payload: { membershipId, partyId: row.partyId, endedRoleAssignmentIds: assignments.map((assignment) => assignment.id) } }, connection);
   });
 }
 
@@ -103,8 +131,9 @@ export async function createTenantRole(context: CommandContext, roleKey: string,
       [id, context.tenantId, validateRoleKey(roleKey), required(name, 'Role name'), timestamp, timestamp], connection
     );
     for (const permission of selected) await executeMutation('INSERT INTO role_permissions (role_id, permission_key) VALUES (?, ?)', [id, permission], connection);
+    const aggregateVersion = await nextTenantVersion(context, connection);
     await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role', objectId: id, action: 'TENANT_ROLE_CREATED', toState: 'ACTIVE' }, connection);
-    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_ROLE_CREATED', topic: 'nublox.tenant.authority', payload: { roleId: id, roleKey, permissions: selected } }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_CREATED', topic: 'nublox.tenant.authority', payload: { roleId: id, roleKey: validateRoleKey(roleKey), permissions: selected } }, connection);
     return id;
   });
 }
@@ -133,8 +162,9 @@ export async function assignTenantRole(context: CommandContext, partyId: string,
       "INSERT INTO role_assignments (id, tenant_id, party_id, role_id, scope_type, scope_id, status, valid_from, valid_to, assignment_source, created_at) VALUES (?, ?, ?, ?, 'TENANT', ?, 'ACTIVE', ?, NULL, 'tenant-authority-command', ?)",
       [id, context.tenantId, partyId, roleId, context.tenantId, timestamp, timestamp], connection
     );
+    const aggregateVersion = await nextTenantVersion(context, connection);
     await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role_assignment', objectId: id, action: 'TENANT_ROLE_ASSIGNED', toState: 'ACTIVE' }, connection);
-    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_ROLE_ASSIGNED', topic: 'nublox.tenant.authority', payload: { assignmentId: id, partyId, roleId, roleKey: role.roleKey } }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_ASSIGNED', topic: 'nublox.tenant.authority', payload: { assignmentId: id, partyId, roleId, roleKey: role.roleKey } }, connection);
     return id;
   });
 }
@@ -151,7 +181,8 @@ export async function unassignTenantRole(context: CommandContext, assignmentId: 
     if (row.status !== 'ACTIVE') return;
     const timestamp = now();
     await executeMutation("UPDATE role_assignments SET status = 'INACTIVE', valid_to = ? WHERE id = ? AND tenant_id = ?", [timestamp, assignmentId, context.tenantId], connection);
+    const aggregateVersion = await nextTenantVersion(context, connection);
     await recordPlatformAudit(context, { aggregateId: 'AGG-01-TENANT', objectType: 'tenant_role_assignment', objectId: assignmentId, action: 'TENANT_ROLE_UNASSIGNED', fromState: 'ACTIVE', toState: 'INACTIVE' }, connection);
-    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_ROLE_UNASSIGNED', topic: 'nublox.tenant.authority', payload: { assignmentId, partyId: row.partyId, roleId: row.roleId } }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-01-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion, eventType: 'TENANT_ROLE_UNASSIGNED', topic: 'nublox.tenant.authority', payload: { assignmentId, partyId: row.partyId, roleId: row.roleId } }, connection);
   });
 }

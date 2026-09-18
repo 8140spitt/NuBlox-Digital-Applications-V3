@@ -37,7 +37,7 @@ Every stage must be represented by one or more business-object families. This pr
 
 Every F01–F29 tenant workspace must have an explicit relationship to the object families it creates, reads, changes or governs.
 
-The current audit is family-to-workspace coverage. The later activity-level convergence pass must map every L2/L3 activity to canonical objects and allowed actions.
+The family-to-workspace lens is now supplemented by the governed activity-level map: all 353 L2 sub-functions and all 1,510 source activities have a primary workspace, frozen aggregate, canonical object focus and allowed action classification.
 
 ### 3. Construction & Built Environment specialist overlays
 
@@ -156,7 +156,7 @@ Therefore the present family-level maturity split is:
 29 total families
 ```
 
-This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Canonical aggregate boundaries are now frozen. Broad physical aggregates/APIs are still not approved until L2/L3 activity → canonical object/action mapping is complete.
+This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Canonical aggregate boundaries are frozen and the L2/L3 activity → canonical object/action mapping is complete. Controlled aggregate-aligned physical schema/API implementation waves are now architecturally authorised.
 
 ## Candidate decision coverage
 
@@ -228,7 +228,7 @@ Current result:
 
 ```text
 29/29 families covered
-100 frozen logical aggregate boundaries
+174 frozen logical aggregate boundaries
 79/79 benchmark refinements assigned to one aggregate
 one-aggregate command transaction rule enforced
 ```
@@ -256,7 +256,8 @@ Before a family can be treated as physically authoritative, it must have:
 7. reference/classification/jurisdiction overlays;
 8. remaining aliases/duplicates resolved;
 9. material candidate decisions completed;
-10. benchmark/standards challenge completed to the level relevant to that family.
+10. benchmark/standards challenge completed to the level relevant to that family;
+11. L2/L3 activities mapped to the owning aggregate/object and permitted action.
 
 ## Immediate convergence queue
 
@@ -264,11 +265,17 @@ The **family-level convergence queue is closed**.
 
 Candidate-level convergence is now also closed at **750/750 decisions**.
 
-The next architecture gates are:
+The architecture convergence queue is now closed:
 
 ```text
-1. Complete the L2/L3 activity → canonical object/action mapping
-2. Only then approve physical schema / API implementation waves
+29/29 workspaces mapped
+353/353 L2 sub-functions mapped
+1,510/1,510 source activities mapped
+174 frozen logical aggregate boundaries
+0 ambiguous or unmapped L2 routes
+0 invalid object/write placements
 ```
+
+Controlled aggregate-aligned physical schema/API implementation waves may now proceed. Runtime implementation, permissions, workflow behaviour and acceptance proof remain engineering deliverables rather than architecture-discovery gates.
 
 The audit must continue to expose benchmark status and must fail if candidate decision coverage ever drops below 100%.

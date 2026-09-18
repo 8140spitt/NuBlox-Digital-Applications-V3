@@ -280,11 +280,54 @@ describe('governed authority configuration', () => {
       permitted.id,
       permitted.version
     );
-    expect(
-      (await delegatedAuthorityService.listDelegatedAuthorities(context)).find(
-        (entry) => entry.id === permittedGrantId
-      )?.status
-    ).toBe('APPROVED');
+    const approvedGrant = (
+      await delegatedAuthorityService.listDelegatedAuthorities(context)
+    ).find((entry) => entry.id === permittedGrantId)!;
+    expect(approvedGrant.status).toBe('APPROVED');
+    expect(approvedGrant.policyRuleId).toBe(delegation.ruleId);
+    expect(approvedGrant.policyVersionId).toBe(delegation.versionId);
+
+    const grantorPartyId = await personService.createPerson(context, {
+      givenName: 'Policy',
+      familyName: 'Grantor'
+    });
+    const actorGrantId = randomUUID();
+    const timestamp = new Date().toISOString();
+    await db.executeMutation(
+      "INSERT INTO delegated_authorities (id, tenant_id, grantor_party_id, delegate_party_id, authority_type, basis, scope_type, scope_id, currency_code, value_limit, allow_subdelegation, status, version, valid_from, valid_to, approved_at, revoked_at, revocation_reason, policy_rule_id, policy_version_id, created_at, updated_at) VALUES (?, ?, ?, ?, 'COMMERCIAL_COMMITMENT', 'Independent board delegation', 'TENANT', ?, 'GBP', 250000, 0, 'ACTIVE', 3, ?, NULL, ?, NULL, NULL, NULL, NULL, ?, ?)",
+      [
+        actorGrantId,
+        context.tenantId,
+        grantorPartyId,
+        context.actorPartyId,
+        context.tenantId,
+        timestamp,
+        timestamp,
+        timestamp,
+        timestamp
+      ]
+    );
+
+    const decisionId = await decisionService.recordWorkDecision(context, {
+      decisionType: 'COMMERCIAL_APPROVAL',
+      subjectType: 'COMMERCIAL_COMMITMENT',
+      subjectId: 'policy-trace-' + randomUUID(),
+      subjectVersion: '1',
+      outcome: 'APPROVED',
+      reason: 'Protected decision records exact policy-as-applied.',
+      authority: {
+        type: 'COMMERCIAL_COMMITMENT',
+        scopeType: 'TENANT',
+        scopeId: context.tenantId,
+        currencyCode: 'GBP',
+        value: 100000
+      }
+    });
+    const decision = (await decisionService.listWorkDecisions(context)).find(
+      (entry) => entry.id === decisionId
+    )!;
+    expect(decision.approvalPolicyRuleId).toBe(approval.ruleId);
+    expect(decision.approvalPolicyVersionId).toBe(approval.versionId);
   });
 
 

@@ -34,6 +34,8 @@ export type DelegatedAuthority = {
   approvedAt: string | null;
   revokedAt: string | null;
   revocationReason: string | null;
+  policyRuleId: string | null;
+  policyVersionId: string | null;
 };
 
 export type DelegatedAuthorityInput = {
@@ -51,7 +53,7 @@ export type DelegatedAuthorityInput = {
 };
 
 const selectAuthority =
-  'SELECT da.id, da.grantor_party_id AS grantorPartyId, gp.display_name AS grantorDisplayName, da.delegate_party_id AS delegatePartyId, dp.display_name AS delegateDisplayName, da.authority_type AS authorityType, da.basis, da.scope_type AS scopeType, da.scope_id AS scopeId, da.currency_code AS currencyCode, da.value_limit AS valueLimit, da.allow_subdelegation AS allowSubdelegation, da.status, da.version, da.valid_from AS validFrom, da.valid_to AS validTo, da.approved_at AS approvedAt, da.revoked_at AS revokedAt, da.revocation_reason AS revocationReason FROM delegated_authorities da JOIN parties gp ON gp.id = da.grantor_party_id JOIN parties dp ON dp.id = da.delegate_party_id';
+  'SELECT da.id, da.grantor_party_id AS grantorPartyId, gp.display_name AS grantorDisplayName, da.delegate_party_id AS delegatePartyId, dp.display_name AS delegateDisplayName, da.authority_type AS authorityType, da.basis, da.scope_type AS scopeType, da.scope_id AS scopeId, da.currency_code AS currencyCode, da.value_limit AS valueLimit, da.allow_subdelegation AS allowSubdelegation, da.status, da.version, da.valid_from AS validFrom, da.valid_to AS validTo, da.approved_at AS approvedAt, da.revoked_at AS revokedAt, da.revocation_reason AS revocationReason, da.policy_rule_id AS policyRuleId, da.policy_version_id AS policyVersionId FROM delegated_authorities da JOIN parties gp ON gp.id = da.grantor_party_id JOIN parties dp ON dp.id = da.delegate_party_id';
 
 function now() {
   return new Date().toISOString();
@@ -125,7 +127,9 @@ async function evidence(
         allowSubdelegation: Boolean(row.allowSubdelegation),
         validFrom: row.validFrom,
         validTo: row.validTo,
-        status: row.status
+        status: row.status,
+        policyRuleId: row.policyRuleId,
+        policyVersionId: row.policyVersionId
       }
     },
     executor
@@ -214,6 +218,9 @@ async function transition(
     if (toState === 'APPROVED' && current.delegatePartyId === context.actorPartyId) {
       throw new Error('A delegate cannot approve their own Delegated Authority.');
     }
+    let policyRuleId = current.policyRuleId;
+    let policyVersionId = current.policyVersionId;
+
     if (
       toState === 'APPROVED' &&
       (await hasPublishedDelegatedAuthorityPolicy(context, current.authorityType, connection))
@@ -242,6 +249,8 @@ async function transition(
           'Published Delegated Authority policy does not permit this grant configuration.'
         );
       }
+      policyRuleId = policy.ruleId;
+      policyVersionId = policy.id;
     }
     const timestamp = now();
     const revocationReason =
@@ -249,7 +258,7 @@ async function transition(
         ? required(reason ?? '', 'Revocation reason')
         : current.revocationReason;
     const result = await executeMutation(
-      "UPDATE delegated_authorities SET status = ?, version = version + 1, approved_at = CASE WHEN ? = 'APPROVED' THEN ? ELSE approved_at END, revoked_at = CASE WHEN ? = 'REVOKED' THEN ? ELSE revoked_at END, revocation_reason = ?, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?",
+      "UPDATE delegated_authorities SET status = ?, version = version + 1, approved_at = CASE WHEN ? = 'APPROVED' THEN ? ELSE approved_at END, revoked_at = CASE WHEN ? = 'REVOKED' THEN ? ELSE revoked_at END, revocation_reason = ?, policy_rule_id = CASE WHEN ? = 'APPROVED' THEN ? ELSE policy_rule_id END, policy_version_id = CASE WHEN ? = 'APPROVED' THEN ? ELSE policy_version_id END, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?",
       [
         toState,
         toState,
@@ -257,6 +266,10 @@ async function transition(
         toState,
         timestamp,
         revocationReason,
+        toState,
+        policyRuleId,
+        toState,
+        policyVersionId,
         timestamp,
         id,
         context.tenantId,

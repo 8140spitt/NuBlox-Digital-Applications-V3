@@ -32,6 +32,8 @@ export type WorkDecision = {
   authorityCurrencyCode: string | null;
   authorityValue: string | null;
   authorityBasis: string;
+  approvalPolicyRuleId: string | null;
+  approvalPolicyVersionId: string | null;
   supersedesDecisionId: string | null;
   decidedAt: string;
 };
@@ -56,7 +58,7 @@ export type RecordDecisionInput = {
 };
 
 const decisionSelect =
-  'SELECT id, decision_type AS decisionType, request_type AS requestType, request_id AS requestId, subject_type AS subjectType, subject_id AS subjectId, subject_version AS subjectVersion, outcome, reason, decider_party_id AS deciderPartyId, authority_type AS authorityType, authority_grant_id AS authorityGrantId, authority_scope_type AS authorityScopeType, authority_scope_id AS authorityScopeId, authority_currency_code AS authorityCurrencyCode, authority_value AS authorityValue, authority_basis AS authorityBasis, supersedes_decision_id AS supersedesDecisionId, decided_at AS decidedAt FROM work_decisions';
+  'SELECT id, decision_type AS decisionType, request_type AS requestType, request_id AS requestId, subject_type AS subjectType, subject_id AS subjectId, subject_version AS subjectVersion, outcome, reason, decider_party_id AS deciderPartyId, authority_type AS authorityType, authority_grant_id AS authorityGrantId, authority_scope_type AS authorityScopeType, authority_scope_id AS authorityScopeId, authority_currency_code AS authorityCurrencyCode, authority_value AS authorityValue, authority_basis AS authorityBasis, approval_policy_rule_id AS approvalPolicyRuleId, approval_policy_version_id AS approvalPolicyVersionId, supersedes_decision_id AS supersedesDecisionId, decided_at AS decidedAt FROM work_decisions';
 
 function now() {
   return new Date().toISOString();
@@ -250,6 +252,9 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
       }
     }
 
+    let approvalPolicyRuleId: string | null = null;
+    let approvalPolicyVersionId: string | null = null;
+
     const hasApprovalPolicy = await hasPublishedApprovalAuthorityPolicy(
       context,
       decisionType,
@@ -277,6 +282,8 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
       if (!requirement) {
         throw new Error('Published Approval Authority policy does not permit this Decision context.');
       }
+      approvalPolicyRuleId = requirement.ruleId;
+      approvalPolicyVersionId = requirement.id;
       if (requirement.requiredAuthorityType !== code(input.authority.type, 'Authority type', 191)) {
         throw new Error(
           'Published Approval Authority policy requires authority type ' +
@@ -307,8 +314,9 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
         (id, tenant_id, decision_type, request_type, request_id, subject_type, subject_id,
          subject_version, outcome, reason, decider_party_id, authority_type, authority_grant_id,
          authority_scope_type, authority_scope_id, authority_currency_code, authority_value,
-         authority_basis, supersedes_decision_id, decided_at, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         authority_basis, approval_policy_rule_id, approval_policy_version_id,
+         supersedes_decision_id, decided_at, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         context.tenantId,
@@ -328,6 +336,8 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
         authority.authorityCurrencyCode,
         authority.authorityValue,
         authority.authorityBasis,
+        approvalPolicyRuleId,
+        approvalPolicyVersionId,
         superseded?.id ?? null,
         timestamp,
         timestamp
@@ -372,6 +382,8 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
           authorityCurrencyCode: authority.authorityCurrencyCode,
           authorityValue: authority.authorityValue,
           authorityBasis: authority.authorityBasis,
+          approvalPolicyRuleId,
+          approvalPolicyVersionId,
           supersedesDecisionId: superseded?.id ?? null
         }
       },

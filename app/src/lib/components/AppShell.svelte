@@ -4,17 +4,21 @@
 
   let { tenantSlug, actorDisplayName, authenticated = false, children } = $props();
 
-  const tenantName = tenantSlug
-    .split('-')
-    .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+  const tenantName = $derived(
+    tenantSlug
+      .split('-')
+      .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ')
+  );
 
-  const initials = actorDisplayName
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part: string) => part[0]?.toUpperCase() ?? '')
-    .join('') || 'U';
+  const initials = $derived(
+    actorDisplayName
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part: string) => part[0]?.toUpperCase() ?? '')
+      .join('') || 'U'
+  );
 </script>
 
 <header class="topbar">

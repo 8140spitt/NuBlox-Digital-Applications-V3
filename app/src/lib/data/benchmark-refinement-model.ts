@@ -9,7 +9,8 @@ export type BenchmarkRefinementKind =
   | 'execution-context'
   | 'definition'
   | 'configuration'
-  | 'accounting-record';
+  | 'accounting-record'
+  | 'child';
 
 export type BenchmarkRefinementDefinition = {
   modelId: string;
@@ -604,6 +605,61 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['calculation run', 'scope', 'planned value', 'earned value', 'actual cost', 'schedule/cost variance', 'SPI/CPI', 'ETC/EAC', 'commitment/exposure', 'forecast cost/value', 'margin', 'installed/budget quantities', 'labour/plant productivity', 'CVR/value position', 'published at'],
     lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
     governance: ['Performance Snapshot is analytical/project-control evidence, not a second cost ledger, progress register or Contract valuation.', 'Earned value and CVR are views over canonical source facts and policies, not independently editable balances.']
+  },
+  {
+    modelId: 'COM-CONTRACT-VALUE-SCHEDULE',
+    originGapIds: ['BG-021'],
+    canonicalName: 'Contract Value Schedule',
+    kind: 'definition',
+    definition: 'Versioned governed breakdown of Contract/commitment value into payable/valued scope lines, supporting schedule-of-values, activity-schedule, bill-of-quantities and equivalent contract-specific pricing structures.',
+    identityRule: 'Stable schedule identity/version under one Contract or commitment; approved versions preserve the agreed pricing/value basis while changes create governed successor/amendment effects.',
+    keyData: ['contract/commitment', 'schedule type', 'currency', 'pricing/accounting method', 'line structure', 'total agreed value', 'effective version', 'approval/amendment basis'],
+    lifecycle: ['Draft', 'Review', 'Approved', 'Effective', 'Amended', 'Superseded', 'Closed'],
+    governance: ['Contract Value Schedule is not WBS, Cost Code, Estimate or Invoice.', 'It may map to WBS/cost classifications while retaining the counterparty-agreed payment/value structure.', 'Approved change updates are explicit and preserve prior versions.']
+  },
+  {
+    modelId: 'COM-CONTRACT-VALUE-LINE',
+    originGapIds: ['BG-021'],
+    canonicalName: 'Contract Value Line',
+    kind: 'child',
+    definition: 'Governed line within a Contract Value Schedule describing priced/value-bearing scope, quantity/unit/value basis and mappings used for valuation or progress payment.',
+    identityRule: 'Stable line identity subordinate to one schedule/version with retained predecessor/successor mapping across amendments.',
+    keyData: ['schedule/version', 'line reference', 'description/scope', 'quantity/UOM', 'rate/unit price', 'value', 'WBS/work package/cost-code mappings', 'retention/payment treatment'],
+    lifecycle: ['Draft', 'Approved', 'Effective', 'Amended/Superseded', 'Closed'],
+    governance: ['Line is contractual/commercial pricing structure and does not become delivery scope or accounting dimension identity.', 'Applications/valuations reference exact line versions used.']
+  },
+  {
+    modelId: 'COM-TARGET-COST-BASELINE',
+    originGapIds: ['BG-022'],
+    canonicalName: 'Target Cost Baseline',
+    kind: 'plan',
+    definition: 'Governed approved target/reference cost or price basis used by target-cost, guaranteed-maximum, alliance or incentive-sharing contract mechanisms.',
+    identityRule: 'Stable baseline/version under an exact Contract and pricing mechanism; approved compensation/change adjustments create traceable successor baselines rather than editing historic target values.',
+    keyData: ['contract', 'pricing mechanism', 'target/reference amount', 'cost/value components', 'currency', 'effective date', 'approved adjustments', 'baseline version', 'authority'],
+    lifecycle: ['Proposed', 'Approved', 'Current', 'Adjusted', 'Superseded', 'Final'],
+    governance: ['Target Cost Baseline is not Budget, Estimate, Actual Cost or Final Account.', 'Changes to target follow the applicable Contract/Commercial Change rules.']
+  },
+  {
+    modelId: 'COM-SHARE-MECHANISM',
+    originGapIds: ['BG-022'],
+    canonicalName: 'Commercial Share Mechanism',
+    kind: 'definition',
+    definition: 'Versioned governed contractual formula for sharing underrun/overrun, gain/pain, incentive or similar financial outcomes between Contract parties.',
+    identityRule: 'Stable mechanism/version referencing exact Contract clauses, target/reference basis, bands, thresholds, caps/floors and party share percentages.',
+    keyData: ['contract/clause', 'mechanism type', 'target/reference basis', 'bands/thresholds', 'party percentages', 'caps/floors', 'excluded/non-recoverable costs', 'effective version'],
+    lifecycle: ['Draft', 'Approved', 'Effective', 'Amended', 'Superseded', 'Closed'],
+    governance: ['Share Mechanism is contractual calculation policy, not a Payment, Invoice or mutable percentage field.', 'Assessments pin the exact mechanism version.']
+  },
+  {
+    modelId: 'COM-SHARE-ASSESSMENT',
+    originGapIds: ['BG-022'],
+    canonicalName: 'Commercial Share Assessment',
+    kind: 'event-evidence',
+    definition: 'Dated attributable assessment calculating gain/pain/incentive sharing under an exact Contract, Target Cost Baseline, Share Mechanism and governed actual/defined-cost/value evidence.',
+    identityRule: 'Immutable assessment occurrence with exact period/final-account scope and source values; corrections or later assessments create successors.',
+    keyData: ['contract', 'assessment period/final context', 'target baseline/version', 'share mechanism/version', 'actual/defined cost basis', 'adjustments/exclusions', 'variance', 'share calculation', 'party outcomes', 'approval/evidence'],
+    lifecycle: ['Calculated', 'Reviewed', 'Agreed/Approved', 'Disputed', 'Superseded/Corrected', 'Final'],
+    governance: ['Share Assessment never rewrites Ledger actuals, Contract terms or Target Cost Baseline.', 'Payment/accounting consequences are explicit downstream records.']
   }
 ];
 
@@ -629,7 +685,10 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R19', from: 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-SCHEDULE-CALCULATION-RUN', governance: 'Analysis pins the exact calculation evidence and scheduling basis.' },
   { id: 'BR-R20', from: 'DEL-RISK-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-RISK-SIMULATION-RUN', governance: 'Probabilistic outcome snapshot pins the exact risk simulation evidence and assumptions.' },
   { id: 'BR-R21', from: 'DEL-PROJECT-PERFORMANCE-SNAPSHOT', predicate: 'derives from', to: 'DEL-PERFORMANCE-CALCULATION-RUN', governance: 'Published performance pins the exact calculation run and source versions.' },
-  { id: 'BR-R22', from: 'DEL-PERFORMANCE-CALCULATION-RUN', predicate: 'uses', to: 'DEL-PROGRESS-MEASUREMENT-METHOD', governance: 'Performance calculation pins the exact approved progress-measurement method version.' }
+  { id: 'BR-R22', from: 'DEL-PERFORMANCE-CALCULATION-RUN', predicate: 'uses', to: 'DEL-PROGRESS-MEASUREMENT-METHOD', governance: 'Performance calculation pins the exact approved progress-measurement method version.' },
+  { id: 'BR-R23', from: 'COM-CONTRACT-VALUE-LINE', predicate: 'belongs to', to: 'COM-CONTRACT-VALUE-SCHEDULE', governance: 'Value lines remain subordinate to the agreed contract pricing schedule/version.' },
+  { id: 'BR-R24', from: 'COM-SHARE-ASSESSMENT', predicate: 'uses', to: 'COM-TARGET-COST-BASELINE', governance: 'Assessment pins the exact approved target baseline/version.' },
+  { id: 'BR-R25', from: 'COM-SHARE-ASSESSMENT', predicate: 'uses', to: 'COM-SHARE-MECHANISM', governance: 'Assessment pins the exact contractual share formula/version.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -648,7 +707,9 @@ export const benchmarkRefinementRules = [
   'Lease accounting records financial consequences without replacing Lease, Contract, Property or physical Asset identity.',
   'CPM dates, float and critical-path status are reproducible schedule projections derived from explicit calendars, network logic and calculation evidence.',
   'Quantitative project-risk results are reproducible analysis evidence derived from explicit risk, schedule, cost, uncertainty and method inputs; they never replace source risk or plan truth.',
-  'Earned value, productivity, EAC and CVR-style project-control positions are reproducible projections over governed progress, budget, commercial and accounting truth; reports never become a shadow cost ledger.'
+  'Earned value, productivity, EAC and CVR-style project-control positions are reproducible projections over governed progress, budget, commercial and accounting truth; reports never become a shadow cost ledger.',
+  'Contract value/payment breakdowns remain commercial structures mapped to delivery and cost classifications; they never become WBS or finance masters.',
+  'Target-cost and gain/pain sharing preserve approved target baselines, formula versions and assessment evidence without rewriting actual cost or Contract truth.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -656,7 +717,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019', 'BG-020', 'BG-021', 'BG-022']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

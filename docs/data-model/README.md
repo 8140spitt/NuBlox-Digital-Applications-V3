@@ -26,6 +26,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `reference-configuration-semantics.md` — governed reference data, classification, jurisdiction, lifecycle/workflow configuration, permission/authority policy and retention-policy semantics.
 - `crm-business-development-semantics.md` — governed market, CRM, Lead, Opportunity, Pursuit, interaction, onboarding and customer-case semantics.
 - `estimating-tendering-semantics.md` — governed Estimate/version, breakdown, measurement, build-up/rate, provision, tender-package, adjudication, proposal/quotation and offer-acceptance semantics.
+- `people-hcm-semantics.md` — governed Person/Worker Relationship, Position/Job Profile, competence/credential, learning, workforce, time, payroll, recruitment and people-case semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -51,6 +52,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Take-off and measurement retain exact information-source provenance; build-ups reference shared Items/resources and applied rates retain historical basis.
 - Estimating supplier/subcontract market testing reuses shared sourcing semantics; Tender Adjudication remains a separate internal bid decision.
 - Proposal/Quotation and Offer Acceptance are separate from internal Estimate truth and from downstream Contract, Sales Order and Project identities.
+- Candidate, employee and contractor contexts reuse canonical Person identity; employment/engagement are effective Worker Relationships.
+- Position, Job Profile and Role Assignment remain distinct; organisation occupancy/reporting history is effective-dated.
+- Skill/Competence definitions, Person Competence, Credentials, Training Sessions and Learning Records remain distinct evidence layers.
+- Worker Availability is derived; Attendance, Time Entry, Timesheet and Payroll Result are separate truth layers.
+- Payroll/expense financial consequences post through Finance without turning finance into the worker, time or payroll master.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

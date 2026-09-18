@@ -6,7 +6,7 @@
   import { f01Workspace } from '$lib/workspaces/f01';
 
   let { data } = $props();
-  const baseHref = `/${data.tenantSlug}/app/functions/f01`;
+  const baseHref = $derived(`/${data.tenantSlug}/app/functions/f01`);
 </script>
 
 <svelte:head>

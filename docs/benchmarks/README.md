@@ -8,9 +8,13 @@ The purpose is **enterprise and built-environment completeness**, not vendor imi
 
 - `market-benchmark-programme.md` — benchmark scope, method, product set and evidence rules.
 - `sap-capability-coverage-register.csv` — the 64-line SAP benchmark register carried forward from the prior NuBlox programme as provenance. Its legacy NuBlox domain/slice columns are not V3 architecture.
-- `sap-v3-capability-map.csv` — governed 64/64 V3 remap to F01–F29 workspaces, canonical object families/concepts and end-to-end chains. Remapping does not itself close the capability challenge.
+- `sap-v3-capability-map.csv` — governed 64/64 V3 remap and completed SAP architecture-challenge classification across F01–F29 workspaces, canonical object families/concepts and end-to-end chains.
 - `app/src/lib/generated/sap-v3-benchmark-map.json` — machine-readable form of the SAP V3 remap.
 - `app/src/lib/data/sap-v3-benchmark-audit.ts` — invariant proving every SAP row has valid V3 semantic mappings.
+- `sap-wave-1-enterprise-backbone.md` — detailed current-SAP challenge for the first 39 rows.
+- `sap-wave-2-specialist-industry-experience.md` — detailed current-SAP challenge for the remaining 25 rows.
+- `app/src/lib/data/benchmark-gap-register.ts` — governed architecture decisions arising from benchmark findings.
+- `app/src/lib/data/benchmark-refinement-model.ts` — durable core semantics accepted from benchmark evidence.
 - `app/src/lib/data/external-benchmark-register.ts` — machine-checkable V3 benchmark registry mapped to the 29 tenant workspaces.
 - `app/src/lib/data/external-benchmark-register.test.ts` — regression gate proving benchmark breadth and 29-workspace coverage.
 

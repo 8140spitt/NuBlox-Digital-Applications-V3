@@ -27,6 +27,7 @@ import { transformationProcessImprovementCanonicalization } from './transformati
 import { siteFieldOperationsCanonicalization } from './site-field-operations-canonicalization';
 import { marketBenchmarkSummary } from './external-benchmark-register';
 import { canonicalAggregateFreezeSummary } from './canonical-aggregate-boundary-register';
+import { activityObjectActionSummary } from './activity-object-action-mapping';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -184,6 +185,7 @@ export const coverageAuditSummary = {
   coveredProcessChainCount: processCoverage.size,
   specialistOverlayCount: specialistOverlays.length,
   aggregateFreeze: canonicalAggregateFreezeSummary,
+  activityMapping: activityObjectActionSummary,
   coveredSpecialistOverlayCount: overlayCoverage.size,
   externalBenchmark: {
     name: 'Multi-vendor market benchmark programme',
@@ -227,5 +229,13 @@ export function validateCanonicalCoverageAudit() {
   if (coverageAuditSummary.aggregateFreeze.state !== 'frozen') return false;
   if (coverageAuditSummary.aggregateFreeze.frozenFamilyCount !== 29) return false;
   if (coverageAuditSummary.aggregateFreeze.benchmarkRefinementsAssigned !== coverageAuditSummary.aggregateFreeze.benchmarkRefinementCount) return false;
+  if (coverageAuditSummary.activityMapping.state !== 'mapped') return false;
+  if (coverageAuditSummary.activityMapping.mappedFunctionCount !== 29) return false;
+  if (coverageAuditSummary.activityMapping.mappedSubfunctionCount !== 353) return false;
+  if (coverageAuditSummary.activityMapping.mappedActivityCount !== 1510) return false;
+  if (coverageAuditSummary.activityMapping.unmappedSubfunctionCount !== 0) return false;
+  if (coverageAuditSummary.activityMapping.ambiguousSubfunctionCount !== 0) return false;
+  if (coverageAuditSummary.activityMapping.invalidObjectModelRouteCount !== 0) return false;
+  if (coverageAuditSummary.activityMapping.invalidAggregateRouteCount !== 0) return false;
   return true;
 }

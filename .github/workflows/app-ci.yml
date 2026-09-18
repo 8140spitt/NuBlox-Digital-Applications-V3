@@ -52,14 +52,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Validate migration architecture
+        run: pnpm db:validate
+
       - name: Apply test database migrations
         run: pnpm db:migrate:test
 
       - name: Verify migration ledger
         run: pnpm db:status:test
 
-      - name: MySQL integration tests
-        run: pnpm test:integration
+      - name: Clean-database migration and service tests
+        run: pnpm test:migrations
 
       - name: Domain and architecture tests
         run: pnpm test:domain

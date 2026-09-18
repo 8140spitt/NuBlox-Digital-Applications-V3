@@ -23,6 +23,8 @@ describe('L2/L3 activity to canonical object/action mapping', () => {
 
   it('routes every L2 rule to a frozen aggregate and every activity to a canonical object focus', () => {
     expect(activityObjectActionSummary.invalidAggregateRouteCount).toBe(0);
+    expect(activityObjectActionSummary.invalidObjectPlacementCount).toBe(0);
+    expect(activityObjectActionSummary.unsafeProjectionCommandCount).toBe(0);
     expect(activityObjectActionSummary.invalidObjectModelRouteCount).toBe(0);
     expect(activityObjectActionSummary.ambiguousSubfunctionCount).toBe(0);
     expect(l2AggregateRoutes.length).toBeGreaterThanOrEqual(150);

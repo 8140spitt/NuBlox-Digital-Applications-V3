@@ -12,6 +12,7 @@ import { sharedWorkEvidenceCanonicalization } from './shared-work-evidence-canon
 import { referenceConfigurationCanonicalization } from './reference-configuration-canonicalization';
 import { crmBusinessDevelopmentCanonicalization } from './crm-business-development-canonicalization';
 import { estimatingTenderingCanonicalization } from './estimating-tendering-canonicalization';
+import { peopleHcmCanonicalization } from './people-hcm-canonicalization';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -77,7 +78,7 @@ export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
   { id: 'BOF-15', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F13','F22','F27'], lifecycleStages: ['Construct','Control','Handover','Operate'], processChains: ['commissioning-to-operation'], overlays: ['engineering','contracting','trades','infrastructure','property-fm','regulation'], note: 'Commissioning, acceptance and handover semantics are governed around persistent System/Asset identity.' },
   { id: 'BOF-16', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F14','F22','F23','F27'], lifecycleStages: ['Design','Construct','Handover','Operate','Maintain','Refurbish','Dispose'], processChains: ['commissioning-to-operation','asset-to-retirement'], overlays: ['development','design','engineering','infrastructure','property-fm','retrofit','heritage'], note: 'Built-environment spatial and physical identity model is governed.' },
   { id: 'BOF-17', semanticModelState: 'governed-semantic-model', workspaces: ['F08','F12','F22','F23'], lifecycleStages: ['Operate','Maintain','Refurbish','Dispose'], processChains: ['service-request-to-resolution','asset-to-retirement','incident/defect/NCR-to-resolution'], overlays: ['property-fm','infrastructure','retrofit','regulation'], note: 'Maintenance, service, warranty, condition and whole-life history semantics are governed.' },
-  { id: 'BOF-18', semanticModelState: 'candidate-only', workspaces: ['F15','F27'], lifecycleStages: ['Plan','Construct','Operate','Maintain'], processChains: ['hire-to-retire'], overlays: ['contracting','trades','manufacturing','infrastructure','property-fm'], note: 'HCM, competence, time, payroll and expenses remain a convergence gap.' },
+  { id: 'BOF-18', semanticModelState: 'governed-semantic-model', workspaces: ['F15','F27'], lifecycleStages: ['Plan','Construct','Operate','Maintain'], processChains: ['hire-to-retire'], overlays: ['contracting','trades','manufacturing','infrastructure','property-fm'], note: 'Person/worker relationship, position/job, competence/credential, learning, workforce planning, time, payroll, recruitment and employee-case semantics are governed.' },
   { id: 'BOF-19', semanticModelState: 'governed-semantic-model', workspaces: ['F03','F07','F09','F14','F27'], lifecycleStages: ['Estimate','Quote','Contract','Procure','Produce','Construct','Control','Invoice','Account','Operate','Maintain','Dispose'], processChains: ['estimate-to-project-control','procure-to-pay','change-to-commercial-position','valuation-to-cash','supplier-progress-to-payment','record-to-report'], overlays: ['development','commercial-management','contracting','manufacturing','infrastructure','property-fm'], note: 'Finance, accounting, tax, treasury and project financial-control semantics are governed.' },
   { id: 'BOF-20', semanticModelState: 'candidate-only', workspaces: ['F03','F09','F14','F22','F23','F27'], lifecycleStages: ['Estimate','Design','Procure','Produce','Construct','Control','Handover','Operate','Maintain','Refurbish','Dispose'], processChains: ['asset-to-retirement','record-to-report'], overlays: ['development','design','engineering','manufacturing','infrastructure','property-fm','retrofit','regulation'], note: 'Sustainability, carbon, energy, circularity and social-value family remains to be canonicalized.' },
   { id: 'BOF-21', semanticModelState: 'candidate-only', workspaces: ['F02','F03','F13','F20','F29'], lifecycleStages: ['Plan','Procure','Construct','Control','Operate'], processChains: ['incident/defect/NCR-to-resolution','record-to-report'], overlays: ['commercial-management','contracting','manufacturing','infrastructure','property-fm','regulation'], note: 'Enterprise risk, compliance, control and audit family remains to be canonicalized.' },
@@ -103,7 +104,8 @@ export const governedCanonicalizationDecisions = [
   ...sharedWorkEvidenceCanonicalization,
   ...referenceConfigurationCanonicalization,
   ...crmBusinessDevelopmentCanonicalization,
-  ...estimatingTenderingCanonicalization
+  ...estimatingTenderingCanonicalization,
+  ...peopleHcmCanonicalization
 ];
 
 const decisionKeys = new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey));

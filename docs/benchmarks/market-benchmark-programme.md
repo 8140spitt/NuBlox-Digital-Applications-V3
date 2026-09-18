@@ -100,7 +100,7 @@ Each benchmark study must produce a version-controlled record containing:
 
 ## Benchmark waves
 
-### Wave 1 — Enterprise backbone — SAP complete, wider suite challenge next
+### Wave 1 — Enterprise backbone — architecture challenge complete
 
 SAP, Oracle, Microsoft, IFS, Workday.
 
@@ -116,7 +116,7 @@ Challenge:
 - master/reference data;
 - enterprise controls and analytics.
 
-### Wave 2 — Project and construction delivery
+### Wave 2 — Project and construction delivery — architecture challenge complete
 
 Oracle Construction & Engineering, Procore, Autodesk, Trimble, Hexagon EcoSys, Causeway, Thinkproject, Asite.
 
@@ -229,3 +229,37 @@ The SAP pass produced core semantic refinements for integrated planning, treasur
 It also explicitly kept usage/subscription billing, public-sector funds management, global-trade compliance depth, sales incentive compensation and merchant/retail/POS mechanics as **contextual extensions** rather than universal core architecture.
 
 This closes SAP as an architectural challenge source. It does **not** claim that all SAP-equivalent runtime features or user journeys are implemented in NuBlox.
+
+
+## Enterprise and construction wave completion — 18 September 2026
+
+The architecture challenge has now been completed for:
+
+- SAP;
+- Oracle Fusion Cloud + Oracle Construction & Engineering;
+- Microsoft Dynamics 365;
+- IFS Cloud;
+- Workday;
+- Procore;
+- Autodesk Construction Cloud / Forma;
+- Trimble Construction One / Viewpoint Vista;
+- Hexagon EcoSys;
+- Causeway;
+- Thinkproject / CEMAR;
+- Asite.
+
+Current programme state:
+
+- **12/23** benchmark products/suites challenged;
+- **1/23** in progress — PTC Windchill deep semantic study;
+- **10/23** queued;
+- all **29/29** workspaces remain represented by the benchmark portfolio;
+- all benchmark gaps identified so far are governed and resolved architecturally;
+- runtime parity is not claimed.
+
+Wave 2 produced additional construction-grade refinements for CPM scheduling, quantitative project risk, reproducible EVM/CVR/productivity analysis, contract value schedules and target-cost share mechanisms.
+
+Detailed records:
+
+- `enterprise-suite-wave-1-oracle-microsoft-ifs-workday.md`;
+- `construction-delivery-wave.md`.

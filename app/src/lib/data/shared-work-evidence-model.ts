@@ -173,7 +173,7 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
   ),
   def(
     'WORK-DECISION',
-    [],
+    ['BOF-06-023', 'BOF-02-016'],
     'Decision',
     'decision-evidence',
     'Immutable attributable outcome resolving an Approval Request, Decision Request or other governed decision point.',
@@ -188,7 +188,7 @@ export const sharedWorkEvidenceModel: SharedWorkEvidenceDefinition[] = [
   ),
   def(
     'WORK-FOLLOW-UP-ACTION',
-    [],
+    ['BOF-06-024', 'BOF-02-017'],
     'Decision Action',
     'work',
     'Action/obligation created by a Decision, review outcome, audit finding or other governed event.',

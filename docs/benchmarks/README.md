@@ -15,6 +15,8 @@ The purpose is **enterprise and built-environment completeness**, not vendor imi
 - `sap-wave-2-specialist-industry-experience.md` — detailed current-SAP challenge for the remaining 25 rows.
 - `app/src/lib/data/benchmark-gap-register.ts` — governed architecture decisions arising from benchmark findings.
 - `app/src/lib/data/benchmark-refinement-model.ts` — durable core semantics accepted from benchmark evidence.
+- `enterprise-suite-wave-1-oracle-microsoft-ifs-workday.md` — enterprise-suite architecture challenge after SAP.
+- `construction-delivery-wave.md` — construction-native challenge across Procore, Autodesk, Trimble, EcoSys, Causeway, Thinkproject and Asite.
 - `app/src/lib/data/external-benchmark-register.ts` — machine-checkable V3 benchmark registry mapped to the 29 tenant workspaces.
 - `app/src/lib/data/external-benchmark-register.test.ts` — regression gate proving benchmark breadth and 29-workspace coverage.
 

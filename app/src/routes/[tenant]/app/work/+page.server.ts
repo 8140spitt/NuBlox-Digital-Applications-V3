@@ -5,7 +5,7 @@ import {
   completeWorkItem,
   escalateWorkItem,
   listMyWork,
-  listWorkEscalations,
+  listMyWorkEscalations,
   resolveWorkEscalation,
   startWorkItem
 } from '$lib/server/shared-work';
@@ -37,7 +37,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const [work, escalations] = await Promise.all([
     listMyWork(context),
-    listWorkEscalations(context)
+    listMyWorkEscalations(context)
   ]);
   return {
     tenantSlug: params.tenant,

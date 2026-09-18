@@ -11,9 +11,9 @@ describe('external market benchmark register', () => {
     expect(marketBenchmarkSummary.workspaceCount).toBe(29);
     expect(marketBenchmarkSummary.coveredWorkspaceCount).toBe(29);
     expect(marketBenchmarkSummary.benchmarkCount).toBeGreaterThanOrEqual(23);
-    expect(marketBenchmarkSummary.challengedBenchmarkCount).toBe(15);
+    expect(marketBenchmarkSummary.challengedBenchmarkCount).toBe(18);
     expect(marketBenchmarkSummary.inProgressBenchmarkCount).toBe(0);
-    expect(marketBenchmarkSummary.registeredBenchmarkCount).toBe(8);
+    expect(marketBenchmarkSummary.registeredBenchmarkCount).toBe(5);
   });
 
   it('retains SAP as an enterprise completeness benchmark without making SAP the architecture', () => {
@@ -24,8 +24,8 @@ describe('external market benchmark register', () => {
     expect(marketBenchmarkSummary.sapV3MappedRows).toBe(64);
     expect(marketBenchmarkSummary.sapV3ChallengedRows).toBe(64);
     expect(marketBenchmarkSummary.sapV3ClosedRows).toBe(0);
-    expect(marketBenchmarkSummary.benchmarkGapCount).toBe(24);
-    expect(marketBenchmarkSummary.benchmarkGapResolvedCount).toBe(24);
+    expect(marketBenchmarkSummary.benchmarkGapCount).toBe(27);
+    expect(marketBenchmarkSummary.benchmarkGapResolvedCount).toBe(27);
     expect(marketBenchmarkSummary.benchmarkGapOpenCount).toBe(0);
     expect(marketBenchmarkSummary.rule).toContain('vendor module boundaries never become automatic NuBlox architecture');
   });
@@ -33,7 +33,7 @@ describe('external market benchmark register', () => {
   it('covers enterprise suites and construction/asset specialist depth', () => {
     const ids = new Set(externalBenchmarkRegister.map((entry) => entry.id));
     const states = new Map(externalBenchmarkRegister.map((entry) => [entry.id, entry.studyState]));
-    for (const id of ['SAP-BUSINESS-SUITE', 'ORACLE-CLOUD-CX', 'MICROSOFT-D365', 'IFS-CLOUD', 'WORKDAY', 'PROCORE', 'AUTODESK-CONSTRUCTION', 'TRIMBLE-CONSTRUCTION-ONE', 'HEXAGON-ECOSYS', 'CAUSEWAY', 'THINKPROJECT', 'ASITE-CDE', 'PTC-WINDCHILL', 'SIEMENS-TEAMCENTER', 'BENTLEY-PROJECTWISE-ITWIN']) {
+    for (const id of ['SAP-BUSINESS-SUITE', 'ORACLE-CLOUD-CX', 'MICROSOFT-D365', 'IFS-CLOUD', 'WORKDAY', 'PROCORE', 'AUTODESK-CONSTRUCTION', 'TRIMBLE-CONSTRUCTION-ONE', 'HEXAGON-ECOSYS', 'CAUSEWAY', 'THINKPROJECT', 'ASITE-CDE', 'PTC-WINDCHILL', 'SIEMENS-TEAMCENTER', 'BENTLEY-PROJECTWISE-ITWIN', 'IBM-MAXIMO', 'PLANON-IWMS', 'ESRI-ARCGIS']) {
       expect(states.get(id)).toBe('challenged');
     }
     for (const id of [

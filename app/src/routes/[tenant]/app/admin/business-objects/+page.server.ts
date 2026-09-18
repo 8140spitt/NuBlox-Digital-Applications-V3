@@ -9,12 +9,13 @@ import {
   seedFoundationCanonicalization,
   type BusinessObjectReviewDecision
 } from '$lib/server/business-object-review';
+import { resolveDevelopmentCommandContext } from '$lib/server/platform-context';
 import type { Actions, PageServerLoad } from './$types';
 
-const actor = 'Development User';
 
-export const load: PageServerLoad = ({ url, params }) => {
-  seedFoundationCanonicalization(params.tenant);
+export const load: PageServerLoad = async ({ url, params }) => {
+  await resolveDevelopmentCommandContext(params.tenant);
+  await seedFoundationCanonicalization(params.tenant);
 
   const q = (url.searchParams.get('q') ?? '').trim();
   const family = url.searchParams.get('family') ?? '';
@@ -22,7 +23,7 @@ export const load: PageServerLoad = ({ url, params }) => {
   const review = url.searchParams.get('review') ?? '';
   const selectedKey = url.searchParams.get('object') ?? '';
   const duplicateNames = new Set(register.duplicates.map((item) => item.canonical_name.toLowerCase()));
-  const reviews = listBusinessObjectReviews();
+  const reviews = await listBusinessObjectReviews();
   const reviewMap = new Map(reviews.map((item) => [item.candidateKey, item]));
 
   let filtered = register.objects.filter((object) => {
@@ -57,8 +58,8 @@ export const load: PageServerLoad = ({ url, params }) => {
   const duplicate = selected
     ? register.duplicates.find((item) => item.canonical_name.toLowerCase() === selected.canonical_name.toLowerCase()) ?? null
     : null;
-  const selectedReview = selected ? getBusinessObjectReview(selected.candidate_key) : null;
-  const reviewEvents = selected ? listBusinessObjectReviewEvents(selected.candidate_key) : [];
+  const selectedReview = selected ? await getBusinessObjectReview(selected.candidate_key) : null;
+  const reviewEvents = selected ? await listBusinessObjectReviewEvents(selected.candidate_key) : [];
 
   return {
     tenantSlug: params.tenant,
@@ -103,7 +104,8 @@ export const actions: Actions = {
     }
 
     try {
-      saveBusinessObjectReview(candidateKey, { decision, proposedCanonicalName, targetCandidateKey, notes }, actor, params.tenant);
+      const context = await resolveDevelopmentCommandContext(params.tenant);
+      await saveBusinessObjectReview(candidateKey, { decision, proposedCanonicalName, targetCandidateKey, notes }, context.actorDisplayName, params.tenant);
     } catch (error) {
       return fail(400, { message: error instanceof Error ? error.message : 'Unable to save review decision.' });
     }

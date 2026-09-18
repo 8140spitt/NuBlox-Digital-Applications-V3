@@ -255,18 +255,6 @@ export const inventoryLogisticsModel: InventoryLogisticsDefinition[] = [
     governance: ['Site Logistics Booking is not an Asset or Site master; it consumes canonical Site and logistics identities.']
   },
   {
-    modelId: 'LOG-CALLOFF',
-    candidateKeys: ['BOF-10-035'],
-    canonicalName: 'Call-off',
-    kind: 'transaction',
-    definition: 'A governed release of quantity/service under an existing framework, contract or blanket commitment.',
-    identityRule: 'Stable Call-off identity linked to its governing agreement/commitment; it never becomes a duplicate Contract or Purchase Order master.',
-    scope: ['contract/framework', 'purchase order/commitment', 'project/site demand'],
-    keyData: ['call-off number', 'governing agreement', 'Item/service', 'quantity/UOM', 'required date/location'],
-    lifecycle: ['Draft', 'Released', 'Acknowledged', 'Partially Fulfilled', 'Fulfilled', 'Cancelled'],
-    governance: ['Call-off consumes existing commercial authority and preserves linkage to the agreement/commitment that authorises it.']
-  },
-  {
     modelId: 'LOG-TRADE-DECLARATION',
     candidateKeys: ['BOF-10-036', 'BOF-10-037', 'BOF-10-038'],
     canonicalName: 'Trade Declaration',
@@ -320,6 +308,7 @@ export const inventoryLogisticsRules = [
   'Pick, Pack, Shipment, Transport Order and Delivery are distinct execution/evidence records.',
   'Delivery evidence is distinct from procurement/financial Goods Receipt where those semantics are required.',
   'Lot, Batch and Serial identities preserve provenance across inventory and logistics.',
+  'Call-off Order is commercial/procurement truth owned by the procurement model; logistics consumes it as demand/fulfilment context and never creates a second call-off master.',
   'Import and Export declarations use one governed Trade Declaration pattern with jurisdictional type/configuration.'
 ];
 

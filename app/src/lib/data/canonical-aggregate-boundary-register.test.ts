@@ -12,7 +12,7 @@ describe('canonical aggregate-boundary freeze', () => {
     expect(validateCanonicalAggregateBoundaryFreeze()).toBe(true);
     expect(canonicalAggregateFreezeSummary.familyCount).toBe(29);
     expect(canonicalAggregateFreezeSummary.frozenFamilyCount).toBe(29);
-    expect(canonicalAggregateFreezeSummary.aggregateBoundaryCount).toBeGreaterThanOrEqual(70);
+    expect(canonicalAggregateFreezeSummary.aggregateBoundaryCount).toBe(174);
     expect(canonicalAggregateFreezeSummary.frozenAggregateBoundaryCount).toBe(canonicalAggregateFreezeSummary.aggregateBoundaryCount);
     expect(canonicalAggregateFreezeSummary.state).toBe('frozen');
   });

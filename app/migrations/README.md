@@ -55,8 +55,11 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0005_tenant_version.sql` — monotonic aggregate versioning for AGG-01-TENANT authority/configuration changes.
 - `0006_authentication.sql` — Better Auth users, sessions, accounts and verification persistence, kept separate from NuBlox business authority.
 - `0007_foundation_relationship_structure_authority.sql` — Party Relationships, Organisation Units/effective hierarchy and Delegated Authority aggregates.
+- `0008_shared_work_runtime.sql` — AGG-27-WORKFLOW runtime for workflow instances, Work Items, assignments, acknowledgements, escalation and governed work-change evidence.
+- `0009_authorised_decision_runtime.sql` — immutable AGG-27-DECISION records with exact subject/version and authority evidence.
+- `0010_governed_evidence_runtime.sql` — AGG-28-EVIDENCE items with integrity hashes, source references, provenance and independent verification.
 
-Future schema changes start at `0008_...`; historical migrations remain immutable.
+Future schema changes start at `0011_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 

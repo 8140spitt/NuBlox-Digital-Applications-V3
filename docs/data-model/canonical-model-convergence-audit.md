@@ -144,7 +144,7 @@ Therefore the present family-level maturity split is:
 29 total families
 ```
 
-This closes the family-level semantic-convergence backlog. It does **not** by itself mean every one of the 750 candidate occurrences has an individual decision, that physical aggregates/APIs are approved, or that benchmark/standards challenge is complete. Those gates remain separately measured.
+This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Physical aggregates/APIs are still not approved until duplicate/alias convergence, benchmark/standards challenge and aggregate-boundary freeze are complete.
 
 ## Candidate decision coverage
 
@@ -160,7 +160,18 @@ The audit deduplicates candidate keys and calculates, per family:
 - undecided candidate count;
 - decision coverage percentage.
 
-This means the percentage cannot be raised by editing presentation copy. A new baseline decision must exist against a real candidate key in the generated register.
+This means the percentage cannot be raised by editing presentation copy. A baseline decision must exist against a real candidate key in the generated register.
+
+Current candidate-level result:
+
+```text
+750 candidate occurrences
+750 governed baseline decisions
+  0 undecided candidates
+100% decision coverage
+```
+
+The validation function and automated test now treat 750/750 decision coverage as an architecture invariant. A future candidate added to the register without a corresponding governed decision will fail the convergence audit.
 
 ## Architecture gate
 
@@ -189,14 +200,15 @@ Before a family can be treated as physically authoritative, it must have:
 
 The **family-level convergence queue is closed**.
 
+Candidate-level convergence is now also closed at **750/750 decisions**.
+
 The next architecture gates are:
 
 ```text
-1. Close remaining individual candidate decisions across the 750-source register
-2. Re-run duplicate/alias convergence across all families
-3. Complete the external benchmark / standards challenge
-4. Freeze the canonical aggregate boundaries
-5. Only then approve physical schema / API implementation waves
+1. Re-run duplicate/alias convergence across all 29 families
+2. Complete the external benchmark / standards challenge
+3. Freeze the canonical aggregate boundaries
+4. Only then approve physical schema / API implementation waves
 ```
 
-The audit must continue to expose residual candidate-decision gaps and benchmark status even though all 29 family semantic architectures are governed.
+The audit must continue to expose benchmark status and must fail if candidate decision coverage ever drops below 100%.

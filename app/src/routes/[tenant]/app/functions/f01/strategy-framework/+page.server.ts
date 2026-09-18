@@ -13,7 +13,7 @@ import {
   updateStrategyFramework,
   type StrategyFrameworkInput
 } from '$lib/server/strategy-framework';
-import { resolveDevelopmentCommandContext } from '$lib/server/platform-context';
+import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 
 function text(data: FormData, name: string) {
   const value = data.get(name);
@@ -40,7 +40,7 @@ function problem(error: unknown) {
 }
 
 export const load: PageServerLoad = async ({ params, url }) => {
-  const context = await resolveDevelopmentCommandContext(params.tenant);
+  const context = await resolveRequestCommandContext(params.tenant, locals);
   const frameworks = await listStrategyFrameworks(context);
   const requestedId = url.searchParams.get('framework');
   const selected = frameworks.find((item) => item.id === requestedId) ?? frameworks[0] ?? null;
@@ -53,9 +53,9 @@ export const load: PageServerLoad = async ({ params, url }) => {
 };
 
 export const actions: Actions = {
-  create: async ({ request, params }) => {
+  create: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     let id: string;
     try {
       id = await createStrategyFramework(context, input(data));
@@ -64,9 +64,9 @@ export const actions: Actions = {
     }
     redirect(303, target(params.tenant, id));
   },
-  save: async ({ request, params }) => {
+  save: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
       await updateStrategyFramework(context, id, input(data));
@@ -75,9 +75,9 @@ export const actions: Actions = {
     }
     redirect(303, target(params.tenant, id));
   },
-  submit: async ({ request, params }) => {
+  submit: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
       await submitStrategyFramework(context, id);
@@ -86,9 +86,9 @@ export const actions: Actions = {
     }
     redirect(303, target(params.tenant, id));
   },
-  return: async ({ request, params }) => {
+  return: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
       await returnStrategyFramework(context, id, text(data, 'note'));
@@ -97,9 +97,9 @@ export const actions: Actions = {
     }
     redirect(303, target(params.tenant, id));
   },
-  approve: async ({ request, params }) => {
+  approve: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
       await approveStrategyFramework(context, id, text(data, 'note'));
@@ -108,9 +108,9 @@ export const actions: Actions = {
     }
     redirect(303, target(params.tenant, id));
   },
-  reject: async ({ request, params }) => {
+  reject: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
       await rejectStrategyFramework(context, id, text(data, 'note'));
@@ -119,9 +119,9 @@ export const actions: Actions = {
     }
     redirect(303, target(params.tenant, id));
   },
-  publish: async ({ request, params }) => {
+  publish: async ({ request, params, locals }) => {
     const data = await request.formData();
-    const context = await resolveDevelopmentCommandContext(params.tenant);
+    const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
       await publishStrategyFramework(context, id, text(data, 'note'));

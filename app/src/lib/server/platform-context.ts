@@ -269,6 +269,24 @@ export const platformPermissions = [
     'strategy.objective',
     'approve',
     'Approve, activate and close governed Strategic Objectives.'
+  ],
+  [
+    'strategy.plan.read',
+    'strategy.plan',
+    'read',
+    'Read governed Business Plans and immutable plan versions.'
+  ],
+  [
+    'strategy.plan.manage',
+    'strategy.plan',
+    'manage',
+    'Create, revise and submit Business Plans with exact planning-basis references.'
+  ],
+  [
+    'strategy.plan.approve',
+    'strategy.plan',
+    'approve',
+    'Approve, activate and close governed Business Plans.'
   ]
 ] as const;
 

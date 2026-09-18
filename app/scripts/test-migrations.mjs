@@ -51,6 +51,7 @@ function runServiceTests() {
         'src/lib/server/strategy-framework.test.ts',
         'src/lib/server/strategic-assumption.test.ts',
         'src/lib/server/strategic-objective.test.ts',
+        'src/lib/server/business-plan.test.ts',
         'src/lib/server/business-object-review.test.ts',
         '--fileParallelism=false',
         '--maxWorkers=1'

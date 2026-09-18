@@ -80,7 +80,8 @@ export const f01Workspace = {
         'Initiatives',
         'Benefits',
         'Approval'
-      ]
+      ],
+      path: 'business-plans'
     },
     {
       id: 'F01.05',

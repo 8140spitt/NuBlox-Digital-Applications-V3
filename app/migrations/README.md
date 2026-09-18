@@ -67,7 +67,7 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0020_...`; historical migrations remain immutable.
+Future schema changes start at `0021_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -127,3 +127,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0019 — strategic objective runtime
 
 `0019_strategic_objective_runtime.sql` implements `AGG-02-OBJECTIVE` for F01.03 Strategic Planning. Each Strategic Objective has a stable identity, immutable content versions, accountable owner, scope/horizon/success criteria and an exact reference to the published Strategy Framework version it supports. Objective lifecycle changes remain independent from Strategy Framework publication and future KPI/target aggregates.
+
+
+## Migration 0020 — Business Plan runtime
+
+`0020_business_plan_runtime.sql` implements F01.04 Business Planning as a governed `SGP-BUSINESS-PLAN` identity under the existing `AGG-02-STRATEGY` boundary. Every immutable plan version pins exact published Strategy Framework context, exact Strategic Objective versions and exact Strategic Assumption versions. Approval retains immutable `AGG-27-DECISION` evidence; activating a successor version supersedes the previous current baseline without rewriting it. Financial/resource expectations remain planning semantics, not Budget or Forecast truth.

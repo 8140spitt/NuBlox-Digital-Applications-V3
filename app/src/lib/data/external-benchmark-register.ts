@@ -246,6 +246,18 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     notes: 'Specialist benchmark for capital/project controls and enterprise portfolio performance.'
   },
   {
+    id: 'ESRI-ARCGIS',
+    provider: 'Esri',
+    product: 'ArcGIS / Field Maps / GeoBIM',
+    tier: 'specialist-depth',
+    category: ['gis','field-mobility','asset-network','infrastructure','geospatial'],
+    workspaces: ['F10','F12','F17','F22','F23','F27'],
+    studyState: 'registered',
+    officialSource: 'https://www.esri.com/en-us/industries/infrastructure-management',
+    challengeFocus: ['geospatial master/context','linear/network assets','field capture','inspection','location-aware work','GIS-BIM continuity'],
+    notes: 'Geospatial/infrastructure benchmark so NuBlox treats location, networks and field evidence as first-class semantics rather than map attachments.'
+  },
+  {
     id: 'PLANON-IWMS',
     provider: 'Planon',
     product: 'Planon Integrated Workplace Management',

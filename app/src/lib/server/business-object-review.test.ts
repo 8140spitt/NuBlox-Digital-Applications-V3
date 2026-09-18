@@ -331,6 +331,26 @@ describe('canonical business object review ledger', () => {
     expect(governanceRecord?.decision).toBe('MERGE');
     expect(governanceRecord?.targetCandidateKey).toBe('BOF-07-007');
 
+    const bia = service.getBusinessObjectReview('BOF-23-001');
+    expect(bia?.decision).toBe('EVENT_EVIDENCE');
+    expect(bia?.proposedCanonicalName).toBe('Business Impact Assessment');
+
+    const crisisAction = service.getBusinessObjectReview('BOF-23-007');
+    expect(crisisAction?.decision).toBe('MERGE');
+    expect(crisisAction?.targetCandidateKey).toBe('BOF-06-024');
+
+    const crisisCommunication = service.getBusinessObjectReview('BOF-23-008');
+    expect(crisisCommunication?.decision).toBe('MERGE');
+    expect(crisisCommunication?.targetCandidateKey).toBe('BOF-25-012');
+
+    const visitorPass = service.getBusinessObjectReview('BOF-23-011');
+    expect(visitorPass?.decision).toBe('MERGE');
+    expect(visitorPass?.targetCandidateKey).toBe('BOF-23-012');
+
+    const securityRisk = service.getBusinessObjectReview('BOF-23-015');
+    expect(securityRisk?.decision).toBe('MERGE');
+    expect(securityRisk?.targetCandidateKey).toBe('BOF-21-003');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

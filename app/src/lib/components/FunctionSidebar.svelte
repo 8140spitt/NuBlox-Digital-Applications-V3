@@ -42,6 +42,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/sustainability-carbon`}><span>◌</span>Sustainability & carbon</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/risk-compliance-audit`}><span>◆</span>Risk, compliance & audit</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/legal-privacy`}><span>§</span>Legal & privacy</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/knowledge-records-communications`}><span>▩</span>Knowledge, records & comms</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}><span>▤</span>Delivery context</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/built-environment`}><span>▧</span>Built environment</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}><span>▥</span>Commercial & procurement</a>

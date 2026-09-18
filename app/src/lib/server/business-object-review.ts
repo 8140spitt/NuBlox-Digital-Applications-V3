@@ -159,7 +159,7 @@ export function listBusinessObjectReviewEvents(candidateKey: string): BusinessOb
       notes, actor, context_tenant_slug AS contextTenantSlug, occurred_at AS occurredAt
     FROM business_object_review_events
     WHERE candidate_key = ?
-    ORDER BY occurred_at DESC
+    ORDER BY occurred_at DESC, rowid DESC
   `).all(candidateKey) as unknown as BusinessObjectReviewEvent[];
 }
 

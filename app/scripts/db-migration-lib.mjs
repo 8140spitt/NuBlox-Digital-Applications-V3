@@ -64,7 +64,11 @@ export async function ensureMigrationLedger(connection) {
 }
 
 export async function withMigrationLock(connection, work) {
-  const lockName = 'nublox:schema-migrations';
+  const [databaseRows] = await connection.query('SELECT DATABASE() AS databaseName');
+  const databaseName = String(databaseRows[0]?.databaseName ?? '');
+  if (!databaseName) throw new Error('Migration connection is not scoped to a database.');
+  const databaseKey = createHash('sha256').update(databaseName).digest('hex').slice(0, 32);
+  const lockName = 'nublox:migrations:' + databaseKey;
   const [rows] = await connection.execute('SELECT GET_LOCK(?, 30) AS acquired', [lockName]);
   if (Number(rows[0]?.acquired) !== 1)
     throw new Error('Could not acquire the NuBlox schema migration lock.');

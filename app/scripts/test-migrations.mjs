@@ -172,15 +172,24 @@ try {
   );
 } finally {
   try {
-    if (temporaryGrantCreated && appAccount) {
-      const accountUser = appAccount.user.replaceAll("'", "''");
-      const accountHost = appAccount.host.replaceAll("'", "''");
-      await admin.query(
-        "REVOKE ALL PRIVILEGES ON `" + escapedDatabase + "`.* FROM '" + accountUser + "'@'" + accountHost + "'"
-      );
-    }
-    if (temporaryDatabaseCreated) {
-      await admin.query('DROP DATABASE IF EXISTS `' + escapedDatabase + '`');
+    try {
+      if (temporaryGrantCreated && appAccount) {
+        const accountUser = appAccount.user.replaceAll("'", "''");
+        const accountHost = appAccount.host.replaceAll("'", "''");
+        await admin.query(
+          "REVOKE ALL PRIVILEGES ON `" +
+            escapedDatabase +
+            "`.* FROM '" +
+            accountUser +
+            "'@'" +
+            accountHost +
+            "'"
+        );
+      }
+    } finally {
+      if (temporaryDatabaseCreated) {
+        await admin.query('DROP DATABASE IF EXISTS `' + escapedDatabase + '`');
+      }
     }
   } finally {
     await admin.end();

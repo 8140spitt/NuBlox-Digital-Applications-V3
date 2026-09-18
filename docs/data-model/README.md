@@ -37,6 +37,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `strategy-governance-performance-semantics.md` — governed strategy framework/objectives/themes/initiatives, business planning/scenarios/assumptions, KPI/target/observation/snapshot, governance bodies/meetings and shared decision/authority semantics.
 - `continuity-crisis-security-semantics.md` — governed business-impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, disaster-recovery invocation and physical-security zone/credential/access/incident semantics.
 - `technology-data-cyber-ai-semantics.md` — governed technology-service/ITSM/configuration, disaster-recovery, data domain/product/dataset/quality/pipeline, analytics/AI, access-control and cybersecurity semantics.
+- `transformation-process-improvement-semantics.md` — governed transformation portfolio/initiative, impact/readiness/adoption/transition, enterprise process/model/version/ownership/measurement and continuous-improvement semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -121,6 +122,10 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - AI Use Case, AI Model and AI Risk Assessment remain separate; AI risk reuses enterprise Risk Assessment.
 - Data/Privileged Access Request is not Access Grant; technical access never becomes business Delegated Authority.
 - Security Policy reuses enterprise Policy; Vulnerability, Alert, Cybersecurity Incident, Threat Intelligence, Penetration Test and Security Finding remain distinct.
+- Transformation Portfolio reuses shared Portfolio; Transformation Initiative remains distinct from Strategic Initiative, Programme and Project while Improvement Initiative uses the same initiative pattern.
+- Change Action and Change Communication reuse shared Decision Action and Communication Item; Change Learning Plan coordinates HCM learning without replacing Learning Plan/Session/Record truth.
+- Enterprise Process identity remains stable across Process Model/Version/SOP/workflow changes; approved Process Versions are immutable.
+- Process Owner Assignment reuses Responsibility Assignment, Process Measure reuses enterprise KPI/metric semantics, SOP reuses Information Container and Process Compliance Assessment reuses Compliance Assessment.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

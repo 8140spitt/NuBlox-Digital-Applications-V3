@@ -21,8 +21,8 @@ describe('canonical model convergence and coverage audit', () => {
   });
 
   it('keeps the audit honest about model maturity', () => {
-    expect(coverageAuditSummary.governedFamilyCount).toBe(28);
-    expect(coverageAuditSummary.partialFamilyCount).toBe(1);
+    expect(coverageAuditSummary.governedFamilyCount).toBe(29);
+    expect(coverageAuditSummary.partialFamilyCount).toBe(0);
     expect(coverageAuditSummary.candidateOnlyFamilyCount).toBe(0);
     expect(coverageAuditSummary.governedFamilyCount + coverageAuditSummary.partialFamilyCount + coverageAuditSummary.candidateOnlyFamilyCount).toBe(29);
   });
@@ -44,7 +44,7 @@ describe('canonical model convergence and coverage audit', () => {
     const states = new Map(familyCoverageAudit.map((family) => [family.id, family.semanticModelState]));
     expect(states.get('BOF-03')).toBe('governed-semantic-model');
     expect(states.get('BOF-05')).toBe('governed-semantic-model');
-    expect(states.get('BOF-12')).toBe('partial-semantic-model');
+    expect(states.get('BOF-12')).toBe('governed-semantic-model');
     expect(states.get('BOF-13')).toBe('governed-semantic-model');
     expect(states.get('BOF-14')).toBe('governed-semantic-model');
     expect(states.get('BOF-20')).toBe('governed-semantic-model');

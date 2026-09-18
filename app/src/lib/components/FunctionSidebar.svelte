@@ -41,6 +41,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}><span>◈</span>Security & access</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}><span>◎</span>Party master data</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisation-structure`}><span>▦</span>Organisation structure</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/reference-data/classifications`}><span>⌁</span>Reference data</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}><span>◇</span>Business object model</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}><span>✓</span>Coverage audit</a>
     <a class="admin-item" href={`/${tenantSlug}/app/functions`}><span>◫</span>Function directory</a>

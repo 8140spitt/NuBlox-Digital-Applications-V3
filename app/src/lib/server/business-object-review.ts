@@ -16,6 +16,7 @@ import { qhseAssuranceCanonicalization } from '$lib/data/qhse-assurance-canonica
 import { buildingSafetyRegulatoryCanonicalization } from '$lib/data/building-safety-regulatory-canonicalization';
 import { sustainabilityCarbonCanonicalization } from '$lib/data/sustainability-carbon-canonicalization';
 import { riskComplianceAuditCanonicalization } from '$lib/data/risk-compliance-audit-canonicalization';
+import { legalPrivacyCanonicalization } from '$lib/data/legal-privacy-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -121,7 +122,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...qhseAssuranceCanonicalization,
     ...buildingSafetyRegulatoryCanonicalization,
     ...sustainabilityCarbonCanonicalization,
-    ...riskComplianceAuditCanonicalization
+    ...riskComplianceAuditCanonicalization,
+    ...legalPrivacyCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

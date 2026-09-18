@@ -199,6 +199,12 @@ export const coverageAuditSummary = {
     benchmarkGapCount: marketBenchmarkSummary.benchmarkGapCount,
     benchmarkGapResolvedCount: marketBenchmarkSummary.benchmarkGapResolvedCount,
     benchmarkGapOpenCount: marketBenchmarkSummary.benchmarkGapOpenCount,
+    standardsChallengeCount: marketBenchmarkSummary.standardsChallengeCount,
+    standardsChallengedCount: marketBenchmarkSummary.standardsChallengedCount,
+    standardsOpenCount: marketBenchmarkSummary.standardsOpenCount,
+    rejectedVendorPatternCount: marketBenchmarkSummary.rejectedVendorPatternCount,
+    rejectedVendorPatternRecordedCount: marketBenchmarkSummary.rejectedVendorPatternRecordedCount,
+    rejectedVendorPatternOpenCount: marketBenchmarkSummary.rejectedVendorPatternOpenCount,
     state: marketBenchmarkSummary.programmeState,
     rule: marketBenchmarkSummary.rule
   }

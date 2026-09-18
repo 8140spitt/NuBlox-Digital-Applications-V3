@@ -3,11 +3,15 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let contextService: typeof import('./platform-context');
 let organisationService: typeof import('./foundation-organisation');
+let personService: typeof import('./foundation-person');
+let legalEntityService: typeof import('./foundation-legal-entity');
 let dbModule: typeof import('./db');
 
 beforeAll(async () => {
   contextService = await import('./platform-context');
   organisationService = await import('./foundation-organisation');
+  personService = await import('./foundation-person');
+  legalEntityService = await import('./foundation-legal-entity');
   dbModule = await import('./db');
 });
 
@@ -97,4 +101,53 @@ describe('platform foundation runtime on MySQL', () => {
       organisationService.createOrganisation(restricted, { legalName: 'Denied' })
     ).rejects.toThrow('Permission denied: party.create');
   });
+
+  it('persists Person and Legal Entity as Party specialisations without duplicate masters', async () => {
+    const context = await contextService.resolveDevelopmentCommandContext('party-specialisations-' + randomUUID().slice(0, 8));
+
+    const personId = await personService.createPerson(context, {
+      givenName: 'Ada',
+      familyName: 'Lovelace',
+      preferredName: 'Ada'
+    });
+    let person = await personService.getPerson(context, personId);
+    expect(person.displayName).toBe('Ada');
+    expect(person.version).toBe(1);
+
+    await personService.updatePerson(context, personId, {
+      givenName: 'Ada',
+      familyName: 'Lovelace',
+      preferredName: 'Ada Lovelace'
+    }, person.version);
+    person = await personService.getPerson(context, personId);
+    expect(person.version).toBe(2);
+    expect((await personService.listPersonAudit(context, personId)).map((event) => event.action))
+      .toEqual(expect.arrayContaining(['PERSON_CREATED', 'PERSON_CHANGED']));
+
+    const organisationId = await organisationService.createOrganisation(context, {
+      legalName: 'NuBlox Construction Limited',
+      registrationNumber: 'LE-' + randomUUID().slice(0, 8),
+      countryCode: 'GB'
+    });
+    const organisation = await organisationService.getOrganisation(context, organisationId);
+    await legalEntityService.designateLegalEntity(context, organisationId, {
+      legalEntityType: 'LIMITED_COMPANY',
+      jurisdictionCode: 'GB',
+      statutoryIdentifier: 'SC-' + randomUUID().slice(0, 8),
+      accountingCurrency: 'GBP'
+    }, organisation.version);
+
+    const legalEntity = await legalEntityService.getLegalEntity(context, organisationId);
+    expect(legalEntity.id).toBe(organisationId);
+    expect(legalEntity.version).toBe(organisation.version + 1);
+    expect(legalEntity.jurisdictionCode).toBe('GB');
+
+    const partyRows = await dbModule.queryRows<any>(
+      'SELECT id, party_type AS partyType FROM parties WHERE tenant_id = ? AND id IN (?, ?)',
+      [context.tenantId, personId, organisationId]
+    );
+    expect(partyRows).toHaveLength(2);
+    expect(partyRows.find((row) => row.id === organisationId)?.partyType).toBe('ORGANISATION');
+  });
+
 });

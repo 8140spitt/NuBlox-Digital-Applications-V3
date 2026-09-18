@@ -307,6 +307,32 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'NEC target-cost and other incentive-based contracts require governed target/reference baselines and share formulas. Treating these solely as unstructured clause text would prevent reproducible assessments and commercial forecasting.',
     requiredOutcome: 'Govern Target Cost Baseline, Commercial Share Mechanism and Commercial Share Assessment while reusing Contract, Commercial Change, actual-cost, valuation/payment and Final Account truth.'
+  },
+  {
+    id: 'BG-023',
+    title: 'Shared effectivity, configuration baselines and structure occurrences',
+    sourceBenchmarks: ['PTC-WINDCHILL', 'SIEMENS-TEAMCENTER'],
+    sourceFindings: ['PLM-W3-WINDCHILL-01', 'PLM-W3-TEAMCENTER-01'],
+    affectedExternalRows: ['WINDCHILL-EFFECTIVITY', 'WINDCHILL-CONFIG-BASELINE', 'TEAMCENTER-CONFIG-BOM'],
+    workspaces: ['F05', 'F11', 'F13', 'F26', 'F27', 'F29'],
+    canonicalFamilies: ['BOF-07', 'BOF-10', 'BOF-11', 'BOF-29'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Configuration-managed engineering requires explicit date/unit/serial/lot/context effectivity, exact released configuration baselines and occurrence-level structure identity. Scattered effective-date fields cannot prove historical/future product configurations reliably.',
+    requiredOutcome: 'Govern Effectivity Statement/Assignment, Configuration Baseline and Product Structure Occurrence while preserving stable Item, BOM, Information Container and manufacturing-definition identities.'
+  },
+  {
+    id: 'BG-024',
+    title: 'As-maintained configuration and digital twin federation',
+    sourceBenchmarks: ['PTC-WINDCHILL', 'BENTLEY-PROJECTWISE-ITWIN', 'SIEMENS-TEAMCENTER'],
+    sourceFindings: ['PLM-W3-WINDCHILL-02', 'PLM-W3-BENTLEY-01', 'PLM-W3-TEAMCENTER-02'],
+    affectedExternalRows: ['WINDCHILL-PART-CONFIG-INSTANCE', 'BENTLEY-ITWIN', 'TEAMCENTER-DIGITAL-TWIN'],
+    workspaces: ['F05', 'F12', 'F17', 'F22', 'F26', 'F27'],
+    canonicalFamilies: ['BOF-07', 'BOF-16', 'BOF-17', 'BOF-24'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Whole-life built-asset operation requires a traceable as-maintained configuration and a governed way to federate physical asset identity with engineering models, GIS, datasets, sensors and operational evidence. A digital twin must not become a second Asset master.',
+    requiredOutcome: 'Govern As-Maintained Configuration, Digital Twin Federation Context, source-aware Data Bindings and reproducible Twin State Snapshots over canonical physical Asset/System and controlled source data.'
   }
 ];
 
@@ -324,9 +350,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 16) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 18) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
-  if (benchmarkGapSummary.resolvedCount !== 22) return false;
+  if (benchmarkGapSummary.resolvedCount !== 24) return false;
   return true;
 }

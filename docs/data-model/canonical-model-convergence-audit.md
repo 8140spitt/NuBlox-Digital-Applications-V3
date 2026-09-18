@@ -114,6 +114,7 @@ Current governed families:
 - BOF-20 Sustainability, carbon, energy, circularity and social value;
 - BOF-21 Enterprise risk, compliance, internal control and audit;
 - BOF-22 Legal, corporate secretariat, privacy and records obligations;
+- BOF-25 Knowledge, document/records management, communications and stakeholder engagement;
 - BOF-27 Shared work, workflow, decision and collaboration;
 - BOF-28 Evidence, audit, retention and legal traceability;
 - BOF-29 Reference data, classification, jurisdiction and configuration.
@@ -124,8 +125,7 @@ Some canonical patterns exist and are reusable, but the family is not yet suffic
 
 Current partial families:
 
-- BOF-12 Site, field and construction operations;
-- BOF-25 Knowledge, document/records management, communications and stakeholder engagement.
+- BOF-12 Site, field and construction operations.
 
 ### Candidate-only
 
@@ -142,8 +142,8 @@ Current candidate-only families:
 Therefore the present maturity split is:
 
 ```text
-22 governed families
- 2 partial families
+23 governed families
+ 1 partial family
  5 candidate-only families
 29 total families
 ```
@@ -194,7 +194,6 @@ Before a family can be treated as physically authoritative, it must have:
 The next canonicalization passes should address the remaining candidate-only families in operating-model dependency order, while completing the two partial families. A practical sequence is:
 
 ```text
-BOF-25 Knowledge / Records / Communications (complete partial family)
 BOF-04 Land / Development / Investment
 BOF-02 Strategy / Governance / EPM
 BOF-23 Continuity / Crisis / Physical Security

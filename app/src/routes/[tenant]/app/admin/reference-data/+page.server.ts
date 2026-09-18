@@ -3,6 +3,10 @@ import { hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { listClassificationSystems } from '$lib/server/classification-runtime';
 import { listLifecycleDefinitions } from '$lib/server/lifecycle-configuration';
+import {
+  listApprovalAuthorityRules,
+  listDelegatedAuthorityRules
+} from '$lib/server/authority-configuration';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);

@@ -193,6 +193,9 @@ export const coverageAuditSummary = {
     sapV3MappedRows: marketBenchmarkSummary.sapV3MappedRows,
     sapV3ChallengedRows: marketBenchmarkSummary.sapV3ChallengedRows,
     sapV3ClosedRows: marketBenchmarkSummary.sapV3ClosedRows,
+    benchmarkGapCount: marketBenchmarkSummary.benchmarkGapCount,
+    benchmarkGapResolvedCount: marketBenchmarkSummary.benchmarkGapResolvedCount,
+    benchmarkGapOpenCount: marketBenchmarkSummary.benchmarkGapOpenCount,
     state: marketBenchmarkSummary.programmeState,
     rule: marketBenchmarkSummary.rule
   }

@@ -7,6 +7,9 @@
   const activeAssignments = $derived(
     data.assignments.filter((item: any) => item.status === 'ACTIVE')
   );
+  const activeAuthorities = $derived(
+    data.delegatedAuthorities.filter((item: any) => item.status === 'ACTIVE')
+  );
 </script>
 
 <svelte:head>
@@ -30,6 +33,7 @@
         ><strong>{data.identities.filter((item: any) => item.status === 'ACTIVE').length}</strong> active
         identities</span
       >
+      <span><strong>{activeAuthorities.length}</strong> active delegations</span>
     </div>
   </header>
 
@@ -42,6 +46,7 @@
     <a class:active={data.view === 'roles'} href="?view=roles">Roles &amp; permissions</a>
     <a class:active={data.view === 'identities'} href="?view=identities">Authenticated identities</a
     >
+    <a class:active={data.view === 'authority'} href="?view=authority">Delegated authority</a>
   </nav>
 
   {#if data.view === 'access'}
@@ -262,7 +267,7 @@
         {/each}
       </div>
     </section>
-  {:else}
+  {:else if data.view === 'identities'}
     <section class="section-card card">
       <div class="section-heading">
         <div>
@@ -332,6 +337,128 @@
         For security, account discovery is exact-email only; the workspace never exposes the global
         authentication directory.
       </p>
+    </section>
+
+  {:else}
+    <section class="section-card card authority-card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">AGG-01-AUTHORITY</p>
+          <h2>Delegated business authority</h2>
+          <p>
+            Business decision authority is separate from system permissions. Grants are effective-dated,
+            scope-bound and can carry monetary limits with independent approval.
+          </p>
+        </div>
+        {#if data.authorityCapabilities.canManage}
+          <details class="create-panel authority-create">
+            <summary>Create delegation</summary>
+            <form method="POST" action="?/createDelegatedAuthority" class="role-form">
+              <div class="form-row">
+                <label>
+                  <span>Delegate</span>
+                  <select name="delegatePartyId" required>
+                    <option value="">Choose active Party</option>
+                    {#each data.parties.filter((party: any) => party.status === 'ACTIVE') as party}
+                      <option value={party.id}>{party.displayName} · {party.partyType}</option>
+                    {/each}
+                  </select>
+                </label>
+                <label>
+                  <span>Grantor (optional)</span>
+                  <select name="grantorPartyId">
+                    <option value="">Current actor</option>
+                    {#each data.parties.filter((party: any) => party.status === 'ACTIVE') as party}
+                      <option value={party.id}>{party.displayName}</option>
+                    {/each}
+                  </select>
+                </label>
+              </div>
+              <div class="form-row">
+                <label><span>Authority type</span><input name="authorityType" required placeholder="COMMERCIAL_COMMITMENT" /></label>
+                <label><span>Basis</span><input name="basis" required placeholder="Board-approved delegation matrix" /></label>
+              </div>
+              <div class="form-row">
+                <label><span>Scope type</span><input name="scopeType" value="TENANT" required /></label>
+                <label><span>Scope ID</span><input name="scopeId" placeholder="Blank = current tenant" /></label>
+              </div>
+              <div class="form-row">
+                <label><span>Currency</span><input name="currencyCode" maxlength="3" placeholder="GBP" /></label>
+                <label><span>Value limit</span><input name="valueLimit" type="number" min="0" step="0.01" /></label>
+              </div>
+              <div class="form-row">
+                <label><span>Valid from</span><input name="validFrom" type="datetime-local" /></label>
+                <label><span>Valid to</span><input name="validTo" type="datetime-local" /></label>
+              </div>
+              <label class="permission">
+                <input name="allowSubdelegation" type="checkbox" />
+                <span><strong>Allow subdelegation</strong><small>Permit this delegate to create subordinate authority where policy allows.</small></span>
+              </label>
+              <button type="submit">Create draft delegation</button>
+            </form>
+          </details>
+        {/if}
+      </div>
+
+      <div class="authority-list">
+        {#each data.delegatedAuthorities as authority}
+          <article class="authority-item">
+            <div class="authority-main">
+              <div>
+                <strong>{authority.delegateDisplayName}</strong>
+                <small>{authority.authorityType} · {authority.scopeType}</small>
+              </div>
+              <div class="authority-basis">
+                <span>{authority.grantorDisplayName} → {authority.delegateDisplayName}</span>
+                <small>{authority.basis}</small>
+              </div>
+              <div class="authority-limit">
+                {#if authority.valueLimit}
+                  <strong>{authority.currencyCode} {Number(authority.valueLimit).toLocaleString('en-GB')}</strong>
+                {:else}
+                  <strong>No monetary limit</strong>
+                {/if}
+                <small>{authority.validFrom} → {authority.validTo || 'Open'}</small>
+              </div>
+              <span class:active-status={authority.status === 'ACTIVE'} class="status">{authority.status}</span>
+            </div>
+
+            <div class="authority-actions">
+              {#if authority.status === 'DRAFT' && data.authorityCapabilities.canApprove}
+                <form method="POST" action="?/approveDelegatedAuthority">
+                  <input type="hidden" name="authorityId" value={authority.id} />
+                  <input type="hidden" name="version" value={authority.version} />
+                  <button type="submit">Approve</button>
+                </form>
+              {/if}
+              {#if (authority.status === 'APPROVED' || authority.status === 'SUSPENDED') && data.authorityCapabilities.canManage}
+                <form method="POST" action="?/activateDelegatedAuthority">
+                  <input type="hidden" name="authorityId" value={authority.id} />
+                  <input type="hidden" name="version" value={authority.version} />
+                  <button type="submit">Activate</button>
+                </form>
+              {/if}
+              {#if authority.status === 'ACTIVE' && data.authorityCapabilities.canManage}
+                <form method="POST" action="?/suspendDelegatedAuthority">
+                  <input type="hidden" name="authorityId" value={authority.id} />
+                  <input type="hidden" name="version" value={authority.version} />
+                  <button class="secondary" type="submit">Suspend</button>
+                </form>
+              {/if}
+              {#if authority.status !== 'REVOKED' && data.authorityCapabilities.canManage}
+                <form method="POST" action="?/revokeDelegatedAuthority" class="revoke-form">
+                  <input type="hidden" name="authorityId" value={authority.id} />
+                  <input type="hidden" name="version" value={authority.version} />
+                  <input name="reason" required placeholder="Revocation reason" />
+                  <button class="secondary danger" type="submit">Revoke</button>
+                </form>
+              {/if}
+            </div>
+          </article>
+        {:else}
+          <p class="note">No delegated business authority has been recorded for this tenant.</p>
+        {/each}
+      </div>
     </section>
   {/if}
 </div>
@@ -691,12 +818,66 @@
     color: var(--muted);
     font-size: 10.5px;
   }
+
+  .authority-create[open] {
+    width: min(100%, 820px);
+  }
+  .authority-list {
+    display: grid;
+    gap: 8px;
+  }
+  .authority-item {
+    display: grid;
+    gap: 9px;
+    padding: 11px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fbfcfd;
+  }
+  .authority-main {
+    display: grid;
+    grid-template-columns: minmax(170px, .8fr) minmax(220px, 1.15fr) minmax(180px, .8fr) auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .authority-main > div {
+    display: grid;
+    gap: 2px;
+  }
+  .authority-main strong {
+    color: var(--navy-900);
+    font-size: 11px;
+  }
+  .authority-main small,
+  .authority-basis span {
+    color: var(--muted);
+    font-size: 9.5px;
+  }
+  .authority-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: end;
+    padding-top: 8px;
+    border-top: 1px solid #e7ecef;
+  }
+  .authority-actions form {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .revoke-form input {
+    width: 220px;
+  }
+
   @media (max-width: 1100px) {
     .two-column {
       grid-template-columns: 1fr;
     }
     .permission-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .authority-main {
+      grid-template-columns: 1fr 1fr;
     }
   }
   @media (max-width: 760px) {
@@ -716,6 +897,17 @@
     }
     .view-tabs {
       overflow-x: auto;
+    }
+    .authority-main {
+      grid-template-columns: 1fr;
+    }
+    .authority-actions,
+    .authority-actions form {
+      align-items: stretch;
+      flex-direction: column;
+    }
+    .revoke-form input {
+      width: 100%;
     }
   }
 </style>

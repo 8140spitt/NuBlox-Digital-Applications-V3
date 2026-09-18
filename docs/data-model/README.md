@@ -24,6 +24,8 @@ This directory governs the NuBlox V3 canonical information model.
 - `finance-accounting-semantics.md` — governed Ledger, AP/AR, settlement, tax, fixed-asset accounting, treasury, project financial-control and immutable posting semantics.
 - `shared-work-evidence-semantics.md` — governed Workflow Definition/Instance, Work Item, assignment, request/decision, evidence, audit, correction/reversal, retention, legal-hold and outbox semantics.
 - `reference-configuration-semantics.md` — governed reference data, classification, jurisdiction, lifecycle/workflow configuration, permission/authority policy and retention-policy semantics.
+- `crm-business-development-semantics.md` — governed market, CRM, Lead, Opportunity, Pursuit, interaction, onboarding and customer-case semantics.
+- `estimating-tendering-semantics.md` — governed Estimate/version, breakdown, measurement, build-up/rate, provision, tender-package, adjudication, proposal/quotation and offer-acceptance semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -45,6 +47,10 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Prospect, customer and account terminology uses canonical Party/Organisation plus governed Party Relationships rather than duplicate CRM masters.
 - Lead, Opportunity and Pursuit are separate commercial identities; Estimate, Proposal, Contract and Project remain separate downstream identities linked by provenance.
 - CRM Activity is distinct from Project Schedule Activity, Work Order and shared workflow Work Item; pipeline/forecast snapshots are projections rather than mutable source truth.
+- Estimate is a stable identity with controlled versions; Estimate Breakdown is distinct from WBS, finance structures and procurement/commercial packages.
+- Take-off and measurement retain exact information-source provenance; build-ups reference shared Items/resources and applied rates retain historical basis.
+- Estimating supplier/subcontract market testing reuses shared sourcing semantics; Tender Adjudication remains a separate internal bid decision.
+- Proposal/Quotation and Offer Acceptance are separate from internal Estimate truth and from downstream Contract, Sales Order and Project identities.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

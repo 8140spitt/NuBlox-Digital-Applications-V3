@@ -24,6 +24,7 @@ const admin = await mysql.createConnection({
   multipleStatements: true
 });
 const escapedDatabase = temporaryDatabase.replaceAll('`', '``');
+let temporaryDatabaseCreated = false;
 const tempUrl = new URL(base);
 tempUrl.pathname = '/' + temporaryDatabase;
 
@@ -50,7 +51,17 @@ function runServiceTests() {
 }
 
 try {
-  await admin.query('CREATE DATABASE `' + escapedDatabase + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
+  try {
+    await admin.query('CREATE DATABASE `' + escapedDatabase + '` CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci');
+    temporaryDatabaseCreated = true;
+  } catch (error) {
+    if (error?.code === 'ER_DBACCESS_DENIED_ERROR' || error?.code === 'ER_SPECIFIC_ACCESS_DENIED_ERROR') {
+      throw new Error(
+        'Clean migration tests require NUBLOX_TEST_ADMIN_DATABASE_URL to use a test-only MySQL account with CREATE/DROP DATABASE privileges. The application database user should remain unprivileged.'
+      );
+    }
+    throw error;
+  }
   if (adminSource !== source) {
     const appUser = decodeURIComponent(base.username).replaceAll("'", "''");
     await admin.query("GRANT ALL PRIVILEGES ON `" + escapedDatabase + "`.* TO '" + appUser + "'@'%'");
@@ -85,6 +96,11 @@ try {
   await runServiceTests();
   console.log('Clean migration, repeat execution, ledger status and migrated-schema service tests passed.');
 } finally {
-  await admin.query('DROP DATABASE IF EXISTS `' + escapedDatabase + '`');
-  await admin.end();
+  try {
+    if (temporaryDatabaseCreated) {
+      await admin.query('DROP DATABASE IF EXISTS `' + escapedDatabase + '`');
+    }
+  } finally {
+    await admin.end();
+  }
 }

@@ -193,6 +193,19 @@ describe('platform foundation runtime on MySQL', () => {
     expect((await tenantAuthority.listTenantMemberships(context)).find((item) => item.id === membershipId)?.status)
       .toBe('INACTIVE');
 
+    const endedAssignments = await dbModule.queryRows<any>(
+      "SELECT status, valid_to AS validTo FROM role_assignments WHERE id = ? AND tenant_id = ?",
+      [assignmentId, context.tenantId]
+    );
+    expect(endedAssignments[0]?.status).toBe('INACTIVE');
+    expect(endedAssignments[0]?.validTo).toBeTruthy();
+
+    const tenantEvents = await dbModule.queryRows<any>(
+      "SELECT aggregate_version AS aggregateVersion FROM business_events WHERE tenant_id = ? AND aggregate_id = 'AGG-01-TENANT' ORDER BY aggregate_version",
+      [context.tenantId]
+    );
+    expect(tenantEvents.map((row) => row.aggregateVersion)).toEqual([2, 3, 4, 5]);
+
     const audit = await dbModule.queryRows<any>(
       "SELECT action FROM platform_audit_events WHERE tenant_id = ? AND aggregate_id = 'AGG-01-TENANT'",
       [context.tenantId]

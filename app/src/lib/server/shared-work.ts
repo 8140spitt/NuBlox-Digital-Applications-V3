@@ -1113,8 +1113,10 @@ export async function resolveWorkEscalation(
       },
       connection
     );
-    return (await listWorkEscalations(context, escalation.workItemId)).find(
-      (row) => row.id === escalation.id
-    )!;
+    return {
+      ...escalation,
+      status: 'RESOLVED',
+      resolvedAt: timestamp
+    };
   });
 }

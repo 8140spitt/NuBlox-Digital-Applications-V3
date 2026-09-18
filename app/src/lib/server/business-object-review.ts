@@ -13,6 +13,7 @@ import { crmBusinessDevelopmentCanonicalization } from '$lib/data/crm-business-d
 import { estimatingTenderingCanonicalization } from '$lib/data/estimating-tendering-canonicalization';
 import { peopleHcmCanonicalization } from '$lib/data/people-hcm-canonicalization';
 import { qhseAssuranceCanonicalization } from '$lib/data/qhse-assurance-canonicalization';
+import { buildingSafetyRegulatoryCanonicalization } from '$lib/data/building-safety-regulatory-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -115,7 +116,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...crmBusinessDevelopmentCanonicalization,
     ...estimatingTenderingCanonicalization,
     ...peopleHcmCanonicalization,
-    ...qhseAssuranceCanonicalization
+    ...qhseAssuranceCanonicalization,
+    ...buildingSafetyRegulatoryCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

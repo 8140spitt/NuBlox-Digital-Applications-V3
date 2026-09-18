@@ -9,6 +9,7 @@ import {
   listOrganisationUnitHierarchy,
   listOrganisationUnits,
   removeOrganisationUnitParent,
+  updateOrganisationUnit,
   type OrganisationUnitInput
 } from '$lib/server/organisation-structure';
 import { listLegalEntities } from '$lib/server/foundation-legal-entity';
@@ -78,6 +79,18 @@ export const actions: Actions = {
     let id: string;
     try {
       id = await createOrganisationUnit(context, unitInput(data));
+    } catch (error) {
+      return problem(error);
+    }
+    redirect(303, target(params.tenant, id));
+  },
+
+  save: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    const context = await resolveRequestCommandContext(params.tenant, locals);
+    const id = text(data, 'unitId');
+    try {
+      await updateOrganisationUnit(context, id, unitInput(data), version(data));
     } catch (error) {
       return problem(error);
     }

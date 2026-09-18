@@ -26,9 +26,12 @@ describe('canonical aggregate-boundary freeze', () => {
   it('prevents aggregate roots and owned members from being reused as competing write boundaries', () => {
     const roots = canonicalAggregateBoundaries.map((boundary) => boundary.rootModelId);
     const owned = canonicalAggregateBoundaries.flatMap((boundary) => boundary.ownedMembers);
+    const projections = canonicalAggregateBoundaries.flatMap((boundary) => boundary.projections);
     expect(new Set(roots).size).toBe(roots.length);
     expect(new Set(owned).size).toBe(owned.length);
+    expect(new Set(projections).size).toBe(projections.length);
     expect(owned.some((member) => roots.includes(member))).toBe(false);
+    expect(projections.some((projection) => roots.includes(projection) || owned.includes(projection))).toBe(false);
   });
 
   it('requires one-aggregate command transactions and read-only projections', () => {

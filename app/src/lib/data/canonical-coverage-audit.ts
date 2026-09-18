@@ -24,6 +24,7 @@ import { strategyGovernancePerformanceCanonicalization } from './strategy-govern
 import { continuityCrisisSecurityCanonicalization } from './continuity-crisis-security-canonicalization';
 import { technologyDataCyberAiCanonicalization } from './technology-data-cyber-ai-canonicalization';
 import { transformationProcessImprovementCanonicalization } from './transformation-process-improvement-canonicalization';
+import { siteFieldOperationsCanonicalization } from './site-field-operations-canonicalization';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -83,7 +84,7 @@ export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
   { id: 'BOF-09', semanticModelState: 'governed-semantic-model', workspaces: ['F09','F10','F14','F27'], lifecycleStages: ['Plan','Procure','Construct','Control','Invoice','Account'], processChains: ['procure-to-pay','supplier-progress-to-payment'], overlays: ['commercial-management','contracting','trades','manufacturing','infrastructure'], note: 'Supplier sourcing, procurement package, award, PO and receipt semantics are governed.' },
   { id: 'BOF-10', semanticModelState: 'governed-semantic-model', workspaces: ['F05','F09','F10','F11','F12','F22'], lifecycleStages: ['Procure','Produce','Construct','Operate','Maintain'], processChains: ['procure-to-pay','plan-to-perform','service-request-to-resolution','asset-to-retirement'], overlays: ['trades','manufacturing','infrastructure','property-fm','retrofit'], note: 'Item identity, traceability, inventory and logistics semantics are governed.' },
   { id: 'BOF-11', semanticModelState: 'governed-semantic-model', workspaces: ['F05','F11','F13'], lifecycleStages: ['Produce','Control','Handover'], processChains: ['plan-to-perform'], overlays: ['manufacturing','trades','infrastructure'], note: 'Manufacturing definition, production execution and as-manufactured configuration are governed.' },
-  { id: 'BOF-12', semanticModelState: 'partial-semantic-model', workspaces: ['F12','F13','F23','F27'], lifecycleStages: ['Construct','Control','Handover'], processChains: ['plan-to-perform','incident/defect/NCR-to-resolution'], overlays: ['engineering','contracting','trades','infrastructure','regulation'], note: 'Site/location identities and shared evidence patterns are governed; field-operation transactions still need convergence.' },
+  { id: 'BOF-12', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F13','F23','F27'], lifecycleStages: ['Construct','Control','Handover'], processChains: ['plan-to-perform','incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['engineering','contracting','trades','infrastructure','regulation'], note: 'Site/stage/zone reuse, Work Area, site establishment/mobilisation/access, daily diary, progress/labour/plant/material/delivery evidence, temporary works, permits/isolations, instructions/constraints, field evidence, completion and handover-readiness semantics are governed.' },
   { id: 'BOF-13', semanticModelState: 'governed-semantic-model', workspaces: ['F13','F20','F23','F27'], lifecycleStages: ['Design','Produce','Construct','Control','Handover','Operate','Maintain'], processChains: ['incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['engineering','contracting','trades','manufacturing','infrastructure','property-fm','regulation'], note: 'Quality planning, verification, nonconformance/CAPA, safe-work controls, incidents, compliance and environmental assurance semantics are governed.' },
   { id: 'BOF-14', semanticModelState: 'governed-semantic-model', workspaces: ['F13','F19','F20','F23','F27'], lifecycleStages: ['Design','Construct','Control','Handover','Operate'], processChains: ['design-to-approved-information','incident/defect/NCR-to-resolution','commissioning-to-operation'], overlays: ['design','engineering','infrastructure','regulation','heritage'], note: 'Dutyholder, competence evidence, regulator case/application, controlled change, inspection/finding, mandatory occurrence, notice, decision, completion, golden-thread and submission semantics are governed.' },
   { id: 'BOF-15', semanticModelState: 'governed-semantic-model', workspaces: ['F12','F13','F22','F27'], lifecycleStages: ['Construct','Control','Handover','Operate'], processChains: ['commissioning-to-operation'], overlays: ['engineering','contracting','trades','infrastructure','property-fm','regulation'], note: 'Commissioning, acceptance and handover semantics are governed around persistent System/Asset identity.' },
@@ -127,7 +128,8 @@ export const governedCanonicalizationDecisions = [
   ...strategyGovernancePerformanceCanonicalization,
   ...continuityCrisisSecurityCanonicalization,
   ...technologyDataCyberAiCanonicalization,
-  ...transformationProcessImprovementCanonicalization
+  ...transformationProcessImprovementCanonicalization,
+  ...siteFieldOperationsCanonicalization
 ];
 
 const decisionKeys = new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey));

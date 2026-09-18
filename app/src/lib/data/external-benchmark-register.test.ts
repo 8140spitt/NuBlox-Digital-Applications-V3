@@ -11,6 +11,9 @@ describe('external market benchmark register', () => {
     expect(marketBenchmarkSummary.workspaceCount).toBe(29);
     expect(marketBenchmarkSummary.coveredWorkspaceCount).toBe(29);
     expect(marketBenchmarkSummary.benchmarkCount).toBeGreaterThanOrEqual(23);
+    expect(marketBenchmarkSummary.challengedBenchmarkCount).toBe(5);
+    expect(marketBenchmarkSummary.inProgressBenchmarkCount).toBe(1);
+    expect(marketBenchmarkSummary.registeredBenchmarkCount).toBe(17);
   });
 
   it('retains SAP as an enterprise completeness benchmark without making SAP the architecture', () => {
@@ -29,6 +32,10 @@ describe('external market benchmark register', () => {
 
   it('covers enterprise suites and construction/asset specialist depth', () => {
     const ids = new Set(externalBenchmarkRegister.map((entry) => entry.id));
+    const states = new Map(externalBenchmarkRegister.map((entry) => [entry.id, entry.studyState]));
+    for (const id of ['SAP-BUSINESS-SUITE', 'ORACLE-CLOUD-CX', 'MICROSOFT-D365', 'IFS-CLOUD', 'WORKDAY']) {
+      expect(states.get(id)).toBe('challenged');
+    }
     for (const id of [
       'SAP-BUSINESS-SUITE',
       'ORACLE-CLOUD-CX',

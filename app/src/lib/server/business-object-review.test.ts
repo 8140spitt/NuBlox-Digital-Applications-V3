@@ -199,6 +199,25 @@ describe('canonical business object review ledger', () => {
     expect(regulatorySubmission?.decision).toBe('MERGE');
     expect(regulatorySubmission?.targetCandidateKey).toBe('BOF-27-013');
 
+    const carbonBaseline = service.getBusinessObjectReview('BOF-20-003');
+    expect(carbonBaseline?.decision).toBe('RENAME');
+    expect(carbonBaseline?.proposedCanonicalName).toBe('Carbon Baseline Snapshot');
+
+    const embodiedCarbon = service.getBusinessObjectReview('BOF-20-007');
+    expect(embodiedCarbon?.decision).toBe('CHILD');
+    expect(embodiedCarbon?.proposedCanonicalName).toBe('Carbon Assessment Line');
+
+    const sustainabilityUtility = service.getBusinessObjectReview('BOF-20-010');
+    expect(sustainabilityUtility?.decision).toBe('MERGE');
+    expect(sustainabilityUtility?.targetCandidateKey).toBe('BOF-17-030');
+
+    const climateRisk = service.getBusinessObjectReview('BOF-20-023');
+    expect(climateRisk?.decision).toBe('MERGE');
+    expect(climateRisk?.targetCandidateKey).toBe('BOF-21-002');
+
+    const costCarbon = service.getBusinessObjectReview('BOF-20-025');
+    expect(costCarbon?.decision).toBe('PROJECTION');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

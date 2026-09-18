@@ -237,6 +237,29 @@ describe('canonical business object review ledger', () => {
     const complianceEvidence = service.getBusinessObjectReview('BOF-21-017');
     expect(complianceEvidence?.decision).toBe('EVENT_EVIDENCE');
 
+    const legalMatter = service.getBusinessObjectReview('BOF-22-001');
+    expect(legalMatter?.decision).toBe('VALIDATE_OBJECT');
+    expect(legalMatter?.proposedCanonicalName).toBe('Legal Matter');
+
+    const regulatoryMatter = service.getBusinessObjectReview('BOF-22-008');
+    expect(regulatoryMatter?.decision).toBe('MERGE');
+    expect(regulatoryMatter?.targetCandidateKey).toBe('BOF-22-001');
+
+    const privacyPolicy = service.getBusinessObjectReview('BOF-22-011');
+    expect(privacyPolicy?.decision).toBe('MERGE');
+    expect(privacyPolicy?.targetCandidateKey).toBe('BOF-07-007');
+
+    const privacyBreach = service.getBusinessObjectReview('BOF-22-018');
+    expect(privacyBreach?.decision).toBe('MERGE');
+    expect(privacyBreach?.targetCandidateKey).toBe('BOF-22-019');
+
+    const internationalTransfer = service.getBusinessObjectReview('BOF-22-020');
+    expect(internationalTransfer?.decision).toBe('RELATIONSHIP');
+
+    const privacyReview = service.getBusinessObjectReview('BOF-22-021');
+    expect(privacyReview?.decision).toBe('MERGE');
+    expect(privacyReview?.targetCandidateKey).toBe('BOF-13-014');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

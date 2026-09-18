@@ -965,7 +965,7 @@ export async function listWorkEscalations(
   context: CommandContext,
   workItemId?: string
 ): Promise<WorkEscalation[]> {
-  assertPermission(context, 'work.item.read');
+  assertPermission(context, 'work.item.manage');
   const where = workItemId
     ? ' WHERE tenant_id = ? AND work_item_id = ?'
     : ' WHERE tenant_id = ?';
@@ -984,6 +984,64 @@ export async function listWorkEscalations(
             resolved_at AS resolvedAt
        FROM work_escalations${where}
       ORDER BY occurred_at DESC, id DESC`,
+    params
+  );
+}
+
+
+
+export async function listMyWorkEscalations(context: CommandContext): Promise<WorkEscalation[]> {
+  assertPermission(context, 'work.item.read');
+  const roles = await actorRoleIds(context);
+  const timestamp = now();
+  const params: unknown[] = [
+    context.tenantId,
+    timestamp,
+    timestamp,
+    context.actorPartyId,
+    context.userIdentityId
+  ];
+  let roleClause = '';
+  if (roles.length) {
+    roleClause = ` OR (wa.assignee_type = 'ROLE' AND wa.assignee_id IN (${roles
+      .map(() => '?')
+      .join(', ')}))`;
+    params.push(...roles);
+  }
+
+  return queryRows<RowDataPacket & WorkEscalation>(
+    `SELECT we.id,
+            we.workflow_instance_id AS workflowInstanceId,
+            we.work_item_id AS workItemId,
+            we.trigger_code AS triggerCode,
+            we.rule_key AS ruleKey,
+            we.from_assignment_ref AS fromAssignmentRef,
+            we.to_assignment_ref AS toAssignmentRef,
+            we.reason,
+            we.status,
+            we.occurred_at AS occurredAt,
+            we.resolved_at AS resolvedAt
+       FROM work_escalations we
+       JOIN work_items wi
+         ON wi.id = we.work_item_id
+        AND wi.tenant_id = we.tenant_id
+      WHERE we.tenant_id = ?
+        AND wi.status IN ('ASSIGNED', 'IN_PROGRESS', 'BLOCKED')
+        AND EXISTS (
+          SELECT 1
+            FROM work_assignments wa
+           WHERE wa.work_item_id = wi.id
+             AND wa.tenant_id = wi.tenant_id
+             AND wa.status = 'ACTIVE'
+             AND wa.valid_from <= ?
+             AND (wa.valid_to IS NULL OR wa.valid_to > ?)
+             AND (
+               (wa.assignee_type = 'PARTY' AND wa.assignee_id = ?)
+               OR (wa.assignee_type = 'USER_IDENTITY' AND wa.assignee_id = ?)
+               ${roleClause}
+             )
+        )
+      ORDER BY we.occurred_at DESC, we.id DESC`,
     params
   );
 }

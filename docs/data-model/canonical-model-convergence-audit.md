@@ -93,7 +93,7 @@ The governing programme is:
 
 The current baseline registers **23 relevant products/suites** spanning all **29 tenant workspaces**, including SAP, Oracle, Microsoft, IFS, Workday, ServiceNow, Procore, Autodesk, Bentley, Trimble, IBM Maximo, PTC Windchill, Siemens Teamcenter, Deltek, Asite, Thinkproject/CEMAR, Hexagon EcoSys, Planon, Sage, Causeway, Salesforce and Diligent.
 
-The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only. The remap is now **64/64 complete** in `docs/benchmarks/sap-v3-capability-map.csv`; detailed capability challenge/closure remains outstanding.
+The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only. The V3 remap and architecture challenge are now **64/64 complete** in `docs/benchmarks/sap-v3-capability-map.csv`: 47 native-core rows, 9 contextual extensions and 8 platform enablers. This is architectural challenge closure, not runtime feature parity.
 
 External benchmark coverage is deliberately not treated as complete merely because products are registered or several useful architectural findings have already been adopted. Benchmark systems challenge completeness, semantics, controls and end-to-end user outcomes; vendor module boundaries never become automatic NuBlox architecture.
 
@@ -198,6 +198,27 @@ The audit closes all **26/26 exact duplicate-name groups** from the generated di
 - **governed family patterns** — related concepts reuse common foundations/evidence rules without being collapsed into one master, such as inspections, changes, certificates and domain evidence.
 
 The former duplicate-name queue is therefore a discovery artefact, not an unresolved architecture backlog. Any future exact duplicate group or documented alias challenge that lacks a governed resolution must fail the Gate 2 audit.
+
+
+### Benchmark-driven refinements
+
+The closed 750-candidate discovery baseline remains historical provenance. External challenge is permitted to expose durable semantics that were not present in that baseline.
+
+Current SAP-driven/cross-market refinements include:
+
+- integrated Demand Plan / Supply Plan and Planning Exception;
+- treasury exposure, hedge, market-data and cash-pool semantics;
+- master-data stewardship, duplicate evidence, merge decision and identity redirect;
+- handling unit, warehouse wave, yard/dock appointment and freight execution;
+- asset criticality, failure-mode and reliability strategy/health semantics;
+- succession/talent-pool and talent-review semantics;
+- configurable product/service model, characteristics, rules and resolved configurations;
+- Travel Request / Business Trip / booking evidence;
+- migration and protected test-data governance;
+- Product Requirement / Requirement Set and engineering systems-model semantics;
+- lease-accounting valuation/schedule consequences.
+
+The machine authority is `app/src/lib/data/benchmark-refinement-model.ts`.
 
 ## Architecture gate
 

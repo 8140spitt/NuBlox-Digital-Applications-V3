@@ -24,7 +24,8 @@ import { continuityCrisisSecurityCanonicalization } from '$lib/data/continuity-c
 import { technologyDataCyberAiCanonicalization } from '$lib/data/technology-data-cyber-ai-canonicalization';
 import { transformationProcessImprovementCanonicalization } from '$lib/data/transformation-process-improvement-canonicalization';
 import { siteFieldOperationsCanonicalization } from '$lib/data/site-field-operations-canonicalization';
-import { db } from '$lib/server/db';
+import type { RowDataPacket } from 'mysql2/promise';
+import { dbTransaction, executeMutation, queryOne, queryRows } from '$lib/server/db';
 
 export const reviewDecisions = [
   'VALIDATE_OBJECT',
@@ -98,20 +99,8 @@ function validateInput(candidateKey: string, input: BusinessObjectReviewInput) {
   }
 }
 
-export function seedFoundationCanonicalization(contextTenantSlug: string) {
+export async function seedFoundationCanonicalization(contextTenantSlug: string) {
   const actor = 'NuBlox Architecture Baseline';
-  const exists = db.prepare('SELECT 1 FROM business_object_reviews WHERE candidate_key = ?');
-  const insertReview = db.prepare(`
-    INSERT INTO business_object_reviews
-      (candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, reviewed_by, reviewed_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-  const insertEvent = db.prepare(`
-    INSERT INTO business_object_review_events
-      (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
   const governedBaseline = [
     ...foundationCanonicalization,
     ...builtEnvironmentCanonicalization,
@@ -139,11 +128,17 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...transformationProcessImprovementCanonicalization,
     ...siteFieldOperationsCanonicalization
   ];
-  let inserted = 0;
-  db.exec('BEGIN IMMEDIATE');
-  try {
+
+  return dbTransaction(async (connection) => {
+    let inserted = 0;
     for (const entry of governedBaseline) {
-      if (exists.get(entry.candidateKey)) continue;
+      const exists = await queryOne<RowDataPacket & { candidateKey: string }>(
+        'SELECT candidate_key AS candidateKey FROM business_object_reviews WHERE candidate_key = ? LIMIT 1',
+        [entry.candidateKey],
+        connection
+      );
+      if (exists) continue;
+
       const timestamp = now();
       const decision = entry.decision as BusinessObjectReviewDecision;
       validateInput(entry.candidateKey, {
@@ -155,39 +150,48 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
       const canonicalName = clean(entry.proposedCanonicalName);
       const target = clean(entry.targetCandidateKey);
       const notes = clean(entry.notes);
-      insertReview.run(entry.candidateKey, decision, canonicalName, target, notes, actor, timestamp, timestamp);
-      insertEvent.run(randomUUID(), entry.candidateKey, decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp);
+
+      await executeMutation(
+        'INSERT INTO business_object_reviews (candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, reviewed_by, reviewed_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [entry.candidateKey, decision, canonicalName, target, notes, actor, timestamp, timestamp],
+        connection
+      );
+      await executeMutation(
+        'INSERT INTO business_object_review_events (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [randomUUID(), entry.candidateKey, decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp],
+        connection
+      );
       inserted += 1;
     }
-    db.exec('COMMIT');
     return inserted;
-  } catch (error) {
-    db.exec('ROLLBACK');
-    throw error;
-  }
+  });
 }
 
-export function listBusinessObjectReviews(): BusinessObjectReview[] {
-  return db.prepare(`${reviewSelect} ORDER BY updated_at DESC`).all() as unknown as BusinessObjectReview[];
+export async function listBusinessObjectReviews(): Promise<BusinessObjectReview[]> {
+  return queryRows<RowDataPacket & BusinessObjectReview>(
+    reviewSelect + ' ORDER BY updated_at DESC'
+  );
 }
 
-export function getBusinessObjectReview(candidateKey: string): BusinessObjectReview | null {
-  return (db.prepare(`${reviewSelect} WHERE candidate_key = ?`).get(candidateKey) as BusinessObjectReview | undefined) ?? null;
+export async function getBusinessObjectReview(candidateKey: string): Promise<BusinessObjectReview | null> {
+  return (
+    (await queryOne<RowDataPacket & BusinessObjectReview>(
+      reviewSelect + ' WHERE candidate_key = ?',
+      [candidateKey]
+    )) ?? null
+  );
 }
 
-export function listBusinessObjectReviewEvents(candidateKey: string): BusinessObjectReviewEvent[] {
-  return db.prepare(`
-    SELECT id, candidate_key AS candidateKey, decision,
-      proposed_canonical_name AS proposedCanonicalName,
-      target_candidate_key AS targetCandidateKey,
-      notes, actor, context_tenant_slug AS contextTenantSlug, occurred_at AS occurredAt
-    FROM business_object_review_events
-    WHERE candidate_key = ?
-    ORDER BY occurred_at DESC, rowid DESC
-  `).all(candidateKey) as unknown as BusinessObjectReviewEvent[];
+export async function listBusinessObjectReviewEvents(
+  candidateKey: string
+): Promise<BusinessObjectReviewEvent[]> {
+  return queryRows<RowDataPacket & BusinessObjectReviewEvent>(
+    'SELECT id, candidate_key AS candidateKey, decision, proposed_canonical_name AS proposedCanonicalName, target_candidate_key AS targetCandidateKey, notes, actor, context_tenant_slug AS contextTenantSlug, occurred_at AS occurredAt FROM business_object_review_events WHERE candidate_key = ? ORDER BY occurred_at DESC, id DESC',
+    [candidateKey]
+  );
 }
 
-export function saveBusinessObjectReview(
+export async function saveBusinessObjectReview(
   candidateKey: string,
   input: BusinessObjectReviewInput,
   actor: string,
@@ -199,31 +203,16 @@ export function saveBusinessObjectReview(
   const target = clean(input.targetCandidateKey);
   const notes = clean(input.notes);
 
-  db.exec('BEGIN IMMEDIATE');
-  try {
-    db.prepare(`
-      INSERT INTO business_object_reviews
-        (candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, reviewed_by, reviewed_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      ON CONFLICT(candidate_key) DO UPDATE SET
-        decision = excluded.decision,
-        proposed_canonical_name = excluded.proposed_canonical_name,
-        target_candidate_key = excluded.target_candidate_key,
-        notes = excluded.notes,
-        reviewed_by = excluded.reviewed_by,
-        reviewed_at = excluded.reviewed_at,
-        updated_at = excluded.updated_at
-    `).run(candidateKey, input.decision, canonicalName, target, notes, actor, timestamp, timestamp);
-
-    db.prepare(`
-      INSERT INTO business_object_review_events
-        (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(randomUUID(), candidateKey, input.decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp);
-
-    db.exec('COMMIT');
-  } catch (error) {
-    db.exec('ROLLBACK');
-    throw error;
-  }
+  return dbTransaction(async (connection) => {
+    await executeMutation(
+      'INSERT INTO business_object_reviews (candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, reviewed_by, reviewed_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE decision = VALUES(decision), proposed_canonical_name = VALUES(proposed_canonical_name), target_candidate_key = VALUES(target_candidate_key), notes = VALUES(notes), reviewed_by = VALUES(reviewed_by), reviewed_at = VALUES(reviewed_at), updated_at = VALUES(updated_at)',
+      [candidateKey, input.decision, canonicalName, target, notes, actor, timestamp, timestamp],
+      connection
+    );
+    await executeMutation(
+      'INSERT INTO business_object_review_events (id, candidate_key, decision, proposed_canonical_name, target_candidate_key, notes, actor, context_tenant_slug, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [randomUUID(), candidateKey, input.decision, canonicalName, target, notes, actor, contextTenantSlug, timestamp],
+      connection
+    );
+  });
 }

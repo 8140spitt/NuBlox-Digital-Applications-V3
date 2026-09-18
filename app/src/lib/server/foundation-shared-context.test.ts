@@ -9,6 +9,7 @@ let legalEntityService: typeof import('./foundation-legal-entity');
 let relationshipService: typeof import('./foundation-party-relationship');
 let structureService: typeof import('./organisation-structure');
 let authorityService: typeof import('./delegated-authority');
+let sharedWorkService: typeof import('./shared-work');
 let db: typeof import('./db');
 
 beforeAll(async () => {
@@ -19,6 +20,7 @@ beforeAll(async () => {
   relationshipService = await import('./foundation-party-relationship');
   structureService = await import('./organisation-structure');
   authorityService = await import('./delegated-authority');
+  sharedWorkService = await import('./shared-work');
   db = await import('./db');
 });
 
@@ -222,4 +224,101 @@ describe('shared foundation relationship, structure and authority aggregates', (
     });
     expect(revoked).toBeNull();
   });
+
+  it('orchestrates assigned My Work without mutating domain subject truth', async () => {
+    const tenant = 'shared-work-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+    const subjectId = 'subject-' + randomUUID();
+
+    const workflowId = await sharedWorkService.createWorkflowInstance(context, {
+      definitionKey: 'test.review',
+      definitionVersion: '1',
+      subjectType: 'TEST_SUBJECT',
+      subjectId,
+      subjectVersion: '7',
+      currentState: 'REVIEW'
+    });
+    const workItemId = await sharedWorkService.createWorkItem(context, workflowId, {
+      workType: 'REVIEW',
+      title: 'Review governed subject',
+      instructions: 'Review the exact subject version without changing its domain state.',
+      priority: 'HIGH',
+      dueAt: new Date(Date.now() + 86_400_000).toISOString()
+    });
+    await sharedWorkService.assignWorkItem(context, workItemId, {
+      assigneeType: 'PARTY',
+      assigneeId: context.actorPartyId,
+      basis: 'Current tenant reviewer'
+    });
+
+    let myWork = await sharedWorkService.listMyWork(context);
+    let item = myWork.find((entry) => entry.id === workItemId)!;
+    expect(item.status).toBe('ASSIGNED');
+    expect(item.subjectId).toBe(subjectId);
+    expect(item.subjectVersion).toBe('7');
+    expect(item.version).toBe(2);
+
+    item = await sharedWorkService.changeWorkItemDueDate(
+      context,
+      workItemId,
+      item.version,
+      new Date(Date.now() + 2 * 86_400_000).toISOString(),
+      'Reviewer availability changed.'
+    );
+    expect(item.version).toBe(3);
+
+    item = await sharedWorkService.changeWorkItemPriority(
+      context,
+      workItemId,
+      item.version,
+      'URGENT',
+      'Decision date brought forward.'
+    );
+    expect(item.version).toBe(4);
+    expect(item.priority).toBe('URGENT');
+
+    const acknowledgementId = await sharedWorkService.acknowledgeWorkItem(context, workItemId, {
+      acknowledgementType: 'RECEIVED',
+      statement: 'Work received.'
+    });
+    expect(acknowledgementId).toBeTruthy();
+
+    item = await sharedWorkService.startWorkItem(context, workItemId, item.version);
+    expect(item.status).toBe('IN_PROGRESS');
+    expect(item.version).toBe(5);
+    item = await sharedWorkService.completeWorkItem(
+      context,
+      workItemId,
+      item.version,
+      'Review completed; any domain transition must occur through its own aggregate command.'
+    );
+    expect(item.status).toBe('COMPLETED');
+    expect(item.version).toBe(6);
+
+    myWork = await sharedWorkService.listMyWork(context);
+    expect(myWork.some((entry) => entry.id === workItemId)).toBe(false);
+
+    const workflow = (await sharedWorkService.listWorkflowInstances(context)).find(
+      (entry) => entry.id === workflowId
+    )!;
+    expect(workflow.version).toBe(7);
+    expect(workflow.subjectId).toBe(subjectId);
+
+    const assignments = await db.queryRows<any>(
+      'SELECT status, valid_to AS validTo FROM work_assignments WHERE work_item_id = ?',
+      [workItemId]
+    );
+    expect(assignments).toHaveLength(1);
+    expect(assignments[0].status).toBe('COMPLETED');
+    expect(assignments[0].validTo).toBeTruthy();
+
+    const evidenceRows = await db.queryRows<any>(
+      'SELECT aggregate_id AS aggregateId, aggregate_object_id AS aggregateObjectId FROM business_events WHERE tenant_id = ? AND aggregate_object_id = ?',
+      [context.tenantId, workflowId]
+    );
+    expect(evidenceRows.length).toBeGreaterThanOrEqual(7);
+    expect(evidenceRows.every((event) => event.aggregateId === 'AGG-27-WORKFLOW')).toBe(true);
+  });
+
 });

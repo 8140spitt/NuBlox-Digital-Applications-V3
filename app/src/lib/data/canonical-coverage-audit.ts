@@ -190,6 +190,7 @@ export const coverageAuditSummary = {
     mandatorySuites: marketBenchmarkSummary.mandatorySuiteCount,
     specialistDepthBenchmarks: marketBenchmarkSummary.specialistDepthCount,
     legacySapCapabilityRows: marketBenchmarkSummary.legacySapCapabilityRows,
+    sapV3MappedRows: marketBenchmarkSummary.sapV3MappedRows,
     state: marketBenchmarkSummary.programmeState,
     rule: marketBenchmarkSummary.rule
   }

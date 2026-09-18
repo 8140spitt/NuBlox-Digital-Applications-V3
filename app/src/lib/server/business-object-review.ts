@@ -11,6 +11,7 @@ import { sharedWorkEvidenceCanonicalization } from '$lib/data/shared-work-eviden
 import { referenceConfigurationCanonicalization } from '$lib/data/reference-configuration-canonicalization';
 import { crmBusinessDevelopmentCanonicalization } from '$lib/data/crm-business-development-canonicalization';
 import { estimatingTenderingCanonicalization } from '$lib/data/estimating-tendering-canonicalization';
+import { peopleHcmCanonicalization } from '$lib/data/people-hcm-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -111,7 +112,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...sharedWorkEvidenceCanonicalization,
     ...referenceConfigurationCanonicalization,
     ...crmBusinessDevelopmentCanonicalization,
-    ...estimatingTenderingCanonicalization
+    ...estimatingTenderingCanonicalization,
+    ...peopleHcmCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

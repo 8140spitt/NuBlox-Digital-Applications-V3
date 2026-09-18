@@ -67,7 +67,7 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0023_...`; historical migrations remain immutable.
+Future schema changes start at `0024_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -142,3 +142,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0022 — strategic performance runtime
 
 `0022_performance_runtime.sql` implements F01.06 Goal & KPI Management through `AGG-02-PERFORMANCE`. KPI Definition, Performance Target, Performance Observation and Baseline are separate semantic layers. KPI versions pin governed UOM and exact Strategic Objective versions; targets pin effective KPI versions; observations are immutable evidence occurrences; baselines pin validated observations; variance is computed as a read projection and corrective action delegates to shared `AGG-27-WORK` rather than creating an F01-specific task engine.
+
+
+## Migration 0023 — Strategic Review / Governance Meeting runtime
+
+`0023_strategic_review_runtime.sql` implements F01.07 through the frozen `AGG-02-GOVERNANCE-MEETING` boundary. Meeting occurrence owns schedule, quorum, attendees, agenda and review findings. Resulting choices remain immutable shared `AGG-27-DECISION` records and follow-up actions remain shared Work Items; linkage tables preserve review context without creating duplicate decision or action masters.

@@ -323,6 +323,24 @@ export const platformPermissions = [
     'strategy.performance',
     'observe',
     'Record and validate immutable performance observations.'
+  ],
+  [
+    'strategy.review.read',
+    'strategy.review',
+    'read',
+    'Read governed strategic review meetings, agenda, findings, decisions and actions.'
+  ],
+  [
+    'strategy.review.manage',
+    'strategy.review',
+    'manage',
+    'Schedule and maintain strategic review meetings, attendees and agenda.'
+  ],
+  [
+    'strategy.review.conduct',
+    'strategy.review',
+    'conduct',
+    'Convene and complete strategic reviews, capture findings and link decisions/actions.'
   ]
 ] as const;
 

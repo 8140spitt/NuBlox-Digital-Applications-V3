@@ -126,7 +126,8 @@ export const f01Workspace = {
         'Actions',
         'Outcomes',
         'Next cycle'
-      ]
+      ],
+      path: 'strategic-review'
     },
     {
       id: 'F01.08',

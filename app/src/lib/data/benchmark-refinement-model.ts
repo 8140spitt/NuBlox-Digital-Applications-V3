@@ -549,6 +549,28 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['calculation run', 'activity', 'early/late dates', 'free float', 'total float', 'critical/float path', 'baseline variance', 'health indicators'],
     lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
     governance: ['Criticality and float are calculated planning positions, not mutable flags on the Activity master.', 'Published snapshots can support delay/change evidence without replacing contemporaneous schedule/baseline truth.']
+  },
+  {
+    modelId: 'DEL-RISK-SIMULATION-RUN',
+    originGapIds: ['BG-019'],
+    canonicalName: 'Project Risk Simulation Run',
+    kind: 'event-evidence',
+    definition: 'Immutable execution evidence for quantitative schedule/cost risk simulation against exact project, schedule, cost, risk and uncertainty inputs using a defined analysis method/model version.',
+    identityRule: 'Stable run occurrence pinned to exact Enterprise Risk/Risk Assessment, Schedule/Activity, cost/forecast, uncertainty-distribution and response/scenario inputs so probabilistic results remain reproducible.',
+    keyData: ['project', 'schedule/version', 'cost/forecast version', 'risks/assessments', 'uncertainty distributions', 'correlations/assumptions', 'simulation method/version', 'iterations', 'scenario/response basis', 'executed at/by'],
+    lifecycle: ['Prepared', 'Running', 'Completed', 'Validated', 'Published', 'Superseded/Corrected'],
+    governance: ['Simulation Run is analysis evidence and never replaces Enterprise Risk, Risk Assessment, Schedule or Forecast truth.', 'Historic results retain the exact assumptions and method version used.']
+  },
+  {
+    modelId: 'DEL-RISK-ANALYSIS-SNAPSHOT',
+    originGapIds: ['BG-019'],
+    canonicalName: 'Project Risk Analysis Snapshot',
+    kind: 'projection',
+    definition: 'Rebuildable or published probabilistic project outcome position derived from a Project Risk Simulation Run, including schedule/cost distributions, confidence dates/values and risk contribution/sensitivity measures.',
+    identityRule: 'Projection identity references one simulation run and exact target/scenario context; published snapshots are immutable comparison evidence.',
+    keyData: ['simulation run', 'target/scenario', 'schedule outcome distribution', 'cost outcome distribution', 'confidence levels', 'P-values', 'sensitivity/contributors', 'contingency basis', 'published at'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Probability outputs are analytical positions, not guaranteed completion dates/costs.', 'Accepted contingency or response decisions remain explicit downstream decisions/plans.']
   }
 ];
 
@@ -571,7 +593,8 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R16', from: 'ENG-SYSTEM-MODEL-ELEMENT', predicate: 'belongs to', to: 'ENG-SYSTEM-MODEL', governance: 'Model-element identity remains scoped to its engineering model/version.' },
   { id: 'BR-R17', from: 'FIN-LEASE-VALUATION', predicate: 'values', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Every valuation is immutable evidence against one accounting record/basis.' },
   { id: 'BR-R18', from: 'FIN-LEASE-PAYMENT-SCHEDULE', predicate: 'derives from', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Schedule remains a projection and never replaces contract terms.' },
-  { id: 'BR-R19', from: 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-SCHEDULE-CALCULATION-RUN', governance: 'Analysis pins the exact calculation evidence and scheduling basis.' }
+  { id: 'BR-R19', from: 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-SCHEDULE-CALCULATION-RUN', governance: 'Analysis pins the exact calculation evidence and scheduling basis.' },
+  { id: 'BR-R20', from: 'DEL-RISK-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-RISK-SIMULATION-RUN', governance: 'Probabilistic outcome snapshot pins the exact risk simulation evidence and assumptions.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -588,7 +611,8 @@ export const benchmarkRefinementRules = [
   'Migration and test-data operations are auditable platform evidence and never redefine canonical business semantics.',
   'Product requirements and engineering models remain distinct from information-delivery requirements and installed physical Systems.',
   'Lease accounting records financial consequences without replacing Lease, Contract, Property or physical Asset identity.',
-  'CPM dates, float and critical-path status are reproducible schedule projections derived from explicit calendars, network logic and calculation evidence.'
+  'CPM dates, float and critical-path status are reproducible schedule projections derived from explicit calendars, network logic and calculation evidence.',
+  'Quantitative project-risk results are reproducible analysis evidence derived from explicit risk, schedule, cost, uncertainty and method inputs; they never replace source risk or plan truth.'
 ];
 
 export function validateBenchmarkRefinementModel() {
@@ -596,7 +620,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017', 'BG-019']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

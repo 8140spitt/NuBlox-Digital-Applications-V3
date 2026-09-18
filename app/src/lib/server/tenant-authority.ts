@@ -7,6 +7,7 @@ import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evi
 export type TenantRole = { id: string; roleKey: string; name: string; status: string; permissions: string[] };
 export type TenantMembership = { id: string; partyId: string; displayName: string; membershipType: string; status: string; validFrom: string; validTo: string | null };
 export type TenantIdentity = { id: string; partyId: string; partyDisplayName: string; provider: string; providerSubject: string; displayName: string; status: string };
+export type TenantRoleAssignment = { id: string; partyId: string; displayName: string; roleId: string; roleKey: string; roleName: string; status: string; validFrom: string; validTo: string | null };
 
 function now() { return new Date().toISOString(); }
 function required(value: string, label: string) {
@@ -223,6 +224,14 @@ export async function listTenantRoles(context: CommandContext): Promise<TenantRo
     byRole.set(row.roleId, permissions);
   }
   return roles.map((role) => ({ ...role, permissions: byRole.get(role.id) ?? [] }));
+}
+
+export async function listTenantRoleAssignments(context: CommandContext): Promise<TenantRoleAssignment[]> {
+  assertPermission(context, 'tenant.role.read');
+  return queryRows<RowDataPacket & TenantRoleAssignment>(
+    "SELECT ra.id, ra.party_id AS partyId, p.display_name AS displayName, ra.role_id AS roleId, rd.role_key AS roleKey, rd.name AS roleName, ra.status, ra.valid_from AS validFrom, ra.valid_to AS validTo FROM role_assignments ra JOIN parties p ON p.id = ra.party_id JOIN role_definitions rd ON rd.id = ra.role_id WHERE ra.tenant_id = ? AND ra.scope_type = 'TENANT' AND ra.scope_id = ? ORDER BY p.display_name, rd.name, ra.valid_from DESC",
+    [context.tenantId, context.tenantId]
+  );
 }
 
 export async function createTenantRole(context: CommandContext, roleKey: string, name: string, permissions: string[]) {

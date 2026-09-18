@@ -146,7 +146,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['engineering-information','cde','digital-twin','infrastructure'],
     workspaces: ['F05','F12','F13','F17','F22','F26','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.bentley.com/wp-content/uploads/pds-projectwise-itwin-ltr-en-lr.pdf',
     challengeFocus: ['engineering work-in-progress','digital design delivery','data governance','multidiscipline infrastructure information','digital twin continuity'],
     notes: 'Key engineering/infrastructure benchmark for controlled design information and digital-twin continuity.'
@@ -182,7 +182,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['plm','configuration','controlled-information','change','quality'],
     workspaces: ['F05','F11','F13','F17','F26','F27','F29'],
-    studyState: 'in-progress',
+    studyState: 'challenged',
     officialSource: 'https://support.ptc.com/help/windchill/r13.1.2.0/en/index.html',
     challengeFocus: ['object identity/versioning','configuration/effectivity','change control','workflow','product structures','quality'],
     notes: 'Deep semantic benchmark for lifecycle/configuration governance; never automatic NuBlox schema authority.'
@@ -194,7 +194,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['plm','digital-thread','bom','configuration','change'],
     workspaces: ['F05','F11','F13','F17','F26','F27','F29'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.siemens.com/en-gb/products/teamcenter/',
     challengeFocus: ['requirements','BOM/product structure','configuration','change','workflow','digital thread','manufacturing/service continuity'],
     notes: 'Second PLM benchmark to prevent Windchill-specific bias and challenge product/configuration semantics independently.'

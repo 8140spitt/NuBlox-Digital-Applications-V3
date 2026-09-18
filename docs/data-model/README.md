@@ -187,7 +187,7 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Retention Rule is policy; Legal Hold and Retention Disposition Decision remain runtime control/evidence.
 - Numbering Scheme creates business identifiers but never replaces immutable system identity.
 - Canonical completeness is measured against five independent lenses: sector lifecycle, 29 workspaces, specialist overlays, end-to-end chains and external benchmarks.
-- Family-level and candidate-level convergence are both closed: all 29 families are governed and all 750 candidate occurrences have explicit baseline decisions. Duplicate/alias convergence, external benchmark challenge and aggregate-boundary freeze remain separate architecture gates.
+- Family-level and candidate-level convergence are closed: all 29 families are governed and all 750 candidate occurrences have explicit baseline decisions. Duplicate/alias convergence and the external benchmark/standards challenge are also closed; aggregate-boundary freeze and L2/L3 object-action mapping remain the architecture gates before physical authority.
 - Reference data and classifications are governed separately from transactional records.
 - Documents may support evidence but do not replace structured business state.
 - Read models, analytics and search indexes are projections of canonical truth.
@@ -210,13 +210,13 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 13. Reference data, classification, jurisdiction and configuration/policy primitives.
 14. Convergence/coverage audit across the 750-candidate universe, all 29 workspaces, lifecycle stages, specialist overlays, E2E chains and external benchmarks.
 15. Cross-family duplicate/alias convergence — **closed**: 26/26 exact duplicate groups plus the governed near-alias challenge set.
-16. Complete the external benchmark/standards challenge.
+16. External benchmark/standards challenge — **closed**: 23/23 market suites, 12/12 standards/reference challenges, 29/29 findings resolved and 12/12 rejection rationales recorded.
 17. Freeze canonical aggregate boundaries and complete L2/L3 object-action mapping before treating physical aggregate/database/API patterns as enterprise-wide authority.
 18. Domain transactions, cases, plans and execution records are physically implemented only against accepted canonical semantics.
 
 ## Development hold
 
-Broad horizontal application expansion remains constrained until the remaining architecture gates close: external benchmark/standards challenge, canonical aggregate-boundary freeze and L2/L3 object-action mapping. Candidate/family semantic convergence and duplicate/alias convergence are now complete.
+Broad horizontal application expansion remains constrained until the remaining architecture gates close: canonical aggregate-boundary freeze and L2/L3 object-action mapping. Candidate/family semantic convergence, duplicate/alias convergence and the external benchmark/standards challenge are complete.
 
 The current F01.01 slice remains a learning prototype. It must not establish platform-wide object, lifecycle, workflow, permissions or versioning patterns by accident.
 

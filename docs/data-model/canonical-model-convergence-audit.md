@@ -81,9 +81,21 @@ A chain may cross several workspaces and object families. No workspace owns a du
 
 ### 5. External benchmark/reference models
 
-PTC Windchill 13.1.2 remains the first formal external benchmark, with 29 required study domains. Its study status remains **in progress**.
+The external benchmark is now a governed **multi-vendor market programme**, not a Windchill-only study.
 
-External benchmark coverage is deliberately not treated as complete merely because several useful architectural findings have already been adopted. Benchmark systems challenge completeness and semantics; they never become automatic NuBlox schema authority.
+The machine-checkable register is:
+
+`app/src/lib/data/external-benchmark-register.ts`
+
+The governing programme is:
+
+`docs/benchmarks/market-benchmark-programme.md`
+
+The current baseline registers **22 relevant products/suites** spanning all **29 tenant workspaces**, including SAP, Oracle, Microsoft, IFS, Workday, ServiceNow, Procore, Autodesk, Bentley, Trimble, IBM Maximo, PTC Windchill, Siemens Teamcenter, Deltek, Asite, Thinkproject/CEMAR, Hexagon EcoSys, Planon, Sage, Causeway, Salesforce and Diligent.
+
+The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only; every SAP capability must be remapped to V3's 29 workspaces and canonical object model.
+
+External benchmark coverage is deliberately not treated as complete merely because products are registered or several useful architectural findings have already been adopted. Benchmark systems challenge completeness, semantics, controls and end-to-end user outcomes; vendor module boundaries never become automatic NuBlox architecture.
 
 ## Family maturity states
 

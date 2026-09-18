@@ -14,9 +14,29 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: nublox_v3_test
+          MYSQL_USER: nublox
+          MYSQL_PASSWORD: nublox
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      NUBLOX_TEST_DATABASE_URL: mysql://nublox:nublox@127.0.0.1:3306/nublox_v3_test
+
     defaults:
       run:
         working-directory: app
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,11 +52,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
+      - name: Apply test database migrations
+        run: pnpm db:migrate:test
+
+      - name: Verify migration ledger
+        run: pnpm db:status:test
+
+      - name: MySQL integration tests
+        run: pnpm test:integration
+
+      - name: Domain and architecture tests
+        run: pnpm test:domain
+
       - name: Type and Svelte check
         run: pnpm check
 
-      - name: Domain tests
-        run: pnpm test:domain
+      - name: Formatting check
+        run: pnpm format:check
 
       - name: Production build
         run: pnpm build

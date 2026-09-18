@@ -33,7 +33,9 @@
         ><strong>{data.identities.filter((item: any) => item.status === 'ACTIVE').length}</strong> active
         identities</span
       >
-      <span><strong>{activeAuthorities.length}</strong> active delegations</span>
+      {#if data.authorityCapabilities.canRead}
+        <span><strong>{activeAuthorities.length}</strong> active delegations</span>
+      {/if}
     </div>
   </header>
 

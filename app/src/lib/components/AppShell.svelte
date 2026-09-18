@@ -2,12 +2,19 @@
   import { page } from '$app/state';
   import FunctionSidebar from '$lib/components/FunctionSidebar.svelte';
 
-  let { tenantSlug, children } = $props();
+  let { tenantSlug, actorDisplayName, children } = $props();
 
   const tenantName = tenantSlug
     .split('-')
     .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ');
+
+  const initials = actorDisplayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part: string) => part[0]?.toUpperCase() ?? '')
+    .join('') || 'U';
 </script>
 
 <header class="topbar">
@@ -17,11 +24,12 @@
     <a href={`/${tenantSlug}/app/functions/f01`}>My work</a>
     <a class:active={!page.url.pathname.includes('/admin/')} href={`/${tenantSlug}/app/functions/f01`}>Functions</a>
     <a href={`/${tenantSlug}/app/functions/f01`}>Reports</a>
-    <a class:active={page.url.pathname.includes('/admin/')} href={`/${tenantSlug}/app/admin/business-objects`}>Administration</a>
+    <a class:active={page.url.pathname.includes('/admin/business-objects')} href={`/${tenantSlug}/app/admin/business-objects`}>Architecture</a>
+    <a class:active={page.url.pathname.includes('/admin/master-data')} href={`/${tenantSlug}/app/admin/master-data/organisations`}>Master data</a>
   </nav>
   <div class="profile">
-    <span class="avatar">SS</span>
-    <span class="profile-copy"><strong>Stephen Spittal</strong><small>{tenantName}</small></span>
+    <span class="avatar">{initials}</span>
+    <span class="profile-copy"><strong>{actorDisplayName}</strong><small>{tenantName}</small></span>
   </div>
 </header>
 

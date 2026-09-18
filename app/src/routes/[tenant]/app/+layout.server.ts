@@ -6,6 +6,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
   return {
     tenantSlug: context.tenantSlug,
     actorDisplayName: context.actorDisplayName,
-    roleKeys: context.roleKeys
+    roleKeys: context.roleKeys,
+    authenticated: Boolean(locals.user)
   };
 };

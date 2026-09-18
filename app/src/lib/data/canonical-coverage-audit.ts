@@ -23,6 +23,7 @@ import { landDevelopmentInvestmentCanonicalization } from './land-development-in
 import { strategyGovernancePerformanceCanonicalization } from './strategy-governance-performance-canonicalization';
 import { continuityCrisisSecurityCanonicalization } from './continuity-crisis-security-canonicalization';
 import { technologyDataCyberAiCanonicalization } from './technology-data-cyber-ai-canonicalization';
+import { transformationProcessImprovementCanonicalization } from './transformation-process-improvement-canonicalization';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -96,7 +97,7 @@ export const familyCoverageDefinitions: FamilyCoverageDefinition[] = [
   { id: 'BOF-23', semanticModelState: 'governed-semantic-model', workspaces: ['F16','F18','F24'], lifecycleStages: ['Control','Operate'], processChains: ['incident/defect/NCR-to-resolution','asset-to-retirement'], overlays: ['infrastructure','property-fm','regulation'], note: 'Business impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, DR invocation, physical-security zones/credentials/access events/incidents and specialist risk-assessment semantics are governed.' },
   { id: 'BOF-24', semanticModelState: 'governed-semantic-model', workspaces: ['F16','F17','F18','F24'], lifecycleStages: ['Plan','Control','Operate','Maintain'], processChains: ['record-to-report','service-request-to-resolution','asset-to-retirement'], overlays: ['engineering','manufacturing','infrastructure','property-fm','regulation'], note: 'Technology services/resources/configuration and ITSM, disaster recovery, data domain/product/dataset/quality/pipeline, analytics/AI, access-control and cyber vulnerability/alert/incident/testing/finding semantics are governed.' },
   { id: 'BOF-25', semanticModelState: 'governed-semantic-model', workspaces: ['F06','F21','F25','F26'], lifecycleStages: ['Market','Lead','Opportunity','Contract','Control','Handover','Operate','Dispose'], processChains: ['design-to-approved-information','record-to-report'], overlays: ['development','design','commercial-management','regulation','heritage'], note: 'Knowledge/article/collection, record declaration/series/file, retention/disposition, communications/publication, external-affairs and stakeholder-engagement semantics are governed around shared controlled-information and evidence foundations.' },
-  { id: 'BOF-26', semanticModelState: 'candidate-only', workspaces: ['F01','F03','F15','F28','F29'], lifecycleStages: ['Plan','Construct','Control','Operate','Refurbish'], processChains: ['plan-to-perform','record-to-report'], overlays: ['development','contracting','manufacturing','infrastructure','property-fm','retrofit'], note: 'Transformation, organisation change and process-improvement family remains to be canonicalized.' },
+  { id: 'BOF-26', semanticModelState: 'governed-semantic-model', workspaces: ['F01','F03','F15','F28','F29'], lifecycleStages: ['Plan','Construct','Control','Operate','Refurbish'], processChains: ['plan-to-perform','record-to-report'], overlays: ['development','contracting','manufacturing','infrastructure','property-fm','retrofit'], note: 'Transformation portfolio/initiative, impact/readiness/adoption/transition, process architecture/model/version/ownership/measurement, analysis, improvement/redesign, SOP and process-compliance semantics are governed with shared portfolio, HCM, communication, decision, information and compliance reuse.' },
   { id: 'BOF-27', semanticModelState: 'governed-semantic-model', workspaces: ALL_WORKSPACES, lifecycleStages: ALL_STAGES, processChains: [...endToEndChains], overlays: [...specialistOverlays], note: 'Shared work/request/decision primitives are governed cross-workspace and do not replace domain truth.' },
   { id: 'BOF-28', semanticModelState: 'governed-semantic-model', workspaces: ALL_WORKSPACES, lifecycleStages: ALL_STAGES, processChains: [...endToEndChains], overlays: [...specialistOverlays], note: 'Evidence, audit, correction/reversal, retention and outbox primitives are governed cross-workspace.' },
   { id: 'BOF-29', semanticModelState: 'governed-semantic-model', workspaces: ALL_WORKSPACES, lifecycleStages: ALL_STAGES, processChains: [...endToEndChains], overlays: [...specialistOverlays], note: 'Reference, classification, jurisdiction and policy/configuration primitives are governed cross-workspace.' }
@@ -125,7 +126,8 @@ export const governedCanonicalizationDecisions = [
   ...landDevelopmentInvestmentCanonicalization,
   ...strategyGovernancePerformanceCanonicalization,
   ...continuityCrisisSecurityCanonicalization,
-  ...technologyDataCyberAiCanonicalization
+  ...technologyDataCyberAiCanonicalization,
+  ...transformationProcessImprovementCanonicalization
 ];
 
 const decisionKeys = new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey));

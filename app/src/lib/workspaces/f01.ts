@@ -111,7 +111,8 @@ export const f01Workspace = {
         'Performance data',
         'Dashboards',
         'Variance analysis'
-      ]
+      ],
+      path: 'performance'
     },
     {
       id: 'F01.07',

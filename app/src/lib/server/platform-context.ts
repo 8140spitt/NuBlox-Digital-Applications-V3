@@ -305,6 +305,24 @@ export const platformPermissions = [
     'strategy.operating-model',
     'approve',
     'Approve, activate and supersede governed target Operating Models.'
+  ],
+  [
+    'strategy.performance.read',
+    'strategy.performance',
+    'read',
+    'Read governed KPI definitions, targets, baselines and performance observations.'
+  ],
+  [
+    'strategy.performance.manage',
+    'strategy.performance',
+    'manage',
+    'Create and govern KPI definitions, targets and baselines.'
+  ],
+  [
+    'strategy.performance.observe',
+    'strategy.performance',
+    'observe',
+    'Record and validate immutable performance observations.'
   ]
 ] as const;
 

@@ -5,7 +5,8 @@ export type DeliveryContextKind =
   | 'scope-structure'
   | 'plan'
   | 'work'
-  | 'event-evidence';
+  | 'event-evidence'
+  | 'constraint';
 
 export type DeliveryContextDefinition = {
   modelId: string;
@@ -199,7 +200,7 @@ export const deliveryContextModel: DeliveryContextDefinition[] = [
   },
   {
     modelId: 'DEL-PROGRESS-RECORD',
-    candidateKeys: ['BOF-06-016'],
+    candidateKeys: ['BOF-06-016', 'BOF-12-009'],
     canonicalName: 'Progress Record',
     kind: 'event-evidence',
     definition: 'An as-of-date evidence record describing measured progress against a governed delivery object such as an Activity or Work Package.',
@@ -228,6 +229,22 @@ export const deliveryContextModel: DeliveryContextDefinition[] = [
       'A requirement may be fulfilled by people, plant, equipment, materials or other resource types through domain-specific allocations.',
       'Resource master identities remain authoritative in their own domains.'
     ]
+  },
+  {
+    modelId: 'DEL-CONSTRAINT',
+    candidateKeys: ['BOF-06-025', 'BOF-12-020'],
+    canonicalName: 'Delivery Constraint',
+    kind: 'constraint',
+    definition: 'A governed delivery/project constraint that limits or blocks planned work, access, information, resources, sequence or conditions.',
+    identityRule: 'Stable constraint identity shared by project controls and field operations, retaining exact source, scope, impact, owner and resolution history.',
+    scope: ['project', 'WBS/work package', 'schedule activity', 'site/work area'],
+    keyData: ['constraint type', 'scope', 'source/basis', 'description', 'impact', 'owner', 'needed-by date', 'mitigation/resolution'],
+    lifecycle: ['Identified', 'Open', 'Mitigating', 'Resolved', 'Closed', 'Cancelled'],
+    governance: [
+      'Project-controls Constraint and Field Constraint use one canonical Delivery Constraint identity.',
+      'Development Constraint remains a distinct land/development concept because it governs development feasibility/consent rather than delivery execution.',
+      'Closing or resolving a constraint preserves its original impact and resolution evidence.'
+    ]
   }
 ];
 
@@ -249,7 +266,9 @@ export const deliveryContextRelationships: DeliveryContextRelationship[] = [
   { id: 'DEL-R15', from: 'DEL-PROGRESS-RECORD', predicate: 'evidences', to: 'DEL-SCHEDULE-ACTIVITY', cardinality: '0..* ↔ 1', governance: 'Progress history is append-only/correctable evidence.' },
   { id: 'DEL-R16', from: 'DEL-PROGRESS-RECORD', predicate: 'evidences', to: 'DEL-WORK-PACKAGE', cardinality: '0..* ↔ 1', governance: 'Package progress may be derived from validated evidence and lower-level work.' },
   { id: 'DEL-R17', from: 'DEL-RESOURCE-REQUIREMENT', predicate: 'required by', to: 'DEL-SCHEDULE-ACTIVITY', cardinality: '0..* ↔ 0..*', governance: 'Requirement and allocation are separate.' },
-  { id: 'DEL-R18', from: 'DEL-RESOURCE-REQUIREMENT', predicate: 'required by', to: 'DEL-WORK-PACKAGE', cardinality: '0..* ↔ 0..*', governance: 'Requirements can be planned at the scope level before detailed activities exist.' }
+  { id: 'DEL-R18', from: 'DEL-RESOURCE-REQUIREMENT', predicate: 'required by', to: 'DEL-WORK-PACKAGE', cardinality: '0..* ↔ 0..*', governance: 'Requirements can be planned at the scope level before detailed activities exist.' },
+  { id: 'DEL-R19', from: 'DEL-CONSTRAINT', predicate: 'constrains', to: 'DEL-WORK-PACKAGE', cardinality: '0..* ↔ 0..*', governance: 'Constraint scope is explicit and does not become Work Package state.' },
+  { id: 'DEL-R20', from: 'DEL-CONSTRAINT', predicate: 'may constrain', to: 'DEL-SCHEDULE-ACTIVITY', cardinality: '0..* ↔ 0..*', governance: 'Schedule impact and constraint identity remain separate so delay/forecast evidence is reconstructable.' }
 ];
 
 export const deliveryStructureBoundaries: DeliveryStructureBoundary[] = [
@@ -271,6 +290,7 @@ export const deliveryContextRules = [
   'Project-controls Task is normalised to Schedule Activity; workflow Work Item/Approval Request remains separate.',
   'Approved Schedule Baselines are immutable. Rebaseline creates a new governed baseline.',
   'Progress is captured as dated evidence/events; current percentage/status is derived rather than destructively overwritten.',
+  'Project-controls and field constraints converge on Delivery Constraint; Development Constraint remains separate land/development semantics.',
   'Physical Site/System/Asset identity is independent of Project/WBS/Schedule and survives handover.',
   'Responsibility, participation and authority use the shared Authority & Participation model rather than bespoke project-role columns.'
 ];

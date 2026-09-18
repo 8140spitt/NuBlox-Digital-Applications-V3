@@ -41,7 +41,6 @@ export type RecordDecisionInput = {
   subjectVersion?: string;
   outcome: string;
   reason: string;
-  authorityBasis?: string;
   authority?: {
     type: string;
     scopeType: string;
@@ -221,7 +220,9 @@ export async function recordWorkDecision(
           authorityScopeId: null,
           authorityCurrencyCode: null,
           authorityValue: null,
-          authorityBasis: required(input.authorityBasis ?? '', 'Decision authority basis')
+          authorityBasis:
+            'Permission work.decision.record via role(s): ' +
+            (context.roleKeys.length ? context.roleKeys.join(', ') : 'direct permission context')
         };
 
     const id = randomUUID();

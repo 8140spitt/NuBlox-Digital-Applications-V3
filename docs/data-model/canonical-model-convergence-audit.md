@@ -173,6 +173,20 @@ Current candidate-level result:
 
 The validation function and automated test now treat 750/750 decision coverage as an architecture invariant. A future candidate added to the register without a corresponding governed decision will fail the convergence audit.
 
+## Duplicate and alias convergence
+
+Cross-family duplicate/alias convergence is now machine-checkable through:
+
+`app/src/lib/data/canonical-alias-convergence-audit.ts`
+
+The audit closes all **26/26 exact duplicate-name groups** from the generated discovery register and the documented near-alias challenge set. It deliberately distinguishes:
+
+- **shared canonical identity** — multiple candidates resolve to one canonical root, such as Site, Zone, Risk Assessment, Procurement Package, Unit of Measure and Call-off Order;
+- **explicitly distinct semantics** — the same word is retained only after canonical renaming/semantic separation, such as CRM Activity vs Schedule Activity, Property Valuation vs Commercial Valuation, and Statutory vs Delivery Completion Certificate;
+- **governed family patterns** — related concepts reuse common foundations/evidence rules without being collapsed into one master, such as inspections, changes, certificates and domain evidence.
+
+The former duplicate-name queue is therefore a discovery artefact, not an unresolved architecture backlog. Any future exact duplicate group or documented alias challenge that lacks a governed resolution must fail the Gate 2 audit.
+
 ## Architecture gate
 
 Physical aggregate/database/API design must not use a family as enterprise-wide authority merely because:
@@ -205,9 +219,9 @@ Candidate-level convergence is now also closed at **750/750 decisions**.
 The next architecture gates are:
 
 ```text
-1. Re-run duplicate/alias convergence across all 29 families
-2. Complete the external benchmark / standards challenge
-3. Freeze the canonical aggregate boundaries
+1. Complete the external benchmark / standards challenge
+2. Freeze the canonical aggregate boundaries
+3. Complete the L2/L3 activity → canonical object/action mapping
 4. Only then approve physical schema / API implementation waves
 ```
 

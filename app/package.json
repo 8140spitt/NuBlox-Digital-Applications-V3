@@ -15,11 +15,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:platform": "pnpm test:integration",
-    "db:migrate": "node scripts/db-migrate.mjs",
-    "db:status": "node scripts/db-status.mjs",
-    "db:migrate:test": "node scripts/db-migrate.mjs --test",
-    "db:status:test": "node scripts/db-status.mjs --test",
-    "test:integration": "node scripts/db-migrate.mjs --test && vitest run src/lib/server/platform-foundation.test.ts src/lib/server/strategy-framework.test.ts src/lib/server/business-object-review.test.ts",
+    "db:migrate": "node --env-file-if-exists=.env scripts/db-migrate.mjs",
+    "db:status": "node --env-file-if-exists=.env scripts/db-status.mjs",
+    "db:migrate:test": "node --env-file-if-exists=.env scripts/db-migrate.mjs --test",
+    "db:status:test": "node --env-file-if-exists=.env scripts/db-status.mjs --test",
+    "test:integration": "node --env-file-if-exists=.env scripts/db-migrate.mjs --test && vitest run src/lib/server/platform-foundation.test.ts src/lib/server/strategy-framework.test.ts src/lib/server/business-object-review.test.ts",
     "test:all": "pnpm test:domain && pnpm test:integration"
   },
   "dependencies": {
@@ -38,5 +38,8 @@
     "typescript": "^6.0.3",
     "vite": "^8.0.16",
     "vitest": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=22.9.0"
   }
 }

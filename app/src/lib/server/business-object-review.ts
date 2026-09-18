@@ -19,6 +19,7 @@ import { riskComplianceAuditCanonicalization } from '$lib/data/risk-compliance-a
 import { legalPrivacyCanonicalization } from '$lib/data/legal-privacy-canonicalization';
 import { knowledgeRecordsCommunicationsCanonicalization } from '$lib/data/knowledge-records-communications-canonicalization';
 import { landDevelopmentInvestmentCanonicalization } from '$lib/data/land-development-investment-canonicalization';
+import { strategyGovernancePerformanceCanonicalization } from '$lib/data/strategy-governance-performance-canonicalization';
 import { db } from '$lib/server/db';
 
 export const reviewDecisions = [
@@ -127,7 +128,8 @@ export function seedFoundationCanonicalization(contextTenantSlug: string) {
     ...riskComplianceAuditCanonicalization,
     ...legalPrivacyCanonicalization,
     ...knowledgeRecordsCommunicationsCanonicalization,
-    ...landDevelopmentInvestmentCanonicalization
+    ...landDevelopmentInvestmentCanonicalization,
+    ...strategyGovernancePerformanceCanonicalization
   ];
   let inserted = 0;
   db.exec('BEGIN IMMEDIATE');

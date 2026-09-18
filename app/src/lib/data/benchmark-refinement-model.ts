@@ -596,7 +596,7 @@ export function validateBenchmarkRefinementModel() {
   if (!benchmarkRefinementModel.every((entry) => entry.originGapIds.length && entry.keyData.length && entry.governance.length)) return false;
   const ids = new Set(benchmarkRefinementModel.map((entry) => entry.modelId));
   if (!benchmarkRefinementRelationships.every((rel) => ids.has(rel.from) && ids.has(rel.to))) return false;
-  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016']) {
+  for (const gapId of ['BG-001', 'BG-002', 'BG-003', 'BG-004', 'BG-005', 'BG-006', 'BG-012', 'BG-013', 'BG-014', 'BG-015', 'BG-016', 'BG-017']) {
     if (!benchmarkRefinementModel.some((entry) => entry.originGapIds.includes(gapId))) return false;
   }
   return true;

@@ -24,20 +24,19 @@
 <header class="topbar">
   <div class="brand" aria-label="NuBlox"><span class="brand-mark">N</span><span>NuBlox</span></div>
   <nav class="topnav" aria-label="Global">
-    <a href={`/${tenantSlug}/app/functions/f01`}>Home</a>
+    <a class:active={page.url.pathname === `/${tenantSlug}/app`} href={`/${tenantSlug}/app`}>Home</a>
     <a class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}>My work</a>
     <a
-      class:active={!page.url.pathname.includes('/admin/')}
-      href={`/${tenantSlug}/app/functions/f01`}>Functions</a
+      class:active={page.url.pathname.includes('/app/functions')}
+      href={`/${tenantSlug}/app/functions`}>Functions</a
     >
-    <a href={`/${tenantSlug}/app/functions/f01`}>Reports</a>
     <a
       class:active={page.url.pathname.includes('/admin/business-objects')}
       href={`/${tenantSlug}/app/admin/business-objects`}>Architecture</a
     >
     <a
       class:active={page.url.pathname.includes('/admin/master-data')}
-      href={`/${tenantSlug}/app/admin/master-data/organisations`}>Master data</a
+      href={`/${tenantSlug}/app/admin/master-data/parties`}>Master data</a
     >
     <a
       class:active={page.url.pathname.includes('/admin/security')}

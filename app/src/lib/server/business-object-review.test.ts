@@ -307,6 +307,30 @@ describe('canonical business object review ledger', () => {
     expect(planningObligation?.decision).toBe('MERGE');
     expect(planningObligation?.targetCandidateKey).toBe('BOF-22-003');
 
+    const strategyFramework = service.getBusinessObjectReview('BOF-02-001');
+    expect(strategyFramework?.decision).toBe('VALIDATE_OBJECT');
+    expect(strategyFramework?.proposedCanonicalName).toBe('Strategy Framework');
+
+    const governanceDecision = service.getBusinessObjectReview('BOF-02-016');
+    expect(governanceDecision?.decision).toBe('MERGE');
+    expect(governanceDecision?.targetCandidateKey).toBe('BOF-06-023');
+
+    const governanceAction = service.getBusinessObjectReview('BOF-02-017');
+    expect(governanceAction?.decision).toBe('MERGE');
+    expect(governanceAction?.targetCandidateKey).toBe('BOF-06-024');
+
+    const policy = service.getBusinessObjectReview('BOF-02-018');
+    expect(policy?.decision).toBe('MERGE');
+    expect(policy?.targetCandidateKey).toBe('BOF-07-007');
+
+    const authorityFramework = service.getBusinessObjectReview('BOF-02-019');
+    expect(authorityFramework?.decision).toBe('VALIDATE_OBJECT');
+    expect(authorityFramework?.proposedCanonicalName).toBe('Authority Framework');
+
+    const governanceRecord = service.getBusinessObjectReview('BOF-02-020');
+    expect(governanceRecord?.decision).toBe('MERGE');
+    expect(governanceRecord?.targetCandidateKey).toBe('BOF-07-007');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

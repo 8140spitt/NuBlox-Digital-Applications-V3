@@ -33,6 +33,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `risk-compliance-audit-semantics.md` — governed Enterprise Risk, Risk Assessment/Treatment, regulatory obligation, compliance requirement/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics.
 - `legal-privacy-semantics.md` — governed legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, privacy incident, international-transfer and assurance semantics.
 - `knowledge-records-communications-semantics.md` — governed Knowledge Article/Collection, record declaration/series/file, retention/disposition, communication planning/publication, media/external-affairs and stakeholder-engagement semantics.
+- `land-development-investment-semantics.md` — governed development opportunity/business case/appraisal, land option, property-interest, valuation/survey, planning/consent/conditions/obligations and funding-evidence semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -97,6 +98,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Retention Schedule is policy, Disposition Request is domain request and BOF-28 Retention Disposition Decision remains the immutable disposition outcome; Legal Hold overrides eligibility.
 - Communication activity remains separate from its controlled content; Reputation/Public Affairs share one External Affairs Issue case pattern.
 - Investor Engagement is typed Stakeholder Engagement evidence linked to canonical Parties; Stakeholder Engagement Plan remains distinct from Communications Plan.
+- Development work reuses canonical Site, Land Parcel, Property, Party, Contract and Project identities; Development Opportunity remains distinct from CRM Opportunity.
+- Investment Case is a Business Case type; Development Appraisal is decision-support projection and approval uses shared immutable Decision evidence.
+- Land Option reuses Contract; Ownership/Occupation are typed Property Interest relationships; Development Constraint remains distinct from Project Delivery Constraint.
+- Property Valuation is distinct from BOF-08 contract/payment Valuation; planning Application, Consent and Conditions remain separate layers.
+- Planning Obligation reuses Legal Obligation; Survey, Site Appraisal and Funding/Grant Evidence remain attributable evidence around canonical source objects.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

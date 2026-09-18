@@ -21,7 +21,8 @@ The machine-readable authority is `app/src/lib/data/commercial-procurement-model
 7. **Commercial change is a case, not an edit.** Variation and Compensation Event are governed Commercial Change types; approved change does not silently overwrite Contract truth.
 8. **Sourcing is traceable end to end.** Requisition, event, request, response, evaluation, award and commitment remain distinct evidence-bearing objects.
 9. **Award is a decision, not a Purchase Order.** Authority is evaluated at Award/commitment execution and the decision basis is retained.
-10. **Fulfilment evidence is immutable.** Goods/Service Receipt uses a shared receipt-event pattern with correction/reversal rather than destructive overwrite.
+10. **Call-off has one identity.** Procurement and logistics reuse one `Call-off Order`; logistics fulfils it but never creates a parallel call-off master.
+11. **Fulfilment evidence is immutable.** Goods/Service Receipt uses a shared receipt-event pattern with correction/reversal rather than destructive overwrite.
 
 ## Core semantic structures
 
@@ -129,7 +130,9 @@ Award
   ↓
 Purchase Order and/or Contract
   ↓
-Procurement Receipt
+Call-off Order (where the governing commitment supports releases)
+  ↓
+Procurement Receipt / logistics fulfilment
 ```
 
 Each transition is traceable. No single mutable procurement record represents the whole process.
@@ -155,6 +158,12 @@ Requisition is the authorised internal request to procure before an external com
 Purchase Order is an external commitment. `Purchase Order Line` is a child/value-bearing entity. `Order Amendment` is controlled commitment history.
 
 An approved amendment never silently overwrites the historical committed terms.
+
+## Call-off Order
+
+`Call-off Order` is one governed release identity under a framework, Contract, Purchase Order or other blanket commitment. The BOF-09 procurement occurrence and BOF-10 logistics occurrence are the same business fact.
+
+Commercial/procurement owns the commitment and authority semantics. Inventory/logistics consumes the Call-off Order as demand/fulfilment context for reservation, pick, shipment, delivery and receipt. A logistics workspace must never create its own second call-off master.
 
 ## Procurement Receipt
 

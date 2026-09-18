@@ -1,6 +1,6 @@
 # NuBlox V3 Market Benchmark Programme
 
-**Status:** Gate 3 — in progress  
+**Status:** Gate 3 — architecture challenge complete  
 **Established:** 18 September 2026  
 **Scope:** enterprise operating system + Construction & Built Environment depth
 
@@ -165,7 +165,7 @@ Challenge:
 - lifecycle investment;
 - operational handover.
 
-### Wave 5 — Enterprise control and specialist back office
+### Wave 5 — Enterprise control and specialist back office — architecture challenge complete
 
 ServiceNow, Diligent, Salesforce, Workday, Deltek, Sage.
 
@@ -248,7 +248,7 @@ The architecture challenge has now been completed for:
 - Thinkproject / CEMAR;
 - Asite.
 
-Current programme state:
+Checkpoint state at that stage:
 
 - **12/23** benchmark products/suites challenged;
 - **1/23** in progress — PTC Windchill deep semantic study;
@@ -276,7 +276,7 @@ The architecture challenge is now complete for:
 - Planon IWMS;
 - Esri ArcGIS.
 
-Current programme state:
+Checkpoint state at that stage:
 
 - **18/23** benchmark products/suites challenged;
 - **0/23** in progress;
@@ -293,3 +293,43 @@ Detailed records:
 
 - `product-engineering-information-wave.md`;
 - `asset-property-service-wave.md`.
+
+
+## Gate 3 completion — 18 September 2026
+
+Gate 3 is now **complete at architecture-challenge level**.
+
+Machine-checkable result:
+
+- **23/23** registered market benchmark products/suites challenged;
+- **29/29** benchmark findings resolved architecturally;
+- **12/12** standards/reference challenges completed;
+- **12/12** deliberately rejected vendor patterns have recorded rationale and preserved authority;
+- **29/29** tenant workspaces covered by the benchmark portfolio;
+- **64/64** SAP capabilities remapped and challenged against V3 semantics;
+- **0** market benchmark studies queued or in progress;
+- **0** open benchmark findings;
+- **0** open standards findings;
+- **0** undocumented rejected-vendor-pattern decisions.
+
+Final Wave 5 study:
+
+- `enterprise-control-specialist-wave.md`
+
+Standards/interoperability study:
+
+- `standards-interoperability-challenge.md`
+
+Machine authorities:
+
+- `app/src/lib/data/external-benchmark-register.ts`
+- `app/src/lib/data/benchmark-gap-register.ts`
+- `app/src/lib/data/benchmark-refinement-model.ts`
+- `app/src/lib/data/standards-challenge-register.ts`
+- `app/src/lib/data/benchmark-rejection-register.ts`
+
+All Gate 3 exit criteria are therefore satisfied for **canonical architecture discovery/convergence**.
+
+This does **not** claim runtime feature parity, certification, legal/regulatory approval or interoperability conformance. Those require implementation and test evidence.
+
+The next architecture gate is **canonical aggregate-boundary freeze**, followed by complete L2/L3 activity → canonical object/action mapping before enterprise-wide physical schema/API implementation is authorised.

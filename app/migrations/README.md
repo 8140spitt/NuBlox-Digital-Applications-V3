@@ -58,8 +58,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0008_shared_work_runtime.sql` — AGG-27-WORKFLOW runtime for workflow instances, Work Items, assignments, acknowledgements, escalation and governed work-change evidence.
 - `0009_authorised_decision_runtime.sql` — immutable AGG-27-DECISION records with exact subject/version and authority evidence.
 - `0010_governed_evidence_runtime.sql` — AGG-28-EVIDENCE items with integrity hashes, source references, provenance and independent verification.
+- `0011_classification_runtime.sql` — AGG-29-CLASSIFICATION systems, immutable releases and governed release-scoped codes.
 
-Future schema changes start at `0011_...`; historical migrations remain immutable.
+Future schema changes start at `0012_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -78,3 +79,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0010 — governed evidence runtime
 
 `0010_governed_evidence_runtime.sql` introduces `AGG-28-EVIDENCE`: stable Evidence Items with exact subject/version binding, integrity hashes, immutable source/provenance references, attributable capture and independent verification. Evidence supports domain truth without becoming a duplicate business master.
+
+
+## Migration 0011 — classification runtime
+
+`0011_classification_runtime.sql` introduces `AGG-29-CLASSIFICATION`: stable Classification Systems, draft-to-published immutable Releases, release-scoped Codes and hierarchical parent-code relationships. Bulk code loading is a governed aggregate command so large taxonomies such as Uniclass can be loaded efficiently without creating a parallel business-master architecture.

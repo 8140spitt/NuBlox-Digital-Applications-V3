@@ -117,6 +117,24 @@ export const platformPermissions = [
     'verify',
     'Verify captured evidence independently and retain attributable verification evidence.'
   ],
+  [
+    'reference.classification.read',
+    'reference.classification',
+    'read',
+    'Read governed classification systems, releases and codes.'
+  ],
+  [
+    'reference.classification.manage',
+    'reference.classification',
+    'manage',
+    'Create classification systems, draft releases and load governed codes.'
+  ],
+  [
+    'reference.classification.publish',
+    'reference.classification',
+    'publish',
+    'Publish immutable classification releases for business use.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

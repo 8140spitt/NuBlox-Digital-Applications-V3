@@ -6,7 +6,7 @@ import mysql, {
   type RowDataPacket
 } from 'mysql2/promise';
 
-export const requiredMigration = '0010_governed_evidence_runtime.sql';
+export const requiredMigration = '0011_classification_runtime.sql';
 
 function databaseUrl() {
   if (

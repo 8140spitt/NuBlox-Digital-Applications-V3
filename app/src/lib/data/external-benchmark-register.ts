@@ -38,7 +38,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['enterprise-erp','finance','procurement','hcm','project-controls','construction','cde','payments'],
     workspaces: ['F01','F03','F07','F09','F10','F12','F13','F14','F15','F17','F20','F23','F26','F27','F29'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.oracle.com/customer-hub/construction-engineering/',
     challengeFocus: ['Primavera planning/control','Unifier capital programme controls','Aconex information exchange','Textura payment management','ERP continuity'],
     notes: 'Challenges project/programme control, capital delivery, CDE collaboration, payment and enterprise back-office continuity.'
@@ -50,7 +50,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['enterprise-erp','finance','supply-chain','crm','field-service','project-operations','workflow'],
     workspaces: ['F03','F06','F07','F08','F09','F10','F12','F14','F15','F17','F22','F27','F29'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://learn.microsoft.com/en-us/dynamics365/guidance/business-processes/',
     challengeFocus: ['field-to-project-finance','record-to-report','source-to-pay','sales/service continuity','Dataverse/Power Platform extensibility'],
     notes: 'Strong benchmark for connected operational and financial processes across field work, project operations and finance.'
@@ -62,7 +62,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['enterprise-erp','eam','field-service','supply-chain','manufacturing'],
     workspaces: ['F09','F10','F11','F12','F13','F14','F15','F22','F23','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.ifs.com/en/ifs-cloud',
     challengeFocus: ['asset-service lifecycle','project-centric ERP','field service','supply chain','manufacturing'],
     notes: 'Important benchmark for asset-intensive and service-centric operating models where ERP, EAM and FSM are integrated.'
@@ -74,7 +74,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['finance','hcm','planning','analytics'],
     workspaces: ['F01','F03','F14','F15','F17','F20'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.workday.com/en-gb/enterprise-resource-planning.html',
     challengeFocus: ['hire-to-retire','workforce planning','record-to-report','close/consolidate','continuous planning'],
     notes: 'Specialist enterprise benchmark for people, finance and planning on a unified cloud data model.'
@@ -304,6 +304,9 @@ export const marketBenchmarkSummary = {
   benchmarkCount: externalBenchmarkRegister.length,
   mandatorySuiteCount: externalBenchmarkRegister.filter((entry) => entry.tier === 'mandatory-suite').length,
   specialistDepthCount: externalBenchmarkRegister.filter((entry) => entry.tier === 'specialist-depth').length,
+  challengedBenchmarkCount: externalBenchmarkRegister.filter((entry) => entry.studyState === 'challenged').length,
+  inProgressBenchmarkCount: externalBenchmarkRegister.filter((entry) => entry.studyState === 'in-progress').length,
+  registeredBenchmarkCount: externalBenchmarkRegister.filter((entry) => entry.studyState === 'registered').length,
   coveredWorkspaceCount: benchmarkWorkspaceCoverage.size,
   workspaceCount: enterpriseFunctions.length,
   programmeState: 'in-progress' as const,

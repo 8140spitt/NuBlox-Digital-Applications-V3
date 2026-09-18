@@ -27,12 +27,12 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.governedFamilyCount + coverageAuditSummary.partialFamilyCount + coverageAuditSummary.candidateOnlyFamilyCount).toBe(29);
   });
 
-  it('measures candidate decision coverage from the real register and governed baselines', () => {
+  it('proves every candidate in the real register has a governed baseline decision', () => {
     expect(coverageAuditSummary.candidateOccurrences).toBe(750);
-    expect(coverageAuditSummary.baselineDecisionCount).toBeGreaterThan(0);
-    expect(coverageAuditSummary.baselineDecisionCount).toBeLessThan(coverageAuditSummary.candidateOccurrences);
-    expect(coverageAuditSummary.baselineUndecidedCount).toBe(coverageAuditSummary.candidateOccurrences - coverageAuditSummary.baselineDecisionCount);
-    expect(new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey)).size).toBe(coverageAuditSummary.baselineDecisionCount);
+    expect(coverageAuditSummary.baselineDecisionCount).toBe(750);
+    expect(coverageAuditSummary.baselineUndecidedCount).toBe(0);
+    expect(coverageAuditSummary.baselineDecisionCoveragePct).toBe(100);
+    expect(new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey)).size).toBe(750);
   });
 
   it('does not pretend the external benchmark study is complete', () => {

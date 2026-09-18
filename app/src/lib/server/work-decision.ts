@@ -9,6 +9,10 @@ import {
 } from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
+import {
+  hasPublishedApprovalAuthorityPolicy,
+  resolveApprovalAuthorityRequirement
+} from '$lib/server/authority-configuration';
 
 export type WorkDecision = {
   id: string;
@@ -209,6 +213,42 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
         superseded.subjectVersion !== subjectVersion
       ) {
         throw new Error('A corrective Decision must reference the same exact subject/version.');
+      }
+    }
+
+    const hasApprovalPolicy = await hasPublishedApprovalAuthorityPolicy(
+      context,
+      decisionType,
+      subjectType,
+      connection
+    );
+    if (hasApprovalPolicy && !input.authority) {
+      throw new Error(
+        'Published Approval Authority policy requires explicit authority context for this Decision.'
+      );
+    }
+    if (hasApprovalPolicy && input.authority) {
+      const requirement = await resolveApprovalAuthorityRequirement(
+        context,
+        {
+          actionKey: decisionType,
+          objectType: subjectType,
+          scopeType: input.authority.scopeType,
+          scopeId: input.authority.scopeId,
+          currencyCode: input.authority.currencyCode,
+          value: input.authority.value
+        },
+        connection
+      );
+      if (!requirement) {
+        throw new Error('Published Approval Authority policy does not permit this Decision context.');
+      }
+      if (requirement.requiredAuthorityType !== code(input.authority.type, 'Authority type', 191)) {
+        throw new Error(
+          'Published Approval Authority policy requires authority type ' +
+            requirement.requiredAuthorityType +
+            '.'
+        );
       }
     }
 

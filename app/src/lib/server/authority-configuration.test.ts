@@ -4,11 +4,17 @@ import { seedDevelopmentTenant } from './development-seed';
 
 let contextService: typeof import('./platform-context');
 let authority: typeof import('./authority-configuration');
+let delegatedAuthorityService: typeof import('./delegated-authority');
+let decisionService: typeof import('./work-decision');
+let personService: typeof import('./foundation-person');
 let db: typeof import('./db');
 
 beforeAll(async () => {
   contextService = await import('./platform-context');
   authority = await import('./authority-configuration');
+  delegatedAuthorityService = await import('./delegated-authority');
+  decisionService = await import('./work-decision');
+  personService = await import('./foundation-person');
   db = await import('./db');
 });
 
@@ -162,4 +168,123 @@ describe('governed authority configuration', () => {
     ]);
     expect(events.map((event) => Number(event.aggregateVersion))).toEqual([1, 2]);
   });
+
+  it('enforces published authority policy at runtime without turning policy into a grant', async () => {
+    const tenant = 'authority-policy-runtime-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const approval = await authority.createApprovalAuthorityRule(context, {
+      ruleKey: 'COMMERCIAL.APPROVAL.RUNTIME',
+      actionKey: 'COMMERCIAL_APPROVAL',
+      objectType: 'COMMERCIAL_COMMITMENT',
+      configuration: {
+        scopeType: 'TENANT',
+        scopeId: context.tenantId,
+        currencyCode: 'GBP',
+        maximumValue: 250000,
+        requiredAuthorityType: 'COMMERCIAL_COMMITMENT'
+      }
+    });
+    await authority.publishApprovalAuthorityRuleVersion(
+      context,
+      approval.ruleId,
+      approval.versionId,
+      1
+    );
+
+    await expect(
+      decisionService.recordWorkDecision(context, {
+        decisionType: 'COMMERCIAL_APPROVAL',
+        subjectType: 'COMMERCIAL_COMMITMENT',
+        subjectId: 'commitment-' + randomUUID(),
+        outcome: 'APPROVED',
+        reason: 'Missing authority context must be rejected by published policy.'
+      })
+    ).rejects.toThrow('requires explicit authority context');
+
+    await expect(
+      decisionService.recordWorkDecision(context, {
+        decisionType: 'COMMERCIAL_APPROVAL',
+        subjectType: 'COMMERCIAL_COMMITMENT',
+        subjectId: 'commitment-' + randomUUID(),
+        outcome: 'APPROVED',
+        reason: 'Over-threshold authority must be rejected by published policy.',
+        authority: {
+          type: 'COMMERCIAL_COMMITMENT',
+          scopeType: 'TENANT',
+          scopeId: context.tenantId,
+          currencyCode: 'GBP',
+          value: 300000
+        }
+      })
+    ).rejects.toThrow('does not permit');
+
+    const delegation = await authority.createDelegatedAuthorityRule(context, {
+      ruleKey: 'COMMERCIAL.DELEGATION.RUNTIME',
+      authorityType: 'COMMERCIAL_COMMITMENT',
+      configuration: {
+        allowedScopeType: 'TENANT',
+        allowedScopeId: context.tenantId,
+        currencyCode: 'GBP',
+        maximumValue: 250000,
+        maximumDurationDays: 30,
+        allowSubdelegation: false
+      }
+    });
+    await authority.publishDelegatedAuthorityRuleVersion(
+      context,
+      delegation.ruleId,
+      delegation.versionId,
+      1
+    );
+
+    const delegatePartyId = await personService.createPerson(context, {
+      givenName: 'Policy',
+      familyName: 'Delegate'
+    });
+    const tooLargeGrantId = await delegatedAuthorityService.createDelegatedAuthority(context, {
+      delegatePartyId,
+      authorityType: 'COMMERCIAL_COMMITMENT',
+      basis: 'Configured policy test',
+      scopeType: 'TENANT',
+      scopeId: context.tenantId,
+      currencyCode: 'GBP',
+      valueLimit: 500000,
+      validFrom: new Date().toISOString(),
+      validTo: new Date(Date.now() + 10 * 86_400_000).toISOString()
+    });
+    const tooLarge = (await delegatedAuthorityService.listDelegatedAuthorities(context)).find(
+      (entry) => entry.id === tooLargeGrantId
+    )!;
+    await expect(
+      delegatedAuthorityService.approveDelegatedAuthority(context, tooLarge.id, tooLarge.version)
+    ).rejects.toThrow('does not permit');
+
+    const permittedGrantId = await delegatedAuthorityService.createDelegatedAuthority(context, {
+      delegatePartyId,
+      authorityType: 'COMMERCIAL_COMMITMENT',
+      basis: 'Configured policy test',
+      scopeType: 'TENANT',
+      scopeId: context.tenantId,
+      currencyCode: 'GBP',
+      valueLimit: 200000,
+      validFrom: new Date().toISOString(),
+      validTo: new Date(Date.now() + 10 * 86_400_000).toISOString()
+    });
+    const permitted = (await delegatedAuthorityService.listDelegatedAuthorities(context)).find(
+      (entry) => entry.id === permittedGrantId
+    )!;
+    await delegatedAuthorityService.approveDelegatedAuthority(
+      context,
+      permitted.id,
+      permitted.version
+    );
+    expect(
+      (await delegatedAuthorityService.listDelegatedAuthorities(context)).find(
+        (entry) => entry.id === permittedGrantId
+      )?.status
+    ).toBe('APPROVED');
+  });
+
 });

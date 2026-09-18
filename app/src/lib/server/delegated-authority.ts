@@ -9,6 +9,10 @@ import {
 } from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
+import {
+  hasPublishedDelegatedAuthorityPolicy,
+  resolveDelegatedAuthorityPolicy
+} from '$lib/server/authority-configuration';
 
 export type DelegatedAuthority = {
   id: string;
@@ -209,6 +213,35 @@ async function transition(
       throw new Error(`Delegated Authority cannot move from ${current.status} to ${toState}.`);
     if (toState === 'APPROVED' && current.delegatePartyId === context.actorPartyId) {
       throw new Error('A delegate cannot approve their own Delegated Authority.');
+    }
+    if (
+      toState === 'APPROVED' &&
+      (await hasPublishedDelegatedAuthorityPolicy(context, current.authorityType, connection))
+    ) {
+      const durationDays = current.validTo
+        ? Math.ceil(
+            (new Date(current.validTo).getTime() - new Date(current.validFrom).getTime()) /
+              86_400_000
+          )
+        : undefined;
+      const policy = await resolveDelegatedAuthorityPolicy(
+        context,
+        {
+          authorityType: current.authorityType,
+          scopeType: current.scopeType,
+          scopeId: current.scopeId,
+          currencyCode: current.currencyCode ?? undefined,
+          value: current.valueLimit == null ? undefined : Number(current.valueLimit),
+          durationDays,
+          allowSubdelegation: Boolean(current.allowSubdelegation)
+        },
+        connection
+      );
+      if (!policy) {
+        throw new Error(
+          'Published Delegated Authority policy does not permit this grant configuration.'
+        );
+      }
     }
     const timestamp = now();
     const revocationReason =

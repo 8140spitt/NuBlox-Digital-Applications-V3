@@ -528,6 +528,32 @@ export async function publishDelegatedAuthorityRuleVersion(
   return publishVersion(context, 'DELEGATED', ruleId, versionId, expectedRuleVersion);
 }
 
+export async function hasPublishedApprovalAuthorityPolicy(
+  context: CommandContext,
+  actionKeyValue: string,
+  objectTypeValue: string,
+  executor?: DbExecutor
+) {
+  const actionKey = key(actionKeyValue, 'Approval action key');
+  const objectType = key(objectTypeValue, 'Approval object type', 128);
+  const row = await queryOne<RowDataPacket & { id: string }>(
+    `SELECT r.id
+       FROM approval_authority_rules r
+       JOIN approval_authority_rule_versions v
+         ON v.approval_authority_rule_id = r.id
+        AND v.tenant_id = r.tenant_id
+      WHERE r.tenant_id = ?
+        AND r.action_key = ?
+        AND r.object_type = ?
+        AND r.status = 'ACTIVE'
+        AND v.status = 'PUBLISHED'
+      LIMIT 1`,
+    [context.tenantId, actionKey, objectType],
+    executor
+  );
+  return Boolean(row);
+}
+
 export async function resolveApprovalAuthorityRequirement(
   context: CommandContext,
   input: {
@@ -538,7 +564,8 @@ export async function resolveApprovalAuthorityRequirement(
     currencyCode?: string;
     value?: number;
     at?: string;
-  }
+  },
+  executor?: DbExecutor
 ) {
   const actionKey = key(input.actionKey, 'Approval action key');
   const objectType = key(input.objectType, 'Approval object type', 128);
@@ -583,7 +610,8 @@ export async function resolveApprovalAuthorityRequirement(
       ORDER BY (v.scope_type IS NOT NULL) DESC,
                (v.minimum_value IS NOT NULL OR v.maximum_value IS NOT NULL) DESC,
                v.version_no DESC`,
-    [context.tenantId, actionKey, objectType, at, at]
+    [context.tenantId, actionKey, objectType, at, at],
+    executor
   );
 
   const scopeType = input.scopeType?.trim().toUpperCase() || null;
@@ -604,6 +632,29 @@ export async function resolveApprovalAuthorityRequirement(
   );
 }
 
+export async function hasPublishedDelegatedAuthorityPolicy(
+  context: CommandContext,
+  authorityTypeValue: string,
+  executor?: DbExecutor
+) {
+  const authorityType = key(authorityTypeValue, 'Delegated authority type');
+  const row = await queryOne<RowDataPacket & { id: string }>(
+    `SELECT r.id
+       FROM delegated_authority_rules r
+       JOIN delegated_authority_rule_versions v
+         ON v.delegated_authority_rule_id = r.id
+        AND v.tenant_id = r.tenant_id
+      WHERE r.tenant_id = ?
+        AND r.authority_type = ?
+        AND r.status = 'ACTIVE'
+        AND v.status = 'PUBLISHED'
+      LIMIT 1`,
+    [context.tenantId, authorityType],
+    executor
+  );
+  return Boolean(row);
+}
+
 export async function resolveDelegatedAuthorityPolicy(
   context: CommandContext,
   input: {
@@ -615,7 +666,8 @@ export async function resolveDelegatedAuthorityPolicy(
     durationDays?: number;
     allowSubdelegation?: boolean;
     at?: string;
-  }
+  },
+  executor?: DbExecutor
 ) {
   const authorityType = key(input.authorityType, 'Delegated authority type');
   const scopeType = key(input.scopeType, 'Delegated authority scope type', 64);
@@ -658,7 +710,8 @@ export async function resolveDelegatedAuthorityPolicy(
         AND (v.effective_from IS NULL OR v.effective_from <= ?)
         AND (v.effective_to IS NULL OR v.effective_to > ?)
       ORDER BY (v.allowed_scope_id IS NOT NULL) DESC, v.version_no DESC`,
-    [context.tenantId, authorityType, scopeType, scopeId, at, at]
+    [context.tenantId, authorityType, scopeType, scopeId, at, at],
+    executor
   );
 
   const currency = input.currencyCode?.trim().toUpperCase() || null;
@@ -669,12 +722,9 @@ export async function resolveDelegatedAuthorityPolicy(
         if (input.value == null || !currency || row.currencyCode !== currency) return false;
         if (input.value > max) return false;
       }
-      if (
-        row.maximumDurationDays != null &&
-        input.durationDays != null &&
-        input.durationDays > Number(row.maximumDurationDays)
-      ) {
-        return false;
+      if (row.maximumDurationDays != null) {
+        if (input.durationDays == null) return false;
+        if (input.durationDays > Number(row.maximumDurationDays)) return false;
       }
       if (input.allowSubdelegation && !row.allowSubdelegation) return false;
       return true;

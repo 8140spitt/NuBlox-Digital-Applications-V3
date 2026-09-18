@@ -84,11 +84,11 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
       canReadDelegatedAuthority ? listDelegatedAuthorities(context) : Promise.resolve([])
     ]);
 
-  const view = ['access', 'roles', 'identities', 'authority'].includes(
-    url.searchParams.get('view') ?? ''
-  )
-    ? url.searchParams.get('view')
-    : 'access';
+  const requestedView = url.searchParams.get('view') ?? '';
+  const allowedViews = canReadDelegatedAuthority
+    ? ['access', 'roles', 'identities', 'authority']
+    : ['access', 'roles', 'identities'];
+  const view = allowedViews.includes(requestedView) ? requestedView : 'access';
 
   return {
     view,

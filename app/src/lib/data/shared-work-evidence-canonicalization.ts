@@ -1,6 +1,8 @@
 import type { FoundationCanonicalizationDecision } from './foundation-canonicalization';
 
 export const sharedWorkEvidenceCanonicalization: FoundationCanonicalizationDecision[] = [
+  { candidateKey: 'BOF-06-023', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Decision', notes: 'Project/governance Decision uses the shared immutable Decision evidence pattern. Domain state changes consume a valid Decision but do not turn the Decision into the domain object.' },
+  { candidateKey: 'BOF-06-024', decision: 'RENAME', proposedCanonicalName: 'Decision Action', notes: 'Project/governance Action uses the shared Decision Action pattern with accountable owner, due date and closure evidence; workflow Work Items may coordinate it but do not replace it.' },
   { candidateKey: 'BOF-27-001', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Work Item', notes: 'Reusable actionable work identity linked to an authoritative business subject. A Work Item coordinates human/system work but never replaces the domain object, case, transaction or lifecycle state it concerns.' },
   { candidateKey: 'BOF-27-002', decision: 'RELATIONSHIP', proposedCanonicalName: 'Work Assignment', notes: 'Effective assignment relationship linking a Work Item to a Party, User Identity or governed Role/queue. Assignment is not identity, responsibility, permission or delegated authority.' },
   { candidateKey: 'BOF-27-003', decision: 'VALIDATE_OBJECT', proposedCanonicalName: 'Review Request', notes: 'Governed request for review of an exact subject/version/configuration. Review outcome/evidence is retained separately from the request.' },

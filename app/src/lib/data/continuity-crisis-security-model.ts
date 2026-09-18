@@ -128,7 +128,7 @@ export const continuityCrisisSecurityModel: ContinuityCrisisSecurityDefinition[]
     ['Requested','Approved','Issued','Active','Suspended','Revoked','Expired','Returned'],
     ['Credential is authorization, not Person identity.', 'Visitor Pass is a typed credential with visitor/sponsor context.', 'Possessing a credential does not itself prove an access occurrence.']),
 
-  ccs('SEC-PHYSICAL-ACCESS-EVENT', [], 'Physical Access Event', 'event-evidence',
+  ccs('SEC-PHYSICAL-ACCESS-EVENT', ['BOF-12-007'], 'Physical Access Event', 'event-evidence',
     'Immutable physical-access occurrence such as entry, exit, denial or checkpoint use associated with credential/subject and controlled point/zone.',
     'Unique occurrence identity preserving event time, access point/zone, credential/subject, outcome and source system/evidence.',
     ['occurred at','access point/security zone','credential','subject','event type','outcome/reason','source device/system','evidence'],

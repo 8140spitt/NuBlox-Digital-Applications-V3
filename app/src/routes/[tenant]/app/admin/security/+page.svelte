@@ -46,7 +46,9 @@
     <a class:active={data.view === 'roles'} href="?view=roles">Roles &amp; permissions</a>
     <a class:active={data.view === 'identities'} href="?view=identities">Authenticated identities</a
     >
-    <a class:active={data.view === 'authority'} href="?view=authority">Delegated authority</a>
+    {#if data.authorityCapabilities.canRead}
+      <a class:active={data.view === 'authority'} href="?view=authority">Delegated authority</a>
+    {/if}
   </nav>
 
   {#if data.view === 'access'}

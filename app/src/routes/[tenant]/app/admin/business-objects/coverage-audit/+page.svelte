@@ -22,7 +22,7 @@
     <div>
       <span class="eyebrow">Convergence & coverage</span>
       <h1>Canonical Model Coverage Audit</h1>
-      <p>Machine-checkable proof of where the 750-object discovery universe has governed semantic decisions, where coverage is partial, and where convergence work remains across the 29 tenant workspaces and whole built-environment lifecycle.</p>
+      <p>Machine-checkable proof that the 750-object discovery universe has governed baseline decisions across all 29 families, while keeping the remaining benchmark, alias-convergence and physical-design gates explicit.</p>
     </div>
     <div class="hero-actions">
       <a href={`/${data.tenantSlug}/app/admin/business-objects`}>← Canonicalization workbench</a>
@@ -86,22 +86,33 @@
       <div><span class="eyebrow">Convergence queue</span><h2>What remains before physical schema authority</h2></div>
       <p>The audit intentionally exposes gaps. “Candidate only” means discovery exists but family-level canonical semantics are not yet governed.</p>
     </div>
-    <div class="gap-grid">
-      {#each convergenceGapFamilies as family}
+    {#if convergenceGapFamilies.length}
+      <div class="gap-grid">
+        {#each convergenceGapFamilies as family}
+          <article>
+            <div><code>{family.id}</code><span class:partial={family.semanticModelState === 'partial-semantic-model'} class:candidate={family.semanticModelState === 'candidate-only'} class="state">{statusLabel(family.semanticModelState)}</span></div>
+            <strong>{family.name}</strong>
+            <p>{family.note}</p>
+            <small>{family.undecidedCandidateCount} candidate decisions open · {family.decisionCoveragePct}% baseline decision coverage</small>
+          </article>
+        {/each}
+      </div>
+    {:else}
+      <div class="gap-grid">
         <article>
-          <div><code>{family.id}</code><span class:partial={family.semanticModelState === 'partial-semantic-model'} class:candidate={family.semanticModelState === 'candidate-only'} class="state">{statusLabel(family.semanticModelState)}</span></div>
-          <strong>{family.name}</strong>
-          <p>{family.note}</p>
-          <small>{family.undecidedCandidateCount} candidate decisions still open · {family.decisionCoveragePct}% baseline decision coverage</small>
+          <div><code>750/750</code><span class="state governed">Candidate closure</span></div>
+          <strong>Candidate convergence complete</strong>
+          <p>All 29 families are governed and every discovery candidate has a version-controlled baseline decision.</p>
+          <small>Next gates: duplicate/alias convergence → external benchmark/standards challenge → aggregate-boundary freeze.</small>
         </article>
-      {/each}
-    </div>
+      </div>
+    {/if}
   </section>
 
   <section class="section-card gate">
     <span class="eyebrow">Architecture gate</span>
     <h2>What this audit permits—and does not permit</h2>
-    <p>Coverage of a lens means the operating-model dimension has an explicit mapping. It does <strong>not</strong> mean every candidate is canonical, every L2/L3 activity is mapped, or the physical database/API design is approved. Candidate-only and partial families remain explicit blockers to declaring the enterprise object model complete.</p>
+    <p>All 750 candidates now have governed baseline decisions and all 29 family semantic models are governed. This is necessary but <strong>does not yet approve</strong> physical database/API design: cross-family duplicate/alias convergence, the external benchmark/standards challenge, L2/L3 object-action mapping and canonical aggregate-boundary freeze remain explicit gates.</p>
   </section>
 </div>
 

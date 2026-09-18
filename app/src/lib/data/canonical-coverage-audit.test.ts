@@ -16,6 +16,14 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.aggregateFreeze.frozenFamilyCount).toBe(29);
     expect(coverageAuditSummary.aggregateFreeze.aggregateBoundaryCount).toBeGreaterThanOrEqual(70);
     expect(coverageAuditSummary.aggregateFreeze.benchmarkRefinementsAssigned).toBe(79);
+    expect(coverageAuditSummary.activityMapping.state).toBe('mapped');
+    expect(coverageAuditSummary.activityMapping.mappedFunctionCount).toBe(29);
+    expect(coverageAuditSummary.activityMapping.mappedSubfunctionCount).toBe(353);
+    expect(coverageAuditSummary.activityMapping.mappedActivityCount).toBe(1510);
+    expect(coverageAuditSummary.activityMapping.unmappedSubfunctionCount).toBe(0);
+    expect(coverageAuditSummary.activityMapping.ambiguousSubfunctionCount).toBe(0);
+    expect(coverageAuditSummary.activityMapping.invalidObjectModelRouteCount).toBe(0);
+    expect(coverageAuditSummary.activityMapping.invalidAggregateRouteCount).toBe(0);
     expect(familyCoverageAudit).toHaveLength(29);
     expect(coverageAuditSummary.workspaceCount).toBe(29);
     expect(coverageAuditSummary.coveredWorkspaceCount).toBe(29);

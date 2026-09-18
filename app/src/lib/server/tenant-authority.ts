@@ -1,0 +1,133 @@
+import { randomUUID } from 'node:crypto';
+import type { RowDataPacket } from 'mysql2/promise';
+import { dbTransaction, executeMutation, queryOne, queryRows, type DbExecutor } from '$lib/server/db';
+import { assertPermission, platformPermissions, type CommandContext } from '$lib/server/platform-context';
+import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
+
+export type TenantRole = { id: string; roleKey: string; name: string; status: string; permissions: string[] };
+export type TenantMembership = { id: string; partyId: string; displayName: string; membershipType: string; status: string; validFrom: string; validTo: string | null };
+
+function now() { return new Date().toISOString(); }
+function required(value: string, label: string) {
+  const clean = value.trim();
+  if (!clean) throw new Error(label + ' is required.');
+  return clean;
+}
+async function assertParty(context: CommandContext, partyId: string, executor?: DbExecutor) {
+  const party = await queryOne<RowDataPacket & { id: string; displayName: string }>(
+    'SELECT id, display_name AS displayName FROM parties WHERE tenant_id = ? AND id = ?',
+    [context.tenantId, partyId], executor
+  );
+  if (!party) throw new Error('Party not found in this tenant.');
+  return party;
+}
+
+export async function listTenantMemberships(context: CommandContext): Promise<TenantMembership[]> {
+  assertPermission(context, 'tenant.membership.read');
+  return queryRows<RowDataPacket & TenantMembership>(
+    "SELECT m.id, m.party_id AS partyId, p.display_name AS displayName, m.membership_type AS membershipType, m.status, m.valid_from AS validFrom, m.valid_to AS validTo FROM memberships m JOIN parties p ON p.id = m.party_id WHERE m.tenant_id = ? AND m.context_type = 'TENANT' AND m.context_id = ? ORDER BY p.display_name",
+    [context.tenantId, context.tenantId]
+  );
+}
+
+export async function grantTenantMembership(context: CommandContext, partyId: string, membershipType = 'INTERNAL') {
+  assertPermission(context, 'tenant.membership.manage');
+  return dbTransaction(async (connection) => {
+    const party = await assertParty(context, partyId, connection);
+    const existing = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM memberships WHERE tenant_id = ? AND party_id = ? AND context_type = 'TENANT' AND context_id = ? AND status = 'ACTIVE' LIMIT 1",
+      [context.tenantId, partyId, context.tenantId], connection
+    );
+    if (existing) return existing.id;
+    const id = randomUUID();
+    const timestamp = now();
+    await executeMutation(
+      "INSERT INTO memberships (id, tenant_id, party_id, context_type, context_id, membership_type, status, valid_from, valid_to, created_at) VALUES (?, ?, ?, 'TENANT', ?, ?, 'ACTIVE', ?, NULL, ?)",
+      [id, context.tenantId, partyId, context.tenantId, required(membershipType, 'Membership type').toUpperCase(), timestamp, timestamp], connection
+    );
+    await recordPlatformAudit(context, { aggregateId: 'AGG-00-TENANT', objectType: 'tenant_membership', objectId: id, action: 'TENANT_MEMBERSHIP_GRANTED', toState: 'ACTIVE', note: party.displayName }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-00-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_MEMBERSHIP_GRANTED', topic: 'nublox.tenant.membership', payload: { membershipId: id, partyId } }, connection);
+    return id;
+  });
+}
+
+export async function revokeTenantMembership(context: CommandContext, membershipId: string) {
+  assertPermission(context, 'tenant.membership.manage');
+  return dbTransaction(async (connection) => {
+    const row = await queryOne<RowDataPacket & { partyId: string; status: string }>(
+      "SELECT party_id AS partyId, status FROM memberships WHERE id = ? AND tenant_id = ? AND context_type = 'TENANT' AND context_id = ?",
+      [membershipId, context.tenantId, context.tenantId], connection
+    );
+    if (!row) throw new Error('Tenant membership not found.');
+    if (row.partyId === context.actorPartyId) throw new Error('An actor cannot revoke their own tenant membership.');
+    if (row.status !== 'ACTIVE') return;
+    await executeMutation("UPDATE memberships SET status = 'INACTIVE', valid_to = ? WHERE id = ? AND tenant_id = ?", [now(), membershipId, context.tenantId], connection);
+    await recordPlatformAudit(context, { aggregateId: 'AGG-00-TENANT', objectType: 'tenant_membership', objectId: membershipId, action: 'TENANT_MEMBERSHIP_REVOKED', fromState: 'ACTIVE', toState: 'INACTIVE' }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-00-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_MEMBERSHIP_REVOKED', topic: 'nublox.tenant.membership', payload: { membershipId, partyId: row.partyId } }, connection);
+  });
+}
+
+export async function listTenantRoles(context: CommandContext): Promise<TenantRole[]> {
+  assertPermission(context, 'tenant.role.read');
+  const roles = await queryRows<RowDataPacket & Omit<TenantRole, 'permissions'>>(
+    'SELECT id, role_key AS roleKey, name, status FROM role_definitions WHERE tenant_id = ? ORDER BY name',
+    [context.tenantId]
+  );
+  const result: TenantRole[] = [];
+  for (const role of roles) {
+    const permissions = await queryRows<RowDataPacket & { permissionKey: string }>(
+      'SELECT permission_key AS permissionKey FROM role_permissions WHERE role_id = ? ORDER BY permission_key', [role.id]
+    );
+    result.push({ ...role, permissions: permissions.map((item) => item.permissionKey) });
+  }
+  return result;
+}
+
+export async function createTenantRole(context: CommandContext, roleKey: string, name: string, permissions: string[]) {
+  assertPermission(context, 'tenant.role.manage');
+  const allowed = new Set(platformPermissions.map(([key]) => key as string));
+  const selected = [...new Set(permissions)];
+  for (const permission of selected) if (!allowed.has(permission)) throw new Error('Unknown permission: ' + permission);
+  return dbTransaction(async (connection) => {
+    const id = randomUUID();
+    const timestamp = now();
+    await executeMutation(
+      "INSERT INTO role_definitions (id, tenant_id, role_key, name, status, created_at, updated_at) VALUES (?, ?, ?, ?, 'ACTIVE', ?, ?)",
+      [id, context.tenantId, required(roleKey, 'Role key').toLowerCase(), required(name, 'Role name'), timestamp, timestamp], connection
+    );
+    for (const permission of selected) await executeMutation('INSERT INTO role_permissions (role_id, permission_key) VALUES (?, ?)', [id, permission], connection);
+    await recordPlatformAudit(context, { aggregateId: 'AGG-00-TENANT', objectType: 'tenant_role', objectId: id, action: 'TENANT_ROLE_CREATED', toState: 'ACTIVE' }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-00-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_ROLE_CREATED', topic: 'nublox.tenant.authority', payload: { roleId: id, roleKey, permissions: selected } }, connection);
+    return id;
+  });
+}
+
+export async function assignTenantRole(context: CommandContext, partyId: string, roleId: string) {
+  assertPermission(context, 'tenant.role.assign');
+  return dbTransaction(async (connection) => {
+    await assertParty(context, partyId, connection);
+    const role = await queryOne<RowDataPacket & { id: string; roleKey: string }>(
+      "SELECT id, role_key AS roleKey FROM role_definitions WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'", [roleId, context.tenantId], connection
+    );
+    if (!role) throw new Error('Active tenant role not found.');
+    const membership = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM memberships WHERE tenant_id = ? AND party_id = ? AND context_type = 'TENANT' AND context_id = ? AND status = 'ACTIVE' LIMIT 1",
+      [context.tenantId, partyId, context.tenantId], connection
+    );
+    if (!membership) throw new Error('Party must be an active tenant member before a role can be assigned.');
+    const existing = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ? AND role_id = ? AND scope_type = 'TENANT' AND scope_id = ? AND status = 'ACTIVE' LIMIT 1",
+      [context.tenantId, partyId, roleId, context.tenantId], connection
+    );
+    if (existing) return existing.id;
+    const id = randomUUID();
+    const timestamp = now();
+    await executeMutation(
+      "INSERT INTO role_assignments (id, tenant_id, party_id, role_id, scope_type, scope_id, status, valid_from, valid_to, assignment_source, created_at) VALUES (?, ?, ?, ?, 'TENANT', ?, 'ACTIVE', ?, NULL, 'tenant-authority-command', ?)",
+      [id, context.tenantId, partyId, roleId, context.tenantId, timestamp, timestamp], connection
+    );
+    await recordPlatformAudit(context, { aggregateId: 'AGG-00-TENANT', objectType: 'tenant_role_assignment', objectId: id, action: 'TENANT_ROLE_ASSIGNED', toState: 'ACTIVE' }, connection);
+    await emitBusinessEvent(context, { aggregateId: 'AGG-00-TENANT', aggregateType: 'Tenant', aggregateObjectId: context.tenantId, aggregateVersion: 1, eventType: 'TENANT_ROLE_ASSIGNED', topic: 'nublox.tenant.authority', payload: { assignmentId: id, partyId, roleId, roleKey: role.roleKey } }, connection);
+    return id;
+  });
+}

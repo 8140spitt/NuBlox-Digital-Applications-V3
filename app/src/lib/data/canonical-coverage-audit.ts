@@ -25,6 +25,7 @@ import { continuityCrisisSecurityCanonicalization } from './continuity-crisis-se
 import { technologyDataCyberAiCanonicalization } from './technology-data-cyber-ai-canonicalization';
 import { transformationProcessImprovementCanonicalization } from './transformation-process-improvement-canonicalization';
 import { siteFieldOperationsCanonicalization } from './site-field-operations-canonicalization';
+import { marketBenchmarkSummary } from './external-benchmark-register';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -183,10 +184,14 @@ export const coverageAuditSummary = {
   specialistOverlayCount: specialistOverlays.length,
   coveredSpecialistOverlayCount: overlayCoverage.size,
   externalBenchmark: {
-    name: 'PTC Windchill 13.1.2',
-    requiredDomains: 29,
-    state: 'in-progress' as const,
-    rule: 'Benchmark findings challenge completeness and semantics but never become automatic NuBlox schema authority.'
+    name: 'Multi-vendor market benchmark programme',
+    requiredDomains: marketBenchmarkSummary.workspaceCount,
+    registeredBenchmarks: marketBenchmarkSummary.benchmarkCount,
+    mandatorySuites: marketBenchmarkSummary.mandatorySuiteCount,
+    specialistDepthBenchmarks: marketBenchmarkSummary.specialistDepthCount,
+    legacySapCapabilityRows: marketBenchmarkSummary.legacySapCapabilityRows,
+    state: marketBenchmarkSummary.programmeState,
+    rule: marketBenchmarkSummary.rule
   }
 };
 

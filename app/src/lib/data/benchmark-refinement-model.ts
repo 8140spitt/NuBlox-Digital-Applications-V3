@@ -486,7 +486,7 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
   },
   {
     modelId: 'FIN-LEASE-ACCOUNTING-RECORD',
-    originGapIds: ['BG-016'],
+    originGapIds: ['BG-016', 'BG-017'],
     canonicalName: 'Lease Accounting Record',
     kind: 'accounting-record',
     definition: 'Finance-side accounting identity linking an exact Lease/Contract relationship to the governed accounting treatment, valuation basis and right-of-use/liability consequences required by the applicable accounting standard.',
@@ -516,6 +516,39 @@ export const benchmarkRefinementModel: BenchmarkRefinementDefinition[] = [
     keyData: ['lease accounting record', 'valuation/version', 'period', 'payment', 'interest', 'principal/liability movement', 'right-of-use depreciation', 'currency'],
     lifecycle: ['Calculated', 'Approved', 'Current', 'Superseded', 'Completed'],
     governance: ['Schedule is not the contractual payment term itself and never rewrites the Lease/Contract.', 'Accounting entries reference exact schedule/valuation evidence.']
+  },
+  {
+    modelId: 'DEL-SCHEDULE-CALENDAR',
+    originGapIds: ['BG-017'],
+    canonicalName: 'Schedule Calendar',
+    kind: 'definition',
+    definition: 'Versioned governed working-time calendar used by a Schedule or Schedule Activity to calculate planned/forecast dates and durations.',
+    identityRule: 'Stable calendar identity/version defining working/non-working periods, shifts, holidays and exceptions; schedule calculations pin the exact version used.',
+    keyData: ['calendar reference', 'timezone', 'working periods', 'non-working periods', 'holidays/exceptions', 'scope', 'effective version'],
+    lifecycle: ['Draft', 'Approved', 'Effective', 'Superseded', 'Retired'],
+    governance: ['Schedule Calendar is planning configuration, not Worker Availability, Shift assignment or site-access truth.', 'Historic schedule calculations retain the calendar version actually used.']
+  },
+  {
+    modelId: 'DEL-SCHEDULE-CALCULATION-RUN',
+    originGapIds: ['BG-017'],
+    canonicalName: 'Schedule Calculation Run',
+    kind: 'event-evidence',
+    definition: 'Immutable execution evidence for network scheduling of an exact Schedule version using defined calendars, data date and calculation options.',
+    identityRule: 'Stable run occurrence pinned to schedule/activity/dependency versions, data date, calendars and algorithm/options so calculated dates and float are reproducible.',
+    keyData: ['schedule/version', 'data date', 'calendar versions', 'calculation options', 'activity/dependency snapshot', 'started/completed at', 'result status', 'warnings'],
+    lifecycle: ['Prepared', 'Calculated', 'Validated', 'Published', 'Superseded/Corrected'],
+    governance: ['Calculation Run never rewrites an approved Schedule Baseline.', 'Manual constraints/overrides remain explicit inputs rather than hidden date edits.']
+  },
+  {
+    modelId: 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT',
+    originGapIds: ['BG-017'],
+    canonicalName: 'Schedule Analysis Snapshot',
+    kind: 'projection',
+    definition: 'Rebuildable as-of schedule-analysis position containing calculated early/late dates, free/total float, critical/longest-path membership, schedule-health indicators and baseline variance for exact activity/network inputs.',
+    identityRule: 'Projection or published snapshot references one Schedule Calculation Run; every metric retains the calculation basis and exact activity/dependency state.',
+    keyData: ['calculation run', 'activity', 'early/late dates', 'free float', 'total float', 'critical/float path', 'baseline variance', 'health indicators'],
+    lifecycle: ['Calculated', 'Reviewed', 'Published', 'Superseded'],
+    governance: ['Criticality and float are calculated planning positions, not mutable flags on the Activity master.', 'Published snapshots can support delay/change evidence without replacing contemporaneous schedule/baseline truth.']
   }
 ];
 
@@ -537,7 +570,8 @@ export const benchmarkRefinementRelationships: BenchmarkRefinementRelationship[]
   { id: 'BR-R15', from: 'DATA-TEST-DATA-RUN', predicate: 'uses', to: 'DATA-TEST-DATA-PROFILE', governance: 'Protection profile version is retained as audit evidence.' },
   { id: 'BR-R16', from: 'ENG-SYSTEM-MODEL-ELEMENT', predicate: 'belongs to', to: 'ENG-SYSTEM-MODEL', governance: 'Model-element identity remains scoped to its engineering model/version.' },
   { id: 'BR-R17', from: 'FIN-LEASE-VALUATION', predicate: 'values', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Every valuation is immutable evidence against one accounting record/basis.' },
-  { id: 'BR-R18', from: 'FIN-LEASE-PAYMENT-SCHEDULE', predicate: 'derives from', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Schedule remains a projection and never replaces contract terms.' }
+  { id: 'BR-R18', from: 'FIN-LEASE-PAYMENT-SCHEDULE', predicate: 'derives from', to: 'FIN-LEASE-ACCOUNTING-RECORD', governance: 'Schedule remains a projection and never replaces contract terms.' },
+  { id: 'BR-R19', from: 'DEL-SCHEDULE-ANALYSIS-SNAPSHOT', predicate: 'derives from', to: 'DEL-SCHEDULE-CALCULATION-RUN', governance: 'Analysis pins the exact calculation evidence and scheduling basis.' }
 ];
 
 export const benchmarkRefinementRules = [
@@ -553,7 +587,8 @@ export const benchmarkRefinementRules = [
   'Business travel connects approval, duty-of-care and expense without replacing specialist booking-provider truth.',
   'Migration and test-data operations are auditable platform evidence and never redefine canonical business semantics.',
   'Product requirements and engineering models remain distinct from information-delivery requirements and installed physical Systems.',
-  'Lease accounting records financial consequences without replacing Lease, Contract, Property or physical Asset identity.'
+  'Lease accounting records financial consequences without replacing Lease, Contract, Property or physical Asset identity.',
+  'CPM dates, float and critical-path status are reproducible schedule projections derived from explicit calendars, network logic and calculation evidence.'
 ];
 
 export function validateBenchmarkRefinementModel() {

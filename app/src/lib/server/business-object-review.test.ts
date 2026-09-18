@@ -176,6 +176,29 @@ describe('canonical business object review ledger', () => {
     const complianceRegister = service.getBusinessObjectReview('BOF-13-033');
     expect(complianceRegister?.decision).toBe('PROJECTION');
 
+    const dutyholder = service.getBusinessObjectReview('BOF-14-001');
+    expect(dutyholder?.decision).toBe('RELATIONSHIP');
+    expect(dutyholder?.proposedCanonicalName).toBe('Dutyholder Assignment');
+
+    const buildingControlApplication = service.getBusinessObjectReview('BOF-14-005');
+    expect(buildingControlApplication?.decision).toBe('MERGE');
+    expect(buildingControlApplication?.targetCandidateKey).toBe('BOF-14-004');
+
+    const regulatoryInspection = service.getBusinessObjectReview('BOF-14-007');
+    expect(regulatoryInspection?.decision).toBe('MERGE');
+    expect(regulatoryInspection?.targetCandidateKey).toBe('BOF-13-003');
+
+    const statutoryCertificate = service.getBusinessObjectReview('BOF-14-013');
+    expect(statutoryCertificate?.decision).toBe('RENAME');
+    expect(statutoryCertificate?.proposedCanonicalName).toBe('Statutory Completion Certificate');
+
+    const goldenThread = service.getBusinessObjectReview('BOF-14-014');
+    expect(goldenThread?.decision).toBe('PROJECTION');
+
+    const regulatorySubmission = service.getBusinessObjectReview('BOF-14-015');
+    expect(regulatorySubmission?.decision).toBe('MERGE');
+    expect(regulatorySubmission?.targetCandidateKey).toBe('BOF-27-013');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

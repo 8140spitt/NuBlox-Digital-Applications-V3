@@ -72,7 +72,7 @@ async function getTenant(tenantSlug: string, executor?: DbExecutor) {
   );
 }
 
-async function ensureTenant(tenantSlug: string, displayName: string, executor: DbExecutor): Promise<TenantRow> {
+export async function ensureTenant(tenantSlug: string, displayName: string, executor: DbExecutor): Promise<TenantRow> {
   const slug = tenantSlug.trim().toLowerCase();
   if (!slug) throw new Error('Tenant slug is required.');
   const existing = await getTenant(slug, executor);
@@ -91,7 +91,7 @@ async function ensureTenant(tenantSlug: string, displayName: string, executor: D
   return (await getTenant(slug, executor)) as TenantRow;
 }
 
-async function seedPermissionDefinitions(executor: DbExecutor) {
+export async function seedPermissionDefinitions(executor: DbExecutor) {
   for (const permission of platformPermissions) {
     await executeMutation(
       'INSERT INTO permission_definitions (permission_key, resource, action, description) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE resource = VALUES(resource), action = VALUES(action), description = VALUES(description)',
@@ -101,7 +101,7 @@ async function seedPermissionDefinitions(executor: DbExecutor) {
   }
 }
 
-async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbExecutor) {
+export async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbExecutor) {
   const existing = await queryOne<IdentityRow>(
     'SELECT id, party_id AS partyId, display_name AS displayName, status FROM user_identities WHERE tenant_id = ? AND provider = \'development\' AND provider_subject = \'development-user\'',
     [tenant.id],
@@ -133,7 +133,7 @@ async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbExecutor
   return { id: identityId, partyId, displayName: 'Development User', status: 'ACTIVE' } as IdentityRow;
 }
 
-async function ensureDevelopmentAuthority(tenant: TenantRow, identity: IdentityRow, executor: DbExecutor) {
+export async function ensureDevelopmentAuthority(tenant: TenantRow, identity: IdentityRow, executor: DbExecutor) {
   await seedPermissionDefinitions(executor);
   const timestamp = now();
 
@@ -248,14 +248,18 @@ export async function resolveDevelopmentCommandContext(
     throw new Error('Development identity bootstrap is disabled in production.');
   }
 
-  const result = await dbTransaction(async (connection) => {
-    const tenant = await ensureTenant(tenantSlug, tenantName(tenantSlug), connection);
-    const identity = await ensureDevelopmentIdentity(tenant, connection);
-    await ensureDevelopmentAuthority(tenant, identity, connection);
-    return { tenant, identity };
-  });
-
-  return resolveContextForIdentity(result.tenant.slug, result.identity.id, correlationId);
+  const tenant = await getTenant(tenantSlug.trim().toLowerCase());
+  if (!tenant || tenant.status !== 'ACTIVE') {
+    throw new Error('Development tenant is not seeded. Run: pnpm db:seed:dev -- ' + tenantSlug);
+  }
+  const identity = await queryOne<IdentityRow>(
+    "SELECT id, party_id AS partyId, display_name AS displayName, status FROM user_identities WHERE tenant_id = ? AND provider = 'development' AND provider_subject = 'development-user'",
+    [tenant.id]
+  );
+  if (!identity || identity.status !== 'ACTIVE') {
+    throw new Error('Development identity is not seeded. Run: pnpm db:seed:dev -- ' + tenantSlug);
+  }
+  return resolveContextForIdentity(tenant.slug, identity.id, correlationId);
 }
 
 export function hasPermission(context: CommandContext, permission: string) {

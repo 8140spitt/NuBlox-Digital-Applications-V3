@@ -104,6 +104,19 @@ export const platformPermissions = [
     'record',
     'Record an attributable authorised decision against an exact business subject/version.'
   ],
+  ['evidence.item.read', 'evidence.item', 'read', 'Read governed evidence and provenance.'],
+  [
+    'evidence.item.capture',
+    'evidence.item',
+    'capture',
+    'Capture immutable evidence references with integrity and provenance metadata.'
+  ],
+  [
+    'evidence.item.verify',
+    'evidence.item',
+    'verify',
+    'Verify captured evidence independently and retain attributable verification evidence.'
+  ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],
   ['party.activate', 'party', 'activate', 'Activate or deactivate canonical Party master data.'],

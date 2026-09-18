@@ -69,6 +69,9 @@ jobs:
       - name: Verify migration ledger
         run: pnpm db:status:test
 
+      - name: Seed platform reference catalog
+        run: pnpm db:seed:platform && pnpm db:seed:platform
+
       - name: Clean-database migration and service tests
         run: pnpm test:migrations
 

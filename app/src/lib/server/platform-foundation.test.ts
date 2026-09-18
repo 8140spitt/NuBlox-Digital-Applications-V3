@@ -6,6 +6,7 @@ let organisationService: typeof import('./foundation-organisation');
 let personService: typeof import('./foundation-person');
 let legalEntityService: typeof import('./foundation-legal-entity');
 let tenantAuthority: typeof import('./tenant-authority');
+let outboxService: typeof import('./platform-outbox');
 let dbModule: typeof import('./db');
 
 beforeAll(async () => {
@@ -14,6 +15,7 @@ beforeAll(async () => {
   personService = await import('./foundation-person');
   legalEntityService = await import('./foundation-legal-entity');
   tenantAuthority = await import('./tenant-authority');
+  outboxService = await import('./platform-outbox');
   dbModule = await import('./db');
 });
 
@@ -191,6 +193,30 @@ describe('platform foundation runtime on MySQL', () => {
       'TENANT_ROLE_ASSIGNED',
       'TENANT_MEMBERSHIP_REVOKED'
     ]));
+  });
+
+
+  it('claims and publishes transactional outbox messages exactly once per worker claim', async () => {
+    const context = await contextService.resolveDevelopmentCommandContext('outbox-' + randomUUID().slice(0, 8));
+    const organisationId = await organisationService.createOrganisation(context, { legalName: 'Outbox Test Organisation' });
+    const workerId = 'test-worker-' + randomUUID();
+    const delivered: string[] = [];
+
+    const result = await outboxService.publishOutboxBatch(workerId, async (message) => {
+      delivered.push(message.businessEventId);
+    }, 100);
+
+    expect(result.claimed).toBeGreaterThan(0);
+    expect(result.published).toBe(result.claimed);
+    expect(result.failed).toBe(0);
+    expect(new Set(delivered).size).toBe(delivered.length);
+
+    const rows = await dbModule.queryRows<any>(
+      "SELECT status, attempts, published_at AS publishedAt, locked_by AS lockedBy FROM outbox_messages WHERE tenant_id = ? AND business_event_id IN (SELECT id FROM business_events WHERE aggregate_object_id = ?)",
+      [context.tenantId, organisationId]
+    );
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((row) => row.status === 'PUBLISHED' && row.attempts === 1 && row.publishedAt && row.lockedBy === null)).toBe(true);
   });
 
 });

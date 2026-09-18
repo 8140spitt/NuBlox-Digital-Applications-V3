@@ -2,7 +2,7 @@
   import { page } from '$app/state';
   import FunctionSidebar from '$lib/components/FunctionSidebar.svelte';
 
-  let { tenantSlug, actorDisplayName, children } = $props();
+  let { tenantSlug, actorDisplayName, authenticated = false, children } = $props();
 
   const tenantName = tenantSlug
     .split('-')
@@ -30,6 +30,11 @@
   <div class="profile">
     <span class="avatar">{initials}</span>
     <span class="profile-copy"><strong>{actorDisplayName}</strong><small>{tenantName}</small></span>
+    {#if authenticated}
+      <form method="POST" action="/logout" class="signout">
+        <button type="submit" aria-label="Sign out">Sign out</button>
+      </form>
+    {/if}
   </div>
 </header>
 
@@ -50,6 +55,9 @@
   .profile-copy { display: grid; line-height: 1.2; }
   .profile-copy strong { font-size: 13px; font-weight: 680; }
   .profile-copy small { margin-top: 3px; color: rgba(255,255,255,.72); font-size: 11px; }
+  .signout { margin: 0 0 0 4px; }
+  .signout button { border: 1px solid rgba(255,255,255,.28); border-radius: 7px; padding: 7px 9px; background: transparent; color: rgba(255,255,255,.82); font-size: 12px; cursor: pointer; }
+  .signout button:hover { background: rgba(255,255,255,.1); color: white; }
   .shell { display: grid; grid-template-columns: 238px minmax(0, 1fr); min-height: calc(100vh - 64px); }
   .main-content { min-width: 0; padding: 14px; }
   @media (max-width: 1050px) { .topbar { grid-template-columns: auto 1fr auto; } .topnav a:nth-child(n+4) { display: none; } .shell { grid-template-columns: 210px minmax(0,1fr); } }

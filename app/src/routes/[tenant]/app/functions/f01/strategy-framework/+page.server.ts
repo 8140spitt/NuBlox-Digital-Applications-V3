@@ -14,6 +14,7 @@ import {
   type StrategyFrameworkInput
 } from '$lib/server/strategy-framework';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
+import { recordWorkDecision } from '$lib/server/work-decision';
 
 function text(data: FormData, name: string) {
   const value = data.get(name);
@@ -38,6 +39,24 @@ function target(tenant: string, id: string) {
 function problem(error: unknown) {
   return fail(400, {
     message: error instanceof Error ? error.message : 'The requested action could not be completed.'
+  });
+}
+
+async function recordReviewDecision(
+  context: Awaited<ReturnType<typeof resolveRequestCommandContext>>,
+  id: string,
+  outcome: 'RETURNED' | 'APPROVED' | 'REJECTED',
+  reason: string
+) {
+  const framework = (await listStrategyFrameworks(context)).find((item) => item.id === id);
+  if (!framework) throw new Error('Strategy framework not found.');
+  return recordWorkDecision(context, {
+    decisionType: 'STRATEGY_FRAMEWORK_REVIEW',
+    subjectType: 'STRATEGY_FRAMEWORK',
+    subjectId: framework.id,
+    subjectVersion: String(framework.currentVersion),
+    outcome,
+    reason
   });
 }
 
@@ -93,7 +112,10 @@ export const actions: Actions = {
     const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
-      await returnStrategyFramework(context, id, text(data, 'note'));
+      const note = text(data, 'note').trim();
+      if (!note) throw new Error('A return reason is required.');
+      const decisionId = await recordReviewDecision(context, id, 'RETURNED', note);
+      await returnStrategyFramework(context, id, decisionId);
     } catch (error) {
       return problem(error);
     }
@@ -104,7 +126,9 @@ export const actions: Actions = {
     const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
-      await approveStrategyFramework(context, id, text(data, 'note'));
+      const note = text(data, 'note').trim() || 'Approved through governed Strategy Framework review.';
+      const decisionId = await recordReviewDecision(context, id, 'APPROVED', note);
+      await approveStrategyFramework(context, id, decisionId);
     } catch (error) {
       return problem(error);
     }
@@ -115,7 +139,10 @@ export const actions: Actions = {
     const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
-      await rejectStrategyFramework(context, id, text(data, 'note'));
+      const note = text(data, 'note').trim();
+      if (!note) throw new Error('A rejection reason is required.');
+      const decisionId = await recordReviewDecision(context, id, 'REJECTED', note);
+      await rejectStrategyFramework(context, id, decisionId);
     } catch (error) {
       return problem(error);
     }

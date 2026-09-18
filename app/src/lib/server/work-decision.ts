@@ -169,6 +169,40 @@ async function resolveAuthority(
   };
 }
 
+
+export async function assertWorkDecisionReference(
+  context: CommandContext,
+  input: {
+    decisionId: string;
+    decisionType: string;
+    subjectType: string;
+    subjectId: string;
+    subjectVersion?: string;
+    outcome: string;
+  },
+  executor: DbExecutor
+) {
+  const decision = await getDecision(context, required(input.decisionId, 'Decision ID'), executor);
+  const expectedDecisionType = code(input.decisionType, 'Decision type');
+  const expectedOutcome = code(input.outcome, 'Decision outcome');
+  const expectedSubjectVersion = input.subjectVersion?.trim() || null;
+
+  if (decision.decisionType !== expectedDecisionType) {
+    throw new Error('Decision type does not match the requested domain transition.');
+  }
+  if (
+    decision.subjectType !== required(input.subjectType, 'Decision subject type') ||
+    decision.subjectId !== required(input.subjectId, 'Decision subject ID') ||
+    decision.subjectVersion !== expectedSubjectVersion
+  ) {
+    throw new Error('Decision does not reference the exact domain subject/version.');
+  }
+  if (decision.outcome !== expectedOutcome) {
+    throw new Error('Decision outcome does not authorise the requested domain transition.');
+  }
+  return decision;
+}
+
 export async function listWorkDecisions(
   context: CommandContext,
   subject?: { type: string; id: string }

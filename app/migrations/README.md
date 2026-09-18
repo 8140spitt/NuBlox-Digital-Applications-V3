@@ -62,8 +62,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0012_lifecycle_configuration_runtime.sql` — AGG-29-LIFECYCLE-CONFIG stable definitions with immutable published versions, states and transition rules.
 - `0013_authority_configuration_runtime.sql` — AGG-29-AUTHORITY-CONFIG approval and delegated-authority policy rules with immutable published versions.
 - `0014_reference_data_runtime.sql` — AGG-29-REFERENCE-DATA typed jurisdictions, currencies, units, tax regimes, contract-form families and versioned calendars.
+- `0015_strategy_decision_reference.sql` — F01 Strategy review versions retain immutable AGG-27-DECISION references for governed review outcomes.
 
-Future schema changes start at `0015_...`; historical migrations remain immutable.
+Future schema changes start at `0016_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -98,3 +99,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0014 — reference data runtime
 
 `0014_reference_data_runtime.sql` introduces `AGG-29-REFERENCE-DATA` as typed governed reference semantics rather than a generic lookup bucket: Jurisdiction, Currency, Unit of Measure, Tax Regime, Contract Form Family and versioned Calendar configuration. Reference identities are effective-dated/versioned so historical transactions can retain the exact meaning used originally.
+
+
+## Migration 0015 — Strategy Decision reference
+
+`0015_strategy_decision_reference.sql` replaces free-text review notes as the authoritative F01 review linkage with an explicit foreign-key reference from each Strategy Framework Version to immutable `AGG-27-DECISION` evidence. Domain state transition and Decision evidence remain separate aggregate commands; the domain command validates the exact referenced decision before changing Strategy state.

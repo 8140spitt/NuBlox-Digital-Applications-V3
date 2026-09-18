@@ -35,14 +35,26 @@ describe('canonical model convergence and coverage audit', () => {
     expect(new Set(governedCanonicalizationDecisions.map((entry) => entry.candidateKey)).size).toBe(750);
   });
 
-  it('does not pretend the external benchmark programme is complete', () => {
+  it('proves the external benchmark and standards architecture challenge is complete', () => {
     expect(coverageAuditSummary.externalBenchmark.requiredDomains).toBe(29);
     expect(coverageAuditSummary.externalBenchmark.registeredBenchmarks).toBeGreaterThanOrEqual(23);
     expect(coverageAuditSummary.externalBenchmark.legacySapCapabilityRows).toBe(64);
     expect(coverageAuditSummary.externalBenchmark.sapV3MappedRows).toBe(64);
     expect(coverageAuditSummary.externalBenchmark.sapV3ChallengedRows).toBe(64);
     expect(coverageAuditSummary.externalBenchmark.sapV3ClosedRows).toBe(0);
-    expect(coverageAuditSummary.externalBenchmark.state).toBe('in-progress');
+    expect(coverageAuditSummary.externalBenchmark.challengedBenchmarks).toBe(23);
+    expect(coverageAuditSummary.externalBenchmark.registeredBenchmarksPending).toBe(0);
+    expect(coverageAuditSummary.externalBenchmark.inProgressBenchmarks).toBe(0);
+    expect(coverageAuditSummary.externalBenchmark.benchmarkGapCount).toBe(29);
+    expect(coverageAuditSummary.externalBenchmark.benchmarkGapResolvedCount).toBe(29);
+    expect(coverageAuditSummary.externalBenchmark.benchmarkGapOpenCount).toBe(0);
+    expect(coverageAuditSummary.externalBenchmark.standardsChallengeCount).toBe(12);
+    expect(coverageAuditSummary.externalBenchmark.standardsChallengedCount).toBe(12);
+    expect(coverageAuditSummary.externalBenchmark.standardsOpenCount).toBe(0);
+    expect(coverageAuditSummary.externalBenchmark.rejectedVendorPatternCount).toBe(12);
+    expect(coverageAuditSummary.externalBenchmark.rejectedVendorPatternRecordedCount).toBe(12);
+    expect(coverageAuditSummary.externalBenchmark.rejectedVendorPatternOpenCount).toBe(0);
+    expect(coverageAuditSummary.externalBenchmark.state).toBe('architecture-challenge-complete');
   });
 
   it('keeps known convergence gaps visible while promoting governed families', () => {

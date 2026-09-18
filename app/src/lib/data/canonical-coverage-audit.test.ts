@@ -40,6 +40,8 @@ describe('canonical model convergence and coverage audit', () => {
     expect(coverageAuditSummary.externalBenchmark.registeredBenchmarks).toBeGreaterThanOrEqual(23);
     expect(coverageAuditSummary.externalBenchmark.legacySapCapabilityRows).toBe(64);
     expect(coverageAuditSummary.externalBenchmark.sapV3MappedRows).toBe(64);
+    expect(coverageAuditSummary.externalBenchmark.sapV3ChallengedRows).toBe(39);
+    expect(coverageAuditSummary.externalBenchmark.sapV3ClosedRows).toBe(0);
     expect(coverageAuditSummary.externalBenchmark.state).toBe('in-progress');
   });
 

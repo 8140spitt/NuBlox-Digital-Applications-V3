@@ -12,6 +12,10 @@ import {
 describe('canonical model convergence and coverage audit', () => {
   it('is internally valid across all five governing coverage lenses', () => {
     expect(validateCanonicalCoverageAudit()).toBe(true);
+    expect(coverageAuditSummary.aggregateFreeze.state).toBe('frozen');
+    expect(coverageAuditSummary.aggregateFreeze.frozenFamilyCount).toBe(29);
+    expect(coverageAuditSummary.aggregateFreeze.aggregateBoundaryCount).toBeGreaterThanOrEqual(70);
+    expect(coverageAuditSummary.aggregateFreeze.benchmarkRefinementsAssigned).toBe(79);
     expect(familyCoverageAudit).toHaveLength(29);
     expect(coverageAuditSummary.workspaceCount).toBe(29);
     expect(coverageAuditSummary.coveredWorkspaceCount).toBe(29);

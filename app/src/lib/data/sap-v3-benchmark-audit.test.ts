@@ -26,8 +26,8 @@ describe('SAP V3 benchmark remap', () => {
   });
 
   it('does not claim the capability challenge is complete just because the remap is complete', () => {
-    expect(sapV3BenchmarkSummary.mappedRowCount).toBe(64);
-    expect(sapV3BenchmarkSummary.challengedRowCount).toBe(0);
+    expect(sapV3BenchmarkSummary.mappedRowCount).toBe(25);
+    expect(sapV3BenchmarkSummary.challengedRowCount).toBe(39);
     expect(sapV3BenchmarkSummary.closedRowCount).toBe(0);
     expect(sapV3BenchmarkSummary.state).toBe('remapped-awaiting-capability-challenge');
   });

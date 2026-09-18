@@ -95,7 +95,7 @@ The current baseline registers **23 relevant products/suites** spanning all **29
 
 The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only. The V3 remap and architecture challenge are now **64/64 complete** in `docs/benchmarks/sap-v3-capability-map.csv`: 47 native-core rows, 9 contextual extensions and 8 platform enablers. This is architectural challenge closure, not runtime feature parity.
 
-External benchmark coverage is deliberately not treated as complete merely because products are registered or several useful architectural findings have already been adopted. Benchmark systems challenge completeness, semantics, controls and end-to-end user outcomes; vendor module boundaries never become automatic NuBlox architecture.
+Gate 3 is now complete at architecture-challenge level: 23/23 market benchmark suites challenged, 29/29 benchmark findings resolved, 12/12 standards/reference challenges completed and 12/12 deliberately rejected vendor patterns documented with rationale. Vendor module boundaries remain non-authoritative, and completion does not imply runtime parity or certification.
 
 ## Family maturity states
 
@@ -156,7 +156,7 @@ Therefore the present family-level maturity split is:
 29 total families
 ```
 
-This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Physical aggregates/APIs are still not approved until duplicate/alias convergence, benchmark/standards challenge and aggregate-boundary freeze are complete.
+This closes the family-level semantic-convergence backlog. All **750/750 candidate occurrences now also have an explicit version-controlled canonicalization decision**. Physical aggregates/APIs are still not approved until canonical aggregate-boundary freeze and L2/L3 object-action mapping are complete.
 
 ## Candidate decision coverage
 
@@ -252,10 +252,9 @@ Candidate-level convergence is now also closed at **750/750 decisions**.
 The next architecture gates are:
 
 ```text
-1. Complete the external benchmark / standards challenge
-2. Freeze the canonical aggregate boundaries
-3. Complete the L2/L3 activity → canonical object/action mapping
-4. Only then approve physical schema / API implementation waves
+1. Freeze the canonical aggregate boundaries
+2. Complete the L2/L3 activity → canonical object/action mapping
+3. Only then approve physical schema / API implementation waves
 ```
 
 The audit must continue to expose benchmark status and must fail if candidate decision coverage ever drops below 100%.

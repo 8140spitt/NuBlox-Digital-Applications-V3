@@ -41,6 +41,9 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}
       ><span>◎</span>Party master data</a
     >
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisation-structure`}
+      ><span>▦</span>Organisation structure</a
+    >
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}
       ><span>◇</span>Business object model</a
     >

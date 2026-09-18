@@ -59,7 +59,7 @@ export type DbExecutor = Pool | PoolConnection;
 
 export async function queryRows<T extends RowDataPacket>(
   sql: string,
-  params: unknown[] = [],
+  params: any[] = [],
   executor: DbExecutor = getDbPool()
 ): Promise<T[]> {
   const [rows] = await executor.execute<T[]>(sql, params);
@@ -68,7 +68,7 @@ export async function queryRows<T extends RowDataPacket>(
 
 export async function queryOne<T extends RowDataPacket>(
   sql: string,
-  params: unknown[] = [],
+  params: any[] = [],
   executor: DbExecutor = getDbPool()
 ): Promise<T | undefined> {
   const rows = await queryRows<T>(sql, params, executor);
@@ -77,7 +77,7 @@ export async function queryOne<T extends RowDataPacket>(
 
 export async function executeMutation(
   sql: string,
-  params: unknown[] = [],
+  params: any[] = [],
   executor: DbExecutor = getDbPool()
 ): Promise<ResultSetHeader> {
   const [result] = await executor.execute<ResultSetHeader>(sql, params);

@@ -6,6 +6,7 @@ import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evi
 
 export type TenantRole = { id: string; roleKey: string; name: string; status: string; permissions: string[] };
 export type TenantMembership = { id: string; partyId: string; displayName: string; membershipType: string; status: string; validFrom: string; validTo: string | null };
+export type TenantIdentity = { id: string; partyId: string; partyDisplayName: string; provider: string; providerSubject: string; displayName: string; status: string };
 
 function now() { return new Date().toISOString(); }
 function required(value: string, label: string) {
@@ -41,6 +42,107 @@ async function assertParty(context: CommandContext, partyId: string, executor?: 
   );
   if (!party) throw new Error('Active Party not found in this tenant.');
   return party;
+}
+
+export async function listTenantIdentities(context: CommandContext): Promise<TenantIdentity[]> {
+  assertPermission(context, 'tenant.identity.read');
+  return queryRows<RowDataPacket & TenantIdentity>(
+    'SELECT ui.id, ui.party_id AS partyId, p.display_name AS partyDisplayName, ui.provider, ui.provider_subject AS providerSubject, ui.display_name AS displayName, ui.status FROM user_identities ui JOIN parties p ON p.id = ui.party_id WHERE ui.tenant_id = ? ORDER BY p.display_name, ui.provider, ui.display_name',
+    [context.tenantId]
+  );
+}
+
+export async function linkAuthenticatedIdentity(
+  context: CommandContext,
+  partyId: string,
+  authUserId: string,
+  displayName: string
+) {
+  assertPermission(context, 'tenant.identity.manage');
+  const subject = required(authUserId, 'Authenticated user ID');
+  const identityDisplayName = required(displayName, 'Identity display name');
+
+  return dbTransaction(async (connection) => {
+    const party = await assertParty(context, partyId, connection);
+    const existing = await queryOne<RowDataPacket & { id: string; partyId: string; status: string }>(
+      "SELECT id, party_id AS partyId, status FROM user_identities WHERE tenant_id = ? AND provider = 'better-auth' AND provider_subject = ? FOR UPDATE",
+      [context.tenantId, subject], connection
+    );
+    if (existing && existing.partyId !== partyId) {
+      throw new Error('Authenticated user is already linked to a different Party in this tenant.');
+    }
+
+    const timestamp = now();
+    const id = existing?.id ?? randomUUID();
+    if (existing) {
+      await executeMutation(
+        "UPDATE user_identities SET display_name = ?, status = 'ACTIVE', updated_at = ? WHERE id = ? AND tenant_id = ?",
+        [identityDisplayName, timestamp, id, context.tenantId], connection
+      );
+    } else {
+      await executeMutation(
+        "INSERT INTO user_identities (id, tenant_id, party_id, provider, provider_subject, display_name, status, created_at, updated_at) VALUES (?, ?, ?, 'better-auth', ?, ?, 'ACTIVE', ?, ?)",
+        [id, context.tenantId, partyId, subject, identityDisplayName, timestamp, timestamp], connection
+      );
+    }
+
+    const aggregateVersion = await nextTenantVersion(context, connection);
+    await recordPlatformAudit(context, {
+      aggregateId: 'AGG-01-TENANT',
+      objectType: 'tenant_identity',
+      objectId: id,
+      action: existing ? 'TENANT_IDENTITY_REACTIVATED' : 'TENANT_IDENTITY_LINKED',
+      fromState: existing?.status,
+      toState: 'ACTIVE',
+      note: party.displayName
+    }, connection);
+    await emitBusinessEvent(context, {
+      aggregateId: 'AGG-01-TENANT',
+      aggregateType: 'Tenant',
+      aggregateObjectId: context.tenantId,
+      aggregateVersion,
+      eventType: existing ? 'TENANT_IDENTITY_REACTIVATED' : 'TENANT_IDENTITY_LINKED',
+      topic: 'nublox.tenant.identity',
+      payload: { identityId: id, partyId, provider: 'better-auth' }
+    }, connection);
+    return id;
+  });
+}
+
+export async function deactivateTenantIdentity(context: CommandContext, identityId: string) {
+  assertPermission(context, 'tenant.identity.manage');
+  return dbTransaction(async (connection) => {
+    const identity = await queryOne<RowDataPacket & { id: string; partyId: string; status: string; provider: string }>(
+      'SELECT id, party_id AS partyId, status, provider FROM user_identities WHERE id = ? AND tenant_id = ? FOR UPDATE',
+      [identityId, context.tenantId], connection
+    );
+    if (!identity) throw new Error('Tenant identity not found.');
+    if (identity.id === context.userIdentityId) throw new Error('An actor cannot deactivate their own active tenant identity.');
+    if (identity.status !== 'ACTIVE') return;
+
+    await executeMutation(
+      "UPDATE user_identities SET status = 'INACTIVE', updated_at = ? WHERE id = ? AND tenant_id = ?",
+      [now(), identityId, context.tenantId], connection
+    );
+    const aggregateVersion = await nextTenantVersion(context, connection);
+    await recordPlatformAudit(context, {
+      aggregateId: 'AGG-01-TENANT',
+      objectType: 'tenant_identity',
+      objectId: identityId,
+      action: 'TENANT_IDENTITY_DEACTIVATED',
+      fromState: 'ACTIVE',
+      toState: 'INACTIVE'
+    }, connection);
+    await emitBusinessEvent(context, {
+      aggregateId: 'AGG-01-TENANT',
+      aggregateType: 'Tenant',
+      aggregateObjectId: context.tenantId,
+      aggregateVersion,
+      eventType: 'TENANT_IDENTITY_DEACTIVATED',
+      topic: 'nublox.tenant.identity',
+      payload: { identityId, partyId: identity.partyId, provider: identity.provider }
+    }, connection);
+  });
 }
 
 export async function listTenantMemberships(context: CommandContext): Promise<TenantMembership[]> {

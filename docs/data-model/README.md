@@ -31,6 +31,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `building-safety-regulatory-semantics.md` — governed dutyholder, competence evidence, regulator case/application, controlled change, statutory inspection/finding, occurrence reporting, notices, decisions, completion and golden-thread semantics.
 - `sustainability-carbon-semantics.md` — governed carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, biodiversity/environmental measures and social-value semantics.
 - `risk-compliance-audit-semantics.md` — governed Enterprise Risk, Risk Assessment/Treatment, regulatory obligation, compliance requirement/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics.
+- `legal-privacy-semantics.md` — governed legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, privacy incident, international-transfer and assurance semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -85,6 +86,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Internal Control is a persistent controlled definition; Control Test is a dated execution/evidence occurrence against an exact version.
 - Audit Plan is an Assurance Plan type; Audit Engagement, Audit Finding and Remediation Action retain independent identities/lifecycles.
 - Fraud and Conduct use one restricted Integrity Case architecture; workflow Work Items coordinate remediation but never replace domain truth.
+- Legal Matter, Dispute and Legal Proceeding retain separate identities; statutory filing uses immutable External Submission evidence for actual filing occurrences.
+- Legal Hold is the preservation instruction while Legal Hold Link places exact records/objects under hold; eDiscovery Collection preserves source provenance and chain of custody.
+- Privacy Policy reuses Information Container; Processing Activity is a stable governed processing definition and DPIA is assessment evidence.
+- Consent and Preference are distinct evidence histories; Privacy Breach is a Privacy Incident classification with retained notification/breach-decision provenance.
+- International Data Transfer is a governed arrangement/relationship; Privacy Assurance Review reuses shared Assurance Review semantics.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

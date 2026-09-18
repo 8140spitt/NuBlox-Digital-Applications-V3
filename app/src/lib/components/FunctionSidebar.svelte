@@ -38,123 +38,45 @@
 
   <section class="admin">
     <p class="label">Administration</p>
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}
-      ><span>◈</span>Security & access</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}
-      ><span>◎</span>Party master data</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisation-structure`}
-      ><span>▦</span>Organisation structure</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}
-      ><span>◇</span>Business object model</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}
-      ><span>✓</span>Coverage audit</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/foundation`}
-      ><span>⌘</span>Foundation semantics</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/authority`}
-      ><span>◆</span>Authority & participation</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/crm-business-development`}
-      ><span>◎</span>CRM & business development</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/estimating-tendering`}
-      ><span>∑</span>Estimating & tendering</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/people-hcm`}
-      ><span>♙</span>People & HCM</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/qhse-assurance`}
-      ><span>△</span>QHSE & assurance</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/building-safety-regulatory`}
-      ><span>◇</span>Building safety & regulatory</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/sustainability-carbon`}
-      ><span>◌</span>Sustainability & carbon</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/risk-compliance-audit`}
-      ><span>◆</span>Risk, compliance & audit</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/legal-privacy`}
-      ><span>§</span>Legal & privacy</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/knowledge-records-communications`}
-      ><span>▩</span>Knowledge, records & comms</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/land-development-investment`}
-      ><span>⌂</span>Land & development</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/strategy-governance-performance`}
-      ><span>◎</span>Strategy & governance</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/continuity-crisis-security`}
-      ><span>◈</span>Continuity, crisis & security</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/technology-data-cyber-ai`}
-      ><span>⌘</span>IT, data, cyber & AI</a
-    >
-    <a
-      class="admin-item"
-      href={`/${tenantSlug}/app/admin/business-objects/transformation-process-improvement`}
-      ><span>↻</span>Transformation & process</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/site-field-operations`}
-      ><span>▰</span>Site & field operations</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}
-      ><span>▤</span>Delivery context</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/built-environment`}
-      ><span>▧</span>Built environment</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}
-      ><span>▥</span>Commercial & procurement</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/item-manufacturing`}
-      ><span>▦</span>Item & manufacturing</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/inventory-logistics`}
-      ><span>▣</span>Inventory & logistics</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/controlled-information`}
-      ><span>▨</span>Controlled information</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/asset-operations`}
-      ><span>◉</span>Asset operations</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/finance-accounting`}
-      ><span>¤</span>Finance & accounting</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/shared-work-evidence`}
-      ><span>◈</span>Work, decisions & evidence</a
-    >
-    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/reference-configuration`}
-      ><span>⌁</span>Reference & configuration</a
-    >
-    <div class="admin-item muted"><span>◫</span>Function directory</div>
-    <div class="admin-item muted"><span>▦</span>Job architecture</div>
-    <div class="admin-item muted"><span>◎</span>Positions</div>
-    <div class="admin-item muted"><span>↻</span>Lifecycle administration</div>
-    <div class="admin-item muted"><span>◈</span>Design system</div>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/security`}><span>◈</span>Security & access</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/parties`}><span>◎</span>Party master data</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/master-data/organisation-structure`}><span>▦</span>Organisation structure</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects`}><span>◇</span>Business object model</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/coverage-audit`}><span>✓</span>Coverage audit</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/functions`}><span>◫</span>Function directory</a>
+
+    <details class="admin-group">
+      <summary>Architecture views</summary>
+      <div class="admin-group-links">
+        <a href={`/${tenantSlug}/app/admin/business-objects/foundation`}>Foundation semantics</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/authority`}>Authority & participation</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}>Delivery context</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/built-environment`}>Built environment</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}>Commercial & procurement</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/controlled-information`}>Controlled information</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/asset-operations`}>Asset operations</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/finance-accounting`}>Finance & accounting</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/item-manufacturing`}>Item & manufacturing</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/inventory-logistics`}>Inventory & logistics</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/crm-business-development`}>CRM & business development</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/estimating-tendering`}>Estimating & tendering</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/people-hcm`}>People & HCM</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/qhse-assurance`}>QHSE & assurance</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/building-safety-regulatory`}>Building safety & regulatory</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/sustainability-carbon`}>Sustainability & carbon</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/risk-compliance-audit`}>Risk, compliance & audit</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/legal-privacy`}>Legal & privacy</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/knowledge-records-communications`}>Knowledge, records & communications</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/land-development-investment`}>Land & development</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/strategy-governance-performance`}>Strategy & governance</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/continuity-crisis-security`}>Continuity, crisis & security</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/technology-data-cyber-ai`}>IT, data, cyber & AI</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/transformation-process-improvement`}>Transformation & process</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/site-field-operations`}>Site & field operations</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/shared-work-evidence`}>Work, decisions & evidence</a>
+        <a href={`/${tenantSlug}/app/admin/business-objects/reference-configuration`}>Reference & configuration</a>
+      </div>
+    </details>
   </section>
 </aside>
 
@@ -246,8 +168,38 @@
     background: #eaf5fc;
     color: #1b5072;
   }
-  .admin-item.muted {
-    color: #8795a1;
+  .admin-group {
+    margin-top: 7px;
+    border-top: 1px solid #e7edf1;
+    padding-top: 7px;
+  }
+  .admin-group summary {
+    padding: 7px 9px;
+    border-radius: 7px;
+    color: #607487;
+    font-size: 10.5px;
+    font-weight: 750;
+    cursor: pointer;
+  }
+  .admin-group summary:hover {
+    background: #eef6fb;
+    color: #244f6b;
+  }
+  .admin-group-links {
+    display: grid;
+    gap: 2px;
+    padding: 4px 0 2px 16px;
+  }
+  .admin-group-links a {
+    padding: 5px 8px;
+    border-radius: 6px;
+    color: #6b7d8a;
+    font-size: 10px;
+    text-decoration: none;
+  }
+  .admin-group-links a:hover {
+    background: #eef6fb;
+    color: #244f6b;
   }
   .admin-item span {
     color: #607b8e;

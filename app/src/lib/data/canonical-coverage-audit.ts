@@ -26,6 +26,7 @@ import { technologyDataCyberAiCanonicalization } from './technology-data-cyber-a
 import { transformationProcessImprovementCanonicalization } from './transformation-process-improvement-canonicalization';
 import { siteFieldOperationsCanonicalization } from './site-field-operations-canonicalization';
 import { marketBenchmarkSummary } from './external-benchmark-register';
+import { canonicalAggregateFreezeSummary } from './canonical-aggregate-boundary-register';
 
 export const sectorLifecycle = [
   'Market', 'Lead', 'Opportunity', 'Bid', 'Estimate', 'Proposal', 'Quote', 'Contract', 'Design', 'Plan',
@@ -182,6 +183,7 @@ export const coverageAuditSummary = {
   processChainCount: endToEndChains.length,
   coveredProcessChainCount: processCoverage.size,
   specialistOverlayCount: specialistOverlays.length,
+  aggregateFreeze: canonicalAggregateFreezeSummary,
   coveredSpecialistOverlayCount: overlayCoverage.size,
   externalBenchmark: {
     name: 'Multi-vendor market benchmark programme',
@@ -222,5 +224,8 @@ export function validateCanonicalCoverageAudit() {
   if (coverageAuditSummary.baselineDecisionCount !== register.objects.length) return false;
   if (coverageAuditSummary.baselineUndecidedCount !== 0) return false;
   if (coverageAuditSummary.baselineDecisionCoveragePct !== 100) return false;
+  if (coverageAuditSummary.aggregateFreeze.state !== 'frozen') return false;
+  if (coverageAuditSummary.aggregateFreeze.frozenFamilyCount !== 29) return false;
+  if (coverageAuditSummary.aggregateFreeze.benchmarkRefinementsAssigned !== coverageAuditSummary.aggregateFreeze.benchmarkRefinementCount) return false;
   return true;
 }

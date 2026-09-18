@@ -96,7 +96,8 @@ export const f01Workspace = {
         'Accountability',
         'Capabilities',
         'Change initiatives'
-      ]
+      ],
+      path: 'operating-model'
     },
     {
       id: 'F01.06',

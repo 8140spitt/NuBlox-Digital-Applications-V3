@@ -287,6 +287,24 @@ export const platformPermissions = [
     'strategy.plan',
     'approve',
     'Approve, activate and close governed Business Plans.'
+  ],
+  [
+    'strategy.operating-model.read',
+    'strategy.operating-model',
+    'read',
+    'Read governed target Operating Models and immutable versions.'
+  ],
+  [
+    'strategy.operating-model.manage',
+    'strategy.operating-model',
+    'manage',
+    'Create and revise target Operating Models, capabilities and accountability design.'
+  ],
+  [
+    'strategy.operating-model.approve',
+    'strategy.operating-model',
+    'approve',
+    'Approve, activate and supersede governed target Operating Models.'
   ]
 ] as const;
 

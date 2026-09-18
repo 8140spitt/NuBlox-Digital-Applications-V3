@@ -107,6 +107,7 @@ Current governed families:
 - BOF-15 Commissioning, completion, handover and closeout;
 - BOF-16 Property, estate, space, infrastructure and physical asset;
 - BOF-17 Maintenance, facilities, service, warranty and aftercare;
+- BOF-18 People, HCM, competence, time, payroll and expenses;
 - BOF-19 Finance, accounting, tax, treasury and enterprise performance;
 - BOF-27 Shared work, workflow, decision and collaboration;
 - BOF-28 Evidence, audit, retention and legal traceability;
@@ -132,7 +133,6 @@ Current candidate-only families:
 - BOF-02 Strategy, governance and enterprise performance;
 - BOF-04 Land, development, investment and property acquisition;
 - BOF-14 Building safety, regulatory control and statutory assurance;
-- BOF-18 People, HCM, competence, time, payroll and expenses;
 - BOF-20 Sustainability, carbon, energy, circularity and social value;
 - BOF-21 Enterprise risk, compliance, internal control and audit;
 - BOF-23 Business continuity, crisis and physical security;
@@ -142,9 +142,9 @@ Current candidate-only families:
 Therefore the present maturity split is:
 
 ```text
-16 governed families
+17 governed families
  4 partial families
- 9 candidate-only families
+ 8 candidate-only families
 29 total families
 ```
 
@@ -194,7 +194,6 @@ Before a family can be treated as physically authoritative, it must have:
 The next canonicalization passes should address the remaining candidate-only families in operating-model dependency order, while completing the four partial families. A practical sequence is:
 
 ```text
-BOF-18 People / HCM / Competence / Time
 BOF-13 Quality / HSE / Assurance (complete partial family)
 BOF-14 Building Safety / Regulatory
 BOF-20 Sustainability / Carbon / Energy

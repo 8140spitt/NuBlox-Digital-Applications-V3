@@ -268,6 +268,19 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'Large construction and capital programmes require reproducible probabilistic schedule/cost risk analysis. Existing Risk Assessment and project Schedule/Forecast semantics do not retain quantitative simulation inputs, method versions and outcome distributions.',
     requiredOutcome: 'Govern Project Risk Simulation Run and Project Risk Analysis Snapshot around existing Enterprise Risk/Risk Assessment, Schedule, cost/Forecast and Scenario identities.'
+  },
+  {
+    id: 'BG-020',
+    title: 'Construction earned value, productivity, forecast and CVR performance analysis',
+    sourceBenchmarks: ['HEXAGON-ECOSYS', 'TRIMBLE-CONSTRUCTION-ONE', 'CAUSEWAY', 'PROCORE'],
+    sourceFindings: ['CON-W2-ECOSYS-01', 'CON-W2-TRIMBLE-01', 'CON-W2-CAUSEWAY-01', 'CON-W2-PROCORE-02'],
+    affectedExternalRows: ['ECOSYS-EVM', 'TRIMBLE-JOB-COST', 'CAUSEWAY-PROJECT-ACCOUNTING', 'PROCORE-PRODUCTIVITY'],
+    workspaces: ['F03', 'F07', 'F12', 'F14', 'F27'],
+    canonicalFamilies: ['BOF-06', 'BOF-08', 'BOF-12', 'BOF-19'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Construction leaders independently converge on time-phased budget/progress/actual/commitment/forecast analysis, earned value, production productivity and cost-value reconciliation. NuBlox has the authoritative source facts but lacked one governed reproducible calculation/snapshot layer.',
+    requiredOutcome: 'Govern Progress Measurement Method, Project Performance Calculation Run and Project Controls Performance Snapshot while preserving Progress Record, Budget, Forecast, Contract/Valuation, Commitment and Ledger as source truth.'
   }
 ];
 
@@ -285,9 +298,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 13) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 14) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
-  if (benchmarkGapSummary.resolvedCount !== 19) return false;
+  if (benchmarkGapSummary.resolvedCount !== 20) return false;
   return true;
 }

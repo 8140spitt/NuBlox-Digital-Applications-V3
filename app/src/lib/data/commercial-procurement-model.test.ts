@@ -42,6 +42,13 @@ describe('commercial and procurement semantic model', () => {
     expect(commercialProcurementRelationships.some((relation) => relation.from === 'PROC-PURCHASE-ORDER' && relation.to === 'PROC-RECEIPT')).toBe(true);
   });
 
+  it('converges procurement and logistics call-off on one commercial identity', () => {
+    const calloff = commercialProcurementModel.find((item) => item.modelId === 'PROC-CALLOFF');
+    expect(calloff?.candidateKeys).toEqual(expect.arrayContaining(['BOF-09-019', 'BOF-10-035']));
+    expect(calloff?.canonicalName).toBe('Call-off Order');
+    expect(commercialProcurementRules.join(' ')).toContain('one canonical Call-off Order');
+  });
+
   it('normalises contract-form and sourcing aliases without losing specialist meaning', () => {
     expect(commercialProcurementModel.find((item) => item.modelId === 'COM-COMMERCIAL-CHANGE')?.candidateKeys)
       .toEqual(expect.arrayContaining(['BOF-08-014', 'BOF-08-015', 'BOF-08-016']));

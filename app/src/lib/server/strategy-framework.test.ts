@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { seedDevelopmentTenant } from './development-seed';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let service: typeof import('./strategy-framework');
@@ -18,6 +19,7 @@ afterAll(async () => {
 describe('F01.01 strategy framework lifecycle on MySQL', () => {
   it('versions amendments and supersedes the previous published framework', async () => {
     const tenant = 'strategy-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
     const input = {
       title: '2027–2030 Strategy',

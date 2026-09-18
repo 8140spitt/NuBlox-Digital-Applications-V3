@@ -6,7 +6,7 @@ import mysql, {
   type RowDataPacket
 } from 'mysql2/promise';
 
-export const requiredMigration = '0007_foundation_relationship_structure_authority.sql';
+export const requiredMigration = '0008_shared_work_runtime.sql';
 
 function databaseUrl() {
   if (

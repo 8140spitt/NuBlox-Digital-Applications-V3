@@ -5,6 +5,7 @@ let contextService: typeof import('./platform-context');
 let organisationService: typeof import('./foundation-organisation');
 let personService: typeof import('./foundation-person');
 let legalEntityService: typeof import('./foundation-legal-entity');
+let tenantAuthority: typeof import('./tenant-authority');
 let dbModule: typeof import('./db');
 
 beforeAll(async () => {
@@ -12,6 +13,7 @@ beforeAll(async () => {
   organisationService = await import('./foundation-organisation');
   personService = await import('./foundation-person');
   legalEntityService = await import('./foundation-legal-entity');
+  tenantAuthority = await import('./tenant-authority');
   dbModule = await import('./db');
 });
 
@@ -148,6 +150,47 @@ describe('platform foundation runtime on MySQL', () => {
     );
     expect(partyRows).toHaveLength(2);
     expect(partyRows.find((row) => row.id === organisationId)?.partyType).toBe('ORGANISATION');
+  });
+
+
+  it('governs tenant membership and role assignment through AGG-00-TENANT commands', async () => {
+    const context = await contextService.resolveDevelopmentCommandContext('authority-' + randomUUID().slice(0, 8));
+    const personId = await personService.createPerson(context, { givenName: 'Grace', familyName: 'Hopper' });
+
+    const membershipId = await tenantAuthority.grantTenantMembership(context, personId);
+    expect((await tenantAuthority.listTenantMemberships(context)).some((item) => item.id === membershipId)).toBe(true);
+
+    const roleId = await tenantAuthority.createTenantRole(
+      context,
+      'party-steward',
+      'Party Steward',
+      ['party.read', 'party.create', 'party.change']
+    );
+    const assignmentId = await tenantAuthority.assignTenantRole(context, personId, roleId);
+    expect(assignmentId).toBeTruthy();
+    expect((await tenantAuthority.listTenantRoles(context)).find((role) => role.id === roleId)?.permissions)
+      .toEqual(['party.change', 'party.create', 'party.read']);
+
+    const assignmentRows = await dbModule.queryRows<any>(
+      "SELECT assignment_source AS source FROM role_assignments WHERE id = ? AND tenant_id = ?",
+      [assignmentId, context.tenantId]
+    );
+    expect(assignmentRows[0]?.source).toBe('tenant-authority-command');
+
+    await tenantAuthority.revokeTenantMembership(context, membershipId);
+    expect((await tenantAuthority.listTenantMemberships(context)).find((item) => item.id === membershipId)?.status)
+      .toBe('INACTIVE');
+
+    const audit = await dbModule.queryRows<any>(
+      "SELECT action FROM platform_audit_events WHERE tenant_id = ? AND aggregate_id = 'AGG-00-TENANT'",
+      [context.tenantId]
+    );
+    expect(audit.map((row) => row.action)).toEqual(expect.arrayContaining([
+      'TENANT_MEMBERSHIP_GRANTED',
+      'TENANT_ROLE_CREATED',
+      'TENANT_ROLE_ASSIGNED',
+      'TENANT_MEMBERSHIP_REVOKED'
+    ]));
   });
 
 });

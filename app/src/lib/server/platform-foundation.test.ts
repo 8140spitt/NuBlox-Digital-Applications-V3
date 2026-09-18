@@ -92,8 +92,12 @@ describe('platform foundation runtime on MySQL', () => {
 
   it('keeps tenant data isolated and denies missing permissions', async () => {
     const suffix = randomUUID().slice(0, 8);
-    const first = await contextService.resolveDevelopmentCommandContext('tenant-a-' + suffix);
-    const second = await contextService.resolveDevelopmentCommandContext('tenant-b-' + suffix);
+    const firstTenant = 'tenant-a-' + suffix;
+    const secondTenant = 'tenant-b-' + suffix;
+    await seedDevelopmentTenant(firstTenant);
+    await seedDevelopmentTenant(secondTenant);
+    const first = await contextService.resolveDevelopmentCommandContext(firstTenant);
+    const second = await contextService.resolveDevelopmentCommandContext(secondTenant);
 
     const id = await organisationService.createOrganisation(first, { legalName: 'Tenant A Organisation' });
     const secondRows = await organisationService.listOrganisations(second);
@@ -109,8 +113,9 @@ describe('platform foundation runtime on MySQL', () => {
   });
 
   it('persists Person and Legal Entity as Party specialisations without duplicate masters', async () => {
-    await seedDevelopmentTenant('party-specialisations-' + randomUUID().slice(0, 8));
-    const context = await contextService.resolveDevelopmentCommandContext('party-specialisations-' + randomUUID().slice(0, 8));
+    const tenant = 'party-specialisations-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
 
     const personId = await personService.createPerson(context, {
       givenName: 'Ada',
@@ -158,9 +163,10 @@ describe('platform foundation runtime on MySQL', () => {
   });
 
 
-  it('governs tenant membership and role assignment through AGG-00-TENANT commands', async () => {
-    await seedDevelopmentTenant('authority-' + randomUUID().slice(0, 8));
-    const context = await contextService.resolveDevelopmentCommandContext('authority-' + randomUUID().slice(0, 8));
+  it('governs tenant membership and role assignment through AGG-01-TENANT commands', async () => {
+    const tenant = 'authority-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
     const personId = await personService.createPerson(context, { givenName: 'Grace', familyName: 'Hopper' });
 
     const membershipId = await tenantAuthority.grantTenantMembership(context, personId);
@@ -201,8 +207,9 @@ describe('platform foundation runtime on MySQL', () => {
 
 
   it('claims and publishes transactional outbox messages exactly once per worker claim', async () => {
-    await seedDevelopmentTenant('outbox-' + randomUUID().slice(0, 8));
-    const context = await contextService.resolveDevelopmentCommandContext('outbox-' + randomUUID().slice(0, 8));
+    const tenant = 'outbox-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
     const organisationId = await organisationService.createOrganisation(context, { legalName: 'Outbox Test Organisation' });
     const workerId = 'test-worker-' + randomUUID();
     const delivered: string[] = [];

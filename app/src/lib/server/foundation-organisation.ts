@@ -1,9 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import { db, dbTransaction } from '$lib/server/db';
+import type { RowDataPacket } from 'mysql2/promise';
 import {
-  assertPermission,
-  type CommandContext
-} from '$lib/server/platform-context';
+  dbTransaction,
+  executeMutation,
+  queryOne,
+  queryRows,
+  type DbExecutor
+} from '$lib/server/db';
+import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import {
   emitBusinessEvent,
   listPlatformAudit,
@@ -35,22 +39,8 @@ export type OrganisationInput = {
   countryCode?: string;
 };
 
-const organisationSelect = `
-  SELECT
-    p.id,
-    p.display_name AS displayName,
-    o.legal_name AS legalName,
-    o.trading_name AS tradingName,
-    o.registration_number AS registrationNumber,
-    o.tax_identifier AS taxIdentifier,
-    o.country_code AS countryCode,
-    p.status,
-    p.version,
-    p.created_at AS createdAt,
-    p.updated_at AS updatedAt
-  FROM parties p
-  JOIN organisations o ON o.party_id = p.id
-`;
+const organisationSelect =
+  'SELECT p.id, p.display_name AS displayName, o.legal_name AS legalName, o.trading_name AS tradingName, o.registration_number AS registrationNumber, o.tax_identifier AS taxIdentifier, o.country_code AS countryCode, p.status, p.version, p.created_at AS createdAt, p.updated_at AS updatedAt FROM parties p JOIN organisations o ON o.party_id = p.id';
 
 function now() {
   return new Date().toISOString();
@@ -58,7 +48,7 @@ function now() {
 
 function cleanRequired(value: string, label: string) {
   const cleaned = value.trim();
-  if (!cleaned) throw new Error(`${label} is required.`);
+  if (!cleaned) throw new Error(label + ' is required.');
   return cleaned;
 }
 
@@ -74,11 +64,16 @@ function cleanCountry(value?: string) {
   return cleaned;
 }
 
-function getOrganisationRow(context: CommandContext, id: string): Organisation {
-  const row = db.prepare(`
-    ${organisationSelect}
-    WHERE p.tenant_id = ? AND p.party_type = 'ORGANISATION' AND p.id = ?
-  `).get(context.tenantId, id) as Organisation | undefined;
+async function getOrganisationRow(
+  context: CommandContext,
+  id: string,
+  executor?: DbExecutor
+): Promise<Organisation> {
+  const row = await queryOne<RowDataPacket & Organisation>(
+    organisationSelect + ' WHERE p.tenant_id = ? AND p.party_type = \'ORGANISATION\' AND p.id = ?',
+    [context.tenantId, id],
+    executor
+  );
   if (!row) throw new Error('Organisation not found.');
   return row;
 }
@@ -89,58 +84,64 @@ function assertMutable(organisation: Organisation) {
   }
 }
 
-function publish(
+async function publish(
   context: CommandContext,
   organisation: Organisation,
   eventType: string,
+  executor: DbExecutor,
   note?: string,
   previousStatus?: OrganisationStatus | null
 ) {
-  recordPlatformAudit(context, {
-    aggregateId: 'AGG-01-PARTY',
-    objectType: 'organisation',
-    objectId: organisation.id,
-    action: eventType,
-    fromState: previousStatus === undefined ? organisation.status : previousStatus,
-    toState: organisation.status,
-    note
-  });
-  emitBusinessEvent(context, {
-    aggregateId: 'AGG-01-PARTY',
-    aggregateType: 'Party',
-    aggregateObjectId: organisation.id,
-    aggregateVersion: organisation.version,
-    eventType,
-    topic: 'nublox.party.organisation',
-    payload: {
-      partyType: 'ORGANISATION',
-      displayName: organisation.displayName,
-      legalName: organisation.legalName,
-      tradingName: organisation.tradingName,
-      registrationNumber: organisation.registrationNumber,
-      countryCode: organisation.countryCode,
-      status: organisation.status
-    }
-  });
+  await recordPlatformAudit(
+    context,
+    {
+      aggregateId: 'AGG-01-PARTY',
+      objectType: 'organisation',
+      objectId: organisation.id,
+      action: eventType,
+      fromState: previousStatus ?? organisation.status,
+      toState: organisation.status,
+      note
+    },
+    executor
+  );
+  await emitBusinessEvent(
+    context,
+    {
+      aggregateId: 'AGG-01-PARTY',
+      aggregateType: 'Party',
+      aggregateObjectId: organisation.id,
+      aggregateVersion: organisation.version,
+      eventType,
+      topic: 'nublox.party.organisation',
+      payload: {
+        partyType: 'ORGANISATION',
+        displayName: organisation.displayName,
+        legalName: organisation.legalName,
+        tradingName: organisation.tradingName,
+        registrationNumber: organisation.registrationNumber,
+        countryCode: organisation.countryCode,
+        status: organisation.status
+      }
+    },
+    executor
+  );
 }
 
-export function listOrganisations(context: CommandContext): Organisation[] {
+export async function listOrganisations(context: CommandContext): Promise<Organisation[]> {
   assertPermission(context, 'party.read');
-  return db.prepare(`
-    ${organisationSelect}
-    WHERE p.tenant_id = ? AND p.party_type = 'ORGANISATION'
-    ORDER BY
-      CASE p.status WHEN 'ACTIVE' THEN 0 WHEN 'PROPOSED' THEN 1 WHEN 'INACTIVE' THEN 2 ELSE 3 END,
-      p.display_name COLLATE NOCASE
-  `).all(context.tenantId) as unknown as Organisation[];
+  return queryRows<RowDataPacket & Organisation>(
+    organisationSelect + ' WHERE p.tenant_id = ? AND p.party_type = \'ORGANISATION\' ORDER BY CASE p.status WHEN \'ACTIVE\' THEN 0 WHEN \'PROPOSED\' THEN 1 WHEN \'INACTIVE\' THEN 2 ELSE 3 END, p.display_name',
+    [context.tenantId]
+  );
 }
 
-export function getOrganisation(context: CommandContext, id: string): Organisation {
+export async function getOrganisation(context: CommandContext, id: string) {
   assertPermission(context, 'party.read');
   return getOrganisationRow(context, id);
 }
 
-export function createOrganisation(context: CommandContext, input: OrganisationInput): string {
+export async function createOrganisation(context: CommandContext, input: OrganisationInput): Promise<string> {
   assertPermission(context, 'party.create');
   const legalName = cleanRequired(input.legalName, 'Legal name');
   const tradingName = cleanOptional(input.tradingName);
@@ -148,40 +149,36 @@ export function createOrganisation(context: CommandContext, input: OrganisationI
   const taxIdentifier = cleanOptional(input.taxIdentifier);
   const countryCode = cleanCountry(input.countryCode);
 
-  return dbTransaction(() => {
+  return dbTransaction(async (connection) => {
     if (registrationNumber) {
-      const duplicate = db.prepare(`
-        SELECT p.id
-        FROM parties p
-        JOIN organisations o ON o.party_id = p.id
-        WHERE p.tenant_id = ? AND p.party_type = 'ORGANISATION'
-          AND o.registration_number = ? AND p.status <> 'MERGED'
-        LIMIT 1
-      `).get(context.tenantId, registrationNumber);
+      const duplicate = await queryOne<RowDataPacket & { id: string }>(
+        'SELECT p.id FROM parties p JOIN organisations o ON o.party_id = p.id WHERE p.tenant_id = ? AND p.party_type = \'ORGANISATION\' AND o.registration_number = ? AND p.status <> \'MERGED\' LIMIT 1',
+        [context.tenantId, registrationNumber],
+        connection
+      );
       if (duplicate) throw new Error('An organisation with this registration number already exists.');
     }
 
     const id = randomUUID();
     const timestamp = now();
-    db.prepare(`
-      INSERT INTO parties
-        (id, tenant_id, party_type, display_name, status, version, created_at, updated_at)
-      VALUES (?, ?, 'ORGANISATION', ?, 'PROPOSED', 1, ?, ?)
-    `).run(id, context.tenantId, tradingName ?? legalName, timestamp, timestamp);
+    await executeMutation(
+      'INSERT INTO parties (id, tenant_id, party_type, display_name, status, version, created_at, updated_at) VALUES (?, ?, \'ORGANISATION\', ?, \'PROPOSED\', 1, ?, ?)',
+      [id, context.tenantId, tradingName ?? legalName, timestamp, timestamp],
+      connection
+    );
+    await executeMutation(
+      'INSERT INTO organisations (party_id, legal_name, trading_name, registration_number, tax_identifier, country_code, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, legalName, tradingName, registrationNumber, taxIdentifier, countryCode, timestamp, timestamp],
+      connection
+    );
 
-    db.prepare(`
-      INSERT INTO organisations
-        (party_id, legal_name, trading_name, registration_number, tax_identifier, country_code, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, legalName, tradingName, registrationNumber, taxIdentifier, countryCode, timestamp, timestamp);
-
-    const organisation = getOrganisationRow(context, id);
-    publish(context, organisation, 'ORGANISATION_CREATED', 'Canonical Organisation Party created.', null);
+    const organisation = await getOrganisationRow(context, id, connection);
+    await publish(context, organisation, 'ORGANISATION_CREATED', connection, 'Canonical Organisation Party created.', null);
     return id;
   });
 }
 
-export function updateOrganisation(
+export async function updateOrganisation(
   context: CommandContext,
   id: string,
   input: OrganisationInput,
@@ -194,95 +191,91 @@ export function updateOrganisation(
   const taxIdentifier = cleanOptional(input.taxIdentifier);
   const countryCode = cleanCountry(input.countryCode);
 
-  return dbTransaction(() => {
-    const current = getOrganisationRow(context, id);
+  return dbTransaction(async (connection) => {
+    const current = await getOrganisationRow(context, id, connection);
     assertMutable(current);
     if (current.version !== expectedVersion) {
       throw new Error('This organisation changed after you opened it. Reload before saving.');
     }
 
     if (registrationNumber) {
-      const duplicate = db.prepare(`
-        SELECT p.id
-        FROM parties p
-        JOIN organisations o ON o.party_id = p.id
-        WHERE p.tenant_id = ? AND p.party_type = 'ORGANISATION'
-          AND o.registration_number = ? AND p.id <> ? AND p.status <> 'MERGED'
-        LIMIT 1
-      `).get(context.tenantId, registrationNumber, id);
+      const duplicate = await queryOne<RowDataPacket & { id: string }>(
+        'SELECT p.id FROM parties p JOIN organisations o ON o.party_id = p.id WHERE p.tenant_id = ? AND p.party_type = \'ORGANISATION\' AND o.registration_number = ? AND p.id <> ? AND p.status <> \'MERGED\' LIMIT 1',
+        [context.tenantId, registrationNumber, id],
+        connection
+      );
       if (duplicate) throw new Error('Another organisation already uses this registration number.');
     }
 
     const timestamp = now();
-    const result = db.prepare(`
-      UPDATE parties
-      SET display_name = ?, version = version + 1, updated_at = ?
-      WHERE id = ? AND tenant_id = ? AND version = ?
-    `).run(tradingName ?? legalName, timestamp, id, context.tenantId, expectedVersion);
+    const result = await executeMutation(
+      'UPDATE parties SET display_name = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
+      [tradingName ?? legalName, timestamp, id, context.tenantId, expectedVersion],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent organisation update detected.');
 
-    if (Number(result.changes) !== 1) throw new Error('Concurrent organisation update detected.');
+    await executeMutation(
+      'UPDATE organisations SET legal_name = ?, trading_name = ?, registration_number = ?, tax_identifier = ?, country_code = ?, updated_at = ? WHERE party_id = ?',
+      [legalName, tradingName, registrationNumber, taxIdentifier, countryCode, timestamp, id],
+      connection
+    );
 
-    db.prepare(`
-      UPDATE organisations
-      SET legal_name = ?, trading_name = ?, registration_number = ?, tax_identifier = ?,
-          country_code = ?, updated_at = ?
-      WHERE party_id = ?
-    `).run(legalName, tradingName, registrationNumber, taxIdentifier, countryCode, timestamp, id);
-
-    const updated = getOrganisationRow(context, id);
-    publish(context, updated, 'ORGANISATION_CHANGED', 'Canonical Organisation master data changed.', current.status);
+    const updated = await getOrganisationRow(context, id, connection);
+    await publish(context, updated, 'ORGANISATION_CHANGED', connection, 'Canonical Organisation master data changed.', current.status);
   });
 }
 
-export function activateOrganisation(context: CommandContext, id: string, expectedVersion: number) {
+export async function activateOrganisation(context: CommandContext, id: string, expectedVersion: number) {
   assertPermission(context, 'party.activate');
   return changeStatus(context, id, expectedVersion, 'ACTIVE', ['PROPOSED', 'INACTIVE']);
 }
 
-export function deactivateOrganisation(context: CommandContext, id: string, expectedVersion: number) {
+export async function deactivateOrganisation(context: CommandContext, id: string, expectedVersion: number) {
   assertPermission(context, 'party.activate');
   return changeStatus(context, id, expectedVersion, 'INACTIVE', ['ACTIVE']);
 }
 
-function changeStatus(
+async function changeStatus(
   context: CommandContext,
   id: string,
   expectedVersion: number,
   nextStatus: OrganisationStatus,
   allowed: OrganisationStatus[]
 ) {
-  return dbTransaction(() => {
-    const current = getOrganisationRow(context, id);
+  return dbTransaction(async (connection) => {
+    const current = await getOrganisationRow(context, id, connection);
     if (current.version !== expectedVersion) {
       throw new Error('This organisation changed after you opened it. Reload before changing status.');
     }
     if (!allowed.includes(current.status)) {
-      throw new Error(`Organisation cannot move from ${current.status} to ${nextStatus}.`);
+      throw new Error('Organisation cannot move from ' + current.status + ' to ' + nextStatus + '.');
     }
 
     const timestamp = now();
-    const result = db.prepare(`
-      UPDATE parties
-      SET status = ?, version = version + 1, updated_at = ?
-      WHERE id = ? AND tenant_id = ? AND version = ?
-    `).run(nextStatus, timestamp, id, context.tenantId, expectedVersion);
-    if (Number(result.changes) !== 1) throw new Error('Concurrent organisation status update detected.');
+    const result = await executeMutation(
+      'UPDATE parties SET status = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
+      [nextStatus, timestamp, id, context.tenantId, expectedVersion],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent organisation status update detected.');
 
-    const updated = getOrganisationRow(context, id);
-    publish(
+    const updated = await getOrganisationRow(context, id, connection);
+    await publish(
       context,
       updated,
       nextStatus === 'ACTIVE' ? 'ORGANISATION_ACTIVATED' : 'ORGANISATION_DEACTIVATED',
+      connection,
       undefined,
       current.status
     );
   });
 }
 
-export function listOrganisationAudit(
+export async function listOrganisationAudit(
   context: CommandContext,
   id: string
-): PlatformAuditEvent[] {
-  getOrganisation(context, id);
+): Promise<PlatformAuditEvent[]> {
+  await getOrganisation(context, id);
   return listPlatformAudit(context, 'organisation', id);
 }

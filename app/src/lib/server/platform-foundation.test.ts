@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { seedDevelopmentTenant } from './development-seed';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let contextService: typeof import('./platform-context');
@@ -26,6 +27,7 @@ afterAll(async () => {
 describe('platform foundation runtime on MySQL', () => {
   it('resolves tenant membership and permissions before organisation commands', async () => {
     const tenant = 'foundation-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
     expect(context.tenantSlug).toBe(tenant);
     expect(context.roleKeys).toContain('tenant-admin');
@@ -107,6 +109,7 @@ describe('platform foundation runtime on MySQL', () => {
   });
 
   it('persists Person and Legal Entity as Party specialisations without duplicate masters', async () => {
+    await seedDevelopmentTenant('party-specialisations-' + randomUUID().slice(0, 8));
     const context = await contextService.resolveDevelopmentCommandContext('party-specialisations-' + randomUUID().slice(0, 8));
 
     const personId = await personService.createPerson(context, {
@@ -156,6 +159,7 @@ describe('platform foundation runtime on MySQL', () => {
 
 
   it('governs tenant membership and role assignment through AGG-00-TENANT commands', async () => {
+    await seedDevelopmentTenant('authority-' + randomUUID().slice(0, 8));
     const context = await contextService.resolveDevelopmentCommandContext('authority-' + randomUUID().slice(0, 8));
     const personId = await personService.createPerson(context, { givenName: 'Grace', familyName: 'Hopper' });
 
@@ -197,6 +201,7 @@ describe('platform foundation runtime on MySQL', () => {
 
 
   it('claims and publishes transactional outbox messages exactly once per worker claim', async () => {
+    await seedDevelopmentTenant('outbox-' + randomUUID().slice(0, 8));
     const context = await contextService.resolveDevelopmentCommandContext('outbox-' + randomUUID().slice(0, 8));
     const organisationId = await organisationService.createOrganisation(context, { legalName: 'Outbox Test Organisation' });
     const workerId = 'test-worker-' + randomUUID();

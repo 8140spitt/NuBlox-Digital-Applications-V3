@@ -65,7 +65,7 @@ Every material implemented command writes:
 3. `business_events` describing the committed business occurrence;
 4. `outbox_messages` for reliable downstream publication.
 
-The writes occur in the same SQLite transaction as the aggregate change.
+The writes occur in the same MySQL transaction as the aggregate change.
 
 An audit event is evidence, not domain truth. A business event describes committed truth, but does not become a second mutable master. An outbox row is integration-delivery state, not business lifecycle state.
 
@@ -75,11 +75,13 @@ F01.01 Strategy Framework now uses the same platform command context, permission
 
 The previous hard-coded actor and slice-specific audit writer are no longer the governing runtime pattern.
 
-## Current development database
+## Database and migrations
 
-SQLite using Node 22 `node:sqlite` remains the local V3 development persistence engine. The logical aggregate boundaries do **not** imply one SQLite table, one future PostgreSQL table or one service per aggregate.
+MySQL 8.0+ is the V3 runtime database. The application uses the `mysql2` promise client and pooled prepared statements. Runtime TypeScript does **not** create or alter business tables.
 
-Physical persistence may evolve without changing:
+Physical schema is managed by ordered forward migrations under `app/migrations/` with a `schema_migrations` ledger and SHA-256 drift detection. Runtime startup verifies that the required migration is present and instructs the operator to run `pnpm db:migrate` when it is not.
+
+The logical aggregate boundaries do **not** imply one MySQL table or one service per aggregate. Physical persistence may evolve without changing:
 
 - canonical identity;
 - aggregate ownership;

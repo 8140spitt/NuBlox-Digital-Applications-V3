@@ -38,6 +38,7 @@
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/estimating-tendering`}><span>∑</span>Estimating & tendering</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/people-hcm`}><span>♙</span>People & HCM</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/qhse-assurance`}><span>△</span>QHSE & assurance</a>
+    <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/building-safety-regulatory`}><span>◇</span>Building safety & regulatory</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/delivery-context`}><span>▤</span>Delivery context</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/built-environment`}><span>▧</span>Built environment</a>
     <a class="admin-item" href={`/${tenantSlug}/app/admin/business-objects/commercial-procurement`}><span>▥</span>Commercial & procurement</a>

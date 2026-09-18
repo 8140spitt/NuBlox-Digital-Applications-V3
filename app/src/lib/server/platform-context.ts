@@ -11,6 +11,11 @@ import {
 
 export const platformPermissions = [
   ['platform.audit.read', 'platform.audit', 'read', 'Read tenant-scoped platform audit evidence.'],
+  ['tenant.membership.read', 'tenant.membership', 'read', 'Read tenant membership authority.'],
+  ['tenant.membership.manage', 'tenant.membership', 'manage', 'Grant and revoke tenant membership authority.'],
+  ['tenant.role.read', 'tenant.role', 'read', 'Read tenant roles and permission grants.'],
+  ['tenant.role.manage', 'tenant.role', 'manage', 'Create and maintain tenant role definitions.'],
+  ['tenant.role.assign', 'tenant.role', 'assign', 'Assign tenant roles to active tenant members.'],
   ['party.read', 'party', 'read', 'Read canonical Party, Person and Organisation master data.'],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],

@@ -255,6 +255,19 @@ export const benchmarkGapRegister: BenchmarkGap[] = [
     state: 'resolved',
     rationale: 'Textura exposes jurisdiction-specific lien-waiver, sworn-statement, payment-hold and downstream-payment compliance. These are real construction-payment controls but should be configured by jurisdiction/contract regime rather than become universal global payment objects.',
     requiredOutcome: 'Reuse Contract, Payment Application/Valuation/Certificate, Compliance Requirement, Evidence Item, Payment Hold/withholding semantics and jurisdiction policy; add regime-specific waiver/release evidence only where legally applicable.'
+  },
+  {
+    id: 'BG-019',
+    title: 'Quantitative project schedule and cost risk analysis',
+    sourceBenchmarks: ['ORACLE-CLOUD-CX'],
+    sourceFindings: ['ENT-W1-ORACLE-02'],
+    affectedExternalRows: ['ORACLE-PRIMAVERA-CLOUD-RISK'],
+    workspaces: ['F20', 'F27', 'F03', 'F14'],
+    canonicalFamilies: ['BOF-06', 'BOF-19', 'BOF-21'],
+    disposition: 'accepted-refinement',
+    state: 'resolved',
+    rationale: 'Large construction and capital programmes require reproducible probabilistic schedule/cost risk analysis. Existing Risk Assessment and project Schedule/Forecast semantics do not retain quantitative simulation inputs, method versions and outcome distributions.',
+    requiredOutcome: 'Govern Project Risk Simulation Run and Project Risk Analysis Snapshot around existing Enterprise Risk/Risk Assessment, Schedule, cost/Forecast and Scenario identities.'
   }
 ];
 
@@ -272,9 +285,9 @@ export function validateBenchmarkGapRegister() {
   if (!benchmarkGapRegister.every((gap) => gap.sourceBenchmarks.length > 0 && gap.sourceFindings.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.workspaces.length > 0 && gap.canonicalFamilies.length > 0)) return false;
   if (!benchmarkGapRegister.every((gap) => gap.rationale && gap.requiredOutcome)) return false;
-  if (benchmarkGapSummary.acceptedRefinementCount !== 12) return false;
+  if (benchmarkGapSummary.acceptedRefinementCount !== 13) return false;
   if (benchmarkGapSummary.crossBenchmarkRequiredCount !== 0) return false;
   if (benchmarkGapSummary.contextualExtensionCount !== 6) return false;
-  if (benchmarkGapSummary.resolvedCount !== 18) return false;
+  if (benchmarkGapSummary.resolvedCount !== 19) return false;
   return true;
 }

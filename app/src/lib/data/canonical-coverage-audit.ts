@@ -186,6 +186,8 @@ export const coverageAuditSummary = {
   specialistOverlayCount: specialistOverlays.length,
   aggregateFreeze: canonicalAggregateFreezeSummary,
   activityMapping: activityObjectActionSummary,
+  architectureConvergenceState: 'complete' as const,
+  implementationAuthority: 'controlled-aggregate-waves-authorized' as const,
   coveredSpecialistOverlayCount: overlayCoverage.size,
   externalBenchmark: {
     name: 'Multi-vendor market benchmark programme',
@@ -237,5 +239,9 @@ export function validateCanonicalCoverageAudit() {
   if (coverageAuditSummary.activityMapping.ambiguousSubfunctionCount !== 0) return false;
   if (coverageAuditSummary.activityMapping.invalidObjectModelRouteCount !== 0) return false;
   if (coverageAuditSummary.activityMapping.invalidAggregateRouteCount !== 0) return false;
+  if (coverageAuditSummary.activityMapping.invalidObjectPlacementCount !== 0) return false;
+  if (coverageAuditSummary.activityMapping.unsafeProjectionCommandCount !== 0) return false;
+  if (coverageAuditSummary.architectureConvergenceState !== 'complete') return false;
+  if (coverageAuditSummary.implementationAuthority !== 'controlled-aggregate-waves-authorized') return false;
   return true;
 }

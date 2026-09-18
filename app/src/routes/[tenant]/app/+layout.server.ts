@@ -1,8 +1,8 @@
 import type { LayoutServerLoad } from './$types';
-import { resolveDevelopmentCommandContext } from '$lib/server/platform-context';
+import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 
-export const load: LayoutServerLoad = async ({ params }) => {
-  const context = await resolveDevelopmentCommandContext(params.tenant);
+export const load: LayoutServerLoad = async ({ params, locals }) => {
+  const context = await resolveRequestCommandContext(params.tenant, locals);
   return {
     tenantSlug: context.tenantSlug,
     actorDisplayName: context.actorDisplayName,

@@ -203,7 +203,7 @@ async function transitionKpi(context:CommandContext,id:string,expectedAggregateV
     const timestamp=now();
     const result=await executeMutation('UPDATE performance_kpis SET status=?,aggregate_version=aggregate_version+1,updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?',[to,timestamp,current.id,context.tenantId,expectedAggregateVersion],connection);
     if(result.affectedRows!==1)throw new Error('Concurrent KPI Definition transition detected.');
-    await executeMutation('UPDATE performance_kpi_versions SET lifecycle_status=?,published_at=CASE WHEN ?="PUBLISHED" THEN ? ELSE published_at END WHERE kpi_id=? AND version_no=?',[versionStatus,versionStatus,timestamp,current.id,current.currentVersionNo],connection);
+    await executeMutation("UPDATE performance_kpi_versions SET lifecycle_status=?,published_at=CASE WHEN ?='PUBLISHED' THEN ? ELSE published_at END WHERE kpi_id=? AND version_no=?",[versionStatus,versionStatus,timestamp,current.id,current.currentVersionNo],connection);
     const updated=await getKpi(context,current.id,connection);await evidence(context,updated,eventType,current.status,to,{versionNo:current.currentVersionNo},connection);
   });
 }
@@ -218,7 +218,6 @@ async function assertEffectiveKpiVersion(context:CommandContext,kpiId:string,ver
 
 export async function listPerformanceTargets(context:CommandContext,kpiId?:string){
   assertPermission(context,'strategy.performance.read');
-  const params:kpiId extends string?never:never = undefined as never;
   return queryRows<RowDataPacket&PerformanceTarget>(
     'SELECT id,target_ref AS targetRef,kpi_id AS kpiId,kpi_version_no AS kpiVersionNo,scope_type AS scopeType,scope_id AS scopeId,period_start AS periodStart,period_end AS periodEnd,target_value AS targetValue,comparison_operator AS comparisonOperator,status,aggregate_version AS aggregateVersion FROM performance_targets WHERE tenant_id=?'+(kpiId?' AND kpi_id=?':'')+' ORDER BY period_start DESC,target_ref',
     kpiId?[context.tenantId,kpiId]:[context.tenantId]
@@ -287,10 +286,13 @@ export async function createPerformanceBaseline(context:CommandContext,input:{ba
   return dbTransaction(async connection=>{
     const observation=await queryOne<RowDataPacket&PerformanceObservation>("SELECT id,kpi_id AS kpiId,kpi_version_no AS kpiVersionNo,subject_type AS subjectType,subject_id AS subjectId,period_start AS periodStart,period_end AS periodEnd,observed_at AS observedAt,numeric_value AS numericValue,unit_of_measure_id AS unitOfMeasureId,source_reference AS sourceReference,quality_status AS qualityStatus,correction_of_id AS correctionOfId,recorded_by_party_id AS recordedByPartyId,created_at AS createdAt FROM performance_observations WHERE id=? AND tenant_id=? AND quality_status='VALIDATED'",[input.observationId,context.tenantId],connection);
     if(!observation)throw new Error('Baseline must pin a validated Performance Observation.');
-    await executeMutation("UPDATE performance_baselines SET status='SUPERSEDED' WHERE tenant_id=? AND kpi_id=? AND scope_type=? AND scope_id=? AND status='ACTIVE'",[context.tenantId,observation.kpiId,code(input.scopeType,'Baseline scope type',64),required(input.scopeId,'Baseline scope ID')],connection);
+    const scopeType=code(input.scopeType,'Baseline scope type',64);
+    const scopeId=required(input.scopeId,'Baseline scope ID');
+    if(observation.subjectType!==scopeType||observation.subjectId!==scopeId)throw new Error('Baseline scope must match the pinned Performance Observation subject.');
+    await executeMutation("UPDATE performance_baselines SET status='SUPERSEDED' WHERE tenant_id=? AND kpi_id=? AND scope_type=? AND scope_id=? AND status='ACTIVE'",[context.tenantId,observation.kpiId,scopeType,scopeId],connection);
     const id=randomUUID();
     await executeMutation("INSERT INTO performance_baselines (id,tenant_id,baseline_ref,kpi_id,kpi_version_no,scope_type,scope_id,period_start,period_end,observation_id,status,created_by_party_id,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,'ACTIVE',?,?)",
-      [id,context.tenantId,code(input.baselineRef,'Baseline reference'),observation.kpiId,observation.kpiVersionNo,code(input.scopeType,'Baseline scope type',64),required(input.scopeId,'Baseline scope ID'),observation.periodStart,observation.periodEnd,observation.id,context.actorPartyId,now()],connection);
+      [id,context.tenantId,code(input.baselineRef,'Baseline reference'),observation.kpiId,observation.kpiVersionNo,scopeType,scopeId,observation.periodStart,observation.periodEnd,observation.id,context.actorPartyId,now()],connection);
     return id;
   });
 }
@@ -308,6 +310,8 @@ export async function getPerformanceVariance(context:CommandContext,input:{kpiId
 
 export async function createPerformanceCorrectiveAction(context:CommandContext,input:{kpiId:string;kpiVersionNo:number;title:string;instructions:string;dueAt?:string;priority?:string}){
   assertPermission(context,'strategy.performance.manage');
+  const kpi=await getKpi(context,input.kpiId);
+  if(kpi.status!=='EFFECTIVE'||kpi.currentVersionNo!==input.kpiVersionNo)throw new Error('Corrective action must reference the current effective KPI Definition version.');
   const workflowId=await createWorkflowInstance(context,{definitionKey:'PERFORMANCE_CORRECTIVE_ACTION',definitionVersion:'1',subjectType:'KPI_DEFINITION',subjectId:input.kpiId,subjectVersion:String(input.kpiVersionNo),currentState:'ACTION_REQUIRED'});
   const workItemId=await createWorkItem(context,workflowId,{workType:'PERFORMANCE_CORRECTIVE_ACTION',title:input.title,instructions:input.instructions,subjectType:'KPI_DEFINITION',subjectId:input.kpiId,subjectVersion:String(input.kpiVersionNo),priority:input.priority,dueAt:input.dueAt});
   return{workflowId,workItemId};

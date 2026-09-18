@@ -414,8 +414,7 @@ describe('shared foundation relationship, structure and authority aggregates', (
       subjectId,
       subjectVersion: '3',
       outcome: 'APPROVED',
-      reason: 'The governed subject satisfies the stated decision criteria.',
-      authorityBasis: 'Tenant governance role with work.decision.record permission.'
+      reason: 'The governed subject satisfies the stated decision criteria.'
     });
 
     const correctiveId = await workDecisionService.recordWorkDecision(context, {

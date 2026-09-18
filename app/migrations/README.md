@@ -52,8 +52,9 @@ Pending, drift or unknown migrations make `db:status` exit non-zero.
 - `0003_party_specialisations.sql` — canonical Person and Legal Entity specialisations of Party.
 - `0004_outbox_delivery_controls.sql` — claim/retry/lock/failure/dead-letter controls for transactional outbox delivery.
 - `0005_tenant_version.sql` — monotonic aggregate versioning for AGG-01-TENANT authority/configuration changes.
+- `0006_authentication.sql` — Better Auth users, sessions, accounts and verification persistence, kept separate from NuBlox business authority.
 
-Future schema changes start at `0006_...`; historical migrations remain immutable.
+Future schema changes start at `0007_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 

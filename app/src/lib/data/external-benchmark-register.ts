@@ -170,7 +170,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'mandatory-suite',
     category: ['eam','apm','field-service','maintenance','facilities','inventory'],
     workspaces: ['F10','F12','F13','F17','F20','F22','F23','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.ibm.com/products/maximo',
     challengeFocus: ['asset lifecycle','work orders','maintenance','reliability','condition/predictive maintenance','MRO inventory','facilities'],
     notes: 'Primary enterprise asset/maintenance benchmark from operation through decommissioning.'
@@ -254,7 +254,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['gis','field-mobility','asset-network','infrastructure','geospatial'],
     workspaces: ['F10','F12','F17','F22','F23','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://www.esri.com/en-us/industries/infrastructure-management',
     challengeFocus: ['geospatial master/context','linear/network assets','field capture','inspection','location-aware work','GIS-BIM continuity'],
     notes: 'Geospatial/infrastructure benchmark so NuBlox treats location, networks and field evidence as first-class semantics rather than map attachments.'
@@ -266,7 +266,7 @@ export const externalBenchmarkRegister: ExternalBenchmarkDefinition[] = [
     tier: 'specialist-depth',
     category: ['iwms','facilities','space','real-estate','maintenance'],
     workspaces: ['F12','F17','F22','F23','F27'],
-    studyState: 'registered',
+    studyState: 'challenged',
     officialSource: 'https://planonsoftware.com/uk/software/iwms/space-workplace-services-management/',
     challengeFocus: ['real estate','lease/space','workplace services','facilities','maintenance','sustainability'],
     notes: 'Specialist FM/property benchmark across workplace, space, facilities and property operations.'

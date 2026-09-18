@@ -341,4 +341,60 @@ describe('shared foundation relationship, structure and authority aggregates', (
     expect(evidenceRows.every((event) => event.aggregateId === 'AGG-27-WORKFLOW')).toBe(true);
   });
 
+
+  it('records and resolves shared-work escalations as governed workflow evidence', async () => {
+    const tenant = 'work-escalation-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+    const workflowId = await sharedWorkService.createWorkflowInstance(context, {
+      definitionKey: 'test.escalation',
+      definitionVersion: '1',
+      subjectType: 'TEST_SUBJECT',
+      subjectId: 'subject-' + randomUUID()
+    });
+    const workItemId = await sharedWorkService.createWorkItem(context, workflowId, {
+      workType: 'REVIEW',
+      title: 'Escalation test work item'
+    });
+    await sharedWorkService.assignWorkItem(context, workItemId, {
+      assigneeType: 'PARTY',
+      assigneeId: context.actorPartyId,
+      basis: 'Escalation test assignment'
+    });
+
+    const escalationId = await sharedWorkService.escalateWorkItem(context, workItemId, {
+      triggerCode: 'SLA.BREACH',
+      ruleKey: 'review.sla.24h',
+      reason: 'Review exceeded the governed service-level threshold.'
+    });
+    let escalation = (await sharedWorkService.listWorkEscalations(context, workItemId)).find(
+      (entry) => entry.id === escalationId
+    )!;
+    expect(escalation.status).toBe('OPEN');
+    expect(escalation.triggerCode).toBe('SLA.BREACH');
+
+    escalation = await sharedWorkService.resolveWorkEscalation(
+      context,
+      escalationId,
+      'Escalation reviewed and recovered.'
+    );
+    expect(escalation.status).toBe('RESOLVED');
+    expect(escalation.resolvedAt).toBeTruthy();
+
+    const workflow = (await sharedWorkService.listWorkflowInstances(context)).find(
+      (entry) => entry.id === workflowId
+    )!;
+    expect(workflow.version).toBe(5);
+
+    const events = await db.queryRows<any>(
+      "SELECT event_type AS eventType, aggregate_version AS aggregateVersion FROM business_events WHERE tenant_id = ? AND aggregate_object_id = ? AND event_type IN ('WORK_ITEM_ESCALATED', 'WORK_ITEM_ESCALATION_RESOLVED') ORDER BY aggregate_version",
+      [context.tenantId, workflowId]
+    );
+    expect(events.map((event) => event.eventType)).toEqual([
+      'WORK_ITEM_ESCALATED',
+      'WORK_ITEM_ESCALATION_RESOLVED'
+    ]);
+    expect(events.map((event) => Number(event.aggregateVersion))).toEqual([4, 5]);
+  });
+
 });

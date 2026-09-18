@@ -18,6 +18,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     disableSignUp: process.env.NUBLOX_ALLOW_PUBLIC_SIGNUP !== 'true',
+    autoSignIn: process.env.NUBLOX_AUTH_BOOTSTRAP !== 'true',
     minPasswordLength: 12,
     maxPasswordLength: 128
   },
@@ -31,7 +32,7 @@ export const auth = betterAuth({
       joins: true
     }
   },
-  plugins: [sveltekitCookies(getRequestEvent)]
+  plugins: process.env.NUBLOX_AUTH_BOOTSTRAP === 'true' ? [] : [sveltekitCookies(getRequestEvent)]
 });
 
 export type AuthSession = typeof auth.$Infer.Session;

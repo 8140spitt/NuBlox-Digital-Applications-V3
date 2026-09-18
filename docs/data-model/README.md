@@ -32,6 +32,7 @@ This directory governs the NuBlox V3 canonical information model.
 - `sustainability-carbon-semantics.md` — governed carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, biodiversity/environmental measures and social-value semantics.
 - `risk-compliance-audit-semantics.md` — governed Enterprise Risk, Risk Assessment/Treatment, regulatory obligation, compliance requirement/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics.
 - `legal-privacy-semantics.md` — governed legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, privacy incident, international-transfer and assurance semantics.
+- `knowledge-records-communications-semantics.md` — governed Knowledge Article/Collection, record declaration/series/file, retention/disposition, communication planning/publication, media/external-affairs and stakeholder-engagement semantics.
 - `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
 - `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
 - `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
@@ -91,6 +92,11 @@ The generated register is a **discovery baseline**, not yet a physical-schema sp
 - Privacy Policy reuses Information Container; Processing Activity is a stable governed processing definition and DPIA is assessment evidence.
 - Consent and Preference are distinct evidence histories; Privacy Breach is a Privacy Incident classification with retained notification/breach-decision provenance.
 - International Data Transfer is a governed arrangement/relationship; Privacy Assurance Review reuses shared Assurance Review semantics.
+- Knowledge Article, Controlled Document, Media Release, Statement and Annual Report reuse canonical Information Container identity/revision semantics.
+- Record Declaration overlays authoritative business truth; Record Series/File are classification/aggregation structures rather than copied content or filesystem folders.
+- Retention Schedule is policy, Disposition Request is domain request and BOF-28 Retention Disposition Decision remains the immutable disposition outcome; Legal Hold overrides eligibility.
+- Communication activity remains separate from its controlled content; Reputation/Public Affairs share one External Affairs Issue case pattern.
+- Investor Engagement is typed Stakeholder Engagement evidence linked to canonical Parties; Stakeholder Engagement Plan remains distinct from Communications Plan.
 - WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
 - Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
 - Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.

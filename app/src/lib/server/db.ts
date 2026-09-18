@@ -13,17 +13,36 @@ function databaseUrl() {
     try { loadEnvFile('.env'); } catch { /* environment may be injected by the runtime */ }
   }
 
-  const url =
-    (process.env.NODE_ENV === 'test' ? process.env.NUBLOX_TEST_DATABASE_URL : undefined) ??
-    process.env.DATABASE_URL ??
-    process.env.MYSQL_URL;
+  if (process.env.NODE_ENV === 'test') {
+    if (!process.env.NUBLOX_TEST_DATABASE_URL) {
+      throw new Error('Tests require NUBLOX_TEST_DATABASE_URL. Refusing to fall back to a development database.');
+    }
+    return process.env.NUBLOX_TEST_DATABASE_URL;
+  }
 
+  const url = process.env.DATABASE_URL ?? process.env.MYSQL_URL;
   if (!url) {
-    throw new Error(
-      'MySQL connection is not configured. Set DATABASE_URL (or MYSQL_URL); tests use NUBLOX_TEST_DATABASE_URL.'
-    );
+    throw new Error('MySQL connection is not configured. Set DATABASE_URL (or MYSQL_URL).');
   }
   return url;
+}
+
+function poolOptions() {
+  const target = new URL(databaseUrl());
+  return {
+    host: target.hostname,
+    port: target.port ? Number(target.port) : 3306,
+    user: decodeURIComponent(target.username),
+    password: decodeURIComponent(target.password),
+    database: decodeURIComponent(target.pathname.replace(/^\//, '')),
+    waitForConnections: true,
+    connectionLimit: Number(process.env.DB_POOL_SIZE ?? 10),
+    queueLimit: 0,
+    enableKeepAlive: true,
+    charset: 'utf8mb4',
+    timezone: 'Z',
+    ssl: process.env.MYSQL_SSL === 'true' ? {} : undefined
+  };
 }
 
 let poolInstance: Pool | null = null;
@@ -31,7 +50,7 @@ let readyPromise: Promise<void> | null = null;
 
 export function getDbPool() {
   if (!poolInstance) {
-    poolInstance = mysql.createPool(databaseUrl());
+    poolInstance = mysql.createPool(poolOptions());
   }
   return poolInstance;
 }

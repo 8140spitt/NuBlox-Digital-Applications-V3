@@ -351,6 +351,30 @@ describe('canonical business object review ledger', () => {
     expect(securityRisk?.decision).toBe('MERGE');
     expect(securityRisk?.targetCandidateKey).toBe('BOF-21-003');
 
+    const technologyService = service.getBusinessObjectReview('BOF-24-001');
+    expect(technologyService?.decision).toBe('VALIDATE_OBJECT');
+    expect(technologyService?.proposedCanonicalName).toBe('Technology Service');
+
+    const appService = service.getBusinessObjectReview('BOF-24-002');
+    expect(appService?.decision).toBe('MERGE');
+    expect(appService?.targetCandidateKey).toBe('BOF-24-001');
+
+    const configItem = service.getBusinessObjectReview('BOF-24-013');
+    expect(configItem?.decision).toBe('RELATIONSHIP');
+    expect(configItem?.proposedCanonicalName).toBe('Configuration Registration');
+
+    const referenceDataset = service.getBusinessObjectReview('BOF-24-019');
+    expect(referenceDataset?.decision).toBe('MERGE');
+    expect(referenceDataset?.targetCandidateKey).toBe('BOF-24-018');
+
+    const aiRisk = service.getBusinessObjectReview('BOF-24-028');
+    expect(aiRisk?.decision).toBe('MERGE');
+    expect(aiRisk?.targetCandidateKey).toBe('BOF-21-003');
+
+    const cyberIncident = service.getBusinessObjectReview('BOF-24-035');
+    expect(cyberIncident?.decision).toBe('RENAME');
+    expect(cyberIncident?.proposedCanonicalName).toBe('Cybersecurity Incident');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

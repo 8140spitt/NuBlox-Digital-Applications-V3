@@ -51,6 +51,20 @@ export type MyWorkItem = WorkItem & {
 
 export type WorkAssignmentTargetType = 'PARTY' | 'USER_IDENTITY' | 'ROLE' | 'QUEUE';
 
+export type WorkEscalation = {
+  id: string;
+  workflowInstanceId: string;
+  workItemId: string;
+  triggerCode: string;
+  ruleKey: string | null;
+  fromAssignmentRef: string | null;
+  toAssignmentRef: string | null;
+  reason: string;
+  status: string;
+  occurredAt: string;
+  resolvedAt: string | null;
+};
+
 const workflowSelect =
   'SELECT id, definition_key AS definitionKey, definition_version AS definitionVersion, subject_type AS subjectType, subject_id AS subjectId, subject_version AS subjectVersion, status, version, current_state AS currentState, started_at AS startedAt, completed_at AS completedAt, completion_reason AS completionReason FROM workflow_instances';
 const workItemSelect =
@@ -943,5 +957,164 @@ export async function completeWorkflowInstance(
       connection
     );
     return completed;
+  });
+}
+
+
+export async function listWorkEscalations(
+  context: CommandContext,
+  workItemId?: string
+): Promise<WorkEscalation[]> {
+  assertPermission(context, 'work.item.read');
+  const where = workItemId
+    ? ' WHERE tenant_id = ? AND work_item_id = ?'
+    : ' WHERE tenant_id = ?';
+  const params = workItemId ? [context.tenantId, workItemId] : [context.tenantId];
+  return queryRows<RowDataPacket & WorkEscalation>(
+    `SELECT id,
+            workflow_instance_id AS workflowInstanceId,
+            work_item_id AS workItemId,
+            trigger_code AS triggerCode,
+            rule_key AS ruleKey,
+            from_assignment_ref AS fromAssignmentRef,
+            to_assignment_ref AS toAssignmentRef,
+            reason,
+            status,
+            occurred_at AS occurredAt,
+            resolved_at AS resolvedAt
+       FROM work_escalations${where}
+      ORDER BY occurred_at DESC, id DESC`,
+    params
+  );
+}
+
+export async function escalateWorkItem(
+  context: CommandContext,
+  workItemId: string,
+  input: {
+    triggerCode: string;
+    reason: string;
+    ruleKey?: string;
+    fromAssignmentRef?: string;
+    toAssignmentRef?: string;
+  }
+) {
+  assertPermission(context, 'work.item.manage');
+  return dbTransaction(async (connection) => {
+    const initial = await getWorkItem(context, workItemId, connection);
+    const workflow = await getWorkflow(context, initial.workflowInstanceId, connection, true);
+    const item = await getWorkItem(context, workItemId, connection, true);
+    if (['COMPLETED', 'CANCELLED'].includes(item.status)) {
+      throw new Error('Completed or cancelled Work Items cannot be escalated.');
+    }
+
+    const id = randomUUID();
+    const timestamp = now();
+    const triggerCode = required(input.triggerCode, 'Escalation trigger code').toUpperCase();
+    if (!/^[A-Z0-9][A-Z0-9._:-]{0,127}$/.test(triggerCode)) {
+      throw new Error('Escalation trigger code contains unsupported characters.');
+    }
+    const reason = required(input.reason, 'Escalation reason');
+    await executeMutation(
+      `INSERT INTO work_escalations
+        (id, tenant_id, workflow_instance_id, work_item_id, trigger_code, rule_key,
+         from_assignment_ref, to_assignment_ref, reason, status, occurred_at, resolved_at, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'OPEN', ?, NULL, ?)`,
+      [
+        id,
+        context.tenantId,
+        workflow.id,
+        item.id,
+        triggerCode,
+        input.ruleKey?.trim() || null,
+        input.fromAssignmentRef?.trim() || null,
+        input.toAssignmentRef?.trim() || null,
+        reason,
+        timestamp,
+        timestamp
+      ],
+      connection
+    );
+
+    const updatedWorkflow = await bumpWorkflow(context, workflow, connection);
+    await evidence(
+      context,
+      updatedWorkflow,
+      'work_escalation',
+      id,
+      'WORK_ITEM_ESCALATED',
+      undefined,
+      'OPEN',
+      {
+        workItemId: item.id,
+        triggerCode,
+        ruleKey: input.ruleKey?.trim() || null,
+        fromAssignmentRef: input.fromAssignmentRef?.trim() || null,
+        toAssignmentRef: input.toAssignmentRef?.trim() || null,
+        reason
+      },
+      connection
+    );
+    return id;
+  });
+}
+
+export async function resolveWorkEscalation(
+  context: CommandContext,
+  escalationId: string,
+  resolutionNote: string
+) {
+  assertPermission(context, 'work.item.manage');
+  return dbTransaction(async (connection) => {
+    const escalation = await queryOne<RowDataPacket & WorkEscalation>(
+      `SELECT id,
+              workflow_instance_id AS workflowInstanceId,
+              work_item_id AS workItemId,
+              trigger_code AS triggerCode,
+              rule_key AS ruleKey,
+              from_assignment_ref AS fromAssignmentRef,
+              to_assignment_ref AS toAssignmentRef,
+              reason,
+              status,
+              occurred_at AS occurredAt,
+              resolved_at AS resolvedAt
+         FROM work_escalations
+        WHERE id = ? AND tenant_id = ?
+        FOR UPDATE`,
+      [escalationId, context.tenantId],
+      connection
+    );
+    if (!escalation) throw new Error('Work escalation not found.');
+    if (escalation.status !== 'OPEN') return escalation;
+
+    const workflow = await getWorkflow(context, escalation.workflowInstanceId, connection, true);
+    const note = required(resolutionNote, 'Escalation resolution note');
+    const timestamp = now();
+    const result = await executeMutation(
+      "UPDATE work_escalations SET status = 'RESOLVED', resolved_at = ? WHERE id = ? AND tenant_id = ? AND status = 'OPEN'",
+      [timestamp, escalation.id, context.tenantId],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent Work escalation change detected.');
+
+    const updatedWorkflow = await bumpWorkflow(context, workflow, connection);
+    await evidence(
+      context,
+      updatedWorkflow,
+      'work_escalation',
+      escalation.id,
+      'WORK_ITEM_ESCALATION_RESOLVED',
+      'OPEN',
+      'RESOLVED',
+      {
+        workItemId: escalation.workItemId,
+        triggerCode: escalation.triggerCode,
+        resolutionNote: note
+      },
+      connection
+    );
+    return (await listWorkEscalations(context, escalation.workItemId)).find(
+      (row) => row.id === escalation.id
+    )!;
   });
 }

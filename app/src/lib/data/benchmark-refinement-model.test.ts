@@ -8,7 +8,7 @@ import {
 describe('benchmark-driven canonical refinements', () => {
   it('is internally valid and traceable back to accepted benchmark gaps', () => {
     expect(validateBenchmarkRefinementModel()).toBe(true);
-    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(51);
+    expect(benchmarkRefinementModel.length).toBeGreaterThanOrEqual(56);
   });
 
   it('adds explicit demand and supply planning without collapsing execution truth', () => {
@@ -88,6 +88,17 @@ describe('benchmark-driven canonical refinements', () => {
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-PERFORMANCE-CALCULATION-RUN')?.kind).toBe('event-evidence');
     expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'DEL-PROJECT-PERFORMANCE-SNAPSHOT')?.kind).toBe('projection');
     expect(benchmarkRefinementRules.join(' ')).toContain('reports never become a shadow cost ledger');
+  });
+
+  it('adds agreed contract value breakdowns without turning them into WBS or accounting masters', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-CONTRACT-VALUE-SCHEDULE')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-CONTRACT-VALUE-LINE')?.kind).toBe('child');
+  });
+
+  it('adds target-cost gain/pain assessment semantics with immutable baselines and formulas', () => {
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-TARGET-COST-BASELINE')?.kind).toBe('plan');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-SHARE-MECHANISM')?.kind).toBe('definition');
+    expect(benchmarkRefinementModel.find((entry) => entry.modelId === 'COM-SHARE-ASSESSMENT')?.kind).toBe('event-evidence');
   });
 
   it('adds governed stewardship and reversible merge lineage rather than a second master store', () => {

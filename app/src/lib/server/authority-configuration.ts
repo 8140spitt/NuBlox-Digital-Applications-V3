@@ -430,6 +430,158 @@ export async function createDelegatedAuthorityRule(
   });
 }
 
+
+export async function createApprovalAuthorityRuleVersion(
+  context: CommandContext,
+  ruleId: string,
+  expectedRuleVersion: number,
+  configuration: ApprovalAuthorityConfigurationInput
+) {
+  assertPermission(context, 'reference.authority.manage');
+  const requiredAuthorityType = key(configuration.requiredAuthorityType, 'Required authority type');
+  const scopeType = configuration.scopeType?.trim()
+    ? key(configuration.scopeType, 'Approval scope type', 64)
+    : null;
+  const scopeId = configuration.scopeId?.trim() || null;
+  if (Boolean(scopeType) !== Boolean(scopeId)) {
+    throw new Error('Approval scope type and scope ID must be supplied together.');
+  }
+  const band = money(configuration.currencyCode, configuration.minimumValue, configuration.maximumValue);
+  const effective = effectiveRange(configuration.effectiveFrom, configuration.effectiveTo);
+
+  return dbTransaction(async (connection) => {
+    const rule = await getApprovalRule(context, ruleId, connection, true);
+    if (rule.version !== expectedRuleVersion) {
+      throw new Error('This Approval Authority Rule changed after you opened it.');
+    }
+    const draft = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM approval_authority_rule_versions WHERE tenant_id = ? AND approval_authority_rule_id = ? AND status = 'DRAFT' LIMIT 1 FOR UPDATE",
+      [context.tenantId, rule.id],
+      connection
+    );
+    if (draft) throw new Error('Approval Authority Rule already has a draft version.');
+
+    const maximum = await queryOne<RowDataPacket & { versionNo: number | null }>(
+      'SELECT MAX(version_no) AS versionNo FROM approval_authority_rule_versions WHERE tenant_id = ? AND approval_authority_rule_id = ?',
+      [context.tenantId, rule.id],
+      connection
+    );
+    const versionNo = Number(maximum?.versionNo ?? 0) + 1;
+    const versionId = randomUUID();
+    const timestamp = now();
+    await executeMutation(
+      "INSERT INTO approval_authority_rule_versions (id, tenant_id, approval_authority_rule_id, version_no, status, scope_type, scope_id, currency_code, minimum_value, maximum_value, required_authority_type, effective_from, effective_to, published_at, created_by_party_id, created_at, updated_at) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)",
+      [
+        versionId,
+        context.tenantId,
+        rule.id,
+        versionNo,
+        scopeType,
+        scopeId,
+        band.currencyCode,
+        band.minimumValue,
+        band.maximumValue,
+        requiredAuthorityType,
+        effective.effectiveFrom,
+        effective.effectiveTo,
+        context.actorPartyId,
+        timestamp,
+        timestamp
+      ],
+      connection
+    );
+    const updated = await bumpApprovalRule(context, rule, connection);
+    await evidence(
+      context,
+      updated.id,
+      updated.version,
+      'approval_authority_rule_version',
+      versionId,
+      'APPROVAL_AUTHORITY_RULE_VERSION_CREATED',
+      'DRAFT',
+      { ruleId: rule.id, versionId, versionNo },
+      connection
+    );
+    return versionId;
+  });
+}
+
+export async function createDelegatedAuthorityRuleVersion(
+  context: CommandContext,
+  ruleId: string,
+  expectedRuleVersion: number,
+  configuration: DelegatedAuthorityConfigurationInput
+) {
+  assertPermission(context, 'reference.authority.manage');
+  const allowedScopeType = key(configuration.allowedScopeType, 'Allowed scope type', 64);
+  const allowedScopeId = configuration.allowedScopeId?.trim() || null;
+  const band = money(configuration.currencyCode, null, configuration.maximumValue);
+  const maximumDurationDays = configuration.maximumDurationDays ?? null;
+  if (
+    maximumDurationDays != null &&
+    (!Number.isInteger(maximumDurationDays) || maximumDurationDays < 1)
+  ) {
+    throw new Error('Maximum delegation duration must be a positive whole number of days.');
+  }
+  const effective = effectiveRange(configuration.effectiveFrom, configuration.effectiveTo);
+
+  return dbTransaction(async (connection) => {
+    const rule = await getDelegatedRule(context, ruleId, connection, true);
+    if (rule.version !== expectedRuleVersion) {
+      throw new Error('This Delegated Authority Rule changed after you opened it.');
+    }
+    const draft = await queryOne<RowDataPacket & { id: string }>(
+      "SELECT id FROM delegated_authority_rule_versions WHERE tenant_id = ? AND delegated_authority_rule_id = ? AND status = 'DRAFT' LIMIT 1 FOR UPDATE",
+      [context.tenantId, rule.id],
+      connection
+    );
+    if (draft) throw new Error('Delegated Authority Rule already has a draft version.');
+
+    const maximum = await queryOne<RowDataPacket & { versionNo: number | null }>(
+      'SELECT MAX(version_no) AS versionNo FROM delegated_authority_rule_versions WHERE tenant_id = ? AND delegated_authority_rule_id = ?',
+      [context.tenantId, rule.id],
+      connection
+    );
+    const versionNo = Number(maximum?.versionNo ?? 0) + 1;
+    const versionId = randomUUID();
+    const timestamp = now();
+    await executeMutation(
+      "INSERT INTO delegated_authority_rule_versions (id, tenant_id, delegated_authority_rule_id, version_no, status, allowed_scope_type, allowed_scope_id, currency_code, maximum_value, maximum_duration_days, allow_subdelegation, effective_from, effective_to, published_at, created_by_party_id, created_at, updated_at) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)",
+      [
+        versionId,
+        context.tenantId,
+        rule.id,
+        versionNo,
+        allowedScopeType,
+        allowedScopeId,
+        band.currencyCode,
+        band.maximumValue,
+        maximumDurationDays,
+        configuration.allowSubdelegation ? 1 : 0,
+        effective.effectiveFrom,
+        effective.effectiveTo,
+        context.actorPartyId,
+        timestamp,
+        timestamp
+      ],
+      connection
+    );
+    const updated = await bumpDelegatedRule(context, rule, connection);
+    await evidence(
+      context,
+      updated.id,
+      updated.version,
+      'delegated_authority_rule_version',
+      versionId,
+      'DELEGATED_AUTHORITY_RULE_VERSION_CREATED',
+      'DRAFT',
+      { ruleId: rule.id, versionId, versionNo },
+      connection
+    );
+    return versionId;
+  });
+}
+
 async function publishVersion(
   context: CommandContext,
   kind: 'APPROVAL' | 'DELEGATED',

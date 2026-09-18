@@ -287,4 +287,73 @@ describe('governed authority configuration', () => {
     ).toBe('APPROVED');
   });
 
+
+  it('creates a new immutable approval policy version instead of editing published history', async () => {
+    const tenant = 'authority-version-' + randomUUID().slice(0, 8);
+    await seedDevelopmentTenant(tenant);
+    const context = await contextService.resolveDevelopmentCommandContext(tenant);
+
+    const created = await authority.createApprovalAuthorityRule(context, {
+      ruleKey: 'CAPEX.APPROVAL',
+      actionKey: 'CAPEX_APPROVAL',
+      objectType: 'CAPITAL_REQUEST',
+      configuration: {
+        currencyCode: 'GBP',
+        maximumValue: 100000,
+        requiredAuthorityType: 'CAPEX'
+      }
+    });
+    await authority.publishApprovalAuthorityRuleVersion(
+      context,
+      created.ruleId,
+      created.versionId,
+      1
+    );
+
+    const secondVersionId = await authority.createApprovalAuthorityRuleVersion(
+      context,
+      created.ruleId,
+      2,
+      {
+        currencyCode: 'GBP',
+        maximumValue: 250000,
+        requiredAuthorityType: 'CAPEX'
+      }
+    );
+
+    let rule = (await authority.listApprovalAuthorityRules(context)).find(
+      (entry) => entry.id === created.ruleId
+    )!;
+    expect(rule.version).toBe(3);
+
+    const versionsBeforePublish = await authority.listApprovalAuthorityRuleVersions(
+      context,
+      created.ruleId
+    );
+    expect(versionsBeforePublish.map((entry) => [entry.versionNo, entry.status])).toEqual([
+      [2, 'DRAFT'],
+      [1, 'PUBLISHED']
+    ]);
+
+    await authority.publishApprovalAuthorityRuleVersion(
+      context,
+      created.ruleId,
+      secondVersionId,
+      rule.version
+    );
+
+    rule = (await authority.listApprovalAuthorityRules(context)).find(
+      (entry) => entry.id === created.ruleId
+    )!;
+    expect(rule.version).toBe(4);
+
+    const requirement = await authority.resolveApprovalAuthorityRequirement(context, {
+      actionKey: 'CAPEX_APPROVAL',
+      objectType: 'CAPITAL_REQUEST',
+      currencyCode: 'GBP',
+      value: 200000
+    });
+    expect(requirement?.versionNo).toBe(2);
+  });
+
 });

@@ -14,6 +14,7 @@ describe('canonical aggregate-boundary freeze', () => {
     expect(canonicalAggregateFreezeSummary.frozenFamilyCount).toBe(29);
     expect(canonicalAggregateFreezeSummary.aggregateBoundaryCount).toBe(174);
     expect(canonicalAggregateFreezeSummary.frozenAggregateBoundaryCount).toBe(canonicalAggregateFreezeSummary.aggregateBoundaryCount);
+    expect(canonicalAggregateFreezeSummary.activityDrivenOwnershipCount).toBe(75);
     expect(canonicalAggregateFreezeSummary.state).toBe('frozen');
   });
 

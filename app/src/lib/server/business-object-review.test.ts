@@ -260,6 +260,30 @@ describe('canonical business object review ledger', () => {
     expect(privacyReview?.decision).toBe('MERGE');
     expect(privacyReview?.targetCandidateKey).toBe('BOF-13-014');
 
+    const knowledgeArticle = service.getBusinessObjectReview('BOF-25-001');
+    expect(knowledgeArticle?.decision).toBe('MERGE');
+    expect(knowledgeArticle?.targetCandidateKey).toBe('BOF-07-007');
+
+    const recordDeclaration = service.getBusinessObjectReview('BOF-25-005');
+    expect(recordDeclaration?.decision).toBe('RELATIONSHIP');
+    expect(recordDeclaration?.proposedCanonicalName).toBe('Record Declaration');
+
+    const recordFile = service.getBusinessObjectReview('BOF-25-007');
+    expect(recordFile?.decision).toBe('RENAME');
+    expect(recordFile?.proposedCanonicalName).toBe('Record File Aggregation');
+
+    const lessonLearned = service.getBusinessObjectReview('BOF-25-010');
+    expect(lessonLearned?.decision).toBe('MERGE');
+    expect(lessonLearned?.targetCandidateKey).toBe('BOF-25-001');
+
+    const publicAffairsIssue = service.getBusinessObjectReview('BOF-25-018');
+    expect(publicAffairsIssue?.decision).toBe('MERGE');
+    expect(publicAffairsIssue?.targetCandidateKey).toBe('BOF-25-017');
+
+    const annualReport = service.getBusinessObjectReview('BOF-25-020');
+    expect(annualReport?.decision).toBe('MERGE');
+    expect(annualReport?.targetCandidateKey).toBe('BOF-07-007');
+
     const site = service.getBusinessObjectReview('BOF-16-003');
     expect(site?.decision).toBe('RENAME');
     expect(site?.proposedCanonicalName).toBe('Built Environment Site');

@@ -157,3 +157,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0025 — Governance Body runtime
 
 `0025_governance_body_runtime.sql` implements the `AGG-02-GOVERNANCE` stable Governance Body boundary for F02.01 Board Governance and F02.05 Committee Governance. Boards and committees retain immutable configuration versions and effective-dated Party membership with explicit quorum, chair and secretariat semantics. Membership is governance context only: it does not grant decision authority, permissions or Delegated Authority. Meetings and Decisions remain separate aggregate transactions.
+
+
+## Migration 0026 — Authority Framework runtime
+
+`0026_authority_framework_runtime.sql` implements F02.02 through the frozen `AGG-02-AUTHORITY-FRAMEWORK` boundary. Stable Authority Framework identities retain immutable governance versions containing authority classes, decision rights, monetary/non-monetary limits, reserved matters, delegation/subdelegation constraints and segregation-of-duties rules. Approval retains immutable shared `AGG-27-DECISION` evidence. The Framework is governance policy: it does not itself grant permission, create Delegated Authority or replace executable `AGG-29-AUTHORITY-CONFIG` policy.

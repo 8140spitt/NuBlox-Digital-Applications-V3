@@ -377,6 +377,24 @@ export const platformPermissions = [
     'governance.body',
     'approve',
     'Constitute, activate, suspend and dissolve governed Boards and Committees.'
+  ],
+  [
+    'governance.framework.read',
+    'governance.framework',
+    'read',
+    'Read governed Authority Frameworks, versions and decision-right rules.'
+  ],
+  [
+    'governance.framework.manage',
+    'governance.framework',
+    'manage',
+    'Create and revise Authority Frameworks, authority classes, reserved matters and SoD rules.'
+  ],
+  [
+    'governance.framework.approve',
+    'governance.framework',
+    'approve',
+    'Approve and activate immutable Authority Framework versions.'
   ]
 ] as const;
 

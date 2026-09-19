@@ -4,6 +4,19 @@
 **Review scope:** complete tenant application runtime currently implemented on `main`  
 **Decision:** correct the runtime from function-page-centric presentation to object-centric working contexts before broad F07+ expansion
 
+## Relationship to the Enterprise Interaction Architecture
+
+The object-centric decision in this review remains governing: functions are perspectives/entry points and canonical objects retain one stable identity.
+
+The later [Enterprise Interaction Architecture](enterprise-interaction-architecture.md) expands this decision with **Operate / Deliver / Enterprise Data**, typed enterprise context, workspaces, collections, grids, structures, search and field/spatial patterns.
+
+Accordingly:
+
+- the O0-O4 programme below remains the architectural rationale for object migration;
+- its implementation work is now **subsumed by the E0-E6 programme** in the Enterprise Interaction Architecture;
+- where sequencing differs, **E0-E6 governs**;
+- no part of the newer model weakens aggregate ownership, canonical identity or one-aggregate command rules.
+
 ## Executive conclusion
 
 NuBlox's **semantic and transactional architecture is already substantially object-centric**: canonical identities are defined, 174 aggregate boundaries are frozen, all 1,510 activities are mapped to canonical objects/actions, work/evidence/decision services reference subjects explicitly, and Work Context already stores `objectType` and `objectId`.
@@ -358,4 +371,4 @@ Do not introduce new canonical-record UX that:
 
 The next implementation task is **not another F07 feature page**.
 
-The next task is Wave O0: make the canonical object model navigable and executable as a first-class runtime concept. Once that foundation is in place, the existing F01-F06 screens can be migrated systematically and F07 can be implemented without repeating the function-page-centric pattern.
+Object-centric runtime work now begins inside **Enterprise Interaction E0/E1**: context, canonical object routing, Object Workspace, Collection View, Saved Views, My Work/Task Bar integration and dense enterprise work primitives. The existing F01-F06 screens can then be migrated systematically and F07 can be implemented without repeating the function-page-centric pattern.

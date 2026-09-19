@@ -162,3 +162,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0026 — Authority Framework runtime
 
 `0026_authority_framework_runtime.sql` implements F02.02 through the frozen `AGG-02-AUTHORITY-FRAMEWORK` boundary. Stable Authority Framework identities retain immutable governance versions containing authority classes, decision rights, monetary/non-monetary limits, reserved matters, delegation/subdelegation constraints and segregation-of-duties rules. Approval retains immutable shared `AGG-27-DECISION` evidence. The Framework is governance policy: it does not itself grant permission, create Delegated Authority or replace executable `AGG-29-AUTHORITY-CONFIG` policy.
+
+
+## Migration 0027 — Information Container runtime
+
+`0027_information_container_runtime.sql` implements the frozen `AGG-07-INFORMATION` boundary. Stable Information Container identity survives controlled revisions and representation/file changes. Revisions preserve purpose-of-issue, suitability, subject/context and immutable approval/issue history; representations retain content references and integrity hashes without becoming the information identity. Issued revisions are immutable and later corrections create successor revisions. Shared `AGG-27-DECISION` evidence authorises approval while exchanges, transmittals and workflows remain separate aggregates.

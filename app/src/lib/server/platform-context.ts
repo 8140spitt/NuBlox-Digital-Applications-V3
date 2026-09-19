@@ -395,6 +395,24 @@ export const platformPermissions = [
     'governance.framework',
     'approve',
     'Approve and activate immutable Authority Framework versions.'
+  ],
+  [
+    'information.container.read',
+    'information.container',
+    'read',
+    'Read controlled Information Containers, revisions and representations.'
+  ],
+  [
+    'information.container.manage',
+    'information.container',
+    'manage',
+    'Create and revise controlled Information Containers and working representations.'
+  ],
+  [
+    'information.container.approve',
+    'information.container',
+    'approve',
+    'Approve and issue immutable controlled Information Container revisions.'
   ]
 ] as const;
 

@@ -1,8 +1,41 @@
 <script lang="ts">
+  import CollectionView from '$lib/components/CollectionView.svelte';
   import { objectHref } from '$lib/data/runtime-object-registry';
 
   let { data, form } = $props();
   const href = (id: string) => objectHref(data.tenantSlug, 'lead', id, { from: 'F06.09' });
+
+  const collectionColumns = [
+    { key: 'reference', label: 'Lead', sortable: true },
+    { key: 'prospect', label: 'Prospect', sortable: true },
+    { key: 'status', label: 'Status', sortable: true },
+    { key: 'score', label: 'Score', sortable: true, align: 'end' as const }
+  ];
+
+  const collectionRows = $derived(
+    data.leads.map((lead) => ({
+      id: lead.id,
+      href: href(lead.id),
+      ariaLabel: 'Open ' + lead.leadRef + ' · ' + lead.prospectName,
+      searchText: [
+        lead.leadRef,
+        lead.prospectName,
+        lead.organisationName,
+        lead.status,
+        lead.sourceType,
+        lead.sector,
+        lead.geography
+      ]
+        .filter(Boolean)
+        .join(' '),
+      values: {
+        reference: lead.leadRef,
+        prospect: lead.prospectName,
+        status: lead.status,
+        score: lead.score
+      }
+    }))
+  );
 </script>
 
 <svelte:head><title>Lead Generation · NuBlox</title></svelte:head>
@@ -34,17 +67,14 @@
 
   <div class="workspace">
     <aside class="section-card register">
-      <span class="eyebrow">Lead register</span>
-      <h2>{data.leads.length} leads</h2>
-      <nav class="rows">
-        {#each data.leads as lead}
-          <a class:active={data.selected?.id === lead.id} href={href(lead.id)}>
-            <div><strong>{lead.leadRef}</strong><span>{lead.status}</span></div>
-            <p>{lead.prospectName}</p>
-            <small>{lead.organisationName ?? 'No organisation'} · score {lead.score}</small>
-          </a>
-        {:else}<p class="empty">No Leads captured.</p>{/each}
-      </nav>
+      <CollectionView
+        eyebrow="Lead register"
+        title="Leads"
+        rows={collectionRows}
+        columns={collectionColumns}
+        emptyText="No Leads captured."
+        searchPlaceholder="Search Leads"
+      />
       {#if data.capabilities.canManage}
         <details class="command">
           <summary>Capture Lead</summary>

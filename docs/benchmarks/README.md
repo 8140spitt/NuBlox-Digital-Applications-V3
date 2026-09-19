@@ -15,6 +15,8 @@ The purpose is **enterprise and built-environment completeness**, not vendor imi
 - `competitive-experience-wave-2-construction-delivery.md` — detailed first-pass construction-delivery UX review across Oracle C&E/Aconex, Procore, Autodesk, Trimble, Sage, Causeway, Thinkproject, Asite and EcoSys.
 - `competitive-experience-wave-3-product-engineering-information.md` — detailed first-pass product/engineering/information UX review across Windchill, Teamcenter, 3DEXPERIENCE/ENOVIA and ProjectWise/iTwin.
 - `competitive-experience-wave-4-asset-property-service.md` — detailed first-pass asset/property/service UX review across Maximo, HxGN EAM, Planon and Esri Field Maps/GeoBIM.
+- `competitive-experience-wave-5-specialist-enterprise.md` — detailed first-pass specialist enterprise UX review across Salesforce, Deltek Vantagepoint, Diligent One, NetSuite and Unit4.
+- `../design-system/enterprise-interaction-architecture.md` — consolidated NuBlox runtime/product architecture derived from the cross-suite experience challenge.
 - `sap-capability-coverage-register.csv` — the 64-line SAP benchmark register carried forward from the prior NuBlox programme as provenance. Its legacy NuBlox domain/slice columns are not V3 architecture.
 - `sap-v3-capability-map.csv` — governed 64/64 V3 remap and completed SAP architecture-challenge classification across F01–F29 workspaces, canonical object families/concepts and end-to-end chains.
 - `app/src/lib/generated/sap-v3-benchmark-map.json` — machine-readable form of the SAP V3 remap.

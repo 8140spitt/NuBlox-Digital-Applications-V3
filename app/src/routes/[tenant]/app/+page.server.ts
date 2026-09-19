@@ -4,7 +4,7 @@ import { resolveRequestCommandContext } from '$lib/server/request-command-contex
 import { listMyWork } from '$lib/server/shared-work';
 import { functionWorkspaceDirectory } from '$lib/workspaces/function-directory';
 
-export const load: PageServerLoad = async ({ params, locals }) => {
+export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const canReadWork = hasPermission(context, 'work.item.read');
   const work = canReadWork ? await listMyWork(context) : [];
@@ -12,6 +12,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
   return {
     tenantSlug: params.tenant,
     actorDisplayName: context.actorDisplayName,
+    accessRequestState: url.searchParams.get('accessRequest'),
     work: work.slice(0, 5),
     workCount: work.length,
     functions: functionWorkspaceDirectory.map((workspace) => ({

@@ -1,0 +1,36 @@
+name: Interaction acceptance once
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/interaction-acceptance-once.yml'
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - run: corepack enable
+      - working-directory: app
+        run: pnpm install --no-frozen-lockfile
+      - working-directory: app
+        run: pnpm check
+      - working-directory: app
+        run: pnpm format
+      - working-directory: app
+        run: pnpm format:check
+      - name: Commit formatting and remove workflow
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          git add app
+          git rm .github/workflows/interaction-acceptance-once.yml
+          git commit -m "Format interaction architecture baseline"
+          git push origin HEAD:main

@@ -29,7 +29,7 @@
     initialContexts = []
   }: { tenantSlug: string; initialContexts?: WorkContext[] } = $props();
 
-  let contexts = $state<WorkContext[]>(initialContexts);
+  let contexts = $state<WorkContext[]>([]);
   let dirtyIds = $state<Set<string>>(new Set());
   let pending = $state(false);
   let expanded = $state(true);

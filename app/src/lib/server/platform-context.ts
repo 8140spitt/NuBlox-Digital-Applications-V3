@@ -341,6 +341,24 @@ export const platformPermissions = [
     'strategy.review',
     'conduct',
     'Convene and complete strategic reviews, capture findings and link decisions/actions.'
+  ],
+  [
+    'strategy.scenario.read',
+    'strategy.scenario',
+    'read',
+    'Read governed Scenario versions, assumptions, projections and sensitivity evidence.'
+  ],
+  [
+    'strategy.scenario.manage',
+    'strategy.scenario',
+    'manage',
+    'Create and revise Scenario versions and execute governed sensitivity analysis.'
+  ],
+  [
+    'strategy.scenario.approve',
+    'strategy.scenario',
+    'approve',
+    'Review, approve, activate, supersede and retire governed Scenarios.'
   ]
 ] as const;
 

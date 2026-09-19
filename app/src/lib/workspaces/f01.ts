@@ -141,7 +141,8 @@ export const f01Workspace = {
         'Assumptions',
         'Sensitivity analysis',
         'KPI projections'
-      ]
+      ],
+      path: 'scenarios'
     }
   ] satisfies WorkArea[],
   journey: [

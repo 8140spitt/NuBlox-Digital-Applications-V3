@@ -61,6 +61,7 @@ function runServiceTests() {
         'src/lib/server/information-container.test.ts',
         'src/lib/server/policy-governance.test.ts',
         'src/lib/server/business-object-review.test.ts',
+        'src/lib/server/interaction-preferences.test.ts',
         '--fileParallelism=false',
         '--maxWorkers=1'
       ],

@@ -1,4 +1,10 @@
-export type RuntimeObjectSection = 'overview' | 'work' | 'decisions' | 'evidence' | 'history';
+export type RuntimeObjectSection =
+  | 'overview'
+  | 'relationships'
+  | 'work'
+  | 'decisions'
+  | 'evidence'
+  | 'history';
 
 export type RuntimeObjectDefinition = {
   type: string;
@@ -14,6 +20,18 @@ export type RuntimeObjectDefinition = {
 };
 
 export const runtimeObjectDefinitions: readonly RuntimeObjectDefinition[] = [
+  {
+    type: 'party',
+    subjectType: 'PARTY',
+    canonicalModelId: 'CBO-PARTY',
+    aggregateId: 'AGG-01-PARTY',
+    singular: 'Party',
+    plural: 'Parties',
+    readPermission: 'party.read',
+    sections: ['overview', 'relationships', 'work', 'decisions', 'evidence', 'history'],
+    auditObjectType: 'party',
+    originFunctionId: 'PLATFORM'
+  },
   {
     type: 'lead',
     subjectType: 'LEAD',

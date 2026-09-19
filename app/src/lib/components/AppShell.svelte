@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import CommandPalette from '$lib/components/CommandPalette.svelte';
   import FunctionSidebar from '$lib/components/FunctionSidebar.svelte';
   import TaskBar from '$lib/components/TaskBar.svelte';
   import { enhanceForms } from '$lib/actions/enhance-forms';
@@ -29,198 +30,319 @@
   );
 </script>
 
+<a class="skip-link" href="#main-content">Skip to content</a>
+
 <header class="topbar">
-  <div class="brand" aria-label="NuBlox"><span class="brand-mark">N</span><span>NuBlox</span></div>
-  <nav class="topnav" aria-label="Global">
-    <a class:active={page.url.pathname === `/${tenantSlug}/app`} href={`/${tenantSlug}/app`}>Home</a
-    >
-    <a class:active={page.url.pathname.includes('/app/work')} href={`/${tenantSlug}/app/work`}
-      >My work</a
+  <a class="brand" href={'/' + tenantSlug + '/app'} aria-label="NuBlox home">
+    <span class="brand-mark">N</span>
+    <span class="brand-copy">
+      <strong>NuBlox</strong>
+      <small>{tenantName}</small>
+    </span>
+  </a>
+
+  <div class="command">
+    <CommandPalette {tenantSlug} />
+  </div>
+
+  <nav class="quick-links" aria-label="Global shortcuts">
+    <a
+      class:active={page.url.pathname.includes('/app/work')}
+      href={'/' + tenantSlug + '/app/work'}>My Work</a
     >
     <a
       class:active={page.url.pathname.includes('/app/functions')}
-      href={`/${tenantSlug}/app/functions`}>Functions</a
-    >
-    <a
-      class:active={page.url.pathname.includes('/admin/business-objects')}
-      href={`/${tenantSlug}/app/admin/business-objects`}>Architecture</a
-    >
-    <a
-      class:active={page.url.pathname.includes('/admin/master-data')}
-      href={`/${tenantSlug}/app/admin/master-data/parties`}>Master data</a
-    >
-    <a
-      class:active={page.url.pathname.includes('/admin/security')}
-      href={`/${tenantSlug}/app/admin/security`}>Security</a
+      href={'/' + tenantSlug + '/app/functions'}>Functions</a
     >
   </nav>
-  <div class="profile">
-    <span class="avatar">{initials}</span>
-    <span class="profile-copy"><strong>{actorDisplayName}</strong><small>{tenantName}</small></span>
-    {#if authenticated}
-      <form method="POST" action="/logout" class="signout">
-        <button type="submit" aria-label="Sign out">Sign out</button>
-      </form>
-    {/if}
-  </div>
+
+  <details class="profile">
+    <summary aria-label={'Account menu for ' + actorDisplayName}>
+      <span class="avatar">{initials}</span>
+      <span class="profile-copy">
+        <strong>{actorDisplayName}</strong>
+        <small>{tenantName}</small>
+      </span>
+      <span class="chevron" aria-hidden="true">⌄</span>
+    </summary>
+    <div class="profile-menu">
+      <div class="profile-context">
+        <strong>{actorDisplayName}</strong>
+        <span>{tenantName}</span>
+      </div>
+      <a href={'/' + tenantSlug + '/app'}>Home</a>
+      <a href={'/' + tenantSlug + '/app/work'}>My Work</a>
+      <a href={'/' + tenantSlug + '/app/functions'}>Function directory</a>
+      {#if authenticated}
+        <form method="POST" action="/logout">
+          <button type="submit">Sign out</button>
+        </form>
+      {/if}
+    </div>
+  </details>
 </header>
 
 <div class="shell">
   <FunctionSidebar {tenantSlug} />
-  <main class="main-content" use:enhanceForms>{@render children()}</main>
+  <main id="main-content" class="main-content" use:enhanceForms>{@render children()}</main>
 </div>
 
 <TaskBar {tenantSlug} initialContexts={initialWorkContexts} />
 
 <style>
-  .topbar {
-    height: 64px;
-    display: grid;
-    grid-template-columns: 220px minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 22px;
-    padding: 0 22px;
-    color: white;
-    background: linear-gradient(100deg, var(--navy-950), var(--navy-900));
-    box-shadow: 0 2px 8px rgba(5, 30, 48, 0.22);
-    position: sticky;
-    top: 0;
-    z-index: 20;
-  }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    font-size: 25px;
-    font-weight: 760;
-    letter-spacing: -0.02em;
-  }
-  .brand-mark {
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 34px;
-    border: 2px solid rgba(255, 255, 255, 0.9);
-    border-radius: 3px;
-    font-weight: 850;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
-  }
-  .topnav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  .topnav a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.85);
-    padding: 10px 12px;
+  .skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 200;
+    transform: translateY(-140%);
     border-radius: 7px;
-    font-size: 14px;
-    white-space: nowrap;
-  }
-  .topnav a:hover,
-  .topnav a.active {
-    color: white;
-    background: rgba(255, 255, 255, 0.1);
-  }
-  .profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-left: 20px;
-    border-left: 1px solid rgba(255, 255, 255, 0.4);
-  }
-  .avatar {
-    display: grid;
-    place-items: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: #edf6fc;
+    padding: 8px 11px;
+    background: white;
     color: var(--navy-900);
     font-size: 12px;
     font-weight: 800;
+    text-decoration: none;
+    box-shadow: var(--shadow);
   }
-  .profile-copy {
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    min-height: 58px;
     display: grid;
-    line-height: 1.2;
+    grid-template-columns: 236px minmax(260px, 1fr) auto auto;
+    gap: 14px;
+    align-items: center;
+    padding: 0 16px 0 14px;
+    color: white;
+    background: var(--navy-950);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 16px rgba(5, 30, 48, 0.14);
   }
-  .profile-copy strong {
-    font-size: 13px;
-    font-weight: 680;
+  .brand {
+    min-width: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: white;
+    text-decoration: none;
   }
-  .profile-copy small {
-    margin-top: 3px;
+  .brand-mark {
+    width: 30px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 30px;
+    border: 1px solid rgba(255, 255, 255, 0.58);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 16px;
+    font-weight: 900;
+  }
+  .brand-copy {
+    min-width: 0;
+    display: grid;
+    gap: 1px;
+    line-height: 1.05;
+  }
+  .brand-copy strong {
+    font-size: 16px;
+    letter-spacing: -0.02em;
+  }
+  .brand-copy small {
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 9.5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .command {
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .quick-links {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .quick-links a {
+    padding: 8px 9px;
+    border-radius: 7px;
     color: rgba(255, 255, 255, 0.72);
     font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
   }
-  .signout {
-    margin: 0 0 0 4px;
-  }
-  .signout button {
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: 7px;
-    padding: 7px 9px;
-    background: transparent;
-    color: rgba(255, 255, 255, 0.82);
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .signout button:hover {
+  .quick-links a:hover,
+  .quick-links a.active {
     background: rgba(255, 255, 255, 0.1);
     color: white;
   }
-  .shell {
+  .profile {
+    position: relative;
+  }
+  .profile > summary {
+    min-width: 0;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    list-style: none;
+    padding: 4px 5px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .profile > summary::-webkit-details-marker {
+    display: none;
+  }
+  .profile > summary:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
     display: grid;
-    grid-template-columns: 238px minmax(0, 1fr);
-    min-height: calc(100vh - 64px);
+    place-items: center;
+    flex: 0 0 34px;
+    border-radius: 50%;
+    background: #edf6fc;
+    color: var(--navy-900);
+    font-size: 11px;
+    font-weight: 850;
+  }
+  .profile-copy {
+    max-width: 150px;
+    display: grid;
+    gap: 1px;
+    line-height: 1.15;
+  }
+  .profile-copy strong,
+  .profile-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .profile-copy strong {
+    font-size: 10.5px;
+    font-weight: 750;
+  }
+  .profile-copy small {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 8.5px;
+  }
+  .chevron {
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 10px;
+  }
+  .profile-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    display: grid;
+    gap: 2px;
+    padding: 7px;
+    border: 1px solid #cad8e0;
+    border-radius: 10px;
+    background: white;
+    color: var(--ink);
+    box-shadow: 0 12px 35px rgba(5, 30, 48, 0.2);
+  }
+  .profile-context {
+    display: grid;
+    gap: 2px;
+    padding: 7px 8px 9px;
+    border-bottom: 1px solid #e4eaee;
+    margin-bottom: 3px;
+  }
+  .profile-context strong {
+    color: #29475c;
+    font-size: 11px;
+  }
+  .profile-context span {
+    color: #778994;
+    font-size: 9px;
+  }
+  .profile-menu a,
+  .profile-menu button {
+    width: 100%;
+    display: block;
+    border: 0;
+    border-radius: 6px;
+    padding: 8px;
+    background: transparent;
+    color: #415d70;
+    font-size: 10.5px;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .profile-menu a:hover,
+  .profile-menu button:hover {
+    background: #eef6fa;
+    color: #214e69;
+  }
+  .profile-menu form {
+    margin: 3px 0 0;
+    padding-top: 3px;
+    border-top: 1px solid #e4eaee;
+  }
+  .shell {
+    min-height: calc(100vh - 58px);
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr);
   }
   .main-content {
     min-width: 0;
-    padding: 14px 14px 64px;
+    padding: 18px 20px 72px;
   }
   :global(form[data-nublox-submitting='true'] button[type='submit']),
   :global(form[data-nublox-submitting='true'] button:not([type])) {
     opacity: 0.65;
     cursor: wait;
   }
-  @media (max-width: 1050px) {
+  @media (max-width: 1100px) {
     .topbar {
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 210px minmax(220px, 1fr) auto;
     }
-    .topnav a:nth-child(n + 4) {
+    .quick-links {
       display: none;
     }
     .shell {
-      grid-template-columns: 210px minmax(0, 1fr);
+      grid-template-columns: 220px minmax(0, 1fr);
     }
   }
   @media (max-width: 760px) {
     .topbar {
-      height: auto;
-      min-height: 58px;
-      grid-template-columns: 1fr auto;
-      padding: 10px 14px;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      min-height: 54px;
+      padding: 0 10px;
     }
     .brand {
-      font-size: 21px;
+      gap: 7px;
     }
-    .topnav {
+    .brand-copy small,
+    .profile-copy,
+    .chevron {
       display: none;
     }
-    .profile-copy {
-      display: none;
+    .brand-mark {
+      width: 28px;
+      height: 30px;
+      flex-basis: 28px;
     }
-    .profile {
-      padding-left: 0;
-      border-left: 0;
+    .command {
+      justify-content: end;
     }
     .shell {
       display: block;
     }
     .main-content {
-      padding: 10px 10px 60px;
+      padding: 12px 10px 66px;
     }
   }
 </style>

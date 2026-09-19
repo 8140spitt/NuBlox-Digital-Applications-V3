@@ -1,4 +1,5 @@
 import type { PageServerLoad } from './$types';
+import { subjectObjectHref } from '$lib/data/runtime-object-registry';
 import { hasPermission } from '$lib/server/platform-context';
 import { listFavourites, listRecentItems } from '$lib/server/interaction-preferences';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
@@ -18,7 +19,12 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     tenantSlug: params.tenant,
     actorDisplayName: context.actorDisplayName,
     accessRequestState: url.searchParams.get('accessRequest'),
-    work: work.slice(0, 5),
+    work: work.slice(0, 5).map((item) => ({
+      ...item,
+      subjectHref: subjectObjectHref(params.tenant, item.subjectType, item.subjectId, {
+        section: 'work'
+      })
+    })),
     workCount: work.length,
     recent,
     favourites: favourites.slice(0, 6),

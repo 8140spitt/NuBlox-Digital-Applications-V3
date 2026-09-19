@@ -167,10 +167,7 @@ export async function listDueDiligenceMatters(context: CommandContext) {
   );
 }
 
-export async function listDueDiligenceWorkstreams(
-  context: CommandContext,
-  matterId: string
-) {
+export async function listDueDiligenceWorkstreams(context: CommandContext, matterId: string) {
   assertPermission(context, 'corporate.development.due_diligence.read');
   await getMatter(context, matterId);
   return queryRows<RowDataPacket & DueDiligenceWorkstream>(
@@ -426,7 +423,9 @@ export async function completeDueDiligenceMatter(
       connection
     );
     if (Number(incomplete?.count ?? 0) !== 0) {
-      throw new Error('Every Due Diligence workstream must be complete before the matter resolves.');
+      throw new Error(
+        'Every Due Diligence workstream must be complete before the matter resolves.'
+      );
     }
 
     const nextVersion = expectedVersion + 1;

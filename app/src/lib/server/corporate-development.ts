@@ -410,14 +410,7 @@ export async function assessDevelopmentOpportunity(
     );
     const result = await executeMutation(
       'UPDATE development_opportunities SET status=?,aggregate_version=?,updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?',
-      [
-        nextState,
-        nextVersion,
-        assessedAt,
-        opportunityId,
-        context.tenantId,
-        expectedVersion
-      ],
+      [nextState, nextVersion, assessedAt, opportunityId, context.tenantId, expectedVersion],
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Development Opportunity version conflict.');
@@ -442,13 +435,7 @@ export async function transitionDevelopmentOpportunity(
   context: CommandContext,
   opportunityId: string,
   expectedVersion: number,
-  action:
-    | 'SECURE_CONTROL'
-    | 'REQUEST_INVESTMENT_DECISION'
-    | 'APPROVE'
-    | 'REJECT'
-    | 'HOLD'
-    | 'CLOSE'
+  action: 'SECURE_CONTROL' | 'REQUEST_INVESTMENT_DECISION' | 'APPROVE' | 'REJECT' | 'HOLD' | 'CLOSE'
 ) {
   assertPermission(context, 'corporate.development.opportunity.manage');
   const transitions: Record<string, { from: string[]; to: string }> = {
@@ -477,7 +464,9 @@ export async function transitionDevelopmentOpportunity(
       throw new Error('Development Opportunity changed before the transition was applied.');
     }
     if (!transition.from.includes(opportunity.status)) {
-      throw new Error('Development Opportunity cannot perform ' + action + ' from ' + opportunity.status + '.');
+      throw new Error(
+        'Development Opportunity cannot perform ' + action + ' from ' + opportunity.status + '.'
+      );
     }
     const nextVersion = expectedVersion + 1;
     const updatedAt = now();
@@ -503,10 +492,7 @@ export async function transitionDevelopmentOpportunity(
   });
 }
 
-export async function listDevelopmentAppraisals(
-  context: CommandContext,
-  opportunityId?: string
-) {
+export async function listDevelopmentAppraisals(context: CommandContext, opportunityId?: string) {
   assertPermission(context, 'corporate.development.read');
   return queryRows<RowDataPacket & DevelopmentAppraisal>(
     appraisalSelect +
@@ -544,7 +530,12 @@ export async function createDevelopmentAppraisal(
 
     let supersedes: DevelopmentAppraisal | null = null;
     if (input.supersedesAppraisalId?.trim()) {
-      supersedes = await getAppraisal(context, input.supersedesAppraisalId.trim(), connection, true);
+      supersedes = await getAppraisal(
+        context,
+        input.supersedesAppraisalId.trim(),
+        connection,
+        true
+      );
       if (supersedes.opportunityId !== input.opportunityId) {
         throw new Error('A successor appraisal must belong to the same Development Opportunity.');
       }
@@ -981,7 +972,10 @@ export async function applyBusinessCaseDecision(
   assertPermission(context, 'corporate.development.transaction.approve');
   return dbTransaction(async (connection) => {
     const businessCase = await getBusinessCase(context, businessCaseId, connection, true);
-    if (businessCase.aggregateVersion !== expectedVersion || businessCase.status !== 'DECISION_REQUIRED') {
+    if (
+      businessCase.aggregateVersion !== expectedVersion ||
+      businessCase.status !== 'DECISION_REQUIRED'
+    ) {
       throw new Error('Business Case is not awaiting the referenced decision.');
     }
     const decision = await queryOne<RowDataPacket & { outcome: string }>(
@@ -1125,7 +1119,9 @@ export async function closeBusinessCase(
       connection
     );
     if (Number(executedAgreement?.count ?? 0) < 1) {
-      throw new Error('Business Case completion requires at least one executed agreement reference.');
+      throw new Error(
+        'Business Case completion requires at least one executed agreement reference.'
+      );
     }
     const nextVersion = expectedVersion + 1;
     const closedAt = now();

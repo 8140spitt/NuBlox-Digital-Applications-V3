@@ -25,7 +25,8 @@ function text(data: FormData, name: string) {
 }
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 function json(data: FormData, name: string) {
@@ -51,7 +52,8 @@ function target(tenant: string, id?: string, type?: string) {
 }
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The Business Case command could not be completed.'
+    message:
+      error instanceof Error ? error.message : 'The Business Case command could not be completed.'
   });
 }
 function caseInput(data: FormData) {
@@ -80,11 +82,12 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     listDueDiligenceMatters(context),
     listOrganisations(context)
   ]);
-  const cases = requestedType
-    ? allCases.filter((row) => row.caseType === requestedType)
-    : allCases;
+  const cases = requestedType ? allCases.filter((row) => row.caseType === requestedType) : allCases;
   const selected =
-    allCases.find((row) => row.id === url.searchParams.get('case')) ?? cases[0] ?? allCases[0] ?? null;
+    allCases.find((row) => row.id === url.searchParams.get('case')) ??
+    cases[0] ??
+    allCases[0] ??
+    null;
   const [versions, agreements] = selected
     ? await Promise.all([
         listBusinessCaseVersions(context, selected.id),
@@ -186,12 +189,7 @@ export const actions: Actions = {
         outcome,
         reason: text(data, 'reason')
       });
-      await applyBusinessCaseDecision(
-        context,
-        id,
-        integer(data, 'aggregateVersion'),
-        decisionId
-      );
+      await applyBusinessCaseDecision(context, id, integer(data, 'aggregateVersion'), decisionId);
       redirect(303, target(params.tenant, id, caseType));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

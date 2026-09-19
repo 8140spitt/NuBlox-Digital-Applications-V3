@@ -165,11 +165,9 @@ Development bootstrap records are application/test fixtures, not migration conte
 
 `0030_governance_meeting_information.sql` closes the Board/Committee meeting-information gap without creating a document silo. Governance Meetings reference exact immutable `information_revisions` for agenda, Board/Committee packs, supporting papers and minutes. Only issued revisions may be linked by the runtime, so historic governance evidence retains the exact controlled information reviewed at the meeting. The meeting remains `AGG-02-GOVERNANCE-MEETING`; Information Container identity and revision lifecycle remain owned by `AGG-07-INFORMATION`.
 
-
 ## Migration 0031 — Enterprise Performance Management extensions
 
 `0031_enterprise_performance_runtime.sql` activates F03 without duplicating the F01 performance foundation. `AGG-02-PERFORMANCE` retains canonical KPI Definition, Target, Observation and Baseline identities while F03 adds governed Scorecards/hierarchy, reproducible Performance Snapshots with exact pinned KPI/Observation/Target inputs, recorded snapshot distribution, approved benchmark basis and benefit profiles/validations. F03.04 Management Review reuses `AGG-02-GOVERNANCE-MEETING` and pins exact published Performance Snapshots; resulting choices remain immutable shared `AGG-27-DECISION` records and corrective follow-up remains shared Work.
-
 
 ## Migration 0032 — Corporate Development & M&A runtime
 

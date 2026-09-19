@@ -18,7 +18,8 @@ function text(data: FormData, name: string) {
 }
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 function optionalNumber(data: FormData, name: string) {
@@ -122,12 +123,7 @@ export const actions: Actions = {
         id,
         integer(data, 'aggregateVersion'),
         text(data, 'action') as
-          | 'SECURE_CONTROL'
-          | 'REQUEST_INVESTMENT_DECISION'
-          | 'APPROVE'
-          | 'REJECT'
-          | 'HOLD'
-          | 'CLOSE'
+          'SECURE_CONTROL' | 'REQUEST_INVESTMENT_DECISION' | 'APPROVE' | 'REJECT' | 'HOLD' | 'CLOSE'
       );
       redirect(303, target(params.tenant, id));
     } catch (error) {

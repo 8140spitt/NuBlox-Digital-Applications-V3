@@ -22,7 +22,8 @@ function text(data: FormData, name: string) {
 }
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 function target(tenant: string, id?: string) {
@@ -59,10 +60,7 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     access,
     capabilities: {
       canManage: hasPermission(context, 'corporate.development.due_diligence.manage'),
-      canAccessManage: hasPermission(
-        context,
-        'corporate.development.due_diligence.access.manage'
-      )
+      canAccessManage: hasPermission(context, 'corporate.development.due_diligence.access.manage')
     }
   };
 };
@@ -83,8 +81,7 @@ export const actions: Actions = {
           counselPartyId: text(data, 'counselPartyId') || undefined,
           jurisdictionId: text(data, 'jurisdictionId') || undefined,
           privilegeClassification: text(data, 'privilegeClassification') || undefined,
-          confidentialityClassification:
-            text(data, 'confidentialityClassification') || undefined
+          confidentialityClassification: text(data, 'confidentialityClassification') || undefined
         }
       );
       redirect(303, target(params.tenant, id));

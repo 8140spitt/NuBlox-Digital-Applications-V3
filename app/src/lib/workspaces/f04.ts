@@ -21,7 +21,14 @@ export const f04Workspace = {
       sourceName: 'Opportunity Identification',
       summary:
         'Identify, screen and evaluate acquisition, merger, divestment and partnership opportunities without creating CRM duplicates.',
-      items: ['Pipeline', 'Target', 'Screening', 'Strategic fit', 'Thesis', 'Investment-decision readiness'],
+      items: [
+        'Pipeline',
+        'Target',
+        'Screening',
+        'Strategic fit',
+        'Thesis',
+        'Investment-decision readiness'
+      ],
       path: 'opportunity-identification'
     },
     {
@@ -30,7 +37,14 @@ export const f04Workspace = {
       sourceName: 'Valuation',
       summary:
         'Create reproducible appraisal snapshots from governed financial, synergy and scenario assumptions.',
-      items: ['Financial model', 'Synergies', 'Valuation', 'Scenarios', 'Sensitivity', 'Approved snapshot'],
+      items: [
+        'Financial model',
+        'Synergies',
+        'Valuation',
+        'Scenarios',
+        'Sensitivity',
+        'Approved snapshot'
+      ],
       path: 'valuation'
     },
     {
@@ -83,23 +97,62 @@ export const f04Workspace = {
     { step: '1', name: 'Identify', detail: 'Capture a stable Corporate Development Opportunity.' },
     { step: '2', name: 'Evaluate', detail: 'Screen strategic fit and freeze appraisal scenarios.' },
     { step: '3', name: 'Diligence', detail: 'Complete restricted cross-functional due diligence.' },
-    { step: '4', name: 'Decide', detail: 'Apply immutable approval Decisions to the exact Business Case version.' },
-    { step: '5', name: 'Execute', detail: 'Record transaction agreements, separation or partnership arrangements.' },
-    { step: '6', name: 'Integrate', detail: 'Coordinate target-state transformation without creating duplicate project masters.' }
+    {
+      step: '4',
+      name: 'Decide',
+      detail: 'Apply immutable approval Decisions to the exact Business Case version.'
+    },
+    {
+      step: '5',
+      name: 'Execute',
+      detail: 'Record transaction agreements, separation or partnership arrangements.'
+    },
+    {
+      step: '6',
+      name: 'Integrate',
+      detail: 'Coordinate target-state transformation without creating duplicate project masters.'
+    }
   ],
   platformServices: [
     ['Party', 'Targets, sponsors, counsel and counterparties reference canonical Party identity.'],
-    ['Decision', 'Material Corporate Development approvals use immutable shared Decision evidence.'],
+    [
+      'Decision',
+      'Material Corporate Development approvals use immutable shared Decision evidence.'
+    ],
     ['Legal Matter', 'Due Diligence is restricted by matter-level need-to-know access.'],
-    ['Evidence & information', 'Models, reports and agreements retain governed source and revision references.'],
-    ['Transformation', 'Post-deal integration reuses the enterprise Transformation Initiative boundary.'],
-    ['Audit & events', 'Lifecycle changes remain attributable, tenant-scoped and replayable without leaking sensitive diligence narrative.']
+    [
+      'Evidence & information',
+      'Models, reports and agreements retain governed source and revision references.'
+    ],
+    [
+      'Transformation',
+      'Post-deal integration reuses the enterprise Transformation Initiative boundary.'
+    ],
+    [
+      'Audit & events',
+      'Lifecycle changes remain attributable, tenant-scoped and replayable without leaking sensitive diligence narrative.'
+    ]
   ],
   integration: [
-    ['Strategy', 'Strategic objectives and operating-model direction inform fit and transaction rationale.'],
-    ['Finance', 'Ledger, funding and financial-source truth feed appraisal without becoming appraisal data.'],
-    ['Legal', 'Due Diligence and transaction execution reuse Legal Matter and controlled agreement evidence.'],
-    ['Risk', 'Diligence findings hand off to risk/control where persistent enterprise exposure exists.'],
-    ['Organisation', 'Integration changes reference canonical Organisation Units and authority structures.']
+    [
+      'Strategy',
+      'Strategic objectives and operating-model direction inform fit and transaction rationale.'
+    ],
+    [
+      'Finance',
+      'Ledger, funding and financial-source truth feed appraisal without becoming appraisal data.'
+    ],
+    [
+      'Legal',
+      'Due Diligence and transaction execution reuse Legal Matter and controlled agreement evidence.'
+    ],
+    [
+      'Risk',
+      'Diligence findings hand off to risk/control where persistent enterprise exposure exists.'
+    ],
+    [
+      'Organisation',
+      'Integration changes reference canonical Organisation Units and authority structures.'
+    ]
   ]
 } as const;

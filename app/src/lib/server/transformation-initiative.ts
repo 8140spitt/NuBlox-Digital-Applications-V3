@@ -134,10 +134,7 @@ export async function listIntegrationInitiatives(context: CommandContext) {
   );
 }
 
-export async function listIntegrationWorkstreams(
-  context: CommandContext,
-  initiativeId: string
-) {
+export async function listIntegrationWorkstreams(context: CommandContext, initiativeId: string) {
   assertPermission(context, 'corporate.development.read');
   const initiative = await getInitiative(context, initiativeId);
   if (initiative.initiativeType !== 'M_AND_A_INTEGRATION') {
@@ -186,7 +183,9 @@ export async function createIntegrationInitiative(
     );
     if (!businessCase) throw new Error('Source Business Case not found.');
     if (!['APPROVED', 'CLOSED'].includes(businessCase.status)) {
-      throw new Error('Integration may only mobilise from an approved Corporate Development Business Case.');
+      throw new Error(
+        'Integration may only mobilise from an approved Corporate Development Business Case.'
+      );
     }
 
     await assertActiveParty(context, sponsorPartyId, connection);
@@ -215,29 +214,32 @@ export async function createIntegrationInitiative(
       connection
     );
 
-    const workstreams =
-      input.workstreams?.length
-        ? input.workstreams
-        : [
-            {
-              workstreamType: 'ORGANISATION',
-              title: 'Organisation integration',
-              scopeSummary: 'Integrate organisation structure, accountabilities and operating interfaces.',
-              successCriteria: 'Target organisation arrangements are effective and governed.'
-            },
-            {
-              workstreamType: 'SYSTEMS',
-              title: 'Systems consolidation',
-              scopeSummary: 'Consolidate technology and application landscape against approved target state.',
-              successCriteria: 'Target systems are transitioned with controlled continuity and data integrity.'
-            },
-            {
-              workstreamType: 'POLICY',
-              title: 'Policy harmonisation',
-              scopeSummary: 'Harmonise enterprise policy and governance requirements.',
-              successCriteria: 'Required policies are governed, issued and effective for the combined organisation.'
-            }
-          ];
+    const workstreams = input.workstreams?.length
+      ? input.workstreams
+      : [
+          {
+            workstreamType: 'ORGANISATION',
+            title: 'Organisation integration',
+            scopeSummary:
+              'Integrate organisation structure, accountabilities and operating interfaces.',
+            successCriteria: 'Target organisation arrangements are effective and governed.'
+          },
+          {
+            workstreamType: 'SYSTEMS',
+            title: 'Systems consolidation',
+            scopeSummary:
+              'Consolidate technology and application landscape against approved target state.',
+            successCriteria:
+              'Target systems are transitioned with controlled continuity and data integrity.'
+          },
+          {
+            workstreamType: 'POLICY',
+            title: 'Policy harmonisation',
+            scopeSummary: 'Harmonise enterprise policy and governance requirements.',
+            successCriteria:
+              'Required policies are governed, issued and effective for the combined organisation.'
+          }
+        ];
 
     const seen = new Set<string>();
     for (const workstream of workstreams) {
@@ -281,7 +283,15 @@ export async function transitionIntegrationInitiative(
   context: CommandContext,
   initiativeId: string,
   expectedVersion: number,
-  action: 'ASSESS' | 'PRIORITISE' | 'APPROVE' | 'MOBILISE' | 'ACTIVATE' | 'TRANSITION' | 'COMPLETE' | 'STOP'
+  action:
+    | 'ASSESS'
+    | 'PRIORITISE'
+    | 'APPROVE'
+    | 'MOBILISE'
+    | 'ACTIVATE'
+    | 'TRANSITION'
+    | 'COMPLETE'
+    | 'STOP'
 ) {
   assertPermission(context, 'corporate.development.integration.manage');
   const transitions: Record<string, { from: string[]; to: string }> = {
@@ -293,7 +303,15 @@ export async function transitionIntegrationInitiative(
     TRANSITION: { from: ['ACTIVE'], to: 'TRANSITIONING' },
     COMPLETE: { from: ['TRANSITIONING', 'ACTIVE'], to: 'COMPLETED' },
     STOP: {
-      from: ['PROPOSED', 'ASSESSMENT', 'PRIORITISED', 'APPROVED', 'MOBILISING', 'ACTIVE', 'TRANSITIONING'],
+      from: [
+        'PROPOSED',
+        'ASSESSMENT',
+        'PRIORITISED',
+        'APPROVED',
+        'MOBILISING',
+        'ACTIVE',
+        'TRANSITIONING'
+      ],
       to: 'STOPPED'
     }
   };
@@ -309,7 +327,9 @@ export async function transitionIntegrationInitiative(
       throw new Error('Integration Initiative changed before the transition was applied.');
     }
     if (!transition.from.includes(initiative.status)) {
-      throw new Error('Integration Initiative cannot perform ' + action + ' from ' + initiative.status + '.');
+      throw new Error(
+        'Integration Initiative cannot perform ' + action + ' from ' + initiative.status + '.'
+      );
     }
 
     if (action === 'COMPLETE') {
@@ -319,7 +339,9 @@ export async function transitionIntegrationInitiative(
         connection
       );
       if (Number(incomplete?.count ?? 0) !== 0) {
-        throw new Error('Every Integration workstream must be complete before the initiative completes.');
+        throw new Error(
+          'Every Integration workstream must be complete before the initiative completes.'
+        );
       }
     }
 
@@ -359,7 +381,11 @@ export async function updateIntegrationWorkstream(
   }
 ) {
   assertPermission(context, 'corporate.development.integration.manage');
-  if (!Number.isFinite(input.progressPercent) || input.progressPercent < 0 || input.progressPercent > 100) {
+  if (
+    !Number.isFinite(input.progressPercent) ||
+    input.progressPercent < 0 ||
+    input.progressPercent > 100
+  ) {
     throw new Error('Integration workstream progress must be between 0 and 100.');
   }
 
@@ -429,7 +455,8 @@ export async function updateIntegrationWorkstream(
       ],
       connection
     );
-    if (initiativeResult.affectedRows !== 1) throw new Error('Integration Initiative version conflict.');
+    if (initiativeResult.affectedRows !== 1)
+      throw new Error('Integration Initiative version conflict.');
 
     await evidence(
       context,

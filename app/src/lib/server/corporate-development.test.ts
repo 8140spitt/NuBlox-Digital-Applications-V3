@@ -75,9 +75,9 @@ describe('F04 Corporate Development & M&A runtime', () => {
       (row) => row.id === opportunityId
     )!;
     expect(opportunity.status).toBe('EVALUATING');
-    expect(await development.listDevelopmentOpportunityAssessments(context, opportunityId)).toHaveLength(
-      2
-    );
+    expect(
+      await development.listDevelopmentOpportunityAssessments(context, opportunityId)
+    ).toHaveLength(2);
 
     const appraisalId = await development.createDevelopmentAppraisal(context, {
       opportunityId,
@@ -164,7 +164,9 @@ describe('F04 Corporate Development & M&A runtime', () => {
           status: 'COMPLETE',
           riskRating: workstream.workstreamType === 'LEGAL' ? 'MEDIUM' : 'LOW',
           findingsSummary:
-            'Sensitive diligence finding for ' + workstream.workstreamType + ' retained in the restricted matter.',
+            'Sensitive diligence finding for ' +
+            workstream.workstreamType +
+            ' retained in the restricted matter.',
           conclusion: 'Diligence workstream complete with identified mitigations.',
           evidenceReference: 'evidence://due-diligence/' + workstream.workstreamType.toLowerCase()
         }
@@ -289,8 +291,10 @@ describe('F04 Corporate Development & M&A runtime', () => {
       affectedScope: 'Organisation, systems, policy and operating interfaces.',
       benefitsSummary: 'Deliver approved business-case synergies and capability outcomes.',
       impactsSummary: 'Organisation structure, technology estate and enterprise policy alignment.',
-      readinessCriteria: 'Day-one governance, access, payroll, finance and operational continuity ready.',
-      adoptionCriteria: 'Target organisation, systems and policy arrangements sustained in operation.'
+      readinessCriteria:
+        'Day-one governance, access, payroll, finance and operational continuity ready.',
+      adoptionCriteria:
+        'Target organisation, systems and policy arrangements sustained in operation.'
     });
 
     let integration = (await transformation.listIntegrationInitiatives(context)).find(
@@ -377,9 +381,9 @@ describe('F04 Corporate Development & M&A runtime', () => {
       sponsorPartyId: context.actorPartyId
     });
 
-    expect((await development.listBusinessCases(context, 'DIVESTITURE')).map((row) => row.id)).toContain(
-      divestitureId
-    );
+    expect(
+      (await development.listBusinessCases(context, 'DIVESTITURE')).map((row) => row.id)
+    ).toContain(divestitureId);
     expect(
       (await development.listBusinessCases(context, 'STRATEGIC_PARTNERSHIP')).map((row) => row.id)
     ).toContain(partnershipId);

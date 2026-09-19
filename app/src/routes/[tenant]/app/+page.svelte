@@ -110,6 +110,70 @@
     </article>
   </section>
 
+  <section class="personal-grid" aria-label="Favourites and recent items">
+    <article class="section-card personal-card">
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">Favourites</span>
+          <h2>Pinned by you</h2>
+        </div>
+        <span class="context-count">{data.favourites.length}</span>
+      </div>
+
+      <div class="personal-list">
+        {#each data.favourites as item}
+          <a href={item.routePath}>
+            <span class="item-kind">{item.itemType}</span>
+            <span class="item-copy">
+              <strong>{item.title}</strong>
+              <small>{item.subtitle ?? 'Favourite enterprise item'}</small>
+            </span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        {:else}
+          <div class="empty compact">
+            <span class="empty-mark neutral">☆</span>
+            <div>
+              <strong>No favourites yet</strong>
+              <span>Favourite a canonical object to keep it close at hand.</span>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </article>
+
+    <article class="section-card personal-card">
+      <div class="card-heading">
+        <div>
+          <span class="eyebrow">Recent</span>
+          <h2>Recently opened</h2>
+        </div>
+        <span class="context-count">{data.recent.length}</span>
+      </div>
+
+      <div class="personal-list">
+        {#each data.recent as item}
+          <a href={item.routePath}>
+            <span class="item-kind">{item.itemType}</span>
+            <span class="item-copy">
+              <strong>{item.title}</strong>
+              <small>{item.subtitle ?? 'Recent enterprise item'}</small>
+            </span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        {:else}
+          <div class="empty compact">
+            <span class="empty-mark neutral">↺</span>
+            <div>
+              <strong>No recent objects yet</strong>
+              <span>Open an object or workspace and it will appear here.</span>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </article>
+  </section>
+
   <section class="section-card function-section">
     <div class="section-heading">
       <div>
@@ -206,6 +270,68 @@
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     gap: 14px;
+  }
+  .personal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .personal-card {
+    min-width: 0;
+    padding: 15px;
+  }
+  .personal-list {
+    display: grid;
+    gap: 4px;
+  }
+  .personal-list > a {
+    min-width: 0;
+    min-height: 43px;
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    gap: 9px;
+    align-items: center;
+    padding: 6px 8px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .personal-list > a:hover {
+    border-color: #c9dce7;
+    background: #f5fafc;
+  }
+  .item-kind {
+    width: max-content;
+    padding: 3px 6px;
+    border-radius: 5px;
+    background: #eef4f7;
+    color: #607887;
+    font-size: 7px;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+  .item-copy {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .item-copy strong,
+  .item-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .item-copy strong {
+    color: #38576b;
+    font-size: 10px;
+  }
+  .item-copy small {
+    color: #81909a;
+    font-size: 8.5px;
+  }
+  .empty.compact {
+    min-height: 58px;
   }
   .work-card,
   .continue-card,
@@ -420,7 +546,8 @@
   }
   @media (max-width: 800px) {
     .page-heading,
-    .focus-grid {
+    .focus-grid,
+    .personal-grid {
       display: grid;
       grid-template-columns: 1fr;
     }

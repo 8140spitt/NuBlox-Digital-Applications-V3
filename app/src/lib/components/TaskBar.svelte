@@ -71,12 +71,7 @@
   }
 
   function pageContextKey(routePath: string) {
-    return (
-      'PAGE:' +
-      routePath
-        .replace(/[^A-Za-z0-9._:/-]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-    );
+    return 'PAGE:' + routePath.replace(/[^A-Za-z0-9._:/-]+/g, '-').replace(/^-+|-+$/g, '');
   }
 
   async function openDirtyFormContext(routePath: string) {

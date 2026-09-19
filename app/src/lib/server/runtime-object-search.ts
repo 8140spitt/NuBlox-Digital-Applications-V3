@@ -1,4 +1,5 @@
 import { objectHref, runtimeObjectDefinition } from '$lib/data/runtime-object-registry';
+import { searchPartyDirectory } from '$lib/server/foundation-party-directory';
 import { searchLeads } from '$lib/server/marketing-lead';
 import { hasPermission, type CommandContext } from '$lib/server/platform-context';
 
@@ -23,7 +24,30 @@ export async function searchRuntimeObjects(
 
   const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
   const results: RuntimeObjectSearchResult[] = [];
+  const partyDefinition = runtimeObjectDefinition('party');
   const leadDefinition = runtimeObjectDefinition('lead');
+
+  if (partyDefinition && hasPermission(context, partyDefinition.readPermission)) {
+    const parties = await searchPartyDirectory(context, needle, limit);
+    for (const party of parties) {
+      const subtype =
+        party.partyType === 'PERSON'
+          ? 'Person'
+          : party.isLegalEntity
+            ? 'Legal entity'
+            : 'Organisation';
+      results.push({
+        objectType: partyDefinition.type,
+        objectId: party.id,
+        objectLabel: partyDefinition.singular,
+        reference: party.originReference || party.id,
+        title: party.displayName,
+        subtitle: subtype,
+        status: party.status,
+        href: objectHref(context.tenantSlug, partyDefinition.type, party.id)
+      });
+    }
+  }
 
   if (leadDefinition && hasPermission(context, leadDefinition.readPermission)) {
     const leads = await searchLeads(context, needle, limit);

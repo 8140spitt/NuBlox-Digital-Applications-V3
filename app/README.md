@@ -20,7 +20,7 @@ The application now establishes:
 - Better Auth production authentication with tenant-scoped identity mapping and controlled first-administrator bootstrap;
 - deny-by-default server command permission checks;
 - MySQL 8.0+ persistence through the `mysql2` promise client and pooled prepared statements;
-- runtime startup schema gating against the latest required forward migration (`0034_product_service_innovation_runtime.sql`);
+- runtime startup schema gating against the latest required forward migration (`0035_marketing_brand_runtime.sql`);
 - append-only platform audit evidence with actor/authority snapshots;
 - canonical business events plus transactional outbox messages;
 - optimistic version control for Organisation master-data commands;
@@ -28,7 +28,7 @@ The application now establishes:
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
-F06–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02, F03, F04 and F05 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
+F07–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02, F03, F04, F05 and F06 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
 ## F02 operational baseline
 
@@ -121,3 +121,20 @@ Product, Service & Innovation Management now operates across the frozen canonica
 The ten F05 L2 work areas are delivered through six shared operational workbenches so identical canonical objects are not split into duplicate mini-applications.
 
 F05 capability coverage is benchmarked against contemporary SAP Integrated Product Development, PTC Windchill, Siemens Teamcenter and Autodesk Fusion Manage semantics while retaining NuBlox canonical authority boundaries.
+
+
+## F06 operational baseline
+
+Marketing & Brand now operates across shared canonical authorities rather than as a separate customer-profile or content-management silo:
+
+- `AGG-03-MARKET-INSIGHT` is shared with F05 for attributable market/customer research, trends and observations; F06 does not create a second market-intelligence master;
+- Market Segment definitions are effective-dated/versioned overlays on Party, Party Relationship and Lead identities; Campaigns pin exact active segment versions so historical audience intent remains reproducible;
+- `AGG-25-COMMUNICATIONS` owns versioned Brand/Marketing Communications Plans and Communication Items, while approved content/assets remain exact issued `AGG-07-INFORMATION` revisions;
+- `AGG-25-COMMS-CAMPAIGN` owns stable multi-channel Campaign identity, exact plan/audience/content context, approval Decision, lifecycle and event execution;
+- Plan and Campaign approvals remain immutable shared `AGG-27-DECISION` records bound to exact versions;
+- the F06 Privacy slice records immutable Consent and Preference Evidence events under `AGG-22-PRIVACY`; outbound delivery evaluates current evidence at execution time and does not use a mutable campaign opt-out flag;
+- `AGG-03-LEAD` owns unresolved early commercial demand, source provenance, enrichment, scoring, nurture, qualification and an exact-version Sales handoff. Lead does not become Party or Opportunity implicitly;
+- Marketing Analytics snapshots are immutable/reproducible evidence that pin the exact delivery-event, Lead, campaign-measurement and segment-membership source sets used to derive reach, conversion, CAC and ROMI;
+- Events reuse the Communications Campaign boundary and retain governed registration, attendance, supplier-reference and outcome evidence.
+
+The eleven F06 L2 areas are delivered through six integrated workbenches: Intelligence & Segmentation, Brand & Marketing Strategy, Campaign Studio, Events, Lead Generation and Marketing Analytics. Contemporary SAP Emarsys and Adobe Journey Optimizer patterns were used as capability benchmarks for segmentation, multi-channel orchestration, approval, automation and optimisation, while NuBlox retains its own canonical authority model.

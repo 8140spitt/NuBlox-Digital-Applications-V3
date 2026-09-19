@@ -97,7 +97,11 @@
     if (objectMatch) {
       const objectType = decodeURIComponent(objectMatch[1]).toUpperCase();
       const objectId = decodeURIComponent(objectMatch[2]);
-      const origin = page.url.searchParams.get('from')?.match(/^F\d{2}/i)?.[0]?.toUpperCase() ?? null;
+      const origin =
+        page.url.searchParams
+          .get('from')
+          ?.match(/^F\d{2}/i)?.[0]
+          ?.toUpperCase() ?? null;
       await openContext({
         contextKey: 'OBJECT:' + objectType + ':' + objectId,
         contextType: 'OBJECT',

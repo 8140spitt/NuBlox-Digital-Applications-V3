@@ -1,0 +1,71 @@
+name: Temporary Prettier Export
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prettier-export.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Format target files
+        run: |
+          pnpm exec prettier --write \
+            src/lib/components/AppShell.svelte \
+            src/lib/components/CommandPalette.svelte \
+            src/lib/components/TaskBar.svelte \
+            src/lib/data/runtime-object-registry.test.ts \
+            src/lib/data/runtime-object-registry.ts \
+            src/lib/server/runtime-object-resolver.ts \
+            'src/routes/[tenant]/app/data/+page.svelte' \
+            'src/routes/[tenant]/app/deliver/+page.svelte' \
+            'src/routes/[tenant]/app/objects/[objectType]/[objectId]/+page.server.ts' \
+            'src/routes/[tenant]/app/objects/[objectType]/[objectId]/+page.svelte' \
+            'src/routes/[tenant]/app/operate/+page.svelte' \
+            'src/routes/[tenant]/app/work/+page.svelte'
+
+      - name: Export formatted files
+        run: |
+          files=(
+            "src/lib/components/AppShell.svelte"
+            "src/lib/components/CommandPalette.svelte"
+            "src/lib/components/TaskBar.svelte"
+            "src/lib/data/runtime-object-registry.test.ts"
+            "src/lib/data/runtime-object-registry.ts"
+            "src/lib/server/runtime-object-resolver.ts"
+            "src/routes/[tenant]/app/data/+page.svelte"
+            "src/routes/[tenant]/app/deliver/+page.svelte"
+            "src/routes/[tenant]/app/objects/[objectType]/[objectId]/+page.server.ts"
+            "src/routes/[tenant]/app/objects/[objectType]/[objectId]/+page.svelte"
+            "src/routes/[tenant]/app/operate/+page.svelte"
+            "src/routes/[tenant]/app/work/+page.svelte"
+          )
+          for file in "${files[@]}"; do
+            echo "@@FILE:$file@@"
+            base64 -w0 "$file"
+            echo
+            echo "@@END@@"
+          done

@@ -491,7 +491,6 @@
   }
   .breadcrumb,
   .head,
-  .rows div,
   .section-head,
   .panel article div {
     display: flex;
@@ -573,41 +572,10 @@
     position: sticky;
     top: 106px;
   }
-  .rows {
-    display: grid;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .rows a {
-    display: grid;
-    gap: 4px;
-    padding: 8px;
-    border: 1px solid #dfe7ec;
-    border-radius: 7px;
-    background: #fafcfd;
-    color: inherit;
-    text-decoration: none;
-  }
-  .rows a.active {
-    border-color: #79bde2;
-    background: #edf8fe;
-  }
-  .rows div,
   .head,
   .section-head,
   .panel article div {
     justify-content: space-between;
-  }
-  .rows p {
-    margin: 0;
-  }
-  .rows strong {
-    font-size: 9.5px;
-  }
-  .rows span,
-  .rows small {
-    font-size: 8px;
-    color: #718693;
   }
   .state-group {
     display: flex;
@@ -739,7 +707,6 @@
     color: #792f2f;
     font-size: 9px;
   }
-  .empty,
   .empty-state {
     color: #758896;
   }

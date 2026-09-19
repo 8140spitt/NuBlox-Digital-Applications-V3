@@ -7,7 +7,7 @@ import {
   queryRows,
   type DbExecutor
 } from '$lib/server/db';
-import { assertPermission, type CommandContext } from '$lib/server/platform-context';
+import type { CommandContext } from '$lib/server/platform-context';
 
 export type WorkContext = {
   id: string;
@@ -72,7 +72,6 @@ function routePath(context: CommandContext, value: string) {
 }
 
 export async function listOpenWorkContexts(context: CommandContext): Promise<WorkContext[]> {
-  assertPermission(context, 'work.context.read');
   return queryRows<RowDataPacket & WorkContext>(
     contextSelect +
       " WHERE tenant_id=? AND user_identity_id=? AND status='OPEN' ORDER BY position,last_accessed_at,id",
@@ -85,7 +84,6 @@ export async function getWorkContext(
   id: string,
   executor?: DbExecutor
 ): Promise<WorkContext> {
-  assertPermission(context, 'work.context.read');
   const row = await queryOne<RowDataPacket & WorkContext>(
     contextSelect + ' WHERE id=? AND tenant_id=? AND user_identity_id=?',
     [id, context.tenantId, context.userIdentityId],
@@ -100,7 +98,6 @@ export async function findWorkContext(
   key: string,
   executor?: DbExecutor
 ): Promise<WorkContext | null> {
-  assertPermission(context, 'work.context.read');
   return (
     (await queryOne<RowDataPacket & WorkContext>(
       contextSelect + ' WHERE tenant_id=? AND user_identity_id=? AND context_key=?',
@@ -124,7 +121,6 @@ export async function openWorkContext(
     workspaceFunctionId?: string | null;
   }
 ): Promise<WorkContext> {
-  assertPermission(context, 'work.context.manage');
   const key = contextKey(input.contextKey);
   const openedAt = now();
   return dbTransaction(async (connection) => {
@@ -199,7 +195,6 @@ export async function openWorkContext(
 }
 
 export async function touchWorkContext(context: CommandContext, id: string) {
-  assertPermission(context, 'work.context.manage');
   const result = await executeMutation(
     "UPDATE work_contexts SET last_accessed_at=? WHERE id=? AND tenant_id=? AND user_identity_id=? AND status='OPEN'",
     [now(), id, context.tenantId, context.userIdentityId]
@@ -208,7 +203,6 @@ export async function touchWorkContext(context: CommandContext, id: string) {
 }
 
 export async function closeWorkContext(context: CommandContext, id: string) {
-  assertPermission(context, 'work.context.manage');
   const timestamp = now();
   const result = await executeMutation(
     "UPDATE work_contexts SET status='CLOSED',closed_at=?,last_accessed_at=? WHERE id=? AND tenant_id=? AND user_identity_id=? AND status='OPEN'",
@@ -218,7 +212,6 @@ export async function closeWorkContext(context: CommandContext, id: string) {
 }
 
 export async function reorderWorkContexts(context: CommandContext, orderedIds: string[]) {
-  assertPermission(context, 'work.context.manage');
   const unique = [...new Set(orderedIds.map((id) => id.trim()).filter(Boolean))];
   return dbTransaction(async (connection) => {
     const current = await listOpenWorkContexts(context);
@@ -250,7 +243,6 @@ export async function getWorkDraft(
   formKey: string,
   executor?: DbExecutor
 ): Promise<WorkDraft | null> {
-  assertPermission(context, 'work.draft.manage');
   await getWorkContext(context, workContextId, executor);
   const row = await queryOne<
     RowDataPacket & Omit<WorkDraft, 'payload'> & { payload: unknown }
@@ -275,7 +267,6 @@ export async function saveWorkDraft(
     payload: Record<string, unknown>;
   }
 ): Promise<WorkDraft> {
-  assertPermission(context, 'work.draft.manage');
   return dbTransaction(async (connection) => {
     await getWorkContext(context, input.workContextId, connection);
     const formKey = required(input.formKey, 'Form key', 191);
@@ -332,7 +323,6 @@ async function transitionDraft(
   formKey: string,
   status: 'APPLIED' | 'DISCARDED'
 ) {
-  assertPermission(context, 'work.draft.manage');
   await getWorkContext(context, workContextId);
   const timestamp = now();
   await executeMutation(

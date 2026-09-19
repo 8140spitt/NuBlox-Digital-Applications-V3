@@ -59,6 +59,7 @@ function runServiceTests() {
         'src/lib/server/governance-body.test.ts',
         'src/lib/server/authority-framework.test.ts',
         'src/lib/server/information-container.test.ts',
+        'src/lib/server/policy-governance.test.ts',
         'src/lib/server/business-object-review.test.ts',
         '--fileParallelism=false',
         '--maxWorkers=1'

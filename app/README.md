@@ -20,6 +20,7 @@ The application now establishes:
 - Better Auth production authentication with tenant-scoped identity mapping and controlled first-administrator bootstrap;
 - deny-by-default server command permission checks;
 - MySQL 8.0+ persistence through the `mysql2` promise client and pooled prepared statements;
+- runtime startup schema gating against the latest required forward migration (`0032_corporate_development_runtime.sql`);
 - append-only platform audit evidence with actor/authority snapshots;
 - canonical business events plus transactional outbox messages;
 - optimistic version control for Organisation master-data commands;

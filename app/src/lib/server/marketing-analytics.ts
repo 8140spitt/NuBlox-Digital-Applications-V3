@@ -272,7 +272,16 @@ export async function freezeMarketingAnalyticsSnapshot(
       evaluatedAt: string;
     }> = [];
     if (segmentId && segmentVersionNo) {
-      segmentMemberships = await queryRows(
+      segmentMemberships = await queryRows<
+        RowDataPacket & {
+          id: string;
+          subjectType: string;
+          subjectId: string;
+          membershipStatus: string;
+          score: string | null;
+          evaluatedAt: string;
+        }
+      >(
         `SELECT m.id,m.subject_type AS subjectType,m.subject_id AS subjectId,
                 m.membership_status AS membershipStatus,m.score,m.evaluated_at AS evaluatedAt
            FROM market_segment_memberships m

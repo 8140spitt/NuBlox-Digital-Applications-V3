@@ -14,6 +14,23 @@
 </svelte:head>
 
 <div class="home-page">
+  {#if data.accessRequestState === 'submitted'}
+    <div class="access-message success" role="status">
+      <strong>Permission request submitted.</strong>
+      <span>A Tenant Administrator can now review it in My Work.</span>
+    </div>
+  {:else if data.accessRequestState === 'already-requested'}
+    <div class="access-message" role="status">
+      <strong>Permission request already open.</strong>
+      <span>Your existing request is already waiting for a Tenant Administrator in My Work.</span>
+    </div>
+  {:else if data.accessRequestState === 'already-authorized'}
+    <div class="access-message success" role="status">
+      <strong>Your access has changed.</strong>
+      <span>You already hold the requested permission. Try opening the area again.</span>
+    </div>
+  {/if}
+
   <header class="hero section-card">
     <div>
       <span class="eyebrow">NuBlox enterprise operating system</span>
@@ -128,6 +145,26 @@
   .home-page {
     display: grid;
     gap: 12px;
+  }
+  .access-message {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 10px 12px;
+    border: 1px solid #b8dcef;
+    border-radius: 8px;
+    background: #f4faff;
+    color: #456275;
+    font-size: 10.5px;
+  }
+  .access-message.success {
+    border-color: #b8dfc0;
+    background: #f2faf4;
+    color: #326841;
+  }
+  .access-message strong {
+    color: inherit;
+    font-size: 10.5px;
   }
   .hero {
     display: grid;

@@ -1,6 +1,6 @@
 # NuBlox Competitive Experience Benchmark Programme
 
-**Status:** active — interaction/runtime challenge  
+**Status:** first comparative pass complete — detailed menu inventory refinement continues  
 **Established:** 19 September 2026  
 **Scope:** menu-by-menu, workspace-by-workspace and object-by-object review of leading enterprise, construction, PLM, EAM and built-environment platforms
 
@@ -326,6 +326,24 @@ The review is already strong enough to establish several provisional rules while
 10. Business configuration and technical administration must be separated.
 11. Context-aware lists, split views, trees and structures need reusable platform primitives.
 12. New F07+ runtime screens must be challenged against this programme before they establish another local UX pattern.
+
+## First comparative pass checkpoint — 19 September 2026
+
+The cross-suite experience challenge now has linked first-pass evidence for **29/29 registered suites/platforms** across all five waves:
+
+- Wave 1 — enterprise navigation/work: SAP, Oracle Fusion, Microsoft Dynamics 365, IFS, Infor, Workday, ServiceNow;
+- Wave 2 — construction delivery: Oracle C&E/Aconex, Procore, Autodesk, Trimble, Sage, Causeway, Thinkproject, Asite, EcoSys;
+- Wave 3 — product/engineering/information: Windchill, Teamcenter, 3DEXPERIENCE/ENOVIA, ProjectWise/iTwin;
+- Wave 4 — asset/property/service: Maximo, HxGN EAM, Planon, Esri;
+- Wave 5 — specialist enterprise: Salesforce, Deltek Vantagepoint, Diligent One, NetSuite, Unit4.
+
+This is **first-pass coverage**, not menu-inventory closure. Every register row remains `in-progress` until the materially relevant menu/work-area inventory and evidence refinement is complete.
+
+The converged findings are now governed through:
+
+`docs/design-system/enterprise-interaction-architecture.md`
+
+That architecture establishes the runtime product model and E0-E6 implementation programme. Further vendor review should refine requirements and identify exceptions rather than repeatedly redefining the top-level interaction model.
 
 ## Completion gate
 

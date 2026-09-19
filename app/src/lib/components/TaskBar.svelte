@@ -92,6 +92,26 @@
 
   async function pinCurrent() {
     if (typeof document === 'undefined') return;
+
+    const objectMatch = page.url.pathname.match(/\/app\/objects\/([^/]+)\/([^/]+)$/);
+    if (objectMatch) {
+      const objectType = decodeURIComponent(objectMatch[1]).toUpperCase();
+      const objectId = decodeURIComponent(objectMatch[2]);
+      const origin = page.url.searchParams.get('from')?.match(/^F\d{2}/i)?.[0]?.toUpperCase() ?? null;
+      await openContext({
+        contextKey: 'OBJECT:' + objectType + ':' + objectId,
+        contextType: 'OBJECT',
+        objectType,
+        objectId,
+        objectVersion: null,
+        title: document.title.replace(/\s+·\s+NuBlox$/, ''),
+        subtitle: 'Canonical ' + objectType.toLowerCase().replaceAll('-', ' ') + ' object',
+        routePath: currentRoute,
+        workspaceFunctionId: origin
+      });
+      return;
+    }
+
     const suffix = page.url.search.replace(/[^A-Za-z0-9._:-]+/g, '-').replace(/^-+|-+$/g, '');
     await openContext({
       contextKey:

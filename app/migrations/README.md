@@ -67,7 +67,7 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0025_...`; historical migrations remain immutable.
+Future schema changes start at `0026_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -152,3 +152,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0024 — Scenario & foresight runtime
 
 `0024_scenario_runtime.sql` implements F01.08 through `AGG-02-SCENARIO`. Stable Scenario identities retain immutable versions with explicit horizon/scope, drivers, exact Strategic Assumption versions and optional exact KPI projections. Sensitivity analyses and contingency strategies are attributable scenario evidence tied to an exact version. Scenario lifecycle is independent from Forecast Snapshot truth and activation never rewrites decisions made against older Scenario versions.
+
+
+## Migration 0025 — Governance Body runtime
+
+`0025_governance_body_runtime.sql` implements the `AGG-02-GOVERNANCE` stable Governance Body boundary for F02.01 Board Governance and F02.05 Committee Governance. Boards and committees retain immutable configuration versions and effective-dated Party membership with explicit quorum, chair and secretariat semantics. Membership is governance context only: it does not grant decision authority, permissions or Delegated Authority. Meetings and Decisions remain separate aggregate transactions.

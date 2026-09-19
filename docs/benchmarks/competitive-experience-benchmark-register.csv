@@ -19,10 +19,10 @@ UX-WINDCHILL,PTC,"Windchill 13.1.2",plm,3,in-progress,"contexts; objects; produc
 UX-TEAMCENTER,Siemens,"Teamcenter",plm,3,in-progress,"active workspace; product structure; change; configuration",competitive-experience-wave-3-product-engineering-information.md
 UX-3DEXPERIENCE,Dassault Systèmes,"3DEXPERIENCE / ENOVIA",plm,3,in-progress,"roles/apps; dashboards; compass; product collaboration",competitive-experience-wave-3-product-engineering-information.md
 UX-PROJECTWISE,Bentley Systems,"ProjectWise / iTwin",plm,3,in-progress,"work areas; folders; documents; versions; workflow; search",competitive-experience-wave-3-product-engineering-information.md
-UX-MAXIMO,IBM,"Maximo Application Suite",asset,4,in-progress,"start center; modules; records; work orders; asset/location",
-UX-HXGN-EAM,Hexagon,"HxGN EAM",asset,4,in-progress,"menu/security; start center; search; favourites; field work",
-UX-PLANON,Planon,"IWMS",asset,4,in-progress,"navigation panel; workspace; property/asset/order contexts",
-UX-ESRI,Esri,"ArcGIS / Field Maps / GeoBIM",asset,4,registered,"maps; assets; field capture; spatial context",
+UX-MAXIMO,IBM,"Maximo Application Suite",asset,4,in-progress,"start center; modules; records; work orders; asset/location",competitive-experience-wave-4-asset-property-service.md
+UX-HXGN-EAM,Hexagon,"HxGN EAM",asset,4,in-progress,"menu/security; start center; search; favourites; field work",competitive-experience-wave-4-asset-property-service.md
+UX-PLANON,Planon,"IWMS",asset,4,in-progress,"navigation panel; workspace; property/asset/order contexts",competitive-experience-wave-4-asset-property-service.md
+UX-ESRI,Esri,"ArcGIS / Field Maps / GeoBIM",asset,4,in-progress,"maps; assets; field capture; spatial context",competitive-experience-wave-4-asset-property-service.md
 UX-SALESFORCE,Salesforce,"Sales / Service / Field Service",specialist,5,in-progress,"apps; objects; list views; record pages; split view",
 UX-DELTEK,Deltek,"Vantagepoint",specialist,5,registered,"project-centric CRM/accounting/resource planning",
 UX-DILIGENT,Diligent,"Diligent One / Boards / GRC",specialist,5,registered,"board work; entity; risk; audit",

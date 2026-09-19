@@ -83,7 +83,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
   const canReadEvidence = hasPermission(context, 'evidence.item.read');
   const canReadAudit = hasPermission(context, 'platform.audit.read');
 
-  const [work, decisions, evidence, history, favourite] = await Promise.all([
+  const [work, decisions, evidence, historySets, favourite] = await Promise.all([
     canReadWork
       ? listMyWork(context).then((items) =>
           items.filter(
@@ -95,10 +95,17 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     canReadDecisions ? listWorkDecisions(context, subject) : Promise.resolve([]),
     canReadEvidence ? listEvidenceItems(context, subject) : Promise.resolve([]),
     canReadAudit
-      ? listPlatformAudit(context, definition.auditObjectType, object.objectId)
+      ? Promise.all(
+          object.auditObjectTypes.map((auditObjectType) =>
+            listPlatformAudit(context, auditObjectType, object.objectId)
+          )
+        )
       : Promise.resolve([]),
     isFavourite(context, navigationItemKey)
   ]);
+  const history = historySets
+    .flat()
+    .sort((left, right) => right.occurredAt.localeCompare(left.occurredAt));
 
   return {
     state: 'ready' as const,

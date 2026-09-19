@@ -20,7 +20,7 @@ The application now establishes:
 - Better Auth production authentication with tenant-scoped identity mapping and controlled first-administrator bootstrap;
 - deny-by-default server command permission checks;
 - MySQL 8.0+ persistence through the `mysql2` promise client and pooled prepared statements;
-- runtime startup schema gating against the latest required forward migration (`0033_permission_access_request_runtime.sql`);
+- runtime startup schema gating against the latest required forward migration (`0034_product_service_innovation_runtime.sql`);
 - append-only platform audit evidence with actor/authority snapshots;
 - canonical business events plus transactional outbox messages;
 - optimistic version control for Organisation master-data commands;
@@ -28,7 +28,7 @@ The application now establishes:
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
-F05–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02, F03 and F04 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
+F06–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02, F03, F04 and F05 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
 ## F02 operational baseline
 
@@ -104,3 +104,19 @@ pnpm test:all
 ```
 
 See `migrations/README.md` for the migration governance rules.
+
+
+## F05 operational baseline
+
+Product, Service & Innovation Management now operates across the frozen canonical boundaries rather than as a monolithic PLM application:
+
+- `AGG-03-MARKET-INSIGHT` captures attributable market/customer need evidence with source, as-of and validation context;
+- `AGG-10-ITEM` provides one stable Item/Offering identity from concept selection through launch, lifecycle and retirement;
+- `AGG-10-CONFIGURATION` provides versioned Product Configuration Models with characteristics, rules, requirement traceability, trials and immutable released versions;
+- `AGG-04-BUSINESS-CASE` is reused for Product/Service and Innovation decision support with exact version profiles for demand, ROI, market basis, product scope and funding envelope;
+- shared `AGG-27-DECISION` evidence authorises concept selection and investment approval rather than embedding approval flags inside product records;
+- Innovation experiments and funding remain evidence against exact Business Case versions and do not become a shadow project, workflow or ledger;
+- launch requires selected-concept Decision evidence, an approved Product/Service Business Case, a released Product Configuration and completed operational readiness;
+- retirement requires stakeholder notice, customer migration, support-end and archive evidence before the Item can become Retired.
+
+The ten F05 L2 work areas are delivered through six shared operational workbenches so identical canonical objects are not split into duplicate mini-applications.

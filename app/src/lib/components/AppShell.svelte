@@ -1,15 +1,19 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { page } from '$app/state';
   import CommandPalette from '$lib/components/CommandPalette.svelte';
+  import ContextBar from '$lib/components/ContextBar.svelte';
   import FunctionSidebar from '$lib/components/FunctionSidebar.svelte';
   import TaskBar from '$lib/components/TaskBar.svelte';
   import { enhanceForms } from '$lib/actions/enhance-forms';
+  import { contextPreservingHref } from '$lib/enterprise/enterprise-context';
 
   let {
     tenantSlug,
     actorDisplayName,
     authenticated = false,
     initialWorkContexts = [],
+    enterpriseContextOptions = { legalEntities: [], organisationUnits: [] },
     children
   } = $props();
 
@@ -28,6 +32,50 @@
       .map((part: string) => part[0]?.toUpperCase() ?? '')
       .join('') || 'U'
   );
+
+  onMount(() => {
+    const preserveEnterpriseContext = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const anchor = target.closest('a[href]');
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+      if (
+        anchor.dataset.nubloxContext === 'clear' ||
+        anchor.target ||
+        anchor.hasAttribute('download')
+      ) {
+        return;
+      }
+
+      const href = anchor.getAttribute('href');
+      if (
+        !href ||
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        href.startsWith('javascript:')
+      ) {
+        return;
+      }
+
+      const contextualHref = contextPreservingHref(page.url, href, tenantSlug);
+      if (contextualHref !== href) anchor.setAttribute('href', contextualHref);
+    };
+
+    document.addEventListener('click', preserveEnterpriseContext, true);
+    return () => document.removeEventListener('click', preserveEnterpriseContext, true);
+  });
 </script>
 
 <a class="skip-link" href="#main-content">Skip to content</a>
@@ -91,6 +139,12 @@
     </div>
   </details>
 </header>
+
+<ContextBar
+  {tenantSlug}
+  legalEntities={enterpriseContextOptions.legalEntities}
+  organisationUnits={enterpriseContextOptions.organisationUnits}
+/>
 
 <div class="shell">
   <FunctionSidebar {tenantSlug} />

@@ -17,13 +17,24 @@
     values: Record<string, CollectionValue>;
   };
 
+  type SavedViewOption = {
+    id: string;
+    name: string;
+    definition: Record<string, unknown>;
+    isDefault?: boolean;
+    isPinned?: boolean;
+  };
+
   let {
     title,
     eyebrow = 'Collection',
     rows = [],
     columns = [],
     emptyText = 'No records in this view.',
-    searchPlaceholder = 'Search this view'
+    searchPlaceholder = 'Search this view',
+    savedViews = [],
+    saveViewAction = null,
+    deleteViewAction = null
   }: {
     title: string;
     eyebrow?: string;
@@ -31,11 +42,17 @@
     columns?: CollectionColumn[];
     emptyText?: string;
     searchPlaceholder?: string;
+    savedViews?: SavedViewOption[];
+    saveViewAction?: string | null;
+    deleteViewAction?: string | null;
   } = $props();
 
   let query = $state('');
   let sortKey = $state<string | null>(null);
   let sortDirection = $state<'asc' | 'desc'>('asc');
+  let selectedViewId = $state('');
+
+  const selectedView = $derived(savedViews.find((view) => view.id === selectedViewId) ?? null);
 
   const visibleRows = $derived.by(() => {
     const needle = query.trim().toLowerCase();
@@ -70,6 +87,23 @@
     sortDirection = 'asc';
   }
 
+  function applySavedView(event: Event) {
+    selectedViewId = (event.currentTarget as HTMLSelectElement).value;
+    const view = savedViews.find((item) => item.id === selectedViewId);
+    if (!view) return;
+
+    const nextQuery = view.definition.query;
+    const nextSortKey = view.definition.sortKey;
+    const nextSortDirection = view.definition.sortDirection;
+
+    query = typeof nextQuery === 'string' ? nextQuery : '';
+    sortKey =
+      typeof nextSortKey === 'string' && columns.some((column) => column.key === nextSortKey)
+        ? nextSortKey
+        : null;
+    sortDirection = nextSortDirection === 'desc' ? 'desc' : 'asc';
+  }
+
   function ariaSort(column: CollectionColumn) {
     if (sortKey !== column.key) return 'none';
     return sortDirection === 'asc' ? 'ascending' : 'descending';
@@ -96,10 +130,62 @@
       <span aria-hidden="true">⌕</span>
       <input bind:value={query} placeholder={searchPlaceholder} />
       {#if query}
-        <button type="button" onclick={() => (query = '')} aria-label="Clear collection search">×</button>
+        <button type="button" onclick={() => (query = '')} aria-label="Clear collection search">
+          ×
+        </button>
       {/if}
     </label>
   </header>
+
+  {#if savedViews.length || saveViewAction}
+    <div class="view-tools">
+      <label class="saved-selector">
+        <span>Saved view</span>
+        <select value={selectedViewId} onchange={applySavedView}>
+          <option value="">Current view</option>
+          {#each savedViews as view}
+            <option value={view.id}>
+              {view.name}{view.isDefault ? ' · default' : ''}{view.isPinned ? ' · pinned' : ''}
+            </option>
+          {/each}
+        </select>
+      </label>
+
+      <div class="view-actions">
+        {#if saveViewAction}
+          <details>
+            <summary>Save view</summary>
+            <form method="POST" action={saveViewAction}>
+              <label>
+                <span>View name</span>
+                <input name="viewName" required maxlength="191" />
+              </label>
+              <input type="hidden" name="query" value={query} />
+              <input type="hidden" name="sortKey" value={sortKey ?? ''} />
+              <input type="hidden" name="sortDirection" value={sortDirection} />
+              <input type="hidden" name="columns" value={columns.map((column) => column.key).join(',')} />
+              <label class="check">
+                <input type="checkbox" name="isPinned" />
+                <span>Pin this view</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" name="isDefault" />
+                <span>Make default</span>
+              </label>
+              <button type="submit">Save personal view</button>
+            </form>
+          </details>
+        {/if}
+
+        {#if deleteViewAction && selectedView}
+          <form method="POST" action={deleteViewAction}>
+            <input type="hidden" name="viewId" value={selectedView.id} />
+            <button class="delete-view" type="submit">Delete view</button>
+          </form>
+        {/if}
+      </div>
+    </div>
+  {/if}
 
   <div class="table-wrap">
     <table>
@@ -166,7 +252,8 @@
     gap: 9px;
   }
 
-  .collection-heading {
+  .collection-heading,
+  .view-tools {
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -233,6 +320,121 @@
     background: transparent;
     color: #748995;
     cursor: pointer;
+  }
+
+  .view-tools {
+    align-items: center;
+    min-height: 34px;
+    padding: 5px 7px;
+    border: 1px solid #e1e7eb;
+    border-radius: 7px;
+    background: #fafcfd;
+  }
+
+  .saved-selector {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    color: #738793;
+    font-size: 8px;
+    font-weight: 800;
+  }
+
+  .saved-selector select {
+    max-width: 190px;
+    min-height: 27px;
+    border: 1px solid #d3dfe5;
+    border-radius: 6px;
+    padding: 0 6px;
+    background: white;
+    color: #4e6879;
+    font-size: 8.5px;
+  }
+
+  .view-actions {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .view-actions details {
+    position: relative;
+  }
+
+  .view-actions summary,
+  .delete-view {
+    list-style: none;
+    border: 1px solid #d3dfe5;
+    border-radius: 6px;
+    padding: 5px 7px;
+    background: white;
+    color: #4e6879;
+    font-size: 8px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .view-actions summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .view-actions details form {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 5;
+    width: 230px;
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #cbd9e1;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 12px 30px rgba(8, 38, 58, 0.16);
+  }
+
+  .view-actions details form > label:not(.check) {
+    display: grid;
+    gap: 4px;
+    color: #687f8d;
+    font-size: 8px;
+    font-weight: 800;
+  }
+
+  .view-actions details input[type='text'],
+  .view-actions details input:not([type]) {
+    min-height: 30px;
+    border: 1px solid #cfdbe2;
+    border-radius: 6px;
+    padding: 0 7px;
+    font-size: 9px;
+  }
+
+  .check {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    color: #617987;
+    font-size: 8.5px;
+  }
+
+  .view-actions details form > button {
+    min-height: 30px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--blue-700);
+    color: white;
+    font-size: 8.5px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .delete-view {
+    color: #824949;
+  }
+
+  .view-actions > form {
+    margin: 0;
   }
 
   .table-wrap {
@@ -336,7 +538,8 @@
   }
 
   @media (max-width: 720px) {
-    .collection-heading {
+    .collection-heading,
+    .view-tools {
       align-items: stretch;
       flex-direction: column;
     }
@@ -344,6 +547,10 @@
     .search {
       width: 100%;
       min-width: 0;
+    }
+
+    .view-actions {
+      justify-content: end;
     }
   }
 </style>

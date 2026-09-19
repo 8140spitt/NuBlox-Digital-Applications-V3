@@ -396,9 +396,8 @@ export async function createPolicy(context: CommandContext, input: CreatePolicyI
   assertPermission(context, 'information.container.manage');
   const policyType = code(input.policyType, 'Policy type', 64);
   const scoped = scope(input.scopeType, input.scopeId);
-  const effectiveScope = scoped.scopeType
-    ? scoped
-    : { scopeType: 'TENANT', scopeId: context.tenantId };
+  const effectiveScopeType = scoped.scopeType ?? 'TENANT';
+  const effectiveScopeId = scoped.scopeId ?? context.tenantId;
 
   return dbTransaction(async (executor) => {
     const id = await createInformationContainerInTransaction(
@@ -408,8 +407,8 @@ export async function createPolicy(context: CommandContext, input: CreatePolicyI
         containerType: 'POLICY',
         title: input.title,
         originatorPartyId: input.ownerPartyId?.trim() || context.actorPartyId,
-        subjectType: effectiveScope.scopeType,
-        subjectId: effectiveScope.scopeId,
+        subjectType: effectiveScopeType,
+        subjectId: effectiveScopeId,
         classificationCode: input.classificationCode,
         securityClassification: input.securityClassification || 'INTERNAL',
         revisionCode: input.revisionCode || 'P01',
@@ -430,8 +429,8 @@ export async function createPolicy(context: CommandContext, input: CreatePolicyI
       1,
       {
         ...input,
-        scopeType: effectiveScope.scopeType,
-        scopeId: effectiveScope.scopeId
+        scopeType: effectiveScopeType,
+        scopeId: effectiveScopeId
       },
       executor
     );

@@ -2085,3 +2085,132 @@ export async function completeItemRetirement(
     );
   });
 }
+
+
+export async function listProductConfigurationCharacteristics(
+  context: CommandContext,
+  configurationVersionId: string
+) {
+  assertPermission(context, 'product.innovation.read');
+  return queryRows<
+    RowDataPacket & {
+      id: string;
+      characteristicKey: string;
+      name: string;
+      valueType: string;
+      required: boolean;
+      allowedValues: unknown;
+      defaultValue: string | null;
+      unitOfMeasureId: string | null;
+    }
+  >(
+    'SELECT id,characteristic_key AS characteristicKey,name,value_type AS valueType,required_flag AS required,allowed_values_json AS allowedValues,default_value AS defaultValue,unit_of_measure_id AS unitOfMeasureId FROM product_configuration_characteristics WHERE tenant_id=? AND configuration_version_id=? ORDER BY name,characteristic_key',
+    [context.tenantId, configurationVersionId]
+  );
+}
+
+export async function listProductConfigurationRules(
+  context: CommandContext,
+  configurationVersionId: string
+) {
+  assertPermission(context, 'product.innovation.read');
+  return queryRows<
+    RowDataPacket & {
+      id: string;
+      ruleKey: string;
+      ruleType: string;
+      expression: string;
+      severity: string;
+    }
+  >(
+    'SELECT id,rule_key AS ruleKey,rule_type AS ruleType,expression_text AS expression,severity FROM product_configuration_rules WHERE tenant_id=? AND configuration_version_id=? ORDER BY rule_type,rule_key',
+    [context.tenantId, configurationVersionId]
+  );
+}
+
+export async function getItemLaunchProfile(context: CommandContext, itemId: string) {
+  assertPermission(context, 'product.innovation.read');
+  await getItem(context, itemId);
+  return (
+    (await queryOne<
+      RowDataPacket & {
+        itemId: string;
+        launchPlan: string;
+        channelReadiness: string;
+        trainingReadiness: string;
+        pricingReference: string;
+        launchStatus: string;
+        plannedLaunchAt: string | null;
+        launchedAt: string | null;
+        updatedAt: string;
+      }
+    >(
+      'SELECT item_id AS itemId,launch_plan AS launchPlan,channel_readiness AS channelReadiness,training_readiness AS trainingReadiness,pricing_reference AS pricingReference,launch_status AS launchStatus,planned_launch_at AS plannedLaunchAt,launched_at AS launchedAt,updated_at AS updatedAt FROM item_launch_profiles WHERE item_id=? AND tenant_id=?',
+      [itemId, context.tenantId]
+    )) ?? null
+  );
+}
+
+export async function listItemLifecycleReviews(context: CommandContext, itemId: string) {
+  assertPermission(context, 'product.innovation.read');
+  await getItem(context, itemId);
+  return queryRows<
+    RowDataPacket & {
+      id: string;
+      reviewType: string;
+      summary: string;
+      metrics: unknown;
+      recommendation: string;
+      configurationModelId: string | null;
+      reviewedAt: string;
+    }
+  >(
+    'SELECT id,review_type AS reviewType,summary,metrics_json AS metrics,recommendation,configuration_model_id AS configurationModelId,reviewed_at AS reviewedAt FROM item_lifecycle_reviews WHERE tenant_id=? AND item_id=? ORDER BY reviewed_at DESC,id DESC',
+    [context.tenantId, itemId]
+  );
+}
+
+export async function getItemRetirementProfile(context: CommandContext, itemId: string) {
+  assertPermission(context, 'product.innovation.read');
+  await getItem(context, itemId);
+  return (
+    (await queryOne<
+      RowDataPacket & {
+        itemId: string;
+        rationale: string;
+        stakeholderNoticeReference: string | null;
+        customerMigrationPlan: string | null;
+        supportEndAt: string | null;
+        archiveReference: string | null;
+        retirementStatus: string;
+        initiatedAt: string;
+        retiredAt: string | null;
+        updatedAt: string;
+      }
+    >(
+      'SELECT item_id AS itemId,rationale,stakeholder_notice_reference AS stakeholderNoticeReference,customer_migration_plan AS customerMigrationPlan,support_end_at AS supportEndAt,archive_reference AS archiveReference,retirement_status AS retirementStatus,initiated_at AS initiatedAt,retired_at AS retiredAt,updated_at AS updatedAt FROM item_retirement_profiles WHERE item_id=? AND tenant_id=?',
+      [itemId, context.tenantId]
+    )) ?? null
+  );
+}
+
+export async function listInnovationFunding(
+  context: CommandContext,
+  businessCaseVersionId: string
+) {
+  assertPermission(context, 'product.innovation.read');
+  return queryRows<
+    RowDataPacket & {
+      id: string;
+      fundingType: string;
+      amount: string;
+      currencyId: string;
+      basis: string;
+      status: string;
+      recordedAt: string;
+    }
+  >(
+    'SELECT id,funding_type AS fundingType,amount,currency_id AS currencyId,basis,status,recorded_at AS recordedAt FROM innovation_funding_allocations WHERE tenant_id=? AND business_case_version_id=? ORDER BY recorded_at DESC,id DESC',
+    [context.tenantId, businessCaseVersionId]
+  );
+}

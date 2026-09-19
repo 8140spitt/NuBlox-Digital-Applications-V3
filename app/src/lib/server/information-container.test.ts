@@ -11,12 +11,12 @@ describe('AGG-07-INFORMATION controlled information runtime',()=>{
   let container=(await info.listInformationContainers(context)).find(x=>x.id===id)!;expect(container.status).toBe('WORK_IN_PROGRESS');
   await info.addInformationRepresentation(context,id,container.aggregateVersion,{representationType:'PDF',contentReference:'s3://controlled/pol-corp-001-p01.pdf',contentMediaType:'application/pdf',sourceFilename:'POL-CORP-001-P01.pdf',hashAlgorithm:'SHA256',contentHash:'a'.repeat(64)});
   container=(await info.listInformationContainers(context)).find(x=>x.id===id)!;
-  await info.submitInformationRevision(context,id,container.aggregateVersion);container=(await info.listInformationContainers(context)).find(x=>x.id===id)!;
+  await info.submitInformationRevision(context,id,container.aggregateVersion);container=(await info.listInformationContainers(context)).find(x=>x.id===id)!;await expect(info.addInformationRepresentation(context,id,container.aggregateVersion,{representationType:'PDF',contentReference:'s3://controlled/review-package.pdf',hashAlgorithm:'SHA256',contentHash:'e'.repeat(64)})).rejects.toThrow('after revision submission');
   const decisionId=await decision.recordWorkDecision(context,{decisionType:'INFORMATION_REVISION_REVIEW',subjectType:'INFORMATION_CONTAINER',subjectId:id,subjectVersion:'1',outcome:'APPROVED',reason:'Approved controlled revision.'});
   await info.approveInformationRevision(context,id,container.aggregateVersion,decisionId);container=(await info.listInformationContainers(context)).find(x=>x.id===id)!;
   await info.issueInformationRevision(context,id,container.aggregateVersion);container=(await info.listInformationContainers(context)).find(x=>x.id===id)!;expect(container.status).toBe('PUBLISHED');
   const v1=(await info.listInformationRevisions(context,id))[0];expect(v1.lifecycleStatus).toBe('ISSUED');expect(v1.approvalDecisionId).toBe(decisionId);
-  await expect(info.addInformationRepresentation(context,id,container.aggregateVersion,{representationType:'PDF',contentReference:'s3://controlled/replacement.pdf',hashAlgorithm:'SHA256',contentHash:'b'.repeat(64)})).rejects.toThrow('after revision approval');
+  await expect(info.addInformationRepresentation(context,id,container.aggregateVersion,{representationType:'PDF',contentReference:'s3://controlled/replacement.pdf',hashAlgorithm:'SHA256',contentHash:'b'.repeat(64)})).rejects.toThrow('after revision submission');
   expect(await info.createSuccessorInformationRevision(context,id,container.aggregateVersion,{revisionCode:'P02',title:'Corporate Governance Policy — revised',purposeOfIssue:'Review'})).toBe(2);
   const revisions=await info.listInformationRevisions(context,id);expect(revisions.map(r=>[r.revisionNo,r.lifecycleStatus])).toEqual([[2,'WORKING'],[1,'ISSUED']]);
   expect(new Set(revisions.map(r=>r.containerId))).toEqual(new Set([id]));

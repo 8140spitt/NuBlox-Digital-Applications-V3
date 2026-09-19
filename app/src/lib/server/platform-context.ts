@@ -403,6 +403,72 @@ export const platformPermissions = [
     'Define and validate benefits against governed baselines and observations.'
   ],
   [
+    'corporate.development.read',
+    'corporate.development',
+    'read',
+    'Read governed Corporate Development opportunities, appraisals, cases and integration records.'
+  ],
+  [
+    'corporate.development.opportunity.manage',
+    'corporate.development.opportunity',
+    'manage',
+    'Create, screen and evaluate governed Corporate Development Opportunities.'
+  ],
+  [
+    'corporate.development.valuation.manage',
+    'corporate.development.valuation',
+    'manage',
+    'Create, review and freeze governed Development Appraisal snapshots.'
+  ],
+  [
+    'corporate.development.due_diligence.read',
+    'corporate.development.due_diligence',
+    'read',
+    'Read authorised Due Diligence Legal Matters.'
+  ],
+  [
+    'corporate.development.due_diligence.manage',
+    'corporate.development.due_diligence',
+    'manage',
+    'Open and conduct restricted Due Diligence Legal Matters.'
+  ],
+  [
+    'corporate.development.due_diligence.access.manage',
+    'corporate.development.due_diligence.access',
+    'manage',
+    'Maintain need-to-know access for Due Diligence Legal Matters.'
+  ],
+  [
+    'corporate.development.transaction.manage',
+    'corporate.development.transaction',
+    'manage',
+    'Create and develop Transaction, Divestiture and Partnership Business Cases.'
+  ],
+  [
+    'corporate.development.transaction.approve',
+    'corporate.development.transaction',
+    'approve',
+    'Apply approved immutable Decisions to Corporate Development Business Cases.'
+  ],
+  [
+    'corporate.development.integration.manage',
+    'corporate.development.integration',
+    'manage',
+    'Create and coordinate M&A Integration Transformation Initiatives.'
+  ],
+  [
+    'corporate.development.divestiture.manage',
+    'corporate.development.divestiture',
+    'manage',
+    'Develop and execute governed Divestiture Business Cases.'
+  ],
+  [
+    'corporate.development.partnership.manage',
+    'corporate.development.partnership',
+    'manage',
+    'Develop and monitor governed Strategic Partnership Business Cases.'
+  ],
+  [
     'governance.body.read',
     'governance.body',
     'read',

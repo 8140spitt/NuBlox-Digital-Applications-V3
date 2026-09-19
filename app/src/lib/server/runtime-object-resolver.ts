@@ -1,4 +1,7 @@
-import { runtimeObjectDefinition, type RuntimeObjectSection } from '$lib/data/runtime-object-registry';
+import {
+  runtimeObjectDefinition,
+  type RuntimeObjectSection
+} from '$lib/data/runtime-object-registry';
 import { getLead } from '$lib/server/marketing-lead';
 import type { CommandContext } from '$lib/server/platform-context';
 
@@ -24,10 +27,7 @@ export type ResolvedRuntimeObject = {
   sections: readonly RuntimeObjectSection[];
 };
 
-type Resolver = (
-  context: CommandContext,
-  objectId: string
-) => Promise<ResolvedRuntimeObject>;
+type Resolver = (context: CommandContext, objectId: string) => Promise<ResolvedRuntimeObject>;
 
 const resolvers: Record<string, Resolver> = {
   lead: async (context, objectId) => {

@@ -31,7 +31,7 @@ export const enterpriseFunctions: readonly EnterpriseFunction[] = [
     shortName: 'Product & innovation',
     state: 'active'
   },
-  { id: 'F06', name: 'Marketing & Brand', shortName: 'Marketing & brand', state: 'planned' },
+  { id: 'F06', name: 'Marketing & Brand', shortName: 'Marketing & brand', state: 'active' },
   {
     id: 'F07',
     name: 'Sales & Commercial Management',

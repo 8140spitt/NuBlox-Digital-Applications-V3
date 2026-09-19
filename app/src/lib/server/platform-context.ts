@@ -72,6 +72,36 @@ export const platformPermissions = [
     'approve',
     'Approve Delegated Authority grants independently from the delegate.'
   ],
+  [
+    'work.context.read',
+    'work.context',
+    'read',
+    'Read the current user\'s open Task Bar work contexts.'
+  ],
+  [
+    'work.context.manage',
+    'work.context',
+    'manage',
+    'Open, reorder, touch and close the current user\'s Task Bar work contexts.'
+  ],
+  [
+    'work.draft.manage',
+    'work.draft',
+    'manage',
+    'Persist, restore, apply and discard the current user\'s recoverable working drafts.'
+  ],
+  [
+    'work.edit_lease.read',
+    'work.edit_lease',
+    'read',
+    'Read active cooperative edit leases for tenant business objects.'
+  ],
+  [
+    'work.edit_lease.acquire',
+    'work.edit_lease',
+    'acquire',
+    'Acquire, renew and release short-lived cooperative edit leases before mutable form editing.'
+  ],
   ['work.workflow.read', 'work.workflow', 'read', 'Read shared workflow runtime state.'],
   [
     'work.workflow.manage',
@@ -189,6 +219,12 @@ export const platformPermissions = [
     'reference.data',
     'publish',
     'Publish immutable reference-configuration versions such as working calendars.'
+  ],
+  [
+    'party.steward.manage',
+    'party.steward',
+    'manage',
+    'Perform exceptional canonical Party identity stewardship without originating business roles outside their home functions.'
   ],
   ['party.create', 'party', 'create', 'Create canonical Party identities and specialisations.'],
   ['party.change', 'party', 'change', 'Change mutable canonical Party master data.'],

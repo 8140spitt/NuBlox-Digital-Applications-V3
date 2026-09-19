@@ -1,10 +1,5 @@
 export type RuntimeObjectSection =
-  | 'overview'
-  | 'relationships'
-  | 'work'
-  | 'decisions'
-  | 'evidence'
-  | 'history';
+  'overview' | 'relationships' | 'work' | 'decisions' | 'evidence' | 'history';
 
 export type RuntimeObjectDefinition = {
   type: string;

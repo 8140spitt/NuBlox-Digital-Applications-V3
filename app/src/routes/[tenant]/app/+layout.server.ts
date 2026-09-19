@@ -1,5 +1,6 @@
 import type { LayoutServerLoad } from './$types';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
+import { listOpenWorkContexts } from '$lib/server/work-context';
 
 export const load: LayoutServerLoad = async ({ params, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
@@ -7,6 +8,7 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
     tenantSlug: context.tenantSlug,
     actorDisplayName: context.actorDisplayName,
     roleKeys: context.roleKeys,
-    authenticated: Boolean(locals.user)
+    authenticated: Boolean(locals.user),
+    workContexts: await listOpenWorkContexts(context)
   };
 };

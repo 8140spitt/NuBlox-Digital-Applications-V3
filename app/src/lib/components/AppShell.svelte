@@ -1,8 +1,16 @@
 <script lang="ts">
   import { page } from '$app/state';
   import FunctionSidebar from '$lib/components/FunctionSidebar.svelte';
+  import TaskBar from '$lib/components/TaskBar.svelte';
+  import { enhanceForms } from '$lib/actions/enhance-forms';
 
-  let { tenantSlug, actorDisplayName, authenticated = false, children } = $props();
+  let {
+    tenantSlug,
+    actorDisplayName,
+    authenticated = false,
+    initialWorkContexts = [],
+    children
+  } = $props();
 
   const tenantName = $derived(
     tenantSlug
@@ -59,8 +67,10 @@
 
 <div class="shell">
   <FunctionSidebar {tenantSlug} />
-  <main class="main-content">{@render children()}</main>
+  <main class="main-content" use:enhanceForms>{@render children()}</main>
 </div>
+
+<TaskBar {tenantSlug} initialContexts={initialWorkContexts} />
 
 <style>
   .topbar {
@@ -168,7 +178,12 @@
   }
   .main-content {
     min-width: 0;
-    padding: 14px;
+    padding: 14px 14px 64px;
+  }
+  :global(form[data-nublox-submitting='true'] button[type='submit']),
+  :global(form[data-nublox-submitting='true'] button:not([type])) {
+    opacity: 0.65;
+    cursor: wait;
   }
   @media (max-width: 1050px) {
     .topbar {
@@ -205,7 +220,7 @@
       display: block;
     }
     .main-content {
-      padding: 10px;
+      padding: 10px 10px 60px;
     }
   }
 </style>

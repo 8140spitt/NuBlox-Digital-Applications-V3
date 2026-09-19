@@ -153,3 +153,5 @@ Migration `0036_work_context_edit_lease_runtime.sql` establishes the application
 - Party/Organisation creation is no longer exposed from global Master Data. Canonical identity creation remains a low-level shared service called by the owning business workflow with immutable Party origination metadata.
 
 **My Work answers “what am I responsible for?”; the Task Bar answers “what am I working on now?”** They are deliberately separate concepts.
+
+0036 interaction architecture acceptance is gated by clean migration replay, the two-user work-context/edit-lease lifecycle test, Svelte/type checks, formatting and production build on the exact main commit.

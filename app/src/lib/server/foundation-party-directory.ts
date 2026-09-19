@@ -98,6 +98,47 @@ export async function listPartyDirectory(context: CommandContext): Promise<Party
   return rows.map(mapParty);
 }
 
+export async function searchPartyDirectory(
+  context: CommandContext,
+  query: string,
+  requestedLimit = 25
+): Promise<PartyDirectoryEntry[]> {
+  assertPermission(context, 'party.read');
+  const needle = query.trim().slice(0, 191);
+  if (!needle) return [];
+  const pattern = '%' + needle + '%';
+  const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
+  const rows = await queryRows<PartyDirectoryRow>(
+    partySelect +
+      ` WHERE p.tenant_id = ?
+          AND (
+            p.display_name LIKE ?
+            OR pe.given_name LIKE ?
+            OR pe.family_name LIKE ?
+            OR o.legal_name LIKE ?
+            OR o.trading_name LIKE ?
+            OR o.registration_number LIKE ?
+            OR po.origin_reference LIKE ?
+          )
+          ORDER BY CASE p.status WHEN 'ACTIVE' THEN 0 WHEN 'PROPOSED' THEN 1 WHEN 'INACTIVE' THEN 2 ELSE 3 END,
+                   p.display_name,
+                   p.id
+          LIMIT ` +
+      limit,
+    [
+      context.tenantId,
+      pattern,
+      pattern,
+      pattern,
+      pattern,
+      pattern,
+      pattern,
+      pattern
+    ]
+  );
+  return rows.map(mapParty);
+}
+
 export async function getPartyDirectoryEntry(
   context: CommandContext,
   partyId: string

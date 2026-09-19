@@ -67,9 +67,11 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0035_...`; historical migrations remain immutable.
+Future schema changes start at `0036_...`; historical migrations remain immutable.
 
-- `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.\n- `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
+- `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
+- `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
+- `0035_marketing_brand_runtime.sql` — F06 Market Segment, Communications Plan/Campaign, Communication Item, Lead, privacy consent/preference evidence, delivery/event evidence and reproducible marketing analytics runtime.
 
 ## Validation and test contract
 
@@ -182,3 +184,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0034 — Product, Service & Innovation Management runtime
 
 `0034_product_service_innovation_runtime.sql` activates F05 across four frozen canonical authorities. `AGG-03-MARKET-INSIGHT` retains immutable attributable customer/market evidence; `AGG-10-ITEM` owns the stable product/service offering identity and concept/launch/lifecycle/retirement state; `AGG-10-CONFIGURATION` owns controlled versioned Product Configuration definitions, characteristics, rules, requirement traceability and validation trials; and the existing shared `AGG-04-BUSINESS-CASE` tables receive F05-specific version profiles for Product/Service and Innovation cases. Concept selection and investment approval remain exact-version immutable `AGG-27-DECISION` evidence. Innovation funding is decision-support evidence only and never replaces Finance/Ledger truth. Released configuration versions are immutable and later enhancement creates a successor version.
+
+
+## Migration 0035 — Marketing & Brand runtime
+
+`0035_marketing_brand_runtime.sql` activates F06 across the frozen Market Insight/Segment, Communications Plan, Communications Campaign and Lead boundaries. Segment definitions are versioned and Campaigns pin exact versions. Brand/campaign content references exact issued Information revisions rather than duplicating content. Communications Plan and Campaign approvals bind immutable Decisions to exact versions. Leads retain unresolved-source provenance until deliberate Party resolution and exact-version Sales handoff. The migration also activates immutable Consent and Preference Evidence events needed to evaluate communication eligibility, plus campaign delivery/event evidence and frozen Marketing Analytics snapshots. Future Sales Opportunity acceptance remains a separate F07 command boundary.

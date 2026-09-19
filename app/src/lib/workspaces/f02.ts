@@ -29,7 +29,8 @@ export const f02Workspace = {
       name: 'Governance Framework',
       sourceName: 'Governance framework',
       summary: 'Define decision-right and authority structures that govern enterprise action.',
-      items: ['Framework', 'Authority classes', 'Decision rights', 'Reserved matters', 'SoD', 'Effectivity']
+      items: ['Framework', 'Authority classes', 'Decision rights', 'Reserved matters', 'SoD', 'Effectivity'],
+      path: 'authority-framework'
     },
     {
       id: 'F02.03',

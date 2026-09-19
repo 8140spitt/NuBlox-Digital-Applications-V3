@@ -100,7 +100,11 @@
                 <h3>{item.title}</h3>
                 {#if item.instructions}<p>{item.instructions}</p>{/if}
                 <div class="subject">
-                  <span><strong>Subject</strong>{item.subjectType} · {item.subjectId}</span>
+                  {#if item.subjectHref}
+                    <a class="subject-link" href={item.subjectHref}><strong>Subject</strong>{item.subjectType}</a>
+                  {:else}
+                    <span><strong>Subject</strong>{item.subjectType} · {item.subjectId}</span>
+                  {/if}
                   {#if item.subjectVersion}<span><strong>Version</strong>{item.subjectVersion}</span
                     >{/if}
                   <span
@@ -240,7 +244,11 @@
             </div>
             <p>{decision.reason}</p>
             <div class="subject">
-              <span><strong>Subject</strong>{decision.subjectType} · {decision.subjectId}</span>
+              {#if decision.subjectHref}
+                <a class="subject-link" href={decision.subjectHref}><strong>Subject</strong>{decision.subjectType}</a>
+              {:else}
+                <span><strong>Subject</strong>{decision.subjectType} · {decision.subjectId}</span>
+              {/if}
               {#if decision.subjectVersion}
                 <span><strong>Version</strong>{decision.subjectVersion}</span>
               {/if}
@@ -504,7 +512,8 @@
     flex-wrap: wrap;
     gap: 5px;
   }
-  .subject span {
+  .subject span,
+  .subject-link {
     display: inline-flex;
     gap: 4px;
     padding: 4px 6px;
@@ -513,7 +522,21 @@
     color: #6b7d89;
     font-size: 8.5px;
   }
-  .subject strong {
+  .subject-link {
+    gap: 4px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    background: #edf6fb;
+    color: #315f7d;
+    font-size: 8.5px;
+    font-weight: 750;
+    text-decoration: none;
+  }
+  .subject-link:hover {
+    background: #e3f1f8;
+  }
+  .subject strong,
+  .subject-link strong {
     color: #4f6574;
   }
   .due {

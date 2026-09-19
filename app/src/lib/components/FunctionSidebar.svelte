@@ -155,8 +155,8 @@
 <style>
   .sidebar {
     position: sticky;
-    top: 58px;
-    height: calc(100vh - 58px);
+    top: 94px;
+    height: calc(100vh - 94px);
     overflow: auto;
     padding: 14px 11px 66px;
     border-right: 1px solid var(--line);

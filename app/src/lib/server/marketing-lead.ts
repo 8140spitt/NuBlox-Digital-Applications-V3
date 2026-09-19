@@ -80,11 +80,7 @@ export async function listLeads(context: CommandContext, status?: string) {
   );
 }
 
-export async function searchLeads(
-  context: CommandContext,
-  query: string,
-  requestedLimit = 25
-) {
+export async function searchLeads(context: CommandContext, query: string, requestedLimit = 25) {
   assertPermission(context, 'marketing.read');
   const needle = query.trim().slice(0, 191);
   if (!needle) return [] as Lead[];

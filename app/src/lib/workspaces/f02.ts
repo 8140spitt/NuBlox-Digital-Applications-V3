@@ -69,7 +69,8 @@ export const f02Workspace = {
       name: 'Ethics Governance',
       sourceName: 'Ethics governance',
       summary: 'Govern conduct expectations, declarations, ethical issues and breach investigations.',
-      items: ['Code of conduct', 'Declarations', 'Conflicts', 'Issues', 'Investigations', 'Evidence']
+      items: ['Code of conduct', 'Declarations', 'Conflicts', 'Issues', 'Investigations', 'Evidence'],
+      path: 'ethics-governance'
     }
   ] satisfies WorkArea[],
   journey: [

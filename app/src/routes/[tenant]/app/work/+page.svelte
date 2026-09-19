@@ -137,6 +137,15 @@
             {/if}
 
             <div class="actions">
+              {#if item.workType === 'ACCESS_REQUEST'}
+                <a
+                  class="review-access"
+                  href={'/' + data.tenantSlug + '/app/admin/security?view=access'}
+                >
+                  Review access
+                </a>
+              {/if}
+
               {#if item.status === 'ASSIGNED' || item.status === 'BLOCKED'}
                 <form method="POST" action="?/start">
                   <input type="hidden" name="workItemId" value={item.id} />
@@ -562,6 +571,23 @@
     padding: 8px 10px;
     border-top: 1px solid #e8edef;
     background: #fafcfd;
+  }
+  .review-access {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 10px;
+    border: 1px solid #9fcde5;
+    border-radius: 6px;
+    background: #f2f9fd;
+    color: #2d6483;
+    font-size: 9px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+  .review-access:hover {
+    border-color: #6fb0d4;
+    background: #e8f5fb;
   }
   button,
   summary {

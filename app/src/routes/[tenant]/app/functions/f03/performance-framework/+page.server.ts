@@ -18,7 +18,8 @@ function text(data: FormData, name: string) {
 
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 
@@ -28,7 +29,10 @@ function target(tenant: string, id?: string) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The Performance Framework command could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The Performance Framework command could not be completed.'
   });
 }
 
@@ -38,14 +42,22 @@ function parseNodes(data: FormData) {
     .map((row) => row.trim())
     .filter(Boolean)
     .map((row, index) => {
-      const [nodeKey, name, parentNodeKey = '', sortOrder = '0'] = row.split('|').map((v) => v.trim());
-      if (!nodeKey || !name) throw new Error('Hierarchy row ' + (index + 1) + ' requires key and name.');
+      const [nodeKey, name, parentNodeKey = '', sortOrder = '0'] = row
+        .split('|')
+        .map((v) => v.trim());
+      if (!nodeKey || !name)
+        throw new Error('Hierarchy row ' + (index + 1) + ' requires key and name.');
       return {
         nodeKey,
         name,
         parentNodeKey: parentNodeKey || undefined,
         sortOrder: Number(sortOrder) || 0,
-        kpis: [] as Array<{ kpiId: string; kpiVersionNo: number; weight?: number; sortOrder?: number }>
+        kpis: [] as Array<{
+          kpiId: string;
+          kpiVersionNo: number;
+          weight?: number;
+          sortOrder?: number;
+        }>
       };
     });
 
@@ -55,7 +67,9 @@ function parseNodes(data: FormData) {
     .map((value) => value.trim())
     .filter(Boolean)
     .entries()) {
-    const [nodeKey, kpiId, version, weight = '', sortOrder = '0'] = row.split('|').map((v) => v.trim());
+    const [nodeKey, kpiId, version, weight = '', sortOrder = '0'] = row
+      .split('|')
+      .map((v) => v.trim());
     const node = byKey.get(nodeKey.toUpperCase());
     if (!node || !kpiId || !Number.isInteger(Number(version))) {
       throw new Error('KPI mapping row ' + (index + 1) + ' requires node key, KPI ID and version.');
@@ -73,7 +87,8 @@ function parseNodes(data: FormData) {
 export const load: PageServerLoad = async ({ params, url, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const scorecards = await listPerformanceScorecards(context);
-  const selected = scorecards.find((row) => row.id === url.searchParams.get('scorecard')) ?? scorecards[0] ?? null;
+  const selected =
+    scorecards.find((row) => row.id === url.searchParams.get('scorecard')) ?? scorecards[0] ?? null;
   const [nodes, mappings, kpis] = selected
     ? await Promise.all([
         listPerformanceScorecardNodes(context, selected.id),

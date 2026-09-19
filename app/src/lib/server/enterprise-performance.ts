@@ -169,7 +169,11 @@ async function assertActiveParty(context: CommandContext, partyId: string, execu
   if (!row) throw new Error('Active tenant Party not found.');
 }
 
-async function assertEvidenceItem(context: CommandContext, evidenceItemId: string, executor: DbExecutor) {
+async function assertEvidenceItem(
+  context: CommandContext,
+  evidenceItemId: string,
+  executor: DbExecutor
+) {
   const row = await queryOne<RowDataPacket & { id: string }>(
     'SELECT id FROM evidence_items WHERE id = ? AND tenant_id = ?',
     [evidenceItemId, context.tenantId],
@@ -295,7 +299,8 @@ export async function createPerformanceScorecard(
   }
 ) {
   assertPermission(context, 'performance.framework.manage');
-  if (!input.nodes.length) throw new Error('Performance Scorecard requires at least one hierarchy node.');
+  if (!input.nodes.length)
+    throw new Error('Performance Scorecard requires at least one hierarchy node.');
 
   return dbTransaction(async (connection) => {
     const ownerPartyId = input.ownerPartyId?.trim() || context.actorPartyId;
@@ -355,10 +360,7 @@ export async function createPerformanceScorecard(
         if (!Number.isInteger(mapping.kpiVersionNo) || mapping.kpiVersionNo < 1) {
           throw new Error('Scorecard KPI version must be a positive whole number.');
         }
-        if (
-          mapping.weight != null &&
-          (!Number.isFinite(mapping.weight) || mapping.weight < 0)
-        ) {
+        if (mapping.weight != null && (!Number.isFinite(mapping.weight) || mapping.weight < 0)) {
           throw new Error('Scorecard KPI weight must be a non-negative number.');
         }
         const kpi = await queryOne<RowDataPacket & { id: string }>(
@@ -427,7 +429,8 @@ export async function publishPerformanceScorecard(
       [now(), scorecard.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Performance Scorecard change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Performance Scorecard change detected.');
     const updated = await getScorecard(context, scorecard.id, connection);
     await performanceEvidence(
       context,
@@ -516,15 +519,7 @@ export async function calculatePerformanceSnapshot(
         RowDataPacket & { id: string; targetValue: string; comparisonOperator: string }
       >(
         "SELECT id, target_value AS targetValue, comparison_operator AS comparisonOperator FROM performance_targets WHERE tenant_id = ? AND kpi_id = ? AND kpi_version_no = ? AND scope_type = ? AND scope_id = ? AND status = 'ACTIVE' AND period_start <= ? AND period_end >= ? ORDER BY updated_at DESC, id DESC LIMIT 1",
-        [
-          context.tenantId,
-          kpi.id,
-          kpi.versionNo,
-          scopeType,
-          scopeId,
-          period.start,
-          period.end
-        ],
+        [context.tenantId, kpi.id, kpi.versionNo, scopeType, scopeId, period.start, period.end],
         connection
       );
       const observation = await queryOne<
@@ -685,7 +680,8 @@ export async function reviewPerformanceSnapshot(
       [timestamp, timestamp, snapshot.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Performance Snapshot change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Performance Snapshot change detected.');
     const updated = await getSnapshot(context, snapshot.id, connection);
     await performanceEvidence(
       context,
@@ -764,7 +760,8 @@ export async function publishPerformanceSnapshot(
       ],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Performance Snapshot publication detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Performance Snapshot publication detected.');
     const updated = await getSnapshot(context, snapshot.id, connection);
     await performanceEvidence(
       context,
@@ -969,7 +966,8 @@ export async function approvePerformanceBenchmark(
       [timestamp, target.id, context.tenantId, expectedTargetVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent benchmark target approval detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent benchmark target approval detected.');
 
     await performanceEvidence(
       context,
@@ -993,10 +991,7 @@ export async function listPerformanceBenefits(context: CommandContext) {
   );
 }
 
-export async function listPerformanceBenefitValidations(
-  context: CommandContext,
-  targetId: string
-) {
+export async function listPerformanceBenefitValidations(context: CommandContext, targetId: string) {
   assertPermission(context, 'performance.enterprise.read');
   return queryRows<RowDataPacket & PerformanceBenefitValidation>(
     'SELECT id, target_id AS targetId, observation_id AS observationId, validation_status AS validationStatus, realised_value AS realisedValue, evidence_item_id AS evidenceItemId, validation_note AS validationNote, validated_by_party_id AS validatedByPartyId, validated_at AS validatedAt FROM performance_benefit_validations WHERE target_id = ? ORDER BY validated_at DESC, id DESC',

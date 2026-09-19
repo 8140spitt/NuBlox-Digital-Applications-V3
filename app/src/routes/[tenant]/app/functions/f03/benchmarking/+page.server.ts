@@ -22,7 +22,8 @@ function text(data: FormData, name: string) {
 }
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 function numeric(data: FormData, name: string) {
@@ -34,7 +35,10 @@ function target(tenant: string, targetId?: string) {
   return `/${tenant}/app/functions/f03/benchmarking${targetId ? '?target=' + encodeURIComponent(targetId) : ''}`;
 }
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'The Benchmarking command could not be completed.' });
+  return fail(400, {
+    message:
+      error instanceof Error ? error.message : 'The Benchmarking command could not be completed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
@@ -44,9 +48,14 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     listPerformanceTargets(context),
     listPerformanceBenchmarkBases(context)
   ]);
-  const selectedBasis = bases.find((row) => row.targetId === url.searchParams.get('target')) ?? bases[0] ?? null;
-  const selectedTarget = selectedBasis ? targets.find((row) => row.id === selectedBasis.targetId) ?? null : null;
-  const observations = selectedTarget ? await listPerformanceObservations(context, selectedTarget.kpiId) : [];
+  const selectedBasis =
+    bases.find((row) => row.targetId === url.searchParams.get('target')) ?? bases[0] ?? null;
+  const selectedTarget = selectedBasis
+    ? (targets.find((row) => row.id === selectedBasis.targetId) ?? null)
+    : null;
+  const observations = selectedTarget
+    ? await listPerformanceObservations(context, selectedTarget.kpiId)
+    : [];
   return {
     tenantSlug: params.tenant,
     kpis,
@@ -73,7 +82,8 @@ export const actions: Actions = {
         periodStart: text(data, 'periodStart'),
         periodEnd: text(data, 'periodEnd'),
         targetValue: numeric(data, 'targetValue'),
-        comparisonOperator: text(data, 'comparisonOperator') as 'GREATER_EQUAL' | 'LESS_EQUAL' | 'EQUAL'
+        comparisonOperator: text(data, 'comparisonOperator') as
+          'GREATER_EQUAL' | 'LESS_EQUAL' | 'EQUAL'
       });
       await attachPerformanceBenchmarkBasis(context, targetId, {
         benchmarkType: text(data, 'benchmarkType'),

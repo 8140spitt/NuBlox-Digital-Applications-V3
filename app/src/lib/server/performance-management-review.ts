@@ -98,11 +98,7 @@ async function getReview(
   return row;
 }
 
-async function getGovernanceBody(
-  context: CommandContext,
-  id: string,
-  executor: DbExecutor
-) {
+async function getGovernanceBody(context: CommandContext, id: string, executor: DbExecutor) {
   const row = await queryOne<
     RowDataPacket & { id: string; status: string; quorumRequired: number }
   >(
@@ -420,13 +416,7 @@ export async function convenePerformanceManagementReview(
     const startedAt = now();
     const result = await executeMutation(
       "UPDATE governance_meetings SET status = 'CONVENED', aggregate_version = aggregate_version + 1, actual_started_at = ?, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",
-      [
-        startedAt,
-        startedAt,
-        review.id,
-        context.tenantId,
-        expectedAggregateVersion
-      ],
+      [startedAt, startedAt, review.id, context.tenantId, expectedAggregateVersion],
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Management Review change detected.');
@@ -575,7 +565,8 @@ export async function completePerformanceManagementReview(
       ],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Management Review completion detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Management Review completion detected.');
 
     const updated = await getReview(context, review.id, connection);
     await reviewEvidence(

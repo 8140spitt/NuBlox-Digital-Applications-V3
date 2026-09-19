@@ -17,14 +17,20 @@ function text(data: FormData, name: string) {
 }
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 function target(tenant: string, kpiId?: string) {
   return `/${tenant}/app/functions/f03/variance-management${kpiId ? '?kpi=' + encodeURIComponent(kpiId) : ''}`;
 }
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'The Variance Management command could not be completed.' });
+  return fail(400, {
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The Variance Management command could not be completed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
@@ -62,7 +68,12 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     observations,
     baselines,
     variance,
-    query: { scopeType: scopeType ?? 'TENANT', scopeId: scopeId ?? '', periodStart: periodStart ?? '', periodEnd: periodEnd ?? '' },
+    query: {
+      scopeType: scopeType ?? 'TENANT',
+      scopeId: scopeId ?? '',
+      periodStart: periodStart ?? '',
+      periodEnd: periodEnd ?? ''
+    },
     canManage: hasPermission(context, 'strategy.performance.manage')
   };
 };

@@ -20,7 +20,8 @@ function text(data: FormData, name: string) {
 
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 
@@ -30,7 +31,10 @@ function target(tenant: string, id?: string) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The Performance Reporting command could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The Performance Reporting command could not be completed.'
   });
 }
 
@@ -40,7 +44,8 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     listPerformanceSnapshots(context),
     listPerformanceScorecards(context)
   ]);
-  const selected = snapshots.find((row) => row.id === url.searchParams.get('snapshot')) ?? snapshots[0] ?? null;
+  const selected =
+    snapshots.find((row) => row.id === url.searchParams.get('snapshot')) ?? snapshots[0] ?? null;
   const items = selected ? await listPerformanceSnapshotItems(context, selected.id) : [];
   return {
     tenantSlug: params.tenant,

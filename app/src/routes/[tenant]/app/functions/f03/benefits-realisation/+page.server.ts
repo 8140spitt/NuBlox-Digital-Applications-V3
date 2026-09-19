@@ -24,7 +24,8 @@ function text(data: FormData, name: string) {
 }
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 function numeric(data: FormData, name: string) {
@@ -36,7 +37,12 @@ function target(tenant: string, targetId?: string) {
   return `/${tenant}/app/functions/f03/benefits-realisation${targetId ? '?benefit=' + encodeURIComponent(targetId) : ''}`;
 }
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'The Benefits Realisation command could not be completed.' });
+  return fail(400, {
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The Benefits Realisation command could not be completed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
@@ -47,8 +53,11 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     listPerformanceBaselines(context),
     listPerformanceBenefits(context)
   ]);
-  const selected = benefits.find((row) => row.targetId === url.searchParams.get('benefit')) ?? benefits[0] ?? null;
-  const selectedTarget = selected ? targets.find((row) => row.id === selected.targetId) ?? null : null;
+  const selected =
+    benefits.find((row) => row.targetId === url.searchParams.get('benefit')) ?? benefits[0] ?? null;
+  const selectedTarget = selected
+    ? (targets.find((row) => row.id === selected.targetId) ?? null)
+    : null;
   const [validations, observations] = selected
     ? await Promise.all([
         listPerformanceBenefitValidations(context, selected.targetId),
@@ -74,15 +83,12 @@ export const actions: Actions = {
   baseline: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      await createPerformanceBaseline(
-        await resolveRequestCommandContext(params.tenant, locals),
-        {
-          baselineRef: text(data, 'baselineRef'),
-          observationId: text(data, 'observationId'),
-          scopeType: text(data, 'scopeType'),
-          scopeId: text(data, 'scopeId')
-        }
-      );
+      await createPerformanceBaseline(await resolveRequestCommandContext(params.tenant, locals), {
+        baselineRef: text(data, 'baselineRef'),
+        observationId: text(data, 'observationId'),
+        scopeType: text(data, 'scopeType'),
+        scopeId: text(data, 'scopeId')
+      });
       redirect(303, target(params.tenant));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -102,7 +108,8 @@ export const actions: Actions = {
         periodStart: text(data, 'periodStart'),
         periodEnd: text(data, 'periodEnd'),
         targetValue: numeric(data, 'targetValue'),
-        comparisonOperator: text(data, 'comparisonOperator') as 'GREATER_EQUAL' | 'LESS_EQUAL' | 'EQUAL'
+        comparisonOperator: text(data, 'comparisonOperator') as
+          'GREATER_EQUAL' | 'LESS_EQUAL' | 'EQUAL'
       });
       await createPerformanceBenefitProfile(context, targetId, {
         benefitType: text(data, 'benefitType'),
@@ -144,7 +151,8 @@ export const actions: Actions = {
         targetId,
         {
           observationId: text(data, 'observationId'),
-          validationStatus: text(data, 'validationStatus') as 'REALISED' | 'PARTIAL' | 'NOT_REALISED',
+          validationStatus: text(data, 'validationStatus') as
+            'REALISED' | 'PARTIAL' | 'NOT_REALISED',
           evidenceItemId: text(data, 'evidenceItemId') || undefined,
           validationNote: text(data, 'validationNote')
         }

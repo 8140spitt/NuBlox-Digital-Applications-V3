@@ -177,11 +177,7 @@ describe('F03 Enterprise Performance Management runtime', () => {
     let scorecard = (await enterprise.listPerformanceScorecards(context)).find(
       (row) => row.id === scorecardId
     )!;
-    await enterprise.publishPerformanceScorecard(
-      context,
-      scorecard.id,
-      scorecard.aggregateVersion
-    );
+    await enterprise.publishPerformanceScorecard(context, scorecard.id, scorecard.aggregateVersion);
     scorecard = (await enterprise.listPerformanceScorecards(context)).find(
       (row) => row.id === scorecardId
     )!;
@@ -272,9 +268,7 @@ describe('F03 Enterprise Performance Management runtime', () => {
       benchmarkTarget.aggregateVersion,
       benchmarkDecisionId
     );
-    expect((await enterprise.listPerformanceBenchmarkBases(context))[0].status).toBe(
-      'APPROVED'
-    );
+    expect((await enterprise.listPerformanceBenchmarkBases(context))[0].status).toBe('APPROVED');
 
     await enterprise.createPerformanceBenefitProfile(context, targetId, {
       benefitType: 'OPERATIONAL',
@@ -337,11 +331,7 @@ describe('F03 Enterprise Performance Management runtime', () => {
     let reviewRow = (await review.listPerformanceManagementReviews(context)).find(
       (row) => row.id === reviewId
     )!;
-    await review.convenePerformanceManagementReview(
-      context,
-      reviewId,
-      reviewRow.aggregateVersion
-    );
+    await review.convenePerformanceManagementReview(context, reviewId, reviewRow.aggregateVersion);
     const managementDecisionId = await review.recordPerformanceManagementReviewDecision(
       context,
       reviewId,

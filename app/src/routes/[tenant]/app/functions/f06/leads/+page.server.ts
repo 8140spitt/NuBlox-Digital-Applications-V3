@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { objectHref } from '$lib/data/runtime-object-registry';
 import { hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { listCurrencies } from '$lib/server/reference-data';
@@ -47,6 +48,9 @@ function optionalNumber(data: FormData, name: string) {
 }
 function target(tenant: string, id?: string) {
   return `/${tenant}/app/functions/f06/leads${id ? '?lead=' + encodeURIComponent(id) : ''}`;
+}
+function canonicalTarget(tenant: string, id: string) {
+  return objectHref(tenant, 'lead', id, { from: 'F06.09' });
 }
 function problem(error: unknown) {
   return fail(400, {
@@ -115,7 +119,7 @@ export const actions: Actions = {
         estimatedValueHigh: optionalNumber(data, 'estimatedValueHigh'),
         currencyId: text(data, 'currencyId') || undefined
       });
-      redirect(303, target(params.tenant, id));
+      redirect(303, canonicalTarget(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
       return problem(error);

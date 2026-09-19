@@ -66,9 +66,7 @@ export async function requestPermissionAccess(
       throw new Error('No active Tenant Administrator role is available to review this request.');
     }
 
-    const existing = await queryOne<
-      RowDataPacket & { requestId: string; workItemId: string }
-    >(
+    const existing = await queryOne<RowDataPacket & { requestId: string; workItemId: string }>(
       `SELECT par.id AS requestId, par.work_item_id AS workItemId
          FROM permission_access_requests par
          JOIN work_items wi

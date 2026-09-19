@@ -9,9 +9,7 @@
   const tenantHome = $derived(`/${page.params.tenant}/app`);
   const forbidden = $derived(page.status === 403);
   const notFound = $derived(page.status === 404);
-  const requiredPermission = $derived(
-    forbidden ? permissionFromError(page.error?.message) : null
-  );
+  const requiredPermission = $derived(forbidden ? permissionFromError(page.error?.message) : null);
 </script>
 
 <svelte:head>

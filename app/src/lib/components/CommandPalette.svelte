@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
   import { enterpriseFunctions } from '$lib/enterprise/functions';
 
@@ -85,6 +86,30 @@
       .slice(0, 12)
   );
 
+  const enterpriseSearchDestination = $derived(
+    query.trim().length >= 2
+      ? {
+          label: 'Search NuBlox for “' + query.trim() + '”',
+          detail: 'Search authorised business objects and enterprise destinations',
+          group: 'Enterprise Search',
+          href: '/' + tenantSlug + '/app/search?q=' + encodeURIComponent(query.trim())
+        }
+      : null
+  );
+
+  const results = $derived(
+    enterpriseSearchDestination
+      ? [enterpriseSearchDestination, ...filtered.slice(0, 11)]
+      : filtered
+  );
+
+  function searchOnEnter(event: KeyboardEvent) {
+    if (event.key !== 'Enter' || !enterpriseSearchDestination) return;
+    event.preventDefault();
+    close();
+    void goto(enterpriseSearchDestination.href);
+  }
+
   function show() {
     open = true;
     query = '';
@@ -126,12 +151,17 @@
       <label class="search">
         <span class="sr-only">Search destinations</span>
         <span aria-hidden="true">⌕</span>
-        <input bind:this={input} bind:value={query} placeholder="Search enterprise destinations" />
+        <input
+          bind:this={input}
+          bind:value={query}
+          onkeydown={searchOnEnter}
+          placeholder="Search business objects or jump to…"
+        />
         <button type="button" onclick={close} aria-label="Close navigation">Esc</button>
       </label>
 
       <div class="results" aria-live="polite">
-        {#each filtered as destination}
+        {#each results as destination}
           <a href={destination.href} onclick={close}>
             <span class="group">{destination.group}</span>
             <span class="copy">
@@ -143,15 +173,13 @@
         {:else}
           <div class="no-results">
             <strong>No matching destination</strong>
-            <span
-              >Try a business stream, function number, data area or administration destination.</span
-            >
+            <span>Type at least two characters to search authorised business objects.</span>
           </div>
         {/each}
       </div>
 
       <footer>
-        <span><kbd>↑</kbd><kbd>↓</kbd> browse</span>
+        <span><kbd>Enter</kbd> enterprise search</span>
         <span><kbd>Esc</kbd> close</span>
       </footer>
     </div>

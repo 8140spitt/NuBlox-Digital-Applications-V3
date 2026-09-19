@@ -6,6 +6,12 @@ import {
   type RuntimeObjectSection
 } from '$lib/data/runtime-object-registry';
 import { listEvidenceItems } from '$lib/server/governed-evidence';
+import {
+  isFavourite,
+  objectNavigationItemKey,
+  recordRecentItem,
+  toggleFavourite
+} from '$lib/server/interaction-preferences';
 import { requestPermissionAccess } from '$lib/server/permission-access-request';
 import { listPlatformAudit } from '$lib/server/platform-evidence';
 import { hasPermission } from '$lib/server/platform-context';
@@ -59,12 +65,24 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
       : ('overview' as RuntimeObjectSection);
 
   const subject = { type: definition.subjectType, id: object.objectId };
+  const navigationItemKey = objectNavigationItemKey(definition.subjectType, object.objectId);
+  const canonicalRoute = objectHref(params.tenant, definition.type, object.objectId);
+  await recordRecentItem(context, {
+    itemKey: navigationItemKey,
+    itemType: 'OBJECT',
+    objectType: definition.subjectType,
+    objectId: object.objectId,
+    title: object.reference + ' · ' + object.title,
+    subtitle: definition.singular + (object.status ? ' · ' + object.status.replaceAll('_', ' ') : ''),
+    routePath: canonicalRoute
+  });
+
   const canReadWork = hasPermission(context, 'work.item.read');
   const canReadDecisions = hasPermission(context, 'work.decision.read');
   const canReadEvidence = hasPermission(context, 'evidence.item.read');
   const canReadAudit = hasPermission(context, 'platform.audit.read');
 
-  const [work, decisions, evidence, history] = await Promise.all([
+  const [work, decisions, evidence, history, favourite] = await Promise.all([
     canReadWork
       ? listMyWork(context).then((items) =>
           items.filter(
@@ -77,7 +95,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     canReadEvidence ? listEvidenceItems(context, subject) : Promise.resolve([]),
     canReadAudit
       ? listPlatformAudit(context, definition.auditObjectType, object.objectId)
-      : Promise.resolve([])
+      : Promise.resolve([]),
+    isFavourite(context, navigationItemKey)
   ]);
 
   return {
@@ -91,6 +110,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     decisions,
     evidence,
     history,
+    favourite,
     capabilities: {
       canReadWork,
       canReadDecisions,
@@ -101,6 +121,32 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 };
 
 export const actions: Actions = {
+  toggleFavourite: async ({ params, locals }) => {
+    const definition = runtimeObjectDefinition(params.objectType);
+    if (!definition) return fail(404, { message: 'That business object type is not registered.' });
+    const context = await resolveRequestCommandContext(params.tenant, locals);
+    if (!hasPermission(context, definition.readPermission)) {
+      return fail(403, { message: 'Your role does not permit access to this object.' });
+    }
+
+    try {
+      const object = await resolveRuntimeObject(context, definition.type, params.objectId);
+      const favourite = await toggleFavourite(context, {
+        itemKey: objectNavigationItemKey(definition.subjectType, object.objectId),
+        itemType: 'OBJECT',
+        objectType: definition.subjectType,
+        objectId: object.objectId,
+        title: object.reference + ' · ' + object.title,
+        subtitle:
+          definition.singular + (object.status ? ' · ' + object.status.replaceAll('_', ' ') : ''),
+        routePath: objectHref(params.tenant, definition.type, object.objectId)
+      });
+      return { favourite };
+    } catch (value) {
+      return problem(value);
+    }
+  },
+
   requestAccess: async ({ request, params, locals }) => {
     const definition = runtimeObjectDefinition(params.objectType);
     if (!definition) return fail(404, { message: 'That business object type is not registered.' });

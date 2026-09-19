@@ -885,6 +885,11 @@ export async function ensureDevelopmentIdentity(tenant: TenantRow, executor: DbE
     executor
   );
   await executeMutation(
+    "INSERT INTO party_originations (party_id,tenant_id,origin_function_id,origin_object_type,origin_object_id,origin_reference,steward_function_id,created_at) VALUES (?,?,'PLATFORM','DEVELOPMENT_IDENTITY',?,'Development identity bootstrap','PLATFORM',?)",
+    [partyId, tenant.id, partyId, timestamp],
+    executor
+  );
+  await executeMutation(
     "INSERT INTO user_identities (id, tenant_id, party_id, provider, provider_subject, display_name, status, created_at, updated_at) VALUES (?, ?, ?, 'development', 'development-user', 'Development User', 'ACTIVE', ?, ?)",
     [identityId, tenant.id, partyId, timestamp, timestamp],
     executor

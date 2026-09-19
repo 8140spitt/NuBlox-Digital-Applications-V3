@@ -57,9 +57,42 @@
         (a, b) => a.position - b.position
       );
       expanded = true;
+      return item;
     } finally {
       pending = false;
     }
+  }
+
+  function setDirty(id: string, dirty: boolean) {
+    const next = new Set(dirtyIds);
+    if (dirty) next.add(id);
+    else next.delete(id);
+    dirtyIds = next;
+  }
+
+  function pageContextKey(routePath: string) {
+    return (
+      'PAGE:' +
+      routePath
+        .replace(/[^A-Za-z0-9._:/-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+    );
+  }
+
+  async function openDirtyFormContext(routePath: string) {
+    const functionMatch = routePath.match(/\/functions\/(f\d{2})(?:\/|\?|$)/i);
+    const item = await openContext({
+      contextKey: pageContextKey(routePath),
+      contextType: 'FORM',
+      objectType: 'PAGE',
+      objectId: routePath,
+      objectVersion: null,
+      title: document.title.replace(/\s+·\s+NuBlox$/, ''),
+      subtitle: 'Unsaved form changes',
+      routePath,
+      workspaceFunctionId: functionMatch?.[1]?.toUpperCase() ?? null
+    });
+    if (item) setDirty(item.id, true);
   }
 
   async function pinCurrent() {

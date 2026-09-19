@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { subjectObjectHref } from '$lib/data/runtime-object-registry';
 import {
   acknowledgeWorkItem,
   completeWorkItem,
@@ -52,9 +53,19 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     actorDisplayName: context.actorDisplayName,
     currentTime: new Date().toISOString(),
     view,
-    work,
+    work: work.map((item) => ({
+      ...item,
+      subjectHref: subjectObjectHref(params.tenant, item.subjectType, item.subjectId, {
+        section: 'work'
+      })
+    })),
     escalations,
-    decisions,
+    decisions: decisions.map((decision) => ({
+      ...decision,
+      subjectHref: subjectObjectHref(params.tenant, decision.subjectType, decision.subjectId, {
+        section: 'decisions'
+      })
+    })),
     capabilities: {
       canExecute: hasPermission(context, 'work.item.execute'),
       canManage: hasPermission(context, 'work.item.manage'),

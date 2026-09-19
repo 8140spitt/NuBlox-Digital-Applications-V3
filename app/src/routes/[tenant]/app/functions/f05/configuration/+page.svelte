@@ -30,9 +30,9 @@
             <div class="grid"><label>Model reference<input name="modelRef" required/></label><label>Title<input name="title" required/></label></div>
             <label>Definition scope<textarea name="definitionScope" rows="2" required></textarea></label>
             <label>Design summary<textarea name="designSummary" rows="3" required></textarea></label>
-            <div class="grid"><label>Definition JSON<textarea name="definition" rows="4">{}</textarea></label><label>Specification JSON<textarea name="specification" rows="4">{}</textarea></label></div>
+            <div class="grid"><label>Definition JSON<textarea name="definition" rows="4">{'{}'}</textarea></label><label>Specification JSON<textarea name="specification" rows="4">{'{}'}</textarea></label></div>
             <label>Validation criteria<textarea name="validationCriteria" rows="3" required></textarea></label>
-            <label>Prototype basis JSON<textarea name="prototypeBasis" rows="3">{}</textarea></label>
+            <label>Prototype basis JSON<textarea name="prototypeBasis" rows="3">{'{}'}</textarea></label>
             <button>Create controlled model</button>
           </form>
         </details>
@@ -90,7 +90,7 @@
           {:else if data.canManage && data.current.lifecycleStatus === 'RELEASED'}
             <details class="command"><summary>Create successor version</summary><form method="POST" action="?/revise">
               <input type="hidden" name="modelId" value={data.selected.id}/><input type="hidden" name="aggregateVersion" value={data.selected.aggregateVersion}/><input type="hidden" name="mode" value={data.mode}/>
-              <label>Design summary<textarea name="designSummary" rows="3" required></textarea></label><div class="grid"><label>Definition JSON<textarea name="definition" rows="3">{}</textarea></label><label>Specification JSON<textarea name="specification" rows="3">{}</textarea></label></div><label>Validation criteria<textarea name="validationCriteria" rows="2" required></textarea></label><label>Prototype basis JSON<textarea name="prototypeBasis" rows="2">{}</textarea></label><button>Create successor draft</button>
+              <label>Design summary<textarea name="designSummary" rows="3" required></textarea></label><div class="grid"><label>Definition JSON<textarea name="definition" rows="3">{'{}'}</textarea></label><label>Specification JSON<textarea name="specification" rows="3">{'{}'}</textarea></label></div><label>Validation criteria<textarea name="validationCriteria" rows="2" required></textarea></label><label>Prototype basis JSON<textarea name="prototypeBasis" rows="2">{'{}'}</textarea></label><button>Create successor draft</button>
             </form></details>
           {/if}
         </section>

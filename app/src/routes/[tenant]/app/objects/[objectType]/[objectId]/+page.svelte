@@ -108,6 +108,17 @@
         <strong>{data.definition.canonicalModelId}</strong>
       </div>
       {#if data.from}<span class="origin">Opened from {data.from}</span>{/if}
+      <form class="favourite-form" method="POST" action="?/toggleFavourite">
+        <button
+          class:favourite={data.favourite}
+          class="favourite-button"
+          type="submit"
+          aria-pressed={data.favourite}
+        >
+          <span aria-hidden="true">{data.favourite ? '★' : '☆'}</span>
+          <span>{data.favourite ? 'Favourite' : 'Add favourite'}</span>
+        </button>
+      </form>
       {#if data.object.originHref && data.object.originLabel}
         <a href={data.object.originHref}>{data.object.originLabel}</a>
       {/if}
@@ -284,6 +295,29 @@
     color: #2e617f;
     font-weight: 800;
     text-decoration: none;
+  }
+  .favourite-form {
+    margin: 0;
+  }
+  .favourite-button {
+    min-height: 29px;
+    display: inline-flex;
+    gap: 5px;
+    align-items: center;
+    border: 1px solid #c9dae4;
+    border-radius: 6px;
+    padding: 0 8px;
+    background: white;
+    color: #536f81;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .favourite-button:hover,
+  .favourite-button.favourite {
+    border-color: #d4c278;
+    background: #fff9e6;
+    color: #6f5a17;
   }
   .content-panel {
     padding: 14px;

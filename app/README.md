@@ -59,7 +59,7 @@ NuBlox does **not** create application databases implicitly. Copy `.env.example`
 
 ## Current security boundary
 
-Permission denials are treated as controlled HTTP 403 responses and render inside the tenant application shell; missing authority must never surface as an unhandled 500 application failure. A denied tenant member can return home or submit a governed permission access request, which creates an `ACCESS_REQUEST` Work Item assigned to the active `tenant-admin` role for review in My Work. The request never grants authority by itself; administrators still change RBAC through Security & Authority.
+Permission denials are treated as controlled HTTP 403 responses and render inside the tenant application shell; missing authority must never surface as an unhandled 500 application failure. A denied tenant member can return home or submit a governed permission access request, which creates an `ACCESS_REQUEST` Work Item assigned to the active `tenant-admin` role for review in My Work. Duplicate open requests for the same actor and permission are suppressed. The request never grants authority by itself; administrators still change RBAC through Security & Authority.
 
 Runtime authorization foundations are now implemented: active tenant, User Identity → Party linkage, effective tenant Membership, Role Assignment, Role Definition and Permission Definition are resolved before protected commands execute. Material commands retain an authority snapshot in audit evidence.
 

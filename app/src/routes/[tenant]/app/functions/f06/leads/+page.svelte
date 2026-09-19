@@ -65,7 +65,7 @@
   </header>
   {#if form?.message}<div class="message" role="alert">{form.message}</div>{/if}
 
-  <div class="workspace">
+  <div class:collection-only={!data.selected} class="workspace">
     <aside class="section-card register">
       <CollectionView
         eyebrow="Lead register"
@@ -74,6 +74,9 @@
         columns={collectionColumns}
         emptyText="No Leads captured."
         searchPlaceholder="Search Leads"
+        savedViews={data.savedViews}
+        saveViewAction="?/saveView"
+        deleteViewAction="?/deleteView"
       />
       {#if data.capabilities.canManage}
         <details class="command">
@@ -553,13 +556,22 @@
     gap: 12px;
     align-items: start;
   }
+  .workspace.collection-only {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace.collection-only main {
+    display: none;
+  }
+  .workspace.collection-only .register {
+    position: static;
+  }
   .register,
   .detail {
     padding: 13px;
   }
   .register {
     position: sticky;
-    top: 78px;
+    top: 106px;
   }
   .rows {
     display: grid;

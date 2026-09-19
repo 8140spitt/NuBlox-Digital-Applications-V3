@@ -10,6 +10,7 @@ The application now establishes:
 - the shared tenant application shell;
 - the canonical 29-function workspace directory;
 - F01 — Strategy & Enterprise Planning as the first active workspace;
+- F02 — Corporate Governance as the second operational workspace, including Governance Bodies, Authority Framework, Delegation of Authority, Executive Management, Policy Governance and restricted Ethics Governance;
 - F01.01 — Strategy Framework as the first operational persisted business slice;
 - canonical Party / Person / Organisation / Legal Entity master data through the shared `AGG-01-PARTY` runtime;
 - Party Relationship, Organisation Unit/effective hierarchy and Delegated Authority shared foundation aggregates;
@@ -24,7 +25,7 @@ The application now establishes:
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
-F02–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
+F03–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01 and F02 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
 ## Run locally
 

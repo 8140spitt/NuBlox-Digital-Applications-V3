@@ -20,7 +20,7 @@ The application now establishes:
 - Better Auth production authentication with tenant-scoped identity mapping and controlled first-administrator bootstrap;
 - deny-by-default server command permission checks;
 - MySQL 8.0+ persistence through the `mysql2` promise client and pooled prepared statements;
-- runtime startup schema gating against the latest required forward migration (`0032_corporate_development_runtime.sql`);
+- runtime startup schema gating against the latest required forward migration (`0033_permission_access_request_runtime.sql`);
 - append-only platform audit evidence with actor/authority snapshots;
 - canonical business events plus transactional outbox messages;
 - optimistic version control for Organisation master-data commands;
@@ -59,7 +59,7 @@ NuBlox does **not** create application databases implicitly. Copy `.env.example`
 
 ## Current security boundary
 
-Permission denials are treated as controlled HTTP 403 responses and render inside the tenant application shell; missing authority must never surface as an unhandled 500 application failure.
+Permission denials are treated as controlled HTTP 403 responses and render inside the tenant application shell; missing authority must never surface as an unhandled 500 application failure. A denied tenant member can return home or submit a governed permission access request, which creates an `ACCESS_REQUEST` Work Item assigned to the active `tenant-admin` role for review in My Work. The request never grants authority by itself; administrators still change RBAC through Security & Authority.
 
 Runtime authorization foundations are now implemented: active tenant, User Identity → Party linkage, effective tenant Membership, Role Assignment, Role Definition and Permission Definition are resolved before protected commands execute. Material commands retain an authority snapshot in audit evidence.
 

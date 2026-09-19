@@ -4,103 +4,119 @@
 
 <header class="workspace-header section-card">
   <div class="identity">
-    <div class="function-icon">▤</div>
+    <span class="function-key">{id}</span>
     <div>
-      <span class="eyebrow">{id}</span>
+      <span class="eyebrow">Business function workspace</span>
       <h1>{name}</h1>
     </div>
   </div>
+
   <p class="purpose">{purpose}</p>
-  <div class="objects">
-    <strong>Objects</strong>{#each objects as object}<span>{object}</span>{/each}
-  </div>
+
+  {#if objects?.length}
+    <div class="records" aria-label="Primary records">
+      <span class="records-label">Primary records</span>
+      <div class="record-list">
+        {#each objects as object}
+          <span>{object}</span>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </header>
 
 <style>
   .workspace-header {
     display: grid;
-    grid-template-columns: minmax(320px, 1.05fr) minmax(320px, 1.25fr) minmax(180px, 0.55fr);
-    gap: 24px;
-    align-items: start;
-    padding: 15px;
-    border-color: #8fc9ee;
-    background: linear-gradient(120deg, #fafdff 0%, #eaf6fd 56%, #fafdff 100%);
+    grid-template-columns: minmax(300px, 0.85fr) minmax(360px, 1.15fr);
+    gap: 14px 30px;
+    align-items: center;
+    padding: 18px 20px;
+    border-color: #c8d9e3;
+    box-shadow: 0 3px 14px rgba(18, 47, 70, 0.05);
   }
   .identity {
+    min-width: 0;
     display: flex;
-    gap: 14px;
+    gap: 12px;
     align-items: center;
   }
-  .function-icon {
+  .function-key {
+    min-width: 47px;
+    min-height: 39px;
     display: grid;
     place-items: center;
-    width: 58px;
-    height: 58px;
-    flex: 0 0 58px;
-    border-radius: 9px;
-    background: linear-gradient(145deg, var(--navy-800), #075478);
-    color: white;
-    font-size: 29px;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+    flex: 0 0 47px;
+    border: 1px solid #a7c7d9;
+    border-radius: 8px;
+    background: #edf6fb;
+    color: #245d7e;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
   }
-  .eyebrow {
-    color: var(--navy-800);
-    font-size: 15px;
+  .eyebrow,
+  .records-label {
+    color: #728796;
+    font-size: 8.5px;
     font-weight: 850;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
   }
   h1 {
-    margin: 1px 0 0;
-    font-size: 21px;
-    line-height: 1.15;
+    margin: 2px 0 0;
+    color: #1d3d52;
+    font-size: 20px;
+    line-height: 1.18;
     letter-spacing: -0.02em;
   }
   .purpose {
-    margin: 7px 0 0;
-    max-width: 700px;
-    color: #2c465c;
-    line-height: 1.45;
-    font-size: 13px;
+    margin: 0;
+    max-width: 760px;
+    color: #526b7c;
+    font-size: 11.5px;
+    line-height: 1.5;
   }
-  .objects {
+  .records {
+    grid-column: 1 / -1;
     display: grid;
-    gap: 1px;
-    padding: 10px 12px;
-    border: 1px solid #83c5ed;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.73);
-    color: #31516b;
-    font-size: 10.5px;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding-top: 11px;
+    border-top: 1px solid #e3e9ed;
   }
-  .objects strong {
-    color: #1c3e58;
-    font-size: 10px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 2px;
+  .record-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
   }
-  @media (max-width: 1120px) {
-    .workspace-header {
-      grid-template-columns: 1fr 1fr;
-    }
-    .objects {
-      grid-column: 1 / -1;
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .objects strong {
-      grid-column: 1 / -1;
-    }
+  .record-list span {
+    padding: 4px 7px;
+    border: 1px solid #d9e3e8;
+    border-radius: 999px;
+    background: #f8fafb;
+    color: #536d7d;
+    font-size: 9px;
+    font-weight: 650;
   }
-  @media (max-width: 720px) {
+  @media (max-width: 900px) {
     .workspace-header {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 10px;
     }
-    .objects {
+    .records {
       grid-column: auto;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+  }
+  @media (max-width: 600px) {
+    .workspace-header {
+      padding: 14px;
     }
     h1 {
-      font-size: 19px;
+      font-size: 18px;
     }
   }
 </style>

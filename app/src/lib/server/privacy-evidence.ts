@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
 import { dbTransaction, executeMutation, queryRows, queryOne, type DbExecutor } from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
-import { appendSimpleAudit, code, domainEvidence, now, required, timestamp } from '$lib/server/marketing-runtime';
+import { code, domainEvidence, now, required, timestamp } from '$lib/server/marketing-runtime';
 
 export type PrivacySubject = {
   subjectType: 'PARTY' | 'LEAD';

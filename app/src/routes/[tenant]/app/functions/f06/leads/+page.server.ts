@@ -2,6 +2,11 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { objectHref } from '$lib/data/runtime-object-registry';
 import { hasPermission } from '$lib/server/platform-context';
+import {
+  deletePersonalView,
+  listSavedViews,
+  savePersonalView
+} from '$lib/server/interaction-preferences';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { listCurrencies } from '$lib/server/reference-data';
 import {
@@ -60,14 +65,17 @@ function problem(error: unknown) {
 
 export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
-  const [leads, campaigns, items, currencies] = await Promise.all([
+  const [leads, campaigns, items, currencies, savedViews] = await Promise.all([
     listLeads(context),
     listCommunicationsCampaigns(context),
     listCommunicationItems(context),
-    listCurrencies(context)
+    listCurrencies(context),
+    listSavedViews(context, 'COLLECTION:LEAD')
   ]);
-  const selected =
-    leads.find((item) => item.id === url.searchParams.get('lead')) ?? leads[0] ?? null;
+  const selectedLeadId = url.searchParams.get('lead');
+  const selected = selectedLeadId
+    ? (leads.find((item) => item.id === selectedLeadId) ?? null)
+    : null;
   const [scores, nurture, handoffs, consents, preferences] = selected
     ? await Promise.all([
         listLeadScoreEvents(context, selected.id),
@@ -89,6 +97,13 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     handoffs,
     consents,
     preferences,
+    savedViews: savedViews.map((view) => ({
+      id: view.id,
+      name: view.name,
+      definition: view.definition,
+      isDefault: Boolean(view.isDefault),
+      isPinned: Boolean(view.isPinned)
+    })),
     capabilities: {
       canManage: hasPermission(context, 'marketing.lead.manage'),
       canQualify: hasPermission(context, 'marketing.lead.qualify'),
@@ -99,6 +114,47 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
 };
 
 export const actions: Actions = {
+  saveView: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      const rawColumns = text(data, 'columns')
+        .split(',')
+        .map((column) => column.trim())
+        .filter((column) => /^[A-Za-z0-9._-]+$/.test(column));
+      const sortDirection = text(data, 'sortDirection') === 'desc' ? 'desc' : 'asc';
+      await savePersonalView(await resolveRequestCommandContext(params.tenant, locals), {
+        targetKey: 'COLLECTION:LEAD',
+        name: text(data, 'viewName'),
+        definition: {
+          query: text(data, 'query'),
+          sortKey: text(data, 'sortKey') || null,
+          sortDirection,
+          columns: rawColumns,
+          displayMode: 'TABLE',
+          density: 'COMPACT'
+        },
+        isDefault: data.get('isDefault') === 'on',
+        isPinned: data.get('isPinned') === 'on'
+      });
+      return { message: 'Personal Lead view saved.' };
+    } catch (error) {
+      return problem(error);
+    }
+  },
+
+  deleteView: async ({ request, params, locals }) => {
+    const data = await request.formData();
+    try {
+      await deletePersonalView(
+        await resolveRequestCommandContext(params.tenant, locals),
+        text(data, 'viewId')
+      );
+      return { message: 'Personal Lead view deleted.' };
+    } catch (error) {
+      return problem(error);
+    }
+  },
+
   create: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {

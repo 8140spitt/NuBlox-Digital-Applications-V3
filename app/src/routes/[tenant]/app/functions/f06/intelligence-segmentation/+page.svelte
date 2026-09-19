@@ -134,9 +134,9 @@
             <form method="POST" action="?/createSegment">
               <div class="grid"><label>Reference<input name="segmentRef" required /></label><label>Name<input name="name" required /></label></div>
               <label>Description<textarea name="description" rows="3" required></textarea></label>
-              <label>Criteria JSON<textarea name="criteria" rows="4" value="{}"></textarea></label>
-              <div class="grid"><label>Geography JSON<textarea name="geography" rows="3" value="{}"></textarea></label><label>Sector JSON<textarea name="sector" rows="3" value="{}"></textarea></label></div>
-              <div class="grid"><label>Profile JSON<textarea name="profile" rows="3" value="{}"></textarea></label><label>Value assessment JSON<textarea name="valueAssessment" rows="3" value="{}"></textarea></label></div>
+              <label>Criteria JSON<textarea name="criteria" rows="4" value={'{}'}></textarea></label>
+              <div class="grid"><label>Geography JSON<textarea name="geography" rows="3" value={'{}'}></textarea></label><label>Sector JSON<textarea name="sector" rows="3" value={'{}'}></textarea></label></div>
+              <div class="grid"><label>Profile JSON<textarea name="profile" rows="3" value={'{}'}></textarea></label><label>Value assessment JSON<textarea name="valueAssessment" rows="3" value={'{}'}></textarea></label></div>
               <button>Create governed segment</button>
             </form>
           </details>
@@ -190,7 +190,7 @@
                   <input type="hidden" name="segmentVersionNo" value={data.currentSegmentVersion.versionNo} />
                   <div class="grid"><label>Subject type<select name="subjectType"><option>PARTY</option><option>PARTY_RELATIONSHIP</option><option>LEAD</option></select></label><label>Subject ID<input name="subjectId" required /></label></div>
                   <div class="grid"><label>Membership<select name="membershipStatus"><option>INCLUDED</option><option>EXCLUDED</option></select></label><label>Score<input name="score" type="number" min="0" max="100" step="any" /></label></div>
-                  <label>Basis JSON<textarea name="basis" rows="3" value="{}"></textarea></label>
+                  <label>Basis JSON<textarea name="basis" rows="3" value={'{}'}></textarea></label>
                   <button>Record membership evaluation</button>
                 </form></details>
               </div>

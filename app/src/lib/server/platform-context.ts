@@ -397,6 +397,24 @@ export const platformPermissions = [
     'Approve and activate immutable Authority Framework versions.'
   ],
   [
+    'governance.meeting.read',
+    'governance.meeting',
+    'read',
+    'Read governed Board and Committee meeting records.'
+  ],
+  [
+    'governance.meeting.manage',
+    'governance.meeting',
+    'manage',
+    'Schedule Board and Committee meetings and maintain their packs and agenda.'
+  ],
+  [
+    'governance.meeting.conduct',
+    'governance.meeting',
+    'conduct',
+    'Record attendance, resolutions, actions and minutes for Board and Committee meetings.'
+  ],
+  [
     'governance.executive.read',
     'governance.executive',
     'read',

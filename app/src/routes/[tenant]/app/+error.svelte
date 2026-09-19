@@ -1,9 +1,17 @@
 <script lang="ts">
   import { page } from '$app/state';
 
+  function permissionFromError(message: string | undefined) {
+    const prefix = 'Permission denied: ';
+    return message?.startsWith(prefix) ? message.slice(prefix.length).trim() : null;
+  }
+
   const tenantHome = $derived(`/${page.params.tenant}/app`);
   const forbidden = $derived(page.status === 403);
   const notFound = $derived(page.status === 404);
+  const requiredPermission = $derived(
+    forbidden ? permissionFromError(page.error?.message) : null
+  );
 </script>
 
 <svelte:head>
@@ -28,14 +36,16 @@
           : 'This request could not be completed'}
     </h1>
 
-    {#if forbidden}
-      <p>
-        Your account is authenticated, but your current tenant roles do not grant access to this
-        area. The rest of NuBlox remains available.
-      </p>
+    {#if forbidden && requiredPermission}
+      <p>Your role does not permit access to this area. The rest of NuBlox remains available.</p>
       <p class="guidance">
-        If you need this capability, ask a tenant administrator to review your role and permission
-        assignments.
+        You can return home or request the required access. Your request will be routed to Tenant
+        Administrators through My Work for review.
+      </p>
+    {:else if forbidden}
+      <p>
+        Your current tenant authority does not permit access to this area. Return home and contact a
+        Tenant Administrator if you believe your tenant membership should be reviewed.
       </p>
     {:else if notFound}
       <p>
@@ -49,7 +59,14 @@
     {/if}
 
     <div class="actions">
-      <a class="primary" href={tenantHome}>Back to workspace home</a>
+      <a class="primary" href={tenantHome}>Back to home</a>
+      {#if requiredPermission}
+        <form method="POST" action={`/${page.params.tenant}/app/access-request`}>
+          <input type="hidden" name="permissionKey" value={requiredPermission} />
+          <input type="hidden" name="requestedPath" value={page.url.pathname} />
+          <button class="secondary" type="submit">Request permission</button>
+        </form>
+      {/if}
     </div>
   </div>
 </section>
@@ -114,24 +131,48 @@
   }
 
   .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 18px;
   }
 
-  .primary {
+  .actions form {
+    margin: 0;
+  }
+
+  .primary,
+  .secondary {
     display: inline-flex;
     align-items: center;
     min-height: 36px;
     padding: 0 14px;
     border-radius: 7px;
-    background: var(--blue-700);
-    color: white;
     font-size: 10.5px;
     font-weight: 800;
     text-decoration: none;
   }
 
+  .primary {
+    border: 1px solid var(--blue-700);
+    background: var(--blue-700);
+    color: white;
+  }
+
   .primary:hover {
     background: var(--navy-800);
+  }
+
+  .secondary {
+    border: 1px solid #9dc9e1;
+    background: #f4faff;
+    color: #2c607f;
+    cursor: pointer;
+  }
+
+  .secondary:hover {
+    border-color: #6fb0d4;
+    background: #eaf6fd;
   }
 
   @media (max-width: 720px) {

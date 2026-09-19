@@ -64,7 +64,7 @@ describe('F02 Governance Body runtime', () => {
     expect(body.aggregateVersion).toBe(4);
 
     const roleAssignments = await db.queryRows<any>(
-      'SELECT id FROM tenant_role_assignments WHERE tenant_id = ? AND party_id = ?',
+      'SELECT id FROM role_assignments WHERE tenant_id = ? AND party_id = ?',
       [context.tenantId, extra]
     );
     const delegated = await db.queryRows<any>(

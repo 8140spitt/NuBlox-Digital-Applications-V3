@@ -73,7 +73,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     objectType: definition.subjectType,
     objectId: object.objectId,
     title: object.reference + ' · ' + object.title,
-    subtitle: definition.singular + (object.status ? ' · ' + object.status.replaceAll('_', ' ') : ''),
+    subtitle:
+      definition.singular + (object.status ? ' · ' + object.status.replaceAll('_', ' ') : ''),
     routePath: canonicalRoute
   });
 

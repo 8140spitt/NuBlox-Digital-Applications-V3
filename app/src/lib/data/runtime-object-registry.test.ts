@@ -12,6 +12,7 @@ describe('runtime object registry', () => {
     expect(validateRuntimeObjectRegistry()).toBe(true);
     expect(runtimeObjectDefinition('PARTY')?.canonicalModelId).toBe('CBO-PARTY');
     expect(runtimeObjectDefinitionForSubject('party')?.aggregateId).toBe('AGG-01-PARTY');
+    expect(runtimeObjectDefinition('party')?.sections).toContain('relationships');
     expect(runtimeObjectDefinition('LEAD')?.canonicalModelId).toBe('CRM-LEAD');
     expect(runtimeObjectDefinitionForSubject('lead')?.aggregateId).toBe('AGG-03-LEAD');
   });

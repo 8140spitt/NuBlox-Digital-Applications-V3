@@ -59,6 +59,8 @@ NuBlox does **not** create application databases implicitly. Copy `.env.example`
 
 ## Current security boundary
 
+Permission denials are treated as controlled HTTP 403 responses and render inside the tenant application shell; missing authority must never surface as an unhandled 500 application failure.
+
 Runtime authorization foundations are now implemented: active tenant, User Identity → Party linkage, effective tenant Membership, Role Assignment, Role Definition and Permission Definition are resolved before protected commands execute. Material commands retain an authority snapshot in audit evidence.
 
 Production authentication is integrated through Better Auth with MySQL-backed users, accounts, sessions and verification records. Authentication does not grant business authority by itself: the authenticated user must map to a tenant-scoped NuBlox User Identity linked to a Party with effective Membership and Role Assignment. Public registration is disabled by default, production has no development-identity fallback, and the first administrator is established explicitly with `pnpm auth:bootstrap`.

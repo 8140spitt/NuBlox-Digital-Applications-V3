@@ -46,7 +46,10 @@ Every function workspace will be built from the same architectural grammar:
 
 This is an information-architecture contract, not a requirement that every workspace render all eight areas on one page.
 
-The detailed governing contract is [`function-workspace-anatomy.md`](function-workspace-anatomy.md).
+The detailed governing contracts are:
+
+- [`experience-system.md`](experience-system.md) — global shell, object-centric work, My Work, Task Bar and F07+ interaction gate;
+- [`function-workspace-anatomy.md`](function-workspace-anatomy.md) — canonical anatomy for all F01-F29 workspaces.
 
 ## Required foundations before feature UI
 

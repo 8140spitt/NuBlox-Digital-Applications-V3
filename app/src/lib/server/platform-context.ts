@@ -359,6 +359,24 @@ export const platformPermissions = [
     'strategy.scenario',
     'approve',
     'Review, approve, activate, supersede and retire governed Scenarios.'
+  ],
+  [
+    'governance.body.read',
+    'governance.body',
+    'read',
+    'Read governed Boards, Committees, membership and immutable configuration versions.'
+  ],
+  [
+    'governance.body.manage',
+    'governance.body',
+    'manage',
+    'Create and maintain Governance Bodies and effective membership.'
+  ],
+  [
+    'governance.body.approve',
+    'governance.body',
+    'approve',
+    'Constitute, activate, suspend and dissolve governed Boards and Committees.'
   ]
 ] as const;
 

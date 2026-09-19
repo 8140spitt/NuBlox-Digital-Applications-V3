@@ -27,6 +27,10 @@ The application now establishes:
 
 F03–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01 and F02 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
+## F02 operational baseline
+
+Corporate Governance now runs on the shared canonical platform services rather than workspace-specific authority or evidence mechanisms. Board and Committee governance include governed meeting occurrences, quorum, exact issued meeting-pack revisions, immutable resolutions and shared follow-up Work. Executive Management reuses the same Governance Meeting boundary, Policy Governance profiles controlled Information, and Ethics Governance uses restricted Integrity Cases with explicit per-case need-to-know access.
+
 ## Run locally
 
 ```bash

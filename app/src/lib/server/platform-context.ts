@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { error } from '@sveltejs/kit';
 import type { RowDataPacket } from 'mysql2/promise';
 import {
   assertDatabaseReady,
@@ -863,7 +864,9 @@ export function hasPermission(context: CommandContext, permission: string) {
 }
 
 export function assertPermission(context: CommandContext, permission: PlatformPermission | string) {
-  if (!hasPermission(context, permission)) throw new Error('Permission denied: ' + permission);
+  if (!hasPermission(context, permission)) {
+    error(403, 'Permission denied: ' + permission);
+  }
 }
 
 export function authoritySnapshot(context: CommandContext) {

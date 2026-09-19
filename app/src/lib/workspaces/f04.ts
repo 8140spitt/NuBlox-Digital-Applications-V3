@@ -49,7 +49,7 @@ export const f04Workspace = {
       summary:
         'Structure, negotiate, approve and complete a transaction through the governed Business Case boundary.',
       items: ['Structure', 'Negotiation', 'Approval', 'Agreements', 'Completion'],
-      path: 'business-cases'
+      path: 'business-cases?type=TRANSACTION'
     },
     {
       id: 'F04.05',
@@ -67,7 +67,7 @@ export const f04Workspace = {
       summary:
         'Govern separation perimeter, carve-out, asset transfer, system separation and disposal through the shared Business Case.',
       items: ['Perimeter', 'Carve-out', 'Assets', 'Systems', 'Disposal'],
-      path: 'business-cases'
+      path: 'business-cases?type=DIVESTITURE'
     },
     {
       id: 'F04.07',
@@ -76,7 +76,7 @@ export const f04Workspace = {
       summary:
         'Assess, negotiate, govern and monitor strategic alliances through the shared Business Case.',
       items: ['Partner search', 'Fit', 'Alliance terms', 'Governance', 'Monitoring'],
-      path: 'business-cases'
+      path: 'business-cases?type=STRATEGIC_PARTNERSHIP'
     }
   ] satisfies WorkArea[],
   journey: [

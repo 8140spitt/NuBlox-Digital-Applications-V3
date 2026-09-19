@@ -167,3 +167,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0027 — Information Container runtime
 
 `0027_information_container_runtime.sql` implements the frozen `AGG-07-INFORMATION` boundary. Stable Information Container identity survives controlled revisions and representation/file changes. Revisions preserve purpose-of-issue, suitability, subject/context and immutable approval/issue history; representations retain content references and integrity hashes without becoming the information identity. Issued revisions are immutable and later corrections create successor revisions. Shared `AGG-27-DECISION` evidence authorises approval while exchanges, transmittals and workflows remain separate aggregates.
+
+
+## Migration 0028 — Policy Governance profile runtime
+
+`0028_policy_governance_runtime.sql` implements F02.06 as a governed Policy profile over canonical controlled information. Policy uses the exact `AGG-07-INFORMATION` Information Container identity rather than creating a second document master. `policy_profiles` adds stable policy type while `policy_revision_profiles` pins revision-specific owner, governance body, applicability, scope, effectivity, review date and attestation requirement to the exact immutable Information Revision. Approval, issue and supersession remain owned by the Information Container lifecycle; `AGG-02-POLICY` records policy-specific governance evidence.

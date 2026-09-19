@@ -6,15 +6,15 @@ UX-IFS,IFS,"IFS Cloud",enterprise,1,in-progress,"navigator; lobbies; exception w
 UX-INFOR,Infor,"CloudSuite / Infor OS",enterprise,1,in-progress,"portal; role workspaces; widgets; drill-back; apps",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
 UX-WORKDAY,Workday,"Financial Management / HCM / Adaptive Planning",enterprise,1,in-progress,"role home; tasks; people/finance objects; planning",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
 UX-SERVICENOW,ServiceNow,"Now Platform",enterprise,1,in-progress,"workspaces; lists/forms; queues; case/request; admin",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
-UX-ORACLE-CE,Oracle,"Construction and Engineering — Primavera / Unifier / Aconex / Textura",construction,2,in-progress,"project context; tasks; information; programme; cost; payment",
-UX-PROCORE,Procore,"Construction Platform",construction,2,in-progress,"company/project context; toolbox; project tools; favourites",
-UX-AUTODESK-ACC,Autodesk,"Construction Cloud / Forma",construction,2,registered,"project selector; Docs; Build; Cost; Takeoff; models",
-UX-TRIMBLE,Trimble,"Construction One / Viewpoint / ProjectSight",construction,2,registered,"construction ERP; project; field; finance",
-UX-SAGE,Sage,"Intacct Construction / Construction Management",construction,2,in-progress,"construction project; WBS; commitments; billing; WIP",
-UX-CAUSEWAY,Causeway,"Construction platform",construction,2,registered,"estimating; commercial; supply chain; workforce",
-UX-THINKPROJECT,Thinkproject,"Built Asset Lifecycle Platform / CEMAR",construction,2,registered,"contracts; project information; field; asset work",
-UX-ASITE,Asite,"CDE / construction platform",construction,2,registered,"CDE; workflow; BIM; procurement",
-UX-ECOSYS,Hexagon,"EcoSys",construction,2,registered,"portfolio; project controls; cost; contracts",
+UX-ORACLE-CE,Oracle,"Construction and Engineering — Primavera / Unifier / Aconex / Textura",construction,2,in-progress,"project context; tasks; information; programme; cost; payment",competitive-experience-wave-2-construction-delivery.md
+UX-PROCORE,Procore,"Construction Platform",construction,2,in-progress,"company/project context; toolbox; project tools; favourites",competitive-experience-wave-2-construction-delivery.md
+UX-AUTODESK-ACC,Autodesk,"Construction Cloud / Forma",construction,2,in-progress,"project selector; Docs; Build; Cost; Takeoff; models",competitive-experience-wave-2-construction-delivery.md
+UX-TRIMBLE,Trimble,"Construction One / Viewpoint / ProjectSight",construction,2,in-progress,"construction ERP; project; field; finance",competitive-experience-wave-2-construction-delivery.md
+UX-SAGE,Sage,"Intacct Construction / Construction Management",construction,2,in-progress,"construction project; WBS; commitments; billing; WIP",competitive-experience-wave-2-construction-delivery.md
+UX-CAUSEWAY,Causeway,"Construction platform",construction,2,in-progress,"estimating; commercial; supply chain; workforce",competitive-experience-wave-2-construction-delivery.md
+UX-THINKPROJECT,Thinkproject,"Built Asset Lifecycle Platform / CEMAR",construction,2,in-progress,"contracts; project information; field; asset work",competitive-experience-wave-2-construction-delivery.md
+UX-ASITE,Asite,"CDE / construction platform",construction,2,in-progress,"CDE; workflow; BIM; procurement",competitive-experience-wave-2-construction-delivery.md
+UX-ECOSYS,Hexagon,"EcoSys",construction,2,in-progress,"portfolio; project controls; cost; contracts",competitive-experience-wave-2-construction-delivery.md
 UX-WINDCHILL,PTC,"Windchill 13.1.2",plm,3,in-progress,"contexts; objects; product data; structures; change; workflow",
 UX-TEAMCENTER,Siemens,"Teamcenter",plm,3,registered,"active workspace; product structure; change; configuration",
 UX-3DEXPERIENCE,Dassault Systèmes,"3DEXPERIENCE / ENOVIA",plm,3,in-progress,"roles/apps; dashboards; compass; product collaboration",

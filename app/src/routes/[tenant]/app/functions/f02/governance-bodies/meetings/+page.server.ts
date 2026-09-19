@@ -26,7 +26,8 @@ function text(data: FormData, name: string) {
 
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 
@@ -38,7 +39,10 @@ function target(tenant: string, bodyId: string, meetingId?: string) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The Governance Meeting command could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The Governance Meeting command could not be completed.'
   });
 }
 
@@ -48,10 +52,18 @@ function agenda(data: FormData) {
     .map((row) => row.trim())
     .filter(Boolean)
     .map((row, index) => {
-      const [subject, requiredOutcome, purpose, subjectType = '', subjectId = '', subjectVersion = ''] =
-        row.split('|').map((item) => item.trim());
+      const [
+        subject,
+        requiredOutcome,
+        purpose,
+        subjectType = '',
+        subjectId = '',
+        subjectVersion = ''
+      ] = row.split('|').map((item) => item.trim());
       if (!subject || !requiredOutcome || !purpose) {
-        throw new Error('Agenda row ' + (index + 1) + ' requires subject, required outcome and purpose.');
+        throw new Error(
+          'Agenda row ' + (index + 1) + ' requires subject, required outcome and purpose.'
+        );
       }
       return {
         subject,

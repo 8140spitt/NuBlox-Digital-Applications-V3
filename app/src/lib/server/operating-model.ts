@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import { dbTransaction, executeMutation, queryOne, queryRows, type DbExecutor } from '$lib/server/db';
+import {
+  dbTransaction,
+  executeMutation,
+  queryOne,
+  queryRows,
+  type DbExecutor
+} from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 import { assertWorkDecisionReference } from '$lib/server/work-decision';
@@ -144,10 +150,18 @@ async function assertPublishedFrameworkVersion(
     [frameworkId, frameworkVersionNo, context.tenantId],
     executor
   );
-  if (!row) throw new Error('Operating Model must reference an exact published Strategy Framework version.');
+  if (!row)
+    throw new Error(
+      'Operating Model must reference an exact published Strategy Framework version.'
+    );
 }
 
-async function getOperatingModel(context: CommandContext, id: string, executor?: DbExecutor, forUpdate = false) {
+async function getOperatingModel(
+  context: CommandContext,
+  id: string,
+  executor?: DbExecutor,
+  forUpdate = false
+) {
   const row = await queryOne<RowDataPacket & OperatingModel>(
     currentSelect + ' WHERE m.id = ? AND m.tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
@@ -168,12 +182,27 @@ async function evidence(
 ) {
   await recordPlatformAudit(
     context,
-    { aggregateId: 'AGG-02-STRATEGY', objectType: 'strategy_operating_model', objectId: model.id, action: eventType, fromState: fromState ?? undefined, toState },
+    {
+      aggregateId: 'AGG-02-STRATEGY',
+      objectType: 'strategy_operating_model',
+      objectId: model.id,
+      action: eventType,
+      fromState: fromState ?? undefined,
+      toState
+    },
     executor
   );
   await emitBusinessEvent(
     context,
-    { aggregateId: 'AGG-02-STRATEGY', aggregateType: 'OperatingModel', aggregateObjectId: model.id, aggregateVersion: model.aggregateVersion, eventType, topic: 'nublox.strategy.operating-model', payload },
+    {
+      aggregateId: 'AGG-02-STRATEGY',
+      aggregateType: 'OperatingModel',
+      aggregateObjectId: model.id,
+      aggregateVersion: model.aggregateVersion,
+      eventType,
+      topic: 'nublox.strategy.operating-model',
+      payload
+    },
     executor
   );
 }
@@ -182,29 +211,71 @@ async function insertVersion(
   context: CommandContext,
   modelId: string,
   versionNo: number,
-  input: Pick<OperatingModelInput,'currentStateSummary'|'targetStateSummary'|'designPrinciples'|'centralisationModel'|'sharedServiceRequirements'|'organisationModelReference'|'changeInitiativesSummary'|'capabilities'|'accountabilities'>,
+  input: Pick<
+    OperatingModelInput,
+    | 'currentStateSummary'
+    | 'targetStateSummary'
+    | 'designPrinciples'
+    | 'centralisationModel'
+    | 'sharedServiceRequirements'
+    | 'organisationModelReference'
+    | 'changeInitiativesSummary'
+    | 'capabilities'
+    | 'accountabilities'
+  >,
   executor: DbExecutor
 ) {
-  if (!input.capabilities.length) throw new Error('Operating Model requires at least one target capability.');
-  if (!input.accountabilities.length) throw new Error('Operating Model requires at least one accountability.');
+  if (!input.capabilities.length)
+    throw new Error('Operating Model requires at least one target capability.');
+  if (!input.accountabilities.length)
+    throw new Error('Operating Model requires at least one accountability.');
 
   const versionId = randomUUID();
   await executeMutation(
     "INSERT INTO strategy_operating_model_versions (id, tenant_id, operating_model_id, version_no, lifecycle_status, current_state_summary, target_state_summary, design_principles, centralisation_model, shared_service_requirements, organisation_model_reference, change_initiatives_summary, approval_decision_id, created_by_party_id, created_at) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)",
-    [versionId, context.tenantId, modelId, versionNo, required(input.currentStateSummary,'Current-state summary'), required(input.targetStateSummary,'Target-state summary'), required(input.designPrinciples,'Operating-model design principles'), required(input.centralisationModel,'Centralisation/decentralisation model'), required(input.sharedServiceRequirements,'Shared-service requirements'), input.organisationModelReference?.trim() || null, required(input.changeInitiativesSummary,'Change initiatives summary'), context.actorPartyId, now()],
+    [
+      versionId,
+      context.tenantId,
+      modelId,
+      versionNo,
+      required(input.currentStateSummary, 'Current-state summary'),
+      required(input.targetStateSummary, 'Target-state summary'),
+      required(input.designPrinciples, 'Operating-model design principles'),
+      required(input.centralisationModel, 'Centralisation/decentralisation model'),
+      required(input.sharedServiceRequirements, 'Shared-service requirements'),
+      input.organisationModelReference?.trim() || null,
+      required(input.changeInitiativesSummary, 'Change initiatives summary'),
+      context.actorPartyId,
+      now()
+    ],
     executor
   );
 
   const capabilityKeys = new Set<string>();
   for (const capability of input.capabilities) {
     const capabilityKey = code(capability.capabilityKey, 'Capability key');
-    if (capabilityKeys.has(capabilityKey)) throw new Error('Operating Model capability keys must be unique.');
+    if (capabilityKeys.has(capabilityKey))
+      throw new Error('Operating Model capability keys must be unique.');
     capabilityKeys.add(capabilityKey);
-    if (!['CRITICAL','IMPORTANT','ENABLING'].includes(capability.criticality)) throw new Error('Unsupported capability criticality.');
-    if (!['CENTRALISED','DECENTRALISED','SHARED_SERVICE','HYBRID','OUTSOURCED'].includes(capability.deliveryModel)) throw new Error('Unsupported capability delivery model.');
+    if (!['CRITICAL', 'IMPORTANT', 'ENABLING'].includes(capability.criticality))
+      throw new Error('Unsupported capability criticality.');
+    if (
+      !['CENTRALISED', 'DECENTRALISED', 'SHARED_SERVICE', 'HYBRID', 'OUTSOURCED'].includes(
+        capability.deliveryModel
+      )
+    )
+      throw new Error('Unsupported capability delivery model.');
     await executeMutation(
       'INSERT INTO strategy_operating_model_capabilities (id, operating_model_version_id, capability_key, name, description, criticality, delivery_model) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [randomUUID(), versionId, capabilityKey, required(capability.name,'Capability name'), required(capability.description,'Capability description'), capability.criticality, capability.deliveryModel],
+      [
+        randomUUID(),
+        versionId,
+        capabilityKey,
+        required(capability.name, 'Capability name'),
+        required(capability.description, 'Capability description'),
+        capability.criticality,
+        capability.deliveryModel
+      ],
       executor
     );
   }
@@ -212,17 +283,27 @@ async function insertVersion(
   const accountabilityKeys = new Set<string>();
   for (const accountability of input.accountabilities) {
     const accountabilityKey = code(accountability.accountabilityKey, 'Accountability key');
-    if (accountabilityKeys.has(accountabilityKey)) throw new Error('Operating Model accountability keys must be unique.');
+    if (accountabilityKeys.has(accountabilityKey))
+      throw new Error('Operating Model accountability keys must be unique.');
     accountabilityKeys.add(accountabilityKey);
     const roleKey = accountability.accountableRoleKey?.trim()
       ? code(accountability.accountableRoleKey, 'Accountable role key')
       : null;
     const partyId = accountability.accountablePartyId?.trim() || null;
-    if (!roleKey && !partyId) throw new Error('Accountability requires a target role key or accountable Party.');
+    if (!roleKey && !partyId)
+      throw new Error('Accountability requires a target role key or accountable Party.');
     if (partyId) await assertParty(context, partyId, executor);
     await executeMutation(
       'INSERT INTO strategy_operating_model_accountabilities (id, operating_model_version_id, accountability_key, responsibility, accountable_role_key, accountable_party_id, decision_rights) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [randomUUID(), versionId, accountabilityKey, required(accountability.responsibility,'Accountability responsibility'), roleKey, partyId, required(accountability.decisionRights,'Accountability decision rights')],
+      [
+        randomUUID(),
+        versionId,
+        accountabilityKey,
+        required(accountability.responsibility, 'Accountability responsibility'),
+        roleKey,
+        partyId,
+        required(accountability.decisionRights, 'Accountability decision rights')
+      ],
       executor
     );
   }
@@ -254,7 +335,10 @@ export async function listOperatingModelCapabilities(context: CommandContext, ve
   );
 }
 
-export async function listOperatingModelAccountabilities(context: CommandContext, versionId: string) {
+export async function listOperatingModelAccountabilities(
+  context: CommandContext,
+  versionId: string
+) {
   assertPermission(context, 'strategy.operating-model.read');
   return queryRows<RowDataPacket & OperatingModelAccountabilityInput>(
     'SELECT accountability_key AS accountabilityKey, responsibility, accountable_role_key AS accountableRoleKey, accountable_party_id AS accountablePartyId, decision_rights AS decisionRights FROM strategy_operating_model_accountabilities a JOIN strategy_operating_model_versions v ON v.id = a.operating_model_version_id WHERE a.operating_model_version_id = ? AND v.tenant_id = ? ORDER BY accountability_key',
@@ -264,24 +348,54 @@ export async function listOperatingModelAccountabilities(context: CommandContext
 
 export async function createOperatingModel(context: CommandContext, input: OperatingModelInput) {
   assertPermission(context, 'strategy.operating-model.manage');
-  const modelRef = code(input.modelRef,'Operating Model reference');
+  const modelRef = code(input.modelRef, 'Operating Model reference');
   const ownerPartyId = input.ownerPartyId?.trim() || context.actorPartyId;
-  const scopeType = code(input.scopeType,'Operating Model scope type',64);
-  const scopeId = required(input.scopeId,'Operating Model scope ID');
+  const scopeType = code(input.scopeType, 'Operating Model scope type', 64);
+  const scopeId = required(input.scopeId, 'Operating Model scope ID');
 
   return dbTransaction(async (connection) => {
-    await assertPublishedFrameworkVersion(context,input.frameworkId,input.frameworkVersionNo,connection);
-    await assertParty(context,ownerPartyId,connection);
-    const id=randomUUID();
-    const timestamp=now();
-    await executeMutation(
-      "INSERT INTO strategy_operating_models (id, tenant_id, model_ref, name, framework_id, framework_version_no, scope_type, scope_id, owner_party_id, status, aggregate_version, current_version_no, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'DRAFT', 1, 1, ?, ?)",
-      [id,context.tenantId,modelRef,required(input.name,'Operating Model name'),input.frameworkId,input.frameworkVersionNo,scopeType,scopeId,ownerPartyId,timestamp,timestamp],
+    await assertPublishedFrameworkVersion(
+      context,
+      input.frameworkId,
+      input.frameworkVersionNo,
       connection
     );
-    const versionId=await insertVersion(context,id,1,input,connection);
-    const created=await getOperatingModel(context,id,connection);
-    await evidence(context,created,'OPERATING_MODEL_CREATED',null,'DRAFT',{modelRef,versionId,frameworkId:input.frameworkId,frameworkVersionNo:input.frameworkVersionNo},connection);
+    await assertParty(context, ownerPartyId, connection);
+    const id = randomUUID();
+    const timestamp = now();
+    await executeMutation(
+      "INSERT INTO strategy_operating_models (id, tenant_id, model_ref, name, framework_id, framework_version_no, scope_type, scope_id, owner_party_id, status, aggregate_version, current_version_no, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'DRAFT', 1, 1, ?, ?)",
+      [
+        id,
+        context.tenantId,
+        modelRef,
+        required(input.name, 'Operating Model name'),
+        input.frameworkId,
+        input.frameworkVersionNo,
+        scopeType,
+        scopeId,
+        ownerPartyId,
+        timestamp,
+        timestamp
+      ],
+      connection
+    );
+    const versionId = await insertVersion(context, id, 1, input, connection);
+    const created = await getOperatingModel(context, id, connection);
+    await evidence(
+      context,
+      created,
+      'OPERATING_MODEL_CREATED',
+      null,
+      'DRAFT',
+      {
+        modelRef,
+        versionId,
+        frameworkId: input.frameworkId,
+        frameworkVersionNo: input.frameworkVersionNo
+      },
+      connection
+    );
     return id;
   });
 }
@@ -290,103 +404,208 @@ export async function reviseOperatingModel(
   context: CommandContext,
   id: string,
   expectedAggregateVersion: number,
-  input: Pick<OperatingModelInput,'currentStateSummary'|'targetStateSummary'|'designPrinciples'|'centralisationModel'|'sharedServiceRequirements'|'organisationModelReference'|'changeInitiativesSummary'|'capabilities'|'accountabilities'>
+  input: Pick<
+    OperatingModelInput,
+    | 'currentStateSummary'
+    | 'targetStateSummary'
+    | 'designPrinciples'
+    | 'centralisationModel'
+    | 'sharedServiceRequirements'
+    | 'organisationModelReference'
+    | 'changeInitiativesSummary'
+    | 'capabilities'
+    | 'accountabilities'
+  >
 ) {
-  assertPermission(context,'strategy.operating-model.manage');
-  return dbTransaction(async (connection)=>{
-    const current=await getOperatingModel(context,id,connection,true);
-    if(current.aggregateVersion!==expectedAggregateVersion) throw new Error('This Operating Model changed after you opened it.');
-    if(!['DRAFT','ACTIVE'].includes(current.status)) throw new Error('Only draft or active Operating Models can be revised.');
-    const nextVersionNo=current.currentVersionNo+1;
-    const versionId=await insertVersion(context,current.id,nextVersionNo,input,connection);
-    const result=await executeMutation(
+  assertPermission(context, 'strategy.operating-model.manage');
+  return dbTransaction(async (connection) => {
+    const current = await getOperatingModel(context, id, connection, true);
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Operating Model changed after you opened it.');
+    if (!['DRAFT', 'ACTIVE'].includes(current.status))
+      throw new Error('Only draft or active Operating Models can be revised.');
+    const nextVersionNo = current.currentVersionNo + 1;
+    const versionId = await insertVersion(context, current.id, nextVersionNo, input, connection);
+    const result = await executeMutation(
       "UPDATE strategy_operating_models SET status='DRAFT', aggregate_version=aggregate_version+1, current_version_no=?, updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
-      [nextVersionNo,now(),current.id,context.tenantId,expectedAggregateVersion],
+      [nextVersionNo, now(), current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if(result.affectedRows!==1) throw new Error('Concurrent Operating Model revision detected.');
-    const updated=await getOperatingModel(context,current.id,connection);
-    await evidence(context,updated,'OPERATING_MODEL_REVISED',current.status,'DRAFT',{versionId,versionNo:nextVersionNo},connection);
+    if (result.affectedRows !== 1) throw new Error('Concurrent Operating Model revision detected.');
+    const updated = await getOperatingModel(context, current.id, connection);
+    await evidence(
+      context,
+      updated,
+      'OPERATING_MODEL_REVISED',
+      current.status,
+      'DRAFT',
+      { versionId, versionNo: nextVersionNo },
+      connection
+    );
   });
 }
 
-export async function submitOperatingModel(context: CommandContext,id:string,expectedAggregateVersion:number){
-  assertPermission(context,'strategy.operating-model.manage');
-  return dbTransaction(async(connection)=>{
-    const current=await getOperatingModel(context,id,connection,true);
-    if(current.aggregateVersion!==expectedAggregateVersion) throw new Error('This Operating Model changed after you opened it.');
-    if(current.status!=='DRAFT') throw new Error('Only a draft Operating Model can be submitted.');
-    const result=await executeMutation(
+export async function submitOperatingModel(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number
+) {
+  assertPermission(context, 'strategy.operating-model.manage');
+  return dbTransaction(async (connection) => {
+    const current = await getOperatingModel(context, id, connection, true);
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Operating Model changed after you opened it.');
+    if (current.status !== 'DRAFT')
+      throw new Error('Only a draft Operating Model can be submitted.');
+    const result = await executeMutation(
       "UPDATE strategy_operating_models SET status='IN_REVIEW', aggregate_version=aggregate_version+1, updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
-      [now(),current.id,context.tenantId,expectedAggregateVersion],
+      [now(), current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if(result.affectedRows!==1) throw new Error('Concurrent Operating Model submission detected.');
-    await executeMutation("UPDATE strategy_operating_model_versions SET lifecycle_status='REVIEW' WHERE operating_model_id=? AND version_no=?",[current.id,current.currentVersionNo],connection);
-    const updated=await getOperatingModel(context,current.id,connection);
-    await evidence(context,updated,'OPERATING_MODEL_SUBMITTED','DRAFT','IN_REVIEW',{versionNo:current.currentVersionNo},connection);
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Operating Model submission detected.');
+    await executeMutation(
+      "UPDATE strategy_operating_model_versions SET lifecycle_status='REVIEW' WHERE operating_model_id=? AND version_no=?",
+      [current.id, current.currentVersionNo],
+      connection
+    );
+    const updated = await getOperatingModel(context, current.id, connection);
+    await evidence(
+      context,
+      updated,
+      'OPERATING_MODEL_SUBMITTED',
+      'DRAFT',
+      'IN_REVIEW',
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }
 
-export async function approveOperatingModel(context:CommandContext,id:string,expectedAggregateVersion:number,decisionId:string){
-  assertPermission(context,'strategy.operating-model.approve');
-  return dbTransaction(async(connection)=>{
-    const current=await getOperatingModel(context,id,connection,true);
-    if(current.aggregateVersion!==expectedAggregateVersion) throw new Error('This Operating Model changed after you opened it.');
-    if(current.status!=='IN_REVIEW') throw new Error('Only an in-review Operating Model can be approved.');
-    const decision=await assertWorkDecisionReference(context,{
-      decisionId,
-      decisionType:'OPERATING_MODEL_APPROVAL',
-      subjectType:'OPERATING_MODEL',
-      subjectId:current.id,
-      subjectVersion:String(current.currentVersionNo),
-      outcome:'APPROVED'
-    },connection);
-    const result=await executeMutation(
+export async function approveOperatingModel(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number,
+  decisionId: string
+) {
+  assertPermission(context, 'strategy.operating-model.approve');
+  return dbTransaction(async (connection) => {
+    const current = await getOperatingModel(context, id, connection, true);
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Operating Model changed after you opened it.');
+    if (current.status !== 'IN_REVIEW')
+      throw new Error('Only an in-review Operating Model can be approved.');
+    const decision = await assertWorkDecisionReference(
+      context,
+      {
+        decisionId,
+        decisionType: 'OPERATING_MODEL_APPROVAL',
+        subjectType: 'OPERATING_MODEL',
+        subjectId: current.id,
+        subjectVersion: String(current.currentVersionNo),
+        outcome: 'APPROVED'
+      },
+      connection
+    );
+    const result = await executeMutation(
       "UPDATE strategy_operating_models SET status='APPROVED', aggregate_version=aggregate_version+1, updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
-      [now(),current.id,context.tenantId,expectedAggregateVersion],
+      [now(), current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if(result.affectedRows!==1) throw new Error('Concurrent Operating Model approval detected.');
-    await executeMutation("UPDATE strategy_operating_model_versions SET lifecycle_status='APPROVED', approval_decision_id=? WHERE operating_model_id=? AND version_no=?",[decision.id,current.id,current.currentVersionNo],connection);
-    const updated=await getOperatingModel(context,current.id,connection);
-    await evidence(context,updated,'OPERATING_MODEL_APPROVED','IN_REVIEW','APPROVED',{versionNo:current.currentVersionNo,decisionId:decision.id},connection);
+    if (result.affectedRows !== 1) throw new Error('Concurrent Operating Model approval detected.');
+    await executeMutation(
+      "UPDATE strategy_operating_model_versions SET lifecycle_status='APPROVED', approval_decision_id=? WHERE operating_model_id=? AND version_no=?",
+      [decision.id, current.id, current.currentVersionNo],
+      connection
+    );
+    const updated = await getOperatingModel(context, current.id, connection);
+    await evidence(
+      context,
+      updated,
+      'OPERATING_MODEL_APPROVED',
+      'IN_REVIEW',
+      'APPROVED',
+      { versionNo: current.currentVersionNo, decisionId: decision.id },
+      connection
+    );
   });
 }
 
-export async function activateOperatingModel(context:CommandContext,id:string,expectedAggregateVersion:number){
-  assertPermission(context,'strategy.operating-model.approve');
-  return dbTransaction(async(connection)=>{
-    const current=await getOperatingModel(context,id,connection,true);
-    if(current.aggregateVersion!==expectedAggregateVersion) throw new Error('This Operating Model changed after you opened it.');
-    if(current.status!=='APPROVED') throw new Error('Only an approved Operating Model can become active.');
-    await executeMutation("UPDATE strategy_operating_model_versions SET lifecycle_status='SUPERSEDED' WHERE operating_model_id=? AND lifecycle_status='ACTIVE' AND version_no<>?",[current.id,current.currentVersionNo],connection);
-    await executeMutation("UPDATE strategy_operating_model_versions SET lifecycle_status='ACTIVE' WHERE operating_model_id=? AND version_no=?",[current.id,current.currentVersionNo],connection);
-    const result=await executeMutation(
+export async function activateOperatingModel(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number
+) {
+  assertPermission(context, 'strategy.operating-model.approve');
+  return dbTransaction(async (connection) => {
+    const current = await getOperatingModel(context, id, connection, true);
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Operating Model changed after you opened it.');
+    if (current.status !== 'APPROVED')
+      throw new Error('Only an approved Operating Model can become active.');
+    await executeMutation(
+      "UPDATE strategy_operating_model_versions SET lifecycle_status='SUPERSEDED' WHERE operating_model_id=? AND lifecycle_status='ACTIVE' AND version_no<>?",
+      [current.id, current.currentVersionNo],
+      connection
+    );
+    await executeMutation(
+      "UPDATE strategy_operating_model_versions SET lifecycle_status='ACTIVE' WHERE operating_model_id=? AND version_no=?",
+      [current.id, current.currentVersionNo],
+      connection
+    );
+    const result = await executeMutation(
       "UPDATE strategy_operating_models SET status='ACTIVE', aggregate_version=aggregate_version+1, updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
-      [now(),current.id,context.tenantId,expectedAggregateVersion],
+      [now(), current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if(result.affectedRows!==1) throw new Error('Concurrent Operating Model activation detected.');
-    const updated=await getOperatingModel(context,current.id,connection);
-    await evidence(context,updated,'OPERATING_MODEL_ACTIVATED','APPROVED','ACTIVE',{versionNo:current.currentVersionNo},connection);
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Operating Model activation detected.');
+    const updated = await getOperatingModel(context, current.id, connection);
+    await evidence(
+      context,
+      updated,
+      'OPERATING_MODEL_ACTIVATED',
+      'APPROVED',
+      'ACTIVE',
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }
 
-export async function supersedeOperatingModel(context:CommandContext,id:string,expectedAggregateVersion:number){
-  assertPermission(context,'strategy.operating-model.approve');
-  return dbTransaction(async(connection)=>{
-    const current=await getOperatingModel(context,id,connection,true);
-    if(current.aggregateVersion!==expectedAggregateVersion) throw new Error('This Operating Model changed after you opened it.');
-    if(current.status!=='ACTIVE') throw new Error('Only an active Operating Model can be superseded.');
-    const result=await executeMutation(
+export async function supersedeOperatingModel(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number
+) {
+  assertPermission(context, 'strategy.operating-model.approve');
+  return dbTransaction(async (connection) => {
+    const current = await getOperatingModel(context, id, connection, true);
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Operating Model changed after you opened it.');
+    if (current.status !== 'ACTIVE')
+      throw new Error('Only an active Operating Model can be superseded.');
+    const result = await executeMutation(
       "UPDATE strategy_operating_models SET status='SUPERSEDED', aggregate_version=aggregate_version+1, updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
-      [now(),current.id,context.tenantId,expectedAggregateVersion],
+      [now(), current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if(result.affectedRows!==1) throw new Error('Concurrent Operating Model supersession detected.');
-    await executeMutation("UPDATE strategy_operating_model_versions SET lifecycle_status='SUPERSEDED' WHERE operating_model_id=? AND version_no=?",[current.id,current.currentVersionNo],connection);
-    const updated=await getOperatingModel(context,current.id,connection);
-    await evidence(context,updated,'OPERATING_MODEL_SUPERSEDED','ACTIVE','SUPERSEDED',{versionNo:current.currentVersionNo},connection);
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Operating Model supersession detected.');
+    await executeMutation(
+      "UPDATE strategy_operating_model_versions SET lifecycle_status='SUPERSEDED' WHERE operating_model_id=? AND version_no=?",
+      [current.id, current.currentVersionNo],
+      connection
+    );
+    const updated = await getOperatingModel(context, current.id, connection);
+    await evidence(
+      context,
+      updated,
+      'OPERATING_MODEL_SUPERSEDED',
+      'ACTIVE',
+      'SUPERSEDED',
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }

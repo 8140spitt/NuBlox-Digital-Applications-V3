@@ -36,7 +36,10 @@ function expectedVersion(data: FormData) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The authority-policy command could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The authority-policy command could not be completed.'
   });
 }
 
@@ -56,11 +59,11 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
   const selectedRuleId = url.searchParams.get('rule');
   const selectedApprovalRule =
     kind === 'approval'
-      ? approvalRules.find((rule) => rule.id === selectedRuleId) ?? approvalRules[0] ?? null
+      ? (approvalRules.find((rule) => rule.id === selectedRuleId) ?? approvalRules[0] ?? null)
       : null;
   const selectedDelegatedRule =
     kind === 'delegated'
-      ? delegatedRules.find((rule) => rule.id === selectedRuleId) ?? delegatedRules[0] ?? null
+      ? (delegatedRules.find((rule) => rule.id === selectedRuleId) ?? delegatedRules[0] ?? null)
       : null;
   const versions = selectedApprovalRule
     ? await listApprovalAuthorityRuleVersions(context, selectedApprovalRule.id)

@@ -23,8 +23,14 @@ describe('F02 Governance Body runtime', () => {
     const tenant = 'governance-body-' + randomUUID().slice(0, 8);
     await seedDevelopmentTenant(tenant);
     const context = await contextService.resolveDevelopmentCommandContext(tenant);
-    const secretary = await personService.createPerson(context, { givenName: 'Board', familyName: 'Secretary' });
-    const member = await personService.createPerson(context, { givenName: 'Board', familyName: 'Member' });
+    const secretary = await personService.createPerson(context, {
+      givenName: 'Board',
+      familyName: 'Secretary'
+    });
+    const member = await personService.createPerson(context, {
+      givenName: 'Board',
+      familyName: 'Member'
+    });
 
     const bodyId = await bodyService.createGovernanceBody(context, {
       bodyRef: 'BOARD-MAIN',
@@ -49,13 +55,21 @@ describe('F02 Governance Body runtime', () => {
     expect(body.status).toBe('PROPOSED');
     expect(await bodyService.listGovernanceBodyMemberships(context, bodyId)).toHaveLength(3);
 
-    await bodyService.transitionGovernanceBody(context, bodyId, body.aggregateVersion, 'CONSTITUTE');
+    await bodyService.transitionGovernanceBody(
+      context,
+      bodyId,
+      body.aggregateVersion,
+      'CONSTITUTE'
+    );
     body = (await bodyService.listGovernanceBodies(context)).find((row) => row.id === bodyId)!;
     await bodyService.transitionGovernanceBody(context, bodyId, body.aggregateVersion, 'ACTIVATE');
     body = (await bodyService.listGovernanceBodies(context)).find((row) => row.id === bodyId)!;
     expect(body.status).toBe('ACTIVE');
 
-    const extra = await personService.createPerson(context, { givenName: 'Board', familyName: 'Observer' });
+    const extra = await personService.createPerson(context, {
+      givenName: 'Board',
+      familyName: 'Observer'
+    });
     await bodyService.addGovernanceBodyMember(context, bodyId, body.aggregateVersion, {
       partyId: extra,
       roleKey: 'OBSERVER'

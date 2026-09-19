@@ -51,148 +51,157 @@
   {/if}
 
   {#if data.view === 'work'}
-  <section class="metrics" aria-label="My Work summary">
-    <div class="metric section-card"><strong>{summary.total}</strong><span>open work</span></div>
-    <div class="metric section-card"><strong>{summary.assigned}</strong><span>assigned</span></div>
-    <div class="metric section-card">
-      <strong>{summary.inProgress}</strong><span>in progress</span>
-    </div>
-    <div class="metric section-card"><strong>{summary.urgent}</strong><span>urgent</span></div>
-    <div class="metric section-card"><strong>{summary.overdue}</strong><span>overdue</span></div>
-    <div class="metric section-card">
-      <strong>{summary.escalations}</strong><span>open escalations</span>
-    </div>
-  </section>
-
-  <section class="work-register section-card">
-    <div class="section-heading">
-      <div>
-        <span class="eyebrow">Action queue</span>
-        <h2>{summary.total} current assignments</h2>
+    <section class="metrics" aria-label="My Work summary">
+      <div class="metric section-card"><strong>{summary.total}</strong><span>open work</span></div>
+      <div class="metric section-card">
+        <strong>{summary.assigned}</strong><span>assigned</span>
       </div>
-      <p>
-        Ordered by priority and due date. Completed work leaves this queue but remains fully
-        evidenced.
-      </p>
-    </div>
+      <div class="metric section-card">
+        <strong>{summary.inProgress}</strong><span>in progress</span>
+      </div>
+      <div class="metric section-card"><strong>{summary.urgent}</strong><span>urgent</span></div>
+      <div class="metric section-card"><strong>{summary.overdue}</strong><span>overdue</span></div>
+      <div class="metric section-card">
+        <strong>{summary.escalations}</strong><span>open escalations</span>
+      </div>
+    </section>
 
-    <div class="work-list">
-      {#each data.work as item}
-        <article
-          class:urgent={item.priority === 'URGENT'}
-          class:overdue={item.dueAt &&
-            new Date(item.dueAt).getTime() < new Date(data.currentTime).getTime()}
-        >
-          <div class="work-main">
-            <div class="state-column">
-              <span class={'priority priority-' + item.priority.toLowerCase()}>{item.priority}</span
-              >
-              <span class={'status status-' + item.status.toLowerCase().replaceAll('_', '-')}
-                >{item.status.replaceAll('_', ' ')}</span
-              >
-            </div>
-            <div class="work-copy">
-              <span class="work-type">{item.workType}</span>
-              <h3>{item.title}</h3>
-              {#if item.instructions}<p>{item.instructions}</p>{/if}
-              <div class="subject">
-                <span><strong>Subject</strong>{item.subjectType} · {item.subjectId}</span>
-                {#if item.subjectVersion}<span><strong>Version</strong>{item.subjectVersion}</span
-                  >{/if}
-                <span
-                  ><strong>Workflow</strong>{item.workflowDefinitionKey} v{item.workflowDefinitionVersion}</span
+    <section class="work-register section-card">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Action queue</span>
+          <h2>{summary.total} current assignments</h2>
+        </div>
+        <p>
+          Ordered by priority and due date. Completed work leaves this queue but remains fully
+          evidenced.
+        </p>
+      </div>
+
+      <div class="work-list">
+        {#each data.work as item}
+          <article
+            class:urgent={item.priority === 'URGENT'}
+            class:overdue={item.dueAt &&
+              new Date(item.dueAt).getTime() < new Date(data.currentTime).getTime()}
+          >
+            <div class="work-main">
+              <div class="state-column">
+                <span class={'priority priority-' + item.priority.toLowerCase()}
+                  >{item.priority}</span
+                >
+                <span class={'status status-' + item.status.toLowerCase().replaceAll('_', '-')}
+                  >{item.status.replaceAll('_', ' ')}</span
                 >
               </div>
-            </div>
-            <div class="due">
-              <small>Due</small>
-              <strong>{formatDate(item.dueAt)}</strong>
-              <span>Work v{item.version}</span>
-            </div>
-          </div>
-
-          {#if data.escalations.some((escalation) => escalation.workItemId === item.id && escalation.status === 'OPEN')}
-            <div class="escalations">
-              <strong>Open escalation</strong>
-              {#each data.escalations.filter((escalation) => escalation.workItemId === item.id && escalation.status === 'OPEN') as escalation}
-                <div class="escalation-row">
-                  <div>
-                    <span>{escalation.triggerCode}</span>
-                    <p>{escalation.reason}</p>
-                    {#if escalation.ruleKey}<small>Rule · {escalation.ruleKey}</small>{/if}
-                  </div>
-                  {#if data.capabilities.canManage}
-                    <form method="POST" action="?/resolveEscalation">
-                      <input type="hidden" name="escalationId" value={escalation.id} />
-                      <input name="resolutionNote" required placeholder="Resolution note" />
-                      <button class="quiet" type="submit">Resolve</button>
-                    </form>
-                  {/if}
+              <div class="work-copy">
+                <span class="work-type">{item.workType}</span>
+                <h3>{item.title}</h3>
+                {#if item.instructions}<p>{item.instructions}</p>{/if}
+                <div class="subject">
+                  <span><strong>Subject</strong>{item.subjectType} · {item.subjectId}</span>
+                  {#if item.subjectVersion}<span><strong>Version</strong>{item.subjectVersion}</span
+                    >{/if}
+                  <span
+                    ><strong>Workflow</strong>{item.workflowDefinitionKey} v{item.workflowDefinitionVersion}</span
+                  >
                 </div>
-              {/each}
+              </div>
+              <div class="due">
+                <small>Due</small>
+                <strong>{formatDate(item.dueAt)}</strong>
+                <span>Work v{item.version}</span>
+              </div>
             </div>
-          {/if}
 
-          <div class="actions">
-            {#if item.status === 'ASSIGNED' || item.status === 'BLOCKED'}
-              <form method="POST" action="?/start">
-                <input type="hidden" name="workItemId" value={item.id} />
-                <input type="hidden" name="version" value={item.version} />
-                <button type="submit">Start work</button>
-              </form>
+            {#if data.escalations.some((escalation) => escalation.workItemId === item.id && escalation.status === 'OPEN')}
+              <div class="escalations">
+                <strong>Open escalation</strong>
+                {#each data.escalations.filter((escalation) => escalation.workItemId === item.id && escalation.status === 'OPEN') as escalation}
+                  <div class="escalation-row">
+                    <div>
+                      <span>{escalation.triggerCode}</span>
+                      <p>{escalation.reason}</p>
+                      {#if escalation.ruleKey}<small>Rule · {escalation.ruleKey}</small>{/if}
+                    </div>
+                    {#if data.capabilities.canManage}
+                      <form method="POST" action="?/resolveEscalation">
+                        <input type="hidden" name="escalationId" value={escalation.id} />
+                        <input name="resolutionNote" required placeholder="Resolution note" />
+                        <button class="quiet" type="submit">Resolve</button>
+                      </form>
+                    {/if}
+                  </div>
+                {/each}
+              </div>
             {/if}
 
-            <details class="acknowledge">
-              <summary>Acknowledge</summary>
-              <form method="POST" action="?/acknowledge">
-                <input type="hidden" name="workItemId" value={item.id} />
-                <input type="hidden" name="acknowledgementType" value="RECEIVED" />
-                <input name="statement" placeholder="Optional acknowledgement note" />
-                <button class="quiet" type="submit">Record acknowledgement</button>
-              </form>
-            </details>
-
-            {#if data.capabilities.canExecute}
-              <details class="escalate">
-                <summary>Escalate</summary>
-                <form method="POST" action="?/escalate">
+            <div class="actions">
+              {#if item.status === 'ASSIGNED' || item.status === 'BLOCKED'}
+                <form method="POST" action="?/start">
                   <input type="hidden" name="workItemId" value={item.id} />
-                  <input name="triggerCode" required placeholder="Trigger code, e.g. SLA.BREACH" />
-                  <input name="ruleKey" placeholder="Optional rule key" />
-                  <textarea
-                    name="reason"
-                    rows="2"
-                    required
-                    placeholder="Why does this work require escalation?"></textarea>
-                  <button class="quiet" type="submit">Raise escalation</button>
+                  <input type="hidden" name="version" value={item.version} />
+                  <button type="submit">Start work</button>
+                </form>
+              {/if}
+
+              <details class="acknowledge">
+                <summary>Acknowledge</summary>
+                <form method="POST" action="?/acknowledge">
+                  <input type="hidden" name="workItemId" value={item.id} />
+                  <input type="hidden" name="acknowledgementType" value="RECEIVED" />
+                  <input name="statement" placeholder="Optional acknowledgement note" />
+                  <button class="quiet" type="submit">Record acknowledgement</button>
                 </form>
               </details>
-            {/if}
 
-            <details class="complete">
-              <summary>Complete</summary>
-              <form method="POST" action="?/complete">
-                <input type="hidden" name="workItemId" value={item.id} />
-                <input type="hidden" name="version" value={item.version} />
-                <textarea name="completionNote" rows="2" placeholder="Outcome / completion evidence"
-                ></textarea>
-                <button type="submit">Complete work item</button>
-              </form>
-            </details>
+              {#if data.capabilities.canExecute}
+                <details class="escalate">
+                  <summary>Escalate</summary>
+                  <form method="POST" action="?/escalate">
+                    <input type="hidden" name="workItemId" value={item.id} />
+                    <input
+                      name="triggerCode"
+                      required
+                      placeholder="Trigger code, e.g. SLA.BREACH"
+                    />
+                    <input name="ruleKey" placeholder="Optional rule key" />
+                    <textarea
+                      name="reason"
+                      rows="2"
+                      required
+                      placeholder="Why does this work require escalation?"></textarea>
+                    <button class="quiet" type="submit">Raise escalation</button>
+                  </form>
+                </details>
+              {/if}
+
+              <details class="complete">
+                <summary>Complete</summary>
+                <form method="POST" action="?/complete">
+                  <input type="hidden" name="workItemId" value={item.id} />
+                  <input type="hidden" name="version" value={item.version} />
+                  <textarea
+                    name="completionNote"
+                    rows="2"
+                    placeholder="Outcome / completion evidence"></textarea>
+                  <button type="submit">Complete work item</button>
+                </form>
+              </details>
+            </div>
+          </article>
+        {:else}
+          <div class="empty">
+            <span class="empty-mark">✓</span>
+            <h3>No assigned work</h3>
+            <p>
+              There are no active Work Items currently assigned to your Party, identity or tenant
+              role.
+            </p>
           </div>
-        </article>
-      {:else}
-        <div class="empty">
-          <span class="empty-mark">✓</span>
-          <h3>No assigned work</h3>
-          <p>
-            There are no active Work Items currently assigned to your Party, identity or tenant
-            role.
-          </p>
-        </div>
-      {/each}
-    </div>
-  </section>
+        {/each}
+      </div>
+    </section>
   {:else}
     <section class="decision-register section-card">
       <div class="section-heading">
@@ -244,7 +253,10 @@
           <div class="empty">
             <span class="empty-mark">✓</span>
             <h3>No decisions recorded</h3>
-            <p>Governed Decisions will appear here as business functions begin using the shared Decision aggregate.</p>
+            <p>
+              Governed Decisions will appear here as business functions begin using the shared
+              Decision aggregate.
+            </p>
           </div>
         {/each}
       </div>

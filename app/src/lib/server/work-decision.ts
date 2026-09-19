@@ -173,7 +173,6 @@ async function resolveAuthority(
   };
 }
 
-
 export async function assertWorkDecisionReference(
   context: CommandContext,
   input: {
@@ -282,7 +281,9 @@ export async function recordWorkDecision(context: CommandContext, input: RecordD
         connection
       );
       if (!requirement) {
-        throw new Error('Published Approval Authority policy does not permit this Decision context.');
+        throw new Error(
+          'Published Approval Authority policy does not permit this Decision context.'
+        );
       }
       approvalPolicyRuleId = requirement.ruleId;
       approvalPolicyVersionId = requirement.id;

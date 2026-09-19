@@ -54,7 +54,8 @@ function jsonValue(data: FormData, name: string, fallback: unknown) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The reference-data command could not be completed.'
+    message:
+      error instanceof Error ? error.message : 'The reference-data command could not be completed.'
   });
 }
 

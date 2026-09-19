@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import { dbTransaction, executeMutation, queryOne, queryRows, type DbExecutor } from '$lib/server/db';
+import {
+  dbTransaction,
+  executeMutation,
+  queryOne,
+  queryRows,
+  type DbExecutor
+} from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 import { assertWorkDecisionReference } from '$lib/server/work-decision';
@@ -138,7 +144,8 @@ async function assertPublishedFrameworkVersion(
     [frameworkId, frameworkVersionNo, context.tenantId],
     executor
   );
-  if (!row) throw new Error('Business Plan must reference an exact published Strategy Framework version.');
+  if (!row)
+    throw new Error('Business Plan must reference an exact published Strategy Framework version.');
 }
 
 async function assertObjectiveReference(
@@ -152,7 +159,7 @@ async function assertObjectiveReference(
     executor
   );
   if (!row) throw new Error('Strategic Objective version not found.');
-  if (!['APPROVED','ACTIVE','ACHIEVED','NOT_ACHIEVED'].includes(row.status)) {
+  if (!['APPROVED', 'ACTIVE', 'ACHIEVED', 'NOT_ACHIEVED'].includes(row.status)) {
     throw new Error('Business Plan may only pin an approved or active Strategic Objective.');
   }
 }
@@ -168,12 +175,17 @@ async function assertAssumptionReference(
     executor
   );
   if (!row) throw new Error('Strategic Assumption version not found.');
-  if (!['ACCEPTED','ACTIVE','CHALLENGED'].includes(row.lifecycleStatus)) {
+  if (!['ACCEPTED', 'ACTIVE', 'CHALLENGED'].includes(row.lifecycleStatus)) {
     throw new Error('Business Plan may only pin an assessed Strategic Assumption version.');
   }
 }
 
-async function getPlan(context: CommandContext, id: string, executor?: DbExecutor, forUpdate = false) {
+async function getPlan(
+  context: CommandContext,
+  id: string,
+  executor?: DbExecutor,
+  forUpdate = false
+) {
   const row = await queryOne<RowDataPacket & BusinessPlan>(
     currentSelect + ' WHERE p.id = ? AND p.tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
@@ -194,12 +206,27 @@ async function evidence(
 ) {
   await recordPlatformAudit(
     context,
-    { aggregateId: 'AGG-02-STRATEGY', objectType: 'business_plan', objectId: plan.id, action: eventType, fromState: fromState ?? undefined, toState },
+    {
+      aggregateId: 'AGG-02-STRATEGY',
+      objectType: 'business_plan',
+      objectId: plan.id,
+      action: eventType,
+      fromState: fromState ?? undefined,
+      toState
+    },
     executor
   );
   await emitBusinessEvent(
     context,
-    { aggregateId: 'AGG-02-STRATEGY', aggregateType: 'BusinessPlan', aggregateObjectId: plan.id, aggregateVersion: plan.aggregateVersion, eventType, topic: 'nublox.strategy.business-plan', payload },
+    {
+      aggregateId: 'AGG-02-STRATEGY',
+      aggregateType: 'BusinessPlan',
+      aggregateObjectId: plan.id,
+      aggregateVersion: plan.aggregateVersion,
+      eventType,
+      topic: 'nublox.strategy.business-plan',
+      payload
+    },
     executor
   );
 }
@@ -208,18 +235,38 @@ async function insertPlanVersion(
   context: CommandContext,
   planId: string,
   versionNo: number,
-  input: Pick<BusinessPlanInput,'resourceAssumptions'|'financialExpectations'|'measurableOutcomes'|'deliveryRoadmap'|'objectives'|'assumptions'>,
+  input: Pick<
+    BusinessPlanInput,
+    | 'resourceAssumptions'
+    | 'financialExpectations'
+    | 'measurableOutcomes'
+    | 'deliveryRoadmap'
+    | 'objectives'
+    | 'assumptions'
+  >,
   executor: DbExecutor
 ) {
   const objectives = input.objectives ?? [];
   const assumptions = input.assumptions ?? [];
   for (const reference of objectives) await assertObjectiveReference(context, reference, executor);
-  for (const reference of assumptions) await assertAssumptionReference(context, reference, executor);
+  for (const reference of assumptions)
+    await assertAssumptionReference(context, reference, executor);
 
   const versionId = randomUUID();
   await executeMutation(
     "INSERT INTO business_plan_versions (id, tenant_id, plan_id, version_no, lifecycle_status, resource_assumptions, financial_expectations, measurable_outcomes, delivery_roadmap, approval_decision_id, created_by_party_id, created_at) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, NULL, ?, ?)",
-    [versionId, context.tenantId, planId, versionNo, required(input.resourceAssumptions, 'Resource assumptions'), required(input.financialExpectations, 'Financial expectations'), required(input.measurableOutcomes, 'Measurable outcomes'), required(input.deliveryRoadmap, 'Delivery roadmap'), context.actorPartyId, now()],
+    [
+      versionId,
+      context.tenantId,
+      planId,
+      versionNo,
+      required(input.resourceAssumptions, 'Resource assumptions'),
+      required(input.financialExpectations, 'Financial expectations'),
+      required(input.measurableOutcomes, 'Measurable outcomes'),
+      required(input.deliveryRoadmap, 'Delivery roadmap'),
+      context.actorPartyId,
+      now()
+    ],
     executor
   );
   for (const reference of objectives) {
@@ -256,7 +303,10 @@ export async function listBusinessPlanVersions(context: CommandContext, planId: 
   );
 }
 
-export async function listBusinessPlanObjectiveReferences(context: CommandContext, planVersionId: string) {
+export async function listBusinessPlanObjectiveReferences(
+  context: CommandContext,
+  planVersionId: string
+) {
   assertPermission(context, 'strategy.plan.read');
   return queryRows<RowDataPacket & { objectiveId: string; objectiveVersionNo: number }>(
     'SELECT bpo.objective_id AS objectiveId, bpo.objective_version_no AS objectiveVersionNo FROM business_plan_objectives bpo JOIN business_plan_versions bpv ON bpv.id = bpo.plan_version_id WHERE bpo.plan_version_id = ? AND bpv.tenant_id = ? ORDER BY bpo.objective_id',
@@ -264,7 +314,10 @@ export async function listBusinessPlanObjectiveReferences(context: CommandContex
   );
 }
 
-export async function listBusinessPlanAssumptionReferences(context: CommandContext, planVersionId: string) {
+export async function listBusinessPlanAssumptionReferences(
+  context: CommandContext,
+  planVersionId: string
+) {
   assertPermission(context, 'strategy.plan.read');
   return queryRows<RowDataPacket & { assumptionId: string; assumptionVersionNo: number }>(
     'SELECT bpa.assumption_id AS assumptionId, bpa.assumption_version_no AS assumptionVersionNo FROM business_plan_assumptions bpa JOIN business_plan_versions bpv ON bpv.id = bpa.plan_version_id WHERE bpa.plan_version_id = ? AND bpv.tenant_id = ? ORDER BY bpa.assumption_id',
@@ -281,18 +334,50 @@ export async function createBusinessPlan(context: CommandContext, input: Busines
   const dates = period(input.periodStart, input.periodEnd);
 
   return dbTransaction(async (connection) => {
-    await assertPublishedFrameworkVersion(context, input.frameworkId, input.frameworkVersionNo, connection);
+    await assertPublishedFrameworkVersion(
+      context,
+      input.frameworkId,
+      input.frameworkVersionNo,
+      connection
+    );
     await assertParty(context, ownerPartyId, connection);
     const id = randomUUID();
     const timestamp = now();
     await executeMutation(
       "INSERT INTO business_plans (id, tenant_id, plan_ref, name, framework_id, framework_version_no, scope_type, scope_id, period_start, period_end, owner_party_id, status, aggregate_version, current_version_no, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'DRAFT', 1, 1, ?, ?)",
-      [id, context.tenantId, planRef, required(input.name, 'Business Plan name'), input.frameworkId, input.frameworkVersionNo, scopeType, scopeId, dates.periodStart, dates.periodEnd, ownerPartyId, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        planRef,
+        required(input.name, 'Business Plan name'),
+        input.frameworkId,
+        input.frameworkVersionNo,
+        scopeType,
+        scopeId,
+        dates.periodStart,
+        dates.periodEnd,
+        ownerPartyId,
+        timestamp,
+        timestamp
+      ],
       connection
     );
     const versionId = await insertPlanVersion(context, id, 1, input, connection);
     const created = await getPlan(context, id, connection);
-    await evidence(context, created, 'BUSINESS_PLAN_CREATED', null, 'DRAFT', { planRef, versionId, frameworkId: input.frameworkId, frameworkVersionNo: input.frameworkVersionNo }, connection);
+    await evidence(
+      context,
+      created,
+      'BUSINESS_PLAN_CREATED',
+      null,
+      'DRAFT',
+      {
+        planRef,
+        versionId,
+        frameworkId: input.frameworkId,
+        frameworkVersionNo: input.frameworkVersionNo
+      },
+      connection
+    );
     return id;
   });
 }
@@ -301,15 +386,31 @@ export async function reviseBusinessPlan(
   context: CommandContext,
   id: string,
   expectedAggregateVersion: number,
-  input: Pick<BusinessPlanInput,'resourceAssumptions'|'financialExpectations'|'measurableOutcomes'|'deliveryRoadmap'|'objectives'|'assumptions'>
+  input: Pick<
+    BusinessPlanInput,
+    | 'resourceAssumptions'
+    | 'financialExpectations'
+    | 'measurableOutcomes'
+    | 'deliveryRoadmap'
+    | 'objectives'
+    | 'assumptions'
+  >
 ) {
   assertPermission(context, 'strategy.plan.manage');
   return dbTransaction(async (connection) => {
     const current = await getPlan(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Business Plan changed after you opened it.');
-    if (!['DRAFT','CURRENT'].includes(current.status)) throw new Error('Only draft or current Business Plans can be revised.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Business Plan changed after you opened it.');
+    if (!['DRAFT', 'CURRENT'].includes(current.status))
+      throw new Error('Only draft or current Business Plans can be revised.');
     const nextVersionNo = current.currentVersionNo + 1;
-    const versionId = await insertPlanVersion(context, current.id, nextVersionNo, input, connection);
+    const versionId = await insertPlanVersion(
+      context,
+      current.id,
+      nextVersionNo,
+      input,
+      connection
+    );
     const result = await executeMutation(
       "UPDATE business_plans SET status = 'DRAFT', aggregate_version = aggregate_version + 1, current_version_no = ?, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",
       [nextVersionNo, now(), current.id, context.tenantId, expectedAggregateVersion],
@@ -317,15 +418,28 @@ export async function reviseBusinessPlan(
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Business Plan revision detected.');
     const updated = await getPlan(context, current.id, connection);
-    await evidence(context, updated, 'BUSINESS_PLAN_REVISED', current.status, 'DRAFT', { versionId, versionNo: nextVersionNo }, connection);
+    await evidence(
+      context,
+      updated,
+      'BUSINESS_PLAN_REVISED',
+      current.status,
+      'DRAFT',
+      { versionId, versionNo: nextVersionNo },
+      connection
+    );
   });
 }
 
-export async function submitBusinessPlan(context: CommandContext, id: string, expectedAggregateVersion: number) {
+export async function submitBusinessPlan(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number
+) {
   assertPermission(context, 'strategy.plan.manage');
   return dbTransaction(async (connection) => {
     const current = await getPlan(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Business Plan changed after you opened it.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Business Plan changed after you opened it.');
     if (current.status !== 'DRAFT') throw new Error('Only a draft Business Plan can be submitted.');
     const result = await executeMutation(
       "UPDATE business_plans SET status = 'IN_REVIEW', aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",
@@ -339,7 +453,15 @@ export async function submitBusinessPlan(context: CommandContext, id: string, ex
       connection
     );
     const updated = await getPlan(context, current.id, connection);
-    await evidence(context, updated, 'BUSINESS_PLAN_SUBMITTED', 'DRAFT', 'IN_REVIEW', { versionNo: current.currentVersionNo }, connection);
+    await evidence(
+      context,
+      updated,
+      'BUSINESS_PLAN_SUBMITTED',
+      'DRAFT',
+      'IN_REVIEW',
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }
 
@@ -352,8 +474,10 @@ export async function approveBusinessPlan(
   assertPermission(context, 'strategy.plan.approve');
   return dbTransaction(async (connection) => {
     const current = await getPlan(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Business Plan changed after you opened it.');
-    if (current.status !== 'IN_REVIEW') throw new Error('Only an in-review Business Plan can be approved.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Business Plan changed after you opened it.');
+    if (current.status !== 'IN_REVIEW')
+      throw new Error('Only an in-review Business Plan can be approved.');
     const decision = await assertWorkDecisionReference(
       context,
       {
@@ -378,16 +502,30 @@ export async function approveBusinessPlan(
       connection
     );
     const updated = await getPlan(context, current.id, connection);
-    await evidence(context, updated, 'BUSINESS_PLAN_APPROVED', 'IN_REVIEW', 'APPROVED', { versionNo: current.currentVersionNo, decisionId: decision.id }, connection);
+    await evidence(
+      context,
+      updated,
+      'BUSINESS_PLAN_APPROVED',
+      'IN_REVIEW',
+      'APPROVED',
+      { versionNo: current.currentVersionNo, decisionId: decision.id },
+      connection
+    );
   });
 }
 
-export async function activateBusinessPlan(context: CommandContext, id: string, expectedAggregateVersion: number) {
+export async function activateBusinessPlan(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number
+) {
   assertPermission(context, 'strategy.plan.approve');
   return dbTransaction(async (connection) => {
     const current = await getPlan(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Business Plan changed after you opened it.');
-    if (current.status !== 'APPROVED') throw new Error('Only an approved Business Plan can become current.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Business Plan changed after you opened it.');
+    if (current.status !== 'APPROVED')
+      throw new Error('Only an approved Business Plan can become current.');
     await executeMutation(
       "UPDATE business_plan_versions SET lifecycle_status = 'SUPERSEDED' WHERE plan_id = ? AND lifecycle_status = 'CURRENT' AND version_no <> ?",
       [current.id, current.currentVersionNo],
@@ -405,16 +543,30 @@ export async function activateBusinessPlan(context: CommandContext, id: string, 
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Business Plan activation detected.');
     const updated = await getPlan(context, current.id, connection);
-    await evidence(context, updated, 'BUSINESS_PLAN_CURRENT', 'APPROVED', 'CURRENT', { versionNo: current.currentVersionNo }, connection);
+    await evidence(
+      context,
+      updated,
+      'BUSINESS_PLAN_CURRENT',
+      'APPROVED',
+      'CURRENT',
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }
 
-export async function closeBusinessPlan(context: CommandContext, id: string, expectedAggregateVersion: number) {
+export async function closeBusinessPlan(
+  context: CommandContext,
+  id: string,
+  expectedAggregateVersion: number
+) {
   assertPermission(context, 'strategy.plan.approve');
   return dbTransaction(async (connection) => {
     const current = await getPlan(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Business Plan changed after you opened it.');
-    if (current.status !== 'CURRENT') throw new Error('Only a current Business Plan can be closed.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Business Plan changed after you opened it.');
+    if (current.status !== 'CURRENT')
+      throw new Error('Only a current Business Plan can be closed.');
     const result = await executeMutation(
       "UPDATE business_plans SET status = 'CLOSED', aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",
       [now(), current.id, context.tenantId, expectedAggregateVersion],
@@ -427,6 +579,14 @@ export async function closeBusinessPlan(context: CommandContext, id: string, exp
       connection
     );
     const updated = await getPlan(context, current.id, connection);
-    await evidence(context, updated, 'BUSINESS_PLAN_CLOSED', 'CURRENT', 'CLOSED', { versionNo: current.currentVersionNo }, connection);
+    await evidence(
+      context,
+      updated,
+      'BUSINESS_PLAN_CLOSED',
+      'CURRENT',
+      'CLOSED',
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }

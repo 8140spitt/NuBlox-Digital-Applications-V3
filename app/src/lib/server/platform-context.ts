@@ -432,12 +432,7 @@ export const platformPermissions = [
     'conduct',
     'Convene and complete executive governance meetings and record resulting decisions/actions.'
   ],
-  [
-    'governance.ethics.read',
-    'governance.ethics',
-    'read',
-    'Read authorised Integrity Cases.'
-  ],
+  ['governance.ethics.read', 'governance.ethics', 'read', 'Read authorised Integrity Cases.'],
   [
     'governance.ethics.manage',
     'governance.ethics',

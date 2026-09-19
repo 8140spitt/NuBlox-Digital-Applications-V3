@@ -24,7 +24,9 @@ afterAll(async () => {
   await db.closeDbPool();
 });
 
-async function publishedStrategy(context: Awaited<ReturnType<typeof contextService.resolveDevelopmentCommandContext>>) {
+async function publishedStrategy(
+  context: Awaited<ReturnType<typeof contextService.resolveDevelopmentCommandContext>>
+) {
   const frameworkId = await strategy.createStrategyFramework(context, {
     title: 'Business Plan Strategy',
     purpose: 'Guide enterprise planning.',
@@ -62,11 +64,27 @@ describe('F01.04 Business Plan runtime', () => {
       successCriteria: 'Recurring revenue share increases.',
       priority: 'HIGH'
     });
-    let objectiveRow = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
-    await objective.transitionStrategicObjective(context, objectiveId, objectiveRow.aggregateVersion, 'APPROVE');
-    objectiveRow = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
-    await objective.transitionStrategicObjective(context, objectiveId, objectiveRow.aggregateVersion, 'ACTIVATE');
-    objectiveRow = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
+    let objectiveRow = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
+    await objective.transitionStrategicObjective(
+      context,
+      objectiveId,
+      objectiveRow.aggregateVersion,
+      'APPROVE'
+    );
+    objectiveRow = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
+    await objective.transitionStrategicObjective(
+      context,
+      objectiveId,
+      objectiveRow.aggregateVersion,
+      'ACTIVATE'
+    );
+    objectiveRow = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
 
     const assumptionId = await assumption.createStrategicAssumption(context, {
       assumptionRef: 'PLAN-MARKET-001',
@@ -75,12 +93,21 @@ describe('F01.04 Business Plan runtime', () => {
       basisSummary: 'Market and client evidence.',
       confidencePercent: 70
     });
-    let assumptionRow = (await assumption.listStrategicAssumptions(context)).find((row) => row.id === assumptionId)!;
-    await assumption.assessStrategicAssumption(context, assumptionId, assumptionRow.aggregateVersion, {
-      outcome: 'ACCEPT',
-      note: 'Accepted planning basis.'
-    });
-    assumptionRow = (await assumption.listStrategicAssumptions(context)).find((row) => row.id === assumptionId)!;
+    let assumptionRow = (await assumption.listStrategicAssumptions(context)).find(
+      (row) => row.id === assumptionId
+    )!;
+    await assumption.assessStrategicAssumption(
+      context,
+      assumptionId,
+      assumptionRow.aggregateVersion,
+      {
+        outcome: 'ACCEPT',
+        note: 'Accepted planning basis.'
+      }
+    );
+    assumptionRow = (await assumption.listStrategicAssumptions(context)).find(
+      (row) => row.id === assumptionId
+    )!;
 
     const planId = await plan.createBusinessPlan(context, {
       planRef: 'BP-2027',
@@ -92,7 +119,8 @@ describe('F01.04 Business Plan runtime', () => {
       periodStart: '2027-01-01',
       periodEnd: '2028-01-01',
       resourceAssumptions: 'Capability investment focused on digital delivery and asset services.',
-      financialExpectations: 'Planning expectation: profitable growth with disciplined cash conversion.',
+      financialExpectations:
+        'Planning expectation: profitable growth with disciplined cash conversion.',
       measurableOutcomes: 'Recurring revenue mix and project predictability improve.',
       deliveryRoadmap: 'Q1 mobilisation; Q2-Q4 staged execution.',
       objectives: [{ id: objectiveId, versionNo: objectiveRow.currentVersionNo }],
@@ -147,6 +175,6 @@ describe('F01.04 Business Plan runtime', () => {
       "SELECT event_type AS eventType, aggregate_version AS aggregateVersion FROM business_events WHERE tenant_id = ? AND aggregate_id = 'AGG-02-STRATEGY' AND aggregate_type = 'BusinessPlan' AND aggregate_object_id = ? ORDER BY aggregate_version",
       [context.tenantId, planId]
     );
-    expect(events.map((row) => Number(row.aggregateVersion))).toEqual([1,2,3,4,5]);
+    expect(events.map((row) => Number(row.aggregateVersion))).toEqual([1, 2, 3, 4, 5]);
   });
 });

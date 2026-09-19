@@ -20,7 +20,8 @@ export const f02Workspace = {
       id: 'F02.01',
       name: 'Board Governance',
       sourceName: 'Board governance',
-      summary: 'Constitute boards and govern their mandate, membership, meetings, resolutions and actions.',
+      summary:
+        'Constitute boards and govern their mandate, membership, meetings, resolutions and actions.',
       items: ['Board structure', 'Membership', 'Quorum', 'Meetings', 'Resolutions', 'Actions'],
       path: 'governance-bodies'
     },
@@ -29,7 +30,14 @@ export const f02Workspace = {
       name: 'Governance Framework',
       sourceName: 'Governance framework',
       summary: 'Define decision-right and authority structures that govern enterprise action.',
-      items: ['Framework', 'Authority classes', 'Decision rights', 'Reserved matters', 'SoD', 'Effectivity'],
+      items: [
+        'Framework',
+        'Authority classes',
+        'Decision rights',
+        'Reserved matters',
+        'SoD',
+        'Effectivity'
+      ],
       path: 'authority-framework'
     },
     {
@@ -37,7 +45,14 @@ export const f02Workspace = {
       name: 'Delegation of Authority',
       sourceName: 'Delegation of authority',
       summary: 'Apply governed approval thresholds and effective delegated authority.',
-      items: ['Thresholds', 'Grants', 'Delegation matrix', 'Effectivity', 'Compliance', 'Policy evidence'],
+      items: [
+        'Thresholds',
+        'Grants',
+        'Delegation matrix',
+        'Effectivity',
+        'Compliance',
+        'Policy evidence'
+      ],
       path: 'delegation-of-authority'
     },
     {
@@ -45,7 +60,14 @@ export const f02Workspace = {
       name: 'Executive Management',
       sourceName: 'Executive management',
       summary: 'Conduct executive governance, resolve escalations and record enterprise decisions.',
-      items: ['Executive reviews', 'Decisions', 'Escalations', 'Investments', 'Actions', 'Evidence'],
+      items: [
+        'Executive reviews',
+        'Decisions',
+        'Escalations',
+        'Investments',
+        'Actions',
+        'Evidence'
+      ],
       path: 'executive-management'
     },
     {
@@ -53,7 +75,14 @@ export const f02Workspace = {
       name: 'Committee Governance',
       sourceName: 'Committee governance',
       summary: 'Constitute committees with governed terms, membership, meetings and follow-up.',
-      items: ['Committee structure', 'Terms of reference', 'Membership', 'Meetings', 'Decisions', 'Actions'],
+      items: [
+        'Committee structure',
+        'Terms of reference',
+        'Membership',
+        'Meetings',
+        'Decisions',
+        'Actions'
+      ],
       path: 'governance-bodies'
     },
     {
@@ -68,22 +97,45 @@ export const f02Workspace = {
       id: 'F02.07',
       name: 'Ethics Governance',
       sourceName: 'Ethics governance',
-      summary: 'Govern conduct expectations, declarations, ethical issues and breach investigations.',
-      items: ['Code of conduct', 'Declarations', 'Conflicts', 'Issues', 'Investigations', 'Evidence'],
+      summary:
+        'Govern conduct expectations, declarations, ethical issues and breach investigations.',
+      items: [
+        'Code of conduct',
+        'Declarations',
+        'Conflicts',
+        'Issues',
+        'Investigations',
+        'Evidence'
+      ],
       path: 'ethics-governance'
     }
   ] satisfies WorkArea[],
   journey: [
-    { step: '1', name: 'Constitute', detail: 'Define governance bodies, mandates and authority context.' },
+    {
+      step: '1',
+      name: 'Constitute',
+      detail: 'Define governance bodies, mandates and authority context.'
+    },
     { step: '2', name: 'Delegate', detail: 'Define authority rules and effective grants.' },
     { step: '3', name: 'Convene', detail: 'Run board, committee and executive governance events.' },
-    { step: '4', name: 'Decide', detail: 'Record attributable decisions against exact subjects and authority evidence.' },
+    {
+      step: '4',
+      name: 'Decide',
+      detail: 'Record attributable decisions against exact subjects and authority evidence.'
+    },
     { step: '5', name: 'Act', detail: 'Create and track accountable follow-up work.' },
-    { step: '6', name: 'Assure', detail: 'Monitor policy, authority, conduct and governance evidence.' }
+    {
+      step: '6',
+      name: 'Assure',
+      detail: 'Monitor policy, authority, conduct and governance evidence.'
+    }
   ],
   platformServices: [
     ['Party & membership', 'Governance participants reference canonical Party identities.'],
-    ['Authority', 'Permissions, frameworks and delegated authority remain distinct from membership.'],
+    [
+      'Authority',
+      'Permissions, frameworks and delegated authority remain distinct from membership.'
+    ],
     ['Decision', 'Material governance choices use immutable shared Decision evidence.'],
     ['Workflow & work', 'Meeting follow-up and governance actions use shared work coordination.'],
     ['Evidence', 'Packs, minutes and supporting records retain governed provenance.'],

@@ -25,7 +25,8 @@ function numberValue(data: FormData, name: string) {
 
 function expectedVersion(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 
@@ -39,7 +40,10 @@ function route(tenant: string, id?: string, category?: string) {
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The environmental-analysis command could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The environmental-analysis command could not be completed.'
   });
 }
 
@@ -52,7 +56,9 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     search: search || undefined
   });
   const selected =
-    assumptions.find((row) => row.id === url.searchParams.get('assumption')) ?? assumptions[0] ?? null;
+    assumptions.find((row) => row.id === url.searchParams.get('assumption')) ??
+    assumptions[0] ??
+    null;
   const versions = selected ? await listStrategicAssumptionVersions(context, selected.id) : [];
 
   return {

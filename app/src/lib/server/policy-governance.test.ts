@@ -84,7 +84,8 @@ describe('F02.06 Policy Governance profile runtime', () => {
       await policy.createSuccessorPolicyRevision(context, id, current.aggregateVersion, {
         revisionCode: 'P02',
         title: 'Corporate Governance Policy — revised',
-        applicabilitySummary: 'Applies to all tenant members, subsidiaries and controlled joint ventures.',
+        applicabilitySummary:
+          'Applies to all tenant members, subsidiaries and controlled joint ventures.',
         effectiveFrom: '2027-01-01',
         reviewDueAt: '2028-01-01'
       })

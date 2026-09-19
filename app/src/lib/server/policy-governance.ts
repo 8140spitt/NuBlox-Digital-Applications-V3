@@ -218,11 +218,7 @@ function optionalDate(value: string | undefined, label: string) {
   return parsed.toISOString();
 }
 
-function dates(input: {
-  effectiveFrom?: string;
-  effectiveTo?: string;
-  reviewDueAt?: string;
-}) {
+function dates(input: { effectiveFrom?: string; effectiveTo?: string; reviewDueAt?: string }) {
   const effectiveFrom = optionalDate(input.effectiveFrom, 'Policy effective-from');
   const effectiveTo = optionalDate(input.effectiveTo, 'Policy effective-to');
   const reviewDueAt = optionalDate(input.reviewDueAt, 'Policy review due date');
@@ -308,14 +304,11 @@ async function profileEvidence(
   );
 }
 
-async function getPolicy(
-  context: CommandContext,
-  id: string,
-  executor?: DbExecutor,
-  lock = false
-) {
+async function getPolicy(context: CommandContext, id: string, executor?: DbExecutor, lock = false) {
   const row = await queryOne<RowDataPacket & Policy>(
-    policySelect + ' WHERE c.id = ? AND c.tenant_id = ? AND c.container_type = \'POLICY\'' + (lock ? ' FOR UPDATE' : ''),
+    policySelect +
+      " WHERE c.id = ? AND c.tenant_id = ? AND c.container_type = 'POLICY'" +
+      (lock ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
     executor
   );
@@ -379,8 +372,7 @@ export async function listPolicyRevisions(
   assertPermission(context, 'information.container.read');
   await getPolicy(context, policyId);
   return queryRows<RowDataPacket & PolicyRevision>(
-    revisionSelect +
-      ' WHERE r.tenant_id = ? AND r.container_id = ? ORDER BY r.revision_no DESC',
+    revisionSelect + ' WHERE r.tenant_id = ? AND r.container_id = ? ORDER BY r.revision_no DESC',
     [context.tenantId, policyId]
   );
 }
@@ -465,8 +457,7 @@ export async function createSuccessorPolicyRevision(
       throw new Error('This Policy changed after you opened it.');
     }
     const previous = await queryOne<RowDataPacket & PolicyRevision>(
-      revisionSelect +
-        ' WHERE r.tenant_id = ? AND r.container_id = ? AND r.revision_no = ?',
+      revisionSelect + ' WHERE r.tenant_id = ? AND r.container_id = ? AND r.revision_no = ?',
       [context.tenantId, policyId, before.currentRevisionNo],
       executor
     );

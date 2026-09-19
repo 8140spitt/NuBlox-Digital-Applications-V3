@@ -172,7 +172,11 @@ async function assertParty(context: CommandContext, partyId: string, executor: D
   if (!row) throw new Error('Active Assumption owner Party not found.');
 }
 
-async function assertEvidence(context: CommandContext, evidenceItemId: string, executor: DbExecutor) {
+async function assertEvidence(
+  context: CommandContext,
+  evidenceItemId: string,
+  executor: DbExecutor
+) {
   const row = await queryOne<RowDataPacket & { id: string }>(
     "SELECT id FROM evidence_items WHERE id = ? AND tenant_id = ? AND status IN ('CAPTURED','VERIFIED')",
     [evidenceItemId, context.tenantId],
@@ -188,9 +192,7 @@ async function getAssumption(
   forUpdate = false
 ) {
   const row = await queryOne<RowDataPacket & StrategicAssumption>(
-    currentSelect +
-      ' WHERE a.id = ? AND a.tenant_id = ?' +
-      (forUpdate ? ' FOR UPDATE' : ''),
+    currentSelect + ' WHERE a.id = ? AND a.tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
     executor
   );
@@ -255,7 +257,10 @@ export async function listStrategicAssumptions(
     params.push(needle, needle, needle);
   }
   return queryRows<RowDataPacket & StrategicAssumption>(
-    currentSelect + ' WHERE ' + clauses.join(' AND ') + ' ORDER BY a.updated_at DESC, a.assumption_ref',
+    currentSelect +
+      ' WHERE ' +
+      clauses.join(' AND ') +
+      ' ORDER BY a.updated_at DESC, a.assumption_ref',
     params
   );
 }
@@ -301,7 +306,21 @@ export async function createStrategicAssumption(
     );
     await executeMutation(
       "INSERT INTO strategic_assumption_versions (id, tenant_id, assumption_id, version_no, statement, basis_summary, evidence_item_id, confidence_percent, scope_type, scope_id, valid_from, valid_to, lifecycle_status, assessment_note, created_by_party_id, created_at) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, 'PROPOSED', NULL, ?, ?)",
-      [versionId, context.tenantId, id, statement, basisSummary, evidenceItemId, confidencePercent, scoped.scopeType, scoped.scopeId, validity.validFrom, validity.validTo, context.actorPartyId, timestamp],
+      [
+        versionId,
+        context.tenantId,
+        id,
+        statement,
+        basisSummary,
+        evidenceItemId,
+        confidencePercent,
+        scoped.scopeType,
+        scoped.scopeId,
+        validity.validFrom,
+        validity.validTo,
+        context.actorPartyId,
+        timestamp
+      ],
       connection
     );
     const created = await getAssumption(context, id, connection);
@@ -348,15 +367,38 @@ export async function reviseStrategicAssumption(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO strategic_assumption_versions (id, tenant_id, assumption_id, version_no, statement, basis_summary, evidence_item_id, confidence_percent, scope_type, scope_id, valid_from, valid_to, lifecycle_status, assessment_note, created_by_party_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PROPOSED', NULL, ?, ?)",
-      [randomUUID(), context.tenantId, current.id, nextVersionNo, statement, basisSummary, evidenceItemId, confidencePercent, scoped.scopeType, scoped.scopeId, validity.validFrom, validity.validTo, context.actorPartyId, timestamp],
+      [
+        randomUUID(),
+        context.tenantId,
+        current.id,
+        nextVersionNo,
+        statement,
+        basisSummary,
+        evidenceItemId,
+        confidencePercent,
+        scoped.scopeType,
+        scoped.scopeId,
+        validity.validFrom,
+        validity.validTo,
+        context.actorPartyId,
+        timestamp
+      ],
       connection
     );
     const result = await executeMutation(
       "UPDATE strategic_assumptions SET owner_party_id = ?, status = 'PROPOSED', aggregate_version = aggregate_version + 1, current_version_no = ?, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",
-      [ownerPartyId, nextVersionNo, timestamp, current.id, context.tenantId, expectedAggregateVersion],
+      [
+        ownerPartyId,
+        nextVersionNo,
+        timestamp,
+        current.id,
+        context.tenantId,
+        expectedAggregateVersion
+      ],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Strategic Assumption change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Strategic Assumption change detected.');
     const updated = await getAssumption(context, current.id, connection);
     await evidence(
       context,
@@ -379,10 +421,22 @@ export async function assessStrategicAssumption(
   assertPermission(context, 'strategy.assumption.assess');
   const note = required(input.note, 'Assessment note');
   const transitions: Record<string, { allowed: string[]; to: string; event: string }> = {
-    ACCEPT: { allowed: ['PROPOSED', 'CHALLENGED'], to: 'ACCEPTED', event: 'STRATEGIC_ASSUMPTION_ACCEPTED' },
+    ACCEPT: {
+      allowed: ['PROPOSED', 'CHALLENGED'],
+      to: 'ACCEPTED',
+      event: 'STRATEGIC_ASSUMPTION_ACCEPTED'
+    },
     ACTIVATE: { allowed: ['ACCEPTED'], to: 'ACTIVE', event: 'STRATEGIC_ASSUMPTION_ACTIVATED' },
-    CHALLENGE: { allowed: ['ACCEPTED', 'ACTIVE'], to: 'CHALLENGED', event: 'STRATEGIC_ASSUMPTION_CHALLENGED' },
-    INVALIDATE: { allowed: ['PROPOSED', 'ACCEPTED', 'ACTIVE', 'CHALLENGED'], to: 'INVALIDATED', event: 'STRATEGIC_ASSUMPTION_INVALIDATED' }
+    CHALLENGE: {
+      allowed: ['ACCEPTED', 'ACTIVE'],
+      to: 'CHALLENGED',
+      event: 'STRATEGIC_ASSUMPTION_CHALLENGED'
+    },
+    INVALIDATE: {
+      allowed: ['PROPOSED', 'ACCEPTED', 'ACTIVE', 'CHALLENGED'],
+      to: 'INVALIDATED',
+      event: 'STRATEGIC_ASSUMPTION_INVALIDATED'
+    }
   };
   const transition = transitions[input.outcome];
   if (!transition) throw new Error('Unsupported Strategic Assumption assessment outcome.');
@@ -393,7 +447,13 @@ export async function assessStrategicAssumption(
       throw new Error('This Strategic Assumption changed after you opened it.');
     }
     if (!transition.allowed.includes(current.status)) {
-      throw new Error('Strategic Assumption cannot transition from ' + current.status + ' using ' + input.outcome + '.');
+      throw new Error(
+        'Strategic Assumption cannot transition from ' +
+          current.status +
+          ' using ' +
+          input.outcome +
+          '.'
+      );
     }
     const timestamp = now();
     const result = await executeMutation(
@@ -401,7 +461,8 @@ export async function assessStrategicAssumption(
       [transition.to, timestamp, current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Strategic Assumption assessment detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Strategic Assumption assessment detected.');
     await executeMutation(
       'UPDATE strategic_assumption_versions SET lifecycle_status = ?, assessment_note = ? WHERE assumption_id = ? AND version_no = ?',
       [transition.to, note, current.id, current.currentVersionNo],

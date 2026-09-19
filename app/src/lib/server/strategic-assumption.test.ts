@@ -34,7 +34,9 @@ describe('F01.02 strategic assumption runtime', () => {
       validTo: '2027-09-01'
     });
 
-    let assumption = (await service.listStrategicAssumptions(context)).find((row) => row.id === id)!;
+    let assumption = (await service.listStrategicAssumptions(context)).find(
+      (row) => row.id === id
+    )!;
     expect(assumption.status).toBe('PROPOSED');
     expect(assumption.aggregateVersion).toBe(1);
     expect(assumption.currentVersionNo).toBe(1);
@@ -62,7 +64,8 @@ describe('F01.02 strategic assumption runtime', () => {
     expect(assumption.status).toBe('CHALLENGED');
 
     await service.reviseStrategicAssumption(context, id, assumption.aggregateVersion, {
-      statement: 'UK public-sector construction demand remains resilient but procurement timing softens in FY27.',
+      statement:
+        'UK public-sector construction demand remains resilient but procurement timing softens in FY27.',
       basisSummary: 'Updated fiscal announcement and procurement pipeline evidence.',
       confidencePercent: 60,
       scopeType: 'TENANT',
@@ -119,8 +122,12 @@ describe('F01.02 strategic assumption runtime', () => {
       confidencePercent: 75
     });
 
-    expect(await service.listStrategicAssumptions(context, { category: 'ECONOMIC' })).toHaveLength(1);
-    expect(await service.listStrategicAssumptions(context, { category: 'REGULATORY' })).toHaveLength(1);
+    expect(await service.listStrategicAssumptions(context, { category: 'ECONOMIC' })).toHaveLength(
+      1
+    );
+    expect(
+      await service.listStrategicAssumptions(context, { category: 'REGULATORY' })
+    ).toHaveLength(1);
     expect(await service.listStrategicAssumptions(context, { category: 'THREAT' })).toHaveLength(1);
     expect(await service.listStrategicAssumptions(context, { search: 'safety' })).toHaveLength(1);
   });

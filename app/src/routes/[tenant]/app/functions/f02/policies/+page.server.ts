@@ -47,9 +47,7 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     policies.find((item) => item.id === url.searchParams.get('policy')) ?? policies[0] ?? null;
   const [revisions, representations, parties, bodies] = await Promise.all([
     selected ? listPolicyRevisions(context, selected.id) : Promise.resolve([]),
-    selected
-      ? listPolicyRepresentations(context, selected.currentRevisionId)
-      : Promise.resolve([]),
+    selected ? listPolicyRepresentations(context, selected.currentRevisionId) : Promise.resolve([]),
     hasPermission(context, 'party.read') ? listPartyDirectory(context) : Promise.resolve([]),
     hasPermission(context, 'governance.body.read')
       ? listGovernanceBodies(context)

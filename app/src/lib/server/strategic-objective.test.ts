@@ -59,27 +59,46 @@ describe('F01.03 Strategic Objective runtime', () => {
       horizonEnd: '2029-10-01'
     });
 
-    let current = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
+    let current = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
     expect(current.frameworkVersionNo).toBe(1);
     expect(current.status).toBe('PROPOSED');
     expect(current.aggregateVersion).toBe(1);
 
     await objective.reviseStrategicObjective(context, objectiveId, current.aggregateVersion, {
       statement: 'Reduce avoidable delivery variance through governed digital controls.',
-      successCriteria: 'Portfolio schedule/cost variance, rework and decision latency improve year-on-year.',
+      successCriteria:
+        'Portfolio schedule/cost variance, rework and decision latency improve year-on-year.',
       priority: 'CRITICAL',
       scopeType: 'TENANT',
       scopeId: context.tenantId,
       horizonStart: '2026-10-01',
       horizonEnd: '2029-10-01'
     });
-    current = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
+    current = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
     expect(current.currentVersionNo).toBe(2);
 
-    await objective.transitionStrategicObjective(context, objectiveId, current.aggregateVersion, 'APPROVE');
-    current = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
-    await objective.transitionStrategicObjective(context, objectiveId, current.aggregateVersion, 'ACTIVATE');
-    current = (await objective.listStrategicObjectives(context)).find((row) => row.id === objectiveId)!;
+    await objective.transitionStrategicObjective(
+      context,
+      objectiveId,
+      current.aggregateVersion,
+      'APPROVE'
+    );
+    current = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
+    await objective.transitionStrategicObjective(
+      context,
+      objectiveId,
+      current.aggregateVersion,
+      'ACTIVATE'
+    );
+    current = (await objective.listStrategicObjectives(context)).find(
+      (row) => row.id === objectiveId
+    )!;
     expect(current.status).toBe('ACTIVE');
 
     const versions = await objective.listStrategicObjectiveVersions(context, objectiveId);

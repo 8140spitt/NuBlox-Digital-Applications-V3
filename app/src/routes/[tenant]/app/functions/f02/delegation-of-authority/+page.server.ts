@@ -36,7 +36,9 @@ function target(tenant: string, id?: string) {
   return `/${tenant}/app/functions/f02/delegation-of-authority${id ? '?grant=' + encodeURIComponent(id) : ''}`;
 }
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'Delegated Authority command failed.' });
+  return fail(400, {
+    message: error instanceof Error ? error.message : 'Delegated Authority command failed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
@@ -48,7 +50,8 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     listPartyDirectory(context),
     canReadPolicy ? listDelegatedAuthorityRules(context) : Promise.resolve([])
   ]);
-  const selected = grants.find((grant) => grant.id === url.searchParams.get('grant')) ?? grants[0] ?? null;
+  const selected =
+    grants.find((grant) => grant.id === url.searchParams.get('grant')) ?? grants[0] ?? null;
   const policyVersions = selected?.policyRuleId
     ? await listDelegatedAuthorityRuleVersions(context, selected.policyRuleId)
     : [];
@@ -96,7 +99,11 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'grantId');
     try {
-      await approveDelegatedAuthority(await resolveRequestCommandContext(params.tenant, locals), id, version(data));
+      await approveDelegatedAuthority(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        version(data)
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -107,7 +114,11 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'grantId');
     try {
-      await activateDelegatedAuthority(await resolveRequestCommandContext(params.tenant, locals), id, version(data));
+      await activateDelegatedAuthority(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        version(data)
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -118,7 +129,11 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'grantId');
     try {
-      await suspendDelegatedAuthority(await resolveRequestCommandContext(params.tenant, locals), id, version(data));
+      await suspendDelegatedAuthority(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        version(data)
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

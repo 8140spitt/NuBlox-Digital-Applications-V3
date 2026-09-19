@@ -280,9 +280,9 @@ describe('governed authority configuration', () => {
       permitted.id,
       permitted.version
     );
-    const approvedGrant = (
-      await delegatedAuthorityService.listDelegatedAuthorities(context)
-    ).find((entry) => entry.id === permittedGrantId)!;
+    const approvedGrant = (await delegatedAuthorityService.listDelegatedAuthorities(context)).find(
+      (entry) => entry.id === permittedGrantId
+    )!;
     expect(approvedGrant.status).toBe('APPROVED');
     expect(approvedGrant.policyRuleId).toBe(delegation.ruleId);
     expect(approvedGrant.policyVersionId).toBe(delegation.versionId);
@@ -329,7 +329,6 @@ describe('governed authority configuration', () => {
     expect(decision.approvalPolicyRuleId).toBe(approval.ruleId);
     expect(decision.approvalPolicyVersionId).toBe(approval.versionId);
   });
-
 
   it('creates a new immutable approval policy version instead of editing published history', async () => {
     const tenant = 'authority-version-' + randomUUID().slice(0, 8);
@@ -398,5 +397,4 @@ describe('governed authority configuration', () => {
     });
     expect(requirement?.versionNo).toBe(2);
   });
-
 });

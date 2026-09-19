@@ -62,7 +62,10 @@ describe('typed governed reference data', () => {
       jurisdictionId
     });
 
-    expect((await reference.listJurisdictions(context)).find((row) => row.id === jurisdictionId)?.jurisdictionKey).toBe('GB-SCT');
+    expect(
+      (await reference.listJurisdictions(context)).find((row) => row.id === jurisdictionId)
+        ?.jurisdictionKey
+    ).toBe('GB-SCT');
     let currency = (await reference.listCurrencies(context)).find((row) => row.id === currencyId)!;
     expect(currency.isoCode).toBe('GBP');
     expect(currency.version).toBe(1);
@@ -76,9 +79,15 @@ describe('typed governed reference data', () => {
     expect(currency.version).toBe(2);
     expect(currency.name).toBe('Pound sterling — governed');
 
-    let currencyVersions = await reference.listReferenceDataVersions(context, 'CURRENCY', currencyId);
+    let currencyVersions = await reference.listReferenceDataVersions(
+      context,
+      'CURRENCY',
+      currencyId
+    );
     expect(currencyVersions.map((row) => row.versionNo)).toEqual([2, 1]);
-    expect((currencyVersions[0].snapshot as { name: string }).name).toBe('Pound sterling — governed');
+    expect((currencyVersions[0].snapshot as { name: string }).name).toBe(
+      'Pound sterling — governed'
+    );
     expect((currencyVersions[1].snapshot as { name: string }).name).toBe('Pound sterling');
 
     await reference.retireReferenceData(
@@ -93,11 +102,19 @@ describe('typed governed reference data', () => {
     expect(currency.version).toBe(3);
     currencyVersions = await reference.listReferenceDataVersions(context, 'CURRENCY', currencyId);
     expect(currencyVersions.map((row) => row.versionNo)).toEqual([3, 2, 1]);
-    const uom = (await reference.listUnitsOfMeasure(context)).find((row) => row.id === millimetreId)!;
+    const uom = (await reference.listUnitsOfMeasure(context)).find(
+      (row) => row.id === millimetreId
+    )!;
     expect(uom.baseUnitId).toBe(metreId);
     expect(Number(uom.conversionMultiplier)).toBeCloseTo(0.001);
-    expect((await reference.listTaxRegimes(context)).find((row) => row.id === taxRegimeId)?.jurisdictionId).toBe(jurisdictionId);
-    expect((await reference.listContractFormFamilies(context)).find((row) => row.id === contractFamilyId)?.jurisdictionId).toBe(jurisdictionId);
+    expect(
+      (await reference.listTaxRegimes(context)).find((row) => row.id === taxRegimeId)
+        ?.jurisdictionId
+    ).toBe(jurisdictionId);
+    expect(
+      (await reference.listContractFormFamilies(context)).find((row) => row.id === contractFamilyId)
+        ?.jurisdictionId
+    ).toBe(jurisdictionId);
   });
 
   it('publishes immutable calendar configuration separately from schedule runtime state', async () => {
@@ -139,7 +156,9 @@ describe('typed governed reference data', () => {
       (row) => row.id === created.calendarId
     )!;
     expect(calendar.version).toBe(2);
-    expect((await reference.listReferenceCalendarVersions(context, created.calendarId))[0].status).toBe('PUBLISHED');
+    expect(
+      (await reference.listReferenceCalendarVersions(context, created.calendarId))[0].status
+    ).toBe('PUBLISHED');
 
     const secondVersionId = await reference.createReferenceCalendarVersion(
       context,
@@ -174,9 +193,10 @@ describe('typed governed reference data', () => {
     )!;
     expect(calendar.version).toBe(4);
     expect(
-      (await reference.listReferenceCalendarVersions(context, created.calendarId)).map(
-        (row) => [row.versionNo, row.status]
-      )
+      (await reference.listReferenceCalendarVersions(context, created.calendarId)).map((row) => [
+        row.versionNo,
+        row.status
+      ])
     ).toEqual([
       [2, 'PUBLISHED'],
       [1, 'PUBLISHED']
@@ -245,5 +265,4 @@ describe('typed governed reference data', () => {
       })
     ).rejects.toThrow('base unit directly');
   });
-
 });

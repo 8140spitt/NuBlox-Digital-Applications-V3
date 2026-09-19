@@ -26,7 +26,8 @@ function text(data: FormData, name: string) {
 
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 
@@ -44,7 +45,10 @@ function target(tenant: string, id?: string) {
 }
 
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'The Business Plan command could not be completed.' });
+  return fail(400, {
+    message:
+      error instanceof Error ? error.message : 'The Business Plan command could not be completed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
@@ -57,7 +61,8 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
   ]);
   const selected = plans.find((row) => row.id === url.searchParams.get('plan')) ?? plans[0] ?? null;
   const versions = selected ? await listBusinessPlanVersions(context, selected.id) : [];
-  const currentVersion = versions.find((version) => version.versionNo === selected?.currentVersionNo) ?? null;
+  const currentVersion =
+    versions.find((version) => version.versionNo === selected?.currentVersionNo) ?? null;
   const [objectiveReferences, assumptionReferences] = currentVersion
     ? await Promise.all([
         listBusinessPlanObjectiveReferences(context, currentVersion.id),
@@ -73,8 +78,12 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     objectiveReferences,
     assumptionReferences,
     frameworks: frameworks.filter((row) => row.status === 'PUBLISHED'),
-    objectives: objectives.filter((row) => ['APPROVED','ACTIVE','ACHIEVED','NOT_ACHIEVED'].includes(row.status)),
-    assumptions: assumptions.filter((row) => ['ACCEPTED','ACTIVE','CHALLENGED'].includes(row.status)),
+    objectives: objectives.filter((row) =>
+      ['APPROVED', 'ACTIVE', 'ACHIEVED', 'NOT_ACHIEVED'].includes(row.status)
+    ),
+    assumptions: assumptions.filter((row) =>
+      ['ACCEPTED', 'ACTIVE', 'CHALLENGED'].includes(row.status)
+    ),
     capabilities: {
       canManage: hasPermission(context, 'strategy.plan.manage'),
       canApprove: hasPermission(context, 'strategy.plan.approve')
@@ -86,22 +95,25 @@ export const actions: Actions = {
   create: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      const id = await createBusinessPlan(await resolveRequestCommandContext(params.tenant, locals), {
-        planRef: text(data, 'planRef'),
-        name: text(data, 'name'),
-        frameworkId: text(data, 'frameworkId'),
-        frameworkVersionNo: integer(data, 'frameworkVersionNo'),
-        scopeType: text(data, 'scopeType'),
-        scopeId: text(data, 'scopeId'),
-        periodStart: text(data, 'periodStart'),
-        periodEnd: text(data, 'periodEnd'),
-        resourceAssumptions: text(data, 'resourceAssumptions'),
-        financialExpectations: text(data, 'financialExpectations'),
-        measurableOutcomes: text(data, 'measurableOutcomes'),
-        deliveryRoadmap: text(data, 'deliveryRoadmap'),
-        objectives: references(data, 'objectives'),
-        assumptions: references(data, 'assumptions')
-      });
+      const id = await createBusinessPlan(
+        await resolveRequestCommandContext(params.tenant, locals),
+        {
+          planRef: text(data, 'planRef'),
+          name: text(data, 'name'),
+          frameworkId: text(data, 'frameworkId'),
+          frameworkVersionNo: integer(data, 'frameworkVersionNo'),
+          scopeType: text(data, 'scopeType'),
+          scopeId: text(data, 'scopeId'),
+          periodStart: text(data, 'periodStart'),
+          periodEnd: text(data, 'periodEnd'),
+          resourceAssumptions: text(data, 'resourceAssumptions'),
+          financialExpectations: text(data, 'financialExpectations'),
+          measurableOutcomes: text(data, 'measurableOutcomes'),
+          deliveryRoadmap: text(data, 'deliveryRoadmap'),
+          objectives: references(data, 'objectives'),
+          assumptions: references(data, 'assumptions')
+        }
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -113,14 +125,19 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'planId');
     try {
-      await reviseBusinessPlan(await resolveRequestCommandContext(params.tenant, locals), id, integer(data, 'aggregateVersion'), {
-        resourceAssumptions: text(data, 'resourceAssumptions'),
-        financialExpectations: text(data, 'financialExpectations'),
-        measurableOutcomes: text(data, 'measurableOutcomes'),
-        deliveryRoadmap: text(data, 'deliveryRoadmap'),
-        objectives: references(data, 'objectives'),
-        assumptions: references(data, 'assumptions')
-      });
+      await reviseBusinessPlan(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        integer(data, 'aggregateVersion'),
+        {
+          resourceAssumptions: text(data, 'resourceAssumptions'),
+          financialExpectations: text(data, 'financialExpectations'),
+          measurableOutcomes: text(data, 'measurableOutcomes'),
+          deliveryRoadmap: text(data, 'deliveryRoadmap'),
+          objectives: references(data, 'objectives'),
+          assumptions: references(data, 'assumptions')
+        }
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -132,7 +149,11 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'planId');
     try {
-      await submitBusinessPlan(await resolveRequestCommandContext(params.tenant, locals), id, integer(data, 'aggregateVersion'));
+      await submitBusinessPlan(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        integer(data, 'aggregateVersion')
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -167,7 +188,11 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'planId');
     try {
-      await activateBusinessPlan(await resolveRequestCommandContext(params.tenant, locals), id, integer(data, 'aggregateVersion'));
+      await activateBusinessPlan(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        integer(data, 'aggregateVersion')
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -179,7 +204,11 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'planId');
     try {
-      await closeBusinessPlan(await resolveRequestCommandContext(params.tenant, locals), id, integer(data, 'aggregateVersion'));
+      await closeBusinessPlan(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        integer(data, 'aggregateVersion')
+      );
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

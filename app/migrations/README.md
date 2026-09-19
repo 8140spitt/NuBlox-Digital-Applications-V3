@@ -93,91 +93,73 @@ Development bootstrap records are application/test fixtures, not migration conte
 
 `0012_lifecycle_configuration_runtime.sql` introduces `AGG-29-LIFECYCLE-CONFIG`: stable Lifecycle Definition identities, versioned draft/published configurations, state definitions and transition-rule value rows. Published versions are immutable and runtime domain state remains owned by the relevant domain aggregate.
 
-
 ## Migration 0013 — authority configuration runtime
 
 `0013_authority_configuration_runtime.sql` introduces `AGG-29-AUTHORITY-CONFIG`: stable Approval Authority Rule and Delegated Authority Rule identities with draft/published immutable versions, scope/value/effectivity constraints and attributable configuration governance. Policy does not itself grant runtime authority; effective grants remain in `AUTH-DELEGATED-AUTHORITY`.
-
 
 ## Migration 0014 — reference data runtime
 
 `0014_reference_data_runtime.sql` introduces `AGG-29-REFERENCE-DATA` as typed governed reference semantics rather than a generic lookup bucket: Jurisdiction, Currency, Unit of Measure, Tax Regime, Contract Form Family and versioned Calendar configuration. Reference identities are effective-dated/versioned so historical transactions can retain the exact meaning used originally.
 
-
 ## Migration 0015 — Strategy Decision reference
 
 `0015_strategy_decision_reference.sql` replaces free-text review notes as the authoritative F01 review linkage with an explicit foreign-key reference from each Strategy Framework Version to immutable `AGG-27-DECISION` evidence. Domain state transition and Decision evidence remain separate aggregate commands; the domain command validates the exact referenced decision before changing Strategy state.
-
 
 ## Migration 0016 — reference-data history
 
 `0016_reference_data_history.sql` adds immutable version snapshots for typed enterprise reference identities and backfills the existing governed state. Reference revisions use optimistic concurrency and append a snapshot rather than erasing prior meaning; retirement ends effectivity without deleting identity. Calendar configuration remains separately versioned and published with non-overlapping effectivity.
 
-
 ## Migration 0017 — authority-policy traceability
 
 `0017_authority_policy_traceability.sql` makes policy-as-applied explicit. A protected `AGG-27-DECISION` retains the exact published Approval Authority Rule version used, and an approved `AGG-01-AUTHORITY` Delegated Authority retains the exact Delegated Authority Rule version used. Composite foreign keys prevent mismatched rule/version pairs while historical pre-policy records remain valid with null policy references.
-
 
 ## Migration 0018 — strategic assumption runtime
 
 `0018_strategic_assumption_runtime.sql` implements F01.02 Environmental Analysis through `AGG-02-ASSUMPTION`. Stable Strategic Assumption identities retain immutable content versions, confidence, scope/effectivity and optional governed `AGG-28-EVIDENCE` references. Assessment/challenge/invalidation changes lifecycle state without rewriting prior versions; analytical F01.02 activities query the same governed evidence base by lens/category.
 
-
 ## Migration 0019 — strategic objective runtime
 
 `0019_strategic_objective_runtime.sql` implements `AGG-02-OBJECTIVE` for F01.03 Strategic Planning. Each Strategic Objective has a stable identity, immutable content versions, accountable owner, scope/horizon/success criteria and an exact reference to the published Strategy Framework version it supports. Objective lifecycle changes remain independent from Strategy Framework publication and future KPI/target aggregates.
-
 
 ## Migration 0020 — Business Plan runtime
 
 `0020_business_plan_runtime.sql` implements F01.04 Business Planning as a governed `SGP-BUSINESS-PLAN` identity under the existing `AGG-02-STRATEGY` boundary. Every immutable plan version pins exact published Strategy Framework context, exact Strategic Objective versions and exact Strategic Assumption versions. Approval retains immutable `AGG-27-DECISION` evidence; activating a successor version supersedes the previous current baseline without rewriting it. Financial/resource expectations remain planning semantics, not Budget or Forecast truth.
 
-
 ## Migration 0021 — Operating Model runtime
 
 `0021_operating_model_runtime.sql` implements F01.05 Operating Model as structured, versioned Strategy content under `AGG-02-STRATEGY`. Each version preserves current-state and target-state assessments, design principles, centralisation/shared-service choices, target capability definitions and accountability design. The model references but never replaces live Organisation Unit structure. Approval is retained as immutable `AGG-27-DECISION` evidence and activation supersedes prior active versions explicitly.
-
 
 ## Migration 0022 — strategic performance runtime
 
 `0022_performance_runtime.sql` implements F01.06 Goal & KPI Management through `AGG-02-PERFORMANCE`. KPI Definition, Performance Target, Performance Observation and Baseline are separate semantic layers. KPI versions pin governed UOM and exact Strategic Objective versions; targets pin effective KPI versions; observations are immutable evidence occurrences; baselines pin validated observations; variance is computed as a read projection and corrective action delegates to shared `AGG-27-WORK` rather than creating an F01-specific task engine.
 
-
 ## Migration 0023 — Strategic Review / Governance Meeting runtime
 
 `0023_strategic_review_runtime.sql` implements F01.07 through the frozen `AGG-02-GOVERNANCE-MEETING` boundary. Meeting occurrence owns schedule, quorum, attendees, agenda and review findings. Resulting choices remain immutable shared `AGG-27-DECISION` records and follow-up actions remain shared Work Items; linkage tables preserve review context without creating duplicate decision or action masters.
-
 
 ## Migration 0024 — Scenario & foresight runtime
 
 `0024_scenario_runtime.sql` implements F01.08 through `AGG-02-SCENARIO`. Stable Scenario identities retain immutable versions with explicit horizon/scope, drivers, exact Strategic Assumption versions and optional exact KPI projections. Sensitivity analyses and contingency strategies are attributable scenario evidence tied to an exact version. Scenario lifecycle is independent from Forecast Snapshot truth and activation never rewrites decisions made against older Scenario versions.
 
-
 ## Migration 0025 — Governance Body runtime
 
 `0025_governance_body_runtime.sql` implements the `AGG-02-GOVERNANCE` stable Governance Body boundary for F02.01 Board Governance and F02.05 Committee Governance. Boards and committees retain immutable configuration versions and effective-dated Party membership with explicit quorum, chair and secretariat semantics. Membership is governance context only: it does not grant decision authority, permissions or Delegated Authority. Meetings and Decisions remain separate aggregate transactions.
-
 
 ## Migration 0026 — Authority Framework runtime
 
 `0026_authority_framework_runtime.sql` implements F02.02 through the frozen `AGG-02-AUTHORITY-FRAMEWORK` boundary. Stable Authority Framework identities retain immutable governance versions containing authority classes, decision rights, monetary/non-monetary limits, reserved matters, delegation/subdelegation constraints and segregation-of-duties rules. Approval retains immutable shared `AGG-27-DECISION` evidence. The Framework is governance policy: it does not itself grant permission, create Delegated Authority or replace executable `AGG-29-AUTHORITY-CONFIG` policy.
 
-
 ## Migration 0027 — Information Container runtime
 
 `0027_information_container_runtime.sql` implements the frozen `AGG-07-INFORMATION` boundary. Stable Information Container identity survives controlled revisions and representation/file changes. Revisions preserve purpose-of-issue, suitability, subject/context and immutable approval/issue history; representations retain content references and integrity hashes without becoming the information identity. Issued revisions are immutable and later corrections create successor revisions. Shared `AGG-27-DECISION` evidence authorises approval while exchanges, transmittals and workflows remain separate aggregates.
-
 
 ## Migration 0028 — Policy Governance profile runtime
 
 `0028_policy_governance_runtime.sql` implements F02.06 as a governed Policy profile over canonical controlled information. Policy uses the exact `AGG-07-INFORMATION` Information Container identity rather than creating a second document master. `policy_profiles` adds stable policy type while `policy_revision_profiles` pins revision-specific owner, governance body, applicability, scope, effectivity, review date and attestation requirement to the exact immutable Information Revision. Approval, issue and supersession remain owned by the Information Container lifecycle; `AGG-02-POLICY` records policy-specific governance evidence.
 
-
 ## Migration 0029 — restricted Integrity Case runtime
 
 `0029_integrity_case_runtime.sql` implements F02.07 Ethics Governance through the frozen `AGG-21-CASE / INTEGRITY-CASE` boundary. Integrity Cases retain stable restricted case identity, Party subjects, investigation ownership, append-only case journal entries, governed Evidence Item links, immutable Decision links and shared Work Item follow-up. Tenant permission is necessary but insufficient for case visibility: every case query and command also requires an active per-case Party access grant. Case business events intentionally exclude allegation, source and journal content so restricted case narrative is not replicated into the general event/outbox stream.
-
 
 ## Migration 0030 — Governance Meeting controlled-information links
 

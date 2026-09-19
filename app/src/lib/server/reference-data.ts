@@ -67,11 +67,7 @@ export type ReferenceCalendar = {
 };
 
 export type ReferenceDataType =
-  | 'JURISDICTION'
-  | 'CURRENCY'
-  | 'UNIT_OF_MEASURE'
-  | 'TAX_REGIME'
-  | 'CONTRACT_FORM_FAMILY';
+  'JURISDICTION' | 'CURRENCY' | 'UNIT_OF_MEASURE' | 'TAX_REGIME' | 'CONTRACT_FORM_FAMILY';
 
 export type ReferenceDataVersion = {
   id: string;
@@ -129,7 +125,8 @@ function range(from: string | undefined, to: string | undefined) {
   };
   const validFrom = parse(from, 'Valid-from');
   const validTo = parse(to, 'Valid-to');
-  if (validFrom && validTo && validTo <= validFrom) throw new Error('Valid-to must be later than valid-from.');
+  if (validFrom && validTo && validTo <= validFrom)
+    throw new Error('Valid-to must be later than valid-from.');
   return { validFrom, validTo };
 }
 
@@ -285,8 +282,10 @@ function validateWorkingPattern(value: unknown) {
   ]);
   const clock = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
   for (const [day, intervals] of Object.entries(value as Record<string, unknown>)) {
-    if (!allowed.has(day.toLowerCase())) throw new Error('Calendar working pattern contains an invalid weekday.');
-    if (!Array.isArray(intervals)) throw new Error('Calendar weekday working periods must be arrays.');
+    if (!allowed.has(day.toLowerCase()))
+      throw new Error('Calendar working pattern contains an invalid weekday.');
+    if (!Array.isArray(intervals))
+      throw new Error('Calendar weekday working periods must be arrays.');
     let previousEnd = '';
     for (const interval of intervals) {
       if (
@@ -386,11 +385,37 @@ export async function createJurisdiction(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_jurisdictions (id, tenant_id, jurisdiction_key, name, country_region_code, parent_jurisdiction_id, authority_context, status, version, valid_from, valid_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 1, ?, ?, ?, ?)",
-      [id, context.tenantId, jurisdictionKey, name, input.countryRegionCode?.trim() || null, parentJurisdictionId, input.authorityContext?.trim() || null, validity.validFrom, validity.validTo, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        jurisdictionKey,
+        name,
+        input.countryRegionCode?.trim() || null,
+        parentJurisdictionId,
+        input.authorityContext?.trim() || null,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        timestamp
+      ],
       connection
     );
-    await recordReferenceVersion(context, 'JURISDICTION', id, 'Initial governed reference version.', connection);
-    await evidence(context, 'reference_jurisdiction', id, 1, 'REFERENCE_JURISDICTION_CREATED', { jurisdictionKey, name, status: 'ACTIVE' }, connection);
+    await recordReferenceVersion(
+      context,
+      'JURISDICTION',
+      id,
+      'Initial governed reference version.',
+      connection
+    );
+    await evidence(
+      context,
+      'reference_jurisdiction',
+      id,
+      1,
+      'REFERENCE_JURISDICTION_CREATED',
+      { jurisdictionKey, name, status: 'ACTIVE' },
+      connection
+    );
     return id;
   });
 }
@@ -420,11 +445,35 @@ export async function createCurrency(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_currencies (id, tenant_id, iso_code, name, minor_units, status, version, valid_from, valid_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 'ACTIVE', 1, ?, ?, ?, ?)",
-      [id, context.tenantId, isoCode, name, input.minorUnits, validity.validFrom, validity.validTo, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        isoCode,
+        name,
+        input.minorUnits,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        timestamp
+      ],
       connection
     );
-    await recordReferenceVersion(context, 'CURRENCY', id, 'Initial governed reference version.', connection);
-    await evidence(context, 'reference_currency', id, 1, 'REFERENCE_CURRENCY_CREATED', { isoCode, name, minorUnits: input.minorUnits, status: 'ACTIVE' }, connection);
+    await recordReferenceVersion(
+      context,
+      'CURRENCY',
+      id,
+      'Initial governed reference version.',
+      connection
+    );
+    await evidence(
+      context,
+      'reference_currency',
+      id,
+      1,
+      'REFERENCE_CURRENCY_CREATED',
+      { isoCode, name, minorUnits: input.minorUnits, status: 'ACTIVE' },
+      connection
+    );
     return id;
   });
 }
@@ -456,7 +505,8 @@ export async function createUnitOfMeasure(
   const dimensionKey = key(input.dimensionKey, 'Dimension key', 128);
   const multiplier = input.conversionMultiplier ?? 1;
   const offset = input.conversionOffset ?? 0;
-  if (!Number.isFinite(multiplier) || multiplier === 0) throw new Error('Conversion multiplier must be a non-zero number.');
+  if (!Number.isFinite(multiplier) || multiplier === 0)
+    throw new Error('Conversion multiplier must be a non-zero number.');
   if (!Number.isFinite(offset)) throw new Error('Conversion offset must be a number.');
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
@@ -469,8 +519,10 @@ export async function createUnitOfMeasure(
         connection
       );
       if (!base) throw new Error('Active base Unit of Measure not found.');
-      if (base.dimensionKey !== dimensionKey) throw new Error('Base Unit of Measure must share the same dimension.');
-      if (base.baseUnitId) throw new Error('Unit conversions must reference the dimension base unit directly.');
+      if (base.dimensionKey !== dimensionKey)
+        throw new Error('Base Unit of Measure must share the same dimension.');
+      if (base.baseUnitId)
+        throw new Error('Unit conversions must reference the dimension base unit directly.');
     } else if (multiplier !== 1 || offset !== 0) {
       throw new Error('A dimension base unit must use multiplier 1 and offset 0.');
     }
@@ -478,11 +530,39 @@ export async function createUnitOfMeasure(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_units_of_measure (id, tenant_id, unit_code, symbol, name, dimension_key, base_unit_id, conversion_multiplier, conversion_offset, status, version, valid_from, valid_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 1, ?, ?, ?, ?)",
-      [id, context.tenantId, unitCode, required(input.symbol, 'Unit symbol'), required(input.name, 'Unit name'), dimensionKey, input.baseUnitId?.trim() || null, multiplier, offset, validity.validFrom, validity.validTo, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        unitCode,
+        required(input.symbol, 'Unit symbol'),
+        required(input.name, 'Unit name'),
+        dimensionKey,
+        input.baseUnitId?.trim() || null,
+        multiplier,
+        offset,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        timestamp
+      ],
       connection
     );
-    await recordReferenceVersion(context, 'UNIT_OF_MEASURE', id, 'Initial governed reference version.', connection);
-    await evidence(context, 'reference_unit_of_measure', id, 1, 'REFERENCE_UOM_CREATED', { unitCode, dimensionKey, baseUnitId: input.baseUnitId?.trim() || null, status: 'ACTIVE' }, connection);
+    await recordReferenceVersion(
+      context,
+      'UNIT_OF_MEASURE',
+      id,
+      'Initial governed reference version.',
+      connection
+    );
+    await evidence(
+      context,
+      'reference_unit_of_measure',
+      id,
+      1,
+      'REFERENCE_UOM_CREATED',
+      { unitCode, dimensionKey, baseUnitId: input.baseUnitId?.trim() || null, status: 'ACTIVE' },
+      connection
+    );
     return id;
   });
 }
@@ -497,7 +577,15 @@ export async function listTaxRegimes(context: CommandContext) {
 
 export async function createTaxRegime(
   context: CommandContext,
-  input: { regimeKey: string; name: string; taxType: string; jurisdictionId: string; authorityName?: string; validFrom?: string; validTo?: string }
+  input: {
+    regimeKey: string;
+    name: string;
+    taxType: string;
+    jurisdictionId: string;
+    authorityName?: string;
+    validFrom?: string;
+    validTo?: string;
+  }
 ) {
   assertPermission(context, 'reference.data.manage');
   const regimeKey = key(input.regimeKey, 'Tax regime key');
@@ -509,11 +597,37 @@ export async function createTaxRegime(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_tax_regimes (id, tenant_id, regime_key, name, tax_type, jurisdiction_id, authority_name, status, version, valid_from, valid_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 1, ?, ?, ?, ?)",
-      [id, context.tenantId, regimeKey, required(input.name, 'Tax regime name'), taxType, input.jurisdictionId, input.authorityName?.trim() || null, validity.validFrom, validity.validTo, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        regimeKey,
+        required(input.name, 'Tax regime name'),
+        taxType,
+        input.jurisdictionId,
+        input.authorityName?.trim() || null,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        timestamp
+      ],
       connection
     );
-    await recordReferenceVersion(context, 'TAX_REGIME', id, 'Initial governed reference version.', connection);
-    await evidence(context, 'reference_tax_regime', id, 1, 'REFERENCE_TAX_REGIME_CREATED', { regimeKey, taxType, jurisdictionId: input.jurisdictionId, status: 'ACTIVE' }, connection);
+    await recordReferenceVersion(
+      context,
+      'TAX_REGIME',
+      id,
+      'Initial governed reference version.',
+      connection
+    );
+    await evidence(
+      context,
+      'reference_tax_regime',
+      id,
+      1,
+      'REFERENCE_TAX_REGIME_CREATED',
+      { regimeKey, taxType, jurisdictionId: input.jurisdictionId, status: 'ACTIVE' },
+      connection
+    );
     return id;
   });
 }
@@ -528,7 +642,15 @@ export async function listContractFormFamilies(context: CommandContext) {
 
 export async function createContractFormFamily(
   context: CommandContext,
-  input: { familyKey: string; name: string; publisherBody?: string; editionFamily?: string; jurisdictionId?: string; validFrom?: string; validTo?: string }
+  input: {
+    familyKey: string;
+    name: string;
+    publisherBody?: string;
+    editionFamily?: string;
+    jurisdictionId?: string;
+    validFrom?: string;
+    validTo?: string;
+  }
 ) {
   assertPermission(context, 'reference.data.manage');
   const familyKey = key(input.familyKey, 'Contract form family key');
@@ -539,15 +661,40 @@ export async function createContractFormFamily(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_contract_form_families (id, tenant_id, family_key, name, publisher_body, edition_family, jurisdiction_id, status, version, valid_from, valid_to, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 1, ?, ?, ?, ?)",
-      [id, context.tenantId, familyKey, required(input.name, 'Contract form family name'), input.publisherBody?.trim() || null, input.editionFamily?.trim() || null, input.jurisdictionId?.trim() || null, validity.validFrom, validity.validTo, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        familyKey,
+        required(input.name, 'Contract form family name'),
+        input.publisherBody?.trim() || null,
+        input.editionFamily?.trim() || null,
+        input.jurisdictionId?.trim() || null,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        timestamp
+      ],
       connection
     );
-    await recordReferenceVersion(context, 'CONTRACT_FORM_FAMILY', id, 'Initial governed reference version.', connection);
-    await evidence(context, 'reference_contract_form_family', id, 1, 'REFERENCE_CONTRACT_FORM_FAMILY_CREATED', { familyKey, jurisdictionId: input.jurisdictionId?.trim() || null, status: 'ACTIVE' }, connection);
+    await recordReferenceVersion(
+      context,
+      'CONTRACT_FORM_FAMILY',
+      id,
+      'Initial governed reference version.',
+      connection
+    );
+    await evidence(
+      context,
+      'reference_contract_form_family',
+      id,
+      1,
+      'REFERENCE_CONTRACT_FORM_FAMILY_CREATED',
+      { familyKey, jurisdictionId: input.jurisdictionId?.trim() || null, status: 'ACTIVE' },
+      connection
+    );
     return id;
   });
 }
-
 
 export async function reviseJurisdiction(
   context: CommandContext,
@@ -567,19 +714,45 @@ export async function reviseJurisdiction(
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
     const current = await currentReferenceSnapshot(context, 'JURISDICTION', id, connection);
-    if (current.version !== expectedVersion) throw new Error('This Jurisdiction changed after you opened it.');
+    if (current.version !== expectedVersion)
+      throw new Error('This Jurisdiction changed after you opened it.');
     if (current.status !== 'ACTIVE') throw new Error('Only an active Jurisdiction can be revised.');
     const parentId = input.parentJurisdictionId?.trim() || null;
     await assertJurisdictionParent(context, id, parentId, connection);
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE reference_jurisdictions SET name = ?, country_region_code = ?, parent_jurisdiction_id = ?, authority_context = ?, valid_from = ?, valid_to = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
-      [required(input.name, 'Jurisdiction name'), input.countryRegionCode?.trim() || null, parentId, input.authorityContext?.trim() || null, validity.validFrom, validity.validTo, timestamp, id, context.tenantId, expectedVersion],
+      [
+        required(input.name, 'Jurisdiction name'),
+        input.countryRegionCode?.trim() || null,
+        parentId,
+        input.authorityContext?.trim() || null,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        id,
+        context.tenantId,
+        expectedVersion
+      ],
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Jurisdiction change detected.');
-    const updated = await recordReferenceVersion(context, 'JURISDICTION', id, input.reason, connection);
-    await evidence(context, 'reference_jurisdiction', id, updated.version, 'REFERENCE_JURISDICTION_REVISED', { status: updated.status }, connection);
+    const updated = await recordReferenceVersion(
+      context,
+      'JURISDICTION',
+      id,
+      input.reason,
+      connection
+    );
+    await evidence(
+      context,
+      'reference_jurisdiction',
+      id,
+      updated.version,
+      'REFERENCE_JURISDICTION_REVISED',
+      { status: updated.status },
+      connection
+    );
     return updated;
   });
 }
@@ -597,17 +770,35 @@ export async function reviseCurrency(
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
     const current = await currentReferenceSnapshot(context, 'CURRENCY', id, connection);
-    if (current.version !== expectedVersion) throw new Error('This Currency changed after you opened it.');
+    if (current.version !== expectedVersion)
+      throw new Error('This Currency changed after you opened it.');
     if (current.status !== 'ACTIVE') throw new Error('Only an active Currency can be revised.');
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE reference_currencies SET name = ?, minor_units = ?, valid_from = ?, valid_to = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
-      [required(input.name, 'Currency name'), input.minorUnits, validity.validFrom, validity.validTo, timestamp, id, context.tenantId, expectedVersion],
+      [
+        required(input.name, 'Currency name'),
+        input.minorUnits,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        id,
+        context.tenantId,
+        expectedVersion
+      ],
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Currency change detected.');
     const updated = await recordReferenceVersion(context, 'CURRENCY', id, input.reason, connection);
-    await evidence(context, 'reference_currency', id, updated.version, 'REFERENCE_CURRENCY_REVISED', { status: updated.status }, connection);
+    await evidence(
+      context,
+      'reference_currency',
+      id,
+      updated.version,
+      'REFERENCE_CURRENCY_REVISED',
+      { status: updated.status },
+      connection
+    );
     return updated;
   });
 }
@@ -630,36 +821,69 @@ export async function reviseUnitOfMeasure(
   assertPermission(context, 'reference.data.manage');
   const multiplier = input.conversionMultiplier ?? 1;
   const offset = input.conversionOffset ?? 0;
-  if (!Number.isFinite(multiplier) || multiplier === 0) throw new Error('Conversion multiplier must be a non-zero number.');
+  if (!Number.isFinite(multiplier) || multiplier === 0)
+    throw new Error('Conversion multiplier must be a non-zero number.');
   if (!Number.isFinite(offset)) throw new Error('Conversion offset must be a number.');
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
     const current = await currentReferenceSnapshot(context, 'UNIT_OF_MEASURE', id, connection);
-    if (current.version !== expectedVersion) throw new Error('This Unit of Measure changed after you opened it.');
-    if (current.status !== 'ACTIVE') throw new Error('Only an active Unit of Measure can be revised.');
+    if (current.version !== expectedVersion)
+      throw new Error('This Unit of Measure changed after you opened it.');
+    if (current.status !== 'ACTIVE')
+      throw new Error('Only an active Unit of Measure can be revised.');
     const baseUnitId = input.baseUnitId?.trim() || null;
     if (baseUnitId === id) throw new Error('Unit of Measure cannot be its own base unit.');
     if (baseUnitId) {
-      const base = await queryOne<RowDataPacket & { dimensionKey: string; baseUnitId: string | null }>(
+      const base = await queryOne<
+        RowDataPacket & { dimensionKey: string; baseUnitId: string | null }
+      >(
         "SELECT dimension_key AS dimensionKey, base_unit_id AS baseUnitId FROM reference_units_of_measure WHERE id = ? AND tenant_id = ? AND status = 'ACTIVE'",
         [baseUnitId, context.tenantId],
         connection
       );
       if (!base) throw new Error('Active base Unit of Measure not found.');
-      if (base.dimensionKey !== current.dimensionKey) throw new Error('Base Unit of Measure must share the same dimension.');
-      if (base.baseUnitId) throw new Error('Unit conversions must reference the dimension base unit directly.');
+      if (base.dimensionKey !== current.dimensionKey)
+        throw new Error('Base Unit of Measure must share the same dimension.');
+      if (base.baseUnitId)
+        throw new Error('Unit conversions must reference the dimension base unit directly.');
     } else if (multiplier !== 1 || offset !== 0) {
       throw new Error('A dimension base unit must use multiplier 1 and offset 0.');
     }
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE reference_units_of_measure SET symbol = ?, name = ?, base_unit_id = ?, conversion_multiplier = ?, conversion_offset = ?, valid_from = ?, valid_to = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
-      [required(input.symbol, 'Unit symbol'), required(input.name, 'Unit name'), baseUnitId, multiplier, offset, validity.validFrom, validity.validTo, timestamp, id, context.tenantId, expectedVersion],
+      [
+        required(input.symbol, 'Unit symbol'),
+        required(input.name, 'Unit name'),
+        baseUnitId,
+        multiplier,
+        offset,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        id,
+        context.tenantId,
+        expectedVersion
+      ],
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Unit of Measure change detected.');
-    const updated = await recordReferenceVersion(context, 'UNIT_OF_MEASURE', id, input.reason, connection);
-    await evidence(context, 'reference_unit_of_measure', id, updated.version, 'REFERENCE_UOM_REVISED', { status: updated.status }, connection);
+    const updated = await recordReferenceVersion(
+      context,
+      'UNIT_OF_MEASURE',
+      id,
+      input.reason,
+      connection
+    );
+    await evidence(
+      context,
+      'reference_unit_of_measure',
+      id,
+      updated.version,
+      'REFERENCE_UOM_REVISED',
+      { status: updated.status },
+      connection
+    );
     return updated;
   });
 }
@@ -681,18 +905,43 @@ export async function reviseTaxRegime(
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
     const current = await currentReferenceSnapshot(context, 'TAX_REGIME', id, connection);
-    if (current.version !== expectedVersion) throw new Error('This Tax Regime changed after you opened it.');
+    if (current.version !== expectedVersion)
+      throw new Error('This Tax Regime changed after you opened it.');
     if (current.status !== 'ACTIVE') throw new Error('Only an active Tax Regime can be revised.');
     await assertJurisdiction(context, input.jurisdictionId, connection);
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE reference_tax_regimes SET name = ?, jurisdiction_id = ?, authority_name = ?, valid_from = ?, valid_to = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
-      [required(input.name, 'Tax regime name'), input.jurisdictionId, input.authorityName?.trim() || null, validity.validFrom, validity.validTo, timestamp, id, context.tenantId, expectedVersion],
+      [
+        required(input.name, 'Tax regime name'),
+        input.jurisdictionId,
+        input.authorityName?.trim() || null,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        id,
+        context.tenantId,
+        expectedVersion
+      ],
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Tax Regime change detected.');
-    const updated = await recordReferenceVersion(context, 'TAX_REGIME', id, input.reason, connection);
-    await evidence(context, 'reference_tax_regime', id, updated.version, 'REFERENCE_TAX_REGIME_REVISED', { status: updated.status }, connection);
+    const updated = await recordReferenceVersion(
+      context,
+      'TAX_REGIME',
+      id,
+      input.reason,
+      connection
+    );
+    await evidence(
+      context,
+      'reference_tax_regime',
+      id,
+      updated.version,
+      'REFERENCE_TAX_REGIME_REVISED',
+      { status: updated.status },
+      connection
+    );
     return updated;
   });
 }
@@ -715,19 +964,47 @@ export async function reviseContractFormFamily(
   const validity = range(input.validFrom, input.validTo);
   return dbTransaction(async (connection) => {
     const current = await currentReferenceSnapshot(context, 'CONTRACT_FORM_FAMILY', id, connection);
-    if (current.version !== expectedVersion) throw new Error('This Contract Form Family changed after you opened it.');
-    if (current.status !== 'ACTIVE') throw new Error('Only an active Contract Form Family can be revised.');
+    if (current.version !== expectedVersion)
+      throw new Error('This Contract Form Family changed after you opened it.');
+    if (current.status !== 'ACTIVE')
+      throw new Error('Only an active Contract Form Family can be revised.');
     const jurisdictionId = input.jurisdictionId?.trim() || null;
     if (jurisdictionId) await assertJurisdiction(context, jurisdictionId, connection);
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE reference_contract_form_families SET name = ?, publisher_body = ?, edition_family = ?, jurisdiction_id = ?, valid_from = ?, valid_to = ?, version = version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND version = ?',
-      [required(input.name, 'Contract form family name'), input.publisherBody?.trim() || null, input.editionFamily?.trim() || null, jurisdictionId, validity.validFrom, validity.validTo, timestamp, id, context.tenantId, expectedVersion],
+      [
+        required(input.name, 'Contract form family name'),
+        input.publisherBody?.trim() || null,
+        input.editionFamily?.trim() || null,
+        jurisdictionId,
+        validity.validFrom,
+        validity.validTo,
+        timestamp,
+        id,
+        context.tenantId,
+        expectedVersion
+      ],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Contract Form Family change detected.');
-    const updated = await recordReferenceVersion(context, 'CONTRACT_FORM_FAMILY', id, input.reason, connection);
-    await evidence(context, 'reference_contract_form_family', id, updated.version, 'REFERENCE_CONTRACT_FORM_FAMILY_REVISED', { status: updated.status }, connection);
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Contract Form Family change detected.');
+    const updated = await recordReferenceVersion(
+      context,
+      'CONTRACT_FORM_FAMILY',
+      id,
+      input.reason,
+      connection
+    );
+    await evidence(
+      context,
+      'reference_contract_form_family',
+      id,
+      updated.version,
+      'REFERENCE_CONTRACT_FORM_FAMILY_REVISED',
+      { status: updated.status },
+      connection
+    );
     return updated;
   });
 }
@@ -755,7 +1032,8 @@ export async function retireReferenceData(
   if (!definition) throw new Error('Unsupported reference-data type.');
   return dbTransaction(async (connection) => {
     const current = await currentReferenceSnapshot(context, referenceType, id, connection);
-    if (current.version !== expectedVersion) throw new Error('This Reference Data item changed after you opened it.');
+    if (current.version !== expectedVersion)
+      throw new Error('This Reference Data item changed after you opened it.');
     if (current.status !== 'ACTIVE') throw new Error('Only active Reference Data can be retired.');
     const timestamp = now();
     const result = await executeMutation(
@@ -763,7 +1041,8 @@ export async function retireReferenceData(
       [timestamp, timestamp, id, context.tenantId, expectedVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Reference Data retirement detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Reference Data retirement detected.');
     const updated = await recordReferenceVersion(context, referenceType, id, reason, connection);
     await evidence(
       context,
@@ -796,7 +1075,16 @@ export async function listReferenceCalendarVersions(context: CommandContext, cal
 
 export async function createReferenceCalendar(
   context: CommandContext,
-  input: { calendarKey: string; name: string; timezoneName: string; workingPattern: unknown; holidays?: unknown; exceptions?: unknown; effectiveFrom?: string; effectiveTo?: string }
+  input: {
+    calendarKey: string;
+    name: string;
+    timezoneName: string;
+    workingPattern: unknown;
+    holidays?: unknown;
+    exceptions?: unknown;
+    effectiveFrom?: string;
+    effectiveTo?: string;
+  }
 ) {
   assertPermission(context, 'reference.data.manage');
   const calendarKey = key(input.calendarKey, 'Calendar key');
@@ -811,19 +1099,46 @@ export async function createReferenceCalendar(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_calendars (id, tenant_id, calendar_key, name, status, version, created_at, updated_at) VALUES (?, ?, ?, ?, 'ACTIVE', 1, ?, ?)",
-      [id, context.tenantId, calendarKey, required(input.name, 'Calendar name'), timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        calendarKey,
+        required(input.name, 'Calendar name'),
+        timestamp,
+        timestamp
+      ],
       connection
     );
     await executeMutation(
       "INSERT INTO reference_calendar_versions (id, tenant_id, calendar_id, version_no, status, timezone_name, working_pattern_json, holidays_json, exceptions_json, effective_from, effective_to, published_at, created_by_party_id, created_at, updated_at) VALUES (?, ?, ?, 1, 'DRAFT', ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)",
-      [versionId, context.tenantId, id, timezoneName, JSON.stringify(workingPattern), JSON.stringify(holidays), JSON.stringify(exceptions), validity.validFrom, validity.validTo, context.actorPartyId, timestamp, timestamp],
+      [
+        versionId,
+        context.tenantId,
+        id,
+        timezoneName,
+        JSON.stringify(workingPattern),
+        JSON.stringify(holidays),
+        JSON.stringify(exceptions),
+        validity.validFrom,
+        validity.validTo,
+        context.actorPartyId,
+        timestamp,
+        timestamp
+      ],
       connection
     );
-    await evidence(context, 'reference_calendar', id, 1, 'REFERENCE_CALENDAR_CREATED', { calendarKey, versionId, versionNo: 1, versionStatus: 'DRAFT', status: 'ACTIVE' }, connection);
+    await evidence(
+      context,
+      'reference_calendar',
+      id,
+      1,
+      'REFERENCE_CALENDAR_CREATED',
+      { calendarKey, versionId, versionNo: 1, versionStatus: 'DRAFT', status: 'ACTIVE' },
+      connection
+    );
     return { calendarId: id, versionId };
   });
 }
-
 
 export async function createReferenceCalendarVersion(
   context: CommandContext,
@@ -852,7 +1167,8 @@ export async function createReferenceCalendarVersion(
       connection
     );
     if (!calendar) throw new Error('Reference Calendar not found.');
-    if (calendar.version !== expectedCalendarVersion) throw new Error('This Reference Calendar changed after you opened it.');
+    if (calendar.version !== expectedCalendarVersion)
+      throw new Error('This Reference Calendar changed after you opened it.');
     if (calendar.status !== 'ACTIVE') throw new Error('Reference Calendar is not active.');
 
     const draft = await queryOne<RowDataPacket & { id: string }>(
@@ -872,7 +1188,21 @@ export async function createReferenceCalendarVersion(
     const timestamp = now();
     await executeMutation(
       "INSERT INTO reference_calendar_versions (id, tenant_id, calendar_id, version_no, status, timezone_name, working_pattern_json, holidays_json, exceptions_json, effective_from, effective_to, published_at, created_by_party_id, created_at, updated_at) VALUES (?, ?, ?, ?, 'DRAFT', ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)",
-      [versionId, context.tenantId, calendar.id, versionNo, timezoneName, JSON.stringify(workingPattern), JSON.stringify(holidays), JSON.stringify(exceptions), validity.validFrom, validity.validTo, context.actorPartyId, timestamp, timestamp],
+      [
+        versionId,
+        context.tenantId,
+        calendar.id,
+        versionNo,
+        timezoneName,
+        JSON.stringify(workingPattern),
+        JSON.stringify(holidays),
+        JSON.stringify(exceptions),
+        validity.validFrom,
+        validity.validTo,
+        context.actorPartyId,
+        timestamp,
+        timestamp
+      ],
       connection
     );
     const result = await executeMutation(
@@ -880,7 +1210,8 @@ export async function createReferenceCalendarVersion(
       [timestamp, calendar.id, context.tenantId, expectedCalendarVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Reference Calendar change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Reference Calendar change detected.');
     await evidence(
       context,
       'reference_calendar',
@@ -908,14 +1239,16 @@ export async function publishReferenceCalendarVersion(
       connection
     );
     if (!calendar) throw new Error('Reference Calendar not found.');
-    if (calendar.version !== expectedCalendarVersion) throw new Error('This Reference Calendar changed after you opened it.');
+    if (calendar.version !== expectedCalendarVersion)
+      throw new Error('This Reference Calendar changed after you opened it.');
     const version = await queryOne<RowDataPacket & ReferenceCalendarVersion>(
       'SELECT id, calendar_id AS calendarId, version_no AS versionNo, status, timezone_name AS timezoneName, working_pattern_json AS workingPattern, holidays_json AS holidays, exceptions_json AS exceptions, effective_from AS effectiveFrom, effective_to AS effectiveTo, published_at AS publishedAt FROM reference_calendar_versions WHERE id = ? AND calendar_id = ? AND tenant_id = ? FOR UPDATE',
       [versionId, calendar.id, context.tenantId],
       connection
     );
     if (!version) throw new Error('Reference Calendar Version not found.');
-    if (version.status !== 'DRAFT') throw new Error('Only a draft Reference Calendar version can be published.');
+    if (version.status !== 'DRAFT')
+      throw new Error('Only a draft Reference Calendar version can be published.');
 
     const overlap = await queryOne<RowDataPacket & { id: string }>(
       `SELECT id
@@ -938,7 +1271,8 @@ export async function publishReferenceCalendarVersion(
       ],
       connection
     );
-    if (overlap) throw new Error('Published Reference Calendar versions cannot have overlapping effectivity.');
+    if (overlap)
+      throw new Error('Published Reference Calendar versions cannot have overlapping effectivity.');
 
     const timestamp = now();
     await executeMutation(
@@ -951,7 +1285,21 @@ export async function publishReferenceCalendarVersion(
       [timestamp, calendar.id, context.tenantId, expectedCalendarVersion],
       connection
     );
-    if (updated.affectedRows !== 1) throw new Error('Concurrent Reference Calendar change detected.');
-    await evidence(context, 'reference_calendar', calendar.id, expectedCalendarVersion + 1, 'REFERENCE_CALENDAR_VERSION_PUBLISHED', { calendarKey: calendar.calendarKey, versionId: version.id, versionNo: version.versionNo, status: 'PUBLISHED' }, connection);
+    if (updated.affectedRows !== 1)
+      throw new Error('Concurrent Reference Calendar change detected.');
+    await evidence(
+      context,
+      'reference_calendar',
+      calendar.id,
+      expectedCalendarVersion + 1,
+      'REFERENCE_CALENDAR_VERSION_PUBLISHED',
+      {
+        calendarKey: calendar.calendarKey,
+        versionId: version.id,
+        versionNo: version.versionNo,
+        status: 'PUBLISHED'
+      },
+      connection
+    );
   });
 }

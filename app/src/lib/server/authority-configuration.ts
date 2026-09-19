@@ -139,7 +139,11 @@ function money(
   if (!/^[A-Z]{3}$/.test(currency)) {
     throw new Error('Currency code must be a three-letter ISO-style code.');
   }
-  return { currencyCode: currency, minimumValue: minimumValue ?? null, maximumValue: maximumValue ?? null };
+  return {
+    currencyCode: currency,
+    minimumValue: minimumValue ?? null,
+    maximumValue: maximumValue ?? null
+  };
 }
 
 function effectiveRange(from: string | undefined, to: string | undefined) {
@@ -191,7 +195,8 @@ async function bumpApprovalRule(
     [now(), rule.id, context.tenantId, rule.version],
     executor
   );
-  if (result.affectedRows !== 1) throw new Error('Concurrent Approval Authority Rule change detected.');
+  if (result.affectedRows !== 1)
+    throw new Error('Concurrent Approval Authority Rule change detected.');
   return getApprovalRule(context, rule.id, executor);
 }
 
@@ -205,7 +210,8 @@ async function bumpDelegatedRule(
     [now(), rule.id, context.tenantId, rule.version],
     executor
   );
-  if (result.affectedRows !== 1) throw new Error('Concurrent Delegated Authority Rule change detected.');
+  if (result.affectedRows !== 1)
+    throw new Error('Concurrent Delegated Authority Rule change detected.');
   return getDelegatedRule(context, rule.id, executor);
 }
 
@@ -430,7 +436,6 @@ export async function createDelegatedAuthorityRule(
   });
 }
 
-
 export async function createApprovalAuthorityRuleVersion(
   context: CommandContext,
   ruleId: string,
@@ -446,7 +451,11 @@ export async function createApprovalAuthorityRuleVersion(
   if (Boolean(scopeType) !== Boolean(scopeId)) {
     throw new Error('Approval scope type and scope ID must be supplied together.');
   }
-  const band = money(configuration.currencyCode, configuration.minimumValue, configuration.maximumValue);
+  const band = money(
+    configuration.currencyCode,
+    configuration.minimumValue,
+    configuration.maximumValue
+  );
   const effective = effectiveRange(configuration.effectiveFrom, configuration.effectiveTo);
 
   return dbTransaction(async (connection) => {

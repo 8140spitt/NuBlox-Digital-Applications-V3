@@ -13,12 +13,7 @@
   function stateRows() {
     return (data.configuration?.states ?? [])
       .map((state) =>
-        [
-          state.stateKey,
-          state.label,
-          state.terminal ? 'terminal' : '',
-          state.sortOrder
-        ].join(' | ')
+        [state.stateKey, state.label, state.terminal ? 'terminal' : '', state.sortOrder].join(' | ')
       )
       .join('\n');
   }
@@ -49,7 +44,9 @@
     <div class="principle">
       <strong>Configuration is not workflow</strong>
       <span>Lifecycle defines valid domain semantics.</span>
-      <small>Shared workflow coordinates work around those semantics without owning domain truth.</small>
+      <small
+        >Shared workflow coordinates work around those semantics without owning domain truth.</small
+      >
     </div>
   </header>
 
@@ -82,10 +79,21 @@
         <details class="command-panel">
           <summary>Add lifecycle</summary>
           <form method="POST" action="?/createDefinition">
-            <label>Lifecycle key<input name="lifecycleKey" required placeholder="CONTRACT.LIFECYCLE" /></label>
+            <label
+              >Lifecycle key<input
+                name="lifecycleKey"
+                required
+                placeholder="CONTRACT.LIFECYCLE"
+              /></label
+            >
             <label>Name<input name="name" required placeholder="Contract lifecycle" /></label>
-            <label>Applies to type<input name="appliesToType" required placeholder="CONTRACT" /></label>
-            <label>Purpose<textarea name="purpose" rows="3" placeholder="Why this lifecycle exists"></textarea></label>
+            <label
+              >Applies to type<input name="appliesToType" required placeholder="CONTRACT" /></label
+            >
+            <label
+              >Purpose<textarea name="purpose" rows="3" placeholder="Why this lifecycle exists"
+              ></textarea></label
+            >
             <button type="submit">Create lifecycle definition</button>
           </form>
         </details>
@@ -119,7 +127,12 @@
                 <form method="POST" action="?/createVersion">
                   <input type="hidden" name="definitionId" value={definition.id} />
                   <input type="hidden" name="definitionVersion" value={definition.version} />
-                  <label>Description<input name="description" placeholder="Purpose of this version" /></label>
+                  <label
+                    >Description<input
+                      name="description"
+                      placeholder="Purpose of this version"
+                    /></label
+                  >
                   <button type="submit">Create draft version</button>
                 </form>
               </details>
@@ -130,7 +143,9 @@
             {#each data.versions as item}
               <a class:active={selectedVersion?.id === item.id} href={href(definition.id, item.id)}>
                 <strong>v{item.versionNo}</strong>
-                <span class:published={item.status === 'PUBLISHED'} class="status">{item.status}</span>
+                <span class:published={item.status === 'PUBLISHED'} class="status"
+                  >{item.status}</span
+                >
                 <small>{item.description || 'No description recorded'}</small>
               </a>
             {:else}
@@ -157,13 +172,23 @@
             </div>
 
             <div class="version-facts">
-              <span><small>Initial state</small><strong>{selectedVersion.initialStateKey || 'Not configured'}</strong></span>
+              <span
+                ><small>Initial state</small><strong
+                  >{selectedVersion.initialStateKey || 'Not configured'}</strong
+                ></span
+              >
               <span><small>States</small><strong>{data.configuration.states.length}</strong></span>
-              <span><small>Transitions</small><strong>{data.configuration.transitions.length}</strong></span>
+              <span
+                ><small>Transitions</small><strong>{data.configuration.transitions.length}</strong
+                ></span
+              >
             </div>
 
             {#if selectedVersion.status === 'DRAFT' && data.capabilities.canManage}
-              <details class="command-panel config-editor" open={data.configuration.states.length === 0}>
+              <details
+                class="command-panel config-editor"
+                open={data.configuration.states.length === 0}
+              >
                 <summary>Configure draft lifecycle</summary>
                 <form method="POST" action="?/configure">
                   <input type="hidden" name="definitionId" value={definition.id} />
@@ -200,8 +225,8 @@
                     </label>
                   </div>
                   <p>
-                    Use tab or pipe delimiters. Every state must be reachable from the initial state,
-                    and terminal states cannot have outgoing transitions.
+                    Use tab or pipe delimiters. Every state must be reachable from the initial
+                    state, and terminal states cannot have outgoing transitions.
                   </p>
                   <button type="submit">Save draft configuration</button>
                 </form>
@@ -263,66 +288,324 @@
 </div>
 
 <style>
-  .lifecycle-page { display: grid; gap: 12px; }
-  .hero { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(290px, .65fr); gap: 24px; padding: 18px; border-color: #8fc9ee; background: linear-gradient(120deg, #fbfdff, #eaf6fd); }
-  .eyebrow { color: var(--blue-700); font-size: 10px; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
-  h1 { margin: 3px 0 6px; font-size: 25px; }
-  h2 { margin: 2px 0 0; font-size: 16px; }
-  p { color: #5f7484; font-size: 10px; line-height: 1.45; }
-  .hero p { margin: 0; max-width: 760px; font-size: 11.5px; }
-  .principle { display: grid; gap: 5px; padding: 12px; border: 1px solid #bddded; border-radius: 9px; background: white; }
-  .principle strong { color: #315d76; font-size: 11px; }
-  .principle span { color: #526d7d; font-size: 9.5px; }
-  .principle small { color: #7b8e9a; font-size: 8.5px; line-height: 1.4; }
-  .message { padding: 9px 12px; border: 1px solid #dd8a8a; border-radius: 8px; background: #fff3f3; color: #792f2f; font-size: 11px; }
-  .workspace-grid { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 12px; align-items: start; }
-  .definitions { position: sticky; top: 78px; padding: 12px; }
-  .main-column { display: grid; gap: 12px; min-width: 0; }
-  .panel-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
-  .definition-list, .version-list { display: grid; gap: 6px; }
-  .definition-list a, .version-list a { display: grid; gap: 3px; padding: 9px; border: 1px solid #e0e7ec; border-radius: 8px; color: inherit; background: #fafcfd; text-decoration: none; }
-  .definition-list a.active, .version-list a.active { border-color: #79bde2; background: #edf8fe; box-shadow: inset 3px 0 var(--blue-700); }
-  .definition-list strong, .version-list strong { font-size: 11px; }
-  .definition-list span, .definition-list small, .version-list small { color: #788a97; font-size: 8.5px; }
-  .command-panel { margin-top: 10px; padding-top: 9px; border-top: 1px solid #e5ebef; }
-  .command-panel.compact { margin: 0; padding: 0; border: 0; }
-  .command-panel summary { width: max-content; padding: 6px 8px; border-radius: 6px; background: #edf5fa; color: #35617d; font-size: 9px; font-weight: 800; cursor: pointer; }
-  form { display: grid; gap: 7px; }
-  .command-panel form { margin-top: 8px; }
-  label { display: grid; gap: 4px; color: #52697a; font-size: 9px; font-weight: 750; }
-  input, textarea { width: 100%; border: 1px solid #ccd8e0; border-radius: 6px; padding: 7px 8px; color: var(--ink); font-size: 9.5px; }
-  textarea { resize: vertical; font-family: inherit; }
-  button { border: 0; border-radius: 6px; padding: 7px 9px; background: var(--blue-700); color: white; font-size: 9px; font-weight: 800; cursor: pointer; }
-  .definition-header { display: flex; justify-content: space-between; gap: 18px; padding: 14px; }
-  .definition-header p { margin: 5px 0 0; }
-  .facts, .version-facts { display: flex; flex-wrap: wrap; gap: 6px; }
-  .facts span, .version-facts span { display: grid; gap: 2px; min-width: 105px; padding: 6px 8px; border-radius: 6px; background: #f4f7f9; }
-  .facts small, .version-facts small { color: #86959f; font-size: 7.5px; text-transform: uppercase; }
-  .facts strong, .version-facts strong { color: #405d70; font-size: 9px; }
-  .versions, .configuration { padding: 14px; }
-  .version-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .status { width: max-content; padding: 2px 5px; border-radius: 999px; background: #fff3d9; color: #805d19; font-size: 7.5px; font-weight: 850; }
-  .status.published { background: #e6f5e9; color: #2b6c39; }
-  .version-facts { margin-bottom: 10px; }
-  .config-editor { margin-bottom: 12px; padding: 10px; border: 1px solid #dce6ec; border-radius: 8px; background: #fafcfd; }
-  .editor-grid, .model-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .config-editor p { margin: 0; }
-  .table-wrap { overflow-x: auto; margin-top: 6px; border: 1px solid #e1e8ec; border-radius: 8px; }
-  table { width: 100%; border-collapse: collapse; font-size: 9px; }
-  th, td { padding: 6px 7px; border-bottom: 1px solid #e8edef; text-align: left; }
-  th { background: #f6f8f9; color: #687c8a; font-size: 7.5px; text-transform: uppercase; }
-  td strong { color: #315b75; }
-  .empty-copy { padding: 10px 4px; color: #81909a; }
-  .empty-cell { padding: 18px; color: #81909a; text-align: center; }
-  .empty-state { display: grid; place-content: center; min-height: 250px; padding: 24px; text-align: center; }
+  .lifecycle-page {
+    display: grid;
+    gap: 12px;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(290px, 0.65fr);
+    gap: 24px;
+    padding: 18px;
+    border-color: #8fc9ee;
+    background: linear-gradient(120deg, #fbfdff, #eaf6fd);
+  }
+  .eyebrow {
+    color: var(--blue-700);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 3px 0 6px;
+    font-size: 25px;
+  }
+  h2 {
+    margin: 2px 0 0;
+    font-size: 16px;
+  }
+  p {
+    color: #5f7484;
+    font-size: 10px;
+    line-height: 1.45;
+  }
+  .hero p {
+    margin: 0;
+    max-width: 760px;
+    font-size: 11.5px;
+  }
+  .principle {
+    display: grid;
+    gap: 5px;
+    padding: 12px;
+    border: 1px solid #bddded;
+    border-radius: 9px;
+    background: white;
+  }
+  .principle strong {
+    color: #315d76;
+    font-size: 11px;
+  }
+  .principle span {
+    color: #526d7d;
+    font-size: 9.5px;
+  }
+  .principle small {
+    color: #7b8e9a;
+    font-size: 8.5px;
+    line-height: 1.4;
+  }
+  .message {
+    padding: 9px 12px;
+    border: 1px solid #dd8a8a;
+    border-radius: 8px;
+    background: #fff3f3;
+    color: #792f2f;
+    font-size: 11px;
+  }
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  .definitions {
+    position: sticky;
+    top: 78px;
+    padding: 12px;
+  }
+  .main-column {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  .panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .definition-list,
+  .version-list {
+    display: grid;
+    gap: 6px;
+  }
+  .definition-list a,
+  .version-list a {
+    display: grid;
+    gap: 3px;
+    padding: 9px;
+    border: 1px solid #e0e7ec;
+    border-radius: 8px;
+    color: inherit;
+    background: #fafcfd;
+    text-decoration: none;
+  }
+  .definition-list a.active,
+  .version-list a.active {
+    border-color: #79bde2;
+    background: #edf8fe;
+    box-shadow: inset 3px 0 var(--blue-700);
+  }
+  .definition-list strong,
+  .version-list strong {
+    font-size: 11px;
+  }
+  .definition-list span,
+  .definition-list small,
+  .version-list small {
+    color: #788a97;
+    font-size: 8.5px;
+  }
+  .command-panel {
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid #e5ebef;
+  }
+  .command-panel.compact {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .command-panel summary {
+    width: max-content;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: #edf5fa;
+    color: #35617d;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  form {
+    display: grid;
+    gap: 7px;
+  }
+  .command-panel form {
+    margin-top: 8px;
+  }
+  label {
+    display: grid;
+    gap: 4px;
+    color: #52697a;
+    font-size: 9px;
+    font-weight: 750;
+  }
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid #ccd8e0;
+    border-radius: 6px;
+    padding: 7px 8px;
+    color: var(--ink);
+    font-size: 9.5px;
+  }
+  textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+  button {
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 9px;
+    background: var(--blue-700);
+    color: white;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  .definition-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px;
+  }
+  .definition-header p {
+    margin: 5px 0 0;
+  }
+  .facts,
+  .version-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .facts span,
+  .version-facts span {
+    display: grid;
+    gap: 2px;
+    min-width: 105px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: #f4f7f9;
+  }
+  .facts small,
+  .version-facts small {
+    color: #86959f;
+    font-size: 7.5px;
+    text-transform: uppercase;
+  }
+  .facts strong,
+  .version-facts strong {
+    color: #405d70;
+    font-size: 9px;
+  }
+  .versions,
+  .configuration {
+    padding: 14px;
+  }
+  .version-list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .status {
+    width: max-content;
+    padding: 2px 5px;
+    border-radius: 999px;
+    background: #fff3d9;
+    color: #805d19;
+    font-size: 7.5px;
+    font-weight: 850;
+  }
+  .status.published {
+    background: #e6f5e9;
+    color: #2b6c39;
+  }
+  .version-facts {
+    margin-bottom: 10px;
+  }
+  .config-editor {
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid #dce6ec;
+    border-radius: 8px;
+    background: #fafcfd;
+  }
+  .editor-grid,
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .config-editor p {
+    margin: 0;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 6px;
+    border: 1px solid #e1e8ec;
+    border-radius: 8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9px;
+  }
+  th,
+  td {
+    padding: 6px 7px;
+    border-bottom: 1px solid #e8edef;
+    text-align: left;
+  }
+  th {
+    background: #f6f8f9;
+    color: #687c8a;
+    font-size: 7.5px;
+    text-transform: uppercase;
+  }
+  td strong {
+    color: #315b75;
+  }
+  .empty-copy {
+    padding: 10px 4px;
+    color: #81909a;
+  }
+  .empty-cell {
+    padding: 18px;
+    color: #81909a;
+    text-align: center;
+  }
+  .empty-state {
+    display: grid;
+    place-content: center;
+    min-height: 250px;
+    padding: 24px;
+    text-align: center;
+  }
   @media (max-width: 1050px) {
-    .workspace-grid { grid-template-columns: 230px minmax(0, 1fr); }
-    .version-list { grid-template-columns: repeat(2, 1fr); }
+    .workspace-grid {
+      grid-template-columns: 230px minmax(0, 1fr);
+    }
+    .version-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
   @media (max-width: 760px) {
-    .hero, .workspace-grid, .editor-grid, .model-grid { grid-template-columns: 1fr; }
-    .definitions { position: static; }
-    .definition-header, .panel-heading { display: grid; }
-    .version-list { grid-template-columns: 1fr; }
+    .hero,
+    .workspace-grid,
+    .editor-grid,
+    .model-grid {
+      grid-template-columns: 1fr;
+    }
+    .definitions {
+      position: static;
+    }
+    .definition-header,
+    .panel-heading {
+      display: grid;
+    }
+    .version-list {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

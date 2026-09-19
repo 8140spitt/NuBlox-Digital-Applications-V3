@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import { dbTransaction, executeMutation, queryOne, queryRows, type DbExecutor } from '$lib/server/db';
+import {
+  dbTransaction,
+  executeMutation,
+  queryOne,
+  queryRows,
+  type DbExecutor
+} from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 import { recordWorkDecision } from '$lib/server/work-decision';
@@ -179,10 +185,7 @@ export async function listGovernanceBodyMeetingAttendees(
   );
 }
 
-export async function listGovernanceBodyMeetingAgenda(
-  context: CommandContext,
-  meetingId: string
-) {
+export async function listGovernanceBodyMeetingAgenda(context: CommandContext, meetingId: string) {
   assertPermission(context, 'governance.meeting.read');
   await getMeeting(context, meetingId);
   return queryRows<RowDataPacket & GovernanceBodyMeetingAgenda>(
@@ -191,10 +194,7 @@ export async function listGovernanceBodyMeetingAgenda(
   );
 }
 
-export async function listGovernanceMeetingInformation(
-  context: CommandContext,
-  meetingId: string
-) {
+export async function listGovernanceMeetingInformation(context: CommandContext, meetingId: string) {
   assertPermission(context, 'governance.meeting.read');
   await getMeeting(context, meetingId);
   return queryRows<RowDataPacket & GovernanceMeetingInformation>(
@@ -246,11 +246,13 @@ export async function scheduleGovernanceBodyMeeting(
 ) {
   assertPermission(context, 'governance.body.read');
   assertPermission(context, 'governance.meeting.manage');
-  if (!input.agenda.length) throw new Error('Governance Body Meeting requires at least one agenda item.');
+  if (!input.agenda.length)
+    throw new Error('Governance Body Meeting requires at least one agenda item.');
 
   return dbTransaction(async (connection) => {
     const body = await getBody(context, input.bodyId, connection);
-    if (body.status !== 'ACTIVE') throw new Error('Only an active Governance Body can schedule meetings.');
+    if (body.status !== 'ACTIVE')
+      throw new Error('Only an active Governance Body can schedule meetings.');
 
     const scheduledAt = timestamp(input.scheduledAt, 'Scheduled time');
     const members = await queryRows<RowDataPacket & { partyId: string; roleKey: string }>(
@@ -259,7 +261,9 @@ export async function scheduleGovernanceBodyMeeting(
       connection
     );
     if (members.length < body.quorumRequired) {
-      throw new Error('Effective membership at the meeting time is below the Governance Body quorum.');
+      throw new Error(
+        'Effective membership at the meeting time is below the Governance Body quorum.'
+      );
     }
 
     const id = randomUUID();
@@ -349,7 +353,9 @@ export async function recordGovernanceBodyMeetingAttendance(
   return dbTransaction(async (connection) => {
     const meeting = await getMeeting(context, meetingId, connection, true);
     if (!['SCHEDULED', 'CONVENED'].includes(meeting.status)) {
-      throw new Error('Attendance can only be recorded before or during a Governance Body Meeting.');
+      throw new Error(
+        'Attendance can only be recorded before or during a Governance Body Meeting.'
+      );
     }
     const result = await executeMutation(
       'UPDATE governance_meeting_attendees SET attendance_status = ? WHERE meeting_id = ? AND party_id = ?',
@@ -392,7 +398,8 @@ export async function conveneGovernanceBodyMeeting(
       [started, started, meeting.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Governance Body Meeting change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Governance Body Meeting change detected.');
 
     const updated = await getMeeting(context, meeting.id, connection);
     await evidence(
@@ -423,7 +430,9 @@ export async function linkGovernanceMeetingInformation(
   return dbTransaction(async (connection) => {
     const meeting = await getMeeting(context, meetingId, connection, true);
     if (meeting.status === 'COMPLETED') {
-      throw new Error('Completed Governance Body Meetings cannot receive additional controlled information links.');
+      throw new Error(
+        'Completed Governance Body Meetings cannot receive additional controlled information links.'
+      );
     }
 
     const revision = await queryOne<
@@ -475,7 +484,9 @@ export async function recordGovernanceBodyResolution(
   assertPermission(context, 'governance.meeting.conduct');
   const meeting = await getMeeting(context, meetingId);
   if (meeting.status !== 'CONVENED') {
-    throw new Error('Resolutions can only be recorded while the Governance Body Meeting is convened.');
+    throw new Error(
+      'Resolutions can only be recorded while the Governance Body Meeting is convened.'
+    );
   }
 
   const decisionId = await recordWorkDecision(context, {

@@ -58,7 +58,12 @@ describe('F02 Board and Committee meeting runtime', () => {
     });
 
     let body = (await bodyService.listGovernanceBodies(context)).find((row) => row.id === bodyId)!;
-    await bodyService.transitionGovernanceBody(context, bodyId, body.aggregateVersion, 'CONSTITUTE');
+    await bodyService.transitionGovernanceBody(
+      context,
+      bodyId,
+      body.aggregateVersion,
+      'CONSTITUTE'
+    );
     body = (await bodyService.listGovernanceBodies(context)).find((row) => row.id === bodyId)!;
     await bodyService.transitionGovernanceBody(context, bodyId, body.aggregateVersion, 'ACTIVATE');
 
@@ -96,19 +101,28 @@ describe('F02 Board and Committee meeting runtime', () => {
     let container = (await informationService.listInformationContainers(context)).find(
       (row) => row.id === containerId
     )!;
-    await informationService.addInformationRepresentation(context, containerId, container.aggregateVersion, {
-      representationType: 'PDF',
-      contentReference: 's3://nublox-test/board-pack-2027-01.pdf',
-      contentMediaType: 'application/pdf',
-      sourceFilename: 'board-pack-2027-01.pdf',
-      hashAlgorithm: 'SHA256',
-      contentHash: 'a'.repeat(64)
-    });
+    await informationService.addInformationRepresentation(
+      context,
+      containerId,
+      container.aggregateVersion,
+      {
+        representationType: 'PDF',
+        contentReference: 's3://nublox-test/board-pack-2027-01.pdf',
+        contentMediaType: 'application/pdf',
+        sourceFilename: 'board-pack-2027-01.pdf',
+        hashAlgorithm: 'SHA256',
+        contentHash: 'a'.repeat(64)
+      }
+    );
 
     container = (await informationService.listInformationContainers(context)).find(
       (row) => row.id === containerId
     )!;
-    await informationService.submitInformationRevision(context, containerId, container.aggregateVersion);
+    await informationService.submitInformationRevision(
+      context,
+      containerId,
+      container.aggregateVersion
+    );
 
     container = (await informationService.listInformationContainers(context)).find(
       (row) => row.id === containerId
@@ -131,7 +145,11 @@ describe('F02 Board and Committee meeting runtime', () => {
     container = (await informationService.listInformationContainers(context)).find(
       (row) => row.id === containerId
     )!;
-    await informationService.issueInformationRevision(context, containerId, container.aggregateVersion);
+    await informationService.issueInformationRevision(
+      context,
+      containerId,
+      container.aggregateVersion
+    );
 
     const revision = (await informationService.listInformationRevisions(context, containerId))[0];
     expect(revision.lifecycleStatus).toBe('ISSUED');
@@ -158,11 +176,7 @@ describe('F02 Board and Committee meeting runtime', () => {
     let meeting = (await meetingService.listGovernanceBodyMeetings(context, bodyId)).find(
       (row) => row.id === meetingId
     )!;
-    await meetingService.conveneGovernanceBodyMeeting(
-      context,
-      meetingId,
-      meeting.aggregateVersion
-    );
+    await meetingService.conveneGovernanceBodyMeeting(context, meetingId, meeting.aggregateVersion);
 
     const resolutionId = await meetingService.recordGovernanceBodyResolution(context, meetingId, {
       subjectType: 'INVESTMENT_CASE',

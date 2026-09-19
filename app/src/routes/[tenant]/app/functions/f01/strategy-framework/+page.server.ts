@@ -126,7 +126,8 @@ export const actions: Actions = {
     const context = await resolveRequestCommandContext(params.tenant, locals);
     const id = text(data, 'id');
     try {
-      const note = text(data, 'note').trim() || 'Approved through governed Strategy Framework review.';
+      const note =
+        text(data, 'note').trim() || 'Approved through governed Strategy Framework review.';
       const decisionId = await recordReviewDecision(context, id, 'APPROVED', note);
       await approveStrategyFramework(context, id, decisionId);
     } catch (error) {

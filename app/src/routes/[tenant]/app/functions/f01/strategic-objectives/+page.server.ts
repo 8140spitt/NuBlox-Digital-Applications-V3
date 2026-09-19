@@ -18,7 +18,8 @@ function text(data: FormData, name: string) {
 
 function integer(data: FormData, name: string) {
   const value = Number(text(data, name));
-  if (!Number.isInteger(value) || value < 1) throw new Error(name + ' must be a positive whole number.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error(name + ' must be a positive whole number.');
   return value;
 }
 
@@ -27,7 +28,12 @@ function route(tenant: string, id?: string) {
 }
 
 function problem(error: unknown) {
-  return fail(400, { message: error instanceof Error ? error.message : 'The Strategic Objective command could not be completed.' });
+  return fail(400, {
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The Strategic Objective command could not be completed.'
+  });
 }
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
@@ -36,7 +42,8 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     listStrategicObjectives(context),
     listStrategyFrameworks(context)
   ]);
-  const selected = objectives.find((row) => row.id === url.searchParams.get('objective')) ?? objectives[0] ?? null;
+  const selected =
+    objectives.find((row) => row.id === url.searchParams.get('objective')) ?? objectives[0] ?? null;
   const versions = selected ? await listStrategicObjectiveVersions(context, selected.id) : [];
   const publishedFrameworks = frameworks.filter((framework) => framework.status === 'PUBLISHED');
 
@@ -57,18 +64,21 @@ export const actions: Actions = {
   create: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      const id = await createStrategicObjective(await resolveRequestCommandContext(params.tenant, locals), {
-        objectiveRef: text(data, 'objectiveRef'),
-        frameworkId: text(data, 'frameworkId'),
-        frameworkVersionNo: integer(data, 'frameworkVersionNo'),
-        statement: text(data, 'statement'),
-        successCriteria: text(data, 'successCriteria'),
-        priority: text(data, 'priority'),
-        scopeType: text(data, 'scopeType') || undefined,
-        scopeId: text(data, 'scopeId') || undefined,
-        horizonStart: text(data, 'horizonStart') || undefined,
-        horizonEnd: text(data, 'horizonEnd') || undefined
-      });
+      const id = await createStrategicObjective(
+        await resolveRequestCommandContext(params.tenant, locals),
+        {
+          objectiveRef: text(data, 'objectiveRef'),
+          frameworkId: text(data, 'frameworkId'),
+          frameworkVersionNo: integer(data, 'frameworkVersionNo'),
+          statement: text(data, 'statement'),
+          successCriteria: text(data, 'successCriteria'),
+          priority: text(data, 'priority'),
+          scopeType: text(data, 'scopeType') || undefined,
+          scopeId: text(data, 'scopeId') || undefined,
+          horizonStart: text(data, 'horizonStart') || undefined,
+          horizonEnd: text(data, 'horizonEnd') || undefined
+        }
+      );
       redirect(303, route(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -80,15 +90,20 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'objectiveId');
     try {
-      await reviseStrategicObjective(await resolveRequestCommandContext(params.tenant, locals), id, integer(data, 'aggregateVersion'), {
-        statement: text(data, 'statement'),
-        successCriteria: text(data, 'successCriteria'),
-        priority: text(data, 'priority'),
-        scopeType: text(data, 'scopeType') || undefined,
-        scopeId: text(data, 'scopeId') || undefined,
-        horizonStart: text(data, 'horizonStart') || undefined,
-        horizonEnd: text(data, 'horizonEnd') || undefined
-      });
+      await reviseStrategicObjective(
+        await resolveRequestCommandContext(params.tenant, locals),
+        id,
+        integer(data, 'aggregateVersion'),
+        {
+          statement: text(data, 'statement'),
+          successCriteria: text(data, 'successCriteria'),
+          priority: text(data, 'priority'),
+          scopeType: text(data, 'scopeType') || undefined,
+          scopeId: text(data, 'scopeId') || undefined,
+          horizonStart: text(data, 'horizonStart') || undefined,
+          horizonEnd: text(data, 'horizonEnd') || undefined
+        }
+      );
       redirect(303, route(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

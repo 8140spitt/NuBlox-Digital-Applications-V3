@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import { dbTransaction, executeMutation, queryOne, queryRows, type DbExecutor } from '$lib/server/db';
+import {
+  dbTransaction,
+  executeMutation,
+  queryOne,
+  queryRows,
+  type DbExecutor
+} from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 
@@ -106,7 +112,8 @@ function priority(value: string) {
 function scope(scopeType?: string, scopeId?: string) {
   const type = scopeType?.trim() ? code(scopeType, 'Objective scope type', 64) : null;
   const id = scopeId?.trim() || null;
-  if (Boolean(type) !== Boolean(id)) throw new Error('Objective scope type and scope ID must be supplied together.');
+  if (Boolean(type) !== Boolean(id))
+    throw new Error('Objective scope type and scope ID must be supplied together.');
   return { scopeType: type, scopeId: id };
 }
 
@@ -120,7 +127,8 @@ function horizon(start?: string, end?: string) {
   };
   const horizonStart = parse(start, 'Objective horizon start');
   const horizonEnd = parse(end, 'Objective horizon end');
-  if (horizonStart && horizonEnd && horizonEnd <= horizonStart) throw new Error('Objective horizon end must be later than start.');
+  if (horizonStart && horizonEnd && horizonEnd <= horizonStart)
+    throw new Error('Objective horizon end must be later than start.');
   return { horizonStart, horizonEnd };
 }
 
@@ -144,10 +152,18 @@ async function assertPublishedFrameworkVersion(
     [frameworkId, frameworkVersionNo, context.tenantId],
     executor
   );
-  if (!row) throw new Error('Strategic Objective must reference an exact published Strategy Framework version.');
+  if (!row)
+    throw new Error(
+      'Strategic Objective must reference an exact published Strategy Framework version.'
+    );
 }
 
-async function getObjective(context: CommandContext, id: string, executor?: DbExecutor, forUpdate = false) {
+async function getObjective(
+  context: CommandContext,
+  id: string,
+  executor?: DbExecutor,
+  forUpdate = false
+) {
   const row = await queryOne<RowDataPacket & StrategicObjective>(
     currentSelect + ' WHERE o.id = ? AND o.tenant_id = ?' + (forUpdate ? ' FOR UPDATE' : ''),
     [id, context.tenantId],
@@ -168,22 +184,41 @@ async function evidence(
 ) {
   await recordPlatformAudit(
     context,
-    { aggregateId: 'AGG-02-OBJECTIVE', objectType: 'strategic_objective', objectId: objective.id, action: eventType, fromState: fromState ?? undefined, toState },
+    {
+      aggregateId: 'AGG-02-OBJECTIVE',
+      objectType: 'strategic_objective',
+      objectId: objective.id,
+      action: eventType,
+      fromState: fromState ?? undefined,
+      toState
+    },
     executor
   );
   await emitBusinessEvent(
     context,
-    { aggregateId: 'AGG-02-OBJECTIVE', aggregateType: 'StrategicObjective', aggregateObjectId: objective.id, aggregateVersion: objective.aggregateVersion, eventType, topic: 'nublox.strategy.objective', payload },
+    {
+      aggregateId: 'AGG-02-OBJECTIVE',
+      aggregateType: 'StrategicObjective',
+      aggregateObjectId: objective.id,
+      aggregateVersion: objective.aggregateVersion,
+      eventType,
+      topic: 'nublox.strategy.objective',
+      payload
+    },
     executor
   );
 }
 
 export async function listStrategicObjectives(context: CommandContext, frameworkId?: string) {
   assertPermission(context, 'strategy.objective.read');
-  const clause = frameworkId ? ' WHERE o.tenant_id = ? AND o.framework_id = ?' : ' WHERE o.tenant_id = ?';
+  const clause = frameworkId
+    ? ' WHERE o.tenant_id = ? AND o.framework_id = ?'
+    : ' WHERE o.tenant_id = ?';
   const params = frameworkId ? [context.tenantId, frameworkId] : [context.tenantId];
   return queryRows<RowDataPacket & StrategicObjective>(
-    currentSelect + clause + ' ORDER BY FIELD(v.priority, "CRITICAL","HIGH","MEDIUM","LOW"), o.updated_at DESC',
+    currentSelect +
+      clause +
+      ' ORDER BY FIELD(v.priority, "CRITICAL","HIGH","MEDIUM","LOW"), o.updated_at DESC',
     params
   );
 }
@@ -197,7 +232,10 @@ export async function listStrategicObjectiveVersions(context: CommandContext, ob
   );
 }
 
-export async function createStrategicObjective(context: CommandContext, input: StrategicObjectiveInput) {
+export async function createStrategicObjective(
+  context: CommandContext,
+  input: StrategicObjectiveInput
+) {
   assertPermission(context, 'strategy.objective.manage');
   const objectiveRef = code(input.objectiveRef, 'Objective reference');
   const ownerPartyId = input.ownerPartyId?.trim() || context.actorPartyId;
@@ -206,22 +244,62 @@ export async function createStrategicObjective(context: CommandContext, input: S
   const objectivePriority = priority(input.priority);
 
   return dbTransaction(async (connection) => {
-    await assertPublishedFrameworkVersion(context, input.frameworkId, input.frameworkVersionNo, connection);
+    await assertPublishedFrameworkVersion(
+      context,
+      input.frameworkId,
+      input.frameworkVersionNo,
+      connection
+    );
     await assertParty(context, ownerPartyId, connection);
     const id = randomUUID();
     const timestamp = now();
     await executeMutation(
       "INSERT INTO strategic_objectives (id, tenant_id, objective_ref, framework_id, framework_version_no, owner_party_id, status, aggregate_version, current_version_no, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, 'PROPOSED', 1, 1, ?, ?)",
-      [id, context.tenantId, objectiveRef, input.frameworkId, input.frameworkVersionNo, ownerPartyId, timestamp, timestamp],
+      [
+        id,
+        context.tenantId,
+        objectiveRef,
+        input.frameworkId,
+        input.frameworkVersionNo,
+        ownerPartyId,
+        timestamp,
+        timestamp
+      ],
       connection
     );
     await executeMutation(
       "INSERT INTO strategic_objective_versions (id, tenant_id, objective_id, version_no, statement, success_criteria, priority, scope_type, scope_id, horizon_start, horizon_end, owner_party_id, lifecycle_status, created_by_party_id, created_at) VALUES (?, ?, ?, 1, ?, ?, ?, ?, ?, ?, ?, ?, 'PROPOSED', ?, ?)",
-      [randomUUID(), context.tenantId, id, required(input.statement, 'Objective statement'), required(input.successCriteria, 'Objective success criteria'), objectivePriority, scoped.scopeType, scoped.scopeId, dates.horizonStart, dates.horizonEnd, ownerPartyId, context.actorPartyId, timestamp],
+      [
+        randomUUID(),
+        context.tenantId,
+        id,
+        required(input.statement, 'Objective statement'),
+        required(input.successCriteria, 'Objective success criteria'),
+        objectivePriority,
+        scoped.scopeType,
+        scoped.scopeId,
+        dates.horizonStart,
+        dates.horizonEnd,
+        ownerPartyId,
+        context.actorPartyId,
+        timestamp
+      ],
       connection
     );
     const created = await getObjective(context, id, connection);
-    await evidence(context, created, 'STRATEGIC_OBJECTIVE_PROPOSED', null, 'PROPOSED', { objectiveRef, frameworkId: input.frameworkId, frameworkVersionNo: input.frameworkVersionNo }, connection);
+    await evidence(
+      context,
+      created,
+      'STRATEGIC_OBJECTIVE_PROPOSED',
+      null,
+      'PROPOSED',
+      {
+        objectiveRef,
+        frameworkId: input.frameworkId,
+        frameworkVersionNo: input.frameworkVersionNo
+      },
+      connection
+    );
     return id;
   });
 }
@@ -240,24 +318,57 @@ export async function reviseStrategicObjective(
 
   return dbTransaction(async (connection) => {
     const current = await getObjective(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Strategic Objective changed after you opened it.');
-    if (!['PROPOSED'].includes(current.status)) throw new Error('Only proposed Strategic Objectives can be revised.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Strategic Objective changed after you opened it.');
+    if (!['PROPOSED'].includes(current.status))
+      throw new Error('Only proposed Strategic Objectives can be revised.');
     await assertParty(context, ownerPartyId, connection);
     const nextVersionNo = current.currentVersionNo + 1;
     const timestamp = now();
     await executeMutation(
       "INSERT INTO strategic_objective_versions (id, tenant_id, objective_id, version_no, statement, success_criteria, priority, scope_type, scope_id, horizon_start, horizon_end, owner_party_id, lifecycle_status, created_by_party_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PROPOSED', ?, ?)",
-      [randomUUID(), context.tenantId, current.id, nextVersionNo, required(input.statement, 'Objective statement'), required(input.successCriteria, 'Objective success criteria'), objectivePriority, scoped.scopeType, scoped.scopeId, dates.horizonStart, dates.horizonEnd, ownerPartyId, context.actorPartyId, timestamp],
+      [
+        randomUUID(),
+        context.tenantId,
+        current.id,
+        nextVersionNo,
+        required(input.statement, 'Objective statement'),
+        required(input.successCriteria, 'Objective success criteria'),
+        objectivePriority,
+        scoped.scopeType,
+        scoped.scopeId,
+        dates.horizonStart,
+        dates.horizonEnd,
+        ownerPartyId,
+        context.actorPartyId,
+        timestamp
+      ],
       connection
     );
     const result = await executeMutation(
       'UPDATE strategic_objectives SET owner_party_id = ?, aggregate_version = aggregate_version + 1, current_version_no = ?, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?',
-      [ownerPartyId, nextVersionNo, timestamp, current.id, context.tenantId, expectedAggregateVersion],
+      [
+        ownerPartyId,
+        nextVersionNo,
+        timestamp,
+        current.id,
+        context.tenantId,
+        expectedAggregateVersion
+      ],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Strategic Objective change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Strategic Objective change detected.');
     const updated = await getObjective(context, current.id, connection);
-    await evidence(context, updated, 'STRATEGIC_OBJECTIVE_REVISED', current.status, current.status, { versionNo: nextVersionNo }, connection);
+    await evidence(
+      context,
+      updated,
+      'STRATEGIC_OBJECTIVE_REVISED',
+      current.status,
+      current.status,
+      { versionNo: nextVersionNo },
+      connection
+    );
   });
 }
 
@@ -273,29 +384,50 @@ export async function transitionStrategicObjective(
     ACTIVATE: { from: ['APPROVED'], to: 'ACTIVE', event: 'STRATEGIC_OBJECTIVE_ACTIVATED' },
     ACHIEVE: { from: ['ACTIVE'], to: 'ACHIEVED', event: 'STRATEGIC_OBJECTIVE_ACHIEVED' },
     MISS: { from: ['ACTIVE'], to: 'NOT_ACHIEVED', event: 'STRATEGIC_OBJECTIVE_NOT_ACHIEVED' },
-    SUPERSEDE: { from: ['PROPOSED','APPROVED','ACTIVE'], to: 'SUPERSEDED', event: 'STRATEGIC_OBJECTIVE_SUPERSEDED' },
-    RETIRE: { from: ['APPROVED','ACTIVE','ACHIEVED','NOT_ACHIEVED','SUPERSEDED'], to: 'RETIRED', event: 'STRATEGIC_OBJECTIVE_RETIRED' }
+    SUPERSEDE: {
+      from: ['PROPOSED', 'APPROVED', 'ACTIVE'],
+      to: 'SUPERSEDED',
+      event: 'STRATEGIC_OBJECTIVE_SUPERSEDED'
+    },
+    RETIRE: {
+      from: ['APPROVED', 'ACTIVE', 'ACHIEVED', 'NOT_ACHIEVED', 'SUPERSEDED'],
+      to: 'RETIRED',
+      event: 'STRATEGIC_OBJECTIVE_RETIRED'
+    }
   };
   const transition = transitions[action];
   if (!transition) throw new Error('Unsupported Strategic Objective transition.');
 
   return dbTransaction(async (connection) => {
     const current = await getObjective(context, id, connection, true);
-    if (current.aggregateVersion !== expectedAggregateVersion) throw new Error('This Strategic Objective changed after you opened it.');
-    if (!transition.from.includes(current.status)) throw new Error('Strategic Objective cannot transition from ' + current.status + ' using ' + action + '.');
+    if (current.aggregateVersion !== expectedAggregateVersion)
+      throw new Error('This Strategic Objective changed after you opened it.');
+    if (!transition.from.includes(current.status))
+      throw new Error(
+        'Strategic Objective cannot transition from ' + current.status + ' using ' + action + '.'
+      );
     const timestamp = now();
     const result = await executeMutation(
       'UPDATE strategic_objectives SET status = ?, aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?',
       [transition.to, timestamp, current.id, context.tenantId, expectedAggregateVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Strategic Objective transition detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Strategic Objective transition detected.');
     await executeMutation(
       'UPDATE strategic_objective_versions SET lifecycle_status = ? WHERE objective_id = ? AND version_no = ?',
       [transition.to, current.id, current.currentVersionNo],
       connection
     );
     const updated = await getObjective(context, current.id, connection);
-    await evidence(context, updated, transition.event, current.status, transition.to, { versionNo: current.currentVersionNo }, connection);
+    await evidence(
+      context,
+      updated,
+      transition.event,
+      current.status,
+      transition.to,
+      { versionNo: current.currentVersionNo },
+      connection
+    );
   });
 }

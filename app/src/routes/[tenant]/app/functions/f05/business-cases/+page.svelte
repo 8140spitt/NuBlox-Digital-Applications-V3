@@ -52,12 +52,12 @@
             {#if data.domain === 'INNOVATION'}<label>Innovation stage<select name="innovationStage"><option>DISCOVERY</option><option>EXPERIMENT</option><option>INCUBATION</option><option>SCALE</option></select></label>{/if}
             <label>Objectives / need<textarea name="objectivesNeed" rows="3" required></textarea></label>
             <div class="json-grid">
-              <label>Options JSON<textarea name="options" rows="3">{}</textarea></label><label>Benefits JSON<textarea name="benefits" rows="3">{}</textarea></label>
-              <label>Cost / funding basis JSON<textarea name="costFundingBasis" rows="3">{}</textarea></label><label>Risks JSON<textarea name="risks" rows="3">{}</textarea></label>
-              <label>Assumptions JSON<textarea name="assumptions" rows="3">{}</textarea></label><label>Demand forecast JSON<textarea name="demandForecast" rows="3">{}</textarea></label>
-              <label>ROI JSON<textarea name="roi" rows="3">{}</textarea></label><label>Market basis JSON<textarea name="marketBasis" rows="3">{}</textarea></label>
-              <label>Product scope JSON<textarea name="productScope" rows="3">{}</textarea></label><label>Funding envelope JSON<textarea name="fundingEnvelope" rows="3">{}</textarea></label>
-              <label>Commercial model JSON<textarea name="commercialModel" rows="3">{}</textarea></label><label>Route to market JSON<textarea name="routeToMarket" rows="3">{}</textarea></label>
+              <label>Options JSON<textarea name="options" rows="3">{'{}'}</textarea></label><label>Benefits JSON<textarea name="benefits" rows="3">{'{}'}</textarea></label>
+              <label>Cost / funding basis JSON<textarea name="costFundingBasis" rows="3">{'{}'}</textarea></label><label>Risks JSON<textarea name="risks" rows="3">{'{}'}</textarea></label>
+              <label>Assumptions JSON<textarea name="assumptions" rows="3">{'{}'}</textarea></label><label>Demand forecast JSON<textarea name="demandForecast" rows="3">{'{}'}</textarea></label>
+              <label>ROI JSON<textarea name="roi" rows="3">{'{}'}</textarea></label><label>Market basis JSON<textarea name="marketBasis" rows="3">{'{}'}</textarea></label>
+              <label>Product scope JSON<textarea name="productScope" rows="3">{'{}'}</textarea></label><label>Funding envelope JSON<textarea name="fundingEnvelope" rows="3">{'{}'}</textarea></label>
+              <label>Commercial model JSON<textarea name="commercialModel" rows="3">{'{}'}</textarea></label><label>Route to market JSON<textarea name="routeToMarket" rows="3">{'{}'}</textarea></label>
             </div>
             <label>Recommendation<textarea name="recommendation" rows="3" required></textarea></label>
             <button>Create governed Business Case</button>

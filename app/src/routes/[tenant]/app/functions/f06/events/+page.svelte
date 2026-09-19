@@ -22,11 +22,11 @@
         <details class="command"><summary>Create EVENT campaign</summary><form method="POST" action="?/createCampaign">
           <div class="grid"><label>Reference<input name="campaignRef" required/></label><label>Title<input name="title" required/></label></div>
           <label>Approved / active plan<select name="communicationsPlanId"><option value="">None</option>{#each data.plans.filter((p)=>['APPROVED','ACTIVE'].includes(p.status)) as plan}<option value={plan.id}>{plan.planRef} · {plan.title}</option>{/each}</select></label>
-          <label>Objectives JSON<textarea name="objectives" rows="3" value="{}"></textarea></label>
-          <label>Audience strategy JSON<textarea name="audienceStrategy" rows="3" value="{}"></textarea></label>
-          <label>Key messages JSON<textarea name="keyMessages" rows="3" value="{}"></textarea></label>
-          <label>Schedule JSON<textarea name="schedule" rows="3" value="{}"></textarea></label>
-          <label>Measurement plan JSON<textarea name="measurementPlan" rows="3" value="{}"></textarea></label>
+          <label>Objectives JSON<textarea name="objectives" rows="3" value={'{}'}></textarea></label>
+          <label>Audience strategy JSON<textarea name="audienceStrategy" rows="3" value={'{}'}></textarea></label>
+          <label>Key messages JSON<textarea name="keyMessages" rows="3" value={'{}'}></textarea></label>
+          <label>Schedule JSON<textarea name="schedule" rows="3" value={'{}'}></textarea></label>
+          <label>Measurement plan JSON<textarea name="measurementPlan" rows="3" value={'{}'}></textarea></label>
           <button>Create event campaign</button>
         </form></details>
       {/if}

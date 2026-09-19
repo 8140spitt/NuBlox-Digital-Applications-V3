@@ -12,6 +12,7 @@ The application now establishes:
 - F01 — Strategy & Enterprise Planning as the first active workspace;
 - F02 — Corporate Governance as the second operational workspace, including Governance Bodies, Authority Framework, Delegation of Authority, Executive Management, Policy Governance and restricted Ethics Governance;
 - F03 — Enterprise Performance Management as the third operational workspace, including Performance Framework, Reporting, Variance Management, Management Review, Benchmarking and Benefits Realisation;
+- F04 — Corporate Development & M&A as the fourth operational workspace, including Opportunity Identification, Valuation, restricted Due Diligence, Transaction Management, Integration, Divestiture and Strategic Partnerships;
 - F01.01 — Strategy Framework as the first operational persisted business slice;
 - canonical Party / Person / Organisation / Legal Entity master data through the shared `AGG-01-PARTY` runtime;
 - Party Relationship, Organisation Unit/effective hierarchy and Delegated Authority shared foundation aggregates;
@@ -26,7 +27,7 @@ The application now establishes:
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
-F04–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02 and F03 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
+F05–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02, F03 and F04 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
 ## F02 operational baseline
 
@@ -35,6 +36,10 @@ Corporate Governance now runs on the shared canonical platform services rather t
 ## F03 operational baseline
 
 Enterprise Performance Management reuses the canonical KPI Definition, Performance Target, Performance Observation and Baseline identities already established by F01. F03 adds governed enterprise Scorecards, reproducible published Performance Snapshots, variance-to-corrective-Work intervention, quorum-controlled Management Reviews, approved benchmark basis and transformation Benefit profiles validated against attributable observations. Published snapshots pin exact governed inputs so later corrections cannot silently rewrite historic dashboards or review evidence.
+
+## F04 operational baseline
+
+Corporate Development & M&A now runs as a connected deal lifecycle over four canonical write boundaries rather than a standalone deal silo. Opportunities and frozen valuation appraisals use `AGG-04-DEVELOPMENT`; Due Diligence uses restricted `AGG-22-LEGAL` Legal Matters with explicit need-to-know access; Transaction, Divestiture and Strategic Partnership cases share the versioned `AGG-04-BUSINESS-CASE` master with exact immutable Decision evidence and executed-agreement completion controls; and post-deal Integration reuses `AGG-26-TRANSFORMATION`. Target organisations reuse canonical Party identities, and finance/legal/project/organisation source records remain authoritative in their own domains.
 
 ## Run locally
 

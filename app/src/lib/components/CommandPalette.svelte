@@ -108,7 +108,11 @@
       <label class="search">
         <span class="sr-only">Search destinations</span>
         <span aria-hidden="true">⌕</span>
-        <input bind:this={input} bind:value={query} placeholder="Search functions and destinations" />
+        <input
+          bind:this={input}
+          bind:value={query}
+          placeholder="Search functions and destinations"
+        />
         <button type="button" onclick={close} aria-label="Close navigation">Esc</button>
       </label>
 

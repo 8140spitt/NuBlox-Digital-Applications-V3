@@ -4,6 +4,14 @@
 
   let { data, form } = $props();
 
+  type ActionFeedback = {
+    message?: string;
+    conflict?: boolean;
+    holderDisplayName?: string | null;
+  };
+
+  const feedback = $derived((form ?? null) as ActionFeedback | null);
+
   const statusLabel: Record<string, string> = {
     PROPOSED: 'Proposed',
     ACTIVE: 'Active',
@@ -53,11 +61,11 @@
     <div class="authority"><strong>Stewardship authority</strong><span>{data.actorDisplayName}</span><small>Edit lease + recoverable draft + optimistic version control</small></div>
   </header>
 
-  {#if form?.message}
-    <div class:conflict={form.conflict} class="message" role="alert">
-      <strong>{form.conflict ? 'Edit conflict' : 'Command could not be completed'}</strong>
-      <span>{form.message}</span>
-      {#if form.holderDisplayName}<small>Current editor: {form.holderDisplayName}</small>{/if}
+  {#if feedback?.message}
+    <div class:conflict={feedback?.conflict} class="message" role="alert">
+      <strong>{feedback?.conflict ? 'Edit conflict' : 'Command could not be completed'}</strong>
+      <span>{feedback?.message}</span>
+      {#if feedback?.holderDisplayName}<small>Current editor: {feedback?.holderDisplayName}</small>{/if}
     </div>
   {/if}
 

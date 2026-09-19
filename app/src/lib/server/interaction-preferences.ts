@@ -108,14 +108,17 @@ function validateDefinition(value: Record<string, unknown>) {
   return json;
 }
 
-export async function listSavedViews(context: CommandContext, target: string): Promise<SavedView[]> {
+export async function listSavedViews(
+  context: CommandContext,
+  target: string
+): Promise<SavedView[]> {
   const targetKey = required(target, 'Saved View target', 191);
   const rows = await queryRows<
     RowDataPacket & Omit<SavedView, 'definition'> & { definition: unknown }
   >(
-    "SELECT id,target_key AS targetKey,name,definition_json AS definition,scope_type AS scopeType," +
-      " is_default AS isDefault,is_pinned AS isPinned,created_at AS createdAt,updated_at AS updatedAt" +
-      " FROM saved_views WHERE tenant_id=? AND owner_identity_id=? AND target_key=?" +
+    'SELECT id,target_key AS targetKey,name,definition_json AS definition,scope_type AS scopeType,' +
+      ' is_default AS isDefault,is_pinned AS isPinned,created_at AS createdAt,updated_at AS updatedAt' +
+      ' FROM saved_views WHERE tenant_id=? AND owner_identity_id=? AND target_key=?' +
       " AND scope_type='PERSONAL' ORDER BY is_pinned DESC,is_default DESC,name",
     [context.tenantId, context.userIdentityId, targetKey]
   );
@@ -140,7 +143,7 @@ export async function savePersonalView(
   return dbTransaction(async (connection) => {
     if (input.isDefault) {
       await executeMutation(
-        "UPDATE saved_views SET is_default=FALSE,updated_at=?" +
+        'UPDATE saved_views SET is_default=FALSE,updated_at=?' +
           " WHERE tenant_id=? AND owner_identity_id=? AND target_key=? AND scope_type='PERSONAL'",
         [timestamp, context.tenantId, context.userIdentityId, targetKey],
         connection
@@ -149,12 +152,12 @@ export async function savePersonalView(
 
     const id = randomUUID();
     await executeMutation(
-      "INSERT INTO saved_views" +
-        " (id,tenant_id,owner_identity_id,target_key,name,definition_json,scope_type,audience_type," +
-        " audience_id,is_default,is_pinned,created_at,updated_at)" +
+      'INSERT INTO saved_views' +
+        ' (id,tenant_id,owner_identity_id,target_key,name,definition_json,scope_type,audience_type,' +
+        ' audience_id,is_default,is_pinned,created_at,updated_at)' +
         " VALUES (?,?,?,?,?,?,'PERSONAL',NULL,NULL,?,?,?,?)" +
-        " ON DUPLICATE KEY UPDATE definition_json=VALUES(definition_json)," +
-        " is_default=VALUES(is_default),is_pinned=VALUES(is_pinned),updated_at=VALUES(updated_at)",
+        ' ON DUPLICATE KEY UPDATE definition_json=VALUES(definition_json),' +
+        ' is_default=VALUES(is_default),is_pinned=VALUES(is_pinned),updated_at=VALUES(updated_at)',
       [
         id,
         context.tenantId,
@@ -173,9 +176,9 @@ export async function savePersonalView(
     const row = await queryOne<
       RowDataPacket & Omit<SavedView, 'definition'> & { definition: unknown }
     >(
-      "SELECT id,target_key AS targetKey,name,definition_json AS definition,scope_type AS scopeType," +
-        " is_default AS isDefault,is_pinned AS isPinned,created_at AS createdAt,updated_at AS updatedAt" +
-        " FROM saved_views WHERE tenant_id=? AND owner_identity_id=? AND target_key=?" +
+      'SELECT id,target_key AS targetKey,name,definition_json AS definition,scope_type AS scopeType,' +
+        ' is_default AS isDefault,is_pinned AS isPinned,created_at AS createdAt,updated_at AS updatedAt' +
+        ' FROM saved_views WHERE tenant_id=? AND owner_identity_id=? AND target_key=?' +
         " AND name=? AND scope_type='PERSONAL'",
       [context.tenantId, context.userIdentityId, targetKey, name],
       connection
@@ -217,12 +220,12 @@ export async function recordRecentItem(context: CommandContext, input: Navigatio
 
   await dbTransaction(async (connection) => {
     await executeMutation(
-      "INSERT INTO user_recent_items" +
-        " (id,tenant_id,user_identity_id,item_key,item_type,object_type,object_id,title,subtitle," +
-        " route_path,created_at,last_opened_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)" +
-        " ON DUPLICATE KEY UPDATE item_type=VALUES(item_type),object_type=VALUES(object_type)," +
-        " object_id=VALUES(object_id),title=VALUES(title),subtitle=VALUES(subtitle)," +
-        " route_path=VALUES(route_path),last_opened_at=VALUES(last_opened_at)",
+      'INSERT INTO user_recent_items' +
+        ' (id,tenant_id,user_identity_id,item_key,item_type,object_type,object_id,title,subtitle,' +
+        ' route_path,created_at,last_opened_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)' +
+        ' ON DUPLICATE KEY UPDATE item_type=VALUES(item_type),object_type=VALUES(object_type),' +
+        ' object_id=VALUES(object_id),title=VALUES(title),subtitle=VALUES(subtitle),' +
+        ' route_path=VALUES(route_path),last_opened_at=VALUES(last_opened_at)',
       [
         randomUUID(),
         context.tenantId,
@@ -241,9 +244,9 @@ export async function recordRecentItem(context: CommandContext, input: Navigatio
     );
 
     await executeMutation(
-      "DELETE FROM user_recent_items WHERE tenant_id=? AND user_identity_id=? AND id NOT IN (" +
-        " SELECT id FROM (SELECT id FROM user_recent_items WHERE tenant_id=? AND user_identity_id=?" +
-        " ORDER BY last_opened_at DESC,id DESC LIMIT 50) retained)",
+      'DELETE FROM user_recent_items WHERE tenant_id=? AND user_identity_id=? AND id NOT IN (' +
+        ' SELECT id FROM (SELECT id FROM user_recent_items WHERE tenant_id=? AND user_identity_id=?' +
+        ' ORDER BY last_opened_at DESC,id DESC LIMIT 50) retained)',
       [context.tenantId, context.userIdentityId, context.tenantId, context.userIdentityId],
       connection
     );
@@ -256,10 +259,10 @@ export async function listRecentItems(
 ): Promise<RecentNavigationItem[]> {
   const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
   return queryRows<RowDataPacket & RecentNavigationItem>(
-    "SELECT id,item_key AS itemKey,item_type AS itemType,object_type AS objectType," +
-      " object_id AS objectId,title,subtitle,route_path AS routePath,created_at AS createdAt," +
-      " last_opened_at AS lastOpenedAt FROM user_recent_items" +
-      " WHERE tenant_id=? AND user_identity_id=? ORDER BY last_opened_at DESC,id DESC LIMIT " +
+    'SELECT id,item_key AS itemKey,item_type AS itemType,object_type AS objectType,' +
+      ' object_id AS objectId,title,subtitle,route_path AS routePath,created_at AS createdAt,' +
+      ' last_opened_at AS lastOpenedAt FROM user_recent_items' +
+      ' WHERE tenant_id=? AND user_identity_id=? ORDER BY last_opened_at DESC,id DESC LIMIT ' +
       limit,
     [context.tenantId, context.userIdentityId]
   );
@@ -267,9 +270,9 @@ export async function listRecentItems(
 
 export async function listFavourites(context: CommandContext): Promise<PersonalNavigationItem[]> {
   return queryRows<RowDataPacket & PersonalNavigationItem>(
-    "SELECT id,item_key AS itemKey,item_type AS itemType,object_type AS objectType," +
-      " object_id AS objectId,title,subtitle,route_path AS routePath,created_at AS createdAt" +
-      " FROM user_favourites WHERE tenant_id=? AND user_identity_id=? ORDER BY created_at DESC,id DESC",
+    'SELECT id,item_key AS itemKey,item_type AS itemType,object_type AS objectType,' +
+      ' object_id AS objectId,title,subtitle,route_path AS routePath,created_at AS createdAt' +
+      ' FROM user_favourites WHERE tenant_id=? AND user_identity_id=? ORDER BY created_at DESC,id DESC',
     [context.tenantId, context.userIdentityId]
   );
 }
@@ -301,9 +304,9 @@ export async function toggleFavourite(context: CommandContext, input: Navigation
     }
 
     await executeMutation(
-      "INSERT INTO user_favourites" +
-        " (id,tenant_id,user_identity_id,item_key,item_type,object_type,object_id,title,subtitle," +
-        " route_path,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+      'INSERT INTO user_favourites' +
+        ' (id,tenant_id,user_identity_id,item_key,item_type,object_type,object_id,title,subtitle,' +
+        ' route_path,created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
       [
         randomUUID(),
         context.tenantId,

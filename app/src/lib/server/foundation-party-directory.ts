@@ -125,16 +125,7 @@ export async function searchPartyDirectory(
                    p.id
           LIMIT ` +
       limit,
-    [
-      context.tenantId,
-      pattern,
-      pattern,
-      pattern,
-      pattern,
-      pattern,
-      pattern,
-      pattern
-    ]
+    [context.tenantId, pattern, pattern, pattern, pattern, pattern, pattern, pattern]
   );
   return rows.map(mapParty);
 }

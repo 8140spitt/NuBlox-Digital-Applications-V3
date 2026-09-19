@@ -56,7 +56,7 @@
 
       <div class="work-preview">
         {#each data.work as item}
-          <a href={'/' + data.tenantSlug + '/app/work'}>
+          <a href={item.subjectHref ?? '/' + data.tenantSlug + '/app/work'}>
             <span class={'priority priority-' + item.priority.toLowerCase()}>{item.priority}</span>
             <span class="work-copy">
               <strong>{item.title}</strong>

@@ -10,29 +10,15 @@ import {
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 import { assertWorkDecisionReference } from '$lib/server/work-decision';
-
-export type MarketInsight = {
-  id: string;
-  insightRef: string;
-  insightType: string;
-  title: string;
-  subject: string;
-  sourceType: string;
-  sourceReference: string | null;
-  asOfAt: string;
-  confidence: string;
-  geography: string | null;
-  sector: string | null;
-  problemStatement: string;
-  needStatement: string;
-  desiredOutcome: string | null;
-  evidenceReference: string | null;
-  status: string;
-  aggregateVersion: number;
-  supersedesInsightId: string | null;
-  validatedAt: string | null;
-  updatedAt: string;
-};
+import {
+  getMarketInsight,
+  type MarketInsight
+} from '$lib/server/market-insight';
+export {
+  createMarketInsight,
+  listMarketInsights,
+  validateMarketInsight
+} from '$lib/server/market-insight';
 
 export type ProductItem = {
   id: string;
@@ -123,9 +109,6 @@ export type ProductBusinessCaseVersion = {
   fundingEnvelope: unknown;
   createdAt: string;
 };
-
-const marketInsightSelect =
-  'SELECT id,insight_ref AS insightRef,insight_type AS insightType,title,subject,source_type AS sourceType,source_reference AS sourceReference,as_of_at AS asOfAt,confidence,geography,sector,problem_statement AS problemStatement,need_statement AS needStatement,desired_outcome AS desiredOutcome,evidence_reference AS evidenceReference,status,aggregate_version AS aggregateVersion,supersedes_insight_id AS supersedesInsightId,validated_at AS validatedAt,updated_at AS updatedAt FROM market_insights';
 
 const itemSelect =
   'SELECT i.id,i.item_number AS itemNumber,i.item_type AS itemType,i.name,i.description,i.classification_code AS classificationCode,i.base_uom_id AS baseUomId,i.status,i.aggregate_version AS aggregateVersion,i.updated_at AS updatedAt,p.concept_type AS conceptType,p.need_summary AS needSummary,p.opportunity_summary AS opportunitySummary,p.feasibility_summary AS feasibilitySummary,p.score,p.concept_status AS conceptStatus,p.selected_decision_id AS selectedDecisionId,p.selected_at AS selectedAt FROM items i LEFT JOIN item_concept_profiles p ON p.item_id=i.id AND p.tenant_id=i.tenant_id';
@@ -250,21 +233,6 @@ async function assertActiveCurrency(context: CommandContext, id: string, executo
   if (!row) throw new Error('Active Currency not found.');
 }
 
-async function getMarketInsight(
-  context: CommandContext,
-  id: string,
-  executor?: DbExecutor,
-  forUpdate = false
-) {
-  const row = await queryOne<RowDataPacket & MarketInsight>(
-    marketInsightSelect + ' WHERE id=? AND tenant_id=?' + (forUpdate ? ' FOR UPDATE' : ''),
-    [id, context.tenantId],
-    executor
-  );
-  if (!row) throw new Error('Market Insight not found.');
-  return row;
-}
-
 async function getItem(
   context: CommandContext,
   id: string,
@@ -358,130 +326,6 @@ function decisionTypeForCase(caseDomain: string) {
   return caseDomain === 'INNOVATION'
     ? 'INNOVATION_BUSINESS_CASE_APPROVAL'
     : 'PRODUCT_SERVICE_BUSINESS_CASE_APPROVAL';
-}
-
-export async function listMarketInsights(context: CommandContext) {
-  assertPermission(context, 'product.innovation.read');
-  return queryRows<RowDataPacket & MarketInsight>(
-    marketInsightSelect + ' WHERE tenant_id=? ORDER BY as_of_at DESC,insight_ref',
-    [context.tenantId]
-  );
-}
-
-export async function createMarketInsight(
-  context: CommandContext,
-  input: {
-    insightRef: string;
-    insightType?: string;
-    title: string;
-    subject: string;
-    sourceType: string;
-    sourceReference?: string;
-    asOfAt?: string;
-    confidence?: string;
-    geography?: string;
-    sector?: string;
-    problemStatement: string;
-    needStatement: string;
-    desiredOutcome?: string;
-    evidenceReference?: string;
-    supersedesInsightId?: string;
-  }
-) {
-  assertPermission(context, 'product.market_need.manage');
-  const id = randomUUID();
-  const createdAt = now();
-  return dbTransaction(async (connection) => {
-    const supersedesInsightId = input.supersedesInsightId?.trim() || null;
-    if (supersedesInsightId) await getMarketInsight(context, supersedesInsightId, connection);
-    await executeMutation(
-      `INSERT INTO market_insights
-        (id,tenant_id,insight_ref,insight_type,title,subject,source_type,source_reference,as_of_at,
-         confidence,geography,sector,problem_statement,need_statement,desired_outcome,evidence_reference,
-         status,aggregate_version,supersedes_insight_id,created_by_party_id,validated_by_party_id,
-         validated_at,created_at,updated_at)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'CAPTURED',1,?,?,NULL,NULL,?,?)`,
-      [
-        id,
-        context.tenantId,
-        code(input.insightRef, 'Insight reference', 191),
-        code(input.insightType || 'CUSTOMER_NEED', 'Insight type'),
-        required(input.title, 'Insight title', 500),
-        required(input.subject, 'Insight subject'),
-        code(input.sourceType, 'Source type'),
-        input.sourceReference?.trim() || null,
-        timestamp(input.asOfAt, 'As-of time'),
-        code(input.confidence || 'MEDIUM', 'Confidence'),
-        input.geography?.trim() || null,
-        input.sector?.trim() || null,
-        required(input.problemStatement, 'Problem statement'),
-        required(input.needStatement, 'Need statement'),
-        input.desiredOutcome?.trim() || null,
-        input.evidenceReference?.trim() || null,
-        supersedesInsightId,
-        context.actorPartyId,
-        createdAt,
-        createdAt
-      ],
-      connection
-    );
-    if (supersedesInsightId) {
-      await executeMutation(
-        "UPDATE market_insights SET status='SUPERSEDED',aggregate_version=aggregate_version+1,updated_at=? WHERE id=? AND tenant_id=? AND status <> 'SUPERSEDED'",
-        [createdAt, supersedesInsightId, context.tenantId],
-        connection
-      );
-    }
-    await evidence(
-      context,
-      {
-        aggregateId: 'AGG-03-MARKET-INSIGHT',
-        aggregateType: 'MarketInsight',
-        objectType: 'market_insight',
-        objectId: id,
-        aggregateVersion: 1,
-        eventType: 'MARKET_INSIGHT_CAPTURED',
-        toState: 'CAPTURED',
-        payload: { insightType: code(input.insightType || 'CUSTOMER_NEED', 'Insight type') }
-      },
-      connection
-    );
-    return id;
-  });
-}
-
-export async function validateMarketInsight(
-  context: CommandContext,
-  insightId: string,
-  expectedVersion: number
-) {
-  assertPermission(context, 'product.market_need.manage');
-  return dbTransaction(async (connection) => {
-    const insight = await getMarketInsight(context, insightId, connection, true);
-    if (insight.aggregateVersion !== expectedVersion) throw new Error('Market Insight changed.');
-    if (insight.status !== 'CAPTURED')
-      throw new Error('Only captured Market Insights can be validated.');
-    const updatedAt = now();
-    await executeMutation(
-      "UPDATE market_insights SET status='VALIDATED',aggregate_version=aggregate_version+1,validated_by_party_id=?,validated_at=?,updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
-      [context.actorPartyId, updatedAt, updatedAt, insight.id, context.tenantId, expectedVersion],
-      connection
-    );
-    await evidence(
-      context,
-      {
-        aggregateId: 'AGG-03-MARKET-INSIGHT',
-        aggregateType: 'MarketInsight',
-        objectType: 'market_insight',
-        objectId: insight.id,
-        aggregateVersion: expectedVersion + 1,
-        eventType: 'MARKET_INSIGHT_VALIDATED',
-        fromState: insight.status,
-        toState: 'VALIDATED'
-      },
-      connection
-    );
-  });
 }
 
 export async function listItems(context: CommandContext, itemType?: string) {

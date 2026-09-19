@@ -2,10 +2,10 @@ id,provider,product,family,wave,state,primary_focus,evidence
 UX-SAP,SAP,"SAP Cloud ERP / S/4HANA / Fiori",enterprise,1,in-progress,"role spaces/pages; search; work; master data; configuration",competitive-experience-wave-1a-sap-oracle-microsoft.md
 UX-ORACLE-FUSION,Oracle,"Fusion Cloud Applications",enterprise,1,in-progress,"home/product map; work areas; tasks; enterprise data; configuration",competitive-experience-wave-1a-sap-oracle-microsoft.md
 UX-MICROSOFT-D365,Microsoft,"Dynamics 365",enterprise,1,in-progress,"dashboard; workspaces; modules; lists; records; navigation search",competitive-experience-wave-1a-sap-oracle-microsoft.md
-UX-IFS,IFS,"IFS Cloud",enterprise,1,in-progress,"navigator; lobbies; exception work; pages; process context",
-UX-INFOR,Infor,"CloudSuite / Infor OS",enterprise,1,in-progress,"portal; role workspaces; widgets; drill-back; apps",
-UX-WORKDAY,Workday,"Financial Management / HCM / Adaptive Planning",enterprise,1,registered,"role home; tasks; people/finance objects; planning",
-UX-SERVICENOW,ServiceNow,"Now Platform",enterprise,1,registered,"workspaces; lists/forms; queues; case/request; admin",
+UX-IFS,IFS,"IFS Cloud",enterprise,1,in-progress,"navigator; lobbies; exception work; pages; process context",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
+UX-INFOR,Infor,"CloudSuite / Infor OS",enterprise,1,in-progress,"portal; role workspaces; widgets; drill-back; apps",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
+UX-WORKDAY,Workday,"Financial Management / HCM / Adaptive Planning",enterprise,1,in-progress,"role home; tasks; people/finance objects; planning",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
+UX-SERVICENOW,ServiceNow,"Now Platform",enterprise,1,in-progress,"workspaces; lists/forms; queues; case/request; admin",competitive-experience-wave-1b-ifs-infor-workday-servicenow.md
 UX-ORACLE-CE,Oracle,"Construction and Engineering — Primavera / Unifier / Aconex / Textura",construction,2,in-progress,"project context; tasks; information; programme; cost; payment",
 UX-PROCORE,Procore,"Construction Platform",construction,2,in-progress,"company/project context; toolbox; project tools; favourites",
 UX-AUTODESK-ACC,Autodesk,"Construction Cloud / Forma",construction,2,registered,"project selector; Docs; Build; Cost; Takeoff; models",

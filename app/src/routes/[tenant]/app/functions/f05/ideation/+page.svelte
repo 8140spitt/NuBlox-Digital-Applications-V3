@@ -33,7 +33,7 @@
             <div class="grid"><label>Classification<input name="classificationCode" /></label><label>Base UOM<select name="baseUomId"><option value="">None</option>{#each data.units.filter((u)=>u.status==='ACTIVE') as unit}<option value={unit.id}>{unit.unitCode} · {unit.name}</option>{/each}</select></label></div>
             <label>Need summary<textarea name="needSummary" rows="3" required></textarea></label>
             <label>Opportunity summary<textarea name="opportunitySummary" rows="3" required></textarea></label>
-            <label>Score basis JSON<textarea name="scoreBasis" rows="3">{}</textarea></label>
+            <label>Score basis JSON<textarea name="scoreBasis" rows="3">{'{}'}</textarea></label>
             <button>Capture canonical concept</button>
           </form>
         </details>

@@ -2,12 +2,27 @@ import {
   runtimeObjectDefinition,
   type RuntimeObjectSection
 } from '$lib/data/runtime-object-registry';
+import {
+  getPartyDirectoryEntry,
+  listPartyDirectoryRelationships
+} from '$lib/server/foundation-party-directory';
 import { getLead } from '$lib/server/marketing-lead';
-import type { CommandContext } from '$lib/server/platform-context';
+import { hasPermission, type CommandContext } from '$lib/server/platform-context';
 
 export type RuntimeObjectField = {
   label: string;
   value: string;
+};
+
+export type RuntimeObjectRelationship = {
+  id: string;
+  direction: 'INCOMING' | 'OUTGOING';
+  relationshipType: string;
+  relatedPartyId: string;
+  relatedPartyName: string;
+  contextType: string;
+  contextId: string;
+  status: string;
 };
 
 export type ResolvedRuntimeObject = {
@@ -21,15 +36,109 @@ export type ResolvedRuntimeObject = {
   summary: string | null;
   metadata: RuntimeObjectField[];
   fields: RuntimeObjectField[];
+  workspaceHref: string;
+  workspaceLabel: string;
   originFunctionId: string;
   originHref: string | null;
   originLabel: string | null;
   sections: readonly RuntimeObjectSection[];
+  relationships: RuntimeObjectRelationship[] | null;
+  auditObjectTypes: string[];
 };
 
 type Resolver = (context: CommandContext, objectId: string) => Promise<ResolvedRuntimeObject>;
 
 const resolvers: Record<string, Resolver> = {
+  party: async (context, objectId) => {
+    const definition = runtimeObjectDefinition('party');
+    if (!definition) throw new Error('Party runtime definition is missing.');
+    const party = await getPartyDirectoryEntry(context, objectId);
+    const canReadRelationships = hasPermission(context, 'party.relationship.read');
+    const relationships = canReadRelationships
+      ? await listPartyDirectoryRelationships(context, party.id)
+      : null;
+    const subtype =
+      party.partyType === 'PERSON'
+        ? 'Person'
+        : party.isLegalEntity
+          ? 'Legal entity'
+          : 'Organisation';
+    const originFunctionId = party.originFunctionId?.startsWith('F')
+      ? party.originFunctionId
+      : 'PLATFORM';
+    const stewardshipHref =
+      '/' +
+      encodeURIComponent(context.tenantSlug) +
+      '/app/admin/master-data/parties?party=' +
+      encodeURIComponent(party.id);
+
+    return {
+      objectType: definition.type,
+      objectId: party.id,
+      reference: party.originReference || party.id,
+      title: party.displayName,
+      subtitle: subtype,
+      status: party.status,
+      objectVersion: String(party.version),
+      summary:
+        'Canonical Party identity reused across enterprise processes without duplicating customer, supplier, worker or legal-role masters.',
+      metadata: [
+        { label: 'Party type', value: subtype },
+        { label: 'Origin', value: party.originFunctionId ?? 'Platform / migration' },
+        { label: 'Steward', value: party.stewardFunctionId ?? 'Platform' }
+      ],
+      fields:
+        party.partyType === 'PERSON'
+          ? [
+              { label: 'Given name', value: party.givenName ?? '—' },
+              { label: 'Middle names', value: party.middleNames ?? '—' },
+              { label: 'Family name', value: party.familyName ?? '—' },
+              { label: 'Preferred name', value: party.preferredName ?? '—' },
+              { label: 'Origin object', value: party.originObjectType ?? '—' },
+              { label: 'Created', value: party.createdAt },
+              { label: 'Last updated', value: party.updatedAt },
+              { label: 'Party ID', value: party.id }
+            ]
+          : [
+              { label: 'Legal name', value: party.legalName ?? '—' },
+              { label: 'Trading name', value: party.tradingName ?? '—' },
+              { label: 'Registration', value: party.registrationNumber ?? '—' },
+              { label: 'Country', value: party.countryCode ?? '—' },
+              { label: 'Legal entity', value: party.isLegalEntity ? 'Yes' : 'No' },
+              { label: 'Entity type', value: party.legalEntityType ?? '—' },
+              { label: 'Jurisdiction', value: party.jurisdictionCode ?? '—' },
+              { label: 'Accounting currency', value: party.accountingCurrency ?? '—' }
+            ],
+      workspaceHref: '/' + encodeURIComponent(context.tenantSlug) + '/app/data',
+      workspaceLabel: 'Enterprise Data',
+      originFunctionId,
+      originHref: stewardshipHref,
+      originLabel: 'Open Party stewardship',
+      sections: definition.sections,
+      relationships:
+        relationships?.map((relationship) => {
+          const outgoing = relationship.fromPartyId === party.id;
+          return {
+            id: relationship.id,
+            direction: outgoing ? ('OUTGOING' as const) : ('INCOMING' as const),
+            relationshipType: relationship.relationshipType,
+            relatedPartyId: outgoing ? relationship.toPartyId : relationship.fromPartyId,
+            relatedPartyName: outgoing
+              ? relationship.toDisplayName
+              : relationship.fromDisplayName,
+            contextType: relationship.contextType,
+            contextId: relationship.contextId,
+            status: relationship.status
+          };
+        }) ?? null,
+      auditObjectTypes:
+        party.partyType === 'PERSON'
+          ? ['person']
+          : party.isLegalEntity
+            ? ['organisation', 'legal_entity']
+            : ['organisation']
+    };
+  },
   lead: async (context, objectId) => {
     const definition = runtimeObjectDefinition('lead');
     if (!definition) throw new Error('Lead runtime definition is missing.');
@@ -63,10 +172,14 @@ const resolvers: Record<string, Resolver> = {
         { label: 'Aggregate version', value: String(lead.aggregateVersion) },
         { label: 'Last updated', value: lead.updatedAt }
       ],
+      workspaceHref: '/' + encodeURIComponent(context.tenantSlug) + '/app/functions/f06',
+      workspaceLabel: 'F06 · Marketing & Brand',
       originFunctionId: definition.originFunctionId,
       originHref,
       originLabel: 'Open Lead Generation actions',
-      sections: definition.sections
+      sections: definition.sections,
+      relationships: [],
+      auditObjectTypes: [definition.auditObjectType]
     };
   }
 };

@@ -66,6 +66,20 @@ export type PerformanceTarget = {
   aggregateVersion: number;
 };
 
+export type PerformanceBaseline = {
+  id: string;
+  baselineRef: string;
+  kpiId: string;
+  kpiVersionNo: number;
+  scopeType: string;
+  scopeId: string;
+  periodStart: string;
+  periodEnd: string;
+  observationId: string;
+  status: string;
+  createdAt: string;
+};
+
 export type PerformanceObservation = {
   id: string;
   kpiId: string;
@@ -679,6 +693,16 @@ export async function validatePerformanceObservation(context: CommandContext, id
       connection
     );
   });
+}
+
+export async function listPerformanceBaselines(context: CommandContext, kpiId?: string) {
+  assertPermission(context, 'strategy.performance.read');
+  return queryRows<RowDataPacket & PerformanceBaseline>(
+    'SELECT id,baseline_ref AS baselineRef,kpi_id AS kpiId,kpi_version_no AS kpiVersionNo,scope_type AS scopeType,scope_id AS scopeId,period_start AS periodStart,period_end AS periodEnd,observation_id AS observationId,status,created_at AS createdAt FROM performance_baselines WHERE tenant_id=?' +
+      (kpiId ? ' AND kpi_id=?' : '') +
+      ' ORDER BY created_at DESC,baseline_ref',
+    kpiId ? [context.tenantId, kpiId] : [context.tenantId]
+  );
 }
 
 export async function createPerformanceBaseline(

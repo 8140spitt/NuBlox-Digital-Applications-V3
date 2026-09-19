@@ -80,6 +80,28 @@ export async function listLeads(context: CommandContext, status?: string) {
   );
 }
 
+export async function searchLeads(
+  context: CommandContext,
+  query: string,
+  requestedLimit = 25
+) {
+  assertPermission(context, 'marketing.read');
+  const needle = query.trim().slice(0, 191);
+  if (!needle) return [] as Lead[];
+  const pattern = '%' + needle + '%';
+  const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
+
+  return queryRows<RowDataPacket & Lead>(
+    leadSelect +
+      ' WHERE tenant_id=?' +
+      ' AND (lead_ref LIKE ? OR prospect_name LIKE ? OR organisation_name LIKE ? OR email LIKE ?' +
+      ' OR need_summary LIKE ? OR sector LIKE ? OR geography LIKE ?)' +
+      ' ORDER BY updated_at DESC,score DESC,lead_ref LIMIT ' +
+      limit,
+    [context.tenantId, pattern, pattern, pattern, pattern, pattern, pattern, pattern]
+  );
+}
+
 export async function listLeadScoreEvents(context: CommandContext, leadId: string) {
   assertPermission(context, 'marketing.read');
   await getLead(context, leadId);

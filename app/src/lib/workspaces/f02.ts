@@ -37,7 +37,8 @@ export const f02Workspace = {
       name: 'Delegation of Authority',
       sourceName: 'Delegation of authority',
       summary: 'Apply governed approval thresholds and effective delegated authority.',
-      items: ['Thresholds', 'Grants', 'Delegation matrix', 'Effectivity', 'Compliance', 'Policy evidence']
+      items: ['Thresholds', 'Grants', 'Delegation matrix', 'Effectivity', 'Compliance', 'Policy evidence'],
+      path: 'delegation-of-authority'
     },
     {
       id: 'F02.04',

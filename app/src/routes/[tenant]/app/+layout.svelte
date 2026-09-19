@@ -8,6 +8,7 @@
   actorDisplayName={data.actorDisplayName}
   authenticated={data.authenticated}
   initialWorkContexts={data.workContexts}
+  enterpriseContextOptions={data.enterpriseContextOptions}
 >
   {@render children()}
 </AppShell>

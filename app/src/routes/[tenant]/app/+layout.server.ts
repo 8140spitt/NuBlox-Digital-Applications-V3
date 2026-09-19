@@ -24,7 +24,9 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
     workContexts,
     enterpriseContextOptions: {
       legalEntities: legalEntities
-        .filter((entity) => entity.partyStatus === 'ACTIVE' && entity.legalEntityStatus === 'ACTIVE')
+        .filter(
+          (entity) => entity.partyStatus === 'ACTIVE' && entity.legalEntityStatus === 'ACTIVE'
+        )
         .map((entity) => ({
           id: entity.id,
           reference: entity.statutoryIdentifier ?? entity.displayName,

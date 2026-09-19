@@ -1,5 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { hasPermission } from '$lib/server/platform-context';
+import { listFavourites, listRecentItems } from '$lib/server/interaction-preferences';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { listMyWork } from '$lib/server/shared-work';
 import { functionWorkspaceDirectory } from '$lib/workspaces/function-directory';
@@ -7,7 +8,11 @@ import { functionWorkspaceDirectory } from '$lib/workspaces/function-directory';
 export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const canReadWork = hasPermission(context, 'work.item.read');
-  const work = canReadWork ? await listMyWork(context) : [];
+  const [work, recent, favourites] = await Promise.all([
+    canReadWork ? listMyWork(context) : Promise.resolve([]),
+    listRecentItems(context, 6),
+    listFavourites(context)
+  ]);
 
   return {
     tenantSlug: params.tenant,
@@ -15,6 +20,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     accessRequestState: url.searchParams.get('accessRequest'),
     work: work.slice(0, 5),
     workCount: work.length,
+    recent,
+    favourites: favourites.slice(0, 6),
     functions: functionWorkspaceDirectory.map((workspace) => ({
       id: workspace.id,
       name: workspace.name,

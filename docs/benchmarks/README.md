@@ -13,6 +13,7 @@ The purpose is **enterprise and built-environment completeness**, not vendor imi
 - `competitive-experience-wave-1a-sap-oracle-microsoft.md` — detailed first-pass menu/interaction review for SAP S/4HANA/Fiori, Oracle Fusion and Microsoft Dynamics 365.
 - `competitive-experience-wave-1b-ifs-infor-workday-servicenow.md` — detailed first-pass menu/interaction review for IFS Cloud, Infor OS/CloudSuite, Workday and ServiceNow.
 - `competitive-experience-wave-2-construction-delivery.md` — detailed first-pass construction-delivery UX review across Oracle C&E/Aconex, Procore, Autodesk, Trimble, Sage, Causeway, Thinkproject, Asite and EcoSys.
+- `competitive-experience-wave-3-product-engineering-information.md` — detailed first-pass product/engineering/information UX review across Windchill, Teamcenter, 3DEXPERIENCE/ENOVIA and ProjectWise/iTwin.
 - `sap-capability-coverage-register.csv` — the 64-line SAP benchmark register carried forward from the prior NuBlox programme as provenance. Its legacy NuBlox domain/slice columns are not V3 architecture.
 - `sap-v3-capability-map.csv` — governed 64/64 V3 remap and completed SAP architecture-challenge classification across F01–F29 workspaces, canonical object families/concepts and end-to-end chains.
 - `app/src/lib/generated/sap-v3-benchmark-map.json` — machine-readable form of the SAP V3 remap.

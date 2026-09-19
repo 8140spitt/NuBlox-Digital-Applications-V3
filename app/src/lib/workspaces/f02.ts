@@ -60,7 +60,8 @@ export const f02Workspace = {
       name: 'Policy Governance',
       sourceName: 'Policy governance',
       summary: 'Control policy drafting, approval, publication, effectivity and adherence.',
-      items: ['Drafting', 'Review', 'Approval', 'Publication', 'Effectivity', 'Adherence']
+      items: ['Drafting', 'Review', 'Approval', 'Publication', 'Effectivity', 'Adherence'],
+      path: 'policies'
     },
     {
       id: 'F02.07',

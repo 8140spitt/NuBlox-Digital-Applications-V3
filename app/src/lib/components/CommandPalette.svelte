@@ -22,6 +22,24 @@
       href: '/' + tenantSlug + '/app/work'
     },
     {
+      label: 'Operate the Business',
+      detail: 'Strategy, governance, performance and enterprise operations',
+      group: 'Enterprise',
+      href: '/' + tenantSlug + '/app/operate'
+    },
+    {
+      label: 'Deliver the Business',
+      detail: 'Opportunity, contract, project, delivery and asset outcomes',
+      group: 'Enterprise',
+      href: '/' + tenantSlug + '/app/deliver'
+    },
+    {
+      label: 'Enterprise Data',
+      detail: 'Parties, organisation, products, assets and reference data',
+      group: 'Enterprise',
+      href: '/' + tenantSlug + '/app/data'
+    },
+    {
       label: 'Function directory',
       detail: 'Browse all 29 business functions',
       group: 'Workspace',
@@ -30,13 +48,13 @@
     {
       label: 'Party master data',
       detail: 'People, organisations and legal entities',
-      group: 'Administration',
+      group: 'Enterprise Data',
       href: '/' + tenantSlug + '/app/admin/master-data/parties'
     },
     {
       label: 'Organisation structure',
       detail: 'Units, hierarchy and accountability',
-      group: 'Administration',
+      group: 'Enterprise Data',
       href: '/' + tenantSlug + '/app/admin/master-data/organisation-structure'
     },
     {
@@ -111,7 +129,7 @@
         <input
           bind:this={input}
           bind:value={query}
-          placeholder="Search functions and destinations"
+          placeholder="Search enterprise destinations"
         />
         <button type="button" onclick={close} aria-label="Close navigation">Esc</button>
       </label>
@@ -129,7 +147,7 @@
         {:else}
           <div class="no-results">
             <strong>No matching destination</strong>
-            <span>Try a function number, business function name or administration area.</span>
+            <span>Try a business stream, function number, data area or administration destination.</span>
           </div>
         {/each}
       </div>

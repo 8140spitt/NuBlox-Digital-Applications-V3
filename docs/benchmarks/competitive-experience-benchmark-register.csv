@@ -15,10 +15,10 @@ UX-CAUSEWAY,Causeway,"Construction platform",construction,2,in-progress,"estimat
 UX-THINKPROJECT,Thinkproject,"Built Asset Lifecycle Platform / CEMAR",construction,2,in-progress,"contracts; project information; field; asset work",competitive-experience-wave-2-construction-delivery.md
 UX-ASITE,Asite,"CDE / construction platform",construction,2,in-progress,"CDE; workflow; BIM; procurement",competitive-experience-wave-2-construction-delivery.md
 UX-ECOSYS,Hexagon,"EcoSys",construction,2,in-progress,"portfolio; project controls; cost; contracts",competitive-experience-wave-2-construction-delivery.md
-UX-WINDCHILL,PTC,"Windchill 13.1.2",plm,3,in-progress,"contexts; objects; product data; structures; change; workflow",
-UX-TEAMCENTER,Siemens,"Teamcenter",plm,3,registered,"active workspace; product structure; change; configuration",
-UX-3DEXPERIENCE,Dassault Systèmes,"3DEXPERIENCE / ENOVIA",plm,3,in-progress,"roles/apps; dashboards; compass; product collaboration",
-UX-PROJECTWISE,Bentley Systems,"ProjectWise / iTwin",plm,3,in-progress,"work areas; folders; documents; versions; workflow; search",
+UX-WINDCHILL,PTC,"Windchill 13.1.2",plm,3,in-progress,"contexts; objects; product data; structures; change; workflow",competitive-experience-wave-3-product-engineering-information.md
+UX-TEAMCENTER,Siemens,"Teamcenter",plm,3,in-progress,"active workspace; product structure; change; configuration",competitive-experience-wave-3-product-engineering-information.md
+UX-3DEXPERIENCE,Dassault Systèmes,"3DEXPERIENCE / ENOVIA",plm,3,in-progress,"roles/apps; dashboards; compass; product collaboration",competitive-experience-wave-3-product-engineering-information.md
+UX-PROJECTWISE,Bentley Systems,"ProjectWise / iTwin",plm,3,in-progress,"work areas; folders; documents; versions; workflow; search",competitive-experience-wave-3-product-engineering-information.md
 UX-MAXIMO,IBM,"Maximo Application Suite",asset,4,in-progress,"start center; modules; records; work orders; asset/location",
 UX-HXGN-EAM,Hexagon,"HxGN EAM",asset,4,in-progress,"menu/security; start center; search; favourites; field work",
 UX-PLANON,Planon,"IWMS",asset,4,in-progress,"navigation panel; workspace; property/asset/order contexts",

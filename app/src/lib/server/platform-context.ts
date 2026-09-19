@@ -76,19 +76,19 @@ export const platformPermissions = [
     'work.context.read',
     'work.context',
     'read',
-    'Read the current user\'s open Task Bar work contexts.'
+    "Read the current user's open Task Bar work contexts."
   ],
   [
     'work.context.manage',
     'work.context',
     'manage',
-    'Open, reorder, touch and close the current user\'s Task Bar work contexts.'
+    "Open, reorder, touch and close the current user's Task Bar work contexts."
   ],
   [
     'work.draft.manage',
     'work.draft',
     'manage',
-    'Persist, restore, apply and discard the current user\'s recoverable working drafts.'
+    "Persist, restore, apply and discard the current user's recoverable working drafts."
   ],
   [
     'work.edit_lease.read',

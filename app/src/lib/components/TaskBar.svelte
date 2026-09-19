@@ -19,10 +19,7 @@
     lastAccessedAt: string;
   };
 
-  type OpenInput = Omit<
-    WorkContext,
-    'id' | 'status' | 'position' | 'openedAt' | 'lastAccessedAt'
-  >;
+  type OpenInput = Omit<WorkContext, 'id' | 'status' | 'position' | 'openedAt' | 'lastAccessedAt'>;
 
   let {
     tenantSlug,
@@ -67,9 +64,7 @@
 
   async function pinCurrent() {
     if (typeof document === 'undefined') return;
-    const suffix = page.url.search
-      .replace(/[^A-Za-z0-9._:-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+    const suffix = page.url.search.replace(/[^A-Za-z0-9._:-]+/g, '-').replace(/^-+|-+$/g, '');
     await openContext({
       contextKey:
         'PAGE:' +
@@ -105,7 +100,9 @@
       if (detail) void openContext(detail);
     };
     const handleForm = (event: Event) => {
-      const detail = (event as CustomEvent<{ state: string; routePath: string; workContextId?: string | null }>).detail;
+      const detail = (
+        event as CustomEvent<{ state: string; routePath: string; workContextId?: string | null }>
+      ).detail;
       const id = detail.workContextId ?? dirtyForRoute(detail.routePath);
       if (!id) return;
       const next = new Set(dirtyIds);
@@ -123,7 +120,12 @@
 </script>
 
 <div class:collapsed={!expanded} class="taskbar" aria-label="Task Bar">
-  <button class="toggle" type="button" onclick={() => (expanded = !expanded)} aria-label="Toggle Task Bar">
+  <button
+    class="toggle"
+    type="button"
+    onclick={() => (expanded = !expanded)}
+    aria-label="Toggle Task Bar"
+  >
     <span>Task Bar</span>
     <strong>{contexts.length}</strong>
     <span>{expanded ? '⌄' : '⌃'}</span>
@@ -142,8 +144,8 @@
             class="close"
             type="button"
             onclick={() => void closeContext(context.id)}
-            aria-label={'Close ' + context.title}
-          >×</button>
+            aria-label={'Close ' + context.title}>×</button
+          >
         </div>
       {/each}
       {#if contexts.length === 0}

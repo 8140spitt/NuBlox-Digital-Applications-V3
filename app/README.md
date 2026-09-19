@@ -140,7 +140,6 @@ The eleven F06 L2 areas are delivered through six integrated workbenches: Intell
 
 F06 acceptance is gated by clean migration replay, domain/service tests, Svelte/type checks, repository formatting and production build on the exact main commit.
 
-
 ## Cross-cutting interaction baseline
 
 Migration `0036_work_context_edit_lease_runtime.sql` establishes the application-wide interaction model used before F07 and all later workspaces:

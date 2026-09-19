@@ -9,11 +9,7 @@ import {
   type OrganisationInput
 } from '$lib/server/foundation-organisation';
 import { actionProblem } from '$lib/server/action-problem';
-import {
-  acquireEditLease,
-  getEditLease,
-  releaseEditLease
-} from '$lib/server/edit-lease';
+import { acquireEditLease, getEditLease, releaseEditLease } from '$lib/server/edit-lease';
 import { getPartyOrigination } from '$lib/server/party-origination';
 import { assertPermission, hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
@@ -76,15 +72,12 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
       ])
     : [[], null, null, null];
 
-  const actorLease =
-    lease && lease.holderIdentityId === context.userIdentityId ? lease : null;
+  const actorLease = lease && lease.holderIdentityId === context.userIdentityId ? lease : null;
   const editing = Boolean(
     selected && url.searchParams.get('edit') === '1' && actorLease && workContext
   );
   const draft =
-    editing && workContext
-      ? await getWorkDraft(context, workContext.id, formKey)
-      : null;
+    editing && workContext ? await getWorkDraft(context, workContext.id, formKey) : null;
 
   return {
     tenantSlug: params.tenant,
@@ -106,11 +99,9 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
       : null,
     capabilities: {
       canSteward:
-        hasPermission(context, 'party.steward.manage') &&
-        hasPermission(context, 'party.change'),
+        hasPermission(context, 'party.steward.manage') && hasPermission(context, 'party.change'),
       canChangeStatus:
-        hasPermission(context, 'party.steward.manage') &&
-        hasPermission(context, 'party.activate')
+        hasPermission(context, 'party.steward.manage') && hasPermission(context, 'party.activate')
     }
   };
 };
@@ -189,7 +180,13 @@ export const actions: Actions = {
     const leaseToken = text(data, 'editLeaseToken');
     try {
       await activateOrganisation(context, id, version(data), leaseToken);
-      await releaseEditLease(context, 'ORGANISATION', id, leaseToken, 'Lifecycle change committed.');
+      await releaseEditLease(
+        context,
+        'ORGANISATION',
+        id,
+        leaseToken,
+        'Lifecycle change committed.'
+      );
     } catch (error) {
       return actionProblem(error, 'The Organisation lifecycle could not be changed.');
     }
@@ -204,7 +201,13 @@ export const actions: Actions = {
     const leaseToken = text(data, 'editLeaseToken');
     try {
       await deactivateOrganisation(context, id, version(data), leaseToken);
-      await releaseEditLease(context, 'ORGANISATION', id, leaseToken, 'Lifecycle change committed.');
+      await releaseEditLease(
+        context,
+        'ORGANISATION',
+        id,
+        leaseToken,
+        'Lifecycle change committed.'
+      );
     } catch (error) {
       return actionProblem(error, 'The Organisation lifecycle could not be changed.');
     }

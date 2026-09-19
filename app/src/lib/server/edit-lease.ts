@@ -1,11 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import {
-  dbTransaction,
-  executeMutation,
-  queryOne,
-  type DbExecutor
-} from '$lib/server/db';
+import { dbTransaction, executeMutation, queryOne, type DbExecutor } from '$lib/server/db';
 import type { CommandContext } from '$lib/server/platform-context';
 import { recordPlatformAudit } from '$lib/server/platform-evidence';
 

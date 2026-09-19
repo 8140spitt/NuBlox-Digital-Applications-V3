@@ -190,7 +190,6 @@ Development bootstrap records are application/test fixtures, not migration conte
 
 `0035_marketing_brand_runtime.sql` activates F06 across the frozen Market Insight/Segment, Communications Plan, Communications Campaign and Lead boundaries. Segment definitions are versioned and Campaigns pin exact versions. Brand/campaign content references exact issued Information revisions rather than duplicating content. Communications Plan and Campaign approvals bind immutable Decisions to exact versions. Leads retain unresolved-source provenance until deliberate Party resolution and exact-version Sales handoff. The migration also activates immutable Consent and Preference Evidence events needed to evaluate communication eligibility, plus campaign delivery/event evidence and frozen Marketing Analytics snapshots. Future Sales Opportunity acceptance remains a separate F07 command boundary.
 
-
 ## Migration 0036 — Work context, draft and edit lease runtime
 
 `0036_work_context_edit_lease_runtime.sql` is a cross-cutting platform migration rather than a business-function aggregate migration. It introduces user-scoped Work Contexts for the persistent Task Bar, recoverable form Drafts pinned to a base canonical version, short-lived Edit Leases with heartbeat/expiry semantics, and immutable Party Origination metadata.

@@ -121,7 +121,8 @@ export function platformPartyOrigination(
     originFunctionId: 'PLATFORM',
     originObjectType: 'INTERNAL_' + objectType,
     originObjectId: partyId,
-    originReference: 'Canonical identity created by an internal platform or test/bootstrap process.',
+    originReference:
+      'Canonical identity created by an internal platform or test/bootstrap process.',
     stewardFunctionId: 'PLATFORM'
   };
 }

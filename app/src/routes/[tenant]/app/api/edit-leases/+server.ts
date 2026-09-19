@@ -1,11 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
-import {
-  acquireEditLease,
-  heartbeatEditLease,
-  releaseEditLease
-} from '$lib/server/edit-lease';
+import { acquireEditLease, heartbeatEditLease, releaseEditLease } from '$lib/server/edit-lease';
 
 export const POST: RequestHandler = async ({ request, params, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
@@ -25,12 +21,7 @@ export const POST: RequestHandler = async ({ request, params, locals }) => {
   }
 
   if (operation === 'heartbeat') {
-    await heartbeatEditLease(
-      context,
-      objectType,
-      objectId,
-      String(body.leaseToken ?? '')
-    );
+    await heartbeatEditLease(context, objectType, objectId, String(body.leaseToken ?? ''));
     return json({ ok: true });
   }
 

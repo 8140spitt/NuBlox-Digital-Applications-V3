@@ -51,7 +51,9 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
         return {
           ...relationship,
           homeFunctionId,
-          homeFunctionName: homeFunctionId ? functionNames[homeFunctionId] ?? homeFunctionId : null,
+          homeFunctionName: homeFunctionId
+            ? (functionNames[homeFunctionId] ?? homeFunctionId)
+            : null,
           homeHref: homeFunctionId
             ? '/' + params.tenant + '/app/functions/' + homeFunctionId.toLowerCase()
             : null
@@ -68,8 +70,7 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
     relationships,
     authority: {
       canSteward:
-        hasPermission(context, 'party.steward.manage') &&
-        hasPermission(context, 'party.change')
+        hasPermission(context, 'party.steward.manage') && hasPermission(context, 'party.change')
     }
   };
 };

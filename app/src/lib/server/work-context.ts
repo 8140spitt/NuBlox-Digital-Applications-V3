@@ -229,7 +229,9 @@ export async function reorderWorkContexts(context: CommandContext, orderedIds: s
   });
 }
 
-function draftRow(row: RowDataPacket & Omit<WorkDraft, 'payload'> & { payload: unknown }): WorkDraft {
+function draftRow(
+  row: RowDataPacket & Omit<WorkDraft, 'payload'> & { payload: unknown }
+): WorkDraft {
   const payload =
     row.payload && typeof row.payload === 'object' && !Array.isArray(row.payload)
       ? (row.payload as Record<string, unknown>)
@@ -244,9 +246,7 @@ export async function getWorkDraft(
   executor?: DbExecutor
 ): Promise<WorkDraft | null> {
   await getWorkContext(context, workContextId, executor);
-  const row = await queryOne<
-    RowDataPacket & Omit<WorkDraft, 'payload'> & { payload: unknown }
-  >(
+  const row = await queryOne<RowDataPacket & Omit<WorkDraft, 'payload'> & { payload: unknown }>(
     `SELECT id,work_context_id AS workContextId,form_key AS formKey,base_version AS baseVersion,
             payload_json AS payload,draft_version AS draftVersion,status,created_at AS createdAt,
             updated_at AS updatedAt,applied_at AS appliedAt,discarded_at AS discardedAt
@@ -352,8 +352,5 @@ export const markWorkDraftApplied = (
   formKey: string
 ) => transitionDraft(context, workContextId, formKey, 'APPLIED');
 
-export const discardWorkDraft = (
-  context: CommandContext,
-  workContextId: string,
-  formKey: string
-) => transitionDraft(context, workContextId, formKey, 'DISCARDED');
+export const discardWorkDraft = (context: CommandContext, workContextId: string, formKey: string) =>
+  transitionDraft(context, workContextId, formKey, 'DISCARDED');

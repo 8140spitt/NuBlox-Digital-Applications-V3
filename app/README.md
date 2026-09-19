@@ -137,3 +137,5 @@ Marketing & Brand now operates across shared canonical authorities rather than a
 - Events reuse the Communications Campaign boundary and retain governed registration, attendance, supplier-reference and outcome evidence.
 
 The eleven F06 L2 areas are delivered through six integrated workbenches: Intelligence & Segmentation, Brand & Marketing Strategy, Campaign Studio, Events, Lead Generation and Marketing Analytics. Contemporary SAP Emarsys and Adobe Journey Optimizer patterns were used as capability benchmarks for segmentation, multi-channel orchestration, approval, automation and optimisation, while NuBlox retains its own canonical authority model.
+
+F06 acceptance is gated by clean migration replay, domain/service tests, Svelte/type checks, repository formatting and production build on the exact main commit.

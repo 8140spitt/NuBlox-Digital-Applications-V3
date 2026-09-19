@@ -397,6 +397,24 @@ export const platformPermissions = [
     'Approve and activate immutable Authority Framework versions.'
   ],
   [
+    'governance.executive.read',
+    'governance.executive',
+    'read',
+    'Read executive governance meetings, agenda, decisions and accountable follow-up.'
+  ],
+  [
+    'governance.executive.manage',
+    'governance.executive',
+    'manage',
+    'Schedule and maintain executive governance meetings, attendees and agenda.'
+  ],
+  [
+    'governance.executive.conduct',
+    'governance.executive',
+    'conduct',
+    'Convene and complete executive governance meetings and record resulting decisions/actions.'
+  ],
+  [
     'information.container.read',
     'information.container',
     'read',

@@ -48,11 +48,13 @@
   <nav class="quick-links" aria-label="Global shortcuts">
     <a
       class:active={page.url.pathname.includes('/app/work')}
-      href={'/' + tenantSlug + '/app/work'}>My Work</a
+      href={'/' + tenantSlug + '/app/work'}
+      >My Work</a
     >
     <a
       class:active={page.url.pathname.includes('/app/functions')}
-      href={'/' + tenantSlug + '/app/functions'}>Functions</a
+      href={'/' + tenantSlug + '/app/functions'}
+      >Functions</a
     >
   </nav>
 

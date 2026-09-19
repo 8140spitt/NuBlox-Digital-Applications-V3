@@ -7,7 +7,9 @@
 </script>
 
 <svelte:head>
-  <title>{forbidden ? 'Access restricted' : notFound ? 'Not found' : 'Request failed'} · NuBlox</title>
+  <title
+    >{forbidden ? 'Access restricted' : notFound ? 'Not found' : 'Request failed'} · NuBlox</title
+  >
 </svelte:head>
 
 <section class="error-state section-card" aria-labelledby="error-title">
@@ -19,7 +21,11 @@
     </span>
 
     <h1 id="error-title">
-      {forbidden ? 'Access restricted' : notFound ? 'This page could not be found' : 'This request could not be completed'}
+      {forbidden
+        ? 'Access restricted'
+        : notFound
+          ? 'This page could not be found'
+          : 'This request could not be completed'}
     </h1>
 
     {#if forbidden}
@@ -58,8 +64,7 @@
     gap: 28px;
     padding: 44px;
     background:
-      radial-gradient(circle at top right, rgba(111, 190, 232, 0.14), transparent 38%),
-      #fff;
+      radial-gradient(circle at top right, rgba(111, 190, 232, 0.14), transparent 38%), #fff;
   }
 
   .status {

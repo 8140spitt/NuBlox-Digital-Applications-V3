@@ -309,7 +309,7 @@ export async function freezeMarketingAnalyticsSnapshot(
     const transferredLeads = periodLeads.filter((lead) => Boolean(lead.transferredAt)).length;
     const spend = measurementTotals.get('SPEND') ?? null;
     const attributedRevenue = measurementTotals.get('ATTRIBUTED_REVENUE') ?? null;
-    const acquisitions = measurementTotals.get('ACQUISITIONS') ?? conversions || null;
+    const acquisitions = measurementTotals.get('ACQUISITIONS') ?? (conversions > 0 ? conversions : null);
 
     const metrics = {
       requested,

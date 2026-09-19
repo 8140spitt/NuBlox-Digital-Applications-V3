@@ -264,6 +264,10 @@ describe('F04 Corporate Development & M&A runtime', () => {
     expect(businessCase.status).toBe('APPROVED');
     expect(businessCase.approvalDecisionId).toBe(decisionId);
 
+    await expect(
+      development.closeBusinessCase(context, businessCaseId, businessCase.aggregateVersion)
+    ).rejects.toThrow('requires at least one executed agreement reference');
+
     await development.recordBusinessCaseAgreement(context, businessCaseId, {
       agreementRole: 'SHARE_PURCHASE_AGREEMENT',
       subjectType: 'INFORMATION_REVISION',

@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { objectHref } from '$lib/data/runtime-object-registry';
+
   let { data, form } = $props();
-  const href = (id: string) =>
-    `/${data.tenantSlug}/app/functions/f06/leads?lead=${encodeURIComponent(id)}`;
+  const href = (id: string) => objectHref(data.tenantSlug, 'lead', id, { from: 'F06.09' });
 </script>
 
 <svelte:head><title>Lead Generation · NuBlox</title></svelte:head>

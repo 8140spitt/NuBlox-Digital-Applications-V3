@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: app-ci-${{ github.ref }}
+  group: app-ci-v2-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:

@@ -46,10 +46,7 @@
   </div>
 
   <nav class="quick-links" aria-label="Global shortcuts">
-    <a
-      class:active={page.url.pathname.includes('/app/work')}
-      href={'/' + tenantSlug + '/app/work'}
-    >
+    <a class:active={page.url.pathname.includes('/app/work')} href={'/' + tenantSlug + '/app/work'}>
       <span>My Work</span>
     </a>
     <a
@@ -126,7 +123,9 @@
     padding: 0 16px 0 14px;
     color: white;
     background: var(--navy-950);
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 16px rgba(5, 30, 48, 0.14);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.08),
+      0 4px 16px rgba(5, 30, 48, 0.14);
   }
   .brand {
     min-width: 0;

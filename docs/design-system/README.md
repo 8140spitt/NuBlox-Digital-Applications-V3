@@ -49,6 +49,7 @@ This is an information-architecture contract, not a requirement that every works
 The detailed governing contracts are:
 
 - [`experience-system.md`](experience-system.md) — global shell, object-centric work, My Work, Task Bar and F07+ interaction gate;
+- [`object-centric-application-review.md`](object-centric-application-review.md) — full runtime review, quantified findings and the O0-O4 migration programme;
 - [`function-workspace-anatomy.md`](function-workspace-anatomy.md) — canonical anatomy for all F01-F29 workspaces.
 
 ## Required foundations before feature UI

@@ -11,6 +11,7 @@ The purpose is **enterprise and built-environment completeness**, not vendor imi
 - `competitive-experience-benchmark-register.csv` — 29-suite experience-review register and progress state.
 - `competitive-experience-cross-suite-findings-01.md` — initial cross-suite navigation, object, context, data-entry and administration findings.
 - `competitive-experience-wave-1a-sap-oracle-microsoft.md` — detailed first-pass menu/interaction review for SAP S/4HANA/Fiori, Oracle Fusion and Microsoft Dynamics 365.
+- `competitive-experience-wave-1b-ifs-infor-workday-servicenow.md` — detailed first-pass menu/interaction review for IFS Cloud, Infor OS/CloudSuite, Workday and ServiceNow.
 - `sap-capability-coverage-register.csv` — the 64-line SAP benchmark register carried forward from the prior NuBlox programme as provenance. Its legacy NuBlox domain/slice columns are not V3 architecture.
 - `sap-v3-capability-map.csv` — governed 64/64 V3 remap and completed SAP architecture-challenge classification across F01–F29 workspaces, canonical object families/concepts and end-to-end chains.
 - `app/src/lib/generated/sap-v3-benchmark-map.json` — machine-readable form of the SAP V3 remap.

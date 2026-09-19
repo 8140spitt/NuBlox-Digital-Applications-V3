@@ -17,7 +17,7 @@ export const enterpriseFunctions: readonly EnterpriseFunction[] = [
     id: 'F03',
     name: 'Enterprise Performance Management',
     shortName: 'Enterprise performance',
-    state: 'planned'
+    state: 'active'
   },
   {
     id: 'F04',

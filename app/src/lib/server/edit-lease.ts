@@ -6,7 +6,7 @@ import {
   queryOne,
   type DbExecutor
 } from '$lib/server/db';
-import { assertPermission, type CommandContext } from '$lib/server/platform-context';
+import type { CommandContext } from '$lib/server/platform-context';
 import { recordPlatformAudit } from '$lib/server/platform-evidence';
 
 export type EditLease = {
@@ -93,7 +93,6 @@ export async function getEditLease(
   objectType: string,
   objectId: string
 ): Promise<EditLease | null> {
-  assertPermission(context, 'work.edit_lease.read');
   const lease = await readLease(context, objectType, objectId);
   if (!lease || expired(lease)) return null;
   return lease;
@@ -118,7 +117,6 @@ export async function acquireEditLease(
     ttlSeconds?: number;
   }
 ): Promise<EditLeaseResult> {
-  assertPermission(context, 'work.edit_lease.acquire');
   const objectType = clean(input.objectType, 'Edit lease object type', 64).toUpperCase();
   const objectId = clean(input.objectId, 'Edit lease object ID');
   const timestamp = now();
@@ -224,7 +222,6 @@ export async function heartbeatEditLease(
   leaseToken: string,
   ttlSeconds = 180
 ) {
-  assertPermission(context, 'work.edit_lease.acquire');
   const timestamp = now();
   const result = await executeMutation(
     `UPDATE edit_leases
@@ -254,7 +251,6 @@ export async function assertEditLease(
   leaseToken: string,
   executor?: DbExecutor
 ): Promise<EditLease> {
-  assertPermission(context, 'work.edit_lease.acquire');
   const lease = await readLease(context, objectType, objectId, executor);
   if (!lease || expired(lease)) {
     throw new EditLeaseConflictError('No active edit lease exists for this item.');
@@ -280,7 +276,6 @@ export async function releaseEditLease(
   leaseToken: string,
   note = 'Edit session released.'
 ) {
-  assertPermission(context, 'work.edit_lease.acquire');
   return dbTransaction(async (connection) => {
     const lease = await assertEditLease(context, objectType, objectId, leaseToken, connection);
     const releasedAt = now();

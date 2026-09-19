@@ -38,6 +38,7 @@
     return () => {
       window.clearInterval(timer);
       window.removeEventListener('pagehide', release);
+      release();
     };
   });
 </script>

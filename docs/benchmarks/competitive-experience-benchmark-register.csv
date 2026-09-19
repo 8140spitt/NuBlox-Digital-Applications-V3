@@ -23,8 +23,8 @@ UX-MAXIMO,IBM,"Maximo Application Suite",asset,4,in-progress,"start center; modu
 UX-HXGN-EAM,Hexagon,"HxGN EAM",asset,4,in-progress,"menu/security; start center; search; favourites; field work",competitive-experience-wave-4-asset-property-service.md
 UX-PLANON,Planon,"IWMS",asset,4,in-progress,"navigation panel; workspace; property/asset/order contexts",competitive-experience-wave-4-asset-property-service.md
 UX-ESRI,Esri,"ArcGIS / Field Maps / GeoBIM",asset,4,in-progress,"maps; assets; field capture; spatial context",competitive-experience-wave-4-asset-property-service.md
-UX-SALESFORCE,Salesforce,"Sales / Service / Field Service",specialist,5,in-progress,"apps; objects; list views; record pages; split view",
-UX-DELTEK,Deltek,"Vantagepoint",specialist,5,registered,"project-centric CRM/accounting/resource planning",
-UX-DILIGENT,Diligent,"Diligent One / Boards / GRC",specialist,5,registered,"board work; entity; risk; audit",
-UX-NETSUITE,Oracle,"NetSuite",specialist,5,registered,"role centers; records; transactions; lists; setup",
-UX-UNIT4,Unit4,"ERP",specialist,5,registered,"project/people-centric ERP; workspaces; finance",
+UX-SALESFORCE,Salesforce,"Sales / Service / Field Service",specialist,5,in-progress,"apps; objects; list views; record pages; split view",competitive-experience-wave-5-specialist-enterprise.md
+UX-DELTEK,Deltek,"Vantagepoint",specialist,5,in-progress,"project-centric CRM/accounting/resource planning",competitive-experience-wave-5-specialist-enterprise.md
+UX-DILIGENT,Diligent,"Diligent One / Boards / GRC",specialist,5,in-progress,"board work; entity; risk; audit",competitive-experience-wave-5-specialist-enterprise.md
+UX-NETSUITE,Oracle,"NetSuite",specialist,5,in-progress,"role centers; records; transactions; lists; setup",competitive-experience-wave-5-specialist-enterprise.md
+UX-UNIT4,Unit4,"ERP",specialist,5,in-progress,"project/people-centric ERP; workspaces; finance",competitive-experience-wave-5-specialist-enterprise.md

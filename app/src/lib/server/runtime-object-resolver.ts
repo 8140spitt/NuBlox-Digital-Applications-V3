@@ -123,9 +123,7 @@ const resolvers: Record<string, Resolver> = {
             direction: outgoing ? ('OUTGOING' as const) : ('INCOMING' as const),
             relationshipType: relationship.relationshipType,
             relatedPartyId: outgoing ? relationship.toPartyId : relationship.fromPartyId,
-            relatedPartyName: outgoing
-              ? relationship.toDisplayName
-              : relationship.fromDisplayName,
+            relatedPartyName: outgoing ? relationship.toDisplayName : relationship.fromDisplayName,
             contextType: relationship.contextType,
             contextId: relationship.contextId,
             status: relationship.status

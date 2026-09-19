@@ -119,7 +119,10 @@ describe('platform foundation runtime on MySQL', () => {
     };
     await expect(
       organisationService.createOrganisation(restricted, { legalName: 'Denied' })
-    ).rejects.toThrow('Permission denied: party.create');
+    ).rejects.toMatchObject({
+      status: 403,
+      body: { message: 'Permission denied: party.create' }
+    });
   });
 
   it('persists Person and Legal Entity as Party specialisations without duplicate masters', async () => {

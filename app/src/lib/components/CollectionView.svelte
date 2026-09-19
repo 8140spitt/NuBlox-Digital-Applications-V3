@@ -68,11 +68,12 @@
         })
       : rows;
 
-    if (!sortKey) return filtered;
+    const activeSortKey = sortKey;
+    if (!activeSortKey) return filtered;
 
     return [...filtered].sort((left, right) => {
-      const a = String(left.values[sortKey] ?? '');
-      const b = String(right.values[sortKey] ?? '');
+      const a = String(left.values[activeSortKey] ?? '');
+      const b = String(right.values[activeSortKey] ?? '');
       const result = a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
       return sortDirection === 'asc' ? result : -result;
     });

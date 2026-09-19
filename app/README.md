@@ -119,3 +119,5 @@ Product, Service & Innovation Management now operates across the frozen canonica
 - retirement requires stakeholder notice, customer migration, support-end and archive evidence before the Item can become Retired.
 
 The ten F05 L2 work areas are delivered through six shared operational workbenches so identical canonical objects are not split into duplicate mini-applications.
+
+F05 capability coverage is benchmarked against contemporary SAP Integrated Product Development, PTC Windchill, Siemens Teamcenter and Autodesk Fusion Manage semantics while retaining NuBlox canonical authority boundaries.

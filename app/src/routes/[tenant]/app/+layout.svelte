@@ -7,6 +7,7 @@
   tenantSlug={data.tenantSlug}
   actorDisplayName={data.actorDisplayName}
   authenticated={data.authenticated}
+  initialWorkContexts={data.workContexts}
 >
   {@render children()}
 </AppShell>

@@ -67,7 +67,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0033_...`; historical migrations remain immutable.
+Future schema changes start at `0034_...`; historical migrations remain immutable.
+
+- `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
 
 ## Validation and test contract
 
@@ -172,3 +174,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0032 — Corporate Development & M&A runtime
 
 `0032_corporate_development_runtime.sql` activates F04 across the frozen canonical boundaries rather than creating a monolithic deal record. `AGG-04-DEVELOPMENT` owns stable Corporate Development Opportunities and immutable approved Development Appraisal snapshots; `AGG-22-LEGAL` provides restricted Due Diligence Legal Matters with matter-level Party access and seven cross-functional workstreams; `AGG-04-BUSINESS-CASE` provides versioned Transaction, Divestiture and Strategic Partnership decision-support cases that reference exact appraisal/legal evidence and require immutable shared `AGG-27-DECISION` approval; and `AGG-26-TRANSFORMATION` provides reusable post-deal Integration Initiatives and governed workstreams. Sensitive diligence narrative remains inside the Legal Matter boundary and is excluded from general event payloads.
+
+
+## Migration 0033 — governed permission access requests
+
+`0033_permission_access_request_runtime.sql` adds an immutable request record for tenant members who encounter a controlled permission denial. The request references the exact governed permission key and requested tenant application path, creates a shared `AGG-27-WORKFLOW` Workflow Instance and `ACCESS_REQUEST` Work Item, and assigns that Work Item to the active `tenant-admin` role. Open requests for the same actor and permission are deduplicated. Permission requests do not grant authority: tenant RBAC remains owned by the existing tenant Role/Permission runtime and administrators fulfil or decline requests through Security & Authority before completing the Work Item.

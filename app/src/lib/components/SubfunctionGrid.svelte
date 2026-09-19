@@ -1,18 +1,27 @@
 <script lang="ts">
   import type { WorkArea } from '$lib/workspaces/f01';
-  let { areas, baseHref }: { areas: readonly WorkArea[]; baseHref: string } = $props();
+  let {
+    areas,
+    baseHref,
+    title = 'Eight strategy work areas',
+    description = 'Each area is a stable F01 sub-function surface backed by shared lifecycle, workflow and evidence services.',
+    eyebrow = 'Workspace map'
+  }: {
+    areas: readonly WorkArea[];
+    baseHref: string;
+    title?: string;
+    description?: string;
+    eyebrow?: string;
+  } = $props();
 </script>
 
 <section class="subfunctions section-card" aria-labelledby="subfunctions-title">
   <div class="section-heading">
     <div>
-      <span class="eyebrow">Workspace map</span>
-      <h2 id="subfunctions-title">Eight strategy work areas</h2>
+      <span class="eyebrow">{eyebrow}</span>
+      <h2 id="subfunctions-title">{title}</h2>
     </div>
-    <p>
-      Each area is a stable F01 sub-function surface backed by shared lifecycle, workflow and
-      evidence services.
-    </p>
+    <p>{description}</p>
   </div>
   <div class="area-grid">
     {#each areas as area}

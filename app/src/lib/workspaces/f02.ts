@@ -45,7 +45,8 @@ export const f02Workspace = {
       name: 'Executive Management',
       sourceName: 'Executive management',
       summary: 'Conduct executive governance, resolve escalations and record enterprise decisions.',
-      items: ['Executive reviews', 'Decisions', 'Escalations', 'Investments', 'Actions', 'Evidence']
+      items: ['Executive reviews', 'Decisions', 'Escalations', 'Investments', 'Actions', 'Evidence'],
+      path: 'executive-management'
     },
     {
       id: 'F02.05',

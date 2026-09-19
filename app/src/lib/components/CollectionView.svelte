@@ -51,6 +51,7 @@
   let sortKey = $state<string | null>(null);
   let sortDirection = $state<'asc' | 'desc'>('asc');
   let selectedViewId = $state('');
+  let defaultViewInitialised = $state(false);
 
   const selectedView = $derived(savedViews.find((view) => view.id === selectedViewId) ?? null);
 
@@ -87,11 +88,7 @@
     sortDirection = 'asc';
   }
 
-  function applySavedView(event: Event) {
-    selectedViewId = (event.currentTarget as HTMLSelectElement).value;
-    const view = savedViews.find((item) => item.id === selectedViewId);
-    if (!view) return;
-
+  function applyView(view: SavedViewOption) {
     const nextQuery = view.definition.query;
     const nextSortKey = view.definition.sortKey;
     const nextSortDirection = view.definition.sortDirection;
@@ -103,6 +100,25 @@
         : null;
     sortDirection = nextSortDirection === 'desc' ? 'desc' : 'asc';
   }
+
+  function applySavedView(event: Event) {
+    selectedViewId = (event.currentTarget as HTMLSelectElement).value;
+    const view = savedViews.find((item) => item.id === selectedViewId);
+    if (view) applyView(view);
+  }
+
+  $effect(() => {
+    if (selectedViewId && !savedViews.some((view) => view.id === selectedViewId)) {
+      selectedViewId = '';
+    }
+    if (defaultViewInitialised) return;
+    defaultViewInitialised = true;
+    const defaultView = savedViews.find((view) => view.isDefault);
+    if (defaultView) {
+      selectedViewId = defaultView.id;
+      applyView(defaultView);
+    }
+  });
 
   function ariaSort(column: CollectionColumn) {
     if (sortKey !== column.key) return 'none';
@@ -158,7 +174,7 @@
             <form method="POST" action={saveViewAction}>
               <label>
                 <span>View name</span>
-                <input name="viewName" required maxlength="191" />
+                <input type="text" name="viewName" required maxlength="191" />
               </label>
               <input type="hidden" name="query" value={query} />
               <input type="hidden" name="sortKey" value={sortKey ?? ''} />

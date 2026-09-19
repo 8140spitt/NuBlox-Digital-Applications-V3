@@ -132,7 +132,10 @@
         event as CustomEvent<{ state: string; routePath: string; workContextId?: string | null }>
       ).detail;
       const id = detail.workContextId ?? dirtyForRoute(detail.routePath);
-      if (!id) return;
+      if (!id) {
+        if (detail.state === 'dirty') void openDirtyFormContext(detail.routePath);
+        return;
+      }
       const next = new Set(dirtyIds);
       if (detail.state === 'dirty') next.add(id);
       if (detail.state === 'saved') next.delete(id);
@@ -189,14 +192,14 @@
 <style>
   .taskbar {
     position: fixed;
-    left: 238px;
+    left: 248px;
     right: 0;
     bottom: 0;
     z-index: 40;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: stretch;
-    min-height: 44px;
+    min-height: 46px;
     border-top: 1px solid #b9ccd8;
     background: rgba(248, 251, 253, 0.97);
     box-shadow: 0 -4px 16px rgba(22, 55, 76, 0.11);
@@ -248,7 +251,7 @@
     flex: 0 0 auto;
     display: flex;
     align-items: stretch;
-    max-width: 250px;
+    max-width: 280px;
     border: 1px solid #d7e2e8;
     border-radius: 6px;
     overflow: hidden;
@@ -264,7 +267,7 @@
     gap: 6px;
     align-items: center;
     min-width: 0;
-    padding: 6px 7px;
+    padding: 7px 9px;
     color: #324f63;
     text-decoration: none;
   }
@@ -303,11 +306,11 @@
     align-self: center;
     padding: 0 9px;
     color: #7c8d98;
-    font-size: 8.5px;
+    font-size: 9.5px;
   }
   @media (max-width: 1050px) {
     .taskbar {
-      left: 210px;
+      left: 220px;
     }
   }
   @media (max-width: 760px) {

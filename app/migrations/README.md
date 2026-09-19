@@ -67,7 +67,7 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0030_...`; historical migrations remain immutable.
+Future schema changes start at `0031_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -177,3 +177,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0029 — restricted Integrity Case runtime
 
 `0029_integrity_case_runtime.sql` implements F02.07 Ethics Governance through the frozen `AGG-21-CASE / INTEGRITY-CASE` boundary. Integrity Cases retain stable restricted case identity, Party subjects, investigation ownership, append-only case journal entries, governed Evidence Item links, immutable Decision links and shared Work Item follow-up. Tenant permission is necessary but insufficient for case visibility: every case query and command also requires an active per-case Party access grant. Case business events intentionally exclude allegation, source and journal content so restricted case narrative is not replicated into the general event/outbox stream.
+
+
+## Migration 0030 — Governance Meeting controlled-information links
+
+`0030_governance_meeting_information.sql` closes the Board/Committee meeting-information gap without creating a document silo. Governance Meetings reference exact immutable `information_revisions` for agenda, Board/Committee packs, supporting papers and minutes. Only issued revisions may be linked by the runtime, so historic governance evidence retains the exact controlled information reviewed at the meeting. The meeting remains `AGG-02-GOVERNANCE-MEETING`; Information Container identity and revision lifecycle remain owned by `AGG-07-INFORMATION`.

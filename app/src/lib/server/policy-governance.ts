@@ -535,6 +535,7 @@ export async function addPolicyRepresentation(
     contentHash: string;
   }
 ) {
+  assertPermission(context, 'information.container.manage');
   await getPolicy(context, policyId);
   return addInformationRepresentation(context, policyId, expectedAggregateVersion, input);
 }
@@ -544,6 +545,7 @@ export async function submitPolicyRevision(
   policyId: string,
   expectedAggregateVersion: number
 ) {
+  assertPermission(context, 'information.container.manage');
   const policy = await getPolicy(context, policyId);
   if (!policy.applicabilitySummary.trim()) {
     throw new Error('Policy applicability must be defined before review.');
@@ -557,6 +559,7 @@ export async function approvePolicyRevision(
   expectedAggregateVersion: number,
   decisionId: string
 ) {
+  assertPermission(context, 'information.container.approve');
   await getPolicy(context, policyId);
   return approveInformationRevision(context, policyId, expectedAggregateVersion, decisionId);
 }
@@ -566,6 +569,7 @@ export async function publishPolicyRevision(
   policyId: string,
   expectedAggregateVersion: number
 ) {
+  assertPermission(context, 'information.container.approve');
   const policy = await getPolicy(context, policyId);
   if (!policy.effectiveFrom) {
     throw new Error('Policy effective-from must be defined before publication.');

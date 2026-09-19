@@ -180,7 +180,11 @@
               <input type="hidden" name="query" value={query} />
               <input type="hidden" name="sortKey" value={sortKey ?? ''} />
               <input type="hidden" name="sortDirection" value={sortDirection} />
-              <input type="hidden" name="columns" value={columns.map((column) => column.key).join(',')} />
+              <input
+                type="hidden"
+                name="columns"
+                value={columns.map((column) => column.key).join(',')}
+              />
               <label class="check">
                 <input type="checkbox" name="isPinned" />
                 <span>Pin this view</span>

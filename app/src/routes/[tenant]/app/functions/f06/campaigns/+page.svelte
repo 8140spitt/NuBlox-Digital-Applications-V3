@@ -57,7 +57,7 @@
             <div class="grid"><label>Reference<input name="campaignRef" required/></label><label>Type<select name="campaignType"><option>MARKETING</option><option>DIGITAL</option><option>CONTENT</option><option>COMMUNICATIONS</option><option>EVENT</option></select></label></div>
             <label>Title<input name="title" required/></label>
             <label>Active / approved plan<select name="communicationsPlanId"><option value="">No linked plan</option>{#each data.plans.filter((p)=>['APPROVED','ACTIVE'].includes(p.status)) as plan}<option value={plan.id}>{plan.planRef} · {plan.title}</option>{/each}</select></label>
-            <div class="json-grid"><label>Objectives JSON<textarea name="objectives" rows="3" value="{}"></textarea></label><label>Audience strategy JSON<textarea name="audienceStrategy" rows="3" value="{}"></textarea></label><label>Key messages JSON<textarea name="keyMessages" rows="3" value="{}"></textarea></label><label>Channels JSON<textarea name="channels" rows="3" value="[]"></textarea></label><label>Schedule JSON<textarea name="schedule" rows="3" value="{}"></textarea></label><label>Budget context JSON<textarea name="budgetContext" rows="3" value="{}"></textarea></label><label>Measurement plan JSON<textarea name="measurementPlan" rows="3" value="{}"></textarea></label><label>Automation JSON<textarea name="automation" rows="3" value="{}"></textarea></label></div>
+            <div class="json-grid"><label>Objectives JSON<textarea name="objectives" rows="3" value={'{}'}></textarea></label><label>Audience strategy JSON<textarea name="audienceStrategy" rows="3" value={'{}'}></textarea></label><label>Key messages JSON<textarea name="keyMessages" rows="3" value={'{}'}></textarea></label><label>Channels JSON<textarea name="channels" rows="3" value={'[]'}></textarea></label><label>Schedule JSON<textarea name="schedule" rows="3" value={'{}'}></textarea></label><label>Budget context JSON<textarea name="budgetContext" rows="3" value={'{}'}></textarea></label><label>Measurement plan JSON<textarea name="measurementPlan" rows="3" value={'{}'}></textarea></label><label>Automation JSON<textarea name="automation" rows="3" value={'{}'}></textarea></label></div>
             <button>Create governed campaign</button>
           </form>
         </details>
@@ -123,7 +123,7 @@
                 <div class="grid"><label>Item reference<input name="itemRef" required/></label><label>Type<select name="itemType"><option>EMAIL</option><option>SOCIAL_POST</option><option>PAID_AD</option><option>WEB_CONTENT</option><option>MARKETING_MESSAGE</option></select></label></div>
                 <label>Channel<input name="channel" required/></label>
                 <label>Issued content<select name="informationRevisionId" required><option value="">Select revision</option>{#each data.issuedInformation as info}<option value={info.id}>{info.containerRef}/{info.revisionCode} · {info.title}</option>{/each}</select></label>
-                <label>Audience scope JSON<textarea name="audienceScope" rows="3" value="{}"></textarea></label><button>Create communication item</button>
+                <label>Audience scope JSON<textarea name="audienceScope" rows="3" value={'{}'}></textarea></label><button>Create communication item</button>
               </form></details>
 
               <details class="command"><summary>Create successor campaign version</summary><form method="POST" action="?/revise">
@@ -178,7 +178,7 @@
                     <input type="hidden" name="campaignId" value={data.selected.id}/><input type="hidden" name="itemId" value={data.selectedItem.id}/><input type="hidden" name="mode" value={data.mode}/><input type="hidden" name="recipientType" value="LEAD"/>
                     <label>Lead recipient<select name="recipientId" required><option value="">Select Lead</option>{#each data.leads as lead}<option value={lead.id}>{lead.leadRef} · {lead.prospectName}</option>{/each}</select></label>
                     <div class="grid"><label>Event<select name="deliveryAction"><option>SENT</option><option>DELIVERED</option><option>BOUNCE</option><option>OPEN</option><option>CLICK</option><option>CONVERSION</option><option>UNSUBSCRIBE</option></select></label><label>External reference<input name="externalReference"/></label></div>
-                    <label>Metadata JSON<textarea name="metadata" rows="3" value="{}"></textarea></label><button>Record engagement evidence</button>
+                    <label>Metadata JSON<textarea name="metadata" rows="3" value={'{}'}></textarea></label><button>Record engagement evidence</button>
                   </form></details>
                 </div>
               {/if}

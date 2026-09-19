@@ -1,0 +1,44 @@
+name: Temporary Party Prettier Export
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/party-prettier-export.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: pnpm install --no-frozen-lockfile
+      - name: Format target files
+        run: |
+          pnpm exec prettier --write \
+            src/lib/data/runtime-object-registry.ts \
+            src/lib/server/foundation-party-directory.ts \
+            src/lib/server/runtime-object-resolver.ts
+      - name: Export formatted files
+        run: |
+          files=(
+            "src/lib/data/runtime-object-registry.ts"
+            "src/lib/server/foundation-party-directory.ts"
+            "src/lib/server/runtime-object-resolver.ts"
+          )
+          for file in "${files[@]}"; do
+            echo "@@FILE:$file@@"
+            base64 -w0 "$file"
+            echo
+            echo "@@END@@"
+          done

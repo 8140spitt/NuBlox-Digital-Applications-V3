@@ -1,9 +1,4 @@
-export type RuntimeObjectSection =
-  | 'overview'
-  | 'work'
-  | 'decisions'
-  | 'evidence'
-  | 'history';
+export type RuntimeObjectSection = 'overview' | 'work' | 'decisions' | 'evidence' | 'history';
 
 export type RuntimeObjectDefinition = {
   type: string;
@@ -91,7 +86,9 @@ export function subjectObjectHref(
 
 export function validateRuntimeObjectRegistry() {
   const typeKeys = new Set(runtimeObjectDefinitions.map((definition) => definition.type));
-  const subjectTypes = new Set(runtimeObjectDefinitions.map((definition) => definition.subjectType));
+  const subjectTypes = new Set(
+    runtimeObjectDefinitions.map((definition) => definition.subjectType)
+  );
   if (typeKeys.size !== runtimeObjectDefinitions.length) return false;
   if (subjectTypes.size !== runtimeObjectDefinitions.length) return false;
   return runtimeObjectDefinitions.every(

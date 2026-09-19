@@ -1,7 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import { onMount } from 'svelte';
   import { enterpriseFunctions } from '$lib/enterprise/functions';
+  import { contextPreservingHref } from '$lib/enterprise/enterprise-context';
 
   let { tenantSlug } = $props();
 
@@ -92,7 +94,11 @@
           label: 'Search NuBlox for “' + query.trim() + '”',
           detail: 'Search authorised business objects and enterprise destinations',
           group: 'Enterprise Search',
-          href: '/' + tenantSlug + '/app/search?q=' + encodeURIComponent(query.trim())
+          href: contextPreservingHref(
+            page.url,
+            '/' + tenantSlug + '/app/search?q=' + encodeURIComponent(query.trim()),
+            tenantSlug
+          )
         }
       : null
   );

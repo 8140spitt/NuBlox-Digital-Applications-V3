@@ -67,11 +67,12 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0036_...`; historical migrations remain immutable.
+Future schema changes start at `0037_...`; historical migrations remain immutable.
 
 - `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
 - `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
 - `0035_marketing_brand_runtime.sql` — F06 Market Segment, Communications Plan/Campaign, Communication Item, Lead, privacy consent/preference evidence, delivery/event evidence and reproducible marketing analytics runtime.
+- `0036_work_context_edit_lease_runtime.sql` — cross-cutting Task Bar work contexts, recoverable drafts, cooperative edit leases and immutable Party origination metadata.
 
 ## Validation and test contract
 
@@ -188,3 +189,12 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0035 — Marketing & Brand runtime
 
 `0035_marketing_brand_runtime.sql` activates F06 across the frozen Market Insight/Segment, Communications Plan, Communications Campaign and Lead boundaries. Segment definitions are versioned and Campaigns pin exact versions. Brand/campaign content references exact issued Information revisions rather than duplicating content. Communications Plan and Campaign approvals bind immutable Decisions to exact versions. Leads retain unresolved-source provenance until deliberate Party resolution and exact-version Sales handoff. The migration also activates immutable Consent and Preference Evidence events needed to evaluate communication eligibility, plus campaign delivery/event evidence and frozen Marketing Analytics snapshots. Future Sales Opportunity acceptance remains a separate F07 command boundary.
+
+
+## Migration 0036 — Work context, draft and edit lease runtime
+
+`0036_work_context_edit_lease_runtime.sql` is a cross-cutting platform migration rather than a business-function aggregate migration. It introduces user-scoped Work Contexts for the persistent Task Bar, recoverable form Drafts pinned to a base canonical version, short-lived Edit Leases with heartbeat/expiry semantics, and immutable Party Origination metadata.
+
+Edit Leases do not hold database transactions open and do not replace optimistic concurrency. The canonical aggregate version remains authoritative when the final command commits. A lease prevents two users from unknowingly spending time in competing edit sessions; the version guard prevents lost updates even if a lease expires or another system command changes the aggregate.
+
+Party Origination records the home business context that caused a canonical Person/Organisation to exist. Global Master Data therefore acts as an identity directory/stewardship surface; customer, supplier and employee roles originate in F07, F09 and F15 respectively. Future F07 persistence starts at `0037_...`.

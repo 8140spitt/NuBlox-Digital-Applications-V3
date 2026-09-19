@@ -1066,8 +1066,8 @@ export async function recordBusinessCaseAgreement(
   return dbTransaction(async (connection) => {
     const businessCase = await getBusinessCase(context, businessCaseId, connection, true);
     assertCaseManagePermission(context, businessCase.caseType);
-    if (!['APPROVED', 'CLOSED'].includes(businessCase.status)) {
-      throw new Error('Agreements may only be recorded against approved Business Cases.');
+    if (businessCase.status !== 'APPROVED') {
+      throw new Error('Agreements may only be recorded against an active approved Business Case.');
     }
     const id = randomUUID();
     const recordedAt = now();
@@ -1118,6 +1118,14 @@ export async function closeBusinessCase(
     assertCaseManagePermission(context, businessCase.caseType);
     if (businessCase.aggregateVersion !== expectedVersion || businessCase.status !== 'APPROVED') {
       throw new Error('Only the current approved Business Case may be closed.');
+    }
+    const executedAgreement = await queryOne<RowDataPacket & { count: number }>(
+      "SELECT COUNT(*) AS count FROM business_case_agreements WHERE business_case_id=? AND execution_status='EXECUTED'",
+      [businessCaseId],
+      connection
+    );
+    if (Number(executedAgreement?.count ?? 0) < 1) {
+      throw new Error('Business Case completion requires at least one executed agreement reference.');
     }
     const nextVersion = expectedVersion + 1;
     const closedAt = now();

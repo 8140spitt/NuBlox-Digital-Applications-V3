@@ -1,7 +1,7 @@
 <script lang="ts">
   let { data } = $props();
 
-  const areas = [
+  const areas = $derived([
     {
       title: 'Parties',
       detail: 'People, organisations, legal entities and canonical business identities.',
@@ -22,7 +22,7 @@
       detail: 'Classifications, lifecycles, calendars and governed reference configuration.',
       href: '/' + data.tenantSlug + '/app/admin/reference-data'
     }
-  ];
+  ]);
 </script>
 
 <svelte:head><title>Enterprise Data · NuBlox</title></svelte:head>

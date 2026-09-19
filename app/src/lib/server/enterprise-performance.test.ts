@@ -304,6 +304,7 @@ describe('F03 Enterprise Performance Management runtime', () => {
       membershipRules: 'Executive owner and performance secretariat.',
       quorumRequired: 1,
       chairPartyId: context.actorPartyId,
+      secretariatPartyId: context.actorPartyId,
       members: [{ partyId: context.actorPartyId, roleKey: 'CHAIR' }]
     });
     let body = (await governance.listGovernanceBodies(context)).find((row) => row.id === bodyId)!;

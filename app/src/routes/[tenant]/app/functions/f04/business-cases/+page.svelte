@@ -98,7 +98,7 @@
               >Primary counterparty<select name="primaryPartyId"
                 ><option value="">None</option
                 >{#each data.organisations.filter((o) => o.status === 'ACTIVE') as organisation}<option
-                    value={organisation.id}>{organisation.name}</option
+                    value={organisation.id}>{organisation.displayName}</option
                   >{/each}</select
               ></label
             >

@@ -6,6 +6,7 @@
 
   function sectionLabel(section: RuntimeObjectSection) {
     if (section === 'overview') return 'Overview';
+    if (section === 'relationships') return 'Relationships';
     if (section === 'work') return 'Work';
     if (section === 'decisions') return 'Decisions';
     if (section === 'evidence') return 'Evidence';
@@ -18,6 +19,7 @@
 
   function sectionAvailable(section: RuntimeObjectSection) {
     if (data.state !== 'ready' || section === 'overview') return true;
+    if (section === 'relationships') return data.object.relationships !== null;
     if (section === 'work') return data.capabilities.canReadWork;
     if (section === 'decisions') return data.capabilities.canReadDecisions;
     if (section === 'evidence') return data.capabilities.canReadEvidence;
@@ -27,6 +29,7 @@
 
   function sectionCount(section: RuntimeObjectSection) {
     if (data.state !== 'ready') return null;
+    if (section === 'relationships') return data.object.relationships?.length ?? null;
     if (section === 'work') return data.work.length;
     if (section === 'decisions') return data.decisions.length;
     if (section === 'evidence') return data.evidence.length;
@@ -72,12 +75,7 @@
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href={'/' + data.tenantSlug + '/app'}>Home</a>
       <span>›</span>
-      <a
-        href={'/' +
-          data.tenantSlug +
-          '/app/functions/' +
-          data.object.originFunctionId.toLowerCase()}>{data.object.originFunctionId}</a
-      >
+      <a href={data.object.workspaceHref}>{data.object.workspaceLabel}</a>
       <span>›</span>
       <strong>{data.definition.singular}</strong>
     </nav>
@@ -144,6 +142,38 @@
             </div>
           {/each}
         </dl>
+      </section>
+    {:else if data.section === 'relationships'}
+      <section class="section-card content-panel">
+        <header>
+          <div>
+            <span class="eyebrow">Relationships</span>
+            <h2>Governed Party relationships</h2>
+          </div>
+          <strong>{data.object.relationships?.length ?? 0}</strong>
+        </header>
+        <div class="record-list">
+          {#each data.object.relationships ?? [] as relationship}
+            <article>
+              <div>
+                <span class="tag">{relationship.direction}</span>
+                <a
+                  class="record-link"
+                  href={objectHref(data.tenantSlug, 'party', relationship.relatedPartyId)}
+                  >{relationship.relatedPartyName}</a
+                >
+              </div>
+              <div class="record-meta">
+                <span>{relationship.relationshipType.replaceAll('_', ' ')}</span>
+                <span>{relationship.status.replaceAll('_', ' ')}</span>
+                <span>{relationship.contextType.replaceAll('_', ' ')}</span>
+              </div>
+              <p>Context: {relationship.contextId}</p>
+            </article>
+          {:else}
+            <p class="empty">No governed Party relationships are recorded for this object.</p>
+          {/each}
+        </div>
       </section>
     {:else if data.section === 'work'}
       <section class="section-card content-panel">
@@ -413,9 +443,17 @@
     gap: 7px;
     align-items: center;
   }
-  .record-list article strong {
+  .record-list article strong,
+  .record-link {
     color: #38576b;
     font-size: 10px;
+    font-weight: 800;
+  }
+  .record-link {
+    text-decoration: none;
+  }
+  .record-link:hover {
+    text-decoration: underline;
   }
   .record-list p {
     margin: 0;

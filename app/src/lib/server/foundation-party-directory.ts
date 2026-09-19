@@ -20,6 +20,11 @@ export type PartyDirectoryEntry = {
   legalEntityType: string | null;
   jurisdictionCode: string | null;
   accountingCurrency: string | null;
+  originFunctionId: string | null;
+  originObjectType: string | null;
+  originObjectId: string | null;
+  originReference: string | null;
+  stewardFunctionId: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -62,12 +67,18 @@ const partySelect = `
          le.legal_entity_type AS legalEntityType,
          le.jurisdiction_code AS jurisdictionCode,
          le.accounting_currency AS accountingCurrency,
+         po.origin_function_id AS originFunctionId,
+         po.origin_object_type AS originObjectType,
+         po.origin_object_id AS originObjectId,
+         po.origin_reference AS originReference,
+         po.steward_function_id AS stewardFunctionId,
          p.created_at AS createdAt,
          p.updated_at AS updatedAt
     FROM parties p
     LEFT JOIN persons pe ON pe.party_id = p.id
     LEFT JOIN organisations o ON o.party_id = p.id
     LEFT JOIN legal_entities le ON le.party_id = p.id
+    LEFT JOIN party_originations po ON po.party_id = p.id AND po.tenant_id = p.tenant_id
 `;
 
 function mapParty(row: PartyDirectoryRow): PartyDirectoryEntry {

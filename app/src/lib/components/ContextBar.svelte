@@ -46,9 +46,8 @@
   async function selectLegalEntity(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value;
     const selection = decodeEnterpriseContextSelection(value);
-    const patch: Partial<
-      Record<EnterpriseContextDimensionKey, EnterpriseContextSelection | null>
-    > = { legalEntity: selection };
+    const patch: Partial<Record<EnterpriseContextDimensionKey, EnterpriseContextSelection | null>> =
+      { legalEntity: selection };
 
     const currentUnit = runtimeContext.dimensions.organisationUnit;
     if (currentUnit) {
@@ -67,9 +66,8 @@
   async function selectOrganisationUnit(event: Event) {
     const value = (event.currentTarget as HTMLSelectElement).value;
     const selection = decodeEnterpriseContextSelection(value);
-    const patch: Partial<
-      Record<EnterpriseContextDimensionKey, EnterpriseContextSelection | null>
-    > = { organisationUnit: selection };
+    const patch: Partial<Record<EnterpriseContextDimensionKey, EnterpriseContextSelection | null>> =
+      { organisationUnit: selection };
 
     if (selection) {
       const option = organisationUnits.find((item) => item.id === selection.id);
@@ -92,7 +90,10 @@
     {#if activeItems.length}
       {#each activeItems as item, index}
         {#if index > 0}<span class="separator" aria-hidden="true">›</span>{/if}
-        <span class="context-item" title={item.selection.label ?? item.selection.reference ?? item.selection.id}>
+        <span
+          class="context-item"
+          title={item.selection.label ?? item.selection.reference ?? item.selection.id}
+        >
           <small>{item.label}</small>
           <strong>{item.selection.reference ?? item.selection.label ?? item.selection.id}</strong>
         </span>
@@ -118,7 +119,8 @@
               <select value={currentValue('legalEntity')} onchange={selectLegalEntity}>
                 <option value="">Enterprise-wide</option>
                 {#each legalEntities as option}
-                  <option value={encodeEnterpriseContextSelection(option)}>{display(option)}</option>
+                  <option value={encodeEnterpriseContextSelection(option)}>{display(option)}</option
+                  >
                 {/each}
               </select>
             </label>
@@ -130,7 +132,8 @@
               <select value={currentValue('organisationUnit')} onchange={selectOrganisationUnit}>
                 <option value="">All organisation units</option>
                 {#each organisationUnits as option}
-                  <option value={encodeEnterpriseContextSelection(option)}>{display(option)}</option>
+                  <option value={encodeEnterpriseContextSelection(option)}>{display(option)}</option
+                  >
                 {/each}
               </select>
             </label>
@@ -148,7 +151,11 @@
         </div>
       </details>
     {:else if activeItems.length}
-      <a class="clear-inline" data-nublox-context="clear" href={clearEnterpriseContextHref(page.url)}>
+      <a
+        class="clear-inline"
+        data-nublox-context="clear"
+        href={clearEnterpriseContextHref(page.url)}
+      >
         Clear
       </a>
     {/if}

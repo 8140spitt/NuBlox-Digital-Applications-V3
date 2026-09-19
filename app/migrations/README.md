@@ -67,9 +67,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0034_...`; historical migrations remain immutable.
+Future schema changes start at `0035_...`; historical migrations remain immutable.
 
-- `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
+- `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.\n- `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
 
 ## Validation and test contract
 
@@ -178,3 +178,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0033 — governed permission access requests
 
 `0033_permission_access_request_runtime.sql` adds an immutable request record for tenant members who encounter a controlled permission denial. The request references the exact governed permission key and requested tenant application path, creates a shared `AGG-27-WORKFLOW` Workflow Instance and `ACCESS_REQUEST` Work Item, and assigns that Work Item to the active `tenant-admin` role. Open requests for the same actor and permission are deduplicated. Permission requests do not grant authority: tenant RBAC remains owned by the existing tenant Role/Permission runtime and administrators fulfil or decline requests through Security & Authority before completing the Work Item.
+
+
+## Migration 0034 — Product, Service & Innovation Management runtime
+
+`0034_product_service_innovation_runtime.sql` activates F05 across four frozen canonical authorities. `AGG-03-MARKET-INSIGHT` retains immutable attributable customer/market evidence; `AGG-10-ITEM` owns the stable product/service offering identity and concept/launch/lifecycle/retirement state; `AGG-10-CONFIGURATION` owns controlled versioned Product Configuration definitions, characteristics, rules, requirement traceability and validation trials; and the existing shared `AGG-04-BUSINESS-CASE` tables receive F05-specific version profiles for Product/Service and Innovation cases. Concept selection and investment approval remain exact-version immutable `AGG-27-DECISION` evidence. Innovation funding is decision-support evidence only and never replaces Finance/Ledger truth. Released configuration versions are immutable and later enhancement creates a successor version.

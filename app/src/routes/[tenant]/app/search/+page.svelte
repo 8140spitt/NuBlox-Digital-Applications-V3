@@ -35,7 +35,10 @@
   {#if data.query.length < 2}
     <section class="search-state section-card">
       <strong>Enter at least two characters.</strong>
-      <span>Object search currently covers runtime-registered business objects and expands as object types join the registry.</span>
+      <span
+        >Object search currently covers runtime-registered business objects and expands as object
+        types join the registry.</span
+      >
     </section>
   {:else}
     <div class="result-summary">
@@ -60,7 +63,8 @@
               <span class="result-copy">
                 <span class="identity">
                   <strong>{item.reference}</strong>
-                  {#if item.status}<span class="status">{item.status.replaceAll('_', ' ')}</span>{/if}
+                  {#if item.status}<span class="status">{item.status.replaceAll('_', ' ')}</span
+                    >{/if}
                 </span>
                 <span class="title">{item.title}</span>
                 {#if item.subtitle}<small>{item.subtitle}</small>{/if}
@@ -100,7 +104,10 @@
     {#if data.resultCount === 0}
       <section class="search-state section-card">
         <strong>No authorised results found.</strong>
-        <span>Try a business reference, prospect, organisation, function number or enterprise workspace name.</span>
+        <span
+          >Try a business reference, prospect, organisation, function number or enterprise workspace
+          name.</span
+        >
       </section>
     {/if}
   {/if}

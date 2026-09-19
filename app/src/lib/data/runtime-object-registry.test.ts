@@ -8,13 +8,18 @@ import {
 } from './runtime-object-registry';
 
 describe('runtime object registry', () => {
-  it('is valid and resolves the Lead definition by route and subject type', () => {
+  it('is valid and resolves canonical Party and Lead definitions', () => {
     expect(validateRuntimeObjectRegistry()).toBe(true);
+    expect(runtimeObjectDefinition('PARTY')?.canonicalModelId).toBe('CBO-PARTY');
+    expect(runtimeObjectDefinitionForSubject('party')?.aggregateId).toBe('AGG-01-PARTY');
     expect(runtimeObjectDefinition('LEAD')?.canonicalModelId).toBe('CRM-LEAD');
     expect(runtimeObjectDefinitionForSubject('lead')?.aggregateId).toBe('AGG-03-LEAD');
   });
 
   it('builds stable encoded canonical object URLs', () => {
+    expect(objectHref('demo-tenant', 'party', 'party id')).toBe(
+      '/demo-tenant/app/objects/party/party%20id'
+    );
     expect(objectHref('demo-tenant', 'lead', 'id with/slash')).toBe(
       '/demo-tenant/app/objects/lead/id%20with%2Fslash'
     );
@@ -24,6 +29,9 @@ describe('runtime object registry', () => {
   });
 
   it('keeps subject links on the same canonical object identity across sections', () => {
+    expect(subjectObjectHref('demo-tenant', 'PARTY', '456', { section: 'relationships' })).toBe(
+      '/demo-tenant/app/objects/party/456?section=relationships'
+    );
     expect(subjectObjectHref('demo-tenant', 'LEAD', '123', { section: 'work' })).toBe(
       '/demo-tenant/app/objects/lead/123?section=work'
     );

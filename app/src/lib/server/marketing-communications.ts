@@ -19,14 +19,8 @@ import {
   required,
   timestamp
 } from '$lib/server/marketing-runtime';
-import {
-  evaluateMarketingEligibility,
-  type PrivacySubject
-} from '$lib/server/privacy-evidence';
-import {
-  getMarketSegment,
-  getMarketSegmentVersion
-} from '$lib/server/marketing-segmentation';
+import { evaluateMarketingEligibility, type PrivacySubject } from '$lib/server/privacy-evidence';
+import { getMarketSegment, getMarketSegmentVersion } from '$lib/server/marketing-segmentation';
 
 export type CommunicationsPlan = {
   id: string;
@@ -194,15 +188,11 @@ export async function listCommunicationsPlans(context: CommandContext, planType?
   );
 }
 
-export async function listCommunicationsPlanVersions(
-  context: CommandContext,
-  planId: string
-) {
+export async function listCommunicationsPlanVersions(context: CommandContext, planId: string) {
   assertPermission(context, 'marketing.read');
   await getCommunicationsPlan(context, planId);
   return queryRows<RowDataPacket & CommunicationsPlanVersion>(
-    planVersionSelect() +
-      ' WHERE tenant_id=? AND plan_id=? ORDER BY version_no DESC',
+    planVersionSelect() + ' WHERE tenant_id=? AND plan_id=? ORDER BY version_no DESC',
     [context.tenantId, planId]
   );
 }
@@ -381,7 +371,8 @@ export async function reviseCommunicationsPlan(
   return dbTransaction(async (connection) => {
     const plan = await getCommunicationsPlan(context, planId, connection, true);
     if (plan.aggregateVersion !== expectedVersion) throw new Error('Communications Plan changed.');
-    if (['CLOSED'].includes(plan.status)) throw new Error('Closed Communications Plans are immutable.');
+    if (['CLOSED'].includes(plan.status))
+      throw new Error('Closed Communications Plans are immutable.');
     const nextVersionNo = plan.currentVersionNo + 1;
     await insertPlanVersion(context, connection, plan.id, nextVersionNo, input);
     const updatedAt = now();
@@ -468,7 +459,8 @@ export async function prepareCommunicationsPlanForDecision(
   return dbTransaction(async (connection) => {
     const plan = await getCommunicationsPlan(context, planId, connection, true);
     if (plan.aggregateVersion !== expectedVersion) throw new Error('Communications Plan changed.');
-    if (plan.status !== 'DRAFT') throw new Error('Only draft Communications Plans can be submitted.');
+    if (plan.status !== 'DRAFT')
+      throw new Error('Only draft Communications Plans can be submitted.');
     const version = await getCommunicationsPlanVersion(
       context,
       plan.id,
@@ -656,10 +648,7 @@ export async function getCommunicationsCampaignVersion(
   return row;
 }
 
-export async function listCommunicationsCampaigns(
-  context: CommandContext,
-  campaignType?: string
-) {
+export async function listCommunicationsCampaigns(context: CommandContext, campaignType?: string) {
   assertPermission(context, 'marketing.read');
   const type = campaignType?.trim() ? code(campaignType, 'Campaign type') : null;
   return queryRows<RowDataPacket & CommunicationsCampaign>(
@@ -678,8 +667,7 @@ export async function listCommunicationsCampaignVersions(
   assertPermission(context, 'marketing.read');
   await getCommunicationsCampaign(context, campaignId);
   return queryRows<RowDataPacket & CommunicationsCampaignVersion>(
-    campaignVersionSelect() +
-      ' WHERE tenant_id=? AND campaign_id=? ORDER BY version_no DESC',
+    campaignVersionSelect() + ' WHERE tenant_id=? AND campaign_id=? ORDER BY version_no DESC',
     [context.tenantId, campaignId]
   );
 }
@@ -818,7 +806,8 @@ export async function reviseCommunicationsCampaign(
   assertPermission(context, 'marketing.campaign.manage');
   return dbTransaction(async (connection) => {
     const campaign = await getCommunicationsCampaign(context, campaignId, connection, true);
-    if (campaign.aggregateVersion !== expectedVersion) throw new Error('Communications Campaign changed.');
+    if (campaign.aggregateVersion !== expectedVersion)
+      throw new Error('Communications Campaign changed.');
     if (['COMPLETED', 'CLOSED', 'CANCELLED'].includes(campaign.status)) {
       throw new Error('Completed, closed or cancelled Campaigns cannot be revised.');
     }
@@ -916,14 +905,7 @@ export async function linkCampaignSegment(
       `INSERT INTO communications_campaign_segments
         (campaign_version_id,tenant_id,segment_id,segment_version_no,inclusion_type,created_at)
        VALUES (?,?,?,?,?,?)`,
-      [
-        version.id,
-        context.tenantId,
-        segment.id,
-        segmentVersion.versionNo,
-        inclusionType,
-        now()
-      ],
+      [version.id, context.tenantId, segment.id, segmentVersion.versionNo, inclusionType, now()],
       connection
     );
   });
@@ -990,10 +972,7 @@ export async function linkCampaignInformation(
   });
 }
 
-export async function listCampaignInformation(
-  context: CommandContext,
-  campaignVersionId: string
-) {
+export async function listCampaignInformation(context: CommandContext, campaignVersionId: string) {
   assertPermission(context, 'marketing.read');
   return queryRows<
     RowDataPacket & {
@@ -1092,10 +1071,7 @@ export async function createCommunicationItem(
   });
 }
 
-export async function listCommunicationItems(
-  context: CommandContext,
-  campaignId?: string
-) {
+export async function listCommunicationItems(context: CommandContext, campaignId?: string) {
   assertPermission(context, 'marketing.read');
   return queryRows<RowDataPacket & CommunicationItem>(
     itemSelect +
@@ -1114,7 +1090,8 @@ export async function prepareCampaignForDecision(
   assertPermission(context, 'marketing.campaign.manage');
   return dbTransaction(async (connection) => {
     const campaign = await getCommunicationsCampaign(context, campaignId, connection, true);
-    if (campaign.aggregateVersion !== expectedVersion) throw new Error('Communications Campaign changed.');
+    if (campaign.aggregateVersion !== expectedVersion)
+      throw new Error('Communications Campaign changed.');
     if (campaign.status !== 'PLANNED') throw new Error('Only planned Campaigns can be submitted.');
     const version = await getCommunicationsCampaignVersion(
       context,
@@ -1133,8 +1110,10 @@ export async function prepareCampaignForDecision(
       [context.tenantId, version.id],
       connection
     );
-    if (!segments?.count) throw new Error('Campaign approval requires at least one pinned Market Segment.');
-    if (!items?.count) throw new Error('Campaign approval requires at least one Communication Item.');
+    if (!segments?.count)
+      throw new Error('Campaign approval requires at least one pinned Market Segment.');
+    if (!items?.count)
+      throw new Error('Campaign approval requires at least one Communication Item.');
     const updatedAt = now();
     await executeMutation(
       "UPDATE communications_campaign_versions SET lifecycle_status='REVIEW' WHERE id=? AND tenant_id=?",
@@ -1181,7 +1160,8 @@ export async function applyCampaignDecision(
   assertPermission(context, 'marketing.campaign.approve');
   return dbTransaction(async (connection) => {
     const campaign = await getCommunicationsCampaign(context, campaignId, connection, true);
-    if (campaign.aggregateVersion !== expectedVersion) throw new Error('Communications Campaign changed.');
+    if (campaign.aggregateVersion !== expectedVersion)
+      throw new Error('Communications Campaign changed.');
     if (campaign.status !== 'REVIEW') throw new Error('Campaign is not awaiting approval.');
     const decisionOutcome = code(outcome, 'Campaign decision outcome');
     if (!['APPROVED', 'REWORK', 'REJECTED'].includes(decisionOutcome)) {
@@ -1247,7 +1227,8 @@ export async function activateCampaign(
   assertPermission(context, 'marketing.campaign.execute');
   return dbTransaction(async (connection) => {
     const campaign = await getCommunicationsCampaign(context, campaignId, connection, true);
-    if (campaign.aggregateVersion !== expectedVersion) throw new Error('Communications Campaign changed.');
+    if (campaign.aggregateVersion !== expectedVersion)
+      throw new Error('Communications Campaign changed.');
     if (campaign.status !== 'APPROVED' || !campaign.approvalDecisionId) {
       throw new Error('Campaign requires an approved immutable Decision.');
     }
@@ -1299,7 +1280,8 @@ export async function scheduleCommunicationItem(
     );
     if (!item) throw new Error('Communication Item not found.');
     if (item.aggregateVersion !== expectedVersion) throw new Error('Communication Item changed.');
-    if (item.status !== 'PLANNED') throw new Error('Only planned Communication Items can be scheduled.');
+    if (item.status !== 'PLANNED')
+      throw new Error('Only planned Communication Items can be scheduled.');
     const campaign = await getCommunicationsCampaign(context, item.campaignId, connection);
     if (!['APPROVED', 'ACTIVE'].includes(campaign.status)) {
       throw new Error('Communication Item requires an approved Campaign.');
@@ -1383,7 +1365,9 @@ export async function requestCommunicationDelivery(
         },
         connection
       );
-      throw new Error('Recipient is not eligible for this marketing communication: ' + eligibility.reason);
+      throw new Error(
+        'Recipient is not eligible for this marketing communication: ' + eligibility.reason
+      );
     }
 
     const deliveryId = randomUUID();
@@ -1455,7 +1439,9 @@ export async function recordCommunicationDeliveryEvent(
 ) {
   assertPermission(context, 'marketing.campaign.execute');
   const action = code(input.action, 'Delivery action');
-  if (!['SENT', 'DELIVERED', 'BOUNCE', 'OPEN', 'CLICK', 'CONVERSION', 'UNSUBSCRIBE'].includes(action)) {
+  if (
+    !['SENT', 'DELIVERED', 'BOUNCE', 'OPEN', 'CLICK', 'CONVERSION', 'UNSUBSCRIBE'].includes(action)
+  ) {
     throw new Error('Unsupported communication delivery action.');
   }
   return dbTransaction(async (connection) => {
@@ -1563,7 +1549,8 @@ export async function transitionCampaign(
   const target = code(targetStatus, 'Campaign target status');
   return dbTransaction(async (connection) => {
     const campaign = await getCommunicationsCampaign(context, campaignId, connection, true);
-    if (campaign.aggregateVersion !== expectedVersion) throw new Error('Communications Campaign changed.');
+    if (campaign.aggregateVersion !== expectedVersion)
+      throw new Error('Communications Campaign changed.');
     const allowed: Record<string, string[]> = {
       ACTIVE: ['PAUSED', 'COMPLETED', 'CANCELLED'],
       PAUSED: ['ACTIVE', 'COMPLETED', 'CANCELLED'],
@@ -1617,10 +1604,7 @@ export async function transitionCampaign(
   });
 }
 
-export async function listDeliveryEvents(
-  context: CommandContext,
-  communicationItemId: string
-) {
+export async function listDeliveryEvents(context: CommandContext, communicationItemId: string) {
   assertPermission(context, 'marketing.read');
   return queryRows<
     RowDataPacket & {
@@ -1733,14 +1717,16 @@ export async function registerMarketingEventParticipant(
   assertPermission(context, 'marketing.event.manage');
   return dbTransaction(async (connection) => {
     const campaign = await getCommunicationsCampaign(context, campaignId, connection);
-    if (campaign.campaignType !== 'EVENT') throw new Error('Registration requires an EVENT Campaign.');
+    if (campaign.campaignType !== 'EVENT')
+      throw new Error('Registration requires an EVENT Campaign.');
     const event = await queryOne<RowDataPacket & { eventStatus: string }>(
       'SELECT event_status AS eventStatus FROM communications_event_profiles WHERE campaign_id=? AND tenant_id=?',
       [campaign.id, context.tenantId],
       connection
     );
     if (!event) throw new Error('Event profile is not configured.');
-    if (event.eventStatus === 'COMPLETED') throw new Error('Completed Events cannot accept registrations.');
+    if (event.eventStatus === 'COMPLETED')
+      throw new Error('Completed Events cannot accept registrations.');
     if (subject.subjectType === 'PARTY') {
       await assertActiveParty(context, subject.subjectId, connection);
     } else {
@@ -1773,10 +1759,7 @@ export async function registerMarketingEventParticipant(
   });
 }
 
-export async function listMarketingEventRegistrations(
-  context: CommandContext,
-  campaignId: string
-) {
+export async function listMarketingEventRegistrations(context: CommandContext, campaignId: string) {
   assertPermission(context, 'marketing.read');
   return queryRows<
     RowDataPacket & {
@@ -1812,7 +1795,8 @@ export async function markMarketingEventAttendance(
       WHERE id=? AND tenant_id=? AND registration_status='REGISTERED'`,
     [attendedAt, registrationId, context.tenantId]
   );
-  if (result.affectedRows !== 1) throw new Error('Only registered participants can be marked attended.');
+  if (result.affectedRows !== 1)
+    throw new Error('Only registered participants can be marked attended.');
 }
 
 export async function completeMarketingEvent(

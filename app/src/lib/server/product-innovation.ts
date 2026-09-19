@@ -10,10 +10,7 @@ import {
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 import { assertWorkDecisionReference } from '$lib/server/work-decision';
-import {
-  getMarketInsight,
-  type MarketInsight
-} from '$lib/server/market-insight';
+import { getMarketInsight, type MarketInsight } from '$lib/server/market-insight';
 export {
   createMarketInsight,
   listMarketInsights,

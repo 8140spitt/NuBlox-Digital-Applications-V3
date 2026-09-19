@@ -17,7 +17,10 @@ import {
   scoreLead,
   transferQualifiedLeadToSales
 } from '$lib/server/marketing-lead';
-import { listCommunicationsCampaigns, listCommunicationItems } from '$lib/server/marketing-communications';
+import {
+  listCommunicationsCampaigns,
+  listCommunicationItems
+} from '$lib/server/marketing-communications';
 import {
   listConsentEvidence,
   listPreferenceEvidence,
@@ -31,7 +34,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function optionalNumber(data: FormData, name: string) {
@@ -58,7 +62,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     listCommunicationItems(context),
     listCurrencies(context)
   ]);
-  const selected = leads.find((item) => item.id === url.searchParams.get('lead')) ?? leads[0] ?? null;
+  const selected =
+    leads.find((item) => item.id === url.searchParams.get('lead')) ?? leads[0] ?? null;
   const [scores, nurture, handoffs, consents, preferences] = selected
     ? await Promise.all([
         listLeadScoreEvents(context, selected.id),
@@ -93,26 +98,23 @@ export const actions: Actions = {
   create: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      const id = await createLead(
-        await resolveRequestCommandContext(params.tenant, locals),
-        {
-          leadRef: text(data, 'leadRef'),
-          sourceType: text(data, 'sourceType'),
-          sourceCampaignId: text(data, 'sourceCampaignId') || undefined,
-          sourceCommunicationItemId: text(data, 'sourceCommunicationItemId') || undefined,
-          sourceReference: text(data, 'sourceReference') || undefined,
-          prospectName: text(data, 'prospectName'),
-          organisationName: text(data, 'organisationName') || undefined,
-          email: text(data, 'email') || undefined,
-          phone: text(data, 'phone') || undefined,
-          geography: text(data, 'geography') || undefined,
-          sector: text(data, 'sector') || undefined,
-          needSummary: text(data, 'needSummary'),
-          estimatedValueLow: optionalNumber(data, 'estimatedValueLow'),
-          estimatedValueHigh: optionalNumber(data, 'estimatedValueHigh'),
-          currencyId: text(data, 'currencyId') || undefined
-        }
-      );
+      const id = await createLead(await resolveRequestCommandContext(params.tenant, locals), {
+        leadRef: text(data, 'leadRef'),
+        sourceType: text(data, 'sourceType'),
+        sourceCampaignId: text(data, 'sourceCampaignId') || undefined,
+        sourceCommunicationItemId: text(data, 'sourceCommunicationItemId') || undefined,
+        sourceReference: text(data, 'sourceReference') || undefined,
+        prospectName: text(data, 'prospectName'),
+        organisationName: text(data, 'organisationName') || undefined,
+        email: text(data, 'email') || undefined,
+        phone: text(data, 'phone') || undefined,
+        geography: text(data, 'geography') || undefined,
+        sector: text(data, 'sector') || undefined,
+        needSummary: text(data, 'needSummary'),
+        estimatedValueLow: optionalNumber(data, 'estimatedValueLow'),
+        estimatedValueHigh: optionalNumber(data, 'estimatedValueHigh'),
+        currencyId: text(data, 'currencyId') || undefined
+      });
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -170,24 +172,20 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'leadId');
     try {
-      await nurtureLead(
-        await resolveRequestCommandContext(params.tenant, locals),
-        id,
-        {
-          campaignId: text(data, 'campaignId') || undefined,
-          interactionType: text(data, 'interactionType'),
-          channel: text(data, 'channel'),
-          summary: text(data, 'summary'),
-          evidenceReference: text(data, 'evidenceReference') || undefined,
-          purposeKey: text(data, 'purposeKey') || undefined,
-          lawfulBasis:
-            text(data, 'lawfulBasis') === 'LEGITIMATE_INTEREST'
-              ? 'LEGITIMATE_INTEREST'
-              : text(data, 'lawfulBasis') === 'CONSENT'
-                ? 'CONSENT'
-                : undefined
-        }
-      );
+      await nurtureLead(await resolveRequestCommandContext(params.tenant, locals), id, {
+        campaignId: text(data, 'campaignId') || undefined,
+        interactionType: text(data, 'interactionType'),
+        channel: text(data, 'channel'),
+        summary: text(data, 'summary'),
+        evidenceReference: text(data, 'evidenceReference') || undefined,
+        purposeKey: text(data, 'purposeKey') || undefined,
+        lawfulBasis:
+          text(data, 'lawfulBasis') === 'LEGITIMATE_INTEREST'
+            ? 'LEGITIMATE_INTEREST'
+            : text(data, 'lawfulBasis') === 'CONSENT'
+              ? 'CONSENT'
+              : undefined
+      });
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -249,11 +247,7 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'leadId');
     try {
-      await closeLead(
-        await resolveRequestCommandContext(params.tenant, locals),
-        id,
-        version(data)
-      );
+      await closeLead(await resolveRequestCommandContext(params.tenant, locals), id, version(data));
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

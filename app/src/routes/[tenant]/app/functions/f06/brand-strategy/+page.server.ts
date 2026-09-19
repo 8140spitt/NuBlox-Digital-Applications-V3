@@ -25,7 +25,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function json(data: FormData, name: string) {
@@ -48,7 +49,9 @@ function problem(error: unknown) {
   });
 }
 
-async function issuedInformation(context: Awaited<ReturnType<typeof resolveRequestCommandContext>>) {
+async function issuedInformation(
+  context: Awaited<ReturnType<typeof resolveRequestCommandContext>>
+) {
   const containers = await listInformationContainers(context);
   const rows = [];
   for (const container of containers) {
@@ -71,12 +74,11 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const mode = url.searchParams.get('mode') === 'brand' ? 'brand' : 'strategy';
   const plans = await listCommunicationsPlans(context);
-  const selected = plans.find((item) => item.id === url.searchParams.get('plan')) ?? plans[0] ?? null;
+  const selected =
+    plans.find((item) => item.id === url.searchParams.get('plan')) ?? plans[0] ?? null;
   const versions = selected ? await listCommunicationsPlanVersions(context, selected.id) : [];
   const current = versions.find((item) => item.versionNo === selected?.currentVersionNo) ?? null;
-  const information = current
-    ? await listCommunicationsPlanInformation(context, current.id)
-    : [];
+  const information = current ? await listCommunicationsPlanInformation(context, current.id) : [];
   return {
     tenantSlug: params.tenant,
     mode,
@@ -207,13 +209,7 @@ export const actions: Actions = {
         outcome,
         reason: text(data, 'reason')
       });
-      await applyCommunicationsPlanDecision(
-        context,
-        id,
-        aggregateVersion,
-        decisionId,
-        outcome
-      );
+      await applyCommunicationsPlanDecision(context, id, aggregateVersion, decisionId, outcome);
       redirect(303, target(params.tenant, mode, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

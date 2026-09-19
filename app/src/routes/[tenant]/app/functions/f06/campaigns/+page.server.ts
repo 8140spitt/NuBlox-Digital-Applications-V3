@@ -38,7 +38,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function integer(data: FormData, name: string) {
@@ -66,7 +67,9 @@ function problem(error: unknown) {
     message: error instanceof Error ? error.message : 'The campaign command could not be completed.'
   });
 }
-async function issuedInformation(context: Awaited<ReturnType<typeof resolveRequestCommandContext>>) {
+async function issuedInformation(
+  context: Awaited<ReturnType<typeof resolveRequestCommandContext>>
+) {
   const containers = await listInformationContainers(context);
   const rows: Array<{ id: string; containerRef: string; revisionCode: string; title: string }> = [];
   for (const container of containers) {
@@ -99,9 +102,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
   ]);
   const selected =
     campaigns.find((item) => item.id === url.searchParams.get('campaign')) ?? campaigns[0] ?? null;
-  const versions = selected
-    ? await listCommunicationsCampaignVersions(context, selected.id)
-    : [];
+  const versions = selected ? await listCommunicationsCampaignVersions(context, selected.id) : [];
   const current =
     versions.find((item) => item.versionNo === selected?.currentVersionNo) ?? versions[0] ?? null;
   const [campaignSegments, campaignInformation, items] =
@@ -114,9 +115,7 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
       : [[], [], []];
   const selectedItem =
     items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
-  const deliveryEvents = selectedItem
-    ? await listDeliveryEvents(context, selectedItem.id)
-    : [];
+  const deliveryEvents = selectedItem ? await listDeliveryEvents(context, selectedItem.id) : [];
   const segmentVersions = new Map<string, Awaited<ReturnType<typeof listMarketSegmentVersions>>>();
   for (const segment of segments.filter((item) => item.status === 'ACTIVE')) {
     segmentVersions.set(segment.id, await listMarketSegmentVersions(context, segment.id));
@@ -208,15 +207,11 @@ export const actions: Actions = {
     const id = text(data, 'campaignId');
     const mode = text(data, 'mode') || 'campaign';
     try {
-      await linkCampaignSegment(
-        await resolveRequestCommandContext(params.tenant, locals),
-        id,
-        {
-          segmentId: text(data, 'segmentId'),
-          segmentVersionNo: integer(data, 'segmentVersionNo'),
-          inclusionType: text(data, 'inclusionType') || 'INCLUDE'
-        }
-      );
+      await linkCampaignSegment(await resolveRequestCommandContext(params.tenant, locals), id, {
+        segmentId: text(data, 'segmentId'),
+        segmentVersionNo: integer(data, 'segmentVersionNo'),
+        inclusionType: text(data, 'inclusionType') || 'INCLUDE'
+      });
       redirect(303, target(params.tenant, mode, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -228,15 +223,11 @@ export const actions: Actions = {
     const id = text(data, 'campaignId');
     const mode = text(data, 'mode') || 'content';
     try {
-      await linkCampaignInformation(
-        await resolveRequestCommandContext(params.tenant, locals),
-        id,
-        {
-          informationRevisionId: text(data, 'informationRevisionId'),
-          linkRole: text(data, 'linkRole'),
-          channel: text(data, 'channel') || undefined
-        }
-      );
+      await linkCampaignInformation(await resolveRequestCommandContext(params.tenant, locals), id, {
+        informationRevisionId: text(data, 'informationRevisionId'),
+        linkRole: text(data, 'linkRole'),
+        channel: text(data, 'channel') || undefined
+      });
       redirect(303, target(params.tenant, mode, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -298,13 +289,7 @@ export const actions: Actions = {
         outcome,
         reason: text(data, 'reason')
       });
-      await applyCampaignDecision(
-        context,
-        id,
-        aggregateVersion,
-        decisionId,
-        outcome
-      );
+      await applyCampaignDecision(context, id, aggregateVersion, decisionId, outcome);
       redirect(303, target(params.tenant, mode, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -361,9 +346,7 @@ export const actions: Actions = {
         {
           purposeKey: text(data, 'purposeKey'),
           lawfulBasis:
-            text(data, 'lawfulBasis') === 'LEGITIMATE_INTEREST'
-              ? 'LEGITIMATE_INTEREST'
-              : 'CONSENT',
+            text(data, 'lawfulBasis') === 'LEGITIMATE_INTEREST' ? 'LEGITIMATE_INTEREST' : 'CONSENT',
           externalReference: text(data, 'externalReference') || undefined
         }
       );

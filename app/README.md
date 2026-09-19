@@ -122,7 +122,6 @@ The ten F05 L2 work areas are delivered through six shared operational workbench
 
 F05 capability coverage is benchmarked against contemporary SAP Integrated Product Development, PTC Windchill, Siemens Teamcenter and Autodesk Fusion Manage semantics while retaining NuBlox canonical authority boundaries.
 
-
 ## F06 operational baseline
 
 Marketing & Brand now operates across shared canonical authorities rather than as a separate customer-profile or content-management silo:

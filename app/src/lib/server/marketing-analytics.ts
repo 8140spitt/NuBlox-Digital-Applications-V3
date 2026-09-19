@@ -12,10 +12,7 @@ import {
   timestamp
 } from '$lib/server/marketing-runtime';
 import { getCommunicationsCampaign } from '$lib/server/marketing-communications';
-import {
-  getMarketSegment,
-  getMarketSegmentVersion
-} from '$lib/server/marketing-segmentation';
+import { getMarketSegment, getMarketSegmentVersion } from '$lib/server/marketing-segmentation';
 
 export type CampaignMeasurement = {
   id: string;
@@ -90,10 +87,7 @@ export async function recordCampaignMeasurement(
   return id;
 }
 
-export async function listCampaignMeasurements(
-  context: CommandContext,
-  campaignId: string
-) {
+export async function listCampaignMeasurements(context: CommandContext, campaignId: string) {
   assertPermission(context, 'marketing.read');
   await getCommunicationsCampaign(context, campaignId);
   return queryRows<RowDataPacket & CampaignMeasurement>(
@@ -135,10 +129,7 @@ function withinPeriod<T extends { occurredAt?: string; observedAt?: string; crea
   });
 }
 
-function countActions(
-  rows: Array<{ deliveryAction: string }>,
-  action: string
-) {
+function countActions(rows: Array<{ deliveryAction: string }>, action: string) {
   return rows.filter((row) => row.deliveryAction === action).length;
 }
 
@@ -318,7 +309,8 @@ export async function freezeMarketingAnalyticsSnapshot(
     const transferredLeads = periodLeads.filter((lead) => Boolean(lead.transferredAt)).length;
     const spend = measurementTotals.get('SPEND') ?? null;
     const attributedRevenue = measurementTotals.get('ATTRIBUTED_REVENUE') ?? null;
-    const acquisitions = measurementTotals.get('ACQUISITIONS') ?? (conversions > 0 ? conversions : null);
+    const acquisitions =
+      measurementTotals.get('ACQUISITIONS') ?? (conversions > 0 ? conversions : null);
 
     const metrics = {
       requested,

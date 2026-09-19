@@ -121,7 +121,8 @@ describe('F06 Marketing & Brand', () => {
     const segmentId = await segmentation.createMarketSegment(context, {
       segmentRef: 'SEG-UK-TIER1',
       name: 'UK Tier 1 digital delivery leaders',
-      description: 'Large UK construction organisations with digital-delivery transformation demand.',
+      description:
+        'Large UK construction organisations with digital-delivery transformation demand.',
       criteria: {
         organisationType: 'CONTRACTOR',
         employeeBand: '1000_PLUS',
@@ -297,10 +298,7 @@ describe('F06 Marketing & Brand', () => {
       score: 94,
       basis: { geography: 'GB', sector: 'CONSTRUCTION', digitalMaturity: 'LEADING' }
     });
-    const memberships = await segmentation.listMarketSegmentMemberships(
-      context,
-      segmentVersion.id
-    );
+    const memberships = await segmentation.listMarketSegmentMemberships(context, segmentVersion.id);
     expect(memberships.find((item) => item.subjectId === lead.id)?.membershipStatus).toBe(
       'INCLUDED'
     );
@@ -442,7 +440,8 @@ describe('F06 Marketing & Brand', () => {
       lead.aggregateVersion,
       {
         handoffRef: 'SALES-HANDOFF-001',
-        qualificationSummary: 'Qualified digital handover demand ready for F07 Opportunity assessment.'
+        qualificationSummary:
+          'Qualified digital handover demand ready for F07 Opportunity assessment.'
       }
     );
     lead = (await leadService.listLeads(context)).find((item) => item.id === leadId)!;

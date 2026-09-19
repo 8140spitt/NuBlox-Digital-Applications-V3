@@ -94,19 +94,15 @@ export const actions: Actions = {
     const data = await request.formData();
     const id = text(data, 'campaignId');
     try {
-      await configureMarketingEvent(
-        await resolveRequestCommandContext(params.tenant, locals),
-        id,
-        {
-          eventType: text(data, 'eventType'),
-          venue: text(data, 'venue') || undefined,
-          eventStartAt: text(data, 'eventStartAt'),
-          eventEndAt: text(data, 'eventEndAt'),
-          supplierReferences: json(data, 'supplierReferences'),
-          registrationPolicy: json(data, 'registrationPolicy'),
-          deliveryNotes: text(data, 'deliveryNotes') || undefined
-        }
-      );
+      await configureMarketingEvent(await resolveRequestCommandContext(params.tenant, locals), id, {
+        eventType: text(data, 'eventType'),
+        venue: text(data, 'venue') || undefined,
+        eventStartAt: text(data, 'eventStartAt'),
+        eventEndAt: text(data, 'eventEndAt'),
+        supplierReferences: json(data, 'supplierReferences'),
+        registrationPolicy: json(data, 'registrationPolicy'),
+        deliveryNotes: text(data, 'deliveryNotes') || undefined
+      });
       redirect(303, target(params.tenant, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

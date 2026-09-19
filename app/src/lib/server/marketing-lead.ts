@@ -646,11 +646,7 @@ export async function transferQualifiedLeadToSales(
   });
 }
 
-export async function closeLead(
-  context: CommandContext,
-  leadId: string,
-  expectedVersion: number
-) {
+export async function closeLead(context: CommandContext, leadId: string, expectedVersion: number) {
   assertPermission(context, 'marketing.lead.manage');
   return dbTransaction(async (connection) => {
     const lead = await getLead(context, leadId, connection, true);

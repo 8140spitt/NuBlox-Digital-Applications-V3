@@ -30,7 +30,8 @@ function num(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function json(data: FormData, name: string) {

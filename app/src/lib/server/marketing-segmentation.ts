@@ -8,7 +8,15 @@ import {
   type DbExecutor
 } from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
-import { code, domainEvidence, finiteNumber, json, now, required, timestamp } from '$lib/server/marketing-runtime';
+import {
+  code,
+  domainEvidence,
+  finiteNumber,
+  json,
+  now,
+  required,
+  timestamp
+} from '$lib/server/marketing-runtime';
 
 export type MarketSegment = {
   id: string;
@@ -71,8 +79,7 @@ export async function getMarketSegmentVersion(
             effective_from AS effectiveFrom,effective_to AS effectiveTo,created_at AS createdAt,
             activated_at AS activatedAt
        FROM market_segment_versions
-      WHERE tenant_id=? AND segment_id=? AND version_no=?` +
-      (forUpdate ? ' FOR UPDATE' : ''),
+      WHERE tenant_id=? AND segment_id=? AND version_no=?` + (forUpdate ? ' FOR UPDATE' : ''),
     [context.tenantId, segmentId, versionNo],
     executor
   );
@@ -428,14 +435,7 @@ export async function evaluateSegmentMembership(
         `UPDATE market_segment_memberships
             SET membership_status=?,score=?,basis_json=?,evaluated_at=?
           WHERE id=? AND tenant_id=?`,
-        [
-          membershipStatus,
-          score,
-          json(input.basis),
-          evaluatedAt,
-          existing.id,
-          context.tenantId
-        ],
+        [membershipStatus, score, json(input.basis), evaluatedAt, existing.id, context.tenantId],
         connection
       );
     } else {

@@ -119,29 +119,80 @@ export const f06Workspace = {
     }
   ] satisfies WorkArea[],
   journey: [
-    { step: '1', name: 'Understand', detail: 'Capture attributable market intelligence and evidence.' },
+    {
+      step: '1',
+      name: 'Understand',
+      detail: 'Capture attributable market intelligence and evidence.'
+    },
     { step: '2', name: 'Segment', detail: 'Define and activate exact audience classifications.' },
-    { step: '3', name: 'Position', detail: 'Set brand promise, positioning and market/channel strategy.' },
-    { step: '4', name: 'Plan', detail: 'Create campaigns with pinned segment and controlled content versions.' },
-    { step: '5', name: 'Approve', detail: 'Bind plan and campaign approvals to immutable exact-version Decisions.' },
-    { step: '6', name: 'Engage', detail: 'Deliver communication only after privacy eligibility is evaluated.' },
+    {
+      step: '3',
+      name: 'Position',
+      detail: 'Set brand promise, positioning and market/channel strategy.'
+    },
+    {
+      step: '4',
+      name: 'Plan',
+      detail: 'Create campaigns with pinned segment and controlled content versions.'
+    },
+    {
+      step: '5',
+      name: 'Approve',
+      detail: 'Bind plan and campaign approvals to immutable exact-version Decisions.'
+    },
+    {
+      step: '6',
+      name: 'Engage',
+      detail: 'Deliver communication only after privacy eligibility is evaluated.'
+    },
     { step: '7', name: 'Qualify', detail: 'Score and transfer qualified Lead evidence to Sales.' },
-    { step: '8', name: 'Measure', detail: 'Freeze reproducible performance, attribution, CAC and ROI snapshots.' }
+    {
+      step: '8',
+      name: 'Measure',
+      detail: 'Freeze reproducible performance, attribution, CAC and ROI snapshots.'
+    }
   ],
   platformServices: [
-    ['Party & relationship', 'Audience membership overlays canonical identity instead of creating a marketing contact master.'],
-    ['Controlled information', 'Campaign content and brand assets reference exact issued Information revisions.'],
+    [
+      'Party & relationship',
+      'Audience membership overlays canonical identity instead of creating a marketing contact master.'
+    ],
+    [
+      'Controlled information',
+      'Campaign content and brand assets reference exact issued Information revisions.'
+    ],
     ['Decision', 'Plan and campaign approvals bind immutable Decisions to exact versions.'],
-    ['Privacy evidence', 'Consent and communication preferences are immutable events evaluated at execution time.'],
-    ['Lead', 'Early demand remains a distinct commercial signal until Sales accepts a governed handoff.'],
-    ['Evidence & events', 'Delivery, engagement and measurement evidence remains attributable and auditable.']
+    [
+      'Privacy evidence',
+      'Consent and communication preferences are immutable events evaluated at execution time.'
+    ],
+    [
+      'Lead',
+      'Early demand remains a distinct commercial signal until Sales accepts a governed handoff.'
+    ],
+    [
+      'Evidence & events',
+      'Delivery, engagement and measurement evidence remains attributable and auditable.'
+    ]
   ],
   integration: [
     ['F01 Strategy', 'Marketing plans may pin strategic context without copying strategy truth.'],
-    ['F05 Product & innovation', 'Validated market insights are shared across product discovery and marketing.'],
+    [
+      'F05 Product & innovation',
+      'Validated market insights are shared across product discovery and marketing.'
+    ],
     ['F07 Sales', 'Qualified Leads hand off exact versions for Opportunity creation/acceptance.'],
-    ['F21 Legal & privacy', 'Consent/preferences remain Privacy authority evidence rather than campaign flags.'],
-    ['F25 Knowledge & communications', 'Communications Plan/Campaign semantics are shared enterprise capabilities.'],
-    ['Finance', 'Campaign spend/attribution may reference finance evidence without becoming Ledger truth.']
+    [
+      'F21 Legal & privacy',
+      'Consent/preferences remain Privacy authority evidence rather than campaign flags.'
+    ],
+    [
+      'F25 Knowledge & communications',
+      'Communications Plan/Campaign semantics are shared enterprise capabilities.'
+    ],
+    [
+      'Finance',
+      'Campaign spend/attribution may reference finance evidence without becoming Ledger truth.'
+    ]
   ]
 } as const;

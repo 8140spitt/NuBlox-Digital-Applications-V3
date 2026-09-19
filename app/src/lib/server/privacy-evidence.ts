@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import { dbTransaction, executeMutation, queryRows, queryOne, type DbExecutor } from '$lib/server/db';
+import {
+  dbTransaction,
+  executeMutation,
+  queryRows,
+  queryOne,
+  type DbExecutor
+} from '$lib/server/db';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { code, domainEvidence, now, required, timestamp } from '$lib/server/marketing-runtime';
 
@@ -37,7 +43,11 @@ export type PreferenceEvent = {
   occurredAt: string;
 };
 
-async function assertSubject(context: CommandContext, subject: PrivacySubject, executor?: DbExecutor) {
+async function assertSubject(
+  context: CommandContext,
+  subject: PrivacySubject,
+  executor?: DbExecutor
+) {
   if (subject.subjectType === 'PARTY') {
     const row = await queryOne<RowDataPacket & { id: string }>(
       'SELECT id FROM parties WHERE id=? AND tenant_id=?',
@@ -280,7 +290,10 @@ export async function evaluateMarketingEligibility(
     executor
   );
   if (!consent || consent.action !== 'GRANT') {
-    return { eligible: false, reason: consent ? 'CONSENT_NOT_GRANTED' as const : 'CONSENT_MISSING' as const };
+    return {
+      eligible: false,
+      reason: consent ? ('CONSENT_NOT_GRANTED' as const) : ('CONSENT_MISSING' as const)
+    };
   }
   return { eligible: true, reason: 'CONSENT_GRANTED' as const };
 }

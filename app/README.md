@@ -11,6 +11,7 @@ The application now establishes:
 - the canonical 29-function workspace directory;
 - F01 — Strategy & Enterprise Planning as the first active workspace;
 - F02 — Corporate Governance as the second operational workspace, including Governance Bodies, Authority Framework, Delegation of Authority, Executive Management, Policy Governance and restricted Ethics Governance;
+- F03 — Enterprise Performance Management as the third operational workspace, including Performance Framework, Reporting, Variance Management, Management Review, Benchmarking and Benefits Realisation;
 - F01.01 — Strategy Framework as the first operational persisted business slice;
 - canonical Party / Person / Organisation / Legal Entity master data through the shared `AGG-01-PARTY` runtime;
 - Party Relationship, Organisation Unit/effective hierarchy and Delegated Authority shared foundation aggregates;
@@ -25,11 +26,15 @@ The application now establishes:
 - automatic supersession when a new approved strategy framework is published;
 - responsive and accessible baseline layout behaviour.
 
-F03–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01 and F02 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
+F04–F29 remain visible as the canonical governed workspace set and are progressively activated only when their runtime journeys are implemented against the shared aggregates. F01, F02 and F03 now operate against the shared platform and canonical aggregate foundations. Architecture convergence is already complete; runtime implementation and acceptance evidence remain the gate.
 
 ## F02 operational baseline
 
 Corporate Governance now runs on the shared canonical platform services rather than workspace-specific authority or evidence mechanisms. Board and Committee governance include governed meeting occurrences, quorum, exact issued meeting-pack revisions, immutable resolutions and shared follow-up Work. Executive Management reuses the same Governance Meeting boundary, Policy Governance profiles controlled Information, and Ethics Governance uses restricted Integrity Cases with explicit per-case need-to-know access.
+
+## F03 operational baseline
+
+Enterprise Performance Management reuses the canonical KPI Definition, Performance Target, Performance Observation and Baseline identities already established by F01. F03 adds governed enterprise Scorecards, reproducible published Performance Snapshots, variance-to-corrective-Work intervention, quorum-controlled Management Reviews, approved benchmark basis and transformation Benefit profiles validated against attributable observations. Published snapshots pin exact governed inputs so later corrections cannot silently rewrite historic dashboards or review evidence.
 
 ## Run locally
 

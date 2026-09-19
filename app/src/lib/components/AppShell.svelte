@@ -49,13 +49,15 @@
     <a
       class:active={page.url.pathname.includes('/app/work')}
       href={'/' + tenantSlug + '/app/work'}
-      >My Work</a
     >
+      <span>My Work</span>
+    </a>
     <a
       class:active={page.url.pathname.includes('/app/functions')}
       href={'/' + tenantSlug + '/app/functions'}
-      >Functions</a
     >
+      <span>Functions</span>
+    </a>
   </nav>
 
   <details class="profile">
@@ -86,7 +88,9 @@
 
 <div class="shell">
   <FunctionSidebar {tenantSlug} />
-  <main id="main-content" class="main-content" use:enhanceForms>{@render children()}</main>
+  <main id="main-content" class="main-content" use:enhanceForms>
+    {@render children()}
+  </main>
 </div>
 
 <TaskBar {tenantSlug} initialContexts={initialWorkContexts} />

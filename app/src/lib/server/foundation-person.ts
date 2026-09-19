@@ -14,6 +14,11 @@ import {
   recordPlatformAudit,
   type PlatformAuditEvent
 } from '$lib/server/platform-evidence';
+import {
+  platformPartyOrigination,
+  recordPartyOrigination,
+  type PartyOriginationInput
+} from '$lib/server/party-origination';
 
 export type Person = {
   id: string;
@@ -120,7 +125,11 @@ export async function getPerson(context: CommandContext, id: string) {
   return getRow(context, id);
 }
 
-export async function createPerson(context: CommandContext, input: PersonInput) {
+export async function createPerson(
+  context: CommandContext,
+  input: PersonInput,
+  origination?: PartyOriginationInput
+) {
   assertPermission(context, 'party.create');
   return dbTransaction(async (connection) => {
     const id = randomUUID();
@@ -143,6 +152,12 @@ export async function createPerson(context: CommandContext, input: PersonInput) 
         timestamp,
         timestamp
       ],
+      connection
+    );
+    await recordPartyOrigination(
+      context,
+      id,
+      origination ?? platformPartyOrigination('PERSON', id),
       connection
     );
     const person = await getRow(context, id, connection);

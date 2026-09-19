@@ -1,30 +1,30 @@
-id,provider,product,family,wave,state,primary_focus
-UX-SAP,SAP,"SAP Cloud ERP / S/4HANA / Fiori",enterprise,1,in-progress,"role spaces/pages; search; work; master data; configuration"
-UX-ORACLE-FUSION,Oracle,"Fusion Cloud Applications",enterprise,1,in-progress,"home/product map; work areas; tasks; enterprise data; configuration"
-UX-MICROSOFT-D365,Microsoft,"Dynamics 365",enterprise,1,in-progress,"dashboard; workspaces; modules; lists; records; navigation search"
-UX-IFS,IFS,"IFS Cloud",enterprise,1,in-progress,"navigator; lobbies; exception work; pages; process context"
-UX-INFOR,Infor,"CloudSuite / Infor OS",enterprise,1,in-progress,"portal; role workspaces; widgets; drill-back; apps"
-UX-WORKDAY,Workday,"Financial Management / HCM / Adaptive Planning",enterprise,1,registered,"role home; tasks; people/finance objects; planning"
-UX-SERVICENOW,ServiceNow,"Now Platform",enterprise,1,registered,"workspaces; lists/forms; queues; case/request; admin"
-UX-ORACLE-CE,Oracle,"Construction and Engineering — Primavera / Unifier / Aconex / Textura",construction,2,in-progress,"project context; tasks; information; programme; cost; payment"
-UX-PROCORE,Procore,"Construction Platform",construction,2,in-progress,"company/project context; toolbox; project tools; favourites"
-UX-AUTODESK-ACC,Autodesk,"Construction Cloud / Forma",construction,2,registered,"project selector; Docs; Build; Cost; Takeoff; models"
-UX-TRIMBLE,Trimble,"Construction One / Viewpoint / ProjectSight",construction,2,registered,"construction ERP; project; field; finance"
-UX-SAGE,Sage,"Intacct Construction / Construction Management",construction,2,in-progress,"construction project; WBS; commitments; billing; WIP"
-UX-CAUSEWAY,Causeway,"Construction platform",construction,2,registered,"estimating; commercial; supply chain; workforce"
-UX-THINKPROJECT,Thinkproject,"Built Asset Lifecycle Platform / CEMAR",construction,2,registered,"contracts; project information; field; asset work"
-UX-ASITE,Asite,"CDE / construction platform",construction,2,registered,"CDE; workflow; BIM; procurement"
-UX-ECOSYS,Hexagon,"EcoSys",construction,2,registered,"portfolio; project controls; cost; contracts"
-UX-WINDCHILL,PTC,"Windchill 13.1.2",plm,3,in-progress,"contexts; objects; product data; structures; change; workflow"
-UX-TEAMCENTER,Siemens,"Teamcenter",plm,3,registered,"active workspace; product structure; change; configuration"
-UX-3DEXPERIENCE,Dassault Systèmes,"3DEXPERIENCE / ENOVIA",plm,3,in-progress,"roles/apps; dashboards; compass; product collaboration"
-UX-PROJECTWISE,Bentley Systems,"ProjectWise / iTwin",plm,3,in-progress,"work areas; folders; documents; versions; workflow; search"
-UX-MAXIMO,IBM,"Maximo Application Suite",asset,4,in-progress,"start center; modules; records; work orders; asset/location"
-UX-HXGN-EAM,Hexagon,"HxGN EAM",asset,4,in-progress,"menu/security; start center; search; favourites; field work"
-UX-PLANON,Planon,"IWMS",asset,4,in-progress,"navigation panel; workspace; property/asset/order contexts"
-UX-ESRI,Esri,"ArcGIS / Field Maps / GeoBIM",asset,4,registered,"maps; assets; field capture; spatial context"
-UX-SALESFORCE,Salesforce,"Sales / Service / Field Service",specialist,5,in-progress,"apps; objects; list views; record pages; split view"
-UX-DELTEK,Deltek,"Vantagepoint",specialist,5,registered,"project-centric CRM/accounting/resource planning"
-UX-DILIGENT,Diligent,"Diligent One / Boards / GRC",specialist,5,registered,"board work; entity; risk; audit"
-UX-NETSUITE,Oracle,"NetSuite",specialist,5,registered,"role centers; records; transactions; lists; setup"
-UX-UNIT4,Unit4,"ERP",specialist,5,registered,"project/people-centric ERP; workspaces; finance"
+id,provider,product,family,wave,state,primary_focus,evidence
+UX-SAP,SAP,"SAP Cloud ERP / S/4HANA / Fiori",enterprise,1,in-progress,"role spaces/pages; search; work; master data; configuration",competitive-experience-wave-1a-sap-oracle-microsoft.md
+UX-ORACLE-FUSION,Oracle,"Fusion Cloud Applications",enterprise,1,in-progress,"home/product map; work areas; tasks; enterprise data; configuration",competitive-experience-wave-1a-sap-oracle-microsoft.md
+UX-MICROSOFT-D365,Microsoft,"Dynamics 365",enterprise,1,in-progress,"dashboard; workspaces; modules; lists; records; navigation search",competitive-experience-wave-1a-sap-oracle-microsoft.md
+UX-IFS,IFS,"IFS Cloud",enterprise,1,in-progress,"navigator; lobbies; exception work; pages; process context",
+UX-INFOR,Infor,"CloudSuite / Infor OS",enterprise,1,in-progress,"portal; role workspaces; widgets; drill-back; apps",
+UX-WORKDAY,Workday,"Financial Management / HCM / Adaptive Planning",enterprise,1,registered,"role home; tasks; people/finance objects; planning",
+UX-SERVICENOW,ServiceNow,"Now Platform",enterprise,1,registered,"workspaces; lists/forms; queues; case/request; admin",
+UX-ORACLE-CE,Oracle,"Construction and Engineering — Primavera / Unifier / Aconex / Textura",construction,2,in-progress,"project context; tasks; information; programme; cost; payment",
+UX-PROCORE,Procore,"Construction Platform",construction,2,in-progress,"company/project context; toolbox; project tools; favourites",
+UX-AUTODESK-ACC,Autodesk,"Construction Cloud / Forma",construction,2,registered,"project selector; Docs; Build; Cost; Takeoff; models",
+UX-TRIMBLE,Trimble,"Construction One / Viewpoint / ProjectSight",construction,2,registered,"construction ERP; project; field; finance",
+UX-SAGE,Sage,"Intacct Construction / Construction Management",construction,2,in-progress,"construction project; WBS; commitments; billing; WIP",
+UX-CAUSEWAY,Causeway,"Construction platform",construction,2,registered,"estimating; commercial; supply chain; workforce",
+UX-THINKPROJECT,Thinkproject,"Built Asset Lifecycle Platform / CEMAR",construction,2,registered,"contracts; project information; field; asset work",
+UX-ASITE,Asite,"CDE / construction platform",construction,2,registered,"CDE; workflow; BIM; procurement",
+UX-ECOSYS,Hexagon,"EcoSys",construction,2,registered,"portfolio; project controls; cost; contracts",
+UX-WINDCHILL,PTC,"Windchill 13.1.2",plm,3,in-progress,"contexts; objects; product data; structures; change; workflow",
+UX-TEAMCENTER,Siemens,"Teamcenter",plm,3,registered,"active workspace; product structure; change; configuration",
+UX-3DEXPERIENCE,Dassault Systèmes,"3DEXPERIENCE / ENOVIA",plm,3,in-progress,"roles/apps; dashboards; compass; product collaboration",
+UX-PROJECTWISE,Bentley Systems,"ProjectWise / iTwin",plm,3,in-progress,"work areas; folders; documents; versions; workflow; search",
+UX-MAXIMO,IBM,"Maximo Application Suite",asset,4,in-progress,"start center; modules; records; work orders; asset/location",
+UX-HXGN-EAM,Hexagon,"HxGN EAM",asset,4,in-progress,"menu/security; start center; search; favourites; field work",
+UX-PLANON,Planon,"IWMS",asset,4,in-progress,"navigation panel; workspace; property/asset/order contexts",
+UX-ESRI,Esri,"ArcGIS / Field Maps / GeoBIM",asset,4,registered,"maps; assets; field capture; spatial context",
+UX-SALESFORCE,Salesforce,"Sales / Service / Field Service",specialist,5,in-progress,"apps; objects; list views; record pages; split view",
+UX-DELTEK,Deltek,"Vantagepoint",specialist,5,registered,"project-centric CRM/accounting/resource planning",
+UX-DILIGENT,Diligent,"Diligent One / Boards / GRC",specialist,5,registered,"board work; entity; risk; audit",
+UX-NETSUITE,Oracle,"NetSuite",specialist,5,registered,"role centers; records; transactions; lists; setup",
+UX-UNIT4,Unit4,"ERP",specialist,5,registered,"project/people-centric ERP; workspaces; finance",

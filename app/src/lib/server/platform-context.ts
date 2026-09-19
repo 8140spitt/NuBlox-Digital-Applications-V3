@@ -415,6 +415,36 @@ export const platformPermissions = [
     'Convene and complete executive governance meetings and record resulting decisions/actions.'
   ],
   [
+    'governance.ethics.read',
+    'governance.ethics',
+    'read',
+    'Read authorised Integrity Cases.'
+  ],
+  [
+    'governance.ethics.manage',
+    'governance.ethics',
+    'manage',
+    'Create and maintain Integrity Cases.'
+  ],
+  [
+    'governance.ethics.investigate',
+    'governance.ethics',
+    'investigate',
+    'Record case investigation activity.'
+  ],
+  [
+    'governance.ethics.decide',
+    'governance.ethics',
+    'decide',
+    'Record case outcomes and follow-up.'
+  ],
+  [
+    'governance.ethics.access.manage',
+    'governance.ethics.access',
+    'manage',
+    'Maintain case access membership.'
+  ],
+  [
     'information.container.read',
     'information.container',
     'read',

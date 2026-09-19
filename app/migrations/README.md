@@ -67,7 +67,7 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0029_...`; historical migrations remain immutable.
+Future schema changes start at `0030_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -172,3 +172,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0028 — Policy Governance profile runtime
 
 `0028_policy_governance_runtime.sql` implements F02.06 as a governed Policy profile over canonical controlled information. Policy uses the exact `AGG-07-INFORMATION` Information Container identity rather than creating a second document master. `policy_profiles` adds stable policy type while `policy_revision_profiles` pins revision-specific owner, governance body, applicability, scope, effectivity, review date and attestation requirement to the exact immutable Information Revision. Approval, issue and supersession remain owned by the Information Container lifecycle; `AGG-02-POLICY` records policy-specific governance evidence.
+
+
+## Migration 0029 — restricted Integrity Case runtime
+
+`0029_integrity_case_runtime.sql` implements F02.07 Ethics Governance through the frozen `AGG-21-CASE / INTEGRITY-CASE` boundary. Integrity Cases retain stable restricted case identity, Party subjects, investigation ownership, append-only case journal entries, governed Evidence Item links, immutable Decision links and shared Work Item follow-up. Tenant permission is necessary but insufficient for case visibility: every case query and command also requires an active per-case Party access grant. Case business events intentionally exclude allegation, source and journal content so restricted case narrative is not replicated into the general event/outbox stream.

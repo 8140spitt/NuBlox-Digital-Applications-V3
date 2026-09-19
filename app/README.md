@@ -20,7 +20,7 @@ The application now establishes:
 - Better Auth production authentication with tenant-scoped identity mapping and controlled first-administrator bootstrap;
 - deny-by-default server command permission checks;
 - MySQL 8.0+ persistence through the `mysql2` promise client and pooled prepared statements;
-- runtime startup schema gating against the latest required forward migration (`0035_marketing_brand_runtime.sql`);
+- runtime startup schema gating against the latest required forward migration (`0036_work_context_edit_lease_runtime.sql`);
 - append-only platform audit evidence with actor/authority snapshots;
 - canonical business events plus transactional outbox messages;
 - optimistic version control for Organisation master-data commands;
@@ -71,7 +71,7 @@ The UI is data-driven from canonical workspace definitions. Function workspaces 
 
 ## Foundation master data
 
-Open `/[tenant]/app/admin/master-data/organisations` for canonical Party/Organisation master data and `/[tenant]/app/admin/security` for tenant identities, memberships, RBAC and access administration. Organisation is implemented once and reused by CRM, procurement, contracts, HCM, finance and project delivery through governed Party Relationships rather than duplicate company masters.
+Open `/[tenant]/app/admin/master-data/parties` for the canonical Party identity directory and `/[tenant]/app/admin/security` for tenant identities, memberships, RBAC and access administration. Business roles originate in their home functions: clients/customers in F07, suppliers/subcontractors in F09, employees/workers in F15 and legal/regulator roles in F19. The shared Party identity is resolved or created behind those workflows; the Master Data surface is a directory and exceptional stewardship surface, not an alternative onboarding route.
 
 ## MySQL migrations
 
@@ -139,3 +139,18 @@ Marketing & Brand now operates across shared canonical authorities rather than a
 The eleven F06 L2 areas are delivered through six integrated workbenches: Intelligence & Segmentation, Brand & Marketing Strategy, Campaign Studio, Events, Lead Generation and Marketing Analytics. Contemporary SAP Emarsys and Adobe Journey Optimizer patterns were used as capability benchmarks for segmentation, multi-channel orchestration, approval, automation and optimisation, while NuBlox retains its own canonical authority model.
 
 F06 acceptance is gated by clean migration replay, domain/service tests, Svelte/type checks, repository formatting and production build on the exact main commit.
+
+
+## Cross-cutting interaction baseline
+
+Migration `0036_work_context_edit_lease_runtime.sql` establishes the application-wide interaction model used before F07 and all later workspaces:
+
+- **Task Bar / Work Context** records what the current user is actively working on and allows multiple open items to be revisited independently of My Work assignment queues.
+- **Progressive form enhancement** is mounted at the application shell: native POST forms and server actions remain authoritative without JavaScript, while enhanced clients preserve field state and expose pending/error/conflict states.
+- **Recoverable Work Drafts** persist a user's form payload against an explicit base version. Drafts never mutate the canonical aggregate until a governed command is committed.
+- **Edit Leases** provide short-lived cooperative editing ownership with heartbeat, expiry and release. They are application coordination records, not long-running SQL row locks.
+- **Aggregate/version checks remain the hard lost-update barrier** even when a valid edit lease exists.
+- Organisation stewardship demonstrates the complete pattern: starting an edit pins the Organisation to the Task Bar, acquires a lease, autosaves a draft, blocks another user from editing, and still commits against the exact canonical version.
+- Party/Organisation creation is no longer exposed from global Master Data. Canonical identity creation remains a low-level shared service called by the owning business workflow with immutable Party origination metadata.
+
+**My Work answers “what am I responsible for?”; the Task Bar answers “what am I working on now?”** They are deliberately separate concepts.

@@ -101,7 +101,9 @@
                 {#if item.instructions}<p>{item.instructions}</p>{/if}
                 <div class="subject">
                   {#if item.subjectHref}
-                    <a class="subject-link" href={item.subjectHref}><strong>Subject</strong>{item.subjectType}</a>
+                    <a class="subject-link" href={item.subjectHref}
+                      ><strong>Subject</strong>{item.subjectType}</a
+                    >
                   {:else}
                     <span><strong>Subject</strong>{item.subjectType} · {item.subjectId}</span>
                   {/if}
@@ -245,7 +247,9 @@
             <p>{decision.reason}</p>
             <div class="subject">
               {#if decision.subjectHref}
-                <a class="subject-link" href={decision.subjectHref}><strong>Subject</strong>{decision.subjectType}</a>
+                <a class="subject-link" href={decision.subjectHref}
+                  ><strong>Subject</strong>{decision.subjectType}</a
+                >
               {:else}
                 <span><strong>Subject</strong>{decision.subjectType} · {decision.subjectId}</span>
               {/if}

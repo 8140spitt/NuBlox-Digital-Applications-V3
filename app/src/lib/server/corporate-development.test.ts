@@ -143,8 +143,8 @@ describe('F04 Corporate Development & M&A runtime', () => {
     let matter = (await dueDiligence.listDueDiligenceMatters(context)).find(
       (row) => row.id === matterId
     )!;
-    let workstreams = await dueDiligence.listDueDiligenceWorkstreams(context, matterId);
-    expect(workstreams.map((row) => row.workstreamType).sort()).toEqual([
+    const diligenceWorkstreams = await dueDiligence.listDueDiligenceWorkstreams(context, matterId);
+    expect(diligenceWorkstreams.map((row) => row.workstreamType).sort()).toEqual([
       'COMMERCIAL_RISK',
       'FINANCE',
       'LEGAL',
@@ -154,7 +154,7 @@ describe('F04 Corporate Development & M&A runtime', () => {
       'TECHNOLOGY'
     ]);
 
-    for (const workstream of workstreams) {
+    for (const workstream of diligenceWorkstreams) {
       await dueDiligence.updateDueDiligenceWorkstream(
         context,
         matterId,
@@ -313,8 +313,11 @@ describe('F04 Corporate Development & M&A runtime', () => {
     }
     expect(integration.status).toBe('ACTIVE');
 
-    workstreams = await transformation.listIntegrationWorkstreams(context, integrationId);
-    for (const workstream of workstreams) {
+    const integrationWorkstreams = await transformation.listIntegrationWorkstreams(
+      context,
+      integrationId
+    );
+    for (const workstream of integrationWorkstreams) {
       await transformation.updateIntegrationWorkstream(
         context,
         integrationId,

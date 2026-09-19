@@ -22,9 +22,7 @@ function text(data: FormData, name: string) {
 function problem(value: unknown) {
   return fail(400, {
     message:
-      value instanceof Error
-        ? value.message
-        : 'The requested object action could not be completed.'
+      value instanceof Error ? value.message : 'The requested object action could not be completed.'
   });
 }
 
@@ -70,7 +68,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     canReadWork
       ? listMyWork(context).then((items) =>
           items.filter(
-            (item) => item.subjectType === definition.subjectType && item.subjectId === object.objectId
+            (item) =>
+              item.subjectType === definition.subjectType && item.subjectId === object.objectId
           )
         )
       : Promise.resolve([]),
@@ -110,7 +109,8 @@ export const actions: Actions = {
     try {
       const result = await requestPermissionAccess(context, {
         permissionKey: definition.readPermission,
-        requestedPath: text(data, 'requestedPath') || objectHref(params.tenant, definition.type, params.objectId)
+        requestedPath:
+          text(data, 'requestedPath') || objectHref(params.tenant, definition.type, params.objectId)
       });
       if (result.alreadyAuthorized) {
         redirect(303, objectHref(params.tenant, definition.type, params.objectId));

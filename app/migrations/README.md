@@ -67,7 +67,7 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0032_...`; historical migrations remain immutable.
+Future schema changes start at `0033_...`; historical migrations remain immutable.
 
 ## Validation and test contract
 
@@ -169,3 +169,8 @@ Development bootstrap records are application/test fixtures, not migration conte
 ## Migration 0031 — Enterprise Performance Management extensions
 
 `0031_enterprise_performance_runtime.sql` activates F03 without duplicating the F01 performance foundation. `AGG-02-PERFORMANCE` retains canonical KPI Definition, Target, Observation and Baseline identities while F03 adds governed Scorecards/hierarchy, reproducible Performance Snapshots with exact pinned KPI/Observation/Target inputs, recorded snapshot distribution, approved benchmark basis and benefit profiles/validations. F03.04 Management Review reuses `AGG-02-GOVERNANCE-MEETING` and pins exact published Performance Snapshots; resulting choices remain immutable shared `AGG-27-DECISION` records and corrective follow-up remains shared Work.
+
+
+## Migration 0032 — Corporate Development & M&A runtime
+
+`0032_corporate_development_runtime.sql` activates F04 across the frozen canonical boundaries rather than creating a monolithic deal record. `AGG-04-DEVELOPMENT` owns stable Corporate Development Opportunities and immutable approved Development Appraisal snapshots; `AGG-22-LEGAL` provides restricted Due Diligence Legal Matters with matter-level Party access and seven cross-functional workstreams; `AGG-04-BUSINESS-CASE` provides versioned Transaction, Divestiture and Strategic Partnership decision-support cases that reference exact appraisal/legal evidence and require immutable shared `AGG-27-DECISION` approval; and `AGG-26-TRANSFORMATION` provides reusable post-deal Integration Initiatives and governed workstreams. Sensitive diligence narrative remains inside the Legal Matter boundary and is excluded from general event payloads.

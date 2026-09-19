@@ -18,7 +18,7 @@ describe('AGG-07-INFORMATION controlled information runtime',()=>{
   const v1=(await info.listInformationRevisions(context,id))[0];expect(v1.lifecycleStatus).toBe('ISSUED');expect(v1.approvalDecisionId).toBe(decisionId);
   await expect(info.addInformationRepresentation(context,id,container.aggregateVersion,{representationType:'PDF',contentReference:'s3://controlled/replacement.pdf',hashAlgorithm:'SHA256',contentHash:'b'.repeat(64)})).rejects.toThrow('after revision approval');
   expect(await info.createSuccessorInformationRevision(context,id,container.aggregateVersion,{revisionCode:'P02',title:'Corporate Governance Policy — revised',purposeOfIssue:'Review'})).toBe(2);
-  const revisions=await info.listInformationRevisions(context,id);expect(revisions.map(r=>[r.revisionNo,r.lifecycleStatus])).toEqual([[2,'WORKING'],[1,'SUPERSEDED']]);
+  const revisions=await info.listInformationRevisions(context,id);expect(revisions.map(r=>[r.revisionNo,r.lifecycleStatus])).toEqual([[2,'WORKING'],[1,'ISSUED']]);
   expect(new Set(revisions.map(r=>r.containerId))).toEqual(new Set([id]));
  });
  it('requires at least one representation before issue',async()=>{

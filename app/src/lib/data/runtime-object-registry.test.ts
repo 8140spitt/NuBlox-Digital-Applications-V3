@@ -18,9 +18,9 @@ describe('runtime object registry', () => {
     expect(objectHref('demo-tenant', 'lead', 'id with/slash')).toBe(
       '/demo-tenant/app/objects/lead/id%20with%2Fslash'
     );
-    expect(
-      objectHref('demo-tenant', 'lead', '123', { section: 'history', from: 'F06.09' })
-    ).toBe('/demo-tenant/app/objects/lead/123?section=history&from=F06.09');
+    expect(objectHref('demo-tenant', 'lead', '123', { section: 'history', from: 'F06.09' })).toBe(
+      '/demo-tenant/app/objects/lead/123?section=history&from=F06.09'
+    );
   });
 
   it('returns null for subjects that have not joined the runtime registry yet', () => {

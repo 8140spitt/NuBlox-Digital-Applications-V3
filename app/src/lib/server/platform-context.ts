@@ -536,6 +536,96 @@ export const platformPermissions = [
     'Run innovation experiments and record governed innovation funding evidence.'
   ],
   [
+    'marketing.read',
+    'marketing',
+    'read',
+    'Read governed market, segment, brand, campaign, lead, event and marketing analytics records.'
+  ],
+  [
+    'marketing.intelligence.manage',
+    'marketing.intelligence',
+    'manage',
+    'Capture and validate market intelligence and marketing analytics evidence.'
+  ],
+  [
+    'marketing.segment.manage',
+    'marketing.segment',
+    'manage',
+    'Create, version and activate governed market/customer segmentation definitions and memberships.'
+  ],
+  [
+    'marketing.plan.manage',
+    'marketing.plan',
+    'manage',
+    'Create and revise governed Brand and Marketing Communications Plans.'
+  ],
+  [
+    'marketing.plan.approve',
+    'marketing.plan',
+    'approve',
+    'Apply immutable approval Decisions to exact Communications Plan versions.'
+  ],
+  [
+    'marketing.campaign.manage',
+    'marketing.campaign',
+    'manage',
+    'Create and revise governed multi-channel Marketing and Communications Campaigns.'
+  ],
+  [
+    'marketing.campaign.approve',
+    'marketing.campaign',
+    'approve',
+    'Apply immutable approval Decisions to exact Communications Campaign versions.'
+  ],
+  [
+    'marketing.campaign.execute',
+    'marketing.campaign',
+    'execute',
+    'Schedule and execute campaign Communication Items against privacy-eligible recipients.'
+  ],
+  [
+    'marketing.event.manage',
+    'marketing.event',
+    'manage',
+    'Plan, register, deliver and evaluate governed marketing events.'
+  ],
+  [
+    'marketing.lead.manage',
+    'marketing.lead',
+    'manage',
+    'Capture, enrich, score and nurture governed Leads.'
+  ],
+  [
+    'marketing.lead.qualify',
+    'marketing.lead',
+    'qualify',
+    'Qualify, disqualify and transfer exact Lead versions into the governed sales handoff.'
+  ],
+  [
+    'marketing.analytics.manage',
+    'marketing.analytics',
+    'manage',
+    'Record campaign measurements and freeze reproducible marketing analytics snapshots.'
+  ],
+  [
+    'privacy.evidence.read',
+    'privacy.evidence',
+    'read',
+    'Read tenant-scoped Consent and Preference evidence required for communication eligibility.'
+  ],
+  [
+    'privacy.consent.record',
+    'privacy.consent',
+    'record',
+    'Record immutable Consent Evidence events without overwriting prior consent history.'
+  ],
+  [
+    'privacy.preference.record',
+    'privacy.preference',
+    'record',
+    'Record immutable communication Preference Evidence events without overwriting prior preference history.'
+  ],
+  [
     'governance.body.read',
     'governance.body',
     'read',

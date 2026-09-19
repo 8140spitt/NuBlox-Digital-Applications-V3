@@ -49,5 +49,6 @@ describe('runtime object search', () => {
       permissions: context.permissions.filter((permission) => permission !== 'marketing.read')
     };
     expect(await searchService.searchRuntimeObjects(restricted, 'Northstar Search')).toEqual([]);
+    expect(await searchService.searchRuntimeObjects(context, 'N')).toEqual([]);
   });
 });

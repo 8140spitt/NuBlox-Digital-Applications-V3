@@ -1,5 +1,6 @@
 <script lang="ts">
   import TaskContextButton from '$lib/components/TaskContextButton.svelte';
+  import { objectHref } from '$lib/data/runtime-object-registry';
 
   let { data } = $props();
 
@@ -19,12 +20,7 @@
   };
 
   function partyHref(id: string) {
-    const params = new URLSearchParams();
-    if (data.filters.q) params.set('q', data.filters.q);
-    if (data.filters.type) params.set('type', data.filters.type);
-    if (data.filters.status) params.set('status', data.filters.status);
-    params.set('party', id);
-    return '?' + params.toString();
+    return objectHref(data.tenantSlug, 'party', id, { from: 'ENTERPRISE-DATA' });
   }
 
   function relationshipDirection(relationship: (typeof data.relationships)[number]) {
@@ -41,7 +37,7 @@
 
   function selectedRoute() {
     return data.selected
-      ? `/${data.tenantSlug}/app/admin/master-data/parties?party=${encodeURIComponent(data.selected.id)}`
+      ? objectHref(data.tenantSlug, 'party', data.selected.id, { from: 'ENTERPRISE-DATA' })
       : `/${data.tenantSlug}/app/admin/master-data/parties`;
   }
 </script>

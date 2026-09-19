@@ -89,131 +89,40 @@
         <div class="admin-links">
           <a
             class:active={page.url.pathname.includes('/admin/security')}
-            href={'/' + tenantSlug + '/app/admin/security'}>Security & access</a
+            href={'/' + tenantSlug + '/app/admin/security'}
           >
+            <span>Security & access</span>
+          </a>
           <a
             class:active={page.url.pathname.includes('/admin/master-data/parties')}
-            href={'/' + tenantSlug + '/app/admin/master-data/parties'}>Party master data</a
+            href={'/' + tenantSlug + '/app/admin/master-data/parties'}
           >
+            <span>Party master data</span>
+          </a>
           <a
             class:active={page.url.pathname.includes('/admin/master-data/organisation-structure')}
             href={'/' + tenantSlug + '/app/admin/master-data/organisation-structure'}
-            >Organisation structure</a
           >
+            <span>Organisation structure</span>
+          </a>
           <a
             class:active={page.url.pathname.includes('/admin/reference-data')}
-            href={'/' + tenantSlug + '/app/admin/reference-data'}>Reference data</a
+            href={'/' + tenantSlug + '/app/admin/reference-data'}
           >
+            <span>Reference data</span>
+          </a>
           <a
             class:active={page.url.pathname === '/' + tenantSlug + '/app/admin/business-objects'}
-            href={'/' + tenantSlug + '/app/admin/business-objects'}>Business object model</a
+            href={'/' + tenantSlug + '/app/admin/business-objects'}
           >
+            <span>Business object model</span>
+          </a>
           <a
             class:active={page.url.pathname.includes('/coverage-audit')}
             href={'/' + tenantSlug + '/app/admin/business-objects/coverage-audit'}
-            >Coverage audit</a
           >
-
-          <details class="architecture">
-            <summary>Architecture views</summary>
-            <div class="architecture-links">
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/foundation'}
-                >Foundation semantics</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/authority'}
-                >Authority & participation</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/delivery-context'}
-                >Delivery context</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/built-environment'}
-                >Built environment</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/commercial-procurement'}
-                >Commercial & procurement</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/controlled-information'}
-                >Controlled information</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/asset-operations'}
-                >Asset operations</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/finance-accounting'}
-                >Finance & accounting</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/item-manufacturing'}
-                >Item & manufacturing</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/inventory-logistics'}
-                >Inventory & logistics</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/crm-business-development'}
-                >CRM & business development</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/estimating-tendering'}
-                >Estimating & tendering</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/people-hcm'}
-                >People & HCM</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/qhse-assurance'}
-                >QHSE & assurance</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/building-safety-regulatory'}
-                >Building safety & regulatory</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/sustainability-carbon'}
-                >Sustainability & carbon</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/risk-compliance-audit'}
-                >Risk, compliance & audit</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/legal-privacy'}
-                >Legal & privacy</a
-              >
-              <a
-                href={'/' +
-                  tenantSlug +
-                  '/app/admin/business-objects/knowledge-records-communications'}
-                >Knowledge, records & communications</a
-              >
-              <a
-                href={'/' + tenantSlug + '/app/admin/business-objects/land-development-investment'}
-                >Land & development</a
-              >
-              <a
-                href={'/' +
-                  tenantSlug +
-                  '/app/admin/business-objects/strategy-governance-performance'}
-                >Strategy & governance</a
-              >
-              <a
-                href={'/' +
-                  tenantSlug +
-                  '/app/admin/business-objects/continuity-crisis-security'}
-                >Continuity, crisis & security</a
-              >
-              <a
-                href={'/' + tenantSlug + '/app/admin/business-objects/technology-data-cyber-ai'}
-                >IT, data, cyber & AI</a
-              >
-              <a
-                href={'/' +
-                  tenantSlug +
-                  '/app/admin/business-objects/transformation-process-improvement'}
-                >Transformation & process</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/site-field-operations'}
-                >Site & field operations</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/shared-work-evidence'}
-                >Work, decisions & evidence</a
-              >
-              <a href={'/' + tenantSlug + '/app/admin/business-objects/reference-configuration'}
-                >Reference & configuration</a
-              >
-            </div>
-          </details>
+            <span>Coverage audit</span>
+          </a>
         </div>
       </details>
     </section>
@@ -358,8 +267,7 @@
     cursor: pointer;
     list-style: none;
   }
-  .administration > details > summary::-webkit-details-marker,
-  .architecture > summary::-webkit-details-marker {
+  .administration > details > summary::-webkit-details-marker {
     display: none;
   }
   .administration > details > summary:hover {
@@ -370,50 +278,20 @@
     gap: 1px;
     padding-top: 4px;
   }
-  .admin-links > a,
-  .architecture-links a {
+  .admin-links a {
+    padding: 7px 8px 7px 14px;
     border-radius: 6px;
     color: #5d7382;
+    font-size: 10px;
     text-decoration: none;
   }
-  .admin-links > a {
-    padding: 6px 8px 6px 14px;
-    font-size: 10px;
-  }
-  .admin-links > a:hover,
-  .admin-links > a.active,
-  .architecture-links a:hover {
+  .admin-links a:hover,
+  .admin-links a.active {
     background: #edf4f8;
     color: #214f6a;
   }
-  .admin-links > a.active {
+  .admin-links a.active {
     font-weight: 800;
-  }
-  .architecture {
-    margin-top: 3px;
-    padding-top: 3px;
-    border-top: 1px solid #e7ecef;
-  }
-  .architecture > summary {
-    padding: 6px 8px 6px 14px;
-    border-radius: 6px;
-    color: #697e8c;
-    font-size: 9.5px;
-    font-weight: 750;
-    cursor: pointer;
-    list-style: none;
-  }
-  .architecture > summary:hover {
-    background: #f0f5f8;
-  }
-  .architecture-links {
-    display: grid;
-    gap: 1px;
-    padding: 3px 0 2px 12px;
-  }
-  .architecture-links a {
-    padding: 5px 8px;
-    font-size: 9px;
   }
   @media (max-width: 1100px) {
     .sidebar {
@@ -429,9 +307,6 @@
       border-right: 0;
       border-bottom: 1px solid var(--line);
       background: white;
-    }
-    .sidebar nav {
-      display: block;
     }
     .primary {
       display: flex;

@@ -361,6 +361,48 @@ export const platformPermissions = [
     'Review, approve, activate, supersede and retire governed Scenarios.'
   ],
   [
+    'performance.enterprise.read',
+    'performance.enterprise',
+    'read',
+    'Read enterprise scorecards, snapshots, benchmarking and benefits.'
+  ],
+  [
+    'performance.framework.manage',
+    'performance.framework',
+    'manage',
+    'Configure enterprise scorecards and KPI hierarchy.'
+  ],
+  [
+    'performance.reporting.manage',
+    'performance.reporting',
+    'manage',
+    'Calculate and review reproducible enterprise Performance Snapshots.'
+  ],
+  [
+    'performance.reporting.publish',
+    'performance.reporting',
+    'publish',
+    'Publish and distribute approved immutable Performance Snapshots.'
+  ],
+  [
+    'performance.review.manage',
+    'performance.review',
+    'manage',
+    'Schedule and conduct operational Management Reviews using published performance evidence.'
+  ],
+  [
+    'performance.benchmark.manage',
+    'performance.benchmark',
+    'manage',
+    'Govern benchmark basis for Performance Targets.'
+  ],
+  [
+    'performance.benefit.manage',
+    'performance.benefit',
+    'manage',
+    'Define and validate benefits against governed baselines and observations.'
+  ],
+  [
     'governance.body.read',
     'governance.body',
     'read',

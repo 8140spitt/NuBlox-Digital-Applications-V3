@@ -14,6 +14,12 @@ import {
   recordPlatformAudit,
   type PlatformAuditEvent
 } from '$lib/server/platform-evidence';
+import {
+  platformPartyOrigination,
+  recordPartyOrigination,
+  type PartyOriginationInput
+} from '$lib/server/party-origination';
+import { assertEditLease } from '$lib/server/edit-lease';
 
 export type OrganisationStatus = 'PROPOSED' | 'ACTIVE' | 'INACTIVE' | 'DISSOLVED' | 'MERGED';
 
@@ -144,7 +150,8 @@ export async function getOrganisation(context: CommandContext, id: string) {
 
 export async function createOrganisation(
   context: CommandContext,
-  input: OrganisationInput
+  input: OrganisationInput,
+  origination?: PartyOriginationInput
 ): Promise<string> {
   assertPermission(context, 'party.create');
   const legalName = cleanRequired(input.legalName, 'Legal name');
@@ -186,6 +193,12 @@ export async function createOrganisation(
       connection
     );
 
+    await recordPartyOrigination(
+      context,
+      id,
+      origination ?? platformPartyOrigination('ORGANISATION', id),
+      connection
+    );
     const organisation = await getOrganisationRow(context, id, connection);
     await publish(
       context,
@@ -203,7 +216,8 @@ export async function updateOrganisation(
   context: CommandContext,
   id: string,
   input: OrganisationInput,
-  expectedVersion: number
+  expectedVersion: number,
+  editLeaseToken?: string
 ) {
   assertPermission(context, 'party.change');
   const legalName = cleanRequired(input.legalName, 'Legal name');
@@ -213,6 +227,9 @@ export async function updateOrganisation(
   const countryCode = cleanCountry(input.countryCode);
 
   return dbTransaction(async (connection) => {
+    if (editLeaseToken) {
+      await assertEditLease(context, 'ORGANISATION', id, editLeaseToken, connection);
+    }
     const current = await getOrganisationRow(context, id, connection);
     assertMutable(current);
     if (current.version !== expectedVersion) {
@@ -257,19 +274,28 @@ export async function updateOrganisation(
 export async function activateOrganisation(
   context: CommandContext,
   id: string,
-  expectedVersion: number
+  expectedVersion: number,
+  editLeaseToken?: string
 ) {
   assertPermission(context, 'party.activate');
-  return changeStatus(context, id, expectedVersion, 'ACTIVE', ['PROPOSED', 'INACTIVE']);
+  return changeStatus(
+    context,
+    id,
+    expectedVersion,
+    'ACTIVE',
+    ['PROPOSED', 'INACTIVE'],
+    editLeaseToken
+  );
 }
 
 export async function deactivateOrganisation(
   context: CommandContext,
   id: string,
-  expectedVersion: number
+  expectedVersion: number,
+  editLeaseToken?: string
 ) {
   assertPermission(context, 'party.activate');
-  return changeStatus(context, id, expectedVersion, 'INACTIVE', ['ACTIVE']);
+  return changeStatus(context, id, expectedVersion, 'INACTIVE', ['ACTIVE'], editLeaseToken);
 }
 
 async function changeStatus(
@@ -277,9 +303,13 @@ async function changeStatus(
   id: string,
   expectedVersion: number,
   nextStatus: OrganisationStatus,
-  allowed: OrganisationStatus[]
+  allowed: OrganisationStatus[],
+  editLeaseToken?: string
 ) {
   return dbTransaction(async (connection) => {
+    if (editLeaseToken) {
+      await assertEditLease(context, 'ORGANISATION', id, editLeaseToken, connection);
+    }
     const current = await getOrganisationRow(context, id, connection);
     if (current.version !== expectedVersion) {
       throw new Error(

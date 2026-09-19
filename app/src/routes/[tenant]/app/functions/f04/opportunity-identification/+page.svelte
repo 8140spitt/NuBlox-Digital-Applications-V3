@@ -122,8 +122,8 @@
             <span><small>Aggregate</small><strong>v{data.selected.aggregateVersion}</strong></span
             ><span
               ><small>Target</small><strong
-                >{data.organisations.find((o) => o.id === data.selected?.targetPartyId)?.displayName ??
-                  'Unqualified'}</strong
+                >{data.organisations.find((o) => o.id === data.selected?.targetPartyId)
+                  ?.displayName ?? 'Unqualified'}</strong
               ></span
             ><span
               ><small>Value range</small><strong

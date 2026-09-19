@@ -20,6 +20,10 @@
   function isCurrentFunction(functionId: string) {
     return page.url.pathname.includes('/functions/' + functionId.toLowerCase());
   }
+
+  function active(path: string) {
+    return page.url.pathname === path || page.url.pathname.startsWith(path + '/');
+  }
 </script>
 
 <aside class="sidebar">
@@ -36,52 +40,83 @@
       </a>
       <a
         class="utility"
-        class:active={page.url.pathname.includes('/app/work')}
+        class:active={active('/' + tenantSlug + '/app/work')}
         href={'/' + tenantSlug + '/app/work'}
       >
         <span class="nav-mark" aria-hidden="true">✓</span>
         <span>My Work</span>
       </a>
+    </section>
+
+    <section class="enterprise">
+      <p class="label">Enterprise</p>
       <a
         class="utility"
-        class:active={page.url.pathname === '/' + tenantSlug + '/app/functions'}
-        href={'/' + tenantSlug + '/app/functions'}
+        class:active={active('/' + tenantSlug + '/app/operate')}
+        href={'/' + tenantSlug + '/app/operate'}
       >
-        <span class="nav-mark" aria-hidden="true">▦</span>
-        <span>Function directory</span>
+        <span class="nav-mark" aria-hidden="true">◫</span>
+        <span>Operate</span>
+      </a>
+      <a
+        class="utility"
+        class:active={active('/' + tenantSlug + '/app/deliver')}
+        href={'/' + tenantSlug + '/app/deliver'}
+      >
+        <span class="nav-mark" aria-hidden="true">→</span>
+        <span>Deliver</span>
+      </a>
+      <a
+        class="utility"
+        class:active={active('/' + tenantSlug + '/app/data')}
+        href={'/' + tenantSlug + '/app/data'}
+      >
+        <span class="nav-mark" aria-hidden="true">▤</span>
+        <span>Enterprise Data</span>
       </a>
     </section>
 
     <section class="functions">
-      <div class="label-row">
-        <p class="label">Business functions</p>
-        <span>29</span>
-      </div>
-
-      <label class="filter">
-        <span class="sr-only">Filter business functions</span>
-        <input bind:value={filterText} placeholder="Filter functions" />
-      </label>
-
-      <div class="function-list">
-        {#each visibleFunctions as fn}
+      <details open={page.url.pathname.includes('/functions/')}>
+        <summary>
+          <span>Business functions</span>
+          <span class="count">29</span>
+        </summary>
+        <div class="function-body">
           <a
-            class="function"
-            class:active={isCurrentFunction(fn.id)}
-            href={'/' + tenantSlug + '/app/functions/' + fn.id.toLowerCase()}
-            title={fn.name}
+            class="directory-link"
+            class:active={page.url.pathname === '/' + tenantSlug + '/app/functions'}
+            href={'/' + tenantSlug + '/app/functions'}
           >
-            <span class="fn-id">{fn.id}</span>
-            <span class="fn-name">{fn.shortName}</span>
+            Function directory
           </a>
-        {:else}
-          <p class="no-functions">No function matches “{filterText}”.</p>
-        {/each}
-      </div>
+
+          <label class="filter">
+            <span class="sr-only">Filter business functions</span>
+            <input bind:value={filterText} placeholder="Filter 29 functions" />
+          </label>
+
+          <div class="function-list">
+            {#each visibleFunctions as fn}
+              <a
+                class="function"
+                class:active={isCurrentFunction(fn.id)}
+                href={'/' + tenantSlug + '/app/functions/' + fn.id.toLowerCase()}
+                title={fn.name}
+              >
+                <span class="fn-id">{fn.id}</span>
+                <span class="fn-name">{fn.shortName}</span>
+              </a>
+            {:else}
+              <p class="no-functions">No function matches “{filterText}”.</p>
+            {/each}
+          </div>
+        </div>
+      </details>
     </section>
 
     <section class="administration">
-      <details>
+      <details open={page.url.pathname.includes('/admin/')}>
         <summary>
           <span>Administration</span>
           <span aria-hidden="true">⌄</span>
@@ -94,22 +129,10 @@
             <span>Security & access</span>
           </a>
           <a
-            class:active={page.url.pathname.includes('/admin/master-data/parties')}
-            href={'/' + tenantSlug + '/app/admin/master-data/parties'}
-          >
-            <span>Party master data</span>
-          </a>
-          <a
-            class:active={page.url.pathname.includes('/admin/master-data/organisation-structure')}
-            href={'/' + tenantSlug + '/app/admin/master-data/organisation-structure'}
-          >
-            <span>Organisation structure</span>
-          </a>
-          <a
             class:active={page.url.pathname.includes('/admin/reference-data')}
             href={'/' + tenantSlug + '/app/admin/reference-data'}
           >
-            <span>Reference data</span>
+            <span>Business configuration</span>
           </a>
           <a
             class:active={page.url.pathname === '/' + tenantSlug + '/app/admin/business-objects'}
@@ -141,20 +164,9 @@
     scrollbar-width: thin;
   }
   section + section {
-    margin-top: 14px;
-    padding-top: 14px;
+    margin-top: 13px;
+    padding-top: 13px;
     border-top: 1px solid #e3e9ed;
-  }
-  .label-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 7px;
-  }
-  .label-row > span {
-    color: #8b99a2;
-    font-size: 8px;
-    font-weight: 800;
   }
   .label {
     margin: 0 7px 7px;
@@ -163,9 +175,6 @@
     font-weight: 850;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-  .label-row .label {
-    margin-inline: 0;
   }
   .utility,
   .function {
@@ -184,12 +193,14 @@
     font-weight: 650;
   }
   .utility:hover,
-  .function:hover {
+  .function:hover,
+  .directory-link:hover {
     background: #edf4f8;
     color: #214f6a;
   }
   .utility.active,
-  .function.active {
+  .function.active,
+  .directory-link.active {
     background: #e5f2f9;
     color: #174a68;
     font-weight: 800;
@@ -209,9 +220,50 @@
     color: #6f8796;
     text-align: center;
   }
+  details > summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 8px;
+    border-radius: 7px;
+    color: #536b7c;
+    font-size: 10.5px;
+    font-weight: 800;
+    cursor: pointer;
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+  details > summary:hover {
+    background: #edf4f8;
+  }
+  .count {
+    min-width: 22px;
+    padding: 2px 5px;
+    border-radius: 999px;
+    background: #e8eef2;
+    color: #667d8c;
+    font-size: 7.5px;
+    text-align: center;
+  }
+  .function-body {
+    display: grid;
+    gap: 6px;
+    padding-top: 5px;
+  }
+  .directory-link {
+    margin: 0 4px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    color: #5d7382;
+    font-size: 10px;
+    font-weight: 750;
+    text-decoration: none;
+  }
   .filter {
     display: block;
-    margin: 0 4px 7px;
+    margin: 0 4px;
   }
   .filter input {
     width: 100%;
@@ -255,24 +307,6 @@
     font-size: 9px;
     line-height: 1.4;
   }
-  .administration > details > summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 8px;
-    border-radius: 7px;
-    color: #536b7c;
-    font-size: 10.5px;
-    font-weight: 800;
-    cursor: pointer;
-    list-style: none;
-  }
-  .administration > details > summary::-webkit-details-marker {
-    display: none;
-  }
-  .administration > details > summary:hover {
-    background: #edf4f8;
-  }
   .admin-links {
     display: grid;
     gap: 1px;
@@ -308,12 +342,18 @@
       border-bottom: 1px solid var(--line);
       background: white;
     }
-    .primary {
+    nav {
       display: flex;
       gap: 4px;
       overflow-x: auto;
     }
-    .primary .label {
+    .primary,
+    .enterprise {
+      display: contents;
+    }
+    .label,
+    .functions,
+    .administration {
       display: none;
     }
     .utility {
@@ -324,10 +364,6 @@
       background: white;
     }
     .utility.active::before {
-      display: none;
-    }
-    .functions,
-    .administration {
       display: none;
     }
     section + section {

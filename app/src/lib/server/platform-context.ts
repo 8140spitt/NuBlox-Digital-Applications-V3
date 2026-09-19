@@ -470,6 +470,72 @@ export const platformPermissions = [
     'Develop and monitor governed Strategic Partnership Business Cases.'
   ],
   [
+    'product.innovation.read',
+    'product.innovation',
+    'read',
+    'Read governed product, service, market-need, configuration, lifecycle and innovation records.'
+  ],
+  [
+    'product.market_need.manage',
+    'product.market_need',
+    'manage',
+    'Capture and validate governed market and customer needs.'
+  ],
+  [
+    'product.concept.manage',
+    'product.concept',
+    'manage',
+    'Create and assess product and service concepts using the canonical Item identity.'
+  ],
+  [
+    'product.concept.approve',
+    'product.concept',
+    'approve',
+    'Apply an immutable concept-selection Decision to the exact Item version.'
+  ],
+  [
+    'product.business_case.manage',
+    'product.business_case',
+    'manage',
+    'Create and revise Product, Service and Innovation Business Cases.'
+  ],
+  [
+    'product.business_case.approve',
+    'product.business_case',
+    'approve',
+    'Apply immutable investment Decisions to exact Product, Service and Innovation Business Case versions.'
+  ],
+  [
+    'product.configuration.manage',
+    'product.configuration',
+    'manage',
+    'Design, validate and release governed Product Configuration Model versions.'
+  ],
+  [
+    'product.launch.manage',
+    'product.launch',
+    'manage',
+    'Prepare launch readiness and activate governed product and service offerings.'
+  ],
+  [
+    'product.lifecycle.manage',
+    'product.lifecycle',
+    'manage',
+    'Record product and service lifecycle reviews and controlled enhancement evidence.'
+  ],
+  [
+    'product.retirement.manage',
+    'product.retirement',
+    'manage',
+    'Plan and complete governed product and service retirement.'
+  ],
+  [
+    'product.innovation.manage',
+    'product.innovation',
+    'manage',
+    'Run innovation experiments and record governed innovation funding evidence.'
+  ],
+  [
     'governance.body.read',
     'governance.body',
     'read',

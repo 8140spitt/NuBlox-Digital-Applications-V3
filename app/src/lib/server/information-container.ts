@@ -75,7 +75,57 @@ export async function listInformationContainers(c:CommandContext,input:{containe
 export async function listInformationRevisions(c:CommandContext,id:string){assertPermission(c,'information.container.read');await getContainer(c,id);return queryRows<RowDataPacket&InformationRevision>(revisionSelect+' WHERE tenant_id = ? AND container_id = ? ORDER BY revision_no DESC',[c.tenantId,id]);}
 export async function listInformationRepresentations(c:CommandContext,revisionId:string){assertPermission(c,'information.container.read');return queryRows<RowDataPacket&InformationRepresentation>(representationSelect+' WHERE tenant_id = ? AND revision_id = ? ORDER BY created_at, id',[c.tenantId,revisionId]);}
 
-export async function createInformationContainer(c:CommandContext,input:{containerRef:string;containerType:string;title:string;originatorPartyId?:string;subjectType?:string;subjectId?:string;classificationCode?:string;securityClassification?:string;revisionCode?:string;purposeOfIssue?:string;suitabilityCode?:string}){assertPermission(c,'information.container.manage');const ref=code(input.containerRef,'Information Container reference'),type=code(input.containerType,'Information Container type',64),originator=input.originatorPartyId?.trim()||c.actorPartyId,s=subject(input.subjectType,input.subjectId),rev=code(input.revisionCode?.trim()||'P01','Revision code',64);return dbTransaction(async e=>{await activeParty(c,originator,e);const id=randomUUID(),ts=now();await executeMutation("INSERT INTO information_containers (id, tenant_id, container_ref, container_type, title, originator_party_id, subject_type, subject_id, classification_code, security_classification, status, aggregate_version, current_revision_no, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'WORK_IN_PROGRESS', 1, 1, ?, ?)",[id,c.tenantId,ref,type,required(input.title,'Information title'),originator,s.subjectType,s.subjectId,input.classificationCode?.trim()||null,optionalCode(input.securityClassification,'Security classification',64),ts,ts],e);await executeMutation("INSERT INTO information_revisions (id, tenant_id, container_id, revision_no, revision_code, title, purpose_of_issue, suitability_code, lifecycle_status, approval_decision_id, approved_at, issued_at, supersedes_revision_id, created_by_party_id, created_at) VALUES (?, ?, ?, 1, ?, ?, ?, ?, 'WORKING', NULL, NULL, NULL, NULL, ?, ?)",[randomUUID(),c.tenantId,id,rev,required(input.title,'Information title'),input.purposeOfIssue?.trim()||null,optionalCode(input.suitabilityCode,'Suitability code',64),c.actorPartyId,ts],e);const created=await getContainer(c,id,e);await evidence(c,created,'INFORMATION_CONTAINER_CREATED',null,'WORK_IN_PROGRESS',{containerRef:ref,containerType:type,revisionNo:1,revisionCode:rev},e);return id;});}
+export type CreateInformationContainerInput = {
+  containerRef: string;
+  containerType: string;
+  title: string;
+  originatorPartyId?: string;
+  subjectType?: string;
+  subjectId?: string;
+  classificationCode?: string;
+  securityClassification?: string;
+  revisionCode?: string;
+  purposeOfIssue?: string;
+  suitabilityCode?: string;
+};
+
+export async function createInformationContainerInTransaction(
+  c: CommandContext,
+  input: CreateInformationContainerInput,
+  e: DbExecutor
+) {
+  assertPermission(c, 'information.container.manage');
+  const ref = code(input.containerRef, 'Information Container reference');
+  const type = code(input.containerType, 'Information Container type', 64);
+  const originator = input.originatorPartyId?.trim() || c.actorPartyId;
+  const s = subject(input.subjectType, input.subjectId);
+  const rev = code(input.revisionCode?.trim() || 'P01', 'Revision code', 64);
+  await activeParty(c, originator, e);
+  const id = randomUUID();
+  const ts = now();
+  await executeMutation(
+    "INSERT INTO information_containers (id, tenant_id, container_ref, container_type, title, originator_party_id, subject_type, subject_id, classification_code, security_classification, status, aggregate_version, current_revision_no, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'WORK_IN_PROGRESS', 1, 1, ?, ?)",
+    [id, c.tenantId, ref, type, required(input.title, 'Information title'), originator, s.subjectType, s.subjectId, input.classificationCode?.trim() || null, optionalCode(input.securityClassification, 'Security classification', 64), ts, ts],
+    e
+  );
+  await executeMutation(
+    "INSERT INTO information_revisions (id, tenant_id, container_id, revision_no, revision_code, title, purpose_of_issue, suitability_code, lifecycle_status, approval_decision_id, approved_at, issued_at, supersedes_revision_id, created_by_party_id, created_at) VALUES (?, ?, ?, 1, ?, ?, ?, ?, 'WORKING', NULL, NULL, NULL, NULL, ?, ?)",
+    [randomUUID(), c.tenantId, id, rev, required(input.title, 'Information title'), input.purposeOfIssue?.trim() || null, optionalCode(input.suitabilityCode, 'Suitability code', 64), c.actorPartyId, ts],
+    e
+  );
+  const created = await getContainer(c, id, e);
+  await evidence(c, created, 'INFORMATION_CONTAINER_CREATED', null, 'WORK_IN_PROGRESS', {
+    containerRef: ref,
+    containerType: type,
+    revisionNo: 1,
+    revisionCode: rev
+  }, e);
+  return id;
+}
+
+export async function createInformationContainer(c: CommandContext, input: CreateInformationContainerInput) {
+  return dbTransaction((e) => createInformationContainerInTransaction(c, input, e));
+}
 
 export async function addInformationRepresentation(c:CommandContext,containerId:string,expected:number,input:{representationType:string;contentReference:string;contentMediaType?:string;sourceFilename?:string;hashAlgorithm:string;contentHash:string}){assertPermission(c,'information.container.manage');const h=hash(input.hashAlgorithm,input.contentHash);return dbTransaction(async e=>{const current=await getContainer(c,containerId,e,true);if(current.aggregateVersion!==expected)throw new Error('This Information Container changed after you opened it.');const rev=await getRevision(c,current.id,current.currentRevisionNo,e,true);if(!['WORKING','REVIEW'].includes(rev.lifecycleStatus))throw new Error('Representations cannot be changed after revision approval.');await executeMutation('INSERT INTO information_representations (id, tenant_id, container_id, revision_id, representation_type, content_reference, content_media_type, source_filename, hash_algorithm, content_hash, created_by_party_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',[randomUUID(),c.tenantId,current.id,rev.id,code(input.representationType,'Representation type',64),required(input.contentReference,'Content reference'),input.contentMediaType?.trim()||null,input.sourceFilename?.trim()||null,h.algorithm,h.value,c.actorPartyId,now()],e);await executeMutation('UPDATE information_containers SET aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?',[now(),current.id,c.tenantId,expected],e);const updated=await getContainer(c,current.id,e);await evidence(c,updated,'INFORMATION_REPRESENTATION_ADDED',current.status,current.status,{revisionNo:current.currentRevisionNo,representationType:input.representationType},e);});}
 
@@ -85,4 +135,57 @@ export async function approveInformationRevision(c:CommandContext,containerId:st
 
 export async function issueInformationRevision(c:CommandContext,containerId:string,expected:number){assertPermission(c,'information.container.approve');return dbTransaction(async e=>{const current=await getContainer(c,containerId,e,true);if(current.aggregateVersion!==expected)throw new Error('This Information Container changed after you opened it.');const rev=await getRevision(c,current.id,current.currentRevisionNo,e,true);if(rev.lifecycleStatus!=='APPROVED')throw new Error('Only an approved revision can be issued.');const count=await queryOne<RowDataPacket&{count:number}>('SELECT COUNT(*) AS count FROM information_representations WHERE tenant_id = ? AND revision_id = ?',[c.tenantId,rev.id],e);if(Number(count?.count??0)<1)throw new Error('An Information Revision requires at least one Representation before issue.');const ts=now();await executeMutation("UPDATE information_revisions SET lifecycle_status = 'ISSUED', issued_at = ? WHERE id = ? AND lifecycle_status = 'APPROVED'",[ts,rev.id],e);if(rev.supersedesRevisionId){await executeMutation("UPDATE information_revisions SET lifecycle_status = 'SUPERSEDED' WHERE id = ? AND container_id = ? AND lifecycle_status = 'ISSUED'",[rev.supersedesRevisionId,current.id],e);}await executeMutation("UPDATE information_containers SET status = 'PUBLISHED', aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",[ts,current.id,c.tenantId,expected],e);const updated=await getContainer(c,current.id,e);await evidence(c,updated,'INFORMATION_REVISION_ISSUED','APPROVED','PUBLISHED',{revisionNo:rev.revisionNo,revisionCode:rev.revisionCode},e);});}
 
-export async function createSuccessorInformationRevision(c:CommandContext,containerId:string,expected:number,input:{revisionCode:string;title?:string;purposeOfIssue?:string;suitabilityCode?:string}){assertPermission(c,'information.container.manage');return dbTransaction(async e=>{const current=await getContainer(c,containerId,e,true);if(current.aggregateVersion!==expected)throw new Error('This Information Container changed after you opened it.');const previous=await getRevision(c,current.id,current.currentRevisionNo,e,true);if(previous.lifecycleStatus!=='ISSUED')throw new Error('A successor revision can only follow an issued revision.');const next=current.currentRevisionNo+1,ts=now();await executeMutation("INSERT INTO information_revisions (id, tenant_id, container_id, revision_no, revision_code, title, purpose_of_issue, suitability_code, lifecycle_status, approval_decision_id, approved_at, issued_at, supersedes_revision_id, created_by_party_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'WORKING', NULL, NULL, NULL, ?, ?, ?)",[randomUUID(),c.tenantId,current.id,next,code(input.revisionCode,'Revision code',64),input.title?.trim()||current.title,input.purposeOfIssue?.trim()||null,optionalCode(input.suitabilityCode,'Suitability code',64),previous.id,c.actorPartyId,ts],e);await executeMutation("UPDATE information_containers SET title = ?, status = 'WORK_IN_PROGRESS', current_revision_no = ?, aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",[input.title?.trim()||current.title,next,ts,current.id,c.tenantId,expected],e);const updated=await getContainer(c,current.id,e);await evidence(c,updated,'INFORMATION_REVISION_CREATED','PUBLISHED','WORK_IN_PROGRESS',{revisionNo:next,revisionCode:input.revisionCode,supersedesRevisionId:previous.id},e);return next;});}
+export type CreateSuccessorInformationRevisionInput = {
+  revisionCode: string;
+  title?: string;
+  purposeOfIssue?: string;
+  suitabilityCode?: string;
+};
+
+export async function createSuccessorInformationRevisionInTransaction(
+  c: CommandContext,
+  containerId: string,
+  expected: number,
+  input: CreateSuccessorInformationRevisionInput,
+  e: DbExecutor
+) {
+  assertPermission(c, 'information.container.manage');
+  const current = await getContainer(c, containerId, e, true);
+  if (current.aggregateVersion !== expected) {
+    throw new Error('This Information Container changed after you opened it.');
+  }
+  const previous = await getRevision(c, current.id, current.currentRevisionNo, e, true);
+  if (previous.lifecycleStatus !== 'ISSUED') {
+    throw new Error('A successor revision can only follow an issued revision.');
+  }
+  const next = current.currentRevisionNo + 1;
+  const ts = now();
+  await executeMutation(
+    "INSERT INTO information_revisions (id, tenant_id, container_id, revision_no, revision_code, title, purpose_of_issue, suitability_code, lifecycle_status, approval_decision_id, approved_at, issued_at, supersedes_revision_id, created_by_party_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'WORKING', NULL, NULL, NULL, ?, ?, ?)",
+    [randomUUID(), c.tenantId, current.id, next, code(input.revisionCode, 'Revision code', 64), input.title?.trim() || current.title, input.purposeOfIssue?.trim() || null, optionalCode(input.suitabilityCode, 'Suitability code', 64), previous.id, c.actorPartyId, ts],
+    e
+  );
+  await executeMutation(
+    "UPDATE information_containers SET title = ?, status = 'WORK_IN_PROGRESS', current_revision_no = ?, aggregate_version = aggregate_version + 1, updated_at = ? WHERE id = ? AND tenant_id = ? AND aggregate_version = ?",
+    [input.title?.trim() || current.title, next, ts, current.id, c.tenantId, expected],
+    e
+  );
+  const updated = await getContainer(c, current.id, e);
+  await evidence(c, updated, 'INFORMATION_REVISION_CREATED', 'PUBLISHED', 'WORK_IN_PROGRESS', {
+    revisionNo: next,
+    revisionCode: input.revisionCode,
+    supersedesRevisionId: previous.id
+  }, e);
+  return next;
+}
+
+export async function createSuccessorInformationRevision(
+  c: CommandContext,
+  containerId: string,
+  expected: number,
+  input: CreateSuccessorInformationRevisionInput
+) {
+  return dbTransaction((e) =>
+    createSuccessorInformationRevisionInTransaction(c, containerId, expected, input, e)
+  );
+}

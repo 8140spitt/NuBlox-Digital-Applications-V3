@@ -27,7 +27,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function number(data: FormData, name: string) {
@@ -71,7 +72,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     listMarketInsights(context),
     listCurrencies(context)
   ]);
-  const selected = cases.find((item) => item.id === url.searchParams.get('case')) ?? cases[0] ?? null;
+  const selected =
+    cases.find((item) => item.id === url.searchParams.get('case')) ?? cases[0] ?? null;
   const versions = selected ? await listProductBusinessCaseVersions(context, selected.id) : [];
   const currentVersion =
     versions.find((item) => item.versionNo === selected?.currentVersionNo) ?? versions[0] ?? null;
@@ -219,13 +221,7 @@ export const actions: Actions = {
         outcome,
         reason: text(data, 'reason')
       });
-      await applyProductBusinessCaseDecision(
-        context,
-        id,
-        aggregateVersion,
-        decisionId,
-        outcome
-      );
+      await applyProductBusinessCaseDecision(context, id, aggregateVersion, decisionId, outcome);
       redirect(303, target(params.tenant, domain, mode, id));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -236,17 +232,14 @@ export const actions: Actions = {
     const data = await request.formData();
     const caseId = text(data, 'businessCaseId');
     try {
-      await createInnovationExperiment(
-        await resolveRequestCommandContext(params.tenant, locals),
-        {
-          businessCaseVersionId: text(data, 'businessCaseVersionId'),
-          experimentRef: text(data, 'experimentRef'),
-          title: text(data, 'title'),
-          hypothesis: text(data, 'hypothesis'),
-          method: text(data, 'method'),
-          successCriteria: text(data, 'successCriteria')
-        }
-      );
+      await createInnovationExperiment(await resolveRequestCommandContext(params.tenant, locals), {
+        businessCaseVersionId: text(data, 'businessCaseVersionId'),
+        experimentRef: text(data, 'experimentRef'),
+        title: text(data, 'title'),
+        hypothesis: text(data, 'hypothesis'),
+        method: text(data, 'method'),
+        successCriteria: text(data, 'successCriteria')
+      });
       redirect(303, target(params.tenant, 'INNOVATION', 'innovation', caseId));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;
@@ -293,17 +286,14 @@ export const actions: Actions = {
   fund: async ({ request, params, locals }) => {
     const data = await request.formData();
     try {
-      await recordInnovationFunding(
-        await resolveRequestCommandContext(params.tenant, locals),
-        {
-          businessCaseVersionId: text(data, 'businessCaseVersionId'),
-          fundingType: text(data, 'fundingType'),
-          amount: number(data, 'amount'),
-          currencyId: text(data, 'currencyId'),
-          basis: text(data, 'basis'),
-          status: text(data, 'status') || 'PLANNED'
-        }
-      );
+      await recordInnovationFunding(await resolveRequestCommandContext(params.tenant, locals), {
+        businessCaseVersionId: text(data, 'businessCaseVersionId'),
+        fundingType: text(data, 'fundingType'),
+        amount: number(data, 'amount'),
+        currencyId: text(data, 'currencyId'),
+        basis: text(data, 'basis'),
+        status: text(data, 'status') || 'PLANNED'
+      });
       redirect(
         303,
         target(params.tenant, 'INNOVATION', 'innovation', text(data, 'businessCaseId'))

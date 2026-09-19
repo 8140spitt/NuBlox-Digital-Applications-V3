@@ -52,7 +52,9 @@ describe('F05 Product, Service & Innovation Management', () => {
       desiredOutcome: 'Reduce handover preparation effort and improve traceability.',
       evidenceReference: 'research://f05/customer-need-001'
     });
-    let insight = (await product.listMarketInsights(context)).find((item) => item.id === insightId)!;
+    let insight = (await product.listMarketInsights(context)).find(
+      (item) => item.id === insightId
+    )!;
     expect(insight.status).toBe('CAPTURED');
     await product.validateMarketInsight(context, insightId, insight.aggregateVersion);
     insight = (await product.listMarketInsights(context)).find((item) => item.id === insightId)!;
@@ -139,7 +141,8 @@ describe('F05 Product, Service & Innovation Management', () => {
       trialType: 'PILOT',
       hypothesis: 'A governed digital handover workflow reduces manual reconciliation.',
       method: 'Run a representative handover pack through the proposed service.',
-      successCriteria: 'All required issued information remains traceable with no duplicate identity.',
+      successCriteria:
+        'All required issued information remains traceable with no duplicate identity.',
       outcome: 'PASS',
       resultSummary: 'Pilot completed successfully with traceable controlled information.',
       evidenceReference: 'trial://f05/handover-pilot-001'
@@ -149,7 +152,9 @@ describe('F05 Product, Service & Innovation Management', () => {
       (candidate) => candidate.id === configId
     )!;
     const versions = await product.listProductConfigurationVersions(context, configId);
-    expect(await product.listProductConfigurationRequirements(context, versions[0].id)).toHaveLength(1);
+    expect(
+      await product.listProductConfigurationRequirements(context, versions[0].id)
+    ).toHaveLength(1);
     expect(await product.listProductConfigurationTrials(context, versions[0].id)).toHaveLength(1);
     await product.releaseProductConfiguration(context, configId, configuration.aggregateVersion);
     configuration = (await product.listProductConfigurations(context, itemId)).find(
@@ -274,7 +279,8 @@ describe('F05 Product, Service & Innovation Management', () => {
       title: 'Automated completeness validation',
       hypothesis: 'Rule-assisted validation identifies missing handover evidence before issue.',
       method: 'Run ten representative packs through controlled validation rules.',
-      successCriteria: 'At least 90% of seeded omissions are detected with acceptable false positives.'
+      successCriteria:
+        'At least 90% of seeded omissions are detected with acceptable false positives.'
     });
     await product.startInnovationExperiment(context, experimentId);
     await product.completeInnovationExperiment(context, experimentId, {
@@ -291,21 +297,26 @@ describe('F05 Product, Service & Innovation Management', () => {
       status: 'ALLOCATED'
     });
     const experiments = await product.listInnovationExperiments(context, innovationCaseId);
-    expect(experiments[0]).toMatchObject({ id: experimentId, status: 'COMPLETED', outcome: 'VALIDATED' });
+    expect(experiments[0]).toMatchObject({
+      id: experimentId,
+      status: 'COMPLETED',
+      outcome: 'VALIDATED'
+    });
 
     await product.beginItemRetirement(context, itemId, item.aggregateVersion, {
       rationale: 'Successor service will replace the current offering.'
     });
     item = (await product.listItems(context)).find((candidate) => candidate.id === itemId)!;
     expect(item.status).toBe('OBSOLETE');
-    await expect(product.completeItemRetirement(context, itemId, item.aggregateVersion)).rejects.toThrow(
-      'stakeholder notice'
-    );
+    await expect(
+      product.completeItemRetirement(context, itemId, item.aggregateVersion)
+    ).rejects.toThrow('stakeholder notice');
 
     await product.beginItemRetirement(context, itemId, item.aggregateVersion, {
       rationale: 'Successor service will replace the current offering.',
       stakeholderNoticeReference: 'notice://f05/retirement-001',
-      customerMigrationPlan: 'Migrate active customers to the successor service before support end.',
+      customerMigrationPlan:
+        'Migrate active customers to the successor service before support end.',
       supportEndAt: '2027-12-31T17:00:00Z',
       archiveReference: 'archive://f05/digital-handover-v1'
     });

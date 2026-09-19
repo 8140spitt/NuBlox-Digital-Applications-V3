@@ -18,7 +18,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function json(data: FormData, name: string) {
@@ -37,7 +38,8 @@ function target(tenant: string, id?: string, mode = 'lifecycle') {
 }
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The lifecycle command could not be completed.'
+    message:
+      error instanceof Error ? error.message : 'The lifecycle command could not be completed.'
   });
 }
 
@@ -47,7 +49,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     listItems(context),
     listProductConfigurations(context)
   ]);
-  const selected = items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
+  const selected =
+    items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
   const [reviews, retirement] = selected
     ? await Promise.all([
         listItemLifecycleReviews(context, selected.id),

@@ -6,7 +6,9 @@
   <div class="inner">
     <div class="copy">
       <p class="eyebrow">Built environment operating system</p>
-      <h1 id="marketing-hero-title">Run the enterprise and deliver the built environment on one governed platform.</h1>
+      <h1 id="marketing-hero-title">
+        Run the enterprise and deliver the built environment on one governed platform.
+      </h1>
       <p class="lede">
         NuBlox connects strategy, people, commercial operations, projects, information and assets
         through shared business identities, controlled workflows and traceable decisions.

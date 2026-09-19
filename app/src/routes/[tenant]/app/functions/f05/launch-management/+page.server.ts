@@ -17,7 +17,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function target(tenant: string, id?: string) {
@@ -36,7 +37,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     listProductConfigurations(context),
     listProductBusinessCases(context, 'PRODUCT_SERVICE')
   ]);
-  const selected = items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
+  const selected =
+    items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
   const launch = selected ? await getItemLaunchProfile(context, selected.id) : null;
   return {
     tenantSlug: params.tenant,
@@ -54,17 +56,13 @@ export const actions: Actions = {
     const data = await request.formData();
     const itemId = text(data, 'itemId');
     try {
-      await configureItemLaunch(
-        await resolveRequestCommandContext(params.tenant, locals),
-        itemId,
-        {
-          launchPlan: text(data, 'launchPlan'),
-          channelReadiness: text(data, 'channelReadiness'),
-          trainingReadiness: text(data, 'trainingReadiness'),
-          pricingReference: text(data, 'pricingReference'),
-          plannedLaunchAt: text(data, 'plannedLaunchAt') || undefined
-        }
-      );
+      await configureItemLaunch(await resolveRequestCommandContext(params.tenant, locals), itemId, {
+        launchPlan: text(data, 'launchPlan'),
+        channelReadiness: text(data, 'channelReadiness'),
+        trainingReadiness: text(data, 'trainingReadiness'),
+        pricingReference: text(data, 'pricingReference'),
+        plannedLaunchAt: text(data, 'plannedLaunchAt') || undefined
+      });
       redirect(303, target(params.tenant, itemId));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

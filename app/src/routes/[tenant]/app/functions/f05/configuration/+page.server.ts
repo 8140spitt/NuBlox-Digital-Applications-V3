@@ -27,7 +27,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function json(data: FormData, name: string) {
@@ -46,7 +47,8 @@ function target(tenant: string, modelId?: string, mode = 'design') {
 }
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The configuration command could not be completed.'
+    message:
+      error instanceof Error ? error.message : 'The configuration command could not be completed.'
   });
 }
 
@@ -58,7 +60,8 @@ export const load: PageServerLoad = async ({ params, locals, url }) => {
     listMarketInsights(context),
     listUnitsOfMeasure(context)
   ]);
-  const selected = models.find((item) => item.id === url.searchParams.get('model')) ?? models[0] ?? null;
+  const selected =
+    models.find((item) => item.id === url.searchParams.get('model')) ?? models[0] ?? null;
   const versions = selected ? await listProductConfigurationVersions(context, selected.id) : [];
   const current = versions.find((item) => item.versionNo === selected?.currentVersionNo) ?? null;
   const [characteristics, rules, requirements, trials] = current
@@ -164,16 +167,12 @@ export const actions: Actions = {
     const id = text(data, 'modelId');
     const mode = text(data, 'mode') || 'design';
     try {
-      await addConfigurationRule(
-        await resolveRequestCommandContext(params.tenant, locals),
-        id,
-        {
-          ruleKey: text(data, 'ruleKey'),
-          ruleType: text(data, 'ruleType'),
-          expression: text(data, 'expression'),
-          severity: text(data, 'severity')
-        }
-      );
+      await addConfigurationRule(await resolveRequestCommandContext(params.tenant, locals), id, {
+        ruleKey: text(data, 'ruleKey'),
+        ruleType: text(data, 'ruleType'),
+        expression: text(data, 'expression'),
+        severity: text(data, 'severity')
+      });
       redirect(303, target(params.tenant, id, mode));
     } catch (error) {
       if (error && typeof error === 'object' && 'status' in error) throw error;

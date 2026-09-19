@@ -105,7 +105,6 @@ pnpm test:all
 
 See `migrations/README.md` for the migration governance rules.
 
-
 ## F05 operational baseline
 
 Product, Service & Innovation Management now operates across the frozen canonical boundaries rather than as a monolithic PLM application:

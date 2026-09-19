@@ -111,27 +111,84 @@ export const f05Workspace = {
   ] satisfies WorkArea[],
   journey: [
     { step: '1', name: 'Discover', detail: 'Capture validated market and customer need evidence.' },
-    { step: '2', name: 'Select', detail: 'Assess concepts and bind selection to an immutable Decision.' },
-    { step: '3', name: 'Invest', detail: 'Develop and approve an exact Product / Service Business Case version.' },
-    { step: '4', name: 'Define', detail: 'Create traceable controlled configuration and requirements.' },
-    { step: '5', name: 'Validate', detail: 'Run prototype/trial evidence and release an immutable configuration version.' },
-    { step: '6', name: 'Launch', detail: 'Activate the Item only when all launch gates are satisfied.' },
-    { step: '7', name: 'Evolve', detail: 'Review adoption, create successor configurations and govern retirement.' }
+    {
+      step: '2',
+      name: 'Select',
+      detail: 'Assess concepts and bind selection to an immutable Decision.'
+    },
+    {
+      step: '3',
+      name: 'Invest',
+      detail: 'Develop and approve an exact Product / Service Business Case version.'
+    },
+    {
+      step: '4',
+      name: 'Define',
+      detail: 'Create traceable controlled configuration and requirements.'
+    },
+    {
+      step: '5',
+      name: 'Validate',
+      detail: 'Run prototype/trial evidence and release an immutable configuration version.'
+    },
+    {
+      step: '6',
+      name: 'Launch',
+      detail: 'Activate the Item only when all launch gates are satisfied.'
+    },
+    {
+      step: '7',
+      name: 'Evolve',
+      detail: 'Review adoption, create successor configurations and govern retirement.'
+    }
   ],
   platformServices: [
-    ['Item', 'One canonical Item identity supports product, material and service behaviour across later workspaces.'],
-    ['Decision', 'Concept selection and investment approval retain exact immutable Decision evidence.'],
-    ['Configuration', 'Released Product Configuration versions are immutable and retain characteristics, rules and traceability.'],
-    ['Requirements', 'Market needs and future engineering requirements remain traceable inputs rather than copied text.'],
-    ['Work & evidence', 'Trials, reviews and follow-up use shared evidence/work patterns without shadow workflow engines.'],
+    [
+      'Item',
+      'One canonical Item identity supports product, material and service behaviour across later workspaces.'
+    ],
+    [
+      'Decision',
+      'Concept selection and investment approval retain exact immutable Decision evidence.'
+    ],
+    [
+      'Configuration',
+      'Released Product Configuration versions are immutable and retain characteristics, rules and traceability.'
+    ],
+    [
+      'Requirements',
+      'Market needs and future engineering requirements remain traceable inputs rather than copied text.'
+    ],
+    [
+      'Work & evidence',
+      'Trials, reviews and follow-up use shared evidence/work patterns without shadow workflow engines.'
+    ],
     ['Reference data', 'Units and currencies reuse governed enterprise reference identities.']
   ],
   integration: [
-    ['Strategy', 'Portfolio and investment priorities remain aligned to governed strategic direction.'],
-    ['Sales & marketing', 'Launched offerings hand off Item identity to opportunity, pricing, catalogue and commercial processes.'],
-    ['Engineering', 'Configuration links to exact requirement/model identities rather than replacing engineering truth.'],
-    ['Supply & production', 'The same Item and configuration identities later underpin planning, BOM and manufacturing semantics.'],
-    ['Finance', 'Business Cases reference financial assumptions/funding evidence without becoming Budget or Ledger truth.'],
-    ['Quality & service', 'Trials, lifecycle reviews and retirement retain evidence required for downstream quality and support.']
+    [
+      'Strategy',
+      'Portfolio and investment priorities remain aligned to governed strategic direction.'
+    ],
+    [
+      'Sales & marketing',
+      'Launched offerings hand off Item identity to opportunity, pricing, catalogue and commercial processes.'
+    ],
+    [
+      'Engineering',
+      'Configuration links to exact requirement/model identities rather than replacing engineering truth.'
+    ],
+    [
+      'Supply & production',
+      'The same Item and configuration identities later underpin planning, BOM and manufacturing semantics.'
+    ],
+    [
+      'Finance',
+      'Business Cases reference financial assumptions/funding evidence without becoming Budget or Ledger truth.'
+    ],
+    [
+      'Quality & service',
+      'Trials, lifecycle reviews and retirement retain evidence required for downstream quality and support.'
+    ]
   ]
 } as const;

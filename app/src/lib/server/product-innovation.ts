@@ -459,7 +459,8 @@ export async function validateMarketInsight(
   return dbTransaction(async (connection) => {
     const insight = await getMarketInsight(context, insightId, connection, true);
     if (insight.aggregateVersion !== expectedVersion) throw new Error('Market Insight changed.');
-    if (insight.status !== 'CAPTURED') throw new Error('Only captured Market Insights can be validated.');
+    if (insight.status !== 'CAPTURED')
+      throw new Error('Only captured Market Insights can be validated.');
     const updatedAt = now();
     await executeMutation(
       "UPDATE market_insights SET status='VALIDATED',aggregate_version=aggregate_version+1,validated_by_party_id=?,validated_at=?,updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
@@ -636,7 +637,14 @@ export async function assessProductServiceConcept(
     );
     await executeMutation(
       "UPDATE item_concept_profiles SET feasibility_summary=CASE WHEN ?='FEASIBILITY' THEN ? ELSE feasibility_summary END,score=COALESCE(?,score),concept_status='ASSESSED',updated_at=? WHERE item_id=? AND tenant_id=?",
-      [assessmentType, required(input.summary, 'Assessment summary'), score, assessedAt, item.id, context.tenantId],
+      [
+        assessmentType,
+        required(input.summary, 'Assessment summary'),
+        score,
+        assessedAt,
+        item.id,
+        context.tenantId
+      ],
       connection
     );
     await executeMutation(
@@ -737,10 +745,7 @@ export async function listProductConfigurations(context: CommandContext, itemId?
   );
 }
 
-export async function listProductConfigurationVersions(
-  context: CommandContext,
-  modelId: string
-) {
+export async function listProductConfigurationVersions(context: CommandContext, modelId: string) {
   assertPermission(context, 'product.innovation.read');
   await getConfiguration(context, modelId);
   return queryRows<RowDataPacket & ProductConfigurationVersion>(
@@ -814,7 +819,9 @@ export async function createProductConfiguration(
   return dbTransaction(async (connection) => {
     const item = await getItem(context, required(input.itemId, 'Item ID'), connection);
     if (item.conceptStatus !== 'SELECTED') {
-      throw new Error('A Product Configuration Model requires a selected Product / Service Concept.');
+      throw new Error(
+        'A Product Configuration Model requires a selected Product / Service Concept.'
+      );
     }
     await executeMutation(
       `INSERT INTO product_configuration_models
@@ -886,7 +893,8 @@ export async function reviseProductConfiguration(
   assertPermission(context, 'product.configuration.manage');
   return dbTransaction(async (connection) => {
     const model = await getConfiguration(context, modelId, connection, true);
-    if (model.aggregateVersion !== expectedVersion) throw new Error('Product Configuration changed.');
+    if (model.aggregateVersion !== expectedVersion)
+      throw new Error('Product Configuration changed.');
     const nextVersionNo = model.currentVersionNo + 1;
     const createdAt = now();
     await executeMutation(
@@ -947,7 +955,9 @@ async function currentMutableConfigurationVersion(
     true
   );
   if (version.lifecycleStatus === 'RELEASED') {
-    throw new Error('Released Product Configuration versions are immutable; create a successor version.');
+    throw new Error(
+      'Released Product Configuration versions are immutable; create a successor version.'
+    );
   }
   return { model, version };
 }
@@ -967,7 +977,11 @@ export async function addConfigurationCharacteristic(
 ) {
   assertPermission(context, 'product.configuration.manage');
   return dbTransaction(async (connection) => {
-    const { model, version } = await currentMutableConfigurationVersion(context, modelId, connection);
+    const { model, version } = await currentMutableConfigurationVersion(
+      context,
+      modelId,
+      connection
+    );
     const uomId = input.unitOfMeasureId?.trim() || null;
     if (uomId) await assertActiveUom(context, uomId, connection);
     await executeMutation(
@@ -1002,7 +1016,11 @@ export async function addConfigurationRule(
 ) {
   assertPermission(context, 'product.configuration.manage');
   return dbTransaction(async (connection) => {
-    const { model, version } = await currentMutableConfigurationVersion(context, modelId, connection);
+    const { model, version } = await currentMutableConfigurationVersion(
+      context,
+      modelId,
+      connection
+    );
     await executeMutation(
       'INSERT INTO product_configuration_rules (id,tenant_id,configuration_version_id,rule_key,rule_type,expression_text,severity,created_at) VALUES (?,?,?,?,?,?,?,?)',
       [
@@ -1038,7 +1056,11 @@ export async function linkConfigurationRequirement(
 ) {
   assertPermission(context, 'product.configuration.manage');
   return dbTransaction(async (connection) => {
-    const { model, version } = await currentMutableConfigurationVersion(context, modelId, connection);
+    const { model, version } = await currentMutableConfigurationVersion(
+      context,
+      modelId,
+      connection
+    );
     const requirementType = code(input.requirementType, 'Requirement type');
     const subjectId = required(input.subjectId, 'Requirement subject ID', 191);
     if (requirementType === 'MARKET_INSIGHT') {
@@ -1088,7 +1110,11 @@ export async function recordConfigurationTrial(
 ) {
   assertPermission(context, 'product.configuration.manage');
   return dbTransaction(async (connection) => {
-    const { model, version } = await currentMutableConfigurationVersion(context, modelId, connection);
+    const { model, version } = await currentMutableConfigurationVersion(
+      context,
+      modelId,
+      connection
+    );
     const outcome = code(input.outcome, 'Trial outcome');
     if (!['PASS', 'FAIL', 'INCONCLUSIVE'].includes(outcome)) {
       throw new Error('Trial outcome must be PASS, FAIL or INCONCLUSIVE.');
@@ -1128,7 +1154,8 @@ export async function releaseProductConfiguration(
   assertPermission(context, 'product.configuration.manage');
   return dbTransaction(async (connection) => {
     const model = await getConfiguration(context, modelId, connection, true);
-    if (model.aggregateVersion !== expectedVersion) throw new Error('Product Configuration changed.');
+    if (model.aggregateVersion !== expectedVersion)
+      throw new Error('Product Configuration changed.');
     const version = await getConfigurationVersion(
       context,
       model.id,
@@ -1142,14 +1169,19 @@ export async function releaseProductConfiguration(
       [context.tenantId, version.id],
       connection
     );
-    const trials = await queryOne<RowDataPacket & { total: number; failed: number; passed: number }>(
+    const trials = await queryOne<
+      RowDataPacket & { total: number; failed: number; passed: number }
+    >(
       "SELECT COUNT(*) AS total,SUM(CASE WHEN outcome='FAIL' THEN 1 ELSE 0 END) AS failed,SUM(CASE WHEN outcome='PASS' THEN 1 ELSE 0 END) AS passed FROM product_configuration_trials WHERE tenant_id=? AND configuration_version_id=?",
       [context.tenantId, version.id],
       connection
     );
-    if (!requirement?.count) throw new Error('Release requires at least one traceable requirement.');
-    if (!trials?.total || !trials.passed) throw new Error('Release requires at least one passing trial.');
-    if (Number(trials.failed) > 0) throw new Error('Failed trials must be resolved in a successor version before release.');
+    if (!requirement?.count)
+      throw new Error('Release requires at least one traceable requirement.');
+    if (!trials?.total || !trials.passed)
+      throw new Error('Release requires at least one passing trial.');
+    if (Number(trials.failed) > 0)
+      throw new Error('Failed trials must be resolved in a successor version before release.');
     const releasedAt = now();
     await executeMutation(
       "UPDATE product_configuration_versions SET lifecycle_status='RELEASED',released_at=? WHERE id=? AND tenant_id=? AND lifecycle_status <> 'RELEASED'",
@@ -1433,12 +1465,19 @@ export async function reviseProductBusinessCase(
   assertPermission(context, 'product.business_case.manage');
   return dbTransaction(async (connection) => {
     const businessCase = await getBusinessCase(context, businessCaseId, connection, true);
-    if (businessCase.aggregateVersion !== expectedVersion) throw new Error('Business Case changed.');
+    if (businessCase.aggregateVersion !== expectedVersion)
+      throw new Error('Business Case changed.');
     if (!['DRAFT', 'REWORK', 'REJECTED'].includes(businessCase.status)) {
       throw new Error('Only draft, rework or rejected Business Cases can be revised.');
     }
     const nextVersion = businessCase.currentVersionNo + 1;
-    await insertProductBusinessCaseVersion(context, connection, businessCase.id, nextVersion, input);
+    await insertProductBusinessCaseVersion(
+      context,
+      connection,
+      businessCase.id,
+      nextVersion,
+      input
+    );
     const updatedAt = now();
     await executeMutation(
       "UPDATE business_cases SET status='DRAFT',aggregate_version=aggregate_version+1,current_version_no=?,approval_decision_id=NULL,approved_at=NULL,updated_at=? WHERE id=? AND tenant_id=? AND aggregate_version=?",
@@ -1483,8 +1522,10 @@ export async function prepareProductBusinessCaseForDecision(
   assertPermission(context, 'product.business_case.manage');
   return dbTransaction(async (connection) => {
     const businessCase = await getBusinessCase(context, businessCaseId, connection, true);
-    if (businessCase.aggregateVersion !== expectedVersion) throw new Error('Business Case changed.');
-    if (businessCase.status !== 'DRAFT') throw new Error('Only draft Business Cases can be submitted.');
+    if (businessCase.aggregateVersion !== expectedVersion)
+      throw new Error('Business Case changed.');
+    if (businessCase.status !== 'DRAFT')
+      throw new Error('Only draft Business Cases can be submitted.');
     await getBusinessCaseVersion(
       context,
       businessCase.id,
@@ -1537,7 +1578,8 @@ export async function applyProductBusinessCaseDecision(
   assertPermission(context, 'product.business_case.approve');
   return dbTransaction(async (connection) => {
     const businessCase = await getBusinessCase(context, businessCaseId, connection, true);
-    if (businessCase.aggregateVersion !== expectedVersion) throw new Error('Business Case changed.');
+    if (businessCase.aggregateVersion !== expectedVersion)
+      throw new Error('Business Case changed.');
     if (businessCase.status !== 'DECISION_REQUIRED') {
       throw new Error('Business Case is not awaiting a Decision.');
     }
@@ -1594,10 +1636,7 @@ export async function applyProductBusinessCaseDecision(
   });
 }
 
-export async function listInnovationExperiments(
-  context: CommandContext,
-  businessCaseId?: string
-) {
+export async function listInnovationExperiments(context: CommandContext, businessCaseId?: string) {
   assertPermission(context, 'product.innovation.read');
   const params: unknown[] = [context.tenantId];
   let where = ' WHERE ie.tenant_id=?';
@@ -1733,7 +1772,8 @@ export async function completeInnovationExperiment(
       context.tenantId
     ]
   );
-  if (result.affectedRows !== 1) throw new Error('Only running Innovation Experiments can complete.');
+  if (result.affectedRows !== 1)
+    throw new Error('Only running Innovation Experiments can complete.');
 }
 
 export async function recordInnovationFunding(
@@ -1835,13 +1875,15 @@ export async function launchOffering(
       [context.tenantId, item.id],
       connection
     );
-    if (!approvedCase) throw new Error('Launch requires an approved Product / Service Business Case.');
+    if (!approvedCase)
+      throw new Error('Launch requires an approved Product / Service Business Case.');
     const releasedConfiguration = await queryOne<RowDataPacket & { id: string }>(
       "SELECT id FROM product_configuration_models WHERE tenant_id=? AND item_id=? AND status='RELEASED' LIMIT 1",
       [context.tenantId, item.id],
       connection
     );
-    if (!releasedConfiguration) throw new Error('Launch requires a released Product Configuration.');
+    if (!releasedConfiguration)
+      throw new Error('Launch requires a released Product Configuration.');
     const launch = await queryOne<
       RowDataPacket & {
         launchPlan: string;
@@ -2085,7 +2127,6 @@ export async function completeItemRetirement(
     );
   });
 }
-
 
 export async function listProductConfigurationCharacteristics(
   context: CommandContext,

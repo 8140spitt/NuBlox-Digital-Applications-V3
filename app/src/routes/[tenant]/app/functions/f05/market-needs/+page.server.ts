@@ -14,7 +14,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function target(tenant: string, id?: string) {
@@ -22,7 +23,8 @@ function target(tenant: string, id?: string) {
 }
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The market-need command could not be completed.'
+    message:
+      error instanceof Error ? error.message : 'The market-need command could not be completed.'
   });
 }
 

@@ -18,7 +18,8 @@ function text(data: FormData, name: string) {
 }
 function version(data: FormData) {
   const value = Number(text(data, 'aggregateVersion'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid aggregate version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid aggregate version is required.');
   return value;
 }
 function optionalNumber(data: FormData, name: string) {
@@ -49,7 +50,8 @@ function problem(error: unknown) {
 export const load: PageServerLoad = async ({ params, locals, url }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
   const [items, units] = await Promise.all([listItems(context), listUnitsOfMeasure(context)]);
-  const selected = items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
+  const selected =
+    items.find((item) => item.id === url.searchParams.get('item')) ?? items[0] ?? null;
   const assessments = selected ? await listConceptAssessments(context, selected.id) : [];
   return {
     tenantSlug: params.tenant,

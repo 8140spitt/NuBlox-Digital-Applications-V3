@@ -49,11 +49,14 @@
     <a class:active={page.url.pathname.includes('/app/work')} href={'/' + tenantSlug + '/app/work'}>
       <span>My Work</span>
     </a>
-    <a
-      class:active={page.url.pathname.includes('/app/functions')}
-      href={'/' + tenantSlug + '/app/functions'}
-    >
-      <span>Functions</span>
+    <a class:active={page.url.pathname.includes('/app/operate')} href={'/' + tenantSlug + '/app/operate'}>
+      <span>Operate</span>
+    </a>
+    <a class:active={page.url.pathname.includes('/app/deliver')} href={'/' + tenantSlug + '/app/deliver'}>
+      <span>Deliver</span>
+    </a>
+    <a class:active={page.url.pathname.includes('/app/data')} href={'/' + tenantSlug + '/app/data'}>
+      <span>Data</span>
     </a>
   </nav>
 

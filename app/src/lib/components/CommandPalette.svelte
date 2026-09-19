@@ -126,11 +126,7 @@
       <label class="search">
         <span class="sr-only">Search destinations</span>
         <span aria-hidden="true">⌕</span>
-        <input
-          bind:this={input}
-          bind:value={query}
-          placeholder="Search enterprise destinations"
-        />
+        <input bind:this={input} bind:value={query} placeholder="Search enterprise destinations" />
         <button type="button" onclick={close} aria-label="Close navigation">Esc</button>
       </label>
 
@@ -147,7 +143,9 @@
         {:else}
           <div class="no-results">
             <strong>No matching destination</strong>
-            <span>Try a business stream, function number, data area or administration destination.</span>
+            <span
+              >Try a business stream, function number, data area or administration destination.</span
+            >
           </div>
         {/each}
       </div>

@@ -23,6 +23,15 @@ describe('runtime object registry', () => {
     );
   });
 
+  it('keeps subject links on the same canonical object identity across sections', () => {
+    expect(subjectObjectHref('demo-tenant', 'LEAD', '123', { section: 'work' })).toBe(
+      '/demo-tenant/app/objects/lead/123?section=work'
+    );
+    expect(objectHref('demo-tenant', 'lead', '123', { section: 'overview' })).toBe(
+      '/demo-tenant/app/objects/lead/123'
+    );
+  });
+
   it('returns null for subjects that have not joined the runtime registry yet', () => {
     expect(subjectObjectHref('demo-tenant', 'UNKNOWN', '1')).toBeNull();
   });

@@ -22,22 +22,19 @@
 </svelte:head>
 
 <div class="work-page">
-  <header class="hero section-card">
+  <header class="page-heading">
     <div>
-      <span class="eyebrow">Shared work · AGG-27-WORKFLOW</span>
-      <h1>My Work</h1>
+      <span class="eyebrow">My Work</span>
+      <h1>Work that needs your attention</h1>
       <p>
-        Actionable work assigned to {data.actorDisplayName}. Work Items coordinate activity around
-        canonical business objects; completing a Work Item does not silently change the referenced
-        domain object.
+        Assignments, reviews and exceptions currently routed to {data.actorDisplayName}. Start with
+        urgent or overdue items, then work through the remaining queue.
       </p>
     </div>
-    <div class="principle">
-      <strong>Work is coordination, not domain truth</strong>
-      <span>Assignment ≠ permission ≠ delegated authority.</span>
-      <small
-        >Protected business decisions are authorised and committed through their owning aggregate.</small
-      >
+    <div class="attention-summary" aria-label="Attention summary">
+      <span><strong>{summary.urgent}</strong> urgent</span>
+      <span><strong>{summary.overdue}</strong> overdue</span>
+      <span><strong>{summary.escalations}</strong> escalated</span>
     </div>
   </header>
 
@@ -59,8 +56,12 @@
       <div class="metric section-card">
         <strong>{summary.inProgress}</strong><span>in progress</span>
       </div>
-      <div class="metric section-card"><strong>{summary.urgent}</strong><span>urgent</span></div>
-      <div class="metric section-card"><strong>{summary.overdue}</strong><span>overdue</span></div>
+      <div class:attention={summary.urgent > 0} class="metric section-card">
+        <strong>{summary.urgent}</strong><span>urgent</span>
+      </div>
+      <div class:attention={summary.overdue > 0} class="metric section-card">
+        <strong>{summary.overdue}</strong><span>overdue</span>
+      </div>
       <div class="metric section-card">
         <strong>{summary.escalations}</strong><span>open escalations</span>
       </div>
@@ -69,12 +70,12 @@
     <section class="work-register section-card">
       <div class="section-heading">
         <div>
-          <span class="eyebrow">Action queue</span>
+          <span class="eyebrow">Your queue</span>
           <h2>{summary.total} current assignments</h2>
         </div>
         <p>
-          Ordered by priority and due date. Completed work leaves this queue but remains fully
-          evidenced.
+          Ordered by priority and due date so the next required action is clear. Completed work
+          leaves the active queue and remains available in history.
         </p>
       </div>
 
@@ -278,13 +279,12 @@
     display: grid;
     gap: 12px;
   }
-  .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.65fr);
+  .page-heading {
+    display: flex;
+    justify-content: space-between;
     gap: 24px;
-    padding: 18px;
-    border-color: #8fc9ee;
-    background: linear-gradient(120deg, #fbfdff, #eaf6fd);
+    align-items: end;
+    padding: 4px 2px 2px;
   }
   .eyebrow {
     color: var(--blue-700);
@@ -306,33 +306,35 @@
     color: #2d4b60;
     font-size: 14px;
   }
-  .hero p,
+  .page-heading p,
   .section-heading p {
     margin: 0;
     color: #526a7d;
     font-size: 11.5px;
     line-height: 1.45;
   }
-  .principle {
+  .attention-summary {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: end;
+  }
+  .attention-summary span {
+    min-width: 70px;
     display: grid;
-    gap: 5px;
-    padding: 12px;
-    border: 1px solid #b8dcef;
-    border-radius: 9px;
-    background: rgba(255, 255, 255, 0.82);
+    gap: 1px;
+    padding: 7px 9px;
+    border: 1px solid #d7e1e7;
+    border-radius: 8px;
+    background: white;
+    color: #748793;
+    font-size: 8px;
+    text-transform: uppercase;
   }
-  .principle strong {
-    color: #245471;
-    font-size: 11.5px;
-  }
-  .principle span {
-    color: #456275;
-    font-size: 10px;
-  }
-  .principle small {
-    color: #788b98;
-    font-size: 9px;
-    line-height: 1.35;
+  .attention-summary strong {
+    color: #31566e;
+    font-size: 15px;
+    line-height: 1;
   }
   .message {
     padding: 9px 12px;
@@ -377,6 +379,13 @@
     color: #718492;
     font-size: 9px;
     text-transform: uppercase;
+  }
+  .metric.attention {
+    border-color: #e5c4a6;
+    background: #fffaf5;
+  }
+  .metric.attention strong {
+    color: #8b5127;
   }
   .work-register {
     padding: 14px;
@@ -680,8 +689,12 @@
     }
   }
   @media (max-width: 760px) {
-    .hero {
-      grid-template-columns: 1fr;
+    .page-heading {
+      display: grid;
+      align-items: start;
+    }
+    .attention-summary {
+      justify-content: start;
     }
     .metrics {
       grid-template-columns: repeat(2, 1fr);

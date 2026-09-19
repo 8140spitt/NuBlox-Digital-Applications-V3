@@ -122,7 +122,7 @@
       if (event.target === event.currentTarget) close();
     }}
   >
-    <section class="palette" role="dialog" aria-modal="true" aria-label="Navigate NuBlox">
+    <div class="palette" role="dialog" aria-modal="true" aria-label="Navigate NuBlox">
       <label class="search">
         <span class="sr-only">Search destinations</span>
         <span aria-hidden="true">⌕</span>
@@ -156,7 +156,7 @@
         <span><kbd>↑</kbd><kbd>↓</kbd> browse</span>
         <span><kbd>Esc</kbd> close</span>
       </footer>
-    </section>
+    </div>
   </div>
 {/if}
 

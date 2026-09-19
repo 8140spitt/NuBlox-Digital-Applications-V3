@@ -104,9 +104,7 @@
   );
 
   const results = $derived(
-    enterpriseSearchDestination
-      ? [enterpriseSearchDestination, ...filtered.slice(0, 11)]
-      : filtered
+    enterpriseSearchDestination ? [enterpriseSearchDestination, ...filtered.slice(0, 11)] : filtered
   );
 
   function searchOnEnter(event: KeyboardEvent) {

@@ -27,7 +27,7 @@
               <details class="command" open><summary>Record lifecycle review</summary><form method="POST" action="?/review">
                 <input type="hidden" name="itemId" value={data.selected.id}/><input type="hidden" name="mode" value={data.mode}/>
                 <div class="grid"><label>Review type<select name="reviewType"><option>ADOPTION</option><option>ENHANCEMENT</option><option>SPECIFICATION_CHANGE</option><option>PORTFOLIO_OPTIMISATION</option></select></label><label>Configuration context<select name="configurationModelId"><option value="">None</option>{#each data.configurations as model}<option value={model.id}>{model.modelRef} · {model.status}</option>{/each}</select></label></div>
-                <label>Summary<textarea name="summary" rows="3" required></textarea></label><label>Metrics JSON<textarea name="metrics" rows="3">{}</textarea></label><label>Recommendation<textarea name="recommendation" rows="3" required></textarea></label><button>Record lifecycle evidence</button>
+                <label>Summary<textarea name="summary" rows="3" required></textarea></label><label>Metrics JSON<textarea name="metrics" rows="3">{'{}'}</textarea></label><label>Recommendation<textarea name="recommendation" rows="3" required></textarea></label><button>Record lifecycle evidence</button>
               </form></details>
             {/if}
           {:else}

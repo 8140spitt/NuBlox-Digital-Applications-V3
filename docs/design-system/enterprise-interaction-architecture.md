@@ -20,12 +20,16 @@ The 29 enterprise functions remain the governed capability architecture, but the
 
 Canonical business objects remain the persistent unit of record/work, but object-centricity alone is also insufficient. Users need role, process and operating context.
 
+Role/persona support is now governed through the [Job-to-Work-Product Architecture](../product/job-to-work-product-architecture.md): the product must enable people to perform the work expected from their Position/Job Profile and produce the corresponding work products without creating role-specific data silos.
+
 The governing interaction hierarchy is now:
 
 ```text
 Tenant / Enterprise
         |
-Role + My Work
+Person / Position / Job Profile
+        |
+Job Workbench + My Work
         |
 Enterprise Context
         |
@@ -1194,22 +1198,27 @@ Implement:
 
 Before a new page/workspace is accepted, answer:
 
-1. Which enterprise stream is this — Operate, Deliver or Enterprise Data?
-2. What enterprise context applies?
-3. Is this a workspace, collection, object, structure, grid, viewer, map, form or work queue?
-4. Which canonical object owns the truth?
-5. Does the object have one stable canonical URL?
-6. Which aggregate owns each command?
-7. What is the primary next action?
-8. How are permissions and delegated authority evaluated?
-9. How does work appear in My Work?
-10. How does active/draft work appear in Task Bar?
-11. Can a Saved View be relevant?
-12. Does the journey require high-volume entry/import?
-13. Are relationships/evidence/history reachable?
-14. How are denied/not-found/conflict states handled?
-15. What happens on tablet/mobile/field?
-16. Which shared Experience System primitive implements the interaction?
+1. Which Job Profiles / Functional Roles create, review or consume the work?
+2. What Work Product is the user actually trying to produce or progress?
+3. Is that Work Product NATIVE, ASSISTED, CONNECTED or INGESTED?
+4. Which enterprise stream is this — Operate, Deliver or Enterprise Data?
+5. What enterprise context applies?
+6. Is this a workspace, collection, object, structure, grid, viewer, map, form or work queue?
+7. Which canonical object owns the truth?
+8. Does the object have one stable canonical URL?
+9. Which aggregate owns each command?
+10. What is the primary next action?
+11. How are permissions and delegated authority evaluated?
+12. How does work appear in My Work?
+13. How does the Job Workbench surface it for the relevant Position?
+14. How does active/draft work appear in Task Bar?
+15. Can a Saved View be relevant?
+16. Does the journey require high-volume entry/import?
+17. Are relationships/evidence/history reachable?
+18. What downstream handoff consumes the resulting Work Product?
+19. How are denied/not-found/conflict states handled?
+20. What happens on tablet/mobile/field?
+21. Which shared Experience System primitive implements the interaction?
 
 A page that cannot answer these questions is not ready for implementation.
 

@@ -1,13 +1,3 @@
-CREATE TABLE kernel_schema_migrations (
-  version VARCHAR(255) NOT NULL PRIMARY KEY,
-  checksum CHAR(64) NOT NULL,
-  status VARCHAR(16) NOT NULL,
-  applied_at TIMESTAMP(6) NULL,
-  error_message TEXT NULL,
-  CONSTRAINT chk_kernel_schema_migrations_status
-    CHECK (status IN ('APPLYING', 'APPLIED', 'FAILED'))
-) ENGINE=InnoDB;
-
 CREATE TABLE tenants (
   id VARCHAR(64) NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,

@@ -1,7 +1,6 @@
-# 18 — Reference Architecture, Benchmark & Migration Mapping
+# Reference Architecture, Benchmark & Migration Policy
 
 **Status:** Governing reference-model policy  
-**Effective:** 20 September 2026
 
 ## Purpose
 

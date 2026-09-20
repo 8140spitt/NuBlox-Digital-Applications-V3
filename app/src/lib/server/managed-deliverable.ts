@@ -648,6 +648,563 @@ export async function listDeliverableDeploymentAssignments(
   );
 }
 
+export async function submitDeliverableForReview(
+  context: CommandContext,
+  deliverableItemId: string,
+  expectedVersion: number
+) {
+  assertPermission(context, 'deliverable.manage');
+  return dbTransaction(async (connection) => {
+    const item = await lockDeliverable(context, deliverableItemId, connection);
+    assertExpectedVersion(item, expectedVersion);
+    if (!item.reviewRequired) throw new Error('This Deliverable Item does not require review.');
+    if (!['PLANNED', 'REWORK'].includes(item.status)) {
+      throw new Error('Only authored or reworked Deliverable Items can be submitted for review.');
+    }
+    if (item.workStatus !== 'COMPLETED') {
+      throw new Error('Authoring work must be completed before review.');
+    }
+
+    const timestamp = now();
+    const result = await executeMutation(
+      `UPDATE deliverable_items
+          SET status = 'IN_REVIEW',
+              version = version + 1,
+              updated_at = ?
+        WHERE id = ? AND tenant_id = ? AND version = ?`,
+      [timestamp, item.id, context.tenantId, item.version],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent Deliverable Item change detected.');
+    if (item.workflowInstanceId) {
+      await executeMutation(
+        `UPDATE workflow_instances
+            SET current_state = 'REVIEW',
+                version = version + 1,
+                updated_at = ?
+          WHERE id = ? AND tenant_id = ?`,
+        [timestamp, item.workflowInstanceId, context.tenantId],
+        connection
+      );
+    }
+    await evidence(
+      context,
+      {
+        objectType: 'deliverable_item',
+        objectId: item.id,
+        action: 'DELIVERABLE_REVIEW_REQUESTED',
+        fromState: item.status,
+        toState: 'IN_REVIEW',
+        version: item.version + 1,
+        payload: { revisionLabel: item.currentRevisionLabel }
+      },
+      connection
+    );
+  });
+}
+
+export async function applyDeliverableReviewDecision(
+  context: CommandContext,
+  deliverableItemId: string,
+  expectedVersion: number,
+  decisionId: string,
+  outcomeInput: string
+) {
+  assertPermission(context, 'deliverable.review');
+  const outcome = code(outcomeInput, 'Review outcome', 32);
+  if (!['APPROVED', 'REVISE', 'REJECTED'].includes(outcome)) {
+    throw new Error('Review outcome must be APPROVED, REVISE or REJECTED.');
+  }
+
+  return dbTransaction(async (connection) => {
+    const item = await lockDeliverable(context, deliverableItemId, connection);
+    assertExpectedVersion(item, expectedVersion);
+    if (item.status !== 'IN_REVIEW') {
+      throw new Error('Only an in-review Deliverable Item can receive a review decision.');
+    }
+
+    await assertWorkDecisionReference(
+      context,
+      {
+        decisionId,
+        decisionType: 'DELIVERABLE_REVIEW',
+        subjectType: 'DELIVERABLE_ITEM',
+        subjectId: item.id,
+        subjectVersion: String(item.version),
+        outcome
+      },
+      connection
+    );
+
+    const timestamp = now();
+    await executeMutation(
+      `INSERT INTO deliverable_stage_decisions
+        (id, tenant_id, deliverable_item_id, stage, item_version, revision_label,
+         decision_id, outcome, created_at)
+       VALUES (?, ?, ?, 'REVIEW', ?, ?, ?, ?, ?)`,
+      [
+        randomUUID(),
+        context.tenantId,
+        item.id,
+        item.version,
+        item.currentRevisionLabel,
+        decisionId,
+        outcome,
+        timestamp
+      ],
+      connection
+    );
+
+    const nextVersion = item.version + 1;
+    const nextState = outcome === 'APPROVED' ? 'REVIEWED' : 'REWORK';
+    const reworkItemId =
+      nextState === 'REWORK'
+        ? await createDeliverableReworkItem(context, item, nextVersion, connection)
+        : item.workItemId;
+
+    const result = await executeMutation(
+      `UPDATE deliverable_items
+          SET status = ?,
+              work_item_id = ?,
+              version = version + 1,
+              updated_at = ?
+        WHERE id = ? AND tenant_id = ? AND version = ?`,
+      [nextState, reworkItemId, timestamp, item.id, context.tenantId, item.version],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent Deliverable Item change detected.');
+    if (item.workflowInstanceId && nextState !== 'REWORK') {
+      await executeMutation(
+        `UPDATE workflow_instances
+            SET current_state = ?,
+                version = version + 1,
+                updated_at = ?
+          WHERE id = ? AND tenant_id = ?`,
+        [nextState, timestamp, item.workflowInstanceId, context.tenantId],
+        connection
+      );
+    }
+    await evidence(
+      context,
+      {
+        objectType: 'deliverable_item',
+        objectId: item.id,
+        action:
+          outcome === 'APPROVED'
+            ? 'DELIVERABLE_REVIEW_COMPLETED'
+            : 'DELIVERABLE_REVIEW_RETURNED',
+        fromState: item.status,
+        toState: nextState,
+        version: nextVersion,
+        payload: { decisionId, outcome, revisionLabel: item.currentRevisionLabel, reworkItemId }
+      },
+      connection
+    );
+  });
+}
+
+export async function submitDeliverableForApproval(
+  context: CommandContext,
+  deliverableItemId: string,
+  expectedVersion: number
+) {
+  assertPermission(context, 'deliverable.manage');
+  return dbTransaction(async (connection) => {
+    const item = await lockDeliverable(context, deliverableItemId, connection);
+    assertExpectedVersion(item, expectedVersion);
+    if (!item.approvalRequired) throw new Error('This Deliverable Item does not require approval.');
+
+    if (item.reviewRequired) {
+      if (item.status !== 'REVIEWED') {
+        throw new Error('Required review must be completed before approval.');
+      }
+    } else {
+      if (!['PLANNED', 'REWORK'].includes(item.status)) {
+        throw new Error('Only authored or reworked Deliverable Items can be submitted for approval.');
+      }
+      if (item.workStatus !== 'COMPLETED') {
+        throw new Error('Authoring work must be completed before approval.');
+      }
+    }
+
+    const timestamp = now();
+    const result = await executeMutation(
+      `UPDATE deliverable_items
+          SET status = 'IN_APPROVAL',
+              version = version + 1,
+              updated_at = ?
+        WHERE id = ? AND tenant_id = ? AND version = ?`,
+      [timestamp, item.id, context.tenantId, item.version],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent Deliverable Item change detected.');
+    if (item.workflowInstanceId) {
+      await executeMutation(
+        `UPDATE workflow_instances
+            SET current_state = 'APPROVAL',
+                version = version + 1,
+                updated_at = ?
+          WHERE id = ? AND tenant_id = ?`,
+        [timestamp, item.workflowInstanceId, context.tenantId],
+        connection
+      );
+    }
+    await evidence(
+      context,
+      {
+        objectType: 'deliverable_item',
+        objectId: item.id,
+        action: 'DELIVERABLE_APPROVAL_REQUESTED',
+        fromState: item.status,
+        toState: 'IN_APPROVAL',
+        version: item.version + 1,
+        payload: { revisionLabel: item.currentRevisionLabel }
+      },
+      connection
+    );
+  });
+}
+
+export async function applyDeliverableApprovalDecision(
+  context: CommandContext,
+  deliverableItemId: string,
+  expectedVersion: number,
+  decisionId: string,
+  outcomeInput: string
+) {
+  assertPermission(context, 'deliverable.approve');
+  const outcome = code(outcomeInput, 'Approval outcome', 32);
+  if (!['APPROVED', 'REVISE', 'REJECTED'].includes(outcome)) {
+    throw new Error('Approval outcome must be APPROVED, REVISE or REJECTED.');
+  }
+
+  return dbTransaction(async (connection) => {
+    const item = await lockDeliverable(context, deliverableItemId, connection);
+    assertExpectedVersion(item, expectedVersion);
+    if (item.status !== 'IN_APPROVAL') {
+      throw new Error('Only a Deliverable Item awaiting approval can receive an approval decision.');
+    }
+
+    await assertWorkDecisionReference(
+      context,
+      {
+        decisionId,
+        decisionType: 'DELIVERABLE_APPROVAL',
+        subjectType: 'DELIVERABLE_ITEM',
+        subjectId: item.id,
+        subjectVersion: String(item.version),
+        outcome
+      },
+      connection
+    );
+
+    const timestamp = now();
+    await executeMutation(
+      `INSERT INTO deliverable_stage_decisions
+        (id, tenant_id, deliverable_item_id, stage, item_version, revision_label,
+         decision_id, outcome, created_at)
+       VALUES (?, ?, ?, 'APPROVAL', ?, ?, ?, ?, ?)`,
+      [
+        randomUUID(),
+        context.tenantId,
+        item.id,
+        item.version,
+        item.currentRevisionLabel,
+        decisionId,
+        outcome,
+        timestamp
+      ],
+      connection
+    );
+
+    const nextVersion = item.version + 1;
+    const nextState = outcome === 'APPROVED' ? 'APPROVED' : 'REWORK';
+    const reworkItemId =
+      nextState === 'REWORK'
+        ? await createDeliverableReworkItem(context, item, nextVersion, connection)
+        : item.workItemId;
+
+    const result = await executeMutation(
+      `UPDATE deliverable_items
+          SET status = ?,
+              work_item_id = ?,
+              version = version + 1,
+              updated_at = ?
+        WHERE id = ? AND tenant_id = ? AND version = ?`,
+      [nextState, reworkItemId, timestamp, item.id, context.tenantId, item.version],
+      connection
+    );
+    if (result.affectedRows !== 1) throw new Error('Concurrent Deliverable Item change detected.');
+    if (item.workflowInstanceId && nextState !== 'REWORK') {
+      await executeMutation(
+        `UPDATE workflow_instances
+            SET current_state = ?,
+                version = version + 1,
+                updated_at = ?
+          WHERE id = ? AND tenant_id = ?`,
+        [nextState, timestamp, item.workflowInstanceId, context.tenantId],
+        connection
+      );
+    }
+    await evidence(
+      context,
+      {
+        objectType: 'deliverable_item',
+        objectId: item.id,
+        action:
+          outcome === 'APPROVED'
+            ? 'DELIVERABLE_APPROVED'
+            : 'DELIVERABLE_APPROVAL_RETURNED',
+        fromState: item.status,
+        toState: nextState,
+        version: nextVersion,
+        payload: { decisionId, outcome, revisionLabel: item.currentRevisionLabel, reworkItemId }
+      },
+      connection
+    );
+  });
+}
+
+export async function recordDeliverableRecipientResponse(
+  context: CommandContext,
+  recipientId: string,
+  decisionId: string,
+  outcomeInput: string,
+  noteInput?: string
+) {
+  assertPermission(context, 'deliverable.accept');
+  const outcome = code(outcomeInput, 'Recipient response', 32);
+  if (!['ACCEPTED', 'ACCEPTED_WITH_COMMENTS', 'NO_OBJECTION', 'REJECTED', 'REVISE'].includes(outcome)) {
+    throw new Error(
+      'Recipient response must be ACCEPTED, ACCEPTED_WITH_COMMENTS, NO_OBJECTION, REJECTED or REVISE.'
+    );
+  }
+
+  return dbTransaction(async (connection) => {
+    const recipient = await queryOne<
+      RowDataPacket & {
+        id: string;
+        deliverableIssueId: string;
+        recipientPartyId: string;
+        responseStatus: string;
+        deliverableItemId: string;
+        revisionLabel: string | null;
+        itemStatus: string;
+        itemVersion: number;
+        title: string;
+        workflowInstanceId: string | null;
+        workItemId: string | null;
+        workStatus: string | null;
+        responsiblePartyId: string | null;
+        dueAt: string | null;
+        currentRevisionLabel: string | null;
+        informationContainerId: string | null;
+        reviewRequired: boolean;
+        approvalRequired: boolean;
+        acceptanceRequired: boolean;
+      }
+    >(
+      `SELECT dir.id,
+              dir.deliverable_issue_id AS deliverableIssueId,
+              dir.recipient_party_id AS recipientPartyId,
+              dir.response_status AS responseStatus,
+              di.deliverable_item_id AS deliverableItemId,
+              di.revision_label AS revisionLabel,
+              item.status AS itemStatus,
+              item.version AS itemVersion,
+              item.title,
+              item.workflow_instance_id AS workflowInstanceId,
+              item.work_item_id AS workItemId,
+              wi.status AS workStatus,
+              item.responsible_party_id AS responsiblePartyId,
+              item.due_at AS dueAt,
+              item.current_revision_label AS currentRevisionLabel,
+              item.information_container_id AS informationContainerId,
+              dr.review_required AS reviewRequired,
+              dr.approval_required AS approvalRequired,
+              dr.acceptance_required AS acceptanceRequired
+         FROM deliverable_issue_recipients dir
+         JOIN deliverable_issues di
+           ON di.id = dir.deliverable_issue_id
+          AND di.tenant_id = dir.tenant_id
+         JOIN deliverable_items item
+           ON item.id = di.deliverable_item_id
+          AND item.tenant_id = di.tenant_id
+         JOIN deliverable_requirements dr
+           ON dr.id = item.requirement_id
+          AND dr.tenant_id = item.tenant_id
+         LEFT JOIN work_items wi
+           ON wi.id = item.work_item_id
+          AND wi.tenant_id = item.tenant_id
+        WHERE dir.id = ?
+          AND dir.tenant_id = ?
+        FOR UPDATE`,
+      [recipientId, context.tenantId],
+      connection
+    );
+    if (!recipient) throw new Error('Deliverable issue recipient not found.');
+    if (recipient.responseStatus !== 'AWAITING_RESPONSE') {
+      throw new Error('This recipient response has already been recorded.');
+    }
+    if (recipient.itemStatus !== 'ISSUED') {
+      throw new Error('Recipient response can only be recorded for an issued Deliverable Item.');
+    }
+
+    await assertWorkDecisionReference(
+      context,
+      {
+        decisionId,
+        decisionType: 'DELIVERABLE_ACCEPTANCE',
+        subjectType: 'DELIVERABLE_ISSUE_RECIPIENT',
+        subjectId: recipient.id,
+        subjectVersion: recipient.revisionLabel ?? undefined,
+        outcome
+      },
+      connection
+    );
+
+    const timestamp = now();
+    await executeMutation(
+      `UPDATE deliverable_issue_recipients
+          SET response_status = ?,
+              response_decision_id = ?,
+              response_note = ?,
+              responded_at = ?,
+              updated_at = ?
+        WHERE id = ? AND tenant_id = ? AND response_status = 'AWAITING_RESPONSE'`,
+      [
+        outcome,
+        decisionId,
+        optional(noteInput),
+        timestamp,
+        timestamp,
+        recipient.id,
+        context.tenantId
+      ],
+      connection
+    );
+
+    let nextState = recipient.itemStatus;
+    let nextVersion = recipient.itemVersion;
+    let reworkItemId: string | null = null;
+
+    if (recipient.acceptanceRequired) {
+      if (['REJECTED', 'REVISE'].includes(outcome)) {
+        nextVersion = recipient.itemVersion + 1;
+        const locked: LockedDeliverable = {
+          id: recipient.deliverableItemId,
+          title: recipient.title,
+          status: recipient.itemStatus,
+          version: recipient.itemVersion,
+          workflowInstanceId: recipient.workflowInstanceId,
+          workItemId: recipient.workItemId,
+          workStatus: recipient.workStatus,
+          responsiblePartyId: recipient.responsiblePartyId,
+          dueAt: recipient.dueAt,
+          currentRevisionLabel: recipient.currentRevisionLabel,
+          informationContainerId: recipient.informationContainerId,
+          reviewRequired: recipient.reviewRequired,
+          approvalRequired: recipient.approvalRequired,
+          acceptanceRequired: recipient.acceptanceRequired
+        };
+        reworkItemId = await createDeliverableReworkItem(
+          context,
+          locked,
+          nextVersion,
+          connection
+        );
+        nextState = 'REWORK';
+        await executeMutation(
+          `UPDATE deliverable_items
+              SET status = 'REWORK',
+                  work_item_id = ?,
+                  accepted_at = NULL,
+                  version = version + 1,
+                  updated_at = ?
+            WHERE id = ? AND tenant_id = ? AND version = ?`,
+          [
+            reworkItemId,
+            timestamp,
+            recipient.deliverableItemId,
+            context.tenantId,
+            recipient.itemVersion
+          ],
+          connection
+        );
+      } else {
+        const pending = await queryOne<RowDataPacket & { remaining: number }>(
+          `SELECT COUNT(*) AS remaining
+             FROM deliverable_issue_recipients
+            WHERE tenant_id = ?
+              AND deliverable_issue_id = ?
+              AND response_status NOT IN ('ACCEPTED','ACCEPTED_WITH_COMMENTS','NO_OBJECTION')`,
+          [context.tenantId, recipient.deliverableIssueId],
+          connection
+        );
+        if ((pending?.remaining ?? 0) === 0) {
+          nextState = 'ACCEPTED';
+          nextVersion = recipient.itemVersion + 1;
+          await executeMutation(
+            `UPDATE deliverable_items
+                SET status = 'ACCEPTED',
+                    accepted_at = ?,
+                    version = version + 1,
+                    updated_at = ?
+              WHERE id = ? AND tenant_id = ? AND version = ?`,
+            [
+              timestamp,
+              timestamp,
+              recipient.deliverableItemId,
+              context.tenantId,
+              recipient.itemVersion
+            ],
+            connection
+          );
+          if (recipient.workflowInstanceId) {
+            await executeMutation(
+              `UPDATE workflow_instances
+                  SET current_state = 'ACCEPTED',
+                      status = 'COMPLETED',
+                      completed_at = ?,
+                      completion_reason = 'Deliverable accepted by required recipient(s).',
+                      version = version + 1,
+                      updated_at = ?
+                WHERE id = ? AND tenant_id = ?`,
+              [
+                timestamp,
+                timestamp,
+                recipient.workflowInstanceId,
+                context.tenantId
+              ],
+              connection
+            );
+          }
+        }
+      }
+    }
+
+    await evidence(
+      context,
+      {
+        objectType: 'deliverable_item',
+        objectId: recipient.deliverableItemId,
+        action: 'DELIVERABLE_RECIPIENT_RESPONSE_RECORDED',
+        fromState: recipient.itemStatus,
+        toState: nextState,
+        version: nextVersion,
+        payload: {
+          recipientId: recipient.id,
+          decisionId,
+          outcome,
+          revisionLabel: recipient.revisionLabel,
+          reworkItemId
+        }
+      },
+      connection
+    );
+  });
+}
+
 export async function createManagedDeliverable(
   context: CommandContext,
   input: {

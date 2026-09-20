@@ -78,7 +78,7 @@ It composes the Position / Job Profile work-product catalogue with My Work, curr
 
 Job Workbench is a perspective. It never grants permission and never duplicates canonical objects.
 
-See [Job-to-Work-Product Architecture](../product/job-to-work-product-architecture.md).
+See [Job-to-Work-Product Architecture](../evidence/product-analysis/job-to-work-product-architecture.md).
 
 ### 4. Workspace / perspective layer
 

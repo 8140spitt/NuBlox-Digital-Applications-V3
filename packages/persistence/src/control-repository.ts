@@ -26,6 +26,7 @@ import type {
   RowDataPacket
 } from 'mysql2/promise';
 import { withTransaction } from './database.js';
+import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface LifecycleDefinitionRow extends RowDataPacket {
@@ -281,6 +282,14 @@ function mapObjectLifecycle(row: ObjectLifecycleStateRow): ObjectLifecycleState 
       ? { decisionId: row.decision_id as NonNullable<ObjectLifecycleState['decisionId']> }
       : {})
   };
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 export class MySqlKernelControlRepository {

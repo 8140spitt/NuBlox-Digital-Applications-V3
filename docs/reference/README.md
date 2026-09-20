@@ -1,24 +1,21 @@
 # NuBlox Reference Architectures
 
-This directory contains external product/reference studies used to test NuBlox capability completeness, object semantics, integration and migration design.
+This directory contains the detailed benchmark, migration and external-product studies used to test NuBlox capability completeness and interoperability.
 
-Reference material is evidence and input to the NuBlox architecture. It is not the governing product architecture.
+Reference material is evidence/input. It does not override the governing architecture under [docs/architecture](../architecture/).
 
-## Governing method
+## Governing reference policy
 
-For each reference product:
+- [Reference Architecture, Benchmark & Migration Policy](benchmark-and-migration-policy.md)
 
-1. decompose capability;
-2. identify useful enterprise concepts and object semantics;
-3. identify Lifecycle/Workflow/Change/Configuration patterns;
-4. identify product-boundary limitations;
-5. map concepts into the NuBlox canonical model;
-6. define native implementation, extension, integration, federation or migration;
-7. preserve provenance;
-8. ensure vendor schema does not become the NuBlox schema.
+The policy defines how external products are decomposed, compared, mapped, migrated and integrated without allowing vendor schemas or product boundaries to become NuBlox architecture.
 
 ## Current reference studies
 
-- [PTC Windchill 13](windchill.md) — controlled objects, information, PLM/configuration/change, publication, integration and migration reference.
+- [PTC Windchill 13](windchill.md) — controlled objects, technical information, PLM/configuration/change, publication, integration and migration reference.
 
-The governing policy is [Reference Architecture, Benchmark & Migration](../architecture/06-reference-architecture-and-migration.md).
+## Architectural boundary
+
+The governing product boundary is [06 — Reference Architecture & Migration](../architecture/06-reference-architecture-and-migration.md).
+
+**NuBlox is the product. External systems are references, integration endpoints or migration sources/targets.**

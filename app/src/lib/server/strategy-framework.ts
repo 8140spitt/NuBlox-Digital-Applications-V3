@@ -150,6 +150,29 @@ export async function listStrategyFrameworks(
   );
 }
 
+export async function getStrategyFramework(context: CommandContext, id: string) {
+  assertPermission(context, 'strategy.framework.read');
+  return getFramework(context, id);
+}
+
+export async function searchStrategyFrameworks(
+  context: CommandContext,
+  query: string,
+  requestedLimit = 25
+) {
+  assertPermission(context, 'strategy.framework.read');
+  const needle = query.trim().slice(0, 191);
+  if (!needle) return [] as StrategyFramework[];
+  const pattern = '%' + needle + '%';
+  const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
+  return queryRows<RowDataPacket & StrategyFramework>(
+    frameworkSelect +
+      ' WHERE tenant_id = ? AND (title LIKE ? OR purpose LIKE ? OR vision LIKE ? OR mission LIKE ? OR direction LIKE ?) ORDER BY updated_at DESC LIMIT ' +
+      limit,
+    [context.tenantId, pattern, pattern, pattern, pattern, pattern]
+  );
+}
+
 export async function createStrategyFramework(
   context: CommandContext,
   input: StrategyFrameworkInput

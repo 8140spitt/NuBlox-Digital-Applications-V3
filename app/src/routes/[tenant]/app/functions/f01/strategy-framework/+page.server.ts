@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { objectHref } from '$lib/data/runtime-object-registry';
 import {
   approveStrategyFramework,
   createStrategyFramework,
@@ -33,7 +34,7 @@ function input(data: FormData): StrategyFrameworkInput {
 }
 
 function target(tenant: string, id: string) {
-  return `/${tenant}/app/functions/f01/strategy-framework?framework=${encodeURIComponent(id)}`;
+  return objectHref(tenant, 'strategy-framework', id, { from: 'F01.01' });
 }
 
 function problem(error: unknown) {

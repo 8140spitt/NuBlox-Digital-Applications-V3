@@ -89,6 +89,7 @@ export type CostPlanLineId = Brand<string, 'CostPlanLineId'>;
 export type CommercialVariationId = Brand<string, 'CommercialVariationId'>;
 export type CommercialVariationVersionId = Brand<string, 'CommercialVariationVersionId'>;
 export type CommercialVariationLineId = Brand<string, 'CommercialVariationLineId'>;
+export type CommercialVariationDecisionId = Brand<string, 'CommercialVariationDecisionId'>;
 export type CommercialValuationId = Brand<string, 'CommercialValuationId'>;
 export type CommercialValuationLineId = Brand<string, 'CommercialValuationLineId'>;
 export type CommercialForecastId = Brand<string, 'CommercialForecastId'>;

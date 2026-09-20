@@ -337,6 +337,139 @@ async function canReceiveMyWork(context: CommandContext, partyId: string, execut
   return Boolean(row);
 }
 
+type LockedDeliverable = {
+  id: string;
+  title: string;
+  status: string;
+  version: number;
+  workflowInstanceId: string | null;
+  workItemId: string | null;
+  workStatus: string | null;
+  responsiblePartyId: string | null;
+  dueAt: string | null;
+  currentRevisionLabel: string | null;
+  informationContainerId: string | null;
+  reviewRequired: boolean;
+  approvalRequired: boolean;
+  acceptanceRequired: boolean;
+};
+
+async function lockDeliverable(
+  context: CommandContext,
+  deliverableItemId: string,
+  executor: DbExecutor
+): Promise<LockedDeliverable> {
+  const row = await queryOne<RowDataPacket & LockedDeliverable>(
+    `SELECT di.id,
+            di.title,
+            di.status,
+            di.version,
+            di.workflow_instance_id AS workflowInstanceId,
+            di.work_item_id AS workItemId,
+            wi.status AS workStatus,
+            di.responsible_party_id AS responsiblePartyId,
+            di.due_at AS dueAt,
+            di.current_revision_label AS currentRevisionLabel,
+            di.information_container_id AS informationContainerId,
+            dr.review_required AS reviewRequired,
+            dr.approval_required AS approvalRequired,
+            dr.acceptance_required AS acceptanceRequired
+       FROM deliverable_items di
+       JOIN deliverable_requirements dr
+         ON dr.id = di.requirement_id
+        AND dr.tenant_id = di.tenant_id
+       LEFT JOIN work_items wi
+         ON wi.id = di.work_item_id
+        AND wi.tenant_id = di.tenant_id
+      WHERE di.id = ?
+        AND di.tenant_id = ?
+      FOR UPDATE`,
+    [deliverableItemId, context.tenantId],
+    executor
+  );
+  if (!row) throw new Error('Deliverable Item not found.');
+  return row;
+}
+
+function assertExpectedVersion(item: LockedDeliverable, expectedVersion: number) {
+  if (item.version !== expectedVersion) {
+    throw new Error('Deliverable Item changed after you opened it.');
+  }
+}
+
+async function createDeliverableReworkItem(
+  context: CommandContext,
+  item: LockedDeliverable,
+  subjectVersion: number,
+  executor: DbExecutor
+) {
+  if (!item.workflowInstanceId) {
+    throw new Error('Deliverable authoring Workflow Instance is missing.');
+  }
+  const workItemId = randomUUID();
+  const timestamp = now();
+  const canAssign = item.responsiblePartyId
+    ? await canReceiveMyWork(context, item.responsiblePartyId, executor)
+    : false;
+  const workStatus = canAssign ? 'ASSIGNED' : 'READY';
+
+  await executeMutation(
+    `INSERT INTO work_items
+      (id, tenant_id, workflow_instance_id, work_type, subject_type, subject_id, subject_version,
+       title, instructions, status, priority, due_at, version, created_by_party_id,
+       completion_note, completed_at, created_at, updated_at)
+     VALUES (?, ?, ?, 'DELIVERABLE_REWORK', 'DELIVERABLE_ITEM', ?, ?, ?, ?, ?, 'HIGH', ?,
+             1, ?, NULL, NULL, ?, ?)`,
+    [
+      workItemId,
+      context.tenantId,
+      item.workflowInstanceId,
+      item.id,
+      String(subjectVersion),
+      'Revise · ' + item.title,
+      'Revise the deliverable in response to the recorded review, approval or recipient decision, then complete this work before resubmission.',
+      workStatus,
+      item.dueAt,
+      context.actorPartyId,
+      timestamp,
+      timestamp
+    ],
+    executor
+  );
+
+  if (canAssign && item.responsiblePartyId) {
+    await executeMutation(
+      `INSERT INTO work_assignments
+        (id, tenant_id, workflow_instance_id, work_item_id, assignee_type, assignee_id,
+         assigned_by_party_id, assignment_basis, status, valid_from, valid_to, created_at)
+       VALUES (?, ?, ?, ?, 'PARTY', ?, ?, ?, 'ACTIVE', ?, NULL, ?)`,
+      [
+        randomUUID(),
+        context.tenantId,
+        item.workflowInstanceId,
+        workItemId,
+        item.responsiblePartyId,
+        context.actorPartyId,
+        'Responsible Party retained for governed Deliverable rework.',
+        timestamp,
+        timestamp
+      ],
+      executor
+    );
+  }
+
+  await executeMutation(
+    `UPDATE workflow_instances
+        SET current_state = 'REWORK',
+            version = version + 1,
+            updated_at = ?
+      WHERE id = ? AND tenant_id = ?`,
+    [timestamp, item.workflowInstanceId, context.tenantId],
+    executor
+  );
+  return workItemId;
+}
+
 export async function listDeliverableRequirements(
   context: CommandContext,
   input: { contextType?: string; contextId?: string; status?: string } = {}

@@ -93,9 +93,10 @@ describe('kernel scoped access invariants', () => {
       )
     ).toThrow(KernelInvariantError);
 
+    const { scopeId: _scopeId, ...assignmentWithoutScopeId } = assignment;
     expect(() =>
       createAccessRoleAssignment(
-        { ...assignment, scopeType: 'PROJECT', scopeId: undefined },
+        { ...assignmentWithoutScopeId, scopeType: 'PROJECT' },
         tenantRole,
         principal
       )

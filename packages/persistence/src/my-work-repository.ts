@@ -342,9 +342,8 @@ export class MySqlMyWorkRepository {
           AND tr.response_required = TRUE
           AND rr.id IS NULL
           AND di.status = 'ISSUED'
-          AND (tr.due_at IS NULL OR tr.due_at >= ? OR tr.due_at < ?)
         ORDER BY tr.due_at IS NULL, tr.due_at, tr.id`,
-      [tenantId, partyId, at, at]
+      [tenantId, partyId]
     );
     return rows;
   }

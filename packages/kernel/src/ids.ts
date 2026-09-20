@@ -43,6 +43,13 @@ export type ChangeImpactAssessmentId = Brand<string, 'ChangeImpactAssessmentId'>
 export type ChangeImplementationActionId = Brand<string, 'ChangeImplementationActionId'>;
 export type ChangeVerificationId = Brand<string, 'ChangeVerificationId'>;
 export type ChangeDiscrepancyId = Brand<string, 'ChangeDiscrepancyId'>;
+export type OutboxMessageId = Brand<string, 'OutboxMessageId'>;
+export type IntegrationJobId = Brand<string, 'IntegrationJobId'>;
+export type IdempotencyRecordId = Brand<string, 'IdempotencyRecordId'>;
+export type DataEnvelopeId = Brand<string, 'DataEnvelopeId'>;
+export type ExternalIdentityId = Brand<string, 'ExternalIdentityId'>;
+export type MigrationReconciliationId = Brand<string, 'MigrationReconciliationId'>;
+export type ProjectionCheckpointId = Brand<string, 'ProjectionCheckpointId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

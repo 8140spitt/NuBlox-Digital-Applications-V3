@@ -543,10 +543,39 @@ export class MySqlPortabilityRepository {
 
       if (existing) {
         const mapped = mapIdempotency(existing);
-        if (mapped.requestHash !== record.requestHash) {
-          throw new Error('Idempotency key was reused with a different request.');
+        const expired =
+          mapped.expiresAt !== undefined &&
+          Date.parse(mapped.expiresAt) < Date.parse(record.createdAt);
+
+        if (!expired) {
+          if (mapped.requestHash !== record.requestHash) {
+            throw new Error('Idempotency key was reused with a different request.');
+          }
+          return { record: mapped, replay: true };
         }
-        return { record: mapped, replay: true };
+
+        const [result] = await connection.execute<ResultSetHeader>(
+          `UPDATE idempotency_records
+              SET id = ?, request_hash = ?, status = 'IN_PROGRESS',
+                  response_reference = NULL, error_message = NULL,
+                  created_at = ?, expires_at = ?, row_version = row_version + 1
+            WHERE tenant_id = ? AND scope_key = ? AND idempotency_key = ?
+              AND row_version = ?`,
+          [
+            record.id,
+            record.requestHash,
+            databaseDate(record.createdAt),
+            record.expiresAt ? databaseDate(record.expiresAt) : null,
+            record.tenantId,
+            record.scope,
+            record.key,
+            existing.row_version
+          ]
+        );
+        if (result.affectedRows !== 1) {
+          throw new Error('Concurrent Idempotency Record renewal detected.');
+        }
+        return { record, replay: false };
       }
 
       await connection.execute(

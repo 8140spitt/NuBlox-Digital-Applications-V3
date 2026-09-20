@@ -70,9 +70,9 @@ describe('runtime object registry', () => {
         section: 'evidence'
       })
     ).toBe('/demo-tenant/app/objects/information-container/info-1?section=evidence');
-    expect(
-      subjectObjectHref('demo-tenant', 'DELIVERABLE_ITEM', 'del-1', { section: 'work' })
-    ).toBe('/demo-tenant/app/objects/deliverable-item/del-1?section=work');
+    expect(subjectObjectHref('demo-tenant', 'DELIVERABLE_ITEM', 'del-1', { section: 'work' })).toBe(
+      '/demo-tenant/app/objects/deliverable-item/del-1?section=work'
+    );
     expect(subjectObjectHref('demo-tenant', 'ITEM', 'item-1', { section: 'decisions' })).toBe(
       '/demo-tenant/app/objects/item/item-1?section=decisions'
     );

@@ -44,23 +44,16 @@ function target(tenant: string, deploymentId?: string) {
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
   const context = await resolveRequestCommandContext(params.tenant, locals);
-  const [
-    functions,
-    jobs,
-    positions,
-    deployments,
-    people,
-    organisations,
-    organisationUnits
-  ] = await Promise.all([
-    listFunctionalDefinitions(context),
-    listJobProfiles(context),
-    listPositions(context),
-    listFunctionalDeployments(context),
-    listDeploymentPeople(context),
-    listDeploymentOrganisations(context),
-    listDeploymentOrganisationUnits(context)
-  ]);
+  const [functions, jobs, positions, deployments, people, organisations, organisationUnits] =
+    await Promise.all([
+      listFunctionalDefinitions(context),
+      listJobProfiles(context),
+      listPositions(context),
+      listFunctionalDeployments(context),
+      listDeploymentPeople(context),
+      listDeploymentOrganisations(context),
+      listDeploymentOrganisationUnits(context)
+    ]);
 
   const requestedDeploymentId = url.searchParams.get('deployment');
   const selected =

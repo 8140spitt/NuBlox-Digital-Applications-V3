@@ -500,7 +500,9 @@ export async function createManagedDeliverable(
       );
       if (!assignment) throw new Error('Active Functional Deployment assignment not found.');
       if (functionalDeploymentId && functionalDeploymentId !== assignment.functionalDeploymentId) {
-        throw new Error('Responsible deployment assignment does not belong to the selected deployment.');
+        throw new Error(
+          'Responsible deployment assignment does not belong to the selected deployment.'
+        );
       }
       functionalDeploymentId = assignment.functionalDeploymentId;
       functionalDefinitionId = assignment.functionalDefinitionId;
@@ -610,7 +612,15 @@ export async function createManagedDeliverable(
          completed_at, completion_reason, created_at, updated_at)
        VALUES (?, ?, 'DELIVERABLE_AUTHORING', '1', 'DELIVERABLE_ITEM', ?, '1', ?,
                'RUNNING', 1, 'AUTHORING', ?, NULL, NULL, ?, ?)`,
-      [workflowId, context.tenantId, itemId, context.actorPartyId, timestampNow, timestampNow, timestampNow],
+      [
+        workflowId,
+        context.tenantId,
+        itemId,
+        context.actorPartyId,
+        timestampNow,
+        timestampNow,
+        timestampNow
+      ],
       connection
     );
 
@@ -627,7 +637,8 @@ export async function createManagedDeliverable(
         workflowId,
         itemId,
         'Produce · ' + required(input.title, 'Deliverable title'),
-        'Create the required ' + deliverableType.replaceAll('_', ' ') +
+        'Create the required ' +
+          deliverableType.replaceAll('_', ' ') +
           ' and complete the authoring work when it is ready for the next governed stage.',
         workStatus,
         dueAt,
@@ -815,7 +826,9 @@ export async function recordDeliverableIssue(
       );
       if (!revision) throw new Error('Current Information Revision not found.');
       if (revision.lifecycleStatus !== 'ISSUED') {
-        throw new Error('Controlled information must be approved and issued before the Deliverable Item can be transmitted.');
+        throw new Error(
+          'Controlled information must be approved and issued before the Deliverable Item can be transmitted.'
+        );
       }
       informationRevisionId = revision.id;
       revisionLabel = revision.revisionCode;

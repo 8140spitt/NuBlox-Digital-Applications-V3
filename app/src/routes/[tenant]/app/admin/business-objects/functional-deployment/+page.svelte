@@ -21,14 +21,18 @@
       <span class="eyebrow">Governance · Delivery · Deployment</span>
       <h1>Functional capability deployment</h1>
       <p>
-        Govern the enterprise capability model, connect the 84 Construction & Built Environment jobs,
-        create real organisational Positions and deploy those capabilities into projects, contracts,
-        sites, assets and enterprise contexts.
+        Govern the enterprise capability model, connect the 84 Construction & Built Environment
+        jobs, create real organisational Positions and deploy those capabilities into projects,
+        contracts, sites, assets and enterprise contexts.
       </p>
     </div>
     <div class="hero-actions">
-      <a href={'/' + data.tenantSlug + '/app/admin/business-objects/people-hcm'}>People & HCM model</a>
-      <a href={'/' + data.tenantSlug + '/app/admin/master-data/organisation-structure'}>Organisation structure</a>
+      <a href={'/' + data.tenantSlug + '/app/admin/business-objects/people-hcm'}
+        >People & HCM model</a
+      >
+      <a href={'/' + data.tenantSlug + '/app/admin/master-data/organisation-structure'}
+        >Organisation structure</a
+      >
       <a href={'/' + data.tenantSlug + '/app/work'}>My Work</a>
     </div>
   </header>
@@ -59,9 +63,9 @@
         <span class="eyebrow">Tenant capability baseline</span>
         <h2>Bootstrap the NuBlox functional catalogue</h2>
         <p>
-          This creates the governed F01–F29 enterprise functions, 16 Construction & Built Environment
-          delivery domains and 84 sector Job Profiles for this tenant. It is idempotent and can be run
-          again safely.
+          This creates the governed F01–F29 enterprise functions, 16 Construction & Built
+          Environment delivery domains and 84 sector Job Profiles for this tenant. It is idempotent
+          and can be run again safely.
         </p>
       </div>
       {#if data.canManageCatalogue}
@@ -122,7 +126,13 @@
                   </optgroup>
                 </select>
               </label>
-              <label>Deployment reference<input name="deploymentReference" required placeholder="PRJ-ALPHA-ARCH" /></label>
+              <label
+                >Deployment reference<input
+                  name="deploymentReference"
+                  required
+                  placeholder="PRJ-ALPHA-ARCH"
+                /></label
+              >
               <label>
                 Context type
                 <select name="contextType" required>
@@ -135,7 +145,9 @@
                   <option>ENTERPRISE</option>
                 </select>
               </label>
-              <label>Context ID<input name="contextId" required placeholder="PROJECT-ALPHA" /></label>
+              <label
+                >Context ID<input name="contextId" required placeholder="PROJECT-ALPHA" /></label
+              >
               <label>
                 Delivery organisation
                 <select name="deliveryOrganisationPartyId">
@@ -154,7 +166,13 @@
                   {/each}
                 </select>
               </label>
-              <label class="wide">Responsibility scope<textarea name="responsibilityScope" required rows="3" placeholder="Describe what this deployment is accountable for."></textarea></label>
+              <label class="wide"
+                >Responsibility scope<textarea
+                  name="responsibilityScope"
+                  required
+                  rows="3"
+                  placeholder="Describe what this deployment is accountable for."></textarea></label
+              >
               <label>Valid from<input type="datetime-local" name="validFrom" /></label>
               <label>Valid to<input type="datetime-local" name="validTo" /></label>
               <button type="submit">Create planned deployment</button>
@@ -182,7 +200,9 @@
         {:else}
           <div class="empty">
             <strong>No functional deployments yet</strong>
-            <span>Bootstrap the catalogue, then deploy a function or delivery domain to a real context.</span>
+            <span
+              >Bootstrap the catalogue, then deploy a function or delivery domain to a real context.</span
+            >
           </div>
         {/each}
       </div>
@@ -204,10 +224,22 @@
           </div>
 
           <dl>
-            <div><dt>Context</dt><dd>{data.selected.contextType} · {data.selected.contextId}</dd></div>
-            <div><dt>Delivery organisation</dt><dd>{data.selected.deliveryOrganisationName || 'Not assigned'}</dd></div>
-            <div><dt>Organisation unit</dt><dd>{data.selected.organisationUnitName || 'Not assigned'}</dd></div>
-            <div><dt>Effective</dt><dd>{data.selected.validFrom} → {data.selected.validTo || 'Open'}</dd></div>
+            <div>
+              <dt>Context</dt>
+              <dd>{data.selected.contextType} · {data.selected.contextId}</dd>
+            </div>
+            <div>
+              <dt>Delivery organisation</dt>
+              <dd>{data.selected.deliveryOrganisationName || 'Not assigned'}</dd>
+            </div>
+            <div>
+              <dt>Organisation unit</dt>
+              <dd>{data.selected.organisationUnitName || 'Not assigned'}</dd>
+            </div>
+            <div>
+              <dt>Effective</dt>
+              <dd>{data.selected.validFrom} → {data.selected.validTo || 'Open'}</dd>
+            </div>
           </dl>
           <div class="scope">
             <small>Responsibility scope</small>
@@ -239,7 +271,9 @@
                     <select name="jobProfileId" required>
                       <option value="">Select job</option>
                       {#each data.jobs as job}
-                        <option value={job.id}>{job.name} · {job.sectorDomain || 'Enterprise'}</option>
+                        <option value={job.id}
+                          >{job.name} · {job.sectorDomain || 'Enterprise'}</option
+                        >
                       {/each}
                     </select>
                   </label>
@@ -258,7 +292,9 @@
                     <select name="positionId">
                       <option value="">No Position</option>
                       {#each data.positions as position}
-                        <option value={position.id}>{position.positionCode} · {position.name}</option>
+                        <option value={position.id}
+                          >{position.positionCode} · {position.name}</option
+                        >
                       {/each}
                     </select>
                   </label>
@@ -280,9 +316,29 @@
                       {/each}
                     </select>
                   </label>
-                  <label>Allocation %<input type="number" min="0.01" max="100" step="0.01" name="allocationPercent" value="100" /></label>
-                  <label class="wide">Assignment scope<textarea name="assignmentScope" rows="2" placeholder="Package, discipline, location, systems, deliverables or other responsibility scope."></textarea></label>
-                  <label>Authority reference type<input name="authorityReferenceType" placeholder="DELEGATED_AUTHORITY" /></label>
+                  <label
+                    >Allocation %<input
+                      type="number"
+                      min="0.01"
+                      max="100"
+                      step="0.01"
+                      name="allocationPercent"
+                      value="100"
+                    /></label
+                  >
+                  <label class="wide"
+                    >Assignment scope<textarea
+                      name="assignmentScope"
+                      rows="2"
+                      placeholder="Package, discipline, location, systems, deliverables or other responsibility scope."
+                    ></textarea></label
+                  >
+                  <label
+                    >Authority reference type<input
+                      name="authorityReferenceType"
+                      placeholder="DELEGATED_AUTHORITY"
+                    /></label
+                  >
                   <label>Authority reference ID<input name="authorityReferenceId" /></label>
                   <label>Valid from<input type="datetime-local" name="validFrom" /></label>
                   <label>Valid to<input type="datetime-local" name="validTo" /></label>
@@ -299,7 +355,10 @@
                   <span class="role">{assignment.assignmentRole}</span>
                   <strong>{assignment.jobName}</strong>
                   <small>
-                    {assignment.positionName || assignment.personName || assignment.organisationName || 'Unresolved assignee'}
+                    {assignment.positionName ||
+                      assignment.personName ||
+                      assignment.organisationName ||
+                      'Unresolved assignee'}
                   </small>
                 </div>
                 <div class="assignment-meta">
@@ -341,8 +400,20 @@
         <details>
           <summary>Create Position</summary>
           <form class="form-grid" method="POST" action="?/createPosition">
-            <label>Position code<input name="positionCode" required placeholder="PRJ-A-ARCH-LEAD" /></label>
-            <label>Position name<input name="positionName" required placeholder="Lead Architect — Project Alpha" /></label>
+            <label
+              >Position code<input
+                name="positionCode"
+                required
+                placeholder="PRJ-A-ARCH-LEAD"
+              /></label
+            >
+            <label
+              >Position name<input
+                name="positionName"
+                required
+                placeholder="Lead Architect — Project Alpha"
+              /></label
+            >
             <label>
               Job Profile
               <select name="jobProfileId" required>
@@ -361,7 +432,15 @@
                 {/each}
               </select>
             </label>
-            <label>Capacity FTE<input type="number" min="0.01" step="0.01" name="capacityFte" value="1" /></label>
+            <label
+              >Capacity FTE<input
+                type="number"
+                min="0.01"
+                step="0.01"
+                name="capacityFte"
+                value="1"
+              /></label
+            >
             <label>Valid from<input type="datetime-local" name="validFrom" /></label>
             <label>Valid to<input type="datetime-local" name="validTo" /></label>
             <button type="submit">Create Position</button>
@@ -393,82 +472,433 @@
 </div>
 
 <style>
-  .page { display: grid; gap: 12px; }
-  .section-card { border: 1px solid var(--line); border-radius: 10px; background: white; }
-  .hero { display: grid; grid-template-columns: minmax(0,1fr) 260px; gap: 24px; padding: 18px; border-color: #8fc9ee; background: linear-gradient(120deg,#fbfdff,#eaf6fd); }
-  .eyebrow { color: var(--blue-700); font-size: 9px; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
-  h1 { margin: 4px 0 7px; font-size: 25px; }
-  h2 { margin: 2px 0 0; font-size: 16px; }
-  .hero p, .bootstrap p, .scope p, .empty-state p { margin: 0; color: #526a7d; font-size: 11px; line-height: 1.5; }
-  .hero-actions { display: grid; gap: 6px; align-content: start; }
-  .hero-actions a { padding: 7px 9px; border: 1px solid #cfe0ea; border-radius: 7px; background: white; color: #315e79; font-size: 9.5px; font-weight: 800; text-decoration: none; }
-  .message { padding: 9px 12px; border: 1px solid #dd8a8a; border-radius: 8px; background: #fff3f3; color: #792f2f; font-size: 11px; }
-  .metrics { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; }
-  .metric { display: grid; gap: 2px; padding: 11px 13px; }
-  .metric strong { color: #1d4f70; font-size: 20px; }
-  .metric span { color: #718492; font-size: 8.5px; text-transform: uppercase; }
-  .bootstrap { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 14px; border-color: #dfc781; background: #fffaf0; }
-  .catalogue-strip { display: grid; grid-template-columns: repeat(3,1fr) auto; gap: 10px; align-items: center; padding: 11px; }
-  .catalogue-strip > div { display: grid; gap: 2px; }
-  .catalogue-strip strong { color: #36566c; font-size: 12px; }
-  .catalogue-strip small { color: #768895; font-size: 8.5px; }
-  .workspace-grid { display: grid; grid-template-columns: 360px minmax(0,1fr); gap: 12px; align-items: start; }
-  .register, .deployment-card, .assignment-card, .positions-card, .empty-state { padding: 14px; }
-  .section-heading { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 10px; }
-  details { border: 1px solid #d8e2e8; border-radius: 7px; background: white; }
-  summary { padding: 7px 9px; cursor: pointer; color: #315c76; font-size: 9px; font-weight: 800; }
-  .form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; padding: 9px; border-top: 1px solid #e4eaee; }
-  .form-grid .wide { grid-column: 1/-1; }
-  label { display: grid; gap: 3px; color: #546b7c; font-size: 8.5px; font-weight: 750; }
-  input, select, textarea { width: 100%; border: 1px solid #cfdbe3; border-radius: 6px; padding: 7px; background: white; color: var(--ink); font-size: 9.5px; }
-  textarea { resize: vertical; }
-  button { border: 0; border-radius: 6px; padding: 7px 10px; background: var(--blue-700); color: white; font-size: 9px; font-weight: 800; cursor: pointer; }
-  button.quiet { border: 1px solid #d5dfe6; background: white; color: #50697a; }
-  .deployment-list { display: grid; gap: 5px; }
-  .deployment-list a { display: flex; justify-content: space-between; gap: 10px; padding: 9px; border: 1px solid #e0e7eb; border-radius: 7px; color: inherit; text-decoration: none; }
-  .deployment-list a:hover, .deployment-list a.active { border-color: #8fc9ee; background: #f1f9fd; }
-  .deployment-list a > div:first-child { display: grid; gap: 2px; min-width: 0; }
-  .reference { color: var(--blue-700); font-size: 8px; font-weight: 850; text-transform: uppercase; }
-  .deployment-list strong, .position-grid strong, .assignment-list strong { color: #3b586b; font-size: 10px; }
-  .deployment-list small, .position-grid small, .assignment-list small { color: #778a98; font-size: 8.5px; }
-  .list-meta { display: grid; gap: 4px; justify-items: end; align-content: start; white-space: nowrap; }
-  .status, .badges span, .role { padding: 3px 5px; border-radius: 999px; background: #edf2f5; color: #5d7383; font-size: 7.5px; font-weight: 850; text-transform: uppercase; }
-  .status-active { background: #e7f5ea; color: #2f6d3c; }
-  .status-planned { background: #fff2d7; color: #7d5c19; }
-  .inspector { display: grid; gap: 12px; min-width: 0; }
-  .identity { display: flex; justify-content: space-between; gap: 12px; align-items: start; padding-bottom: 10px; border-bottom: 1px solid #e5ebef; }
-  .identity code { display: inline-block; margin-top: 4px; padding: 3px 5px; border-radius: 4px; background: #f2f5f7; color: #647b8b; font-size: 8px; }
-  .badges { display: flex; gap: 4px; }
-  dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin: 11px 0; }
-  dl div { display: grid; gap: 2px; }
-  dt { color: #7b8d99; font-size: 8px; text-transform: uppercase; }
-  dd { margin: 0; color: #435e70; font-size: 9.5px; }
-  .scope { padding: 9px; border: 1px solid #e3e9ed; border-radius: 7px; background: #fafcfd; }
-  .scope small { color: #7b8d99; font-size: 8px; text-transform: uppercase; }
-  .scope p { margin-top: 4px; }
-  .lifecycle { display: flex; justify-content: end; margin-top: 9px; }
-  .assignment-list { display: grid; gap: 6px; }
-  .assignment-list article { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px 12px; padding: 9px; border: 1px solid #e2e8ec; border-radius: 7px; }
-  .assignment-list article > div:first-child { display: grid; gap: 2px; }
-  .assignment-meta { display: grid; justify-items: end; align-content: start; gap: 2px; color: #5e7382; font-size: 9px; }
-  .assignment-list p { grid-column: 1/-1; margin: 0; color: #657b8b; font-size: 9px; }
-  .positions-card { display: grid; gap: 10px; }
-  .position-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 7px; }
-  .position-grid article { display: grid; gap: 3px; padding: 9px; border: 1px solid #e2e8ec; border-radius: 7px; }
-  .position-grid article div { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; }
-  .position-grid article div span { padding: 3px 5px; border-radius: 5px; background: #f3f6f8; color: #647987; font-size: 7.5px; }
-  .empty { display: grid; gap: 3px; padding: 20px 10px; color: #748895; text-align: center; font-size: 9px; }
-  .empty-state { min-height: 280px; display: grid; place-content: center; text-align: center; }
-  .empty-state p { max-width: 540px; margin-top: 7px; }
+  .page {
+    display: grid;
+    gap: 12px;
+  }
+  .section-card {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: white;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 24px;
+    padding: 18px;
+    border-color: #8fc9ee;
+    background: linear-gradient(120deg, #fbfdff, #eaf6fd);
+  }
+  .eyebrow {
+    color: var(--blue-700);
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 4px 0 7px;
+    font-size: 25px;
+  }
+  h2 {
+    margin: 2px 0 0;
+    font-size: 16px;
+  }
+  .hero p,
+  .bootstrap p,
+  .scope p,
+  .empty-state p {
+    margin: 0;
+    color: #526a7d;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .hero-actions {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+  }
+  .hero-actions a {
+    padding: 7px 9px;
+    border: 1px solid #cfe0ea;
+    border-radius: 7px;
+    background: white;
+    color: #315e79;
+    font-size: 9.5px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+  .message {
+    padding: 9px 12px;
+    border: 1px solid #dd8a8a;
+    border-radius: 8px;
+    background: #fff3f3;
+    color: #792f2f;
+    font-size: 11px;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .metric {
+    display: grid;
+    gap: 2px;
+    padding: 11px 13px;
+  }
+  .metric strong {
+    color: #1d4f70;
+    font-size: 20px;
+  }
+  .metric span {
+    color: #718492;
+    font-size: 8.5px;
+    text-transform: uppercase;
+  }
+  .bootstrap {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    padding: 14px;
+    border-color: #dfc781;
+    background: #fffaf0;
+  }
+  .catalogue-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    gap: 10px;
+    align-items: center;
+    padding: 11px;
+  }
+  .catalogue-strip > div {
+    display: grid;
+    gap: 2px;
+  }
+  .catalogue-strip strong {
+    color: #36566c;
+    font-size: 12px;
+  }
+  .catalogue-strip small {
+    color: #768895;
+    font-size: 8.5px;
+  }
+  .workspace-grid {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+  }
+  .register,
+  .deployment-card,
+  .assignment-card,
+  .positions-card,
+  .empty-state {
+    padding: 14px;
+  }
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  details {
+    border: 1px solid #d8e2e8;
+    border-radius: 7px;
+    background: white;
+  }
+  summary {
+    padding: 7px 9px;
+    cursor: pointer;
+    color: #315c76;
+    font-size: 9px;
+    font-weight: 800;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    padding: 9px;
+    border-top: 1px solid #e4eaee;
+  }
+  .form-grid .wide {
+    grid-column: 1/-1;
+  }
+  label {
+    display: grid;
+    gap: 3px;
+    color: #546b7c;
+    font-size: 8.5px;
+    font-weight: 750;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    border: 1px solid #cfdbe3;
+    border-radius: 6px;
+    padding: 7px;
+    background: white;
+    color: var(--ink);
+    font-size: 9.5px;
+  }
+  textarea {
+    resize: vertical;
+  }
+  button {
+    border: 0;
+    border-radius: 6px;
+    padding: 7px 10px;
+    background: var(--blue-700);
+    color: white;
+    font-size: 9px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+  button.quiet {
+    border: 1px solid #d5dfe6;
+    background: white;
+    color: #50697a;
+  }
+  .deployment-list {
+    display: grid;
+    gap: 5px;
+  }
+  .deployment-list a {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px;
+    border: 1px solid #e0e7eb;
+    border-radius: 7px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .deployment-list a:hover,
+  .deployment-list a.active {
+    border-color: #8fc9ee;
+    background: #f1f9fd;
+  }
+  .deployment-list a > div:first-child {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+  .reference {
+    color: var(--blue-700);
+    font-size: 8px;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+  .deployment-list strong,
+  .position-grid strong,
+  .assignment-list strong {
+    color: #3b586b;
+    font-size: 10px;
+  }
+  .deployment-list small,
+  .position-grid small,
+  .assignment-list small {
+    color: #778a98;
+    font-size: 8.5px;
+  }
+  .list-meta {
+    display: grid;
+    gap: 4px;
+    justify-items: end;
+    align-content: start;
+    white-space: nowrap;
+  }
+  .status,
+  .badges span,
+  .role {
+    padding: 3px 5px;
+    border-radius: 999px;
+    background: #edf2f5;
+    color: #5d7383;
+    font-size: 7.5px;
+    font-weight: 850;
+    text-transform: uppercase;
+  }
+  .status-active {
+    background: #e7f5ea;
+    color: #2f6d3c;
+  }
+  .status-planned {
+    background: #fff2d7;
+    color: #7d5c19;
+  }
+  .inspector {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  .identity {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: start;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5ebef;
+  }
+  .identity code {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 3px 5px;
+    border-radius: 4px;
+    background: #f2f5f7;
+    color: #647b8b;
+    font-size: 8px;
+  }
+  .badges {
+    display: flex;
+    gap: 4px;
+  }
+  dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin: 11px 0;
+  }
+  dl div {
+    display: grid;
+    gap: 2px;
+  }
+  dt {
+    color: #7b8d99;
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0;
+    color: #435e70;
+    font-size: 9.5px;
+  }
+  .scope {
+    padding: 9px;
+    border: 1px solid #e3e9ed;
+    border-radius: 7px;
+    background: #fafcfd;
+  }
+  .scope small {
+    color: #7b8d99;
+    font-size: 8px;
+    text-transform: uppercase;
+  }
+  .scope p {
+    margin-top: 4px;
+  }
+  .lifecycle {
+    display: flex;
+    justify-content: end;
+    margin-top: 9px;
+  }
+  .assignment-list {
+    display: grid;
+    gap: 6px;
+  }
+  .assignment-list article {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 12px;
+    padding: 9px;
+    border: 1px solid #e2e8ec;
+    border-radius: 7px;
+  }
+  .assignment-list article > div:first-child {
+    display: grid;
+    gap: 2px;
+  }
+  .assignment-meta {
+    display: grid;
+    justify-items: end;
+    align-content: start;
+    gap: 2px;
+    color: #5e7382;
+    font-size: 9px;
+  }
+  .assignment-list p {
+    grid-column: 1/-1;
+    margin: 0;
+    color: #657b8b;
+    font-size: 9px;
+  }
+  .positions-card {
+    display: grid;
+    gap: 10px;
+  }
+  .position-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+  .position-grid article {
+    display: grid;
+    gap: 3px;
+    padding: 9px;
+    border: 1px solid #e2e8ec;
+    border-radius: 7px;
+  }
+  .position-grid article div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 3px;
+  }
+  .position-grid article div span {
+    padding: 3px 5px;
+    border-radius: 5px;
+    background: #f3f6f8;
+    color: #647987;
+    font-size: 7.5px;
+  }
+  .empty {
+    display: grid;
+    gap: 3px;
+    padding: 20px 10px;
+    color: #748895;
+    text-align: center;
+    font-size: 9px;
+  }
+  .empty-state {
+    min-height: 280px;
+    display: grid;
+    place-content: center;
+    text-align: center;
+  }
+  .empty-state p {
+    max-width: 540px;
+    margin-top: 7px;
+  }
   @media (max-width: 1100px) {
-    .workspace-grid { grid-template-columns: 300px minmax(0,1fr); }
-    .position-grid { grid-template-columns: repeat(2,1fr); }
-    .metrics { grid-template-columns: repeat(3,1fr); }
+    .workspace-grid {
+      grid-template-columns: 300px minmax(0, 1fr);
+    }
+    .position-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .metrics {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
   @media (max-width: 760px) {
-    .hero, .workspace-grid, .catalogue-strip { grid-template-columns: 1fr; }
-    .metrics, .position-grid, .form-grid, dl { grid-template-columns: 1fr; }
-    .bootstrap { display: grid; }
-    .form-grid .wide { grid-column: auto; }
+    .hero,
+    .workspace-grid,
+    .catalogue-strip {
+      grid-template-columns: 1fr;
+    }
+    .metrics,
+    .position-grid,
+    .form-grid,
+    dl {
+      grid-template-columns: 1fr;
+    }
+    .bootstrap {
+      display: grid;
+    }
+    .form-grid .wide {
+      grid-column: auto;
+    }
   }
 </style>

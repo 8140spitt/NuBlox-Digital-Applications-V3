@@ -21,13 +21,17 @@ function checked(data: FormData, name: string) {
 
 function version(data: FormData) {
   const value = Number(text(data, 'version'));
-  if (!Number.isInteger(value) || value < 1) throw new Error('A valid Deliverable Item version is required.');
+  if (!Number.isInteger(value) || value < 1)
+    throw new Error('A valid Deliverable Item version is required.');
   return value;
 }
 
 function problem(error: unknown) {
   return fail(400, {
-    message: error instanceof Error ? error.message : 'The requested deliverable action could not be completed.'
+    message:
+      error instanceof Error
+        ? error.message
+        : 'The requested deliverable action could not be completed.'
   });
 }
 

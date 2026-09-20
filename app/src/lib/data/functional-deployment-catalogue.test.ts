@@ -20,7 +20,9 @@ describe('functional governance, delivery and deployment catalogue', () => {
   });
 
   it('uses unique stable function/domain and job codes', () => {
-    expect(new Set(functionalCatalogue.map((item) => item.code)).size).toBe(functionalCatalogue.length);
+    expect(new Set(functionalCatalogue.map((item) => item.code)).size).toBe(
+      functionalCatalogue.length
+    );
     expect(new Set(constructionJobCatalogue.map((item) => item.code)).size).toBe(
       constructionJobCatalogue.length
     );

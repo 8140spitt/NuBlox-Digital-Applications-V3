@@ -13,10 +13,7 @@ import {
   queryRows,
   type DbExecutor
 } from '$lib/server/db';
-import {
-  assertPermission,
-  type CommandContext
-} from '$lib/server/platform-context';
+import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
 
 export type FunctionalDefinition = {
@@ -193,7 +190,9 @@ async function evidence(
   );
 }
 
-export async function listFunctionalDefinitions(context: CommandContext): Promise<FunctionalDefinition[]> {
+export async function listFunctionalDefinitions(
+  context: CommandContext
+): Promise<FunctionalDefinition[]> {
   assertPermission(context, 'functional.capability.read');
   return queryRows<RowDataPacket & FunctionalDefinition>(
     functionalSelect + ' WHERE fd.tenant_id = ? ORDER BY fd.function_type, fd.function_code',
@@ -652,7 +651,11 @@ export async function createWorkerRelationship(
 
     const id = randomUUID();
     const timestampNow = now();
-    const validFrom = timestamp(input.validFrom, 'Worker relationship valid from', timestampNow) as string;
+    const validFrom = timestamp(
+      input.validFrom,
+      'Worker relationship valid from',
+      timestampNow
+    ) as string;
     const validTo = timestamp(input.validTo, 'Worker relationship valid to');
     await executeMutation(
       `INSERT INTO worker_relationships
@@ -724,7 +727,11 @@ export async function assignPersonToPosition(
 
     const id = randomUUID();
     const timestampNow = now();
-    const validFrom = timestamp(input.validFrom, 'Position assignment valid from', timestampNow) as string;
+    const validFrom = timestamp(
+      input.validFrom,
+      'Position assignment valid from',
+      timestampNow
+    ) as string;
     const validTo = timestamp(input.validTo, 'Position assignment valid to');
     const allocation = positive(input.allocationPercent ?? 100, 'Position allocation percent', 100);
 
@@ -761,7 +768,11 @@ export async function assignPersonToPosition(
         action: 'PERSON_ASSIGNED_TO_POSITION',
         toState: 'ACTIVE',
         version: 1,
-        payload: { positionId: position.id, personPartyId: worker.personPartyId, allocationPercent: allocation }
+        payload: {
+          positionId: position.id,
+          personPartyId: worker.personPartyId,
+          allocationPercent: allocation
+        }
       },
       connection
     );
@@ -871,7 +882,8 @@ export async function activateFunctionalDeployment(
       connection
     );
     if (!row) throw new Error('Functional Deployment not found.');
-    if (row.version !== expectedVersion) throw new Error('Functional Deployment changed after you opened it.');
+    if (row.version !== expectedVersion)
+      throw new Error('Functional Deployment changed after you opened it.');
     if (!['PLANNED', 'INACTIVE'].includes(row.status)) {
       throw new Error('Only a planned or inactive Functional Deployment can be activated.');
     }
@@ -883,7 +895,8 @@ export async function activateFunctionalDeployment(
       [timestampNow, row.id, context.tenantId, expectedVersion],
       connection
     );
-    if (result.affectedRows !== 1) throw new Error('Concurrent Functional Deployment change detected.');
+    if (result.affectedRows !== 1)
+      throw new Error('Concurrent Functional Deployment change detected.');
     await evidence(
       context,
       {
@@ -918,7 +931,9 @@ export async function assignToFunctionalDeployment(
 ) {
   assertPermission(context, 'functional.deployment.manage');
   return dbTransaction(async (connection) => {
-    const deployment = await queryOne<RowDataPacket & { id: string; status: string; version: number }>(
+    const deployment = await queryOne<
+      RowDataPacket & { id: string; status: string; version: number }
+    >(
       "SELECT id, status, version FROM functional_deployments WHERE id = ? AND tenant_id = ? AND status IN ('PLANNED','ACTIVE')",
       [deploymentId, context.tenantId],
       connection
@@ -953,10 +968,18 @@ export async function assignToFunctionalDeployment(
 
     const id = randomUUID();
     const timestampNow = now();
-    const validFrom = timestamp(input.validFrom, 'Deployment assignment valid from', timestampNow) as string;
+    const validFrom = timestamp(
+      input.validFrom,
+      'Deployment assignment valid from',
+      timestampNow
+    ) as string;
     const validTo = timestamp(input.validTo, 'Deployment assignment valid to');
-    const allocation = positive(input.allocationPercent ?? 100, 'Deployment allocation percent', 100);
-    const role = (input.assignmentRole?.trim().toUpperCase() || 'DELIVERY');
+    const allocation = positive(
+      input.allocationPercent ?? 100,
+      'Deployment allocation percent',
+      100
+    );
+    const role = input.assignmentRole?.trim().toUpperCase() || 'DELIVERY';
     if (!['PRIMARY', 'DELIVERY', 'GOVERNANCE', 'ASSURANCE', 'SUPPORT'].includes(role)) {
       throw new Error('Deployment assignment role is invalid.');
     }

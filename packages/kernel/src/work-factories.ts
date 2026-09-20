@@ -204,9 +204,8 @@ export function cancelWork(
   );
   assertDate(cancelledAt, 'Work Item cancelledAt');
   assertNonEmpty(cancellationReason, 'Work Item cancellationReason');
-  const { completedAt: _completedAt, completionNote: _completionNote, ...openWork } = current;
   return Object.freeze({
-    ...openWork,
+    ...current,
     status: 'CANCELLED'
   });
 }

@@ -674,8 +674,9 @@ Wave 5: 55 jobs / 238 explicit Work Products
 Wave 6: 55 jobs / 247 explicit Work Products
 Wave 7: 57 jobs / 244 explicit Work Products
 Wave 8: 77 jobs / 338 explicit Work Products
+Wave 9: 77 jobs / 295 explicit Work Products
 
-Total explicit/candidate Work-Product evidence: 339 jobs / 1,942 Work Products
+Total explicit/candidate Work-Product evidence: 416 jobs / 2,237 Work Products
 ```
 
 Wave 1 established the first cross-functional employment-job challenge across quantity surveying, estimating, project/site management, architecture, building services, building surveying, facilities and procurement.
@@ -718,7 +719,7 @@ The source reconciliation produces **374 distinct employment jobs** after true d
 
 The internal employment-reconciliation gate is therefore closed.
 
-Work-Product decomposition is now explicit for **339 / 462** candidate employment jobs. **123 jobs remain** without explicit Work-Product decomposition. Waves 5-8 use exact source Activity IDs and Work-Product-family classification as the stronger J1 standard.
+Work-Product decomposition is now explicit for **416 / 462** candidate employment jobs. **46 jobs remain** without explicit Work-Product decomposition. Waves 5-9 use exact source Activity IDs and Work-Product-family classification as the stronger J1 standard.
 
 **J1 remains open** because employment identity is not Work-Product completeness. The next J1 gate is explicit Work-Product, exact activity, handoff, authoring, canonical-object, lifecycle/evidence and Job Workbench coverage across the 462-job catalogue.
 

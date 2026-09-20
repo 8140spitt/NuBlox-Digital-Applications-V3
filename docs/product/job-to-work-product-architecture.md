@@ -675,8 +675,9 @@ Wave 6: 55 jobs / 247 explicit Work Products
 Wave 7: 57 jobs / 244 explicit Work Products
 Wave 8: 77 jobs / 338 explicit Work Products
 Wave 9: 77 jobs / 295 explicit Work Products
+Wave 10: 46 jobs / 178 explicit Work Products
 
-Total explicit/candidate Work-Product evidence: 416 jobs / 2,237 Work Products
+Total explicit/candidate Work-Product evidence: 462 jobs / 2,415 Work Products
 ```
 
 Wave 1 established the first cross-functional employment-job challenge across quantity surveying, estimating, project/site management, architecture, building services, building surveying, facilities and procurement.
@@ -719,11 +720,22 @@ The source reconciliation produces **374 distinct employment jobs** after true d
 
 The internal employment-reconciliation gate is therefore closed.
 
-Work-Product decomposition is now explicit for **416 / 462** candidate employment jobs. **46 jobs remain** without explicit Work-Product decomposition. Waves 5-9 use exact source Activity IDs and Work-Product-family classification as the stronger J1 standard.
+Work-Product decomposition coverage now exists for **462 / 462** candidate employment jobs. **0 jobs remain without Work-Product treatment** without explicit Work-Product decomposition. Waves 5-10 use exact source Activity IDs and Work-Product-family classification as the stronger J1 standard.
 
 **J1 remains open** because employment identity is not Work-Product completeness. The next J1 gate is explicit Work-Product, exact activity, handoff, authoring, canonical-object, lifecycle/evidence and Job Workbench coverage across the 462-job catalogue.
 
 See `job-profile-reconciliation.md`, `job-profile-reconciliation-register.csv`, `employment-job-catalogue.csv` and `employment-job-catalogue.md`.
+
+The **Work-Product coverage gate is therefore closed** at candidate level:
+
+```text
+462 / 462 candidate employment jobs have Work-Product treatment
+2,415 candidate/explicit Work Products are catalogued
+367 jobs use the stronger Waves 5-10 exact-activity standard
+95 jobs from Waves 1-4 still require exact-activity uplift
+```
+
+J1 validation remains open until exact activities, handoffs, accountable/author/reviewer/decision relationships, canonical ownership, lifecycle/effectivity/evidence, authoring primitives, Position-level Job Workbench composition and role acceptance are validated.
 
 ---
 

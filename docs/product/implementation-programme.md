@@ -95,7 +95,7 @@ Implement:
 - My Work projection;
 - controlled permission-denied/business-blocked outcomes.
 
-### P1.5 Information & Configuration Kernel — CURRENT
+### P1.5 Information & Configuration Kernel — IMPLEMENTED
 
 Implement:
 
@@ -110,7 +110,7 @@ Implement:
 - Effectivity;
 - configuration status accounting.
 
-### P1.6 Change Runtime
+### P1.6 Change Runtime — CURRENT
 
 Implement:
 

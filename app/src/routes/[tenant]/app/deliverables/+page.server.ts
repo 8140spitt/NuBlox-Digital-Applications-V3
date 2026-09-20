@@ -64,6 +64,7 @@ export const actions: Actions = {
   create: async ({ request, params, locals }) => {
     const data = await request.formData();
     const context = await resolveRequestCommandContext(params.tenant, locals);
+    let deliverableItemId: string;
     try {
       const result = await createManagedDeliverable(context, {
         requirementRef: text(data, 'requirementRef'),
@@ -90,10 +91,11 @@ export const actions: Actions = {
         createInformationContainer: checked(data, 'createInformationContainer'),
         initialRevisionCode: text(data, 'initialRevisionCode')
       });
-      redirect(303, target(params.tenant, result.deliverableItemId));
+      deliverableItemId = result.deliverableItemId;
     } catch (error) {
       return problem(error);
     }
+    redirect(303, target(params.tenant, deliverableItemId));
   },
 
   issue: async ({ request, params, locals }) => {

@@ -150,6 +150,14 @@ async function writeAudit(
       JSON.stringify(payload)
     ]
   );
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 function mapWorkflowDefinition(row: WorkflowDefinitionRow): WorkflowDefinition {
@@ -220,14 +228,6 @@ function mapCanonicalObject(row: CanonicalObjectRow): CanonicalObjectIdentity {
     stableKey: row.stable_key,
     createdAt: row.created_at.toISOString()
   };
-  await writeOutboxEvent(connection, {
-    tenantId,
-    aggregateType: entityType,
-    aggregateId: entityId,
-    eventType: `${entityType}.${action}`,
-    payload
-  });
-
 }
 
 export class MySqlWorkRepository {

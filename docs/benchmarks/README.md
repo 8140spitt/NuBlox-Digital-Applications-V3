@@ -1,49 +1,40 @@
-# External Benchmark Programme
+# External Benchmark Evidence
 
-This directory contains the outside-in market and standards challenge for NuBlox V3.
+> This directory is supporting evidence, not the NuBlox product specification.
+>
+> Start with the [Product Handbook](../handbook/README.md).
 
-The purpose is **enterprise and built-environment completeness**, not vendor imitation. External products may expose missing outcomes, controls, information semantics, lifecycle depth or user-experience patterns. They do not define NuBlox module boundaries, database schemas, aggregate ownership or workflow architecture.
+NuBlox was challenged against major ERP, construction, PLM, EAM, CRM, service-management and specialist enterprise products, plus relevant standards/interoperability sources.
 
-## Governing artefacts
+The purpose was to expose missing business outcomes, controls, lifecycle depth, information semantics and interaction patterns — **not to copy vendor module structures**.
 
-- `market-benchmark-programme.md` — benchmark scope, method, product set and evidence rules.
-- `competitive-experience-benchmark-programme.md` — menu-by-menu/runtime UX benchmark across major ERP, construction, PLM, EAM and enterprise platforms.
-- `competitive-experience-benchmark-register.csv` — 29-suite experience-review register and progress state.
-- `competitive-experience-cross-suite-findings-01.md` — initial cross-suite navigation, object, context, data-entry and administration findings.
-- `competitive-experience-wave-1a-sap-oracle-microsoft.md` — detailed first-pass menu/interaction review for SAP S/4HANA/Fiori, Oracle Fusion and Microsoft Dynamics 365.
-- `competitive-experience-wave-1b-ifs-infor-workday-servicenow.md` — detailed first-pass menu/interaction review for IFS Cloud, Infor OS/CloudSuite, Workday and ServiceNow.
-- `competitive-experience-wave-2-construction-delivery.md` — detailed first-pass construction-delivery UX review across Oracle C&E/Aconex, Procore, Autodesk, Trimble, Sage, Causeway, Thinkproject, Asite and EcoSys.
-- `competitive-experience-wave-3-product-engineering-information.md` — detailed first-pass product/engineering/information UX review across Windchill, Teamcenter, 3DEXPERIENCE/ENOVIA and ProjectWise/iTwin.
-- `competitive-experience-wave-4-asset-property-service.md` — detailed first-pass asset/property/service UX review across Maximo, HxGN EAM, Planon and Esri Field Maps/GeoBIM.
-- `competitive-experience-wave-5-specialist-enterprise.md` — detailed first-pass specialist enterprise UX review across Salesforce, Deltek Vantagepoint, Diligent One, NetSuite and Unit4.
-- `../design-system/enterprise-interaction-architecture.md` — consolidated NuBlox runtime/product architecture derived from the cross-suite experience challenge.
-- `sap-capability-coverage-register.csv` — the 64-line SAP benchmark register carried forward from the prior NuBlox programme as provenance. Its legacy NuBlox domain/slice columns are not V3 architecture.
-- `sap-v3-capability-map.csv` — governed 64/64 V3 remap and completed SAP architecture-challenge classification across F01–F29 workspaces, canonical object families/concepts and end-to-end chains.
-- `app/src/lib/generated/sap-v3-benchmark-map.json` — machine-readable form of the SAP V3 remap.
-- `app/src/lib/data/sap-v3-benchmark-audit.ts` — invariant proving every SAP row has valid V3 semantic mappings.
-- `sap-wave-1-enterprise-backbone.md` — detailed current-SAP challenge for the first 39 rows.
-- `sap-wave-2-specialist-industry-experience.md` — detailed current-SAP challenge for the remaining 25 rows.
-- `app/src/lib/data/benchmark-gap-register.ts` — governed architecture decisions arising from benchmark findings.
-- `app/src/lib/data/benchmark-refinement-model.ts` — durable core semantics accepted from benchmark evidence.
-- `enterprise-suite-wave-1-oracle-microsoft-ifs-workday.md` — enterprise-suite architecture challenge after SAP.
-- `construction-delivery-wave.md` — construction-native challenge across Procore, Autodesk, Trimble, EcoSys, Causeway, Thinkproject and Asite.
-- `product-engineering-information-wave.md` — Windchill, Teamcenter and Bentley configuration/digital-thread challenge.
-- `asset-property-service-wave.md` — Maximo, Planon and Esri asset/property/network challenge.
-- `enterprise-control-specialist-wave.md` — ServiceNow, Diligent, Salesforce, Deltek and Sage specialist back-office challenge.
-- `standards-interoperability-challenge.md` — ISO/openBIM/Uniclass independent standards challenge.
-- `app/src/lib/data/external-benchmark-register.ts` — machine-checkable V3 benchmark registry mapped to the 29 tenant workspaces.
-- `app/src/lib/data/external-benchmark-register.test.ts` — regression gate proving benchmark breadth and 29-workspace coverage.
-- `app/src/lib/data/standards-challenge-register.ts` — machine-checkable standards/interoperability challenge.
-- `app/src/lib/data/benchmark-rejection-register.ts` — deliberate vendor-pattern non-adoptions with recorded rationale and preserved NuBlox authority.
+## Benchmark treatment
 
-## Rule
+A finding may be:
 
-A benchmark finding can result in one of five treatments:
+1. adopted as a genuine semantic requirement;
+2. adopted as an outcome but implemented through NuBlox architecture;
+3. treated as an integration boundary;
+4. treated as a contextual/sector extension;
+5. deliberately rejected as vendor-specific or duplicative.
 
-1. **adopt semantic requirement** — NuBlox is missing a real business concept/control;
-2. **adopt outcome, not vendor model** — the user/business outcome is required but NuBlox implements it through its canonical architecture;
-3. **integration boundary** — the external system remains authoritative for a specialist capability and NuBlox must interoperate cleanly;
-4. **contextual extension** — relevant only for defined sectors/business models;
-5. **reject vendor-specific pattern** — the external structure is product-specific, duplicative or conflicts with NuBlox canonical principles.
+## Principal evidence
 
-A benchmark is not closed by confirming that a similarly named screen/object exists. Closure requires evidence that the material business outcome, lifecycle, controls, traceability and cross-workspace handoffs are covered.
+- `market-benchmark-programme.md`
+- `competitive-experience-benchmark-programme.md`
+- `competitive-experience-benchmark-register.csv`
+- `competitive-experience-cross-suite-findings-01.md`
+- `sap-capability-coverage-register.csv`
+- `sap-v3-capability-map.csv`
+- `standards-interoperability-challenge.md`
+- `windchill-13.1.2-reference-model.md`
+
+Detailed wave files are retained for traceability.
+
+## Current rule
+
+Benchmarking is no longer the default product-development loop.
+
+New benchmark work should only be opened when implementation reveals a concrete completeness question or when an external standard/product materially changes a requirement.
+
+Product behaviour belongs in the Handbook; durable architecture choices belong in ADRs; benchmark evidence stays here.

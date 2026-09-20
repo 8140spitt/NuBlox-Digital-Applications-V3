@@ -43,7 +43,7 @@ Current foundation:
 - migration runner and schema status;
 - unit and MySQL integration tests.
 
-### P1.2 Control Spine — CURRENT
+### P1.2 Control Spine — IMPLEMENTED
 
 Implement:
 
@@ -61,7 +61,7 @@ Implement:
 
 This slice establishes the control semantics required by Workflow, Deliverables, Change and Configuration.
 
-### P1.3 Access, Scope & Permission Runtime
+### P1.3 Access, Scope & Permission Runtime — CURRENT
 
 Implement:
 

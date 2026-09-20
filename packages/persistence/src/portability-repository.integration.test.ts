@@ -80,7 +80,7 @@ suite('MySQL platform events and portability runtime', () => {
     ]);
 
     const claimed = await portability.claimOutboxBatch(
-      100,
+      1000,
       '2026-09-20T12:00:00.000Z',
       '2026-09-20T12:05:00.000Z'
     );
@@ -101,7 +101,7 @@ suite('MySQL platform events and portability runtime', () => {
     expect(failed.attempts).toBe(1);
 
     const notYetRetryable = await portability.claimOutboxBatch(
-      100,
+      1000,
       '2026-09-20T12:05:30.000Z',
       '2026-09-20T12:10:00.000Z'
     );
@@ -110,7 +110,7 @@ suite('MySQL platform events and portability runtime', () => {
     ).toBe(false);
 
     const retryable = await portability.claimOutboxBatch(
-      100,
+      1000,
       '2026-09-20T12:06:01.000Z',
       '2026-09-20T12:11:00.000Z'
     );

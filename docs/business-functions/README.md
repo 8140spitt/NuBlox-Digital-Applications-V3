@@ -80,6 +80,29 @@ The master coverage register will contain, at minimum:
 - External benchmark mappings describe coverage and equivalence; they do not dictate NuBlox's internal architecture.
 - Job roles determine responsibility and access within workspaces; job titles do not define workspace boundaries.
 
+## Relationship to Job-to-Work-Product coverage
+
+Function/workspace coverage proves that the enterprise capability has a governed home. It does **not** by itself prove that a person can perform a job.
+
+V3 therefore evaluates the same work through the separate [Job-to-Work-Product Architecture](../product/job-to-work-product-architecture.md):
+
+```text
+Function -> Sub-function -> Activity
+                       |
+                       v
+Functional Role -> Job Profile -> Position -> Person
+                       |
+                       v
+                  Work Product
+                       |
+                       v
+       Authoring experience / canonical object
+```
+
+A function may be architecturally complete while one or more Job Profiles still lack the practical work-product authoring capability required to do their jobs. Product completion requires both views to converge.
+
+Career and Job Profile mappings do not create workspace ownership, canonical object identity, permissions or delegated authority.
+
 ## Definition of complete workspace coverage
 
 At the **architecture** level, all 353 L2 sub-functions and 1,510 source activities now have a primary workspace home plus canonical aggregate/object/action mapping. At the **runtime implementation** level, a sub-function is considered delivered only when its workspace provides a usable route into the work and NuBlox has traceable workflow behaviour, roles/permissions, controls/evidence and acceptance proof for the relevant business outcome.

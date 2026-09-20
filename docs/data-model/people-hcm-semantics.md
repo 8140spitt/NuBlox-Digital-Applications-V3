@@ -68,7 +68,7 @@ Examples include Quantity Surveyor, Architect, Construction Manager, Building Su
 
 The Job Profile therefore defines **expected work**, not authority. Permission, scope, responsibility assignment and delegated authority remain separately governed.
 
-See `docs/product/job-to-work-product-architecture.md`.
+See `docs/evidence/product-analysis/job-to-work-product-architecture.md`.
 
 Reporting Relationship is an effective organisational relationship. It does not grant approval authority or system permissions.
 

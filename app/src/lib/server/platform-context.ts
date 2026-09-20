@@ -85,6 +85,24 @@ export const platformPermissions = [
     'Create and maintain competence definitions, requirements and evidenced Person competence.'
   ],
   [
+    'deliverable.read',
+    'deliverable',
+    'read',
+    'Read governed Deliverable Requirements, Deliverable Items, participants, issue and acceptance state.'
+  ],
+  [
+    'deliverable.manage',
+    'deliverable',
+    'manage',
+    'Create and maintain Deliverable Requirements, Deliverable Items and delivery responsibility.'
+  ],
+  [
+    'deliverable.issue',
+    'deliverable',
+    'issue',
+    'Issue governed Deliverable Items and record recipients and response state.'
+  ],
+  [
     'authority.delegation.read',
     'authority.delegation',
     'read',

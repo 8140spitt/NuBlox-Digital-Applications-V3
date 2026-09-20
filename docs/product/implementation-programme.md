@@ -136,7 +136,7 @@ Implement:
 - migration reconciliation;
 - search/index projection contracts.
 
-## Phase 2 — Functional Framework & Deployment — CURRENT
+## Phase 2 — Functional Framework & Deployment — IMPLEMENTED
 
 Implement:
 
@@ -153,7 +153,7 @@ Implement:
 - deployment gates;
 - authority/competence evaluation.
 
-## Phase 3 — Native Work-Delivery Runtime
+## Phase 3 — Native Work-Delivery Runtime — CURRENT
 
 Implement:
 

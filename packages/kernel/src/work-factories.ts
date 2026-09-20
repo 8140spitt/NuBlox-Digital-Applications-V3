@@ -191,3 +191,55 @@ export function completeWorkflow(
     completionReason
   });
 }
+
+
+export function cancelWork(
+  current: WorkItem,
+  cancelledAt: string,
+  cancellationReason: string
+): WorkItem {
+  invariant(
+    !['COMPLETED', 'CANCELLED'].includes(current.status),
+    'Only open Work can be cancelled.'
+  );
+  assertDate(cancelledAt, 'Work Item cancelledAt');
+  assertNonEmpty(cancellationReason, 'Work Item cancellationReason');
+  const { completedAt: _completedAt, completionNote: _completionNote, ...openWork } = current;
+  return Object.freeze({
+    ...openWork,
+    status: 'CANCELLED'
+  });
+}
+
+export function escalateWork(current: WorkItem): WorkItem {
+  invariant(
+    !['COMPLETED', 'CANCELLED'].includes(current.status),
+    'Closed Work cannot be escalated.'
+  );
+
+  const nextPriority =
+    current.priority === 'LOW'
+      ? 'NORMAL'
+      : current.priority === 'NORMAL'
+        ? 'HIGH'
+        : 'URGENT';
+
+  invariant(current.priority !== 'URGENT', 'URGENT Work cannot be escalated further.');
+  return Object.freeze({ ...current, priority: nextPriority });
+}
+
+export function cancelWorkflow(
+  current: WorkflowInstance,
+  cancelledAt: string,
+  cancellationReason: string
+): WorkflowInstance {
+  invariant(current.status === 'ACTIVE', 'Only an ACTIVE Workflow Instance can be cancelled.');
+  assertDate(cancelledAt, 'Workflow Instance cancelledAt');
+  assertNonEmpty(cancellationReason, 'Workflow Instance cancellationReason');
+  return Object.freeze({
+    ...current,
+    status: 'CANCELLED',
+    completedAt: cancelledAt,
+    completionReason: cancellationReason
+  });
+}

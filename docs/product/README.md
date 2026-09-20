@@ -15,6 +15,7 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Priority Job Work-Product Wave 5](priority-job-work-product-wave-5.csv) — 238 explicit Work Products across 55 F01-F06 enterprise-direction jobs with exact source-activity trace.
 - [Priority Job Work-Product Wave 6](priority-job-work-product-wave-6.csv) — 247 explicit Work Products across 55 F07-F10 commercial, customer, procurement and supply-chain jobs.
 - [Priority Job Work-Product Wave 7](priority-job-work-product-wave-7.csv) — 244 explicit Work Products across 57 F11-F14 production, service, quality and finance jobs.
+- [Priority Job Work-Product Wave 8](priority-job-work-product-wave-8.csv) — 338 explicit Work Products across 77 F15-F18 workforce, IT, data/AI and cybersecurity jobs.
 - [Work-Product Family Taxonomy](work-product-family-taxonomy.md) — shared experience/completeness families evidenced by 875 candidate Work Products across 95 job archetypes.
 - [Wave 1 Professional Role Challenge](job-work-product-wave-1.md) — findings from the first cross-functional role decomposition.
 - [Wave 2 Controls, Engineering, Assurance & Field Work](job-work-product-wave-2.md) — findings from the second decomposition wave.
@@ -23,6 +24,7 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Wave 5 Enterprise Direction & Growth](job-work-product-wave-5.md) — explicit Work-Product decomposition for F01-F06.
 - [Wave 6 Commercial, Customer & Supply Chain](job-work-product-wave-6.md) — explicit Work-Product decomposition for F07-F10.
 - [Wave 7 Production, Service, Quality & Finance](job-work-product-wave-7.md) — explicit Work-Product decomposition for F11-F14.
+- [Wave 8 Workforce & Digital](job-work-product-wave-8.md) — explicit Work-Product decomposition for F15-F18.
 - [Professional Job Architecture Gap Register](professional-job-architecture-gap-register.csv) — explicit gaps/partial matches between real sector jobs and the prior function-derived Job Profile baseline.
 - [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row register; 382/382 source profiles have an employment treatment and unresolved = 0.
 - [Canonical Employment Job Catalogue](employment-job-catalogue.csv) — 462 candidate employment jobs combining 374 reconciled source-derived jobs with 88 additional Wave jobs.
@@ -50,7 +52,7 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - **84 / 84 external careers** have an explicit candidate NuBlox treatment.
 - **95 employment-job archetypes** are represented across Waves 1-4.
 - **875 candidate Work Products** are decomposed.
-- **J1 remains open**: 262 of 462 candidate employment jobs now have explicit Work-Product treatment; 200 still require decomposition, and all jobs still require canonical/lifecycle/authority/Job-Workbench acceptance validation.
+- **J1 remains open**: 339 of 462 candidate employment jobs now have explicit Work-Product treatment; 123 still require decomposition, and all jobs still require canonical/lifecycle/authority/Job-Workbench acceptance validation.
 
 ## Product completeness model
 

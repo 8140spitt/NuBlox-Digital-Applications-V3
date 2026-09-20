@@ -7,9 +7,11 @@ NuBlox is a **single enterprise-grade software platform for organisations operat
 ## Read these first
 
 1. [Product Handbook](handbook/README.md) — what NuBlox is and how the complete product works.
-2. [Product State](handbook/08-product-state-and-roadmap.md) — what is implemented today versus target product behaviour.
-3. [System Architecture](handbook/07-system-architecture.md) — how the software is structured.
-4. [Glossary](handbook/09-glossary.md) — canonical language.
+2. [User Guide](user-guide/README.md) — how people work in NuBlox.
+3. [Administrator Guide](admin-guide/README.md) — tenant, business-configuration, security and operational administration.
+4. [Product State](handbook/08-product-state-and-roadmap.md) — what is implemented today versus target product behaviour.
+5. [System Architecture](handbook/07-system-architecture.md) — how the software is structured.
+6. [Glossary](handbook/09-glossary.md) — canonical language.
 
 ## Documentation model
 

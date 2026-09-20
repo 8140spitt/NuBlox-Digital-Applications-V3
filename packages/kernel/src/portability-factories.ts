@@ -43,9 +43,8 @@ export function markOutboxPublished(
     'Only pending or failed Outbox Messages can publish.'
   );
   assertDate(publishedAt, 'Outbox publishedAt');
-  const { lastError: _lastError, nextAttemptAt: _nextAttemptAt, ...rest } = current;
   return Object.freeze({
-    ...rest,
+    ...current,
     status: 'PUBLISHED',
     attempts: current.attempts + 1,
     publishedAt

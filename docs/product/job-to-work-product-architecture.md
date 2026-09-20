@@ -864,3 +864,18 @@ The V3 success test is expanded to:
 > A sophisticated construction/built-environment organisation can define its Positions and Job Profiles, assign people to those Positions, and show that each person can perform the work they are accountable for, produce the required Work Products, collaborate and obtain decisions under the correct authority, hand results into the next business process, and retrieve the evidence behind the outcome — without reconstructing the job across disconnected systems.
 
 That is the standard NuBlox should build toward.
+
+
+## J1 validation backlog
+
+Candidate Work-Product coverage is complete across all **462 employment jobs / 2,415 Work Products**.
+
+The governing validation backlog is now `employment-job-validation-register.csv`.
+
+```text
+367 jobs  -> exact Activity trace already defined
+ 95 jobs  -> legacy Waves 1-4 exact-activity uplift required
+462 total -> canonical/lifecycle/responsibility/authority/Job Workbench/acceptance validation required
+```
+
+See `employment-job-validation-gate.md`.

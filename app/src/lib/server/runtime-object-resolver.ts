@@ -6,8 +6,11 @@ import {
   getPartyDirectoryEntry,
   listPartyDirectoryRelationships
 } from '$lib/server/foundation-party-directory';
+import { getInformationContainer } from '$lib/server/information-container';
 import { getLead } from '$lib/server/marketing-lead';
 import { hasPermission, type CommandContext } from '$lib/server/platform-context';
+import { getStrategicObjective } from '$lib/server/strategic-objective';
+import { getStrategyFramework } from '$lib/server/strategy-framework';
 
 export type RuntimeObjectField = {
   label: string;
@@ -48,6 +51,10 @@ export type ResolvedRuntimeObject = {
 
 type Resolver = (context: CommandContext, objectId: string) => Promise<ResolvedRuntimeObject>;
 
+function tenantPath(context: CommandContext, path: string) {
+  return '/' + encodeURIComponent(context.tenantSlug) + '/app' + path;
+}
+
 const resolvers: Record<string, Resolver> = {
   party: async (context, objectId) => {
     const definition = runtimeObjectDefinition('party');
@@ -67,10 +74,7 @@ const resolvers: Record<string, Resolver> = {
       ? party.originFunctionId
       : 'PLATFORM';
     const stewardshipHref =
-      '/' +
-      encodeURIComponent(context.tenantSlug) +
-      '/app/admin/master-data/parties?party=' +
-      encodeURIComponent(party.id);
+      tenantPath(context, '/admin/master-data/parties?party=') + encodeURIComponent(party.id);
 
     return {
       objectType: definition.type,
@@ -109,7 +113,7 @@ const resolvers: Record<string, Resolver> = {
               { label: 'Jurisdiction', value: party.jurisdictionCode ?? '—' },
               { label: 'Accounting currency', value: party.accountingCurrency ?? '—' }
             ],
-      workspaceHref: '/' + encodeURIComponent(context.tenantSlug) + '/app/data',
+      workspaceHref: tenantPath(context, '/data'),
       workspaceLabel: 'Enterprise Data',
       originFunctionId,
       originHref: stewardshipHref,
@@ -137,15 +141,154 @@ const resolvers: Record<string, Resolver> = {
             : ['organisation']
     };
   },
+
+  'strategy-framework': async (context, objectId) => {
+    const definition = runtimeObjectDefinition('strategy-framework');
+    if (!definition) throw new Error('Strategy Framework runtime definition is missing.');
+    const framework = await getStrategyFramework(context, objectId);
+    const originHref =
+      tenantPath(context, '/functions/f01/strategy-framework?framework=') +
+      encodeURIComponent(framework.id);
+
+    return {
+      objectType: definition.type,
+      objectId: framework.id,
+      reference:
+        framework.currentVersion > 0
+          ? 'Strategy Framework · v' + framework.currentVersion
+          : 'Strategy Framework · Draft',
+      title: framework.title,
+      subtitle: 'Enterprise strategy and direction',
+      status: framework.status,
+      objectVersion: String(framework.currentVersion),
+      summary: framework.purpose || framework.direction || null,
+      metadata: [
+        { label: 'Review cadence', value: framework.reviewCadence || '—' },
+        { label: 'Version', value: framework.currentVersion ? 'v' + framework.currentVersion : 'Draft' },
+        { label: 'Published', value: framework.publishedAt ?? 'Not published' }
+      ],
+      fields: [
+        { label: 'Purpose', value: framework.purpose || '—' },
+        { label: 'Vision', value: framework.vision || '—' },
+        { label: 'Mission', value: framework.mission || '—' },
+        { label: 'Strategic direction', value: framework.direction || '—' },
+        { label: 'Review cadence', value: framework.reviewCadence || '—' },
+        { label: 'Submitted', value: framework.submittedAt ?? '—' },
+        { label: 'Approved', value: framework.approvedAt ?? '—' },
+        { label: 'Last updated', value: framework.updatedAt }
+      ],
+      workspaceHref: tenantPath(context, '/operate'),
+      workspaceLabel: 'Operate',
+      originFunctionId: definition.originFunctionId,
+      originHref,
+      originLabel: 'Open Strategy Framework actions',
+      sections: definition.sections,
+      relationships: [],
+      auditObjectTypes: [definition.auditObjectType]
+    };
+  },
+
+  'strategic-objective': async (context, objectId) => {
+    const definition = runtimeObjectDefinition('strategic-objective');
+    if (!definition) throw new Error('Strategic Objective runtime definition is missing.');
+    const objective = await getStrategicObjective(context, objectId);
+    const originHref =
+      tenantPath(context, '/functions/f01/strategic-objectives?objective=') +
+      encodeURIComponent(objective.id);
+
+    return {
+      objectType: definition.type,
+      objectId: objective.id,
+      reference: objective.objectiveRef,
+      title: objective.statement,
+      subtitle: 'Strategic Objective',
+      status: objective.status,
+      objectVersion: String(objective.aggregateVersion),
+      summary: objective.successCriteria,
+      metadata: [
+        { label: 'Priority', value: objective.priority },
+        { label: 'Strategy version', value: 'v' + objective.frameworkVersionNo },
+        {
+          label: 'Scope',
+          value:
+            objective.scopeType && objective.scopeId
+              ? objective.scopeType + ' · ' + objective.scopeId
+              : 'Enterprise'
+        }
+      ],
+      fields: [
+        { label: 'Success criteria', value: objective.successCriteria },
+        { label: 'Priority', value: objective.priority },
+        { label: 'Owner Party', value: objective.ownerPartyId },
+        { label: 'Strategy Framework', value: objective.frameworkId },
+        { label: 'Strategy version', value: String(objective.frameworkVersionNo) },
+        { label: 'Objective version', value: String(objective.currentVersionNo) },
+        { label: 'Horizon start', value: objective.horizonStart ?? '—' },
+        { label: 'Horizon end', value: objective.horizonEnd ?? '—' }
+      ],
+      workspaceHref: tenantPath(context, '/operate'),
+      workspaceLabel: 'Operate',
+      originFunctionId: definition.originFunctionId,
+      originHref,
+      originLabel: 'Open Strategic Objective actions',
+      sections: definition.sections,
+      relationships: [],
+      auditObjectTypes: [definition.auditObjectType]
+    };
+  },
+
+  'information-container': async (context, objectId) => {
+    const definition = runtimeObjectDefinition('information-container');
+    if (!definition) throw new Error('Information Container runtime definition is missing.');
+    const container = await getInformationContainer(context, objectId);
+
+    return {
+      objectType: definition.type,
+      objectId: container.id,
+      reference: container.containerRef,
+      title: container.title,
+      subtitle: container.containerType.replaceAll('_', ' '),
+      status: container.status,
+      objectVersion: String(container.aggregateVersion),
+      summary:
+        container.subjectType && container.subjectId
+          ? 'Controlled information for ' +
+            container.subjectType.replaceAll('_', ' ') +
+            ' · ' +
+            container.subjectId
+          : 'Controlled enterprise information container.',
+      metadata: [
+        { label: 'Revision', value: String(container.currentRevisionNo) },
+        { label: 'Classification', value: container.classificationCode ?? '—' },
+        { label: 'Security', value: container.securityClassification ?? '—' }
+      ],
+      fields: [
+        { label: 'Container type', value: container.containerType },
+        { label: 'Originator', value: container.originatorDisplayName },
+        { label: 'Subject type', value: container.subjectType ?? '—' },
+        { label: 'Subject ID', value: container.subjectId ?? '—' },
+        { label: 'Classification', value: container.classificationCode ?? '—' },
+        { label: 'Security classification', value: container.securityClassification ?? '—' },
+        { label: 'Current revision', value: String(container.currentRevisionNo) },
+        { label: 'Last updated', value: container.updatedAt }
+      ],
+      workspaceHref: tenantPath(context, '/functions'),
+      workspaceLabel: 'Business Functions',
+      originFunctionId: definition.originFunctionId,
+      originHref: null,
+      originLabel: null,
+      sections: definition.sections,
+      relationships: [],
+      auditObjectTypes: [definition.auditObjectType]
+    };
+  },
+
   lead: async (context, objectId) => {
     const definition = runtimeObjectDefinition('lead');
     if (!definition) throw new Error('Lead runtime definition is missing.');
     const lead = await getLead(context, objectId);
     const originHref =
-      '/' +
-      encodeURIComponent(context.tenantSlug) +
-      '/app/functions/f06/leads?lead=' +
-      encodeURIComponent(lead.id);
+      tenantPath(context, '/functions/f06/leads?lead=') + encodeURIComponent(lead.id);
     return {
       objectType: definition.type,
       objectId: lead.id,
@@ -170,7 +313,7 @@ const resolvers: Record<string, Resolver> = {
         { label: 'Aggregate version', value: String(lead.aggregateVersion) },
         { label: 'Last updated', value: lead.updatedAt }
       ],
-      workspaceHref: '/' + encodeURIComponent(context.tenantSlug) + '/app/functions/f06',
+      workspaceHref: tenantPath(context, '/functions/f06'),
       workspaceLabel: 'F06 · Marketing & Brand',
       originFunctionId: definition.originFunctionId,
       originHref,

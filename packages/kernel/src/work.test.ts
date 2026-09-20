@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   KernelInvariantError,
   asId,
+  cancelWork,
+  cancelWorkflow,
   completeWork,
   completeWorkflow,
   createWorkAssignment,
@@ -9,6 +11,7 @@ import {
   createWorkflowDefinition,
   createWorkflowDefinitionVersion,
   createWorkflowInstance,
+  escalateWork,
   markWorkAssigned,
   startWork,
   type CanonicalObjectIdentity,
@@ -149,6 +152,32 @@ describe('kernel workflow and work invariants', () => {
     expect(completed.status).toBe('COMPLETED');
     expect(completed.subjectObjectId).toBe(subject.id);
     expect(subject.objectType).toBe('DELIVERABLE_ITEM');
+  });
+
+
+  it('supports controlled cancellation and priority escalation without changing subject truth', () => {
+    const escalated = escalateWork(work);
+    expect(escalated.priority).toBe('HIGH');
+
+    const urgent = escalateWork(escalated);
+    expect(urgent.priority).toBe('URGENT');
+    expect(() => escalateWork(urgent)).toThrow(KernelInvariantError);
+
+    const cancelledWork = cancelWork(
+      work,
+      '2026-09-20T13:00:00.000Z',
+      'Work no longer required.'
+    );
+    expect(cancelledWork.status).toBe('CANCELLED');
+    expect(cancelledWork.subjectObjectId).toBe(subject.id);
+
+    const cancelledWorkflow = cancelWorkflow(
+      workflow,
+      '2026-09-20T13:01:00.000Z',
+      'Workflow superseded.'
+    );
+    expect(cancelledWorkflow.status).toBe('CANCELLED');
+    expect(cancelledWorkflow.subjectObjectId).toBe(subject.id);
   });
 
   it('rejects assignment to completed Work', () => {

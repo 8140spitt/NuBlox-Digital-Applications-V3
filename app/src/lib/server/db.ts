@@ -6,6 +6,7 @@ import mysql, {
   type RowDataPacket
 } from 'mysql2/promise';
 
+// Runtime startup must follow the latest governed forward migration baseline.
 export const requiredMigration = '0040_managed_deliverable_governance.sql';
 
 function databaseUrl() {

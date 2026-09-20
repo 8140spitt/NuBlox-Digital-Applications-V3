@@ -7,6 +7,7 @@ import {
   type ConstructionContextProfile,
   type ConstructionWorkProductType,
   type DeliveryDomainDefinition,
+  type IndustryJobCapabilityProfile,
   type IndustryJobProfileDefinition,
   type IndustryObjectClassification,
   type IndustrySolutionDefinition,
@@ -50,6 +51,13 @@ interface JobProfileRow extends RowDataPacket {
   code: string;
   name: string;
   status: JobProfile['status'];
+}
+
+interface IndustryJobCapabilityRow extends RowDataPacket {
+  industry_job_profile_id: string;
+  specialist_capabilities: string | string[];
+  primary_structured_records: string | string[];
+  lifecycle_stages: string | string[];
 }
 
 interface IndustryJobProfileRow extends RowDataPacket {
@@ -166,6 +174,16 @@ function mapJobProfile(row: JobProfileRow): JobProfile {
     code: row.code,
     name: row.name,
     status: row.status
+  };
+}
+
+function mapIndustryJobCapability(row: IndustryJobCapabilityRow): IndustryJobCapabilityProfile {
+  return {
+    industryJobProfileId:
+      row.industry_job_profile_id as IndustryJobCapabilityProfile['industryJobProfileId'],
+    specialistCapabilities: Object.freeze(jsonArray(row.specialist_capabilities)),
+    primaryStructuredRecords: Object.freeze(jsonArray(row.primary_structured_records)),
+    lifecycleStages: Object.freeze(jsonArray(row.lifecycle_stages))
   };
 }
 
@@ -385,6 +403,21 @@ export class MySqlIndustryRepository {
         status: (row as unknown as Record<string, unknown>).jp_status as JobProfile['status']
       } as JobProfileRow)
     }));
+  }
+
+  async getJobCapabilityProfile(
+    industryJobProfileId: IndustryJobProfileDefinition['id']
+  ): Promise<IndustryJobCapabilityProfile> {
+    const [rows] = await this.pool.execute<IndustryJobCapabilityRow[]>(
+      `SELECT industry_job_profile_id, specialist_capabilities,
+              primary_structured_records, lifecycle_stages
+         FROM industry_job_capability_profiles
+        WHERE industry_job_profile_id = ?`,
+      [industryJobProfileId]
+    );
+    const row = rows[0];
+    if (!row) throw new Error('Industry Job Capability Profile not found.');
+    return mapIndustryJobCapability(row);
   }
 
   async getWorkProductType(

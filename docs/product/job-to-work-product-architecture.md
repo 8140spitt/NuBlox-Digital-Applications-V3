@@ -663,14 +663,15 @@ A green function matrix with red Job/Work-Product coverage is **not a complete p
 
 # 11A. J1 checkpoint — 20 September 2026
 
-Three professional-role decomposition waves are now complete.
+Four job/work-product decomposition waves are now complete.
 
 ```text
 Wave 1: 10 jobs / 118 candidate Work Products
 Wave 2: 16 jobs / 165 candidate Work Products
 Wave 3: 20 jobs / 200 candidate Work Products
+Wave 4: 49 jobs / 392 candidate Work Products
 
-Total:  46 jobs / 483 candidate Work Products
+Total:  95 job archetypes / 875 candidate Work Products
 ```
 
 Wave 1 established the first cross-functional employment-job challenge across quantity surveying, estimating, project/site management, architecture, building services, building surveying, facilities and procurement.
@@ -679,22 +680,30 @@ Wave 2 extends the challenge across contracts, planning, project controls, proje
 
 Wave 3 extends it across technical design support, geospatial and land surveying, energy assessment, fire engineering, property surveying, heritage, development/town planning and transport planning.
 
+Wave 4 closes the remaining external-career patterns across building trades, fit-out, building-services installation/maintenance, utilities and networks, plant/specialist operations, manufacturing/supply, rural/external works and support roles.
+
 A material architecture finding is now explicit: the prior 382 generated Job Profiles are primarily function/sub-function-derived capability profiles. They are useful provenance, but they are **not yet a complete employment-job architecture** for construction and the built environment.
 
 V3 therefore permits one Job Profile to compose Functional Roles from several F01-F29 functions while keeping Job Profile, Position, permission, responsibility and delegated authority distinct.
 
-The first 483 candidate Work Products reinforce the reusable [Work-Product Family Taxonomy](work-product-family-taxonomy.md). This taxonomy reduces hundreds of professional outputs into repeatable authoring patterns without introducing a universal runtime Work Product aggregate.
+The 875 candidate Work Products reinforce the reusable [Work-Product Family Taxonomy](work-product-family-taxonomy.md). This taxonomy reduces hundreds of professional outputs into repeatable authoring patterns without introducing a universal runtime Work Product aggregate.
 
 See:
 
 - `job-work-product-wave-1.md`;
 - `job-work-product-wave-2.md`;
 - `job-work-product-wave-3.md`;
+- `job-work-product-wave-4.md`;
 - `priority-job-work-product-wave-1.csv`;
 - `priority-job-work-product-wave-2.csv`;
 - `priority-job-work-product-wave-3.csv`;
+- `priority-job-work-product-wave-4.csv`;
 - `professional-job-architecture-gap-register.csv`;
 - `work-product-family-taxonomy.md`.
+
+External career treatment is now **84/84** at candidate-decomposition level. This closes the external-market coverage lens, but it does **not** close J1. The 382 prior candidate Job Profiles still require reconciliation into real employable Job Profiles, composed cross-functional jobs, or Functional-Role provenance, with explicit Work Products, exact source-activity mappings and handoffs.
+
+The next J1 gate is therefore **internal Job Profile reconciliation**, not blanket progression of all candidate rows into J2.
 
 ---
 

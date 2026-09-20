@@ -23,6 +23,11 @@ export type EvidenceRecordId = Brand<string, 'EvidenceRecordId'>;
 export type AccessRoleId = Brand<string, 'AccessRoleId'>;
 export type AccessRolePermissionId = Brand<string, 'AccessRolePermissionId'>;
 export type AccessRoleAssignmentId = Brand<string, 'AccessRoleAssignmentId'>;
+export type WorkflowDefinitionId = Brand<string, 'WorkflowDefinitionId'>;
+export type WorkflowDefinitionVersionId = Brand<string, 'WorkflowDefinitionVersionId'>;
+export type WorkflowInstanceId = Brand<string, 'WorkflowInstanceId'>;
+export type WorkItemId = Brand<string, 'WorkItemId'>;
+export type WorkAssignmentId = Brand<string, 'WorkAssignmentId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

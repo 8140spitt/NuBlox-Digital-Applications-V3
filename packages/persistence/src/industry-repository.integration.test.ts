@@ -96,6 +96,44 @@ suite('MySQL Construction & Built Environment industry solution', () => {
       })
     );
 
+    const architectCapabilities = await industry.getJobCapabilityProfile(
+      asId<'IndustryJobProfileId'>('CBE-JP-003', 'Industry Job Profile')
+    );
+    expect(architectCapabilities).toEqual(
+      expect.objectContaining({
+        specialistCapabilities: expect.arrayContaining([
+          'Briefing',
+          'drawings',
+          'site reviews'
+        ]),
+        primaryStructuredRecords: expect.arrayContaining([
+          'Drawings',
+          'models',
+          'design decisions'
+        ]),
+        lifecycleStages: ['Brief', 'Design', 'Construction', 'Handover']
+      })
+    );
+
+    const quantitySurveyorCapabilities = await industry.getJobCapabilityProfile(
+      asId<'IndustryJobProfileId'>('CBE-JP-060', 'Industry Job Profile')
+    );
+    expect(quantitySurveyorCapabilities).toEqual(
+      expect.objectContaining({
+        specialistCapabilities: expect.arrayContaining([
+          'Measurement',
+          'valuations',
+          'final accounts'
+        ]),
+        primaryStructuredRecords: expect.arrayContaining([
+          'Cost plans',
+          'BoQs',
+          'variations'
+        ]),
+        lifecycleStages: ['Feasibility', 'Design', 'Construction', 'Final account']
+      })
+    );
+
     const drawing = await industry.getWorkProductType('DRAWING');
     expect(drawing).toEqual(
       expect.objectContaining({

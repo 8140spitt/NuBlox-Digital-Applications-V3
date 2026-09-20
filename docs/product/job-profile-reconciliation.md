@@ -1,6 +1,6 @@
 # Internal Job Profile Reconciliation — J1 Gate
 
-**Status:** governing reconciliation gate established  
+**Status:** employment reconciliation complete; J1 Work-Product completeness remains open  
 **Date:** 20 September 2026  
 **Source inventory:** 382 prior candidate Job Profiles  
 **External employment evidence:** Waves 1-4 — 95 job archetypes / 875 candidate Work Products  
@@ -22,8 +22,8 @@ Until that decision is made, the profile remains candidate architecture rather t
 
 ```text
 Source candidate Job Profiles:                 382
-Reconciled to an employment treatment:          185
-Still requiring employment reconciliation:      197
+Reconciled to an employment treatment:          382
+Still requiring employment reconciliation:        0
 ```
 
 The referenced profiles are not automatically approved. Their Wave mapping states distinguish direct, partial, adjacent and multi-profile composition evidence.
@@ -45,7 +45,12 @@ Completed reconciliation tranches:
 - complete F19 Legal & Corporate Secretariat reconciliation;
 - complete F21 Privacy & Information Governance reconciliation;
 - complete F24 Business Continuity, Crisis & Physical Security reconciliation;
-- complete F26 Knowledge, Document & Records Management reconciliation.
+- complete F26 Knowledge, Document & Records Management reconciliation;
+- complete F15 Human Resources / Human Capital reconciliation;
+- complete F16 Information Technology reconciliation;
+- complete F17 Data, Analytics & AI reconciliation;
+- complete F18 Cybersecurity & Information Security reconciliation;
+- complete F01-F06, F08, F10-F13, F25, F28 and F29 reconciliation.
 
 Key outcomes include:
 
@@ -55,20 +60,28 @@ Key outcomes include:
 - Risk Analyst identification/assessment slices composed;
 - Internal Audit Manager planning/reporting slices composed while Internal Auditor remains distinct;
 - Crisis Communications composed across F24/F25;
-- Business Process Analyst modelling/analysis slices composed.
+- Business Process Analyst modelling/analysis slices composed;
+- Benefits Realisation composed across F03/F28;
+- Visitor Management corrected from an over-broad Security Operations source title;
+- all 382 inherited source profiles now have an employment treatment;
+- source reconciliation yields 374 distinct employment jobs;
+- merging the 95 sector Wave archetypes produces a 462-job candidate employment catalogue.
 
-The unresolved inventory is now **197 source profiles**.
+The unresolved inventory is now **0 source profiles**.
 
 ## Reconciliation states
 
-| State | Meaning |
-| --- | --- |
-| `candidate-direct-employment-profile` | Wave evidence identifies a plausible direct employment-job base; validate rather than regenerate it. |
-| `candidate-composition-source` | The source profile contributes Functional Roles to a broader cross-functional employment job. |
-| `candidate-adjacent-source-only` | The source profile is useful adjacent provenance but does not represent the target employment job. |
-| `candidate-unreconciled-source-profile` | No Wave 1-4 employment archetype currently establishes its treatment. |
+The register now contains only reconciled treatments.
 
-None of these states grants permissions or creates Positions.
+| State family | Meaning |
+| --- | --- |
+| `reconciled-retain-employment-profile*` | independently employable reusable Job Profile retained |
+| `reconciled-retain-and-compose` | standalone employment job retained while its Functional Roles are also reused by broader jobs |
+| `reconciled-retain-distinct-employment-profile` | legitimate job retained separately from an adjacent Wave role |
+| `reconciled-retain-with-corrected-title` | source provenance retained but the V3 employment title is corrected |
+| `reconciled-compose-into-*` | multiple generated source profiles compose into one reusable employment job |
+
+No reconciliation state grants permissions or creates Positions.
 
 ## Required decision for every source profile
 
@@ -106,8 +119,32 @@ A profile can leave J1 only when:
 - duplicate/overlapping source-profile semantics are resolved;
 - the result is traceable to the 29-function architecture without forcing the employment job into one function.
 
-## Sequencing
+## Employment-reconciliation closure
 
-The next work should reconcile the 382-source inventory by coherent job-family waves, starting with profiles already referenced by the 95 employment archetypes, then progressing across the remaining function-derived families.
+The 382-row reconciliation gate is now closed: **382/382 source profiles have an employment treatment and unresolved = 0**.
 
-J2 canonical/aggregate/lifecycle/authority mapping can proceed for validated high-priority Work Products, but J1 must not be declared complete until the 382-profile reconciliation register has no unresolved candidate profile.
+This does **not** close J1.
+
+The combined candidate employment catalogue now contains **462 jobs**:
+
+```text
+374 distinct jobs from the reconciled source inventory
++88 additional Wave jobs not exact-title matches
+=462 candidate employment jobs
+```
+
+J1 now advances from **employment identity reconciliation** to **Work-Product completeness**.
+
+The next work must prove, for every candidate employment job:
+
+- explicit material Work Products;
+- exact source Activities;
+- upstream inputs and downstream handoffs;
+- accountable/author/contributor/reviewer/decision-authority relationships;
+- authoring mode and primitive;
+- exact canonical aggregate/object ownership;
+- lifecycle/version/effectivity/evidence semantics;
+- Position-level Job Workbench composition;
+- executable role acceptance scenarios.
+
+J2 canonical/aggregate/lifecycle/authority mapping may continue for validated priority Work Products in parallel, but J1 cannot be declared complete until the 462-job catalogue meets the Work-Product completion contract.

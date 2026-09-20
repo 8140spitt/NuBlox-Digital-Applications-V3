@@ -60,7 +60,15 @@ Role Assignment
 
 Position is an organisational seat/capacity and can exist while vacant.
 
-Job Profile is a reusable controlled definition of work, family, grade/level, responsibilities and capability requirements.
+Job Profile is a reusable controlled definition of employable work, family, grade/level, responsibilities, capability requirements and expected Work Products.
+
+A Job Profile may compose Functional Roles from several enterprise functions. NuBlox must not force a real employment job to remain inside one F01-F29 function simply because a Functional Role has a primary functional home.
+
+Examples include Quantity Surveyor, Architect, Construction Manager, Building Surveyor and Facilities Manager: each may perform governed activities across multiple functions while retaining one Job Profile/Position identity.
+
+The Job Profile therefore defines **expected work**, not authority. Permission, scope, responsibility assignment and delegated authority remain separately governed.
+
+See `docs/product/job-to-work-product-architecture.md`.
 
 Reporting Relationship is an effective organisational relationship. It does not grant approval authority or system permissions.
 

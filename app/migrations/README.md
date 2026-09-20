@@ -67,9 +67,9 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Historical migrations remain immutable. The current schema baseline extends through `0039_managed_deliverable_runtime.sql`; future schema changes start at `0040_...`.
+Historical migrations remain immutable. The current schema baseline extends through `0040_managed_deliverable_governance.sql`; future schema changes start at `0041_...`.
 
-The `0038` and `0039` migrations form the current functional-deployment and managed-deliverable platform baseline.
+The `0038`, `0039` and `0040` migrations form the current functional-deployment and managed-deliverable platform baseline.
 
 - `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
 - `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
@@ -78,6 +78,7 @@ The `0038` and `0039` migrations form the current functional-deployment and mana
 - `0037_personal_navigation_state.sql` — personal Saved Views, Recent and Favourites navigation state.
 - `0038_functional_governance_deployment_runtime.sql` — persisted Worker Relationships, Job Profiles, Positions, competence, governed functional definitions/versions/change and context-specific Functional Deployment/Assignment.
 - `0039_managed_deliverable_runtime.sql` — governed Deliverable Requirements, actual Deliverable Items, participants, shared authoring Work, Information Container linkage, issue/transmittal and recipient response state.
+- `0040_managed_deliverable_governance.sql` — exact-version Deliverable review/approval Decision linkage and governed acceptance/rework state control without collapsing immutable Decision evidence into Deliverable state.
 
 ## Validation and test contract
 

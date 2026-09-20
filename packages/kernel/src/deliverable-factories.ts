@@ -277,8 +277,13 @@ export function bindDeliverableOutput(
   );
   if (outputVersion !== undefined) assertNonEmpty(outputVersion, 'Governed output version');
 
+  const {
+    governedOutputVersion: _governedOutputVersion,
+    ...withoutPreviousOutputVersion
+  } = current;
+
   return Object.freeze({
-    ...current,
+    ...withoutPreviousOutputVersion,
     governedOutputObjectId: output.id,
     ...(outputVersion !== undefined ? { governedOutputVersion: outputVersion } : {})
   });

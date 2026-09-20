@@ -267,8 +267,19 @@ suite('MySQL platform events and portability runtime', () => {
     );
     expect(completedIdempotency.status).toBe('COMPLETED');
 
-    const job: IntegrationJob = {
-      id: asId<'IntegrationJobId'>(`JOB-${suffix}`, 'Integration Job'),
+
+    const renewed = await portability.claimIdempotency({
+      ...idempotency,
+      id: asId<'IdempotencyRecordId'>(`IDEMP-RENEWED-${suffix}`, 'Idempotency Record'),
+      requestHash: 'sha256:request-after-expiry',
+      createdAt: '2026-09-22T12:00:00.000Z',
+      expiresAt: '2026-09-23T12:00:00.000Z'
+    });
+    expect(renewed.replay).toBe(false);
+    expect(renewed.record.id).toBe(`IDEMP-RENEWED-${suffix}`);
+    expect(renewed.record.status).toBe('IN_PROGRESS');
+
+    const job: IntegrationJob = {      id: asId<'IntegrationJobId'>(`JOB-${suffix}`, 'Integration Job'),
       tenantId,
       jobType: 'IMPORT',
       sourceSystem: 'PTC_WINDCHILL',

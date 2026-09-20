@@ -539,6 +539,68 @@ export async function getDeliverableItem(
   return row;
 }
 
+export async function listDeliverableStageDecisions(
+  context: CommandContext,
+  deliverableItemId: string
+): Promise<DeliverableStageDecision[]> {
+  assertPermission(context, 'deliverable.read');
+  return queryRows<RowDataPacket & DeliverableStageDecision>(
+    `SELECT dsd.id,
+            dsd.stage,
+            dsd.item_version AS itemVersion,
+            dsd.revision_label AS revisionLabel,
+            dsd.decision_id AS decisionId,
+            dsd.outcome,
+            wd.reason,
+            wd.decider_party_id AS deciderPartyId,
+            p.display_name AS deciderName,
+            wd.decided_at AS decidedAt
+       FROM deliverable_stage_decisions dsd
+       JOIN work_decisions wd
+         ON wd.id = dsd.decision_id
+        AND wd.tenant_id = dsd.tenant_id
+       LEFT JOIN parties p
+         ON p.id = wd.decider_party_id
+        AND p.tenant_id = wd.tenant_id
+      WHERE dsd.tenant_id = ?
+        AND dsd.deliverable_item_id = ?
+      ORDER BY wd.decided_at DESC, dsd.id DESC`,
+    [context.tenantId, deliverableItemId]
+  );
+}
+
+export async function listDeliverableIssueRecipients(
+  context: CommandContext,
+  deliverableItemId: string
+): Promise<DeliverableIssueRecipient[]> {
+  assertPermission(context, 'deliverable.read');
+  return queryRows<RowDataPacket & DeliverableIssueRecipient>(
+    `SELECT dir.id,
+            dir.deliverable_issue_id AS deliverableIssueId,
+            di.issue_ref AS issueRef,
+            di.revision_label AS revisionLabel,
+            dir.recipient_party_id AS recipientPartyId,
+            p.display_name AS recipientName,
+            dir.recipient_role AS recipientRole,
+            dir.response_status AS responseStatus,
+            dir.response_decision_id AS responseDecisionId,
+            dir.response_note AS responseNote,
+            dir.responded_at AS respondedAt,
+            di.issued_at AS issuedAt
+       FROM deliverable_issue_recipients dir
+       JOIN deliverable_issues di
+         ON di.id = dir.deliverable_issue_id
+        AND di.tenant_id = dir.tenant_id
+       LEFT JOIN parties p
+         ON p.id = dir.recipient_party_id
+        AND p.tenant_id = dir.tenant_id
+      WHERE dir.tenant_id = ?
+        AND di.deliverable_item_id = ?
+      ORDER BY di.issued_at DESC, dir.created_at DESC`,
+    [context.tenantId, deliverableItemId]
+  );
+}
+
 export async function listDeliverableDeploymentAssignments(
   context: CommandContext
 ): Promise<DeliverableDeploymentAssignmentOption[]> {

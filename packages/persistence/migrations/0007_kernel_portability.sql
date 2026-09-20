@@ -130,7 +130,7 @@ CREATE TABLE external_identities (
   canonical_object_id VARCHAR(64) NOT NULL,
   external_system VARCHAR(160) NOT NULL,
   external_object_type VARCHAR(160) NOT NULL,
-  external_object_id VARCHAR(512) NOT NULL,
+  external_object_id VARCHAR(320) NOT NULL,
   external_version VARCHAR(160) NULL,
   source_reference VARCHAR(1024) NULL,
   created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),

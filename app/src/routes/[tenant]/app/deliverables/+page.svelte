@@ -19,6 +19,28 @@
   function fmt(value: string | null) {
     return value ? new Date(value).toLocaleDateString('en-GB') : '—';
   }
+
+  function reviewReady(item: typeof data.selected) {
+    return Boolean(
+      item &&
+        item.reviewRequired &&
+        ['PLANNED', 'REWORK'].includes(item.status) &&
+        item.workStatus === 'COMPLETED'
+    );
+  }
+
+  function approvalReady(item: typeof data.selected) {
+    if (!item?.approvalRequired) return false;
+    if (item.reviewRequired) return item.status === 'REVIEWED';
+    return ['PLANNED', 'REWORK'].includes(item.status) && item.workStatus === 'COMPLETED';
+  }
+
+  function issueReady(item: typeof data.selected) {
+    if (!item || item.workStatus !== 'COMPLETED') return false;
+    if (item.approvalRequired) return item.status === 'APPROVED';
+    if (item.reviewRequired) return item.status === 'REVIEWED';
+    return ['PLANNED', 'REWORK'].includes(item.status);
+  }
 </script>
 
 <svelte:head><title>Deliverables · NuBlox</title></svelte:head>
@@ -317,6 +339,18 @@
               <dt>Authoring work</dt>
               <dd>{data.selected.workStatus || 'No work item'}</dd>
             </div>
+            <div>
+              <dt>Review</dt>
+              <dd>{data.selected.reviewRequired ? 'Required' : 'Not required'}</dd>
+            </div>
+            <div>
+              <dt>Approval</dt>
+              <dd>{data.selected.approvalRequired ? 'Required' : 'Not required'}</dd>
+            </div>
+            <div>
+              <dt>Recipient acceptance</dt>
+              <dd>{data.selected.acceptanceRequired ? 'Required' : 'Not required'}</dd>
+            </div>
           </dl>
 
           <div class="links">
@@ -336,7 +370,94 @@
             <a href={'/' + data.tenantSlug + '/app/work'}>Open My Work</a>
           </div>
 
-          {#if data.canIssue && !['ISSUED', 'ACCEPTED', 'SUPERSEDED', 'CANCELLED'].includes(data.selected.status)}
+          <div class="control-stack">
+            {#if data.canManage && reviewReady(data.selected)}
+              <form method="POST" action="?/submitReview" class="inline-action">
+                <input type="hidden" name="deliverableId" value={data.selected.id} />
+                <input type="hidden" name="version" value={data.selected.version} />
+                <div>
+                  <strong>Authoring complete</strong>
+                  <span>Route this exact Deliverable version into governed review.</span>
+                </div>
+                <button type="submit">Submit for review</button>
+              </form>
+            {/if}
+
+            {#if data.canReview && data.selected.status === 'IN_REVIEW'}
+              <details class="control-panel" open>
+                <summary>Record review decision</summary>
+                <form method="POST" action="?/reviewDecision">
+                  <input type="hidden" name="deliverableId" value={data.selected.id} />
+                  <input type="hidden" name="version" value={data.selected.version} />
+                  <label>
+                    Review outcome
+                    <select name="outcome">
+                      <option value="APPROVED">Review complete</option>
+                      <option value="REVISE">Revise and resubmit</option>
+                      <option value="REJECTED">Rejected — rework required</option>
+                    </select>
+                  </label>
+                  <label class="wide">
+                    Review reason / comments
+                    <textarea name="reason" rows="3" required></textarea>
+                  </label>
+                  <button type="submit">Record review decision</button>
+                </form>
+              </details>
+            {/if}
+
+            {#if data.canManage && approvalReady(data.selected)}
+              <form method="POST" action="?/submitApproval" class="inline-action">
+                <input type="hidden" name="deliverableId" value={data.selected.id} />
+                <input type="hidden" name="version" value={data.selected.version} />
+                <div>
+                  <strong>Review gate satisfied</strong>
+                  <span>Route this exact Deliverable version for approval.</span>
+                </div>
+                <button type="submit">Submit for approval</button>
+              </form>
+            {/if}
+
+            {#if data.canApprove && data.selected.status === 'IN_APPROVAL'}
+              <details class="control-panel" open>
+                <summary>Record approval decision</summary>
+                <form method="POST" action="?/approvalDecision">
+                  <input type="hidden" name="deliverableId" value={data.selected.id} />
+                  <input type="hidden" name="version" value={data.selected.version} />
+                  <label>
+                    Approval outcome
+                    <select name="outcome">
+                      <option value="APPROVED">Approved for issue</option>
+                      <option value="REVISE">Return for revision</option>
+                      <option value="REJECTED">Rejected — rework required</option>
+                    </select>
+                  </label>
+                  <label class="wide">
+                    Decision reason
+                    <textarea name="reason" rows="3" required></textarea>
+                  </label>
+                  <button type="submit">Record approval decision</button>
+                </form>
+              </details>
+            {/if}
+          </div>
+
+          {#if data.stageDecisions.length}
+            <section class="decision-history">
+              <span class="eyebrow">Control history</span>
+              {#each data.stageDecisions as decision}
+                <div class="history-row">
+                  <div>
+                    <strong>{decision.stage} · {decision.outcome.replaceAll('_', ' ')}</strong>
+                    <span>{decision.reason}</span>
+                  </div>
+                  <small>{decision.deciderName || decision.deciderPartyId} · {fmt(decision.decidedAt)}</small>
+                </div>
+              {/each}
+            </section>
+          {/if}
+
+          {#if data.canIssue && issueReady(data.selected)}
             <details class="issue-panel">
               <summary>Record issue / transmittal</summary>
               <form method="POST" action="?/issue">
@@ -373,6 +494,44 @@
                 </p>
               {/if}
             </details>
+          {/if}
+
+          {#if data.issueRecipients.length}
+            <section class="recipient-history">
+              <span class="eyebrow">Recipient responses</span>
+              {#each data.issueRecipients as recipient}
+                <div class="recipient-row">
+                  <div>
+                    <strong>{recipient.recipientName || recipient.recipientPartyId}</strong>
+                    <span>
+                      {recipient.issueRef} · {recipient.revisionLabel || 'No revision'} ·
+                      {recipient.responseStatus.replaceAll('_', ' ')}
+                    </span>
+                    {#if recipient.responseNote}<small>{recipient.responseNote}</small>{/if}
+                  </div>
+                  {#if data.canAccept && recipient.responseStatus === 'AWAITING_RESPONSE'}
+                    <form method="POST" action="?/recipientResponse">
+                      <input type="hidden" name="recipientId" value={recipient.id} />
+                      <input type="hidden" name="deliverableId" value={data.selected.id} />
+                      <input
+                        type="hidden"
+                        name="revisionLabel"
+                        value={recipient.revisionLabel || ''}
+                      />
+                      <select name="outcome" aria-label="Recipient response">
+                        <option value="ACCEPTED">Accepted</option>
+                        <option value="ACCEPTED_WITH_COMMENTS">Accepted with comments</option>
+                        <option value="NO_OBJECTION">No objection</option>
+                        <option value="REVISE">Revise</option>
+                        <option value="REJECTED">Rejected</option>
+                      </select>
+                      <input name="reason" required placeholder="Response reason / comments" />
+                      <button type="submit">Record response</button>
+                    </form>
+                  {/if}
+                </div>
+              {/each}
+            </section>
           {/if}
         </section>
       {:else}
@@ -703,12 +862,62 @@
     flex-wrap: wrap;
     gap: 5px;
   }
-  .issue-panel form {
+  .issue-panel form,
+  .control-panel form {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
     padding: 9px;
     border-top: 1px solid #e4eaee;
+  }
+  .control-stack {
+    display: grid;
+    gap: 7px;
+  }
+  .inline-action {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px;
+    border: 1px solid #d9e5ec;
+    border-radius: 8px;
+    background: #f8fbfd;
+  }
+  .inline-action div {
+    display: grid;
+    gap: 2px;
+  }
+  .inline-action span,
+  .history-row span,
+  .recipient-row span {
+    color: #6f8391;
+    font-size: 8.5px;
+  }
+  .decision-history,
+  .recipient-history {
+    display: grid;
+    gap: 6px;
+    padding: 9px;
+    border-top: 1px solid #e4eaee;
+  }
+  .history-row,
+  .recipient-row {
+    display: grid;
+    gap: 5px;
+    padding: 7px;
+    border: 1px solid #e5ebef;
+    border-radius: 7px;
+  }
+  .history-row > div,
+  .recipient-row > div {
+    display: grid;
+    gap: 2px;
+  }
+  .recipient-row form {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) auto;
+    gap: 6px;
   }
   .issue-panel p {
     padding: 0 9px 9px;
@@ -755,7 +964,9 @@
     }
     fieldset,
     dl,
-    .issue-panel form {
+    .issue-panel form,
+    .control-panel form,
+    .recipient-row form {
       grid-template-columns: 1fr;
     }
     label.wide {

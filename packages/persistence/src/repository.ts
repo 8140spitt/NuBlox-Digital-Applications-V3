@@ -24,6 +24,7 @@ import {
 } from '@nublox/kernel';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
+import { writeOutboxEvent } from './platform-writes.js';
 
 export interface AuditContext {
   actorPersonId?: string;
@@ -153,6 +154,14 @@ async function writeAudit(
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [tenantId, entityType, entityId, action, actorPersonId, correlationId, JSON.stringify(payload)]
   );
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 export class MySqlKernelRepository {

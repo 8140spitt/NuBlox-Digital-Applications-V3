@@ -103,6 +103,24 @@ export const platformPermissions = [
     'Issue governed Deliverable Items and record recipients and response state.'
   ],
   [
+    'deliverable.review',
+    'deliverable',
+    'review',
+    'Review governed Deliverable Items and apply attributable review decisions.'
+  ],
+  [
+    'deliverable.approve',
+    'deliverable',
+    'approve',
+    'Approve governed Deliverable Items after required review controls are satisfied.'
+  ],
+  [
+    'deliverable.accept',
+    'deliverable',
+    'accept',
+    'Record governed recipient acceptance, no-objection or rejection responses.'
+  ],
+  [
     'authority.delegation.read',
     'authority.delegation',
     'read',

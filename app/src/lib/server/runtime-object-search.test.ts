@@ -10,6 +10,7 @@ let strategyService: typeof import('./strategy-framework');
 let objectiveService: typeof import('./strategic-objective');
 let informationService: typeof import('./information-container');
 let decisionService: typeof import('./work-decision');
+let productService: typeof import('./product-innovation');
 let db: typeof import('./db');
 
 beforeAll(async () => {
@@ -21,6 +22,7 @@ beforeAll(async () => {
   objectiveService = await import('./strategic-objective');
   informationService = await import('./information-container');
   decisionService = await import('./work-decision');
+  productService = await import('./product-innovation');
   db = await import('./db');
 });
 
@@ -86,6 +88,15 @@ describe('runtime object search', () => {
       subjectId: frameworkId
     });
 
+    const itemId = await productService.createProductServiceConcept(context, {
+      itemNumber: 'ITEM-FORGE-SEARCH',
+      conceptType: 'PRODUCT',
+      name: 'Forge Search Pump',
+      description: 'Forge Search canonical product data proof.',
+      needSummary: 'Provide a searchable product identity.',
+      opportunitySummary: 'Reuse one Item across downstream enterprise processes.'
+    });
+
     const results = await searchService.searchRuntimeObjects(context, 'Northstar Search');
     expect(results).toContainEqual(
       expect.objectContaining({
@@ -130,6 +141,25 @@ describe('runtime object search', () => {
         })
       ])
     );
+
+    const forgeResults = await searchService.searchRuntimeObjects(context, 'Forge Search');
+    expect(forgeResults).toEqual([
+      expect.objectContaining({
+        objectType: 'item',
+        objectId: itemId,
+        reference: 'ITEM-FORGE-SEARCH',
+        title: 'Forge Search Pump',
+        href: '/' + tenant + '/app/objects/item/' + itemId
+      })
+    ]);
+
+    const noProductRead = {
+      ...context,
+      permissions: context.permissions.filter(
+        (permission) => permission !== 'product.innovation.read'
+      )
+    };
+    expect(await searchService.searchRuntimeObjects(noProductRead, 'Forge Search')).toEqual([]);
 
     const noMarketing = {
       ...context,

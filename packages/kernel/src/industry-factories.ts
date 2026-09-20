@@ -3,6 +3,7 @@ import type {
   ConstructionContextProfile,
   ConstructionWorkProductType,
   DeliveryDomainDefinition,
+  IndustryJobCapabilityProfile,
   IndustryJobProfileDefinition,
   IndustryObjectClassification,
   IndustrySolutionDefinition,
@@ -54,6 +55,48 @@ export function createDeliveryDomainDefinition(
   assertNonEmpty(input.name, 'Delivery Domain name');
   assertNonEmpty(input.purpose, 'Delivery Domain purpose');
   return Object.freeze({ ...input });
+}
+
+export function createIndustryJobCapabilityProfile(
+  input: IndustryJobCapabilityProfile,
+  industryJobProfile: IndustryJobProfileDefinition
+): IndustryJobCapabilityProfile {
+  invariant(
+    input.industryJobProfileId === industryJobProfile.id,
+    'Industry Job Capability Profile must reference the supplied Industry Job Profile.'
+  );
+  invariant(
+    input.specialistCapabilities.length > 0,
+    'Industry Job Capability Profile requires at least one specialist capability.'
+  );
+  invariant(
+    input.primaryStructuredRecords.length > 0,
+    'Industry Job Capability Profile requires at least one primary structured record.'
+  );
+  invariant(
+    input.lifecycleStages.length > 0,
+    'Industry Job Capability Profile requires at least one lifecycle stage.'
+  );
+
+  for (const [label, values] of [
+    ['specialist capability', input.specialistCapabilities],
+    ['primary structured record', input.primaryStructuredRecords],
+    ['lifecycle stage', input.lifecycleStages]
+  ] as const) {
+    const seen = new Set<string>();
+    for (const value of values) {
+      assertNonEmpty(value, `Industry Job Capability ${label}`);
+      invariant(!seen.has(value), `Industry Job Capability ${label}s must not contain duplicates.`);
+      seen.add(value);
+    }
+  }
+
+  return Object.freeze({
+    ...input,
+    specialistCapabilities: Object.freeze([...input.specialistCapabilities]),
+    primaryStructuredRecords: Object.freeze([...input.primaryStructuredRecords]),
+    lifecycleStages: Object.freeze([...input.lifecycleStages])
+  });
 }
 
 export function createIndustryJobProfileDefinition(

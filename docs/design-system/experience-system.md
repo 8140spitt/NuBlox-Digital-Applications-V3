@@ -12,8 +12,9 @@ The user-facing hierarchy is:
 
 ```text
 Tenant / Enterprise
-  -> Role / My Work
-     -> Enterprise Context
+  -> Person / Position / Job Profile
+     -> Job Workbench / My Work
+        -> Enterprise Context
         -> Operate / Deliver / Enterprise Data
            -> process / function / context workspace
               -> collection / grid / structure / map / viewer
@@ -67,7 +68,19 @@ Not every page uses every dimension.
 
 Context is a perspective/filter/authority dimension. It never creates duplicate master data.
 
-### 3. Workspace / perspective layer
+### 3. Job-workbench layer
+
+A Job Workbench answers:
+
+> **What do I need to do my job?**
+
+It composes the Position / Job Profile work-product catalogue with My Work, current context, actual permissions/authority, role-relevant collections, create actions, exceptions, templates and performance information.
+
+Job Workbench is a perspective. It never grants permission and never duplicates canonical objects.
+
+See [Job-to-Work-Product Architecture](../product/job-to-work-product-architecture.md).
+
+### 4. Workspace / perspective layer
 
 A workspace answers:
 
@@ -94,7 +107,7 @@ A workspace may aggregate:
 
 A workspace does not own durable domain truth merely because it displays it.
 
-### 4. Business-object layer
+### 5. Business-object layer
 
 Once a user opens a canonical business object, the object becomes the stable unit of record/work.
 
@@ -118,7 +131,7 @@ Users should not reopen the same object independently in several functions merel
 
 The reusable runtime primitive is `ObjectHeader.svelte`.
 
-### 5. Active-work layer
+### 6. Active-work layer
 
 **My Work** and the **Task Bar** are different concepts.
 
@@ -318,6 +331,9 @@ Large promotional hero panels are inappropriate inside routine operational pages
 
 Before a new runtime screen/workspace is accepted, it must answer:
 
+- Which Job Profile / Functional Role performs or consumes this work?
+- What Work Product is the user producing, reviewing or issuing?
+- Is that Work Product NATIVE, ASSISTED, CONNECTED or INGESTED?
 - Which stream is this: Operate, Deliver or Enterprise Data?
 - What enterprise context applies?
 - What surface type is this?

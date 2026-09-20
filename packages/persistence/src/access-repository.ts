@@ -95,6 +95,14 @@ async function writeAudit(
       JSON.stringify(payload)
     ]
   );
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 function mapAccessRole(row: AccessRoleRow): AccessRoleDefinition {
@@ -147,14 +155,6 @@ function validateRequestedScope(scope: PermissionScope): void {
   if (!scope.scopeId?.trim()) {
     throw new Error('Non-TENANT permission scope must specify scopeId.');
   }
-  await writeOutboxEvent(connection, {
-    tenantId,
-    aggregateType: entityType,
-    aggregateId: entityId,
-    eventType: `${entityType}.${action}`,
-    payload
-  });
-
 }
 
 export class MySqlAccessRepository {

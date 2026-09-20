@@ -13,6 +13,8 @@ import {
   createWorkflowInstance,
   escalateWork,
   markWorkAssigned,
+  publishWorkflowDefinitionVersion,
+  retireWorkflowDefinitionVersion,
   startWork,
   type CanonicalObjectIdentity,
   type WorkAssignment,
@@ -100,6 +102,49 @@ describe('kernel workflow and work invariants', () => {
         { ...version, status: 'DRAFT' },
         subject
       )
+    ).toThrow(KernelInvariantError);
+  });
+
+
+  it('publishes and retires Workflow Definition Versions explicitly and enforces effectivity', () => {
+    const draft = createWorkflowDefinitionVersion(
+      {
+        id: asId<'WorkflowDefinitionVersionId'>('WF-DEF-V2', 'Workflow Definition Version'),
+        tenantId,
+        workflowDefinitionId: definition.id,
+        version: 2,
+        status: 'DRAFT'
+      },
+      definition
+    );
+
+    const published = publishWorkflowDefinitionVersion(
+      draft,
+      '2026-10-01T00:00:00.000Z'
+    );
+    expect(published.status).toBe('PUBLISHED');
+
+    expect(() =>
+      createWorkflowInstance(
+        {
+          ...workflow,
+          id: asId<'WorkflowInstanceId'>('WF-I-TOO-EARLY', 'Workflow Instance'),
+          workflowDefinitionVersionId: published.id,
+          startedAt: '2026-09-30T23:59:59.000Z'
+        },
+        definition,
+        published,
+        subject
+      )
+    ).toThrow(KernelInvariantError);
+
+    const retired = retireWorkflowDefinitionVersion(
+      published,
+      '2026-10-31T23:59:59.000Z'
+    );
+    expect(retired.status).toBe('RETIRED');
+    expect(() =>
+      publishWorkflowDefinitionVersion(retired, '2026-11-01T00:00:00.000Z')
     ).toThrow(KernelInvariantError);
   });
 

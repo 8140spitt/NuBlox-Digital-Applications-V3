@@ -1,3 +1,5 @@
+export * from './portability-repository.js';
+export * from './platform-writes.js';
 export * from './change-repository.js';
 export * from './information-repository.js';
 export * from './work-repository.js';

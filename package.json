@@ -5,9 +5,11 @@
   "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "pnpm --dir apps/web dev",
-    "check": "pnpm -r check",
-    "test": "pnpm -r --if-present test",
+    "check": "pnpm --filter @nublox/kernel build && pnpm -r check",
+    "test": "pnpm --filter @nublox/kernel build && pnpm -r --if-present test",
     "build": "pnpm -r build",
+    "db:migrate": "pnpm --dir packages/persistence db:migrate",
+    "db:status": "pnpm --dir packages/persistence db:status",
     "format": "pnpm --dir apps/web format",
     "format:check": "pnpm --dir apps/web format:check"
   }

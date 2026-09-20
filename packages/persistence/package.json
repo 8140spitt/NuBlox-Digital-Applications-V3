@@ -1,0 +1,25 @@
+{
+  "name": "@nublox/persistence",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "precheck": "pnpm --filter @nublox/kernel build",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "pretest": "pnpm --filter @nublox/kernel build",
+    "test": "vitest run",
+    "build": "tsc -p tsconfig.build.json",
+    "db:migrate": "tsx src/cli/migrate.ts",
+    "db:status": "tsx src/cli/status.ts"
+  },
+  "dependencies": {
+    "@nublox/kernel": "workspace:*",
+    "mysql2": "^3.14.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.20.6",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  }
+}

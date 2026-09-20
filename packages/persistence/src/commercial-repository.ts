@@ -1173,7 +1173,7 @@ export class MySqlCommercialRepository {
   private async countRows(
     connection: PoolConnection,
     query: string,
-    params: unknown[]
+    params: Array<string | number | Date | null>
   ): Promise<number> {
     const [rows] = await connection.query<CountRow[]>(query, params);
     return Number(rows[0]?.count ?? 0);

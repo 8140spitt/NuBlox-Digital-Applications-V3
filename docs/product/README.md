@@ -18,8 +18,12 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Wave 3 Professional, Technical, Property & Planning Work](job-work-product-wave-3.md) — findings from the third decomposition wave.
 - [Wave 4 Field, Trades, Utilities, Plant & Supply Work](job-work-product-wave-4.md) — closes the remaining external-career decomposition and records the internal-profile reconciliation gate.
 - [Professional Job Architecture Gap Register](professional-job-architecture-gap-register.csv) — explicit gaps/partial matches between real sector jobs and the prior function-derived Job Profile baseline.
+- [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row working register; 81 source profiles have an employment treatment and 301 remain unresolved.
+- [Project Manager Composed Job Profile](composed-job-profile-project-manager.md) — first cross-sub-function employment profile with exact Work-Product/activity trace and explicit activity gaps.
+- [F27 Job Profile Reconciliation](job-profile-reconciliation-f27.md) — complete employment-model reconciliation for Portfolio, Programme & Project Management.
+- [Job Work-Product Activity Gap Register](job-work-product-activity-gap-register.csv) — source activity gaps exposed by exact job/work-product traceability.
 - [Internal Job Profile Reconciliation](job-profile-reconciliation.md) — governing J1 gate for deciding whether each of the 382 inherited profiles is retained, composed, reduced to Functional-Role provenance, superseded or explicitly out of scope.
-- [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row working register; 36 source profiles have Wave evidence and 346 remain unresolved.
+- [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row working register; 81 source profiles have now been reconciled to an employment treatment and 301 remain unresolved.
 - [Stakeholder Design Review — 17 September 2026](stakeholder-design-review-2026-09-17.md) — earlier stakeholder design baseline.
 
 ## Current job/work-product checkpoint
@@ -27,7 +31,7 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - **84 / 84 external careers** have an explicit candidate NuBlox treatment.
 - **95 employment-job archetypes** are represented across Waves 1-4.
 - **875 candidate Work Products** are decomposed.
-- **J1 remains open** until the 382 prior function-derived candidate Job Profiles are reconciled and given explicit Work-Product/activity/handoff treatment.
+- **J1 remains open**: 81 of the 382 prior function-derived candidate Job Profiles now have an employment treatment; 301 still require reconciliation before the catalogue can be declared complete.
 
 ## Product completeness model
 

@@ -61,7 +61,7 @@ Implement:
 
 This slice establishes the control semantics required by Workflow, Deliverables, Change and Configuration.
 
-### P1.3 Access, Scope & Permission Runtime — CURRENT
+### P1.3 Access, Scope & Permission Runtime — IMPLEMENTED
 
 Implement:
 
@@ -79,7 +79,7 @@ Implement:
 
 This remains separate from Responsibility and Authority. A user may have permission to perform an action yet still lack the delegated Authority required to approve or commit it.
 
-### P1.4 Workflow & Work Runtime
+### P1.4 Workflow & Work Runtime — CURRENT
 
 Implement:
 

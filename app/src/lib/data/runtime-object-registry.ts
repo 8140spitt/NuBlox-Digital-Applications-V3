@@ -64,6 +64,18 @@ export const runtimeObjectDefinitions: readonly RuntimeObjectDefinition[] = [
     originFunctionId: 'PLATFORM'
   },
   {
+    type: 'item',
+    subjectType: 'ITEM',
+    canonicalModelId: 'CBO-ITEM',
+    aggregateId: 'AGG-10-ITEM',
+    singular: 'Item',
+    plural: 'Items',
+    readPermission: 'product.innovation.read',
+    sections: ['overview', 'work', 'decisions', 'evidence', 'history'],
+    auditObjectType: 'item',
+    originFunctionId: 'F05'
+  },
+  {
     type: 'lead',
     subjectType: 'LEAD',
     canonicalModelId: 'CRM-LEAD',

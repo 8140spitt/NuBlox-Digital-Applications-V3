@@ -1,3 +1,4 @@
+export * from './work-repository.js';
 export * from './access-repository.js';
 export * from './control-repository.js';
 export * from './database.js';

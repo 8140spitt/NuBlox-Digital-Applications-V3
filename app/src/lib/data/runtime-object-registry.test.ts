@@ -31,6 +31,8 @@ describe('runtime object registry', () => {
     expect(runtimeObjectDefinitionForSubject('INFORMATION_CONTAINER')?.aggregateId).toBe(
       'AGG-07-INFORMATION'
     );
+    expect(runtimeObjectDefinition('ITEM')?.canonicalModelId).toBe('CBO-ITEM');
+    expect(runtimeObjectDefinitionForSubject('ITEM')?.aggregateId).toBe('AGG-10-ITEM');
     expect(runtimeObjectDefinition('LEAD')?.canonicalModelId).toBe('CRM-LEAD');
     expect(runtimeObjectDefinitionForSubject('lead')?.aggregateId).toBe('AGG-03-LEAD');
   });
@@ -62,6 +64,9 @@ describe('runtime object registry', () => {
         section: 'evidence'
       })
     ).toBe('/demo-tenant/app/objects/information-container/info-1?section=evidence');
+    expect(subjectObjectHref('demo-tenant', 'ITEM', 'item-1', { section: 'decisions' })).toBe(
+      '/demo-tenant/app/objects/item/item-1?section=decisions'
+    );
     expect(subjectObjectHref('demo-tenant', 'LEAD', '123', { section: 'work' })).toBe(
       '/demo-tenant/app/objects/lead/123?section=work'
     );

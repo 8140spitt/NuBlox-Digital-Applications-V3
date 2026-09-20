@@ -661,33 +661,35 @@ A green function matrix with red Job/Work-Product coverage is **not a complete p
 
 ---
 
-# 11A. J1 Wave 1 checkpoint — 20 September 2026
+# 11A. J1 checkpoint — 20 September 2026
 
-The first professional-role decomposition is complete for ten priority job archetypes:
+Two professional-role decomposition waves are now complete.
 
-- Quantity Surveyor;
-- Estimator;
-- Project Manager;
-- Construction Manager;
-- Construction Site Supervisor;
-- Architect;
-- Building Services Engineer;
-- Building Surveyor;
-- Facilities Manager;
-- Procurement Manager.
+```text
+Wave 1: 10 jobs / 118 candidate Work Products
+Wave 2: 16 jobs / 165 candidate Work Products
 
-The wave identifies **118 candidate Work Products** in `priority-job-work-product-wave-1.csv`.
+Total:  26 jobs / 283 candidate Work Products
+```
+
+Wave 1 established the first cross-functional employment-job challenge across quantity surveying, estimating, project/site management, architecture, building services, building surveying, facilities and procurement.
+
+Wave 2 extends the challenge across contracts, planning, project controls, project accounting, design management, civil/structural engineering, building control, QHSE, asset management, maintenance and field trades.
 
 A material architecture finding is now explicit: the prior 382 generated Job Profiles are primarily function/sub-function-derived capability profiles. They are useful provenance, but they are **not yet a complete employment-job architecture** for construction and the built environment.
 
-Six of the ten priority jobs have no direct sector Job Profile in that generated baseline. The remaining four are partial or multi-profile compositions.
-
 V3 therefore permits one Job Profile to compose Functional Roles from several F01-F29 functions while keeping Job Profile, Position, permission, responsibility and delegated authority distinct.
+
+The first 283 candidate Work Products also establish a reusable [Work-Product Family Taxonomy](work-product-family-taxonomy.md). This taxonomy reduces hundreds of professional outputs into repeatable authoring patterns without introducing a universal runtime Work Product aggregate.
 
 See:
 
 - `job-work-product-wave-1.md`;
-- `professional-job-architecture-gap-register.csv`.
+- `job-work-product-wave-2.md`;
+- `priority-job-work-product-wave-1.csv`;
+- `priority-job-work-product-wave-2.csv`;
+- `professional-job-architecture-gap-register.csv`;
+- `work-product-family-taxonomy.md`.
 
 ---
 

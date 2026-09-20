@@ -701,21 +701,22 @@ See:
 - `professional-job-architecture-gap-register.csv`;
 - `work-product-family-taxonomy.md`.
 
-External career treatment is now **84/84** at candidate-decomposition level. This closes the external-market coverage lens, but it does **not** close J1. The 382 prior candidate Job Profiles still require reconciliation into real employable Job Profiles, composed cross-functional jobs, or Functional-Role provenance, with explicit Work Products, exact source-activity mappings and handoffs.
+External career treatment is **84/84** at candidate-decomposition level, and the inherited internal source inventory is now **382/382 employment-reconciled**.
 
-The next J1 gate is therefore **internal Job Profile reconciliation**, not blanket progression of all candidate rows into J2.
-
-The working reconciliation baseline is now:
+The source reconciliation produces **374 distinct employment jobs** after true duplicate/lifecycle compositions. Merging the 95 sector Wave archetypes adds 88 jobs that are not exact-title matches, producing a **462-job candidate employment catalogue**.
 
 ```text
-382 inherited candidate Job Profiles
-  2 candidate direct employment-profile bases
- 32 candidate composition sources
-  2 candidate adjacent sources only
-346 candidate unreconciled source profiles
+382 inherited source profiles
+  -> 374 distinct reconciled employment jobs
+  + 88 additional Wave employment jobs
+  = 462 candidate employment jobs
 ```
 
-See `job-profile-reconciliation.md` and `job-profile-reconciliation-register.csv`.
+The internal employment-reconciliation gate is therefore closed.
+
+**J1 remains open** because employment identity is not Work-Product completeness. The next J1 gate is explicit Work-Product, exact activity, handoff, authoring, canonical-object, lifecycle/evidence and Job Workbench coverage across the 462-job catalogue.
+
+See `job-profile-reconciliation.md`, `job-profile-reconciliation-register.csv`, `employment-job-catalogue.csv` and `employment-job-catalogue.md`.
 
 ---
 

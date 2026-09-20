@@ -10,6 +10,7 @@ import {
 import { createInformationContainerInTransaction } from '$lib/server/information-container';
 import { assertPermission, type CommandContext } from '$lib/server/platform-context';
 import { emitBusinessEvent, recordPlatformAudit } from '$lib/server/platform-evidence';
+import { assertWorkDecisionReference } from '$lib/server/work-decision';
 
 export type DeliverableRequirement = {
   id: string;
@@ -54,6 +55,9 @@ export type DeliverableItem = {
   contextId: string;
   disciplineCode: string | null;
   classificationCode: string | null;
+  reviewRequired: boolean;
+  approvalRequired: boolean;
+  acceptanceRequired: boolean;
   responsibleDeploymentAssignmentId: string | null;
   responsiblePositionId: string | null;
   responsiblePositionName: string | null;
@@ -77,6 +81,34 @@ export type DeliverableItem = {
   acceptedAt: string | null;
   createdAt: string;
   updatedAt: string;
+};
+
+export type DeliverableStageDecision = {
+  id: string;
+  stage: string;
+  itemVersion: number;
+  revisionLabel: string | null;
+  decisionId: string;
+  outcome: string;
+  reason: string;
+  deciderPartyId: string;
+  deciderName: string | null;
+  decidedAt: string;
+};
+
+export type DeliverableIssueRecipient = {
+  id: string;
+  deliverableIssueId: string;
+  issueRef: string;
+  revisionLabel: string | null;
+  recipientPartyId: string;
+  recipientName: string | null;
+  recipientRole: string | null;
+  responseStatus: string;
+  responseDecisionId: string | null;
+  responseNote: string | null;
+  respondedAt: string | null;
+  issuedAt: string;
 };
 
 export type DeliverableDeploymentAssignmentOption = {
@@ -147,6 +179,9 @@ SELECT di.id,
        dr.context_id AS contextId,
        dr.discipline_code AS disciplineCode,
        dr.classification_code AS classificationCode,
+       dr.review_required AS reviewRequired,
+       dr.approval_required AS approvalRequired,
+       dr.acceptance_required AS acceptanceRequired,
        di.responsible_deployment_assignment_id AS responsibleDeploymentAssignmentId,
        di.responsible_position_id AS responsiblePositionId,
        pos.name AS responsiblePositionName,

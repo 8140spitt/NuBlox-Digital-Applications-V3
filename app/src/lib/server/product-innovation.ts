@@ -342,11 +342,7 @@ export async function getItem(context: CommandContext, id: string) {
   return getItemRow(context, id);
 }
 
-export async function searchItems(
-  context: CommandContext,
-  query: string,
-  requestedLimit = 25
-) {
+export async function searchItems(context: CommandContext, query: string, requestedLimit = 25) {
   assertPermission(context, 'product.innovation.read');
   const needle = query.trim().slice(0, 191);
   if (!needle) return [] as ProductItem[];

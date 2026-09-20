@@ -28,17 +28,19 @@ What the organisation produces includes drawings, models, specifications, calcul
 ## Read the Handbook in this order
 
 1. [Complete Product Model](01-complete-product-model.md)
-2. [Functional Areas F01-F29](functional-areas/README.md)
-3. [Delivery Lifecycle](03-delivery-lifecycle.md)
-4. [Managed Deliverables & Business Output](04-managed-deliverables-and-output.md)
-5. [People, Jobs & Responsibilities](05-people-jobs-and-responsibilities.md)
-6. [Enterprise Data & Business Objects](06-enterprise-data-and-business-objects.md)
-7. [Process, Workflow, Authority & Evidence](07-process-workflow-authority-and-evidence.md)
-8. [User Experience & Workspaces](08-user-experience-and-workspaces.md)
-9. [Administration, Configuration & Integration](09-administration-configuration-and-integration.md)
-10. [System Architecture](10-system-architecture.md)
-11. [Product State & Roadmap](11-product-state-and-roadmap.md)
-12. [Glossary](12-glossary.md)
+2. [Functional Governance, Delivery & Deployment](02-functional-governance-delivery-and-deployment.md)
+3. [Functional Areas F01-F29](functional-areas/README.md)
+4. [84 Construction & Built Environment Jobs](construction-jobs/README.md)
+5. [Delivery Lifecycle](03-delivery-lifecycle.md)
+6. [Managed Deliverables & Business Output](04-managed-deliverables-and-output.md)
+7. [People, Jobs & Responsibilities](05-people-jobs-and-responsibilities.md)
+8. [Enterprise Data & Business Objects](06-enterprise-data-and-business-objects.md)
+9. [Process, Workflow, Authority & Evidence](07-process-workflow-authority-and-evidence.md)
+10. [User Experience & Workspaces](08-user-experience-and-workspaces.md)
+11. [Administration, Configuration & Integration](09-administration-configuration-and-integration.md)
+12. [System Architecture](10-system-architecture.md)
+13. [Product State & Roadmap](11-product-state-and-roadmap.md)
+14. [Glossary](12-glossary.md)
 
 ## Governing product tests
 

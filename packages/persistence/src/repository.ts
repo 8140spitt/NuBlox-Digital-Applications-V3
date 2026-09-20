@@ -432,7 +432,7 @@ export class MySqlKernelRepository {
       id: row.id as OrganisationUnit['id'],
       tenantId: row.tenant_id as TenantId,
       organisationId: row.organisation_id as OrganisationUnit['organisationId'],
-      ...(row.parent_unit_id ? { parentUnitId: row.parent_unit_id as OrganisationUnit['parentUnitId'] } : {}),
+      ...(row.parent_unit_id ? { parentUnitId: row.parent_unit_id as NonNullable<OrganisationUnit['parentUnitId']> } : {}),
       code: row.code,
       name: row.name,
       status: row.status
@@ -467,7 +467,7 @@ export class MySqlKernelRepository {
       id: row.id as Position['id'],
       tenantId: row.tenant_id as TenantId,
       organisationUnitId: row.organisation_unit_id as Position['organisationUnitId'],
-      ...(row.job_profile_id ? { jobProfileId: row.job_profile_id as Position['jobProfileId'] } : {}),
+      ...(row.job_profile_id ? { jobProfileId: row.job_profile_id as NonNullable<Position['jobProfileId']> } : {}),
       code: row.code,
       title: row.title,
       status: row.status

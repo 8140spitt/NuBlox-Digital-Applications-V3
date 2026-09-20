@@ -22,7 +22,7 @@ export function databaseConfigFromEnv(): PoolOptions {
     charset: 'utf8mb4',
     timezone: 'Z',
     multipleStatements: true,
-    ssl: process.env.NUBLOX_DB_SSL === 'true' ? {} : undefined
+    ...(process.env.NUBLOX_DB_SSL === 'true' ? { ssl: {} } : {})
   };
 }
 

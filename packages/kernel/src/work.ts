@@ -100,3 +100,11 @@ export interface WorkCompletionEvidence {
   workItemId: WorkItemId;
   evidenceRecordId: EvidenceRecordId;
 }
+
+export interface MyWorkProjectionItem {
+  workItem: WorkItem;
+  assignmentId: WorkAssignmentId;
+  responsibilityRole: WorkResponsibilityRole;
+  assignedThrough: WorkAssigneeType;
+  isOverdue: boolean;
+}

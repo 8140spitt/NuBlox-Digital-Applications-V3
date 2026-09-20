@@ -124,7 +124,7 @@ Implement:
 - closure;
 - resulting Baseline/configuration update.
 
-### P1.7 Platform Events & Portability — CURRENT
+### P1.7 Platform Events & Portability — IMPLEMENTED
 
 Implement:
 
@@ -136,7 +136,7 @@ Implement:
 - migration reconciliation;
 - search/index projection contracts.
 
-## Phase 2 — Functional Framework & Deployment
+## Phase 2 — Functional Framework & Deployment — CURRENT
 
 Implement:
 

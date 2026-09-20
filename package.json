@@ -5,8 +5,9 @@
   "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "pnpm --dir apps/web dev",
-    "check": "pnpm --dir apps/web check",
-    "build": "pnpm --dir apps/web build",
+    "check": "pnpm -r check",
+    "test": "pnpm -r --if-present test",
+    "build": "pnpm -r build",
     "format": "pnpm --dir apps/web format",
     "format:check": "pnpm --dir apps/web format:check"
   }

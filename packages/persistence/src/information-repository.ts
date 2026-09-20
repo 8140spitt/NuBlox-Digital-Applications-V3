@@ -35,6 +35,7 @@ import type {
   RowDataPacket
 } from 'mysql2/promise';
 import { withTransaction } from './database.js';
+import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface InformationContainerRow extends RowDataPacket {
@@ -345,6 +346,14 @@ function mapEffectivity(row: EffectivityRow): Effectivity {
     ...(row.expression ? { expression: row.expression } : {}),
     status: row.status
   };
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 export class MySqlInformationRepository {

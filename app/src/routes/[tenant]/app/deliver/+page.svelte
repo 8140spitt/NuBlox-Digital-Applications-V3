@@ -32,7 +32,10 @@
         <span class="eyebrow">Delivery capability</span>
         <h2>Workspaces</h2>
       </div>
-      <a href={'/' + data.tenantSlug + '/app/functions'}>All 29 functions</a>
+      <div class="section-links">
+        <a href={'/' + data.tenantSlug + '/app/deliverables'}>Deliverables</a>
+        <a href={'/' + data.tenantSlug + '/app/functions'}>All 29 functions</a>
+      </div>
     </div>
     <div class="rows">
       {#each functions as fn}
@@ -113,6 +116,11 @@
     font-size: 9.5px;
     font-weight: 800;
     text-decoration: none;
+  }
+  .section-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
   }
   .rows {
     display: grid;

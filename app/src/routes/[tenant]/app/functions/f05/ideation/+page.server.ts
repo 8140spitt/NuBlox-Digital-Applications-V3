@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { objectHref } from '$lib/data/runtime-object-registry';
 import { hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { listUnitsOfMeasure } from '$lib/server/reference-data';
@@ -39,7 +40,9 @@ function json(data: FormData, name: string) {
   }
 }
 function target(tenant: string, id?: string) {
-  return `/${tenant}/app/functions/f05/ideation${id ? '?item=' + encodeURIComponent(id) : ''}`;
+  return id
+    ? objectHref(tenant, 'item', id, { from: 'F05.03' })
+    : `/${tenant}/app/functions/f05/ideation`;
 }
 function problem(error: unknown) {
   return fail(400, {

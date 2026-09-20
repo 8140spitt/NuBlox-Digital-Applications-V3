@@ -1522,7 +1522,7 @@ export class MySqlFunctionalRepository {
     requirement: CompetenceRequirement
   ): Promise<void> {
     let query = '';
-    let params: unknown[] = [];
+    let params: string[] = [];
 
     switch (requirement.subjectType) {
       case 'FUNCTION':

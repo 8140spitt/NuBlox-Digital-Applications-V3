@@ -1,3 +1,5 @@
+export * from './access.js';
+export * from './access-factories.js';
 export * from './control.js';
 export * from './control-factories.js';
 export * from './errors.js';

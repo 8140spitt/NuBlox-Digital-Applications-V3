@@ -5,6 +5,7 @@ import type {
   ConfigurationItemId,
   DecisionId,
   DeliverableApprovalId,
+  DeliverableAuthoringBindingId,
   DeliverableConsequenceId,
   DeliverableItemId,
   DeliverableRequirementId,
@@ -66,6 +67,19 @@ export type DeliverableItemStatus =
   | 'REWORK'
   | 'CLOSED'
   | 'CANCELLED';
+
+export interface DeliverableAuthoringBinding {
+  id: DeliverableAuthoringBindingId;
+  tenantId: TenantId;
+  deliverableItemId: DeliverableItemId;
+  mode: AuthoringMode;
+  providerKey: string;
+  authoritativeObjectId?: CanonicalObjectId;
+  externalIdentityId?: import('./ids.js').ExternalIdentityId;
+  connectedReference?: string;
+  createdAt: string;
+  status: RecordStatus;
+}
 
 export interface DeliverableItem {
   id: DeliverableItemId;

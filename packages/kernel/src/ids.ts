@@ -73,6 +73,7 @@ export type TransmittalRecipientId = Brand<string, 'TransmittalRecipientId'>;
 export type RecipientResponseId = Brand<string, 'RecipientResponseId'>;
 export type DeliverableReworkId = Brand<string, 'DeliverableReworkId'>;
 export type DeliverableConsequenceId = Brand<string, 'DeliverableConsequenceId'>;
+export type DeliverableAuthoringBindingId = Brand<string, 'DeliverableAuthoringBindingId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

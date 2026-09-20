@@ -28,6 +28,15 @@ export type WorkflowDefinitionVersionId = Brand<string, 'WorkflowDefinitionVersi
 export type WorkflowInstanceId = Brand<string, 'WorkflowInstanceId'>;
 export type WorkItemId = Brand<string, 'WorkItemId'>;
 export type WorkAssignmentId = Brand<string, 'WorkAssignmentId'>;
+export type InformationContainerId = Brand<string, 'InformationContainerId'>;
+export type InformationRevisionId = Brand<string, 'InformationRevisionId'>;
+export type InformationIterationId = Brand<string, 'InformationIterationId'>;
+export type RepresentationId = Brand<string, 'RepresentationId'>;
+export type InformationIssueId = Brand<string, 'InformationIssueId'>;
+export type ConfigurationItemId = Brand<string, 'ConfigurationItemId'>;
+export type BaselineId = Brand<string, 'BaselineId'>;
+export type BaselineItemId = Brand<string, 'BaselineItemId'>;
+export type EffectivityId = Brand<string, 'EffectivityId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

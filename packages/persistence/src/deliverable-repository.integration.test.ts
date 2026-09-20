@@ -3,6 +3,7 @@ import {
   asId,
   type CanonicalObjectIdentity,
   type DeliverableApproval,
+  type DeliverableAuthoringBinding,
   type DeliverableConsequence,
   type DeliverableItem,
   type DeliverableRequirement,
@@ -157,8 +158,28 @@ suite('MySQL native Deliverable runtime', () => {
       correlationId: suffix
     });
 
-    const responsibility: DeliverableResponsibility = {
-      id: asId<'DeliverableResponsibilityId'>(`RESP-${suffix}`, 'Deliverable Responsibility'),
+
+    const authoringBinding: DeliverableAuthoringBinding = {
+      id: asId<'DeliverableAuthoringBindingId'>(`AUTHORING-${suffix}`, 'Deliverable Authoring Binding'),
+      tenantId,
+      deliverableItemId: item.id,
+      mode: 'NATIVE',
+      providerKey: 'NUBLOX_INFORMATION',
+      authoritativeObjectId: informationObject.id,
+      createdAt: '2026-09-20T10:00:30.000Z',
+      status: 'ACTIVE'
+    };
+    await deliverables.createAuthoringBinding(
+      tenantId,
+      authoringBinding,
+      { actorPersonId: author.id, correlationId: suffix }
+    );
+
+    expect(await deliverables.getAuthoringBinding(tenantId, item.id)).toEqual(
+      authoringBinding
+    );
+
+    const responsibility: DeliverableResponsibility = {      id: asId<'DeliverableResponsibilityId'>(`RESP-${suffix}`, 'Deliverable Responsibility'),
       tenantId,
       deliverableItemId: item.id,
       principalType: 'PERSON',

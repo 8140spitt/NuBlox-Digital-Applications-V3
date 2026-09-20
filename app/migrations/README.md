@@ -67,12 +67,14 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 - `0017_authority_policy_traceability.sql` — exact published authority-policy rule/version references on protected Decisions and approved Delegated Authority grants.
 - `0018_strategic_assumption_runtime.sql` — AGG-02-ASSUMPTION governed strategic assumptions with immutable versions, evidence links and assessment lifecycle.
 
-Future schema changes start at `0037_...`; historical migrations remain immutable.
+Historical migrations remain immutable. The current schema baseline extends through `0038_functional_governance_deployment_runtime.sql`; future schema changes start at `0039_...`.
 
 - `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
 - `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
 - `0035_marketing_brand_runtime.sql` — F06 Market Segment, Communications Plan/Campaign, Communication Item, Lead, privacy consent/preference evidence, delivery/event evidence and reproducible marketing analytics runtime.
 - `0036_work_context_edit_lease_runtime.sql` — cross-cutting Task Bar work contexts, recoverable drafts, cooperative edit leases and immutable Party origination metadata.
+- `0037_personal_navigation_state.sql` — personal Saved Views, Recent and Favourites navigation state.
+- `0038_functional_governance_deployment_runtime.sql` — persisted Worker Relationships, Job Profiles, Positions, competence, governed functional definitions/versions/change and context-specific Functional Deployment/Assignment.
 
 ## Validation and test contract
 

@@ -13,6 +13,13 @@ export type AuthorityGrantId = Brand<string, 'AuthorityGrantId'>;
 export type DelegationId = Brand<string, 'DelegationId'>;
 export type CanonicalObjectId = Brand<string, 'CanonicalObjectId'>;
 export type CanonicalRelationshipId = Brand<string, 'CanonicalRelationshipId'>;
+export type LifecycleDefinitionId = Brand<string, 'LifecycleDefinitionId'>;
+export type LifecycleStateDefinitionId = Brand<string, 'LifecycleStateDefinitionId'>;
+export type LifecycleTransitionDefinitionId = Brand<string, 'LifecycleTransitionDefinitionId'>;
+export type ObjectLifecycleStateId = Brand<string, 'ObjectLifecycleStateId'>;
+export type DecisionId = Brand<string, 'DecisionId'>;
+export type BusinessEventId = Brand<string, 'BusinessEventId'>;
+export type EvidenceRecordId = Brand<string, 'EvidenceRecordId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

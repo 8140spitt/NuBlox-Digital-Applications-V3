@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { objectHref } from '$lib/data/runtime-object-registry';
+
   let { data, form } = $props();
 
   function href(id: string) {
-    return `/${data.tenantSlug}/app/functions/f01/strategic-objectives?objective=${encodeURIComponent(id)}`;
+    return objectHref(data.tenantSlug, 'strategic-objective', id, { from: 'F01.03' });
   }
 </script>
 

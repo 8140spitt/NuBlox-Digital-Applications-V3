@@ -74,6 +74,14 @@ export type RecipientResponseId = Brand<string, 'RecipientResponseId'>;
 export type DeliverableReworkId = Brand<string, 'DeliverableReworkId'>;
 export type DeliverableConsequenceId = Brand<string, 'DeliverableConsequenceId'>;
 export type DeliverableAuthoringBindingId = Brand<string, 'DeliverableAuthoringBindingId'>;
+export type IndustrySolutionId = Brand<string, 'IndustrySolutionId'>;
+export type DeliveryDomainId = Brand<string, 'DeliveryDomainId'>;
+export type IndustryJobProfileId = Brand<string, 'IndustryJobProfileId'>;
+export type SectorClassificationSchemeId = Brand<string, 'SectorClassificationSchemeId'>;
+export type SectorClassificationValueId = Brand<string, 'SectorClassificationValueId'>;
+export type IndustryObjectClassificationId = Brand<string, 'IndustryObjectClassificationId'>;
+export type ConstructionContextProfileId = Brand<string, 'ConstructionContextProfileId'>;
+export type ConstructionWorkProductTypeId = Brand<string, 'ConstructionWorkProductTypeId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

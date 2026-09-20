@@ -279,7 +279,8 @@ suite('MySQL platform events and portability runtime', () => {
     expect(renewed.record.id).toBe(`IDEMP-RENEWED-${suffix}`);
     expect(renewed.record.status).toBe('IN_PROGRESS');
 
-    const job: IntegrationJob = {      id: asId<'IntegrationJobId'>(`JOB-${suffix}`, 'Integration Job'),
+    const job: IntegrationJob = {
+      id: asId<'IntegrationJobId'>(`JOB-${suffix}`, 'Integration Job'),
       tenantId,
       jobType: 'IMPORT',
       sourceSystem: 'PTC_WINDCHILL',

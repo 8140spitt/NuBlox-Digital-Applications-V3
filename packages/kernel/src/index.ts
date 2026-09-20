@@ -1,3 +1,4 @@
+export * from './my-work.js';
 export * from './deliverables.js';
 export * from './deliverable-factories.js';
 export * from './functional.js';

@@ -1,0 +1,68 @@
+name: Temporary Runtime Prettier Export
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/runtime-prettier-export.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: corepack enable
+      - run: pnpm install --no-frozen-lockfile
+      - name: Format target files
+        run: |
+          pnpm exec prettier --write \
+            src/lib/data/runtime-object-registry.test.ts \
+            src/lib/data/runtime-object-registry.ts \
+            src/lib/server/information-container.ts \
+            src/lib/server/product-innovation.ts \
+            src/lib/server/runtime-object-resolver.ts \
+            src/lib/server/runtime-object-search.test.ts \
+            src/lib/server/runtime-object-search.ts \
+            src/lib/server/strategic-objective.ts \
+            src/lib/server/strategy-framework.ts \
+            'src/routes/[tenant]/app/functions/f01/strategic-objectives/+page.server.ts' \
+            'src/routes/[tenant]/app/functions/f01/strategic-objectives/+page.svelte' \
+            'src/routes/[tenant]/app/functions/f01/strategy-framework/+page.server.ts' \
+            'src/routes/[tenant]/app/functions/f01/strategy-framework/+page.svelte' \
+            'src/routes/[tenant]/app/functions/f05/ideation/+page.server.ts' \
+            'src/routes/[tenant]/app/functions/f05/ideation/+page.svelte'
+      - name: Export formatted files
+        run: |
+          files=(
+            "src/lib/data/runtime-object-registry.test.ts"
+            "src/lib/data/runtime-object-registry.ts"
+            "src/lib/server/information-container.ts"
+            "src/lib/server/product-innovation.ts"
+            "src/lib/server/runtime-object-resolver.ts"
+            "src/lib/server/runtime-object-search.test.ts"
+            "src/lib/server/runtime-object-search.ts"
+            "src/lib/server/strategic-objective.ts"
+            "src/lib/server/strategy-framework.ts"
+            "src/routes/[tenant]/app/functions/f01/strategic-objectives/+page.server.ts"
+            "src/routes/[tenant]/app/functions/f01/strategic-objectives/+page.svelte"
+            "src/routes/[tenant]/app/functions/f01/strategy-framework/+page.server.ts"
+            "src/routes/[tenant]/app/functions/f01/strategy-framework/+page.svelte"
+            "src/routes/[tenant]/app/functions/f05/ideation/+page.server.ts"
+            "src/routes/[tenant]/app/functions/f05/ideation/+page.svelte"
+          )
+          for file in "${files[@]}"; do
+            echo "@@FILE:$file@@"
+            base64 -w0 "$file"
+            echo
+            echo "@@END@@"
+          done

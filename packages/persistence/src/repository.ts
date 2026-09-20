@@ -127,6 +127,16 @@ function auditColumns(audit: AuditContext): [string | null, string | null] {
   return [audit.actorPersonId ?? null, audit.correlationId ?? null];
 }
 
+function databaseDate(value: string): Date {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid date/time value: ${value}`);
+  }
+
+  return date;
+}
+
 async function writeAudit(
   connection: PoolConnection,
   tenantId: string,
@@ -278,7 +288,7 @@ export class MySqlKernelRepository {
         `INSERT INTO position_occupancies
           (id, tenant_id, position_id, person_id, effective_from, effective_to, created_by_person_id)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [occupancy.id, occupancy.tenantId, occupancy.positionId, occupancy.personId, occupancy.effectiveFrom, occupancy.effectiveTo ?? null, audit.actorPersonId ?? null]
+        [occupancy.id, occupancy.tenantId, occupancy.positionId, occupancy.personId, databaseDate(occupancy.effectiveFrom), occupancy.effectiveTo ? databaseDate(occupancy.effectiveTo) : null, audit.actorPersonId ?? null]
       );
       await writeAudit(connection, occupancy.tenantId, 'POSITION_OCCUPANCY', occupancy.id, 'CREATED', audit, occupancy);
     });
@@ -316,7 +326,7 @@ export class MySqlKernelRepository {
         `INSERT INTO authority_grants
           (id, tenant_id, authority_definition_id, grantee_type, grantee_id, scope_type, scope_id, limit_value, effective_from, effective_to, status, created_by_person_id, updated_by_person_id)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [grant.id, grant.tenantId, grant.authorityDefinitionId, grant.granteeType, grant.granteeId, grant.scopeType, grant.scopeId ?? null, grant.limitValue ?? null, grant.effectiveFrom, grant.effectiveTo ?? null, grant.status, audit.actorPersonId ?? null, audit.actorPersonId ?? null]
+        [grant.id, grant.tenantId, grant.authorityDefinitionId, grant.granteeType, grant.granteeId, grant.scopeType, grant.scopeId ?? null, grant.limitValue ?? null, databaseDate(grant.effectiveFrom), grant.effectiveTo ? databaseDate(grant.effectiveTo) : null, grant.status, audit.actorPersonId ?? null, audit.actorPersonId ?? null]
       );
       await writeAudit(connection, grant.tenantId, 'AUTHORITY_GRANT', grant.id, 'CREATED', audit, grant);
     });
@@ -334,7 +344,7 @@ export class MySqlKernelRepository {
         `INSERT INTO delegations
           (id, tenant_id, authority_grant_id, delegated_by_person_id, delegated_to_person_id, effective_from, effective_to, reason, status, created_by_person_id)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [delegation.id, delegation.tenantId, delegation.authorityGrantId, delegation.delegatedByPersonId, delegation.delegatedToPersonId, delegation.effectiveFrom, delegation.effectiveTo ?? null, delegation.reason, delegation.status, audit.actorPersonId ?? null]
+        [delegation.id, delegation.tenantId, delegation.authorityGrantId, delegation.delegatedByPersonId, delegation.delegatedToPersonId, databaseDate(delegation.effectiveFrom), delegation.effectiveTo ? databaseDate(delegation.effectiveTo) : null, delegation.reason, delegation.status, audit.actorPersonId ?? null]
       );
       await writeAudit(connection, delegation.tenantId, 'DELEGATION', delegation.id, 'CREATED', audit, delegation);
     });
@@ -350,7 +360,7 @@ export class MySqlKernelRepository {
       await connection.execute(
         `INSERT INTO canonical_objects (id, tenant_id, object_type, stable_key, created_at)
          VALUES (?, ?, ?, ?, ?)`,
-        [object.id, object.tenantId, object.objectType, object.stableKey, object.createdAt]
+        [object.id, object.tenantId, object.objectType, object.stableKey, databaseDate(object.createdAt)]
       );
       await writeAudit(connection, object.tenantId, 'CANONICAL_OBJECT', object.id, 'CREATED', audit, object);
     });
@@ -371,7 +381,7 @@ export class MySqlKernelRepository {
         `INSERT INTO canonical_relationships
           (id, tenant_id, relationship_type, from_object_id, to_object_id, effective_from, effective_to, status, metadata, created_by_person_id)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [relationship.id, relationship.tenantId, relationship.relationshipType, relationship.fromObjectId, relationship.toObjectId, relationship.effectiveFrom, relationship.effectiveTo ?? null, relationship.status, relationship.metadata ? JSON.stringify(relationship.metadata) : null, audit.actorPersonId ?? null]
+        [relationship.id, relationship.tenantId, relationship.relationshipType, relationship.fromObjectId, relationship.toObjectId, databaseDate(relationship.effectiveFrom), relationship.effectiveTo ? databaseDate(relationship.effectiveTo) : null, relationship.status, relationship.metadata ? JSON.stringify(relationship.metadata) : null, audit.actorPersonId ?? null]
       );
       await writeAudit(connection, relationship.tenantId, 'CANONICAL_RELATIONSHIP', relationship.id, 'CREATED', audit, relationship);
     });

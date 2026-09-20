@@ -32,6 +32,8 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Professional Job Architecture Gap Register](professional-job-architecture-gap-register.csv) — explicit gaps/partial matches between real sector jobs and the prior function-derived Job Profile baseline.
 - [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row register; 382/382 source profiles have an employment treatment and unresolved = 0.
 - [Canonical Employment Job Catalogue](employment-job-catalogue.csv) — 462 candidate employment jobs combining 374 reconciled source-derived jobs with 88 additional Wave jobs.
+- [Employment Job Validation Register](employment-job-validation-register.csv) — 462-row J1 validation backlog; 367 jobs have exact-activity trace and 95 legacy Wave 1-4 jobs require uplift.
+- [J1 Employment Job Validation Gate](employment-job-validation-gate.md) — governing criteria for canonical/lifecycle/responsibility/authority/Job-Workbench/role-acceptance validation.
 - [Employment Job Catalogue Rationale](employment-job-catalogue.md) — governing interpretation of the 462-job candidate employment catalogue.
 - [Project Manager Composed Job Profile](composed-job-profile-project-manager.md) — first cross-sub-function employment profile with exact Work-Product/activity trace and explicit activity gaps.
 - [F27 Job Profile Reconciliation](job-profile-reconciliation-f27.md) — complete employment-model reconciliation for Portfolio, Programme & Project Management.

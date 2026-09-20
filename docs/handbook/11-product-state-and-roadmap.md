@@ -23,6 +23,46 @@ The product is now defined around:
 
 The repository currently contains material capability around tenant context, authentication, membership and permissions, delegated-authority foundations, Party/Person/Organisation foundations, organisation structure, shared work/work items, authorised decisions, governed evidence, audit/business events/outbox, classifications, lifecycle configuration, authority configuration, reference data/history, permission access requests, work contexts, drafts/edit leases, personal navigation state and object resolution/search.
 
+## Newly implemented functional-deployment runtime
+
+The application now persists and exposes the first reusable Governance / Delivery / Deployment runtime:
+
+- governed enterprise Functional Definitions and controlled versions/baselines;
+- 29 enterprise-function seed definitions;
+- 16 Construction & Built Environment delivery-domain seed definitions;
+- 84 sector Job Profiles;
+- Worker Relationships;
+- Positions and Position Assignments;
+- competence definitions, requirements and Person competence evidence;
+- Job-to-Function relationships;
+- Functional Change records;
+- Deployment Requirements;
+- Functional Deployments and Deployment Assignments;
+- project/contract/package/site/asset/organisation/enterprise responsibility scope;
+- Position / Person / Organisation allocation;
+- authority-reference linkage;
+- platform audit and business-event evidence.
+
+## Newly implemented managed-deliverable runtime
+
+The application now contains the first reusable Managed Deliverable runtime:
+
+- Deliverable Requirement identity separate from the actual Deliverable Item;
+- requirement source and delivery context;
+- linkage to Functional Definition, Functional Deployment and required Job Profile;
+- responsible deployment assignment, Position, Person and originating Organisation;
+- Native / Assisted / Connected / Ingested authoring modes;
+- controlled output type, discipline, classification and planned dates;
+- optional controlled Information Container creation for drawings/models/documents and other controlled information;
+- shared authoring Workflow and Work Item creation;
+- automatic My Work routing where the responsible Person is an active tenant member;
+- canonical Deliverable Item object routing;
+- participant responsibility;
+- issue/transmittal and recipient response persistence;
+- full platform audit/business-event evidence.
+
+This is the first delivery-runtime slice. Review/approval/acceptance workflow depth, connected-authoring adapters, bulk deliverable schedules and broader job-specific authoring experiences remain implementation work.
+
 ## Current application surface
 
 Application routes/workspaces exist for Home, Operate, Deliver, Enterprise Data, Functions, My Work, Search, canonical object routing and administration/master/reference/security areas.

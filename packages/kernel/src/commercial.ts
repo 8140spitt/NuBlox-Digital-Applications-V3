@@ -48,6 +48,7 @@ export type CostPlanStatus = 'ACTIVE' | 'CLOSED' | 'CANCELLED';
 export interface CostPlan {
   id: CostPlanId;
   tenantId: TenantId;
+  canonicalObjectId: CanonicalObjectId;
   projectObjectId: CanonicalObjectId;
   code: string;
   title: string;
@@ -141,6 +142,7 @@ export type CommercialValuationStatus =
 export interface CommercialValuation {
   id: CommercialValuationId;
   tenantId: TenantId;
+  canonicalObjectId: CanonicalObjectId;
   projectObjectId: CanonicalObjectId;
   commercialContextObjectId?: CanonicalObjectId;
   sourceApplicationId?: CommercialValuationId;
@@ -177,6 +179,7 @@ export type CommercialForecastStatus =
 export interface CommercialForecast {
   id: CommercialForecastId;
   tenantId: TenantId;
+  canonicalObjectId: CanonicalObjectId;
   projectObjectId: CanonicalObjectId;
   reportingCutoffAt: string;
   currency: string;
@@ -208,6 +211,7 @@ export type CommercialFinalAccountStatus =
 export interface CommercialFinalAccount {
   id: CommercialFinalAccountId;
   tenantId: TenantId;
+  canonicalObjectId: CanonicalObjectId;
   projectObjectId: CanonicalObjectId;
   commercialContextObjectId?: CanonicalObjectId;
   currency: string;

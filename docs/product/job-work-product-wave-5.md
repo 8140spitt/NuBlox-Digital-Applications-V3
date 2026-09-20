@@ -3,8 +3,8 @@
 **Status:** candidate explicit Work-Product decomposition  
 **Date:** 20 September 2026  
 **Functions:** F01-F06  
-**Jobs:** 49  
-**Work Products:** 197
+**Jobs:** 55  
+**Work Products:** 238
 
 ## Why this wave exists
 

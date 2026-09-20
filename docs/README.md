@@ -1,43 +1,26 @@
 # NuBlox Construction & The Built Environment — Documentation
 
-This directory contains the **live documentation for the product**.
+This is the live documentation for the current NuBlox product definition.
 
-If you are trying to understand NuBlox, start here and stay here.
+## Start here
 
-## Read in this order
+1. [Product Handbook](handbook/README.md)
+2. [Complete Product Model](handbook/01-complete-product-model.md)
+3. [Functional Areas F01-F29](handbook/functional-areas/README.md)
+4. [Delivery Lifecycle](handbook/03-delivery-lifecycle.md)
+5. [Managed Deliverables & Business Output](handbook/04-managed-deliverables-and-output.md)
+6. [User Guide](user-guide/README.md)
+7. [Administrator Guide](admin-guide/README.md)
+8. [Product State & Roadmap](handbook/11-product-state-and-roadmap.md)
+9. [System Architecture](handbook/10-system-architecture.md)
+10. [Architecture Decisions](decisions/)
 
-1. [Product Handbook](handbook/README.md) — what NuBlox is and how the business operates in it.
-2. [Functional Areas F01–F29](handbook/functional-areas/README.md) — the complete business-function model.
-3. [Deliver the Business](handbook/04-deliver-the-business.md) — how the functions work together to win and deliver construction/built-environment work.
-4. [User Guide](user-guide/README.md) — how a person uses NuBlox.
-5. [Administrator Guide](admin-guide/README.md) — how NuBlox is administered.
-6. [Product State & Roadmap](handbook/08-product-state-and-roadmap.md) — target product versus what is implemented today.
-7. [System Architecture](handbook/07-system-architecture.md) — the current architectural model.
-8. [Architecture Decisions](decisions/) — active ADRs only.
+## The product in one line
 
-## What belongs in `docs/`
+NuBlox is the single enterprise system through which a construction and built-environment organisation defines itself, operates its functional areas, delivers its work and manages everything its people are required to produce.
 
-Only documentation that is actively used to understand, operate, administer or build the current product.
+## Live documentation rule
 
-```text
-docs/
-├── README.md
-├── handbook/
-├── user-guide/
-├── admin-guide/
-└── decisions/
-```
+Only current product, user, administrator and active decision documentation belongs under docs.
 
-## Historical and supporting material
-
-Discovery registers, old architecture papers, detailed semantic studies, benchmark waves, reconciliation material and superseded design references have been moved to:
-
-`archive/documentation/`
-
-They remain in Git for provenance but are **not part of the normal documentation path**.
-
-## Rule from now on
-
-Do not add a new top-level folder to `docs/` without a clear ongoing audience and ownership.
-
-If a document exists only to explain how we reached a historic decision, it belongs in `archive/`, not in the live product documentation.
+Historical discovery, benchmarking and superseded technical material belongs under archive/documentation.

@@ -189,6 +189,21 @@ Mappings should preserve where relevant:
 
 The target is the NuBlox canonical model, not a cloned Windchill schema.
 
+## Required restructuring of the architecture diagram
+
+The current 16-page source remains valuable study evidence, but its future presentation must be reorganised so NuBlox—not Windchill—is the centre of the architecture.
+
+The governing diagram structure is:
+
+1. **NuBlox Product Architecture** — Enterprise Operating Platform and product layers.
+2. **Enterprise Platform Kernel** — canonical objects, identity, Organisation, Authority, Lifecycle, Workflow, Change, Baseline, information, Decision, Evidence and audit.
+3. **Functional / Domain Framework** — 29 governed Functions, native tools, policies/processes and cross-domain operation.
+4. **Native Work-Delivery Runtime** — deployment, assignment, Work, Deliverable, review, Decision, approval, issue, Acceptance and Evidence.
+5. **Construction & Built Environment Industry Solution** — 16 Delivery Domains, 84 Job Profiles and construction-specific contexts/outputs.
+6. **Windchill Capability Comparison & Migration Mapping** — retained Windchill concepts, gaps, redesign choices, system-of-record decisions and migration mappings.
+
+The original Windchill infrastructure/object/control pages therefore move into section 6 as reference evidence. They do not appear above or around NuBlox as a parent/foundation layer.
+
 ## Improvement direction
 
 NuBlox takes the strongest controlled-object/configuration ideas from PLM and applies them across one Enterprise Operating Platform that also governs:

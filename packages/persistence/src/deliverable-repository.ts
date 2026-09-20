@@ -2,6 +2,7 @@ import {
   bindDeliverableOutput,
   closeDeliverable,
   createDeliverableApproval,
+  createDeliverableAuthoringBinding,
   createDeliverableConsequence,
   createDeliverableItem,
   createDeliverableRequirement,
@@ -21,6 +22,7 @@ import {
   type CanonicalObjectIdentity,
   type Decision,
   type DeliverableApproval,
+  type DeliverableAuthoringBinding,
   type DeliverableConsequence,
   type DeliverableItem,
   type DeliverableRequirement,
@@ -28,6 +30,7 @@ import {
   type DeliverableReview,
   type DeliverableRework,
   type FunctionDefinition,
+  type ExternalIdentity,
   type FunctionalDeployment,
   type Organisation,
   type OrganisationUnit,
@@ -51,6 +54,30 @@ import type {
 import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
+
+interface AuthoringBindingRow extends RowDataPacket {
+  id: string;
+  tenant_id: string;
+  deliverable_item_id: string;
+  mode: DeliverableAuthoringBinding['mode'];
+  provider_key: string;
+  authoritative_object_id: string | null;
+  external_identity_id: string | null;
+  connected_reference: string | null;
+  created_at: Date;
+  status: DeliverableAuthoringBinding['status'];
+}
+
+interface ExternalIdentityRow extends RowDataPacket {
+  id: string;
+  tenant_id: string;
+  canonical_object_id: string;
+  external_system: string;
+  external_object_type: string;
+  external_object_id: string;
+  external_version: string | null;
+  source_reference: string | null;
+}
 
 interface RequirementRow extends RowDataPacket {
   id: string;
@@ -278,6 +305,38 @@ async function writeAudit(
     eventType: `${entityType}.${action}`,
     payload
   });
+}
+
+function mapAuthoringBinding(row: AuthoringBindingRow): DeliverableAuthoringBinding {
+  return {
+    id: row.id as DeliverableAuthoringBinding['id'],
+    tenantId: row.tenant_id as TenantId,
+    deliverableItemId: row.deliverable_item_id as DeliverableAuthoringBinding['deliverableItemId'],
+    mode: row.mode,
+    providerKey: row.provider_key,
+    ...(row.authoritative_object_id
+      ? { authoritativeObjectId: row.authoritative_object_id as NonNullable<DeliverableAuthoringBinding['authoritativeObjectId']> }
+      : {}),
+    ...(row.external_identity_id
+      ? { externalIdentityId: row.external_identity_id as NonNullable<DeliverableAuthoringBinding['externalIdentityId']> }
+      : {}),
+    ...(row.connected_reference ? { connectedReference: row.connected_reference } : {}),
+    createdAt: row.created_at.toISOString(),
+    status: row.status
+  };
+}
+
+function mapExternalIdentity(row: ExternalIdentityRow): ExternalIdentity {
+  return {
+    id: row.id as ExternalIdentity['id'],
+    tenantId: row.tenant_id as TenantId,
+    canonicalObjectId: row.canonical_object_id as ExternalIdentity['canonicalObjectId'],
+    externalSystem: row.external_system,
+    externalObjectType: row.external_object_type,
+    externalObjectId: row.external_object_id,
+    ...(row.external_version ? { externalVersion: row.external_version } : {}),
+    ...(row.source_reference ? { sourceReference: row.source_reference } : {})
+  };
 }
 
 function mapRequirement(row: RequirementRow): DeliverableRequirement {
@@ -541,6 +600,81 @@ export class MySqlDeliverableRepository {
       );
       await writeAudit(connection, tenantId, 'DELIVERABLE_REQUIREMENT', requirement.id, 'CREATED', audit, requirement);
     });
+  }
+
+  async createAuthoringBinding(
+    tenantId: TenantId,
+    binding: DeliverableAuthoringBinding,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    if (binding.tenantId !== tenantId) {
+      throw new Error('Persistence operation crossed tenant boundary.');
+    }
+
+    const item = await this.requireItem(tenantId, binding.deliverableItemId);
+    const requirement = await this.requireRequirement(tenantId, item.requirementId);
+    const [authoritativeObject, externalIdentity] = await Promise.all([
+      binding.authoritativeObjectId
+        ? this.requireObject(tenantId, binding.authoritativeObjectId)
+        : Promise.resolve(undefined),
+      binding.externalIdentityId
+        ? this.requireExternalIdentity(tenantId, binding.externalIdentityId)
+        : Promise.resolve(undefined)
+    ]);
+
+    createDeliverableAuthoringBinding(binding, item, requirement, {
+      ...(authoritativeObject ? { authoritativeObject } : {}),
+      ...(externalIdentity ? { externalIdentity } : {})
+    });
+
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO deliverable_authoring_bindings
+          (id, tenant_id, deliverable_item_id, mode, provider_key,
+           authoritative_object_id, external_identity_id, connected_reference,
+           created_at, status, created_by_person_id, updated_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          binding.id,
+          binding.tenantId,
+          binding.deliverableItemId,
+          binding.mode,
+          binding.providerKey,
+          binding.authoritativeObjectId ?? null,
+          binding.externalIdentityId ?? null,
+          binding.connectedReference ?? null,
+          databaseDate(binding.createdAt),
+          binding.status,
+          audit.actorPersonId ?? null,
+          audit.actorPersonId ?? null
+        ]
+      );
+
+      await writeAudit(
+        connection,
+        tenantId,
+        'DELIVERABLE_AUTHORING_BINDING',
+        binding.id,
+        'CREATED',
+        audit,
+        binding
+      );
+    });
+  }
+
+  async getAuthoringBinding(
+    tenantId: TenantId,
+    itemId: DeliverableItem['id']
+  ): Promise<DeliverableAuthoringBinding | undefined> {
+    const [rows] = await this.pool.execute<AuthoringBindingRow[]>(
+      `SELECT id, tenant_id, deliverable_item_id, mode, provider_key,
+              authoritative_object_id, external_identity_id, connected_reference,
+              created_at, status
+         FROM deliverable_authoring_bindings
+        WHERE tenant_id = ? AND deliverable_item_id = ?`,
+      [tenantId, itemId]
+    );
+    return rows[0] ? mapAuthoringBinding(rows[0]) : undefined;
   }
 
   async createItem(
@@ -1254,6 +1388,24 @@ export class MySqlDeliverableRepository {
       ...(row.trading_name ? { tradingName: String(row.trading_name) } : {}),
       status: row.status as Organisation['status']
     };
+  }
+
+  private async requireExternalIdentity(
+    tenantId: TenantId,
+    id: string,
+    connection: Pool | PoolConnection = this.pool
+  ): Promise<ExternalIdentity> {
+    const [rows] = await connection.execute<ExternalIdentityRow[]>(
+      `SELECT id, tenant_id, canonical_object_id, external_system,
+              external_object_type, external_object_id, external_version,
+              source_reference
+         FROM external_identities
+        WHERE tenant_id = ? AND id = ?`,
+      [tenantId, id]
+    );
+    const row = rows[0];
+    if (!row) throw new Error('External Identity not found in tenant.');
+    return mapExternalIdentity(row);
   }
 
   private async requireTransmittal(

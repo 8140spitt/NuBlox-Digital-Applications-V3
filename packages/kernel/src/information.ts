@@ -142,3 +142,14 @@ export interface Effectivity {
   expression?: string;
   status: RecordStatus;
 }
+
+export interface ConfigurationStatusEntry {
+  baselineId: BaselineId;
+  baselineCode: string;
+  baselineStatus: BaselineStatus;
+  configurationItemId: ConfigurationItemId;
+  configurationItemCode: string;
+  configurationItemName: string;
+  subjectVersion: string;
+  effectivities: ReadonlyArray<Effectivity>;
+}

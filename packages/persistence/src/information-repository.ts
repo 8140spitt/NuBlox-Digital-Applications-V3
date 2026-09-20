@@ -20,7 +20,6 @@ import {
   type ConfigurationStatusEntry,
   type Decision,
   type Effectivity,
-  type EvidenceRecordId,
   type InformationContainer,
   type InformationIssue,
   type InformationIteration,

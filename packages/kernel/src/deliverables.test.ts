@@ -6,6 +6,7 @@ import {
   closeDeliverable,
   createDecision,
   createDeliverableApproval,
+  createDeliverableAuthoringBinding,
   createDeliverableItem,
   createDeliverableRequirement,
   createDeliverableReview,
@@ -22,6 +23,7 @@ import {
   type CanonicalObjectIdentity,
   type DeliverableItem,
   type DeliverableRequirement,
+  type ExternalIdentity,
   type Party,
   type Person
 } from './index.js';
@@ -323,4 +325,131 @@ describe('native Deliverable runtime invariants', () => {
     expect(revisionB.governedOutputVersion).toBe('B');
     expect(rework.previousSubjectVersion).toBe('A');
   });
+
+  it('governs native, connected and externally authoritative authoring without changing Deliverable identity', () => {
+    const native = createDeliverableAuthoringBinding(
+      {
+        id: asId<'DeliverableAuthoringBindingId'>('AUTHORING-NATIVE', 'Deliverable Authoring Binding'),
+        tenantId,
+        deliverableItemId: planned.id,
+        mode: 'NATIVE',
+        providerKey: 'NUBLOX_INFORMATION',
+        authoritativeObjectId: output.id,
+        createdAt: '2026-09-20T10:00:00.000Z',
+        status: 'ACTIVE'
+      },
+      planned,
+      requirement,
+      { authoritativeObject: output }
+    );
+    expect(native.authoritativeObjectId).toBe(output.id);
+
+    const connectedRequirement = createDeliverableRequirement(
+      {
+        ...requirement,
+        id: asId<'DeliverableRequirementId'>('REQ-CONNECTED', 'Deliverable Requirement'),
+        code: 'REQ-CONNECTED',
+        authoringMode: 'CONNECTED'
+      },
+      project
+    );
+    const connectedObject: CanonicalObjectIdentity = {
+      ...itemObject,
+      id: asId<'CanonicalObjectId'>('OBJ-DEL-CONNECTED', 'Canonical Object'),
+      stableKey: 'DEL-CONNECTED'
+    };
+    const connectedItem = createDeliverableItem(
+      {
+        ...planned,
+        id: asId<'DeliverableItemId'>('DEL-CONNECTED', 'Deliverable Item'),
+        canonicalObjectId: connectedObject.id,
+        requirementId: connectedRequirement.id,
+        code: 'DEL-CONNECTED'
+      },
+      connectedObject,
+      connectedRequirement,
+      project
+    );
+    const connected = createDeliverableAuthoringBinding(
+      {
+        id: asId<'DeliverableAuthoringBindingId'>('AUTHORING-CONNECTED', 'Deliverable Authoring Binding'),
+        tenantId,
+        deliverableItemId: connectedItem.id,
+        mode: 'CONNECTED',
+        providerKey: 'AUTODESK_REVIT',
+        connectedReference: 'revit://model/ground-floor-plan',
+        createdAt: '2026-09-20T10:00:00.000Z',
+        status: 'ACTIVE'
+      },
+      connectedItem,
+      connectedRequirement
+    );
+    expect(connected.connectedReference).toContain('revit://');
+
+    const externalRequirement = createDeliverableRequirement(
+      {
+        ...requirement,
+        id: asId<'DeliverableRequirementId'>('REQ-EXTERNAL', 'Deliverable Requirement'),
+        code: 'REQ-EXTERNAL',
+        authoringMode: 'EXTERNAL_AUTHORITATIVE'
+      },
+      project
+    );
+    const externalObject: CanonicalObjectIdentity = {
+      ...itemObject,
+      id: asId<'CanonicalObjectId'>('OBJ-DEL-EXTERNAL', 'Canonical Object'),
+      stableKey: 'DEL-EXTERNAL'
+    };
+    const externalItem = createDeliverableItem(
+      {
+        ...planned,
+        id: asId<'DeliverableItemId'>('DEL-EXTERNAL', 'Deliverable Item'),
+        canonicalObjectId: externalObject.id,
+        requirementId: externalRequirement.id,
+        code: 'DEL-EXTERNAL'
+      },
+      externalObject,
+      externalRequirement,
+      project
+    );
+    const externalIdentity: ExternalIdentity = {
+      id: asId<'ExternalIdentityId'>('EXT-WINDCHILL-A1001', 'External Identity'),
+      tenantId,
+      canonicalObjectId: output.id,
+      externalSystem: 'PTC_WINDCHILL',
+      externalObjectType: 'WTDocument',
+      externalObjectId: 'OR:wt.doc.WTDocument:12345',
+      externalVersion: 'A.3'
+    };
+    const external = createDeliverableAuthoringBinding(
+      {
+        id: asId<'DeliverableAuthoringBindingId'>('AUTHORING-EXTERNAL', 'Deliverable Authoring Binding'),
+        tenantId,
+        deliverableItemId: externalItem.id,
+        mode: 'EXTERNAL_AUTHORITATIVE',
+        providerKey: 'PTC_WINDCHILL',
+        externalIdentityId: externalIdentity.id,
+        createdAt: '2026-09-20T10:00:00.000Z',
+        status: 'ACTIVE'
+      },
+      externalItem,
+      externalRequirement,
+      { externalIdentity }
+    );
+    expect(external.externalIdentityId).toBe(externalIdentity.id);
+
+    expect(() =>
+      createDeliverableAuthoringBinding(
+        {
+          ...external,
+          id: asId<'DeliverableAuthoringBindingId'>('AUTHORING-BAD-MODE', 'Deliverable Authoring Binding'),
+          mode: 'NATIVE'
+        },
+        externalItem,
+        externalRequirement,
+        { externalIdentity }
+      )
+    ).toThrow(KernelInvariantError);
+  });
+
 });

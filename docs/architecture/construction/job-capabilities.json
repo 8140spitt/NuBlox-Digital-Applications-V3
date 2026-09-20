@@ -1,0 +1,2207 @@
+{
+  "version": 1,
+  "industrySolutionId": "CBE",
+  "source": "Legacy NuBlox career capability matrix",
+  "jobCapabilities": [
+    {
+      "sequence": 1,
+      "canonicalName": "Acoustics consultant",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "Acoustic surveys",
+        "noise and vibration assessment",
+        "modelling",
+        "design recommendations",
+        "compliance evidence"
+      ],
+      "primaryStructuredRecords": [
+        "Survey reports",
+        "models",
+        "recommendations",
+        "specifications"
+      ],
+      "lifecycleStages": [
+        "Feasibility",
+        "Design",
+        "Verification"
+      ],
+      "industryJobProfileId": "CBE-JP-001",
+      "jobProfileId": "JP-CBE-001",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 2,
+      "canonicalName": "Agricultural contractor",
+      "primaryDomain": "Infrastructure, Land & Rural",
+      "specialistCapabilities": [
+        "Job planning",
+        "field operations",
+        "plant allocation",
+        "labour",
+        "materials",
+        "service records"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "field logs",
+        "plant records",
+        "invoices"
+      ],
+      "lifecycleStages": [
+        "Planning",
+        "Delivery",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-002",
+      "jobProfileId": "JP-CBE-002",
+      "primaryDeliveryDomainId": "D16"
+    },
+    {
+      "sequence": 3,
+      "canonicalName": "Architect",
+      "primaryDomain": "Architecture & Design",
+      "specialistCapabilities": [
+        "Briefing",
+        "design stages",
+        "drawings",
+        "specifications",
+        "coordination",
+        "planning",
+        "approvals",
+        "site reviews"
+      ],
+      "primaryStructuredRecords": [
+        "Drawings",
+        "models",
+        "specifications",
+        "design decisions",
+        "inspection records"
+      ],
+      "lifecycleStages": [
+        "Brief",
+        "Design",
+        "Construction",
+        "Handover"
+      ],
+      "industryJobProfileId": "CBE-JP-003",
+      "jobProfileId": "JP-CBE-003",
+      "primaryDeliveryDomainId": "D01"
+    },
+    {
+      "sequence": 4,
+      "canonicalName": "Architectural technician",
+      "primaryDomain": "Architecture & Design",
+      "specialistCapabilities": [
+        "Technical drawings",
+        "detailing",
+        "schedules",
+        "coordination",
+        "document production"
+      ],
+      "primaryStructuredRecords": [
+        "Drawings",
+        "details",
+        "schedules",
+        "issue sheets"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-004",
+      "jobProfileId": "JP-CBE-004",
+      "primaryDeliveryDomainId": "D01"
+    },
+    {
+      "sequence": 5,
+      "canonicalName": "Architectural technologist",
+      "primaryDomain": "Architecture & Design",
+      "specialistCapabilities": [
+        "Technical design management",
+        "detailing",
+        "compliance",
+        "specifications",
+        "coordination"
+      ],
+      "primaryStructuredRecords": [
+        "Technical designs",
+        "specifications",
+        "schedules",
+        "compliance records"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction",
+        "Handover"
+      ],
+      "industryJobProfileId": "CBE-JP-005",
+      "jobProfileId": "JP-CBE-005",
+      "primaryDeliveryDomainId": "D01"
+    },
+    {
+      "sequence": 6,
+      "canonicalName": "Bricklayer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Job planning",
+        "setting out",
+        "masonry works",
+        "materials",
+        "progress",
+        "quality checks"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "material usage",
+        "photos",
+        "quality records"
+      ],
+      "lifecycleStages": [
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-006",
+      "jobProfileId": "JP-CBE-006",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 7,
+      "canonicalName": "Builders' merchant",
+      "primaryDomain": "Supply Chain & Manufacturing",
+      "specialistCapabilities": [
+        "Catalogue",
+        "stock",
+        "quotations",
+        "orders",
+        "trade accounts",
+        "deliveries",
+        "returns"
+      ],
+      "primaryStructuredRecords": [
+        "Products",
+        "stock",
+        "quotes",
+        "sales orders",
+        "delivery notes",
+        "invoices"
+      ],
+      "lifecycleStages": [
+        "Procurement",
+        "Supply"
+      ],
+      "industryJobProfileId": "CBE-JP-007",
+      "jobProfileId": "JP-CBE-007",
+      "primaryDeliveryDomainId": "D14"
+    },
+    {
+      "sequence": 8,
+      "canonicalName": "Building control officer",
+      "primaryDomain": "Regulation, Inspection & Compliance",
+      "specialistCapabilities": [
+        "Applications",
+        "plan assessment",
+        "inspections",
+        "evidence",
+        "defects",
+        "decisions"
+      ],
+      "primaryStructuredRecords": [
+        "Applications",
+        "inspection records",
+        "notices",
+        "decisions",
+        "certificates"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction",
+        "Completion"
+      ],
+      "industryJobProfileId": "CBE-JP-008",
+      "jobProfileId": "JP-CBE-008",
+      "primaryDeliveryDomainId": "D15"
+    },
+    {
+      "sequence": 9,
+      "canonicalName": "Building services engineer",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "MEP design",
+        "calculations",
+        "equipment schedules",
+        "coordination",
+        "commissioning requirements"
+      ],
+      "primaryStructuredRecords": [
+        "Designs",
+        "calculations",
+        "specifications",
+        "equipment schedules"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction",
+        "Commissioning"
+      ],
+      "industryJobProfileId": "CBE-JP-009",
+      "jobProfileId": "JP-CBE-009",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 10,
+      "canonicalName": "Building surveyor",
+      "primaryDomain": "Surveying, Property & Land",
+      "specialistCapabilities": [
+        "Condition surveys",
+        "defects",
+        "schedules",
+        "project advice",
+        "dilapidations",
+        "maintenance planning"
+      ],
+      "primaryStructuredRecords": [
+        "Survey reports",
+        "defect schedules",
+        "photos",
+        "scopes",
+        "certificates"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Design",
+        "Construction",
+        "Operations"
+      ],
+      "industryJobProfileId": "CBE-JP-010",
+      "jobProfileId": "JP-CBE-010",
+      "primaryDeliveryDomainId": "D03"
+    },
+    {
+      "sequence": 11,
+      "canonicalName": "Building technician",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "Technical support",
+        "drawings",
+        "surveys",
+        "records",
+        "project coordination"
+      ],
+      "primaryStructuredRecords": [
+        "Drawings",
+        "survey data",
+        "schedules",
+        "reports"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-011",
+      "jobProfileId": "JP-CBE-011",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 12,
+      "canonicalName": "Caretaker",
+      "primaryDomain": "Facilities, Property & Asset Operations",
+      "specialistCapabilities": [
+        "Inspections",
+        "reactive tasks",
+        "access",
+        "cleaning/maintenance coordination",
+        "incident reporting"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "checks",
+        "logs",
+        "incident records"
+      ],
+      "lifecycleStages": [
+        "Operations"
+      ],
+      "industryJobProfileId": "CBE-JP-012",
+      "jobProfileId": "JP-CBE-012",
+      "primaryDeliveryDomainId": "D10"
+    },
+    {
+      "sequence": 13,
+      "canonicalName": "Carpenter",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Job planning",
+        "setting out",
+        "fabrication",
+        "installation",
+        "materials",
+        "quality"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "cut lists",
+        "material usage",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-013",
+      "jobProfileId": "JP-CBE-013",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 14,
+      "canonicalName": "Carpet fitter and floor layer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Site measure",
+        "product selection",
+        "preparation",
+        "installation",
+        "snagging"
+      ],
+      "primaryStructuredRecords": [
+        "Measurements",
+        "material schedules",
+        "work orders",
+        "completion records"
+      ],
+      "lifecycleStages": [
+        "Fit-out"
+      ],
+      "industryJobProfileId": "CBE-JP-014",
+      "jobProfileId": "JP-CBE-014",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 15,
+      "canonicalName": "Cartographer",
+      "primaryDomain": "Geospatial, Planning & Transport",
+      "specialistCapabilities": [
+        "Spatial data management",
+        "map production",
+        "revisions",
+        "exports"
+      ],
+      "primaryStructuredRecords": [
+        "Maps",
+        "datasets",
+        "layers",
+        "metadata"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Planning",
+        "Design"
+      ],
+      "industryJobProfileId": "CBE-JP-015",
+      "jobProfileId": "JP-CBE-015",
+      "primaryDeliveryDomainId": "D05"
+    },
+    {
+      "sequence": 16,
+      "canonicalName": "Cavity insulation installer",
+      "primaryDomain": "Energy & Building Performance",
+      "specialistCapabilities": [
+        "Survey",
+        "suitability checks",
+        "installation",
+        "materials",
+        "photos",
+        "completion evidence"
+      ],
+      "primaryStructuredRecords": [
+        "Survey records",
+        "installation records",
+        "certificates",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Retrofit",
+        "Completion"
+      ],
+      "industryJobProfileId": "CBE-JP-016",
+      "jobProfileId": "JP-CBE-016",
+      "primaryDeliveryDomainId": "D09"
+    },
+    {
+      "sequence": 17,
+      "canonicalName": "Ceiling fixer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Take-off",
+        "layout",
+        "installation",
+        "materials",
+        "progress",
+        "snagging"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "material usage",
+        "photos",
+        "defects"
+      ],
+      "lifecycleStages": [
+        "Fit-out"
+      ],
+      "industryJobProfileId": "CBE-JP-017",
+      "jobProfileId": "JP-CBE-017",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 18,
+      "canonicalName": "Civil engineer",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "Civil design",
+        "calculations",
+        "specifications",
+        "coordination",
+        "site queries",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Designs",
+        "calculations",
+        "specifications",
+        "RFIs",
+        "inspection records"
+      ],
+      "lifecycleStages": [
+        "Feasibility",
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-018",
+      "jobProfileId": "JP-CBE-018",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 19,
+      "canonicalName": "Civil engineering technician",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "CAD/BIM support",
+        "surveys",
+        "calculations",
+        "drawings",
+        "records"
+      ],
+      "primaryStructuredRecords": [
+        "Drawings",
+        "models",
+        "survey data",
+        "schedules"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-019",
+      "jobProfileId": "JP-CBE-019",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 20,
+      "canonicalName": "Commercial energy assessor",
+      "primaryDomain": "Energy & Building Performance",
+      "specialistCapabilities": [
+        "Property data capture",
+        "energy assessment",
+        "evidence",
+        "certificate workflow"
+      ],
+      "primaryStructuredRecords": [
+        "Assessment records",
+        "evidence",
+        "EPC-related outputs"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Assessment",
+        "Certification"
+      ],
+      "industryJobProfileId": "CBE-JP-020",
+      "jobProfileId": "JP-CBE-020",
+      "primaryDeliveryDomainId": "D09"
+    },
+    {
+      "sequence": 21,
+      "canonicalName": "Conservator",
+      "primaryDomain": "Heritage, Conservation & Landscape",
+      "specialistCapabilities": [
+        "Condition assessment",
+        "conservation plan",
+        "treatment records",
+        "provenance/evidence"
+      ],
+      "primaryStructuredRecords": [
+        "Condition reports",
+        "treatment plans",
+        "photos",
+        "conservation records"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Conservation",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-021",
+      "jobProfileId": "JP-CBE-021",
+      "primaryDeliveryDomainId": "D13"
+    },
+    {
+      "sequence": 22,
+      "canonicalName": "Construction contracts manager",
+      "primaryDomain": "Commercial, Contracts & Cost",
+      "specialistCapabilities": [
+        "Contract register",
+        "obligations",
+        "notices",
+        "change",
+        "payment",
+        "claims",
+        "correspondence"
+      ],
+      "primaryStructuredRecords": [
+        "Contracts",
+        "notices",
+        "instructions",
+        "variations",
+        "payment records"
+      ],
+      "lifecycleStages": [
+        "Pre-contract",
+        "Construction",
+        "Closeout"
+      ],
+      "industryJobProfileId": "CBE-JP-022",
+      "jobProfileId": "JP-CBE-022",
+      "primaryDeliveryDomainId": "D04"
+    },
+    {
+      "sequence": 23,
+      "canonicalName": "Construction labourer",
+      "primaryDomain": "Site Delivery & Construction Management",
+      "specialistCapabilities": [
+        "Task allocation",
+        "attendance",
+        "inductions",
+        "daily work",
+        "equipment",
+        "safety records"
+      ],
+      "primaryStructuredRecords": [
+        "Timesheets",
+        "task records",
+        "inductions",
+        "site diary entries"
+      ],
+      "lifecycleStages": [
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-023",
+      "jobProfileId": "JP-CBE-023",
+      "primaryDeliveryDomainId": "D06"
+    },
+    {
+      "sequence": 24,
+      "canonicalName": "Construction manager",
+      "primaryDomain": "Site Delivery & Construction Management",
+      "specialistCapabilities": [
+        "Programme",
+        "packages",
+        "coordination",
+        "site diary",
+        "labour",
+        "plant",
+        "quality",
+        "safety",
+        "progress"
+      ],
+      "primaryStructuredRecords": [
+        "Programme",
+        "diaries",
+        "RFIs",
+        "reports",
+        "inspections",
+        "progress records"
+      ],
+      "lifecycleStages": [
+        "Pre-construction",
+        "Construction",
+        "Handover"
+      ],
+      "industryJobProfileId": "CBE-JP-024",
+      "jobProfileId": "JP-CBE-024",
+      "primaryDeliveryDomainId": "D06"
+    },
+    {
+      "sequence": 25,
+      "canonicalName": "Construction plant mechanic",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Asset register",
+        "servicing",
+        "defects",
+        "inspections",
+        "parts",
+        "breakdowns"
+      ],
+      "primaryStructuredRecords": [
+        "Asset records",
+        "service history",
+        "defect reports",
+        "work orders"
+      ],
+      "lifecycleStages": [
+        "Construction",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-025",
+      "jobProfileId": "JP-CBE-025",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 26,
+      "canonicalName": "Construction plant operator",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Plant allocation",
+        "pre-use checks",
+        "hours",
+        "tasks",
+        "defects",
+        "competencies"
+      ],
+      "primaryStructuredRecords": [
+        "Plant checks",
+        "utilisation",
+        "task logs",
+        "defect records"
+      ],
+      "lifecycleStages": [
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-026",
+      "jobProfileId": "JP-CBE-026",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 27,
+      "canonicalName": "Construction site supervisor",
+      "primaryDomain": "Site Delivery & Construction Management",
+      "specialistCapabilities": [
+        "Daily supervision",
+        "labour",
+        "inspections",
+        "permits",
+        "quality",
+        "progress",
+        "safety"
+      ],
+      "primaryStructuredRecords": [
+        "Site diary",
+        "inspections",
+        "permits",
+        "progress records"
+      ],
+      "lifecycleStages": [
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-027",
+      "jobProfileId": "JP-CBE-027",
+      "primaryDeliveryDomainId": "D06"
+    },
+    {
+      "sequence": 28,
+      "canonicalName": "Crane driver",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Lift allocation",
+        "pre-use checks",
+        "plant hours",
+        "competency",
+        "lift records",
+        "defects"
+      ],
+      "primaryStructuredRecords": [
+        "Checks",
+        "lift logs",
+        "utilisation",
+        "defect records"
+      ],
+      "lifecycleStages": [
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-028",
+      "jobProfileId": "JP-CBE-028",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 29,
+      "canonicalName": "Demolition operative",
+      "primaryDomain": "Site Delivery & Construction Management",
+      "specialistCapabilities": [
+        "Method/task planning",
+        "permits",
+        "hazardous materials records",
+        "waste",
+        "progress"
+      ],
+      "primaryStructuredRecords": [
+        "RAMS references",
+        "permits",
+        "waste records",
+        "photos",
+        "task logs"
+      ],
+      "lifecycleStages": [
+        "Enabling",
+        "Demolition"
+      ],
+      "industryJobProfileId": "CBE-JP-029",
+      "jobProfileId": "JP-CBE-029",
+      "primaryDeliveryDomainId": "D06"
+    },
+    {
+      "sequence": 30,
+      "canonicalName": "Domestic energy assessor",
+      "primaryDomain": "Energy & Building Performance",
+      "specialistCapabilities": [
+        "Dwelling data capture",
+        "energy assessment",
+        "evidence",
+        "certificate workflow"
+      ],
+      "primaryStructuredRecords": [
+        "Assessment records",
+        "evidence",
+        "EPC-related outputs"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Assessment",
+        "Certification"
+      ],
+      "industryJobProfileId": "CBE-JP-030",
+      "jobProfileId": "JP-CBE-030",
+      "primaryDeliveryDomainId": "D09"
+    },
+    {
+      "sequence": 31,
+      "canonicalName": "Dryliner",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Take-off",
+        "layout",
+        "installation",
+        "materials",
+        "progress",
+        "defects"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "material usage",
+        "photos",
+        "snagging"
+      ],
+      "lifecycleStages": [
+        "Fit-out"
+      ],
+      "industryJobProfileId": "CBE-JP-031",
+      "jobProfileId": "JP-CBE-031",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 32,
+      "canonicalName": "Electrician",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "estimate",
+        "schedule",
+        "installation",
+        "circuits",
+        "testing",
+        "defects",
+        "certification",
+        "maintenance"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "job sheets",
+        "circuit/test records",
+        "certificates",
+        "invoices"
+      ],
+      "lifecycleStages": [
+        "Design support",
+        "Installation",
+        "Testing",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-032",
+      "jobProfileId": "JP-CBE-032",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 33,
+      "canonicalName": "Engineering construction technician",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "Technical support",
+        "installation records",
+        "commissioning/decommissioning support",
+        "drawings"
+      ],
+      "primaryStructuredRecords": [
+        "Drawings",
+        "technical records",
+        "test sheets",
+        "schedules"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Installation",
+        "Commissioning"
+      ],
+      "industryJobProfileId": "CBE-JP-033",
+      "jobProfileId": "JP-CBE-033",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 34,
+      "canonicalName": "Estimator",
+      "primaryDomain": "Commercial, Contracts & Cost",
+      "specialistCapabilities": [
+        "Take-off",
+        "resource build-ups",
+        "supplier enquiries",
+        "estimates",
+        "tender submissions",
+        "revisions"
+      ],
+      "primaryStructuredRecords": [
+        "Estimates",
+        "take-offs",
+        "RFQs",
+        "tender returns",
+        "bid documents"
+      ],
+      "lifecycleStages": [
+        "Pre-contract"
+      ],
+      "industryJobProfileId": "CBE-JP-034",
+      "jobProfileId": "JP-CBE-034",
+      "primaryDeliveryDomainId": "D04"
+    },
+    {
+      "sequence": 35,
+      "canonicalName": "Facilities manager",
+      "primaryDomain": "Facilities, Property & Asset Operations",
+      "specialistCapabilities": [
+        "Property/asset register",
+        "PPM",
+        "reactive maintenance",
+        "compliance",
+        "contractors",
+        "SLAs",
+        "budgets"
+      ],
+      "primaryStructuredRecords": [
+        "Assets",
+        "work orders",
+        "service records",
+        "inspections",
+        "compliance evidence"
+      ],
+      "lifecycleStages": [
+        "Operations"
+      ],
+      "industryJobProfileId": "CBE-JP-035",
+      "jobProfileId": "JP-CBE-035",
+      "primaryDeliveryDomainId": "D10"
+    },
+    {
+      "sequence": 36,
+      "canonicalName": "Fence installer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "estimate",
+        "set-out",
+        "installation",
+        "materials",
+        "completion"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "work orders",
+        "material usage",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Construction / External works"
+      ],
+      "industryJobProfileId": "CBE-JP-036",
+      "jobProfileId": "JP-CBE-036",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 37,
+      "canonicalName": "Fire safety engineer",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "Fire strategy",
+        "modelling",
+        "design review",
+        "compliance evidence",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Fire strategies",
+        "calculations",
+        "reports",
+        "design comments"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction",
+        "Operations"
+      ],
+      "industryJobProfileId": "CBE-JP-037",
+      "jobProfileId": "JP-CBE-037",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 38,
+      "canonicalName": "Formworker",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Formwork planning",
+        "drawings",
+        "material/plant requirements",
+        "installation",
+        "striking",
+        "checks"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "checklists",
+        "material records",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Structural construction"
+      ],
+      "industryJobProfileId": "CBE-JP-038",
+      "jobProfileId": "JP-CBE-038",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 39,
+      "canonicalName": "Furniture maker",
+      "primaryDomain": "Supply Chain & Manufacturing",
+      "specialistCapabilities": [
+        "Design",
+        "BOM",
+        "production",
+        "stock",
+        "quality",
+        "orders",
+        "delivery"
+      ],
+      "primaryStructuredRecords": [
+        "Drawings",
+        "BOMs",
+        "work orders",
+        "QC records",
+        "sales orders"
+      ],
+      "lifecycleStages": [
+        "Manufacture",
+        "Supply"
+      ],
+      "industryJobProfileId": "CBE-JP-039",
+      "jobProfileId": "JP-CBE-039",
+      "primaryDeliveryDomainId": "D14"
+    },
+    {
+      "sequence": 40,
+      "canonicalName": "Gas mains layer",
+      "primaryDomain": "Utilities & Networks",
+      "specialistCapabilities": [
+        "Work orders",
+        "excavation/laying records",
+        "materials",
+        "pressure/test records",
+        "reinstatement",
+        "asset location"
+      ],
+      "primaryStructuredRecords": [
+        "Job packs",
+        "network records",
+        "test results",
+        "as-builts"
+      ],
+      "lifecycleStages": [
+        "Infrastructure construction",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-040",
+      "jobProfileId": "JP-CBE-040",
+      "primaryDeliveryDomainId": "D12"
+    },
+    {
+      "sequence": 41,
+      "canonicalName": "Gas service technician",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Jobs",
+        "appliances",
+        "service schedules",
+        "tests",
+        "defects",
+        "parts",
+        "certification"
+      ],
+      "primaryStructuredRecords": [
+        "Job sheets",
+        "appliance records",
+        "test results",
+        "service records"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-041",
+      "jobProfileId": "JP-CBE-041",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 42,
+      "canonicalName": "General practice surveyor",
+      "primaryDomain": "Surveying, Property & Land",
+      "specialistCapabilities": [
+        "Property records",
+        "valuations",
+        "transactions",
+        "leases",
+        "development appraisal",
+        "client advice"
+      ],
+      "primaryStructuredRecords": [
+        "Valuations",
+        "property records",
+        "instructions",
+        "reports"
+      ],
+      "lifecycleStages": [
+        "Acquisition",
+        "Development",
+        "Operations"
+      ],
+      "industryJobProfileId": "CBE-JP-042",
+      "jobProfileId": "JP-CBE-042",
+      "primaryDeliveryDomainId": "D03"
+    },
+    {
+      "sequence": 43,
+      "canonicalName": "Geospatial technician",
+      "primaryDomain": "Geospatial, Planning & Transport",
+      "specialistCapabilities": [
+        "Data capture",
+        "GIS layers",
+        "coordinate/reference management",
+        "mapping",
+        "exports"
+      ],
+      "primaryStructuredRecords": [
+        "Spatial datasets",
+        "maps",
+        "metadata"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Planning",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-043",
+      "jobProfileId": "JP-CBE-043",
+      "primaryDeliveryDomainId": "D05"
+    },
+    {
+      "sequence": 44,
+      "canonicalName": "Glazier",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Measure",
+        "quote",
+        "product/order",
+        "installation",
+        "repair",
+        "completion"
+      ],
+      "primaryStructuredRecords": [
+        "Measurements",
+        "quotes",
+        "work orders",
+        "product records",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Fit-out",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-044",
+      "jobProfileId": "JP-CBE-044",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 45,
+      "canonicalName": "Heat pump engineer",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "sizing",
+        "estimate",
+        "installation",
+        "commissioning",
+        "servicing",
+        "evidence"
+      ],
+      "primaryStructuredRecords": [
+        "Survey",
+        "calculations",
+        "job sheets",
+        "commissioning/test records"
+      ],
+      "lifecycleStages": [
+        "Retrofit/Installation",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-045",
+      "jobProfileId": "JP-CBE-045",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 46,
+      "canonicalName": "Heating and ventilation engineer",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "design support",
+        "installation",
+        "commissioning",
+        "service",
+        "defects"
+      ],
+      "primaryStructuredRecords": [
+        "Job sheets",
+        "equipment records",
+        "test/commissioning sheets"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Commissioning",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-046",
+      "jobProfileId": "JP-CBE-046",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 47,
+      "canonicalName": "Heritage officer",
+      "primaryDomain": "Heritage, Conservation & Landscape",
+      "specialistCapabilities": [
+        "Heritage asset records",
+        "significance assessment",
+        "consultations",
+        "case management",
+        "condition monitoring"
+      ],
+      "primaryStructuredRecords": [
+        "Case files",
+        "assessments",
+        "consultation records",
+        "reports"
+      ],
+      "lifecycleStages": [
+        "Planning",
+        "Conservation",
+        "Operations"
+      ],
+      "industryJobProfileId": "CBE-JP-047",
+      "jobProfileId": "JP-CBE-047",
+      "primaryDeliveryDomainId": "D13"
+    },
+    {
+      "sequence": 48,
+      "canonicalName": "Kitchen and bathroom designer",
+      "primaryDomain": "Architecture & Design",
+      "specialistCapabilities": [
+        "Customer brief",
+        "survey",
+        "layouts",
+        "products",
+        "quotation",
+        "revisions",
+        "approvals"
+      ],
+      "primaryStructuredRecords": [
+        "Layouts",
+        "product schedules",
+        "quotes",
+        "approvals"
+      ],
+      "lifecycleStages": [
+        "Sales",
+        "Design",
+        "Fit-out"
+      ],
+      "industryJobProfileId": "CBE-JP-048",
+      "jobProfileId": "JP-CBE-048",
+      "primaryDeliveryDomainId": "D01"
+    },
+    {
+      "sequence": 49,
+      "canonicalName": "Kitchen and bathroom fitter",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "schedule",
+        "installation tasks",
+        "materials",
+        "coordination",
+        "snagging"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "material lists",
+        "photos",
+        "completion records"
+      ],
+      "lifecycleStages": [
+        "Fit-out"
+      ],
+      "industryJobProfileId": "CBE-JP-049",
+      "jobProfileId": "JP-CBE-049",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 50,
+      "canonicalName": "Land surveyor",
+      "primaryDomain": "Surveying, Property & Land",
+      "specialistCapabilities": [
+        "Survey planning",
+        "observations",
+        "control",
+        "coordinates",
+        "topographical outputs",
+        "setting out"
+      ],
+      "primaryStructuredRecords": [
+        "Survey files",
+        "point data",
+        "drawings",
+        "reports"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-050",
+      "jobProfileId": "JP-CBE-050",
+      "primaryDeliveryDomainId": "D03"
+    },
+    {
+      "sequence": 51,
+      "canonicalName": "Landscape architect",
+      "primaryDomain": "Heritage, Conservation & Landscape",
+      "specialistCapabilities": [
+        "Brief",
+        "site analysis",
+        "landscape design",
+        "specifications",
+        "planting",
+        "coordination",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Plans",
+        "schedules",
+        "specifications",
+        "inspection records"
+      ],
+      "lifecycleStages": [
+        "Planning",
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-051",
+      "jobProfileId": "JP-CBE-051",
+      "primaryDeliveryDomainId": "D13"
+    },
+    {
+      "sequence": 52,
+      "canonicalName": "Landscaper",
+      "primaryDomain": "Heritage, Conservation & Landscape",
+      "specialistCapabilities": [
+        "Quotes",
+        "site works",
+        "planting/materials",
+        "labour",
+        "maintenance schedule"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "material schedules",
+        "photos",
+        "maintenance records"
+      ],
+      "lifecycleStages": [
+        "External works",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-052",
+      "jobProfileId": "JP-CBE-052",
+      "primaryDeliveryDomainId": "D13"
+    },
+    {
+      "sequence": 53,
+      "canonicalName": "Lighting technician",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Equipment planning",
+        "inventory",
+        "setup",
+        "inspections",
+        "operation",
+        "maintenance"
+      ],
+      "primaryStructuredRecords": [
+        "Equipment lists",
+        "checklists",
+        "allocation records",
+        "faults"
+      ],
+      "lifecycleStages": [
+        "Installation/Event delivery",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-053",
+      "jobProfileId": "JP-CBE-053",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 54,
+      "canonicalName": "Locksmith",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Callouts",
+        "asset/lock register",
+        "access hardware",
+        "installation",
+        "repair",
+        "key/control records"
+      ],
+      "primaryStructuredRecords": [
+        "Jobs",
+        "asset records",
+        "key/access records",
+        "invoices"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-054",
+      "jobProfileId": "JP-CBE-054",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 55,
+      "canonicalName": "Painter and decorator",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Estimate",
+        "area/take-off",
+        "materials",
+        "schedule",
+        "application",
+        "completion"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "work orders",
+        "material usage",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Finishes"
+      ],
+      "industryJobProfileId": "CBE-JP-055",
+      "jobProfileId": "JP-CBE-055",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 56,
+      "canonicalName": "Pipe fitter",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Isometrics/work packs",
+        "fabrication/installation",
+        "weld/test references",
+        "materials",
+        "QA"
+      ],
+      "primaryStructuredRecords": [
+        "Work packs",
+        "spool/line records",
+        "test records",
+        "material traceability"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Testing"
+      ],
+      "industryJobProfileId": "CBE-JP-056",
+      "jobProfileId": "JP-CBE-056",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 57,
+      "canonicalName": "Planning and development surveyor",
+      "primaryDomain": "Surveying, Property & Land",
+      "specialistCapabilities": [
+        "Site appraisal",
+        "development appraisal",
+        "planning constraints",
+        "valuations",
+        "viability",
+        "client reports"
+      ],
+      "primaryStructuredRecords": [
+        "Appraisals",
+        "reports",
+        "valuations",
+        "planning records"
+      ],
+      "lifecycleStages": [
+        "Feasibility",
+        "Planning"
+      ],
+      "industryJobProfileId": "CBE-JP-057",
+      "jobProfileId": "JP-CBE-057",
+      "primaryDeliveryDomainId": "D03"
+    },
+    {
+      "sequence": 58,
+      "canonicalName": "Plasterer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Estimate",
+        "areas",
+        "materials",
+        "schedule",
+        "application",
+        "snagging"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "work orders",
+        "material usage",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Finishes"
+      ],
+      "industryJobProfileId": "CBE-JP-058",
+      "jobProfileId": "JP-CBE-058",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 59,
+      "canonicalName": "Plumber",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "quote",
+        "schedule",
+        "installation",
+        "fixtures",
+        "testing",
+        "callouts",
+        "maintenance"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "job sheets",
+        "test records",
+        "asset/service records",
+        "invoices"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Testing",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-059",
+      "jobProfileId": "JP-CBE-059",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 60,
+      "canonicalName": "Quantity surveyor",
+      "primaryDomain": "Commercial, Contracts & Cost",
+      "specialistCapabilities": [
+        "Measurement",
+        "cost plans",
+        "procurement",
+        "tender analysis",
+        "valuations",
+        "variations",
+        "forecasts",
+        "final accounts"
+      ],
+      "primaryStructuredRecords": [
+        "Cost plans",
+        "BoQs",
+        "tender analyses",
+        "valuations",
+        "variations",
+        "cost reports"
+      ],
+      "lifecycleStages": [
+        "Feasibility",
+        "Design",
+        "Construction",
+        "Final account"
+      ],
+      "industryJobProfileId": "CBE-JP-060",
+      "jobProfileId": "JP-CBE-060",
+      "primaryDeliveryDomainId": "D04"
+    },
+    {
+      "sequence": 61,
+      "canonicalName": "Quarry engineer",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Site/production planning",
+        "extraction records",
+        "plant",
+        "safety",
+        "environmental/restoration records"
+      ],
+      "primaryStructuredRecords": [
+        "Plans",
+        "production records",
+        "inspections",
+        "environmental records"
+      ],
+      "lifecycleStages": [
+        "Extraction",
+        "Restoration"
+      ],
+      "industryJobProfileId": "CBE-JP-061",
+      "jobProfileId": "JP-CBE-061",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 62,
+      "canonicalName": "Quarry worker",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Tasks",
+        "plant checks",
+        "production logs",
+        "materials",
+        "safety",
+        "maintenance defects"
+      ],
+      "primaryStructuredRecords": [
+        "Shift logs",
+        "plant checks",
+        "production records"
+      ],
+      "lifecycleStages": [
+        "Extraction"
+      ],
+      "industryJobProfileId": "CBE-JP-062",
+      "jobProfileId": "JP-CBE-062",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 63,
+      "canonicalName": "Refrigeration and air-conditioning installer",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "equipment selection",
+        "installation",
+        "commissioning",
+        "refrigerant/service records",
+        "maintenance"
+      ],
+      "primaryStructuredRecords": [
+        "Job sheets",
+        "equipment records",
+        "commissioning/test records",
+        "service logs"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Commissioning",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-063",
+      "jobProfileId": "JP-CBE-063",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 64,
+      "canonicalName": "Road worker",
+      "primaryDomain": "Utilities & Networks",
+      "specialistCapabilities": [
+        "Work packs",
+        "traffic-management references",
+        "plant",
+        "materials",
+        "daily progress",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "daily records",
+        "material usage",
+        "inspection records"
+      ],
+      "lifecycleStages": [
+        "Infrastructure construction",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-064",
+      "jobProfileId": "JP-CBE-064",
+      "primaryDeliveryDomainId": "D12"
+    },
+    {
+      "sequence": 65,
+      "canonicalName": "Roofer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "estimate",
+        "materials",
+        "access",
+        "installation/repair",
+        "inspections",
+        "photos"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "work orders",
+        "material schedules",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Envelope construction",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-065",
+      "jobProfileId": "JP-CBE-065",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 66,
+      "canonicalName": "Rural surveyor",
+      "primaryDomain": "Surveying, Property & Land",
+      "specialistCapabilities": [
+        "Land/property records",
+        "valuations",
+        "tenancy/estate work",
+        "land management",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Valuations",
+        "plans",
+        "property records",
+        "reports"
+      ],
+      "lifecycleStages": [
+        "Acquisition",
+        "Management"
+      ],
+      "industryJobProfileId": "CBE-JP-066",
+      "jobProfileId": "JP-CBE-066",
+      "primaryDeliveryDomainId": "D03"
+    },
+    {
+      "sequence": 67,
+      "canonicalName": "Scaffolder",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Scaffold design/reference",
+        "erection",
+        "inspection",
+        "handover",
+        "tagging",
+        "alterations",
+        "dismantle"
+      ],
+      "primaryStructuredRecords": [
+        "Scaffold register",
+        "inspection records",
+        "handover certificates"
+      ],
+      "lifecycleStages": [
+        "Construction enabling works"
+      ],
+      "industryJobProfileId": "CBE-JP-067",
+      "jobProfileId": "JP-CBE-067",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 68,
+      "canonicalName": "Security systems installer",
+      "primaryDomain": "Building Services Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "quote",
+        "device/system design",
+        "installation",
+        "testing",
+        "commissioning",
+        "maintenance"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "device registers",
+        "test results",
+        "commissioning/service records"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Commissioning",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-068",
+      "jobProfileId": "JP-CBE-068",
+      "primaryDeliveryDomainId": "D08"
+    },
+    {
+      "sequence": 69,
+      "canonicalName": "Shopfitter",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Survey",
+        "programme",
+        "fabrication/install coordination",
+        "materials",
+        "snagging",
+        "handover"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "drawings",
+        "material schedules",
+        "snagging records"
+      ],
+      "lifecycleStages": [
+        "Fit-out"
+      ],
+      "industryJobProfileId": "CBE-JP-069",
+      "jobProfileId": "JP-CBE-069",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 70,
+      "canonicalName": "Solar panel installer",
+      "primaryDomain": "Energy & Building Performance",
+      "specialistCapabilities": [
+        "Survey",
+        "system sizing/design inputs",
+        "quote",
+        "installation",
+        "testing",
+        "commissioning",
+        "maintenance"
+      ],
+      "primaryStructuredRecords": [
+        "Survey",
+        "quotes",
+        "equipment records",
+        "commissioning/test records"
+      ],
+      "lifecycleStages": [
+        "Retrofit/Installation",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-070",
+      "jobProfileId": "JP-CBE-070",
+      "primaryDeliveryDomainId": "D09"
+    },
+    {
+      "sequence": 71,
+      "canonicalName": "Steel erector",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Work packs",
+        "lifts",
+        "sequence",
+        "members",
+        "bolts/connections",
+        "inspections",
+        "progress"
+      ],
+      "primaryStructuredRecords": [
+        "Work packs",
+        "member records",
+        "inspection records",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Structural construction"
+      ],
+      "industryJobProfileId": "CBE-JP-071",
+      "jobProfileId": "JP-CBE-071",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 72,
+      "canonicalName": "Steel fixer",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Bar schedules/reference",
+        "work areas",
+        "installation",
+        "checks",
+        "progress"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "reinforcement records",
+        "inspections",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Structural construction"
+      ],
+      "industryJobProfileId": "CBE-JP-072",
+      "jobProfileId": "JP-CBE-072",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 73,
+      "canonicalName": "Steeplejack",
+      "primaryDomain": "Plant, Equipment & Specialist Operations",
+      "specialistCapabilities": [
+        "Access planning",
+        "inspection",
+        "repair",
+        "maintenance",
+        "lightning protection records",
+        "photos"
+      ],
+      "primaryStructuredRecords": [
+        "Inspection reports",
+        "work orders",
+        "test records",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Maintenance / Specialist works"
+      ],
+      "industryJobProfileId": "CBE-JP-073",
+      "jobProfileId": "JP-CBE-073",
+      "primaryDeliveryDomainId": "D11"
+    },
+    {
+      "sequence": 74,
+      "canonicalName": "Stonemason",
+      "primaryDomain": "Heritage, Conservation & Landscape",
+      "specialistCapabilities": [
+        "Survey/template",
+        "fabrication",
+        "installation",
+        "conservation repair",
+        "material traceability"
+      ],
+      "primaryStructuredRecords": [
+        "Templates",
+        "work orders",
+        "material records",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Construction",
+        "Conservation"
+      ],
+      "industryJobProfileId": "CBE-JP-074",
+      "jobProfileId": "JP-CBE-074",
+      "primaryDeliveryDomainId": "D13"
+    },
+    {
+      "sequence": 75,
+      "canonicalName": "Structural engineer",
+      "primaryDomain": "Engineering & Technical Design",
+      "specialistCapabilities": [
+        "Structural analysis",
+        "calculations",
+        "drawings",
+        "specifications",
+        "design changes",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Calculations",
+        "models",
+        "drawings",
+        "specifications",
+        "inspection records"
+      ],
+      "lifecycleStages": [
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-075",
+      "jobProfileId": "JP-CBE-075",
+      "primaryDeliveryDomainId": "D02"
+    },
+    {
+      "sequence": 76,
+      "canonicalName": "Surveying technician",
+      "primaryDomain": "Surveying, Property & Land",
+      "specialistCapabilities": [
+        "Survey support",
+        "site data",
+        "measurements",
+        "drawings",
+        "records",
+        "inspections"
+      ],
+      "primaryStructuredRecords": [
+        "Survey data",
+        "drawings",
+        "schedules",
+        "reports"
+      ],
+      "lifecycleStages": [
+        "Survey",
+        "Design",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-076",
+      "jobProfileId": "JP-CBE-076",
+      "primaryDeliveryDomainId": "D03"
+    },
+    {
+      "sequence": 77,
+      "canonicalName": "Thermal insulation engineer",
+      "primaryDomain": "Energy & Building Performance",
+      "specialistCapabilities": [
+        "Take-off",
+        "materials",
+        "installation",
+        "quality checks",
+        "completion evidence"
+      ],
+      "primaryStructuredRecords": [
+        "Work orders",
+        "material usage",
+        "inspection records",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Installation",
+        "Completion"
+      ],
+      "industryJobProfileId": "CBE-JP-077",
+      "jobProfileId": "JP-CBE-077",
+      "primaryDeliveryDomainId": "D09"
+    },
+    {
+      "sequence": 78,
+      "canonicalName": "Tiler",
+      "primaryDomain": "Building Trades",
+      "specialistCapabilities": [
+        "Measure",
+        "estimate",
+        "layout",
+        "materials",
+        "installation",
+        "snagging"
+      ],
+      "primaryStructuredRecords": [
+        "Quotes",
+        "work orders",
+        "material usage",
+        "photos"
+      ],
+      "lifecycleStages": [
+        "Finishes"
+      ],
+      "industryJobProfileId": "CBE-JP-078",
+      "jobProfileId": "JP-CBE-078",
+      "primaryDeliveryDomainId": "D07"
+    },
+    {
+      "sequence": 79,
+      "canonicalName": "Town planner",
+      "primaryDomain": "Geospatial, Planning & Transport",
+      "specialistCapabilities": [
+        "Planning cases",
+        "policy/constraints",
+        "consultations",
+        "site appraisal",
+        "reports",
+        "decisions tracking"
+      ],
+      "primaryStructuredRecords": [
+        "Applications/cases",
+        "consultation records",
+        "reports",
+        "spatial data"
+      ],
+      "lifecycleStages": [
+        "Feasibility",
+        "Planning"
+      ],
+      "industryJobProfileId": "CBE-JP-079",
+      "jobProfileId": "JP-CBE-079",
+      "primaryDeliveryDomainId": "D05"
+    },
+    {
+      "sequence": 80,
+      "canonicalName": "Town planning assistant",
+      "primaryDomain": "Geospatial, Planning & Transport",
+      "specialistCapabilities": [
+        "Application processing",
+        "data gathering",
+        "plans",
+        "consultations",
+        "case administration"
+      ],
+      "primaryStructuredRecords": [
+        "Case records",
+        "plans",
+        "consultation records"
+      ],
+      "lifecycleStages": [
+        "Planning"
+      ],
+      "industryJobProfileId": "CBE-JP-080",
+      "jobProfileId": "JP-CBE-080",
+      "primaryDeliveryDomainId": "D05"
+    },
+    {
+      "sequence": 81,
+      "canonicalName": "Transport planner",
+      "primaryDomain": "Geospatial, Planning & Transport",
+      "specialistCapabilities": [
+        "Demand/network analysis",
+        "options",
+        "modelling",
+        "consultation",
+        "reports",
+        "programme interfaces"
+      ],
+      "primaryStructuredRecords": [
+        "Models",
+        "datasets",
+        "option reports",
+        "plans"
+      ],
+      "lifecycleStages": [
+        "Feasibility",
+        "Planning",
+        "Design"
+      ],
+      "industryJobProfileId": "CBE-JP-081",
+      "jobProfileId": "JP-CBE-081",
+      "primaryDeliveryDomainId": "D05"
+    },
+    {
+      "sequence": 82,
+      "canonicalName": "Water network operative",
+      "primaryDomain": "Utilities & Networks",
+      "specialistCapabilities": [
+        "Work orders",
+        "network asset location",
+        "repairs",
+        "leakage",
+        "tests",
+        "reinstatement",
+        "as-builts"
+      ],
+      "primaryStructuredRecords": [
+        "Job packs",
+        "network records",
+        "test results",
+        "as-builts"
+      ],
+      "lifecycleStages": [
+        "Infrastructure construction",
+        "Maintenance"
+      ],
+      "industryJobProfileId": "CBE-JP-082",
+      "jobProfileId": "JP-CBE-082",
+      "primaryDeliveryDomainId": "D12"
+    },
+    {
+      "sequence": 83,
+      "canonicalName": "Welder",
+      "primaryDomain": "Supply Chain & Manufacturing",
+      "specialistCapabilities": [
+        "Work packs",
+        "weld procedures/references",
+        "material traceability",
+        "weld logs",
+        "inspections",
+        "repairs"
+      ],
+      "primaryStructuredRecords": [
+        "Weld logs",
+        "material records",
+        "inspection/NDT references",
+        "work orders"
+      ],
+      "lifecycleStages": [
+        "Fabrication",
+        "Construction"
+      ],
+      "industryJobProfileId": "CBE-JP-083",
+      "jobProfileId": "JP-CBE-083",
+      "primaryDeliveryDomainId": "D14"
+    },
+    {
+      "sequence": 84,
+      "canonicalName": "Wood machinist",
+      "primaryDomain": "Supply Chain & Manufacturing",
+      "specialistCapabilities": [
+        "Cut lists",
+        "machine jobs",
+        "BOM/material stock",
+        "quality",
+        "production output"
+      ],
+      "primaryStructuredRecords": [
+        "Cut lists",
+        "work orders",
+        "material records",
+        "QC records"
+      ],
+      "lifecycleStages": [
+        "Manufacture"
+      ],
+      "industryJobProfileId": "CBE-JP-084",
+      "jobProfileId": "JP-CBE-084",
+      "primaryDeliveryDomainId": "D14"
+    }
+  ]
+}

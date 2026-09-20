@@ -60,6 +60,39 @@ export function createWorkflowDefinitionVersion(
   return Object.freeze({ ...input });
 }
 
+export function publishWorkflowDefinitionVersion(
+  current: WorkflowDefinitionVersion,
+  effectiveFrom: string
+): WorkflowDefinitionVersion {
+  invariant(current.status === 'DRAFT', 'Only a DRAFT Workflow Definition Version can publish.');
+  assertDate(effectiveFrom, 'Workflow Definition Version effectiveFrom');
+  invariant(!current.effectiveTo, 'Draft Workflow Definition Version must not already have effectiveTo.');
+  return Object.freeze({
+    ...current,
+    status: 'PUBLISHED',
+    effectiveFrom
+  });
+}
+
+export function retireWorkflowDefinitionVersion(
+  current: WorkflowDefinitionVersion,
+  effectiveTo: string
+): WorkflowDefinitionVersion {
+  invariant(current.status === 'PUBLISHED', 'Only a PUBLISHED Workflow Definition Version can retire.');
+  assertDate(effectiveTo, 'Workflow Definition Version effectiveTo');
+  if (current.effectiveFrom) {
+    invariant(
+      Date.parse(effectiveTo) >= Date.parse(current.effectiveFrom),
+      'Workflow Definition Version effectiveTo must not be earlier than effectiveFrom.'
+    );
+  }
+  return Object.freeze({
+    ...current,
+    status: 'RETIRED',
+    effectiveTo
+  });
+}
+
 export function createWorkflowInstance(
   input: WorkflowInstance,
   definition: WorkflowDefinition,

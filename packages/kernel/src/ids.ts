@@ -50,6 +50,19 @@ export type DataEnvelopeId = Brand<string, 'DataEnvelopeId'>;
 export type ExternalIdentityId = Brand<string, 'ExternalIdentityId'>;
 export type MigrationReconciliationId = Brand<string, 'MigrationReconciliationId'>;
 export type ProjectionCheckpointId = Brand<string, 'ProjectionCheckpointId'>;
+export type FunctionId = Brand<string, 'FunctionId'>;
+export type SubFunctionId = Brand<string, 'SubFunctionId'>;
+export type FunctionalActivityId = Brand<string, 'FunctionalActivityId'>;
+export type ProcessDefinitionId = Brand<string, 'ProcessDefinitionId'>;
+export type TaskDefinitionId = Brand<string, 'TaskDefinitionId'>;
+export type FunctionGovernanceVersionId = Brand<string, 'FunctionGovernanceVersionId'>;
+export type FunctionJobProfileParticipationId = Brand<string, 'FunctionJobProfileParticipationId'>;
+export type CompetenceRequirementId = Brand<string, 'CompetenceRequirementId'>;
+export type CompetenceEvidenceId = Brand<string, 'CompetenceEvidenceId'>;
+export type FunctionalDeploymentId = Brand<string, 'FunctionalDeploymentId'>;
+export type DeploymentAssignmentId = Brand<string, 'DeploymentAssignmentId'>;
+export type ResponsibilityScopeId = Brand<string, 'ResponsibilityScopeId'>;
+export type DeploymentCapacityId = Brand<string, 'DeploymentCapacityId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

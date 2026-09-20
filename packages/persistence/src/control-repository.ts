@@ -127,6 +127,16 @@ function assertTenant(expected: TenantId, actual: TenantId): void {
   }
 }
 
+function databaseDate(value: string): Date {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid date/time value: ${value}`);
+  }
+
+  return date;
+}
+
 async function writeAudit(
   connection: PoolConnection,
   tenantId: string,
@@ -435,7 +445,7 @@ export class MySqlKernelControlRepository {
           decision.reason,
           decision.deciderPersonId,
           decision.authorityGrantId ?? null,
-          decision.decidedAt,
+          databaseDate(decision.decidedAt),
           audit.correlationId ?? null
         ]
       );
@@ -478,7 +488,7 @@ export class MySqlKernelControlRepository {
           initial.lifecycleStateId,
           initial.subjectVersion ?? null,
           initial.sequence,
-          initial.effectiveAt
+          databaseDate(initial.effectiveAt)
         ]
       );
       await this.insertLifecycleHistory(connection, initial);
@@ -570,7 +580,7 @@ export class MySqlKernelControlRepository {
           next.lifecycleStateId,
           next.subjectVersion ?? null,
           next.sequence,
-          next.effectiveAt,
+          databaseDate(next.effectiveAt),
           next.transitionId ?? null,
           next.decisionId ?? null,
           tenantId,
@@ -636,7 +646,7 @@ export class MySqlKernelControlRepository {
           event.subjectObjectId ?? null,
           event.actorPersonId ?? null,
           event.correlationId ?? audit.correlationId ?? null,
-          event.occurredAt,
+          databaseDate(event.occurredAt),
           event.payload ? JSON.stringify(event.payload) : null
         ]
       );
@@ -679,7 +689,7 @@ export class MySqlKernelControlRepository {
           evidence.subjectObjectId,
           evidence.subjectVersion ?? null,
           evidence.capturedByPersonId ?? null,
-          evidence.capturedAt,
+          databaseDate(evidence.capturedAt),
           evidence.contentReference ?? null,
           evidence.integrityHash ?? null,
           evidence.metadata ? JSON.stringify(evidence.metadata) : null
@@ -749,7 +759,7 @@ export class MySqlKernelControlRepository {
         state.sequence,
         state.transitionId ?? null,
         state.decisionId ?? null,
-        state.effectiveAt
+        databaseDate(state.effectiveAt)
       ]
     );
   }

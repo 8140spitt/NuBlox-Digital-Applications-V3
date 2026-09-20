@@ -35,9 +35,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/data-model/canonical-business-object-register.csv \
-                  docs/data-model/canonical-business-object-duplicates.csv \
-                  docs/data-model/canonical-business-object-summary.md \
+          git add archive/documentation/data-model/canonical-business-object-register.csv \
+                  archive/documentation/data-model/canonical-business-object-duplicates.csv \
+                  archive/documentation/data-model/canonical-business-object-summary.md \
                   app/src/lib/generated/business-object-register.json
           if git diff --cached --quiet; then
             echo "Generated register already current"

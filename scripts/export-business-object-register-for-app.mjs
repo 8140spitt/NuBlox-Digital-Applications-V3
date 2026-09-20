@@ -37,7 +37,7 @@ const readCsv = (filePath) => {
 };
 
 const root = process.cwd();
-const dataModel = path.join(root, 'docs', 'data-model');
+const dataModel = path.join(root, 'archive', 'documentation', 'data-model');
 const register = readCsv(path.join(dataModel, 'canonical-business-object-register.csv'));
 const duplicates = readCsv(path.join(dataModel, 'canonical-business-object-duplicates.csv'));
 

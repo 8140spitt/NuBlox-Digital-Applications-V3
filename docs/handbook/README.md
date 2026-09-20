@@ -104,8 +104,8 @@ See [06 — Workflow, Authority, Evidence & Experience](06-workflow-authority-ev
 - [08 — Product State & Roadmap](08-product-state-and-roadmap.md)
 - [09 — Glossary](09-glossary.md)
 
-## Supporting evidence
+## Historical evidence
 
-Historical product analysis and market benchmarking are preserved under `docs/evidence/`.
+Historical analysis, benchmark material and superseded technical reference are preserved under the repository-level `archive/documentation/` area.
 
-They explain why decisions were made. They are not the primary description of the product.
+They are not required reading to understand the current product.

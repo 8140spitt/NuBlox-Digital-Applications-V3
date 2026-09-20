@@ -59,7 +59,12 @@
       </div>
       <div class="record-list">
         {#each data.frameworks as framework}
-          <a class:active={data.selected?.id === framework.id} href={objectHref(data.tenantSlug, 'strategy-framework', framework.id, { from: 'F01.01' })}>
+          <a
+            class:active={data.selected?.id === framework.id}
+            href={objectHref(data.tenantSlug, 'strategy-framework', framework.id, {
+              from: 'F01.01'
+            })}
+          >
             <strong>{framework.title}</strong><span
               class={`status status-${framework.status.toLowerCase()}`}
               >{label[framework.status]}</span

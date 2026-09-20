@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "industrySolutionId": "CBE",
+  "deliveryDomains": [
+    {
+      "id": "D01",
+      "code": "D01",
+      "name": "Architecture & Design",
+      "purpose": "Architectural and interior/fit-out design workflows.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D02",
+      "code": "D02",
+      "name": "Engineering & Technical Design",
+      "purpose": "Civil, structural, building-services and specialist technical engineering.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D03",
+      "code": "D03",
+      "name": "Surveying, Property & Land",
+      "purpose": "Building, land, valuation, development and rural surveying.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D04",
+      "code": "D04",
+      "name": "Commercial, Contracts & Cost",
+      "purpose": "Estimating, quantity surveying and contract/commercial management.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D05",
+      "code": "D05",
+      "name": "Geospatial, Planning & Transport",
+      "purpose": "Planning, mapping, GIS and transport planning.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D06",
+      "code": "D06",
+      "name": "Site Delivery & Construction Management",
+      "purpose": "Site management, supervision, labour and demolition delivery.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D07",
+      "code": "D07",
+      "name": "Building Trades",
+      "purpose": "Trade work, work orders, materials, installation and snagging.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D08",
+      "code": "D08",
+      "name": "Building Services Trades",
+      "purpose": "MEP/service trades, jobs, equipment, testing and maintenance.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D09",
+      "code": "D09",
+      "name": "Energy & Building Performance",
+      "purpose": "Energy assessment, retrofit, renewables and insulation.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D10",
+      "code": "D10",
+      "name": "Facilities, Property & Asset Operations",
+      "purpose": "Operational property, assets, planned/reactive maintenance and compliance.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D11",
+      "code": "D11",
+      "name": "Plant, Equipment & Specialist Operations",
+      "purpose": "Plant, lifting, access, specialist equipment and extraction operations.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D12",
+      "code": "D12",
+      "name": "Utilities & Networks",
+      "purpose": "Roads, gas and water network field operations.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D13",
+      "code": "D13",
+      "name": "Heritage, Conservation & Landscape",
+      "purpose": "Heritage, conservation, landscape and specialist craft conservation.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D14",
+      "code": "D14",
+      "name": "Supply Chain & Manufacturing",
+      "purpose": "Merchants, fabrication/manufacturing, stock and product fulfilment.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D15",
+      "code": "D15",
+      "name": "Regulation, Inspection & Compliance",
+      "purpose": "Regulatory assessment, inspection, decision and certification workflows.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "D16",
+      "code": "D16",
+      "name": "Infrastructure, Land & Rural",
+      "purpose": "Rural contracting, land operations, mobile resources and field service delivery.",
+      "status": "ACTIVE"
+    }
+  ]
+}

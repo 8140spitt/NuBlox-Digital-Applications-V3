@@ -59,6 +59,9 @@
       <strong>Model authority</strong>
       <span>Candidate register + review ledger</span>
       <small>Candidate → reviewed → validated → canonical → implemented → proven</small>
+      <a class="deployment-link" href={basePath + '/functional-deployment'}>
+        Functional governance & deployment →
+      </a>
     </div>
   </header>
 
@@ -360,6 +363,15 @@
   .authority-note small {
     color: #6e8292;
     font-size: 9.5px;
+  }
+  .deployment-link {
+    margin-top: 6px;
+    padding-top: 7px;
+    border-top: 1px solid #dce9f0;
+    color: var(--blue-700);
+    font-size: 9.5px;
+    font-weight: 800;
+    text-decoration: none;
   }
   .message {
     padding: 9px 12px;

@@ -28,6 +28,42 @@ export const runtimeObjectDefinitions: readonly RuntimeObjectDefinition[] = [
     originFunctionId: 'PLATFORM'
   },
   {
+    type: 'strategy-framework',
+    subjectType: 'STRATEGY_FRAMEWORK',
+    canonicalModelId: 'SGP-STRATEGY-FRAMEWORK',
+    aggregateId: 'AGG-02-STRATEGY',
+    singular: 'Strategy Framework',
+    plural: 'Strategy Frameworks',
+    readPermission: 'strategy.framework.read',
+    sections: ['overview', 'work', 'decisions', 'evidence', 'history'],
+    auditObjectType: 'strategy_framework',
+    originFunctionId: 'F01'
+  },
+  {
+    type: 'strategic-objective',
+    subjectType: 'STRATEGIC_OBJECTIVE',
+    canonicalModelId: 'SGP-STRATEGIC-OBJECTIVE',
+    aggregateId: 'AGG-02-OBJECTIVE',
+    singular: 'Strategic Objective',
+    plural: 'Strategic Objectives',
+    readPermission: 'strategy.objective.read',
+    sections: ['overview', 'work', 'decisions', 'evidence', 'history'],
+    auditObjectType: 'strategic_objective',
+    originFunctionId: 'F01'
+  },
+  {
+    type: 'information-container',
+    subjectType: 'INFORMATION_CONTAINER',
+    canonicalModelId: 'CBO-INFORMATION-CONTAINER',
+    aggregateId: 'AGG-07-INFORMATION',
+    singular: 'Information Container',
+    plural: 'Information Containers',
+    readPermission: 'information.container.read',
+    sections: ['overview', 'work', 'decisions', 'evidence', 'history'],
+    auditObjectType: 'information_container',
+    originFunctionId: 'PLATFORM'
+  },
+  {
     type: 'lead',
     subjectType: 'LEAD',
     canonicalModelId: 'CRM-LEAD',

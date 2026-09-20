@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { objectHref } from '$lib/data/runtime-object-registry';
 import { hasPermission } from '$lib/server/platform-context';
 import { resolveRequestCommandContext } from '$lib/server/request-command-context';
 import { listStrategyFrameworks } from '$lib/server/strategy-framework';
@@ -24,7 +25,9 @@ function integer(data: FormData, name: string) {
 }
 
 function route(tenant: string, id?: string) {
-  return `/${tenant}/app/functions/f01/strategic-objectives${id ? '?objective=' + encodeURIComponent(id) : ''}`;
+  return id
+    ? objectHref(tenant, 'strategic-objective', id, { from: 'F01.03' })
+    : `/${tenant}/app/functions/f01/strategic-objectives`;
 }
 
 function problem(error: unknown) {

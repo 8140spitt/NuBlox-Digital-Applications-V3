@@ -1,3 +1,5 @@
+export * from './control.js';
+export * from './control-factories.js';
 export * from './errors.js';
 export * from './factories.js';
 export * from './ids.js';

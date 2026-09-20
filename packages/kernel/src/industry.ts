@@ -45,6 +45,13 @@ export interface IndustryJobProfileDefinition {
   status: RecordStatus;
 }
 
+export interface IndustryJobCapabilityProfile {
+  industryJobProfileId: IndustryJobProfileId;
+  specialistCapabilities: ReadonlyArray<string>;
+  primaryStructuredRecords: ReadonlyArray<string>;
+  lifecycleStages: ReadonlyArray<string>;
+}
+
 export interface SectorClassificationScheme {
   id: SectorClassificationSchemeId;
   industrySolutionId: IndustrySolutionId;

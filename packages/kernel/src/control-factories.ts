@@ -141,6 +141,12 @@ export function initialiseObjectLifecycle(
     'Lifecycle state must reference the supplied Lifecycle Definition.'
   );
   invariant(
+    definition.objectType === object.objectType,
+    'Lifecycle Definition objectType must match the canonical object type.'
+  );
+  invariant(definition.status === 'ACTIVE', 'Lifecycle Definition must be active.');
+  invariant(state.status === 'ACTIVE', 'Initial Lifecycle State must be active.');
+  invariant(
     input.lifecycleStateId === state.id,
     'Lifecycle state must reference the supplied Lifecycle State Definition.'
   );
@@ -194,12 +200,10 @@ export function transitionObjectLifecycle(
       decision?.subjectObjectId === current.canonicalObjectId,
       'Decision subject must be the Lifecycle object.'
     );
-    if (current.subjectVersion !== undefined) {
-      invariant(
-        decision?.subjectVersion === current.subjectVersion,
-        'Decision must reference the exact current subject version.'
-      );
-    }
+    invariant(
+      decision?.subjectVersion === current.subjectVersion,
+      'Decision must reference the exact current subject version.'
+    );
     invariant(
       decision?.decisionType === transition.requiredDecisionType,
       'Decision type does not satisfy Lifecycle Transition.'

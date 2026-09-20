@@ -23,10 +23,11 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [F27 Job Profile Reconciliation](job-profile-reconciliation-f27.md) — complete employment-model reconciliation for Portfolio, Programme & Project Management.
 - [F22 Job Profile Reconciliation](job-profile-reconciliation-f22.md) — complete employment-model reconciliation for Property, Facilities & Physical Assets.
 - [F23 Job Profile Reconciliation](job-profile-reconciliation-f23.md) — complete employment-model reconciliation for HSE & Sustainability.
+- [F14 Job Profile Reconciliation](job-profile-reconciliation-f14.md) — complete employment-model reconciliation for Finance, Accounting, Treasury & Tax.
 - [Job Reconciliation Architecture Gap Register](job-profile-reconciliation-architecture-gap-register.csv) — canonical/data-model defects exposed by job-level traceability.
 - [Job Work-Product Activity Gap Register](job-work-product-activity-gap-register.csv) — source activity gaps exposed by exact job/work-product traceability.
 - [Internal Job Profile Reconciliation](job-profile-reconciliation.md) — governing J1 gate for deciding whether each of the 382 inherited profiles is retained, composed, reduced to Functional-Role provenance, superseded or explicitly out of scope.
-- [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row working register; 92 source profiles have now been reconciled to an employment treatment and 290 remain unresolved.
+- [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row working register; 111 source profiles have now been reconciled to an employment treatment and 271 remain unresolved.
 - [Stakeholder Design Review — 17 September 2026](stakeholder-design-review-2026-09-17.md) — earlier stakeholder design baseline.
 
 ## Current job/work-product checkpoint
@@ -34,7 +35,7 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - **84 / 84 external careers** have an explicit candidate NuBlox treatment.
 - **95 employment-job archetypes** are represented across Waves 1-4.
 - **875 candidate Work Products** are decomposed.
-- **J1 remains open**: 92 of the 382 prior function-derived candidate Job Profiles now have an employment treatment; 290 still require reconciliation before the catalogue can be declared complete.
+- **J1 remains open**: 111 of the 382 prior function-derived candidate Job Profiles now have an employment treatment; 271 still require reconciliation before the catalogue can be declared complete.
 
 ## Product completeness model
 

@@ -309,13 +309,6 @@ export function createDeliverableResponsibility(
   invariant(input.principalId === principal.id, 'Deliverable Responsibility must reference the supplied principal.');
   assertDateOrder(input.effectiveFrom, input.effectiveTo, 'Deliverable Responsibility');
 
-  const typeMatches =
-    (input.principalType === 'PERSON' && 'legalName' in principal && 'partyId' in principal) ||
-    (input.principalType === 'POSITION' && 'title' in principal && 'organisationUnitId' in principal) ||
-    (input.principalType === 'ORGANISATION_UNIT' && 'organisationId' in principal && 'code' in principal) ||
-    (input.principalType === 'ORGANISATION' && 'legalName' in principal && !('preferredName' in principal));
-  invariant(typeMatches, 'Deliverable Responsibility principalType must match the supplied principal.');
-
   return Object.freeze({ ...input });
 }
 
@@ -444,12 +437,23 @@ export function createRecipientResponse(
 export function markDeliverableAccepted(
   current: DeliverableItem,
   requirement: DeliverableRequirement,
+  transmittal: Transmittal,
   recipients: ReadonlyArray<TransmittalRecipient>,
   responses: ReadonlyArray<RecipientResponse>
 ): DeliverableItem {
   invariant(current.status === 'ISSUED', 'Only an ISSUED Deliverable Item can become ACCEPTED.');
   invariant(requirement.id === current.requirementId, 'Requirement must belong to the Deliverable Item.');
   invariant(requirement.acceptanceRequired, 'Requirement does not require acceptance.');
+  invariant(
+    transmittal.deliverableItemId === current.id,
+    'Acceptance Transmittal must belong to the Deliverable Item.'
+  );
+  for (const recipient of recipients) {
+    invariant(
+      recipient.transmittalId === transmittal.id,
+      'Acceptance recipients must belong to the supplied Transmittal.'
+    );
+  }
 
   const responsesByRecipient = new Map(
     responses.map((response) => [response.transmittalRecipientId, response])

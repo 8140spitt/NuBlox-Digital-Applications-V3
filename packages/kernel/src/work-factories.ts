@@ -111,9 +111,22 @@ export function createWorkflowInstance(
     version.workflowDefinitionId === definition.id,
     'Workflow Definition Version must belong to the supplied definition.'
   );
+  invariant(definition.status === 'ACTIVE', 'Workflow Definition must be active.');
   invariant(version.status === 'PUBLISHED', 'Workflow Instance requires a published Workflow Definition Version.');
   invariant(input.subjectObjectId === subject.id, 'Workflow Instance must reference the supplied subject.');
   assertDate(input.startedAt, 'Workflow Instance startedAt');
+  if (version.effectiveFrom) {
+    invariant(
+      Date.parse(input.startedAt) >= Date.parse(version.effectiveFrom),
+      'Workflow Instance cannot start before the Workflow Definition Version is effective.'
+    );
+  }
+  if (version.effectiveTo) {
+    invariant(
+      Date.parse(input.startedAt) <= Date.parse(version.effectiveTo),
+      'Workflow Instance cannot start after the Workflow Definition Version has expired.'
+    );
+  }
   invariant(input.status === 'ACTIVE', 'New Workflow Instance must start ACTIVE.');
   invariant(!input.completedAt && !input.completionReason, 'New Workflow Instance must not be completed.');
 

@@ -110,7 +110,7 @@ Implement:
 - Effectivity;
 - configuration status accounting.
 
-### P1.6 Change Runtime — CURRENT
+### P1.6 Change Runtime — IMPLEMENTED
 
 Implement:
 
@@ -124,7 +124,7 @@ Implement:
 - closure;
 - resulting Baseline/configuration update.
 
-### P1.7 Platform Events & Portability
+### P1.7 Platform Events & Portability — CURRENT
 
 Implement:
 

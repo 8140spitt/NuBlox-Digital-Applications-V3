@@ -153,6 +153,10 @@ export function createChangeImplementationAction(
   }
 
   if (input.targetVersion !== undefined) {
+    invariant(
+      Boolean(input.targetObjectId),
+      'Implementation Action targetVersion requires targetObjectId.'
+    );
     assertNonEmpty(input.targetVersion, 'Implementation Action targetVersion');
   }
 

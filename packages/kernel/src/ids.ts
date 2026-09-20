@@ -82,6 +82,18 @@ export type SectorClassificationValueId = Brand<string, 'SectorClassificationVal
 export type IndustryObjectClassificationId = Brand<string, 'IndustryObjectClassificationId'>;
 export type ConstructionContextProfileId = Brand<string, 'ConstructionContextProfileId'>;
 export type ConstructionWorkProductTypeId = Brand<string, 'ConstructionWorkProductTypeId'>;
+export type ProjectCostCodeId = Brand<string, 'ProjectCostCodeId'>;
+export type CostPlanId = Brand<string, 'CostPlanId'>;
+export type CostPlanVersionId = Brand<string, 'CostPlanVersionId'>;
+export type CostPlanLineId = Brand<string, 'CostPlanLineId'>;
+export type CommercialVariationId = Brand<string, 'CommercialVariationId'>;
+export type CommercialVariationVersionId = Brand<string, 'CommercialVariationVersionId'>;
+export type CommercialVariationLineId = Brand<string, 'CommercialVariationLineId'>;
+export type CommercialValuationId = Brand<string, 'CommercialValuationId'>;
+export type CommercialValuationLineId = Brand<string, 'CommercialValuationLineId'>;
+export type CommercialForecastId = Brand<string, 'CommercialForecastId'>;
+export type CommercialForecastLineId = Brand<string, 'CommercialForecastLineId'>;
+export type CommercialFinalAccountId = Brand<string, 'CommercialFinalAccountId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

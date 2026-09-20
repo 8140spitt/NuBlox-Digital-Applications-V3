@@ -2,7 +2,7 @@
 
 **Status:** governing product-definition taxonomy  
 **Established:** 20 September 2026  
-**Evidence base:** J1 Waves 1 and 2 — 26 priority jobs / 283 candidate Work Products  
+**Evidence base:** J1 Waves 1-3 — 46 priority jobs / 483 candidate Work Products  
 **Purpose:** classify user-visible work products without creating a universal runtime Work Product aggregate
 
 ## Governing rule
@@ -428,7 +428,7 @@ Handover changes stewardship/status; it must not recreate canonical object ident
 
 # 15. Why the taxonomy matters
 
-The 283 candidate Work Products from J1 Waves 1 and 2 show that NuBlox does not need 283 bespoke screen patterns.
+The 483 candidate Work Products from J1 Waves 1-3 show that NuBlox does not need 483 bespoke screen patterns.
 
 It needs a smaller set of **world-class authoring primitives** capable of supporting these families while respecting domain semantics.
 

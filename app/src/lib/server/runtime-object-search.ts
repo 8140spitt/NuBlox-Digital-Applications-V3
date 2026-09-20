@@ -3,6 +3,7 @@ import { searchPartyDirectory } from '$lib/server/foundation-party-directory';
 import { searchInformationContainers } from '$lib/server/information-container';
 import { searchLeads } from '$lib/server/marketing-lead';
 import { hasPermission, type CommandContext } from '$lib/server/platform-context';
+import { searchItems } from '$lib/server/product-innovation';
 import { searchStrategicObjectives } from '$lib/server/strategic-objective';
 import { searchStrategyFrameworks } from '$lib/server/strategy-framework';
 
@@ -125,6 +126,23 @@ export async function searchRuntimeObjects(
         subtitle: container.containerType.replaceAll('_', ' '),
         status: container.status,
         href: objectHref(context.tenantSlug, informationDefinition.type, container.id)
+      }))
+    );
+  }
+
+  const itemDefinition = runtimeObjectDefinition('item');
+  if (itemDefinition && hasPermission(context, itemDefinition.readPermission)) {
+    const items = await searchItems(context, needle, providerLimit);
+    groups.push(
+      items.map((item) => ({
+        objectType: itemDefinition.type,
+        objectId: item.id,
+        objectLabel: itemDefinition.singular,
+        reference: item.itemNumber,
+        title: item.name,
+        subtitle: item.itemType.replaceAll('_', ' '),
+        status: item.status,
+        href: objectHref(context.tenantSlug, itemDefinition.type, item.id)
       }))
     );
   }

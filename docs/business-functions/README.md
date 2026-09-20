@@ -84,7 +84,7 @@ The master coverage register will contain, at minimum:
 
 Function/workspace coverage proves that the enterprise capability has a governed home. It does **not** by itself prove that a person can perform a job.
 
-V3 therefore evaluates the same work through the separate [Job-to-Work-Product Architecture](../product/job-to-work-product-architecture.md):
+V3 therefore evaluates the same work through the separate [Job-to-Work-Product Architecture](../evidence/product-analysis/job-to-work-product-architecture.md):
 
 ```text
 Function -> Sub-function -> Activity

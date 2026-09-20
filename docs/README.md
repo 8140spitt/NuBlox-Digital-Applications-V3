@@ -37,8 +37,8 @@ These provide deeper technical and semantic detail behind the handbook.
 
 ### C. Product-analysis and traceability evidence
 
-- `docs/product/`
-- `docs/benchmarks/`
+- `docs/evidence/product-analysis/`
+- `docs/evidence/benchmarks/`
 
 These folders contain discovery registers, reconciliation waves, market benchmarking, work-product analysis and other evidence that helped establish the product model.
 

@@ -1,111 +1,63 @@
 # NuBlox Construction & The Built Environment — Product Handbook
 
-**Status:** authoritative product description  
-**Audience:** business stakeholders, product, design, engineering, implementation, support and assurance
+This Handbook is the authoritative description of the NuBlox product.
 
-## What NuBlox is
+## Product definition
 
-**NuBlox Construction & The Built Environment is a single enterprise-grade software system that enables a business operating in the construction and built-environment sector to carry out all of the functional activities required to run the enterprise and deliver its work within one connected system.**
+NuBlox Construction & The Built Environment is a single enterprise-grade software system for organisations that design, develop, construct, manufacture, manage, operate and maintain the built environment.
 
-It is intended to replace the fragmented departmental landscape in which strategy, CRM, estimating, procurement, projects, commercial management, finance, HCM, quality, HSE, documents, assets, facilities and service operations are separated into independent tools and spreadsheets.
+NuBlox must allow an organisation to:
 
-The primary product model is therefore the **functional areas of the business**.
+1. define and manage the enterprise itself;
+2. operate every functional area of the business;
+3. win, plan, coordinate and deliver its work;
+4. define, create, control, review, issue, accept and retain everything the organisation is required to produce.
 
-## The governing product test
+Those four dimensions are inseparable.
 
-For every functional area:
+## The complete product model
 
-> **Can the people responsible for this function carry out the complete function in NuBlox?**
+The enterprise itself defines who and what the organisation is: legal entities, structure, people, positions, customers, suppliers, products/services, projects, contracts, assets, locations, classifications, reference data and authority.
 
-And for the enterprise as a whole:
+How the organisation operates is described through F01-F29 functional areas.
 
-> **Can those functions collaborate around the same customers, suppliers, people, projects, contracts, products, assets, transactions and evidence without recreating business truth in disconnected systems?**
+How the organisation delivers covers the full market/client-to-asset/service lifecycle.
 
-## Functional areas first
+What the organisation produces includes drawings, models, specifications, calculations, schedules, cost plans, estimates, contracts, purchase orders, invoices, inspections, permits, decisions, reports, certificates, records, evidence and handover information.
 
-NuBlox covers 29 functional areas.
+## Read the Handbook in this order
 
-See the [Functional Areas of the Business](functional-areas/README.md) for the complete model and detailed operating chapters.
+1. [Complete Product Model](01-complete-product-model.md)
+2. [Functional Areas F01-F29](functional-areas/README.md)
+3. [Delivery Lifecycle](03-delivery-lifecycle.md)
+4. [Managed Deliverables & Business Output](04-managed-deliverables-and-output.md)
+5. [People, Jobs & Responsibilities](05-people-jobs-and-responsibilities.md)
+6. [Enterprise Data & Business Objects](06-enterprise-data-and-business-objects.md)
+7. [Process, Workflow, Authority & Evidence](07-process-workflow-authority-and-evidence.md)
+8. [User Experience & Workspaces](08-user-experience-and-workspaces.md)
+9. [Administration, Configuration & Integration](09-administration-configuration-and-integration.md)
+10. [System Architecture](10-system-architecture.md)
+11. [Product State & Roadmap](11-product-state-and-roadmap.md)
+12. [Glossary](12-glossary.md)
 
-The functions describe the business. They are not vendor-style software modules and they do not own separate databases.
+## Governing product tests
 
-## How the business delivers work
+For each functional area:
 
-Construction and built-environment delivery cuts across the functional areas.
+> Can the people responsible for this function perform the complete function in NuBlox?
 
-```text
-Market / Client
- -> Lead / Opportunity
- -> Estimate / Tender / Proposal
- -> Contract / Appointment
- -> Portfolio / Programme / Project
- -> Design / Information / Planning
- -> Procurement / Supply Chain
- -> Construction / Field Execution
- -> Commercial / Cost / Change
- -> Quality / HSE / Assurance
- -> Commissioning / Handover
- -> Asset / Facilities / Service
-```
+For each job:
 
-See [04 — Deliver the Business](04-deliver-the-business.md).
+> Can the person perform the job they are employed to do in NuBlox?
 
-## People perform the functions
+For each required output:
 
-The product connects enterprise functions to real organisational responsibility:
+> Can NuBlox identify that it is required, assign responsibility, support or connect its creation, control its versions and status, obtain the required reviews and approvals, issue it, record acceptance and preserve the full history?
 
-```text
-Person
- -> Worker Relationship
- -> Position
- -> Job Profile
- -> Functional Responsibilities
- -> Business Processes / Activities
- -> Transactions / Records / Decisions / Outputs
- -> Business Outcome
-```
+For each business journey:
 
-The job model supports the functional-area model; it is not the top-level product architecture.
+> Can the organisation move from one stage to the next without re-keying business truth into another system?
 
-See [02 — People, Jobs & Work](02-people-jobs-and-work.md).
+## Historical material
 
-## Shared enterprise truth
-
-All functional areas operate on shared canonical enterprise data.
-
-Examples include:
-
-- people and organisations;
-- customers and suppliers;
-- products, services and items;
-- projects, programmes and contracts;
-- sites, properties, spaces and assets;
-- budgets, transactions and financial consequences;
-- controlled information and evidence.
-
-See [05 — Enterprise Data, Objects & Information](05-enterprise-data-and-information.md).
-
-## Common enterprise controls
-
-NuBlox provides shared workflow, authority, evidence, audit, lifecycle, search and interaction capabilities so each function does not reinvent them.
-
-See [06 — Workflow, Authority, Evidence & Experience](06-workflow-authority-evidence-and-experience.md).
-
-## Handbook
-
-- [01 — Product & Enterprise Model](01-product-and-enterprise-model.md)
-- [02 — People, Jobs & Work](02-people-jobs-and-work.md)
-- [03 — Functional Areas of the Business](03-operate-the-business.md)
-- [Functional Area Chapters F01–F29](functional-areas/README.md)
-- [04 — Deliver the Business](04-deliver-the-business.md)
-- [05 — Enterprise Data, Objects & Information](05-enterprise-data-and-information.md)
-- [06 — Workflow, Authority, Evidence & Experience](06-workflow-authority-evidence-and-experience.md)
-- [07 — System Architecture](07-system-architecture.md)
-- [08 — Product State & Roadmap](08-product-state-and-roadmap.md)
-- [09 — Glossary](09-glossary.md)
-
-## Historical evidence
-
-Historical analysis, benchmark material and superseded technical reference are preserved under the repository-level `archive/documentation/` area.
-
-They are not required reading to understand the current product.
+Previous discovery, benchmarks, detailed semantic studies and superseded architecture papers are retained under the repository-level archive/documentation area. They are evidence, not the current product manual.

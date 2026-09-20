@@ -1564,32 +1564,30 @@ export async function recordDeliverableIssue(
 ) {
   assertPermission(context, 'deliverable.issue');
   return dbTransaction(async (connection) => {
-    const item = await queryOne<
-      RowDataPacket & {
-        id: string;
-        status: string;
-        version: number;
-        informationContainerId: string | null;
-        currentRevisionLabel: string | null;
-      }
-    >(
-      `SELECT id,
-              status,
-              version,
-              information_container_id AS informationContainerId,
-              current_revision_label AS currentRevisionLabel
-         FROM deliverable_items
-        WHERE id = ? AND tenant_id = ?
-        FOR UPDATE`,
-      [deliverableItemId, context.tenantId],
-      connection
-    );
-    if (!item) throw new Error('Deliverable Item not found.');
-    if (item.version !== expectedVersion) {
-      throw new Error('Deliverable Item changed after you opened it.');
+    const item = await lockDeliverable(context, deliverableItemId, connection);
+    assertExpectedVersion(item, expectedVersion);
+
+    if (item.workStatus !== 'COMPLETED') {
+      throw new Error('Authoring or rework must be completed before issue.');
     }
-    if (['ACCEPTED', 'SUPERSEDED', 'CANCELLED'].includes(item.status)) {
-      throw new Error('This Deliverable Item cannot be issued from its current state.');
+    if (item.reviewRequired && item.approvalRequired && item.status !== 'APPROVED') {
+      throw new Error('Required review and approval must be completed before issue.');
+    }
+    if (item.reviewRequired && !item.approvalRequired && item.status !== 'REVIEWED') {
+      throw new Error('Required review must be completed before issue.');
+    }
+    if (!item.reviewRequired && item.approvalRequired && item.status !== 'APPROVED') {
+      throw new Error('Required approval must be completed before issue.');
+    }
+    if (
+      !item.reviewRequired &&
+      !item.approvalRequired &&
+      !['PLANNED', 'REWORK'].includes(item.status)
+    ) {
+      throw new Error('This Deliverable Item is not ready to issue.');
+    }
+    if (item.acceptanceRequired && !input.recipientPartyId?.trim()) {
+      throw new Error('A recipient is required when deliverable acceptance is mandatory.');
     }
 
     let informationRevisionId: string | null = null;
@@ -1682,6 +1680,18 @@ export async function recordDeliverableIssue(
       connection
     );
     if (result.affectedRows !== 1) throw new Error('Concurrent Deliverable Item change detected.');
+
+    if (item.workflowInstanceId) {
+      await executeMutation(
+        `UPDATE workflow_instances
+            SET current_state = 'ISSUED',
+                version = version + 1,
+                updated_at = ?
+          WHERE id = ? AND tenant_id = ?`,
+        [timestampNow, item.workflowInstanceId, context.tenantId],
+        connection
+      );
+    }
 
     await evidence(
       context,

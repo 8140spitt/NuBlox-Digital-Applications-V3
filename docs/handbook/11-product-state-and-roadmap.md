@@ -58,10 +58,14 @@ The application now contains the first reusable Managed Deliverable runtime:
 - automatic My Work routing where the responsible Person is an active tenant member;
 - canonical Deliverable Item object routing;
 - participant responsibility;
+- exact-version review and approval gates backed by immutable authorised Decision evidence;
+- controlled rework Work Items when review/approval returns or rejects an output;
+- issue/transmittal blocked until required authoring, review, approval and controlled-information gates are satisfied;
+- recipient acceptance/no-objection/rejection evidence with acceptance closure or governed rework;
 - issue/transmittal and recipient response persistence;
 - full platform audit/business-event evidence.
 
-This is the first delivery-runtime slice. Review/approval/acceptance workflow depth, connected-authoring adapters, bulk deliverable schedules and broader job-specific authoring experiences remain implementation work.
+This is still an early delivery-runtime slice. Collaborative review comments/markups, connected-authoring adapters, bulk deliverable schedules, supersession depth and broader job-specific authoring experiences remain implementation work.
 
 ## Current application surface
 

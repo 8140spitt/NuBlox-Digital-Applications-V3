@@ -33,6 +33,7 @@ import type {
   RowDataPacket
 } from 'mysql2/promise';
 import { withTransaction } from './database.js';
+import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface ChangeRow extends RowDataPacket {
@@ -316,6 +317,14 @@ function mapBaseline(row: BaselineRow): Baseline {
       ? { supersededByBaselineId: row.superseded_by_baseline_id as NonNullable<Baseline['supersededByBaselineId']> }
       : {})
   };
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 export class MySqlChangeRepository {

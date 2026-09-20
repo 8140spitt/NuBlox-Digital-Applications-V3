@@ -18,6 +18,8 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Wave 3 Professional, Technical, Property & Planning Work](job-work-product-wave-3.md) — findings from the third decomposition wave.
 - [Wave 4 Field, Trades, Utilities, Plant & Supply Work](job-work-product-wave-4.md) — closes the remaining external-career decomposition and records the internal-profile reconciliation gate.
 - [Professional Job Architecture Gap Register](professional-job-architecture-gap-register.csv) — explicit gaps/partial matches between real sector jobs and the prior function-derived Job Profile baseline.
+- [Internal Job Profile Reconciliation](job-profile-reconciliation.md) — governing J1 gate for deciding whether each of the 382 inherited profiles is retained, composed, reduced to Functional-Role provenance, superseded or explicitly out of scope.
+- [Job Profile Reconciliation Register](job-profile-reconciliation-register.csv) — 382-row working register; 36 source profiles have Wave evidence and 346 remain unresolved.
 - [Stakeholder Design Review — 17 September 2026](stakeholder-design-review-2026-09-17.md) — earlier stakeholder design baseline.
 
 ## Current job/work-product checkpoint

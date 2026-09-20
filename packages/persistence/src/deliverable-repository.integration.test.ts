@@ -158,6 +158,14 @@ suite('MySQL native Deliverable runtime', () => {
       correlationId: suffix
     });
 
+    await expect(
+      deliverables.startItem(
+        tenantId,
+        item.id,
+        '2026-09-20T10:00:15.000Z',
+        { actorPersonId: author.id }
+      )
+    ).rejects.toThrow('requires an Authoring Binding');
 
     const authoringBinding: DeliverableAuthoringBinding = {
       id: asId<'DeliverableAuthoringBindingId'>(`AUTHORING-${suffix}`, 'Deliverable Authoring Binding'),
@@ -179,7 +187,8 @@ suite('MySQL native Deliverable runtime', () => {
       authoringBinding
     );
 
-    const responsibility: DeliverableResponsibility = {      id: asId<'DeliverableResponsibilityId'>(`RESP-${suffix}`, 'Deliverable Responsibility'),
+    const responsibility: DeliverableResponsibility = {
+      id: asId<'DeliverableResponsibilityId'>(`RESP-${suffix}`, 'Deliverable Responsibility'),
       tenantId,
       deliverableItemId: item.id,
       principalType: 'PERSON',

@@ -20,6 +20,9 @@ export type ObjectLifecycleStateId = Brand<string, 'ObjectLifecycleStateId'>;
 export type DecisionId = Brand<string, 'DecisionId'>;
 export type BusinessEventId = Brand<string, 'BusinessEventId'>;
 export type EvidenceRecordId = Brand<string, 'EvidenceRecordId'>;
+export type AccessRoleId = Brand<string, 'AccessRoleId'>;
+export type AccessRolePermissionId = Brand<string, 'AccessRolePermissionId'>;
+export type AccessRoleAssignmentId = Brand<string, 'AccessRoleAssignmentId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

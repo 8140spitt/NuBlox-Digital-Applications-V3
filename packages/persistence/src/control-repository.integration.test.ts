@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   asId,
@@ -36,7 +37,7 @@ suite('MySQL enterprise kernel control spine', () => {
   it('controls exact-version lifecycle transition through an immutable Decision and preserves history', async () => {
     if (!pool) throw new Error('Database pool missing.');
 
-    const suffix = Date.now().toString(36);
+    const suffix = randomUUID().replaceAll('-', '').slice(0, 12);
     const tenantId = asId<'TenantId'>(`TENANT-CTRL-${suffix}`, 'Tenant');
     const identity = new MySqlKernelRepository(pool);
     const control = new MySqlKernelControlRepository(pool);

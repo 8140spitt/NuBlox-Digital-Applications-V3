@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   asId,
@@ -34,7 +35,7 @@ suite('MySQL enterprise kernel persistence', () => {
   it('persists the canonical identity spine with audit attribution', async () => {
     if (!pool) throw new Error('Database pool missing.');
 
-    const suffix = Date.now().toString(36);
+    const suffix = randomUUID().replaceAll('-', '').slice(0, 12);
     const tenantId = asId<'TenantId'>(`TENANT-${suffix}`, 'Tenant');
     const tenant: Tenant = { id: tenantId, name: 'NuBlox Test Tenant', status: 'ACTIVE' };
     const repository = new MySqlKernelRepository(pool);
@@ -183,7 +184,7 @@ suite('MySQL enterprise kernel persistence', () => {
   it('rejects cross-tenant persistence through the repository boundary', async () => {
     if (!pool) throw new Error('Database pool missing.');
 
-    const suffix = `X-${Date.now().toString(36)}`;
+    const suffix = `X-${randomUUID().replaceAll('-', '').slice(0, 12)}`;
     const tenantA = asId<'TenantId'>(`TENANT-A-${suffix}`, 'Tenant');
     const tenantB = asId<'TenantId'>(`TENANT-B-${suffix}`, 'Tenant');
     const repository = new MySqlKernelRepository(pool);

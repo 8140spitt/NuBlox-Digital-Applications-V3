@@ -642,6 +642,22 @@ export class MySqlFunctionalRepository {
     return withTransaction(this.pool, async (connection) => {
       const row = await this.requireGovernanceForUpdate(connection, tenantId, id);
       const next = publishFunctionGovernanceVersion(mapGovernance(row), effectiveFrom);
+
+      const [otherPublished] = await connection.execute<CountRow[]>(
+        `SELECT COUNT(*) AS count
+           FROM function_governance_versions
+          WHERE tenant_id = ?
+            AND function_id = ?
+            AND id <> ?
+            AND status = 'PUBLISHED'`,
+        [tenantId, row.function_id, id]
+      );
+      if (Number(otherPublished[0]?.count ?? 0) > 0) {
+        throw new Error(
+          'Function Governance cannot publish while another version is PUBLISHED. Retire the current version first.'
+        );
+      }
+
       const [result] = await connection.execute<ResultSetHeader>(
         `UPDATE function_governance_versions
             SET status = ?, effective_from = ?, row_version = row_version + 1,
@@ -962,6 +978,31 @@ export class MySqlFunctionalRepository {
     createDeploymentCapacity(capacity, assignment);
 
     await withTransaction(this.pool, async (connection) => {
+      const newFrom = databaseDate(capacity.effectiveFrom);
+      const newTo = capacity.effectiveTo ? databaseDate(capacity.effectiveTo) : null;
+      const [overlapRows] = await connection.execute<Array<RowDataPacket & { allocated: string | number | null }>>(
+        `SELECT COALESCE(SUM(capacity_percent), 0) AS allocated
+           FROM deployment_capacities
+          WHERE tenant_id = ?
+            AND deployment_assignment_id = ?
+            AND status = 'ACTIVE'
+            AND (effective_to IS NULL OR effective_to >= ?)
+            AND (? IS NULL OR effective_from <= ?)`,
+        [
+          tenantId,
+          capacity.deploymentAssignmentId,
+          newFrom,
+          newTo,
+          newTo
+        ]
+      );
+      const allocated = Number(overlapRows[0]?.allocated ?? 0);
+      if (allocated + capacity.capacityPercent > 100) {
+        throw new Error(
+          `Deployment capacity would exceed 100% during an overlapping effective period (existing ${allocated}%, requested ${capacity.capacityPercent}%).`
+        );
+      }
+
       await connection.execute(
         `INSERT INTO deployment_capacities
           (id, tenant_id, deployment_assignment_id, capacity_percent,

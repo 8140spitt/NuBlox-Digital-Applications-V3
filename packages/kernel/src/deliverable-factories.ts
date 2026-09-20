@@ -2,6 +2,7 @@ import { invariant } from './errors.js';
 import type { Decision } from './control.js';
 import type {
   DeliverableApproval,
+  DeliverableAuthoringBinding,
   DeliverableConsequence,
   DeliverableItem,
   DeliverableRequirement,
@@ -19,6 +20,7 @@ import type {
   SubFunctionDefinition,
   TaskDefinition
 } from './functional.js';
+import type { ExternalIdentity } from './portability.js';
 import type {
   CanonicalObjectIdentity,
   Organisation,
@@ -195,6 +197,89 @@ export function createDeliverableRequirement(
     ...input,
     requiredRepresentationTypes: Object.freeze([...input.requiredRepresentationTypes])
   });
+}
+
+export function createDeliverableAuthoringBinding(
+  input: DeliverableAuthoringBinding,
+  item: DeliverableItem,
+  requirement: DeliverableRequirement,
+  options: {
+    authoritativeObject?: CanonicalObjectIdentity;
+    externalIdentity?: ExternalIdentity;
+  } = {}
+): DeliverableAuthoringBinding {
+  assertSameTenant(input.tenantId, item.tenantId, 'Deliverable Authoring Binding and Item');
+  invariant(
+    input.deliverableItemId === item.id,
+    'Deliverable Authoring Binding must reference the supplied Deliverable Item.'
+  );
+  invariant(
+    requirement.id === item.requirementId,
+    'Deliverable Authoring Binding Requirement must belong to the Deliverable Item.'
+  );
+  invariant(
+    input.mode === requirement.authoringMode,
+    'Deliverable Authoring Binding mode must match the Requirement authoring mode.'
+  );
+  assertNonEmpty(input.providerKey, 'Deliverable Authoring Binding providerKey');
+  assertDate(input.createdAt, 'Deliverable Authoring Binding createdAt');
+
+  if (options.authoritativeObject) {
+    assertSameTenant(
+      input.tenantId,
+      options.authoritativeObject.tenantId,
+      'Deliverable Authoring Binding and authoritative object'
+    );
+    invariant(
+      input.authoritativeObjectId === options.authoritativeObject.id,
+      'Deliverable Authoring Binding must reference the supplied authoritative object.'
+    );
+  } else {
+    invariant(
+      !input.authoritativeObjectId,
+      'Deliverable Authoring Binding cannot reference an unsupplied authoritative object.'
+    );
+  }
+
+  if (options.externalIdentity) {
+    assertSameTenant(
+      input.tenantId,
+      options.externalIdentity.tenantId,
+      'Deliverable Authoring Binding and External Identity'
+    );
+    invariant(
+      input.externalIdentityId === options.externalIdentity.id,
+      'Deliverable Authoring Binding must reference the supplied External Identity.'
+    );
+  } else {
+    invariant(
+      !input.externalIdentityId,
+      'Deliverable Authoring Binding cannot reference an unsupplied External Identity.'
+    );
+  }
+
+  if (input.mode === 'NATIVE') {
+    invariant(
+      Boolean(input.authoritativeObjectId),
+      'NATIVE authoring requires an authoritative NuBlox object.'
+    );
+    invariant(
+      !input.externalIdentityId && !input.connectedReference,
+      'NATIVE authoring must not depend on an external identity or connected reference.'
+    );
+  } else if (input.mode === 'CONNECTED') {
+    invariant(
+      Boolean(input.connectedReference?.trim()),
+      'CONNECTED authoring requires connectedReference.'
+    );
+  } else {
+    invariant(
+      Boolean(input.externalIdentityId),
+      'EXTERNAL_AUTHORITATIVE authoring requires an External Identity.'
+    );
+  }
+
+  return Object.freeze({ ...input });
 }
 
 export function createDeliverableItem(

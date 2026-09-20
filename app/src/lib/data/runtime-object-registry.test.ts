@@ -8,11 +8,29 @@ import {
 } from './runtime-object-registry';
 
 describe('runtime object registry', () => {
-  it('is valid and resolves canonical Party and Lead definitions', () => {
+  it('is valid and resolves canonical enterprise object definitions', () => {
     expect(validateRuntimeObjectRegistry()).toBe(true);
     expect(runtimeObjectDefinition('PARTY')?.canonicalModelId).toBe('CBO-PARTY');
     expect(runtimeObjectDefinitionForSubject('party')?.aggregateId).toBe('AGG-01-PARTY');
     expect(runtimeObjectDefinition('party')?.sections).toContain('relationships');
+    expect(runtimeObjectDefinition('STRATEGY-FRAMEWORK')?.canonicalModelId).toBe(
+      'SGP-STRATEGY-FRAMEWORK'
+    );
+    expect(runtimeObjectDefinitionForSubject('STRATEGY_FRAMEWORK')?.aggregateId).toBe(
+      'AGG-02-STRATEGY'
+    );
+    expect(runtimeObjectDefinition('STRATEGIC-OBJECTIVE')?.canonicalModelId).toBe(
+      'SGP-STRATEGIC-OBJECTIVE'
+    );
+    expect(runtimeObjectDefinitionForSubject('STRATEGIC_OBJECTIVE')?.aggregateId).toBe(
+      'AGG-02-OBJECTIVE'
+    );
+    expect(runtimeObjectDefinition('INFORMATION-CONTAINER')?.canonicalModelId).toBe(
+      'CBO-INFORMATION-CONTAINER'
+    );
+    expect(runtimeObjectDefinitionForSubject('INFORMATION_CONTAINER')?.aggregateId).toBe(
+      'AGG-07-INFORMATION'
+    );
     expect(runtimeObjectDefinition('LEAD')?.canonicalModelId).toBe('CRM-LEAD');
     expect(runtimeObjectDefinitionForSubject('lead')?.aggregateId).toBe('AGG-03-LEAD');
   });
@@ -33,6 +51,17 @@ describe('runtime object registry', () => {
     expect(subjectObjectHref('demo-tenant', 'PARTY', '456', { section: 'relationships' })).toBe(
       '/demo-tenant/app/objects/party/456?section=relationships'
     );
+    expect(
+      subjectObjectHref('demo-tenant', 'STRATEGY_FRAMEWORK', 'sf-1', { section: 'decisions' })
+    ).toBe('/demo-tenant/app/objects/strategy-framework/sf-1?section=decisions');
+    expect(
+      subjectObjectHref('demo-tenant', 'STRATEGIC_OBJECTIVE', 'obj-1', { section: 'work' })
+    ).toBe('/demo-tenant/app/objects/strategic-objective/obj-1?section=work');
+    expect(
+      subjectObjectHref('demo-tenant', 'INFORMATION_CONTAINER', 'info-1', {
+        section: 'evidence'
+      })
+    ).toBe('/demo-tenant/app/objects/information-container/info-1?section=evidence');
     expect(subjectObjectHref('demo-tenant', 'LEAD', '123', { section: 'work' })).toBe(
       '/demo-tenant/app/objects/lead/123?section=work'
     );

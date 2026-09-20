@@ -223,6 +223,29 @@ export async function listStrategicObjectives(context: CommandContext, framework
   );
 }
 
+export async function getStrategicObjective(context: CommandContext, id: string) {
+  assertPermission(context, 'strategy.objective.read');
+  return getObjective(context, id);
+}
+
+export async function searchStrategicObjectives(
+  context: CommandContext,
+  query: string,
+  requestedLimit = 25
+) {
+  assertPermission(context, 'strategy.objective.read');
+  const needle = query.trim().slice(0, 191);
+  if (!needle) return [] as StrategicObjective[];
+  const pattern = '%' + needle + '%';
+  const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
+  return queryRows<RowDataPacket & StrategicObjective>(
+    currentSelect +
+      ' WHERE o.tenant_id = ? AND (o.objective_ref LIKE ? OR v.statement LIKE ? OR v.success_criteria LIKE ? OR v.priority LIKE ?) ORDER BY o.updated_at DESC LIMIT ' +
+      limit,
+    [context.tenantId, pattern, pattern, pattern, pattern]
+  );
+}
+
 export async function listStrategicObjectiveVersions(context: CommandContext, objectiveId: string) {
   assertPermission(context, 'strategy.objective.read');
   await getObjective(context, objectiveId);

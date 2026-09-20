@@ -104,10 +104,16 @@
       <span>Operate</span>
     </a>
     <a
-      class:active={page.url.pathname.includes('/app/deliver')}
+      class:active={page.url.pathname.endsWith('/app/deliver') || page.url.pathname.includes('/app/deliver/')}
       href={'/' + tenantSlug + '/app/deliver'}
     >
       <span>Deliver</span>
+    </a>
+    <a
+      class:active={page.url.pathname.includes('/app/deliverables')}
+      href={'/' + tenantSlug + '/app/deliverables'}
+    >
+      <span>Deliverables</span>
     </a>
     <a class:active={page.url.pathname.includes('/app/data')} href={'/' + tenantSlug + '/app/data'}>
       <span>Data</span>

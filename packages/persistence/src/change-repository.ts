@@ -63,18 +63,6 @@ interface AffectedObjectRow extends RowDataPacket {
   rationale: string;
 }
 
-interface ImpactAssessmentRow extends RowDataPacket {
-  id: string;
-  tenant_id: string;
-  change_id: string;
-  domain: string;
-  assessor_person_id: string;
-  assessed_at: Date;
-  impact_level: ChangeImpactAssessment['impactLevel'];
-  summary: string;
-  cost_impact: string | null;
-  schedule_impact_days: string | null;
-}
 
 interface ImplementationActionRow extends RowDataPacket {
   id: string;

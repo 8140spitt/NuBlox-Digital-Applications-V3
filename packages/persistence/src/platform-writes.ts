@@ -12,7 +12,7 @@ export interface OutboxEventInput {
   aggregateType: string;
   aggregateId: string;
   eventType: string;
-  payload: Readonly<Record<string, unknown>>;
+  payload: unknown;
   occurredAt?: string;
 }
 
@@ -37,7 +37,12 @@ export async function writeOutboxEvent(
     aggregateType: input.aggregateType,
     aggregateId: input.aggregateId,
     eventType: input.eventType,
-    payload: input.payload,
+    payload:
+      typeof input.payload === 'object' &&
+      input.payload !== null &&
+      !Array.isArray(input.payload)
+        ? (input.payload as Readonly<Record<string, unknown>>)
+        : { value: input.payload },
     occurredAt: input.occurredAt ?? new Date().toISOString(),
     status: 'PENDING',
     attempts: 0

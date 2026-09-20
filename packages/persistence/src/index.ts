@@ -1,3 +1,4 @@
+export * from './my-work-repository.js';
 export * from './deliverable-repository.js';
 export * from './functional-repository.js';
 export * from './portability-repository.js';

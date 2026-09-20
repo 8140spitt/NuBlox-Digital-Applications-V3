@@ -11,7 +11,9 @@ import {
   createWorkflowInstance,
   escalateWork,
   markWorkAssigned,
+  publishWorkflowDefinitionVersion,
   resumeWork,
+  retireWorkflowDefinitionVersion,
   startWork,
   type CanonicalObjectIdentity,
   type EvidenceRecordId,
@@ -301,6 +303,82 @@ export class MySqlWorkRepository {
         audit,
         version
       );
+    });
+  }
+
+  async publishWorkflowDefinitionVersion(
+    tenantId: TenantId,
+    versionId: WorkflowDefinitionVersion['id'],
+    effectiveFrom: string,
+    audit: AuditContext = {}
+  ): Promise<WorkflowDefinitionVersion> {
+    return withTransaction(this.pool, async (connection) => {
+      const row = await this.requireWorkflowDefinitionVersionForUpdate(
+        connection,
+        tenantId,
+        versionId
+      );
+      const current = mapWorkflowVersion(row);
+      const next = publishWorkflowDefinitionVersion(current, effectiveFrom);
+
+      const [result] = await connection.execute<ResultSetHeader>(
+        `UPDATE workflow_definition_versions
+            SET status = ?, effective_from = ?
+          WHERE tenant_id = ? AND id = ? AND status = 'DRAFT'`,
+        [next.status, databaseDate(effectiveFrom), tenantId, versionId]
+      );
+      if (result.affectedRows !== 1) {
+        throw new Error('Concurrent Workflow Definition Version publication detected.');
+      }
+
+      await writeAudit(
+        connection,
+        tenantId,
+        'WORKFLOW_DEFINITION_VERSION',
+        versionId,
+        'PUBLISHED',
+        audit,
+        next
+      );
+      return next;
+    });
+  }
+
+  async retireWorkflowDefinitionVersion(
+    tenantId: TenantId,
+    versionId: WorkflowDefinitionVersion['id'],
+    effectiveTo: string,
+    audit: AuditContext = {}
+  ): Promise<WorkflowDefinitionVersion> {
+    return withTransaction(this.pool, async (connection) => {
+      const row = await this.requireWorkflowDefinitionVersionForUpdate(
+        connection,
+        tenantId,
+        versionId
+      );
+      const current = mapWorkflowVersion(row);
+      const next = retireWorkflowDefinitionVersion(current, effectiveTo);
+
+      const [result] = await connection.execute<ResultSetHeader>(
+        `UPDATE workflow_definition_versions
+            SET status = ?, effective_to = ?
+          WHERE tenant_id = ? AND id = ? AND status = 'PUBLISHED'`,
+        [next.status, databaseDate(effectiveTo), tenantId, versionId]
+      );
+      if (result.affectedRows !== 1) {
+        throw new Error('Concurrent Workflow Definition Version retirement detected.');
+      }
+
+      await writeAudit(
+        connection,
+        tenantId,
+        'WORKFLOW_DEFINITION_VERSION',
+        versionId,
+        'RETIRED',
+        audit,
+        next
+      );
+      return next;
     });
   }
 
@@ -1086,6 +1164,24 @@ export class MySqlWorkRepository {
     const row = rows[0];
     if (!row) throw new Error('Workflow Definition not found in tenant.');
     return mapWorkflowDefinition(row);
+  }
+
+  private async requireWorkflowDefinitionVersionForUpdate(
+    connection: PoolConnection,
+    tenantId: TenantId,
+    id: string
+  ): Promise<WorkflowVersionRow> {
+    const [rows] = await connection.execute<WorkflowVersionRow[]>(
+      `SELECT id, tenant_id, workflow_definition_id, version, status,
+              effective_from, effective_to
+         FROM workflow_definition_versions
+        WHERE tenant_id = ? AND id = ?
+        FOR UPDATE`,
+      [tenantId, id]
+    );
+    const row = rows[0];
+    if (!row) throw new Error('Workflow Definition Version not found in tenant.');
+    return row;
   }
 
   private async requireWorkflowDefinitionVersion(

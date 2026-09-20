@@ -69,6 +69,8 @@ Pending, dirty, drift or unknown migrations make `db:status` exit non-zero.
 
 Historical migrations remain immutable. The current schema baseline extends through `0039_managed_deliverable_runtime.sql`; future schema changes start at `0040_...`.
 
+The `0038` and `0039` migrations form the current functional-deployment and managed-deliverable platform baseline.
+
 - `0033_permission_access_request_runtime.sql` — governed permission-access requests linked to shared Work and routed to the active Tenant Administrator role.
 - `0034_product_service_innovation_runtime.sql` — F05 Market Insight, canonical Item/Offering, Product Configuration, Product/Service Business Case profiles, innovation experiment/funding, launch, lifecycle and retirement runtime.
 - `0035_marketing_brand_runtime.sql` — F06 Market Segment, Communications Plan/Campaign, Communication Item, Lead, privacy consent/preference evidence, delivery/event evidence and reproducible marketing analytics runtime.

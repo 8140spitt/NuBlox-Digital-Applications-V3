@@ -43,7 +43,7 @@ PTC Windchill and other external products are reference architectures, benchmark
 1. The product documentation must refer to NuBlox as the enterprise platform.
 2. Construction & Built Environment documentation must be framed as an Industry Solution.
 3. Shared concepts must reside in the Enterprise Kernel rather than be owned by the Construction solution.
-4. The 29 functions remain stable first-class tenant workspaces under ADR-0002.
+4. The 29 functions are stable first-class tenant workspaces while sharing one Enterprise Kernel and canonical object graph.
 5. The 16 Construction delivery domains and 84 Construction Job Profiles remain industry-specific composition structures.
 6. Additional Industry Solutions can reuse the Kernel, functional framework and work-delivery runtime.
 7. Windchill concepts may be adopted only after mapping them into NuBlox canonical semantics.
@@ -64,13 +64,11 @@ NuBlox Enterprise Operating Platform
     +-- future industry solutions
 ~~~
 
-## Relationship to ADR-0002
-
-ADR-0002 remains accepted.
+## Function workspace decision
 
 The 29 enterprise functions are first-class tenant workspaces.
 
-This ADR clarifies that those workspaces operate on a shared enterprise platform and are not independent applications or industry-specific silos.
+Those workspaces operate on the shared NuBlox platform and are not independent applications, databases or industry-specific silos.
 
 ## Superseded interpretation
 

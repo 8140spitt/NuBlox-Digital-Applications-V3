@@ -285,7 +285,8 @@ export function advanceProjectionCheckpoint(
 ): ProjectionCheckpoint {
   assertSameTenant(current.tenantId, next.tenantId, 'Projection Checkpoints');
   invariant(
-    current.projectionName === next.projectionName &&
+    current.id === next.id &&
+      current.projectionName === next.projectionName &&
       current.partitionKey === next.partitionKey,
     'Projection Checkpoint identity cannot change.'
   );

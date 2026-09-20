@@ -64,6 +64,18 @@ export const runtimeObjectDefinitions: readonly RuntimeObjectDefinition[] = [
     originFunctionId: 'PLATFORM'
   },
   {
+    type: 'deliverable-item',
+    subjectType: 'DELIVERABLE_ITEM',
+    canonicalModelId: 'CBO-DELIVERABLE-ITEM',
+    aggregateId: 'AGG-MANAGED-DELIVERABLE',
+    singular: 'Deliverable Item',
+    plural: 'Deliverable Items',
+    readPermission: 'deliverable.read',
+    sections: ['overview', 'relationships', 'work', 'decisions', 'evidence', 'history'],
+    auditObjectType: 'deliverable_item',
+    originFunctionId: 'PLATFORM'
+  },
+  {
     type: 'item',
     subjectType: 'ITEM',
     canonicalModelId: 'CBO-ITEM',

@@ -21,12 +21,33 @@ Until that decision is made, the profile remains candidate architecture rather t
 ## Current reconciliation position
 
 ```text
-Source candidate Job Profiles:             382
-Referenced by Waves 1-4:                    36
-Not yet referenced by an employment wave:  346
+Source candidate Job Profiles:                 382
+Reconciled to an employment treatment:           81
+Still requiring employment reconciliation:      301
 ```
 
 The referenced profiles are not automatically approved. Their Wave mapping states distinguish direct, partial, adjacent and multi-profile composition evidence.
+
+## Progress checkpoint — 20 September 2026
+
+Completed reconciliation tranches:
+
+- 36 Wave-evidenced source profiles;
+- duplicate-title / semantic-collision review;
+- 27 additional function-lead profiles;
+- complete F27 Portfolio, Programme & Project Management employment reconciliation.
+
+Key outcomes include:
+
+- three Project Manager lifecycle slices composed into one employment job;
+- Customer Retention separated from Information Retention;
+- IT Incident Manager separated from Safety Incident Investigator;
+- Risk Analyst identification/assessment slices composed;
+- Internal Audit Manager planning/reporting slices composed while Internal Auditor remains distinct;
+- Crisis Communications composed across F24/F25;
+- Business Process Analyst modelling/analysis slices composed.
+
+The unresolved inventory is now **301 source profiles**.
 
 ## Reconciliation states
 

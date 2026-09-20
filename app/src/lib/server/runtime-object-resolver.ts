@@ -165,7 +165,10 @@ const resolvers: Record<string, Resolver> = {
       summary: framework.purpose || framework.direction || null,
       metadata: [
         { label: 'Review cadence', value: framework.reviewCadence || '—' },
-        { label: 'Version', value: framework.currentVersion ? 'v' + framework.currentVersion : 'Draft' },
+        {
+          label: 'Version',
+          value: framework.currentVersion ? 'v' + framework.currentVersion : 'Draft'
+        },
         { label: 'Published', value: framework.publishedAt ?? 'Not published' }
       ],
       fields: [

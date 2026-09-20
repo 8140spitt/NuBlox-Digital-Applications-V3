@@ -14,6 +14,18 @@ For every functional area, the question is:
 
 A dashboard, menu entry or data register is not sufficient.
 
+## Governance, Delivery and Deployment
+
+Every functional area is defined through the common [Functional Governance, Delivery & Deployment](../02-functional-governance-delivery-and-deployment.md) model.
+
+That means every F01-F29 area must make explicit:
+
+- **Governance** — ownership, standards, process rules, competence, controls, authority, baselines/change and assurance;
+- **Delivery** — processes, activities, participating jobs, deliverables, transactions, decisions and handoffs;
+- **Deployment** — the actual organisations, Positions and people performing the capability for a project, contract, site, asset or enterprise context.
+
+The [84 Construction & Built Environment Jobs](../construction-jobs/README.md) are a sector-delivery test across these functions. Jobs participate in multiple functions rather than being artificially allocated one-to-one.
+
 ## Functional areas
 
 - [F01 — Strategy & Enterprise Planning](f01-strategy-and-enterprise-planning.md)

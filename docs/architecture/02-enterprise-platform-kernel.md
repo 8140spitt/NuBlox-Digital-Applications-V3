@@ -255,13 +255,20 @@ NuBlox distinguishes:
 
 They may originate from one transaction but serve different purposes.
 
-## External systems
+## External data boundary
 
-External applications may remain authoritative for specialist objects.
+NuBlox does not depend on external applications to execute supported enterprise capabilities.
 
-NuBlox records external system identity, external object identity, ownership/source-of-record status, provenance, transformation/reconciliation state and canonical relationships.
+External products may appear only at the platform boundary for:
 
-Vendor schemas must not become the NuBlox canonical model by accident.
+- migration into NuBlox;
+- controlled import of source data;
+- controlled export of NuBlox data or representations; and
+- historical provenance.
+
+After migration into a NuBlox-owned capability, NuBlox is the authoritative operational system for that capability. External source identities may be retained as provenance, but an external application must not remain necessary to create, edit, approve, transact, control or complete the work.
+
+Vendor schemas must not become the NuBlox canonical model.
 
 ## Kernel rule
 

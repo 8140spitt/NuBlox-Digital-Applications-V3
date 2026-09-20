@@ -38,12 +38,15 @@ These rules are architectural constraints, not implementation preferences.
 31. **Generated Representations do not replace governed structured/controlled source identity.**
 32. **Every material state-changing command must be attributable and auditable.**
 33. **Permission denial must produce a controlled business/user outcome, not an unhandled server failure.**
-34. **Integration never silently transfers system-of-record ownership.**
-35. **External source object != canonical NuBlox identity.**
-36. **Migration preserves source semantics and provenance; it does not flatten controlled object history into files.**
-37. **Industry Solutions configure and extend the platform; they do not fork the Enterprise Kernel.**
-38. **Reference architectures inform NuBlox; they do not become NuBlox.**
-39. **The 29 Functions and 84 Construction Job Profiles resolve through shared runtimes rather than isolated applications.**
-40. **A connected authoring tool does not remove NuBlox's responsibility for governing the required output, responsibility, Decision, issue, Acceptance and Evidence.**
+34. **A supported NuBlox capability must be executable natively inside NuBlox.**
+35. **No external application may be required to create, edit, approve, transact, control or complete NuBlox work.**
+36. **External products are benchmarks or migration/import/export boundaries, not runtime components of the NuBlox operating model.**
+37. **External source object != canonical NuBlox identity.**
+38. **Migration preserves source semantics and provenance; it does not flatten controlled object history into files.**
+39. **After governed cutover of a supported capability, NuBlox is the authoritative operational system for that capability.**
+40. **Industry Solutions configure and extend the platform; they do not fork the Enterprise Kernel.**
+41. **Reference architectures inform what NuBlox builds natively; they do not become NuBlox.**
+42. **The 29 Functions and 84 Construction Job Profiles resolve through shared native runtimes rather than isolated or externally hosted applications.**
+43. **Native authoring is part of the unified platform obligation wherever authoring is required to perform a supported job.**
 
 Any implementation that violates an invariant requires an explicit architecture decision before it can be accepted.

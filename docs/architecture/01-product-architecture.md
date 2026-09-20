@@ -7,7 +7,7 @@
 
 NuBlox is a configurable **Enterprise Operating Platform**.
 
-NuBlox is the product. Construction & Built Environment is an Industry Solution. External ERP, PLM, CDE, BIM, EAM, PPM, ITSM, CRM and HCM products are references, integration endpoints or migration sources/targets; they do not define NuBlox's product boundary.
+NuBlox is the product and the operating environment. Construction & Built Environment is an Industry Solution. External ERP, PLM, CDE, BIM, EAM, PPM, ITSM, CRM and HCM products are benchmarks or migration/import/export sources and targets only; they are not runtime dependencies and do not perform work on behalf of NuBlox.
 
 NuBlox must support three inseparable enterprise concerns:
 
@@ -89,7 +89,7 @@ See [04 — Native Work-Delivery Runtime](04-native-work-delivery-runtime.md).
 
 An Industry Solution configures the generic NuBlox platform for a sector.
 
-It can define sector terminology, Job Profiles, delivery domains, object subtypes, relationships, lifecycle/workflow templates, Deliverable types, competence schemes, regulatory requirements, integrations, workspace composition and reporting.
+It can define sector terminology, Job Profiles, delivery domains, object subtypes, relationships, lifecycle/workflow templates, Deliverable types, competence schemes, regulatory requirements, native capability composition, workspace composition and reporting.
 
 An Industry Solution must reuse the Enterprise Kernel rather than fork it.
 
@@ -144,13 +144,21 @@ Govern
 
 A user should experience NuBlox as one enterprise system whose behaviour is shaped by their organisation, Position, Job Profile, Functional Deployment, authority, operating context and work obligations—not as a menu of unrelated modules.
 
+## Unified native experience
+
+A NuBlox user must be able to perform the work for a supported Function or Job Profile without leaving NuBlox to use another enterprise application.
+
+This means NuBlox owns the operative capability, user experience, business rules, object state, workflow, lifecycle, Decisions, evidence and records needed to complete the work.
+
+External products may be studied for capability design and may exchange data at the boundary for migration, import or export. They must not be required to create, edit, approve, transact, control or complete NuBlox work.
+
 ## Product acceptance test
 
 NuBlox capability is complete only when the platform can:
 
 - govern the capability;
 - deploy competent and authorised people/organisations into context;
-- enable the work through native or governed connected tools;
+- enable the work through native NuBlox tools and workspaces without requiring another application;
 - control the resulting objects and Deliverable Items;
 - make and preserve authorised Decisions;
 - manage lifecycle, configuration and change where required;

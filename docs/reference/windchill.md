@@ -20,7 +20,7 @@ The reviewed Draw.io study is not only an infrastructure diagram.
 
 These pages describe the runtime/deployment view of Windchill, including client/web access, application/method-server processing, persistence/content/search services, background processing, publication and specialist authoring/CAD integration patterns.
 
-NuBlox uses this section as an infrastructure/integration reference only.
+NuBlox uses this section as a reference for infrastructure and capability design only; it does not imply a Windchill runtime dependency.
 
 ### Pages 5–10 — controlled object and PLM semantics
 
@@ -77,15 +77,11 @@ The study then deliberately translates the reference concepts into NuBlox concer
 
 This is where the study stops being a Windchill diagram and becomes a NuBlox design exploration.
 
-### Page 16 — system-of-record mapping
+### Page 16 — source-system mapping
 
-The final mapping distinguishes:
+The final page records source-system and ownership ideas from the study.
 
-1. objects/semantics NuBlox should own natively;
-2. NuBlox-governed relationships/context around specialist or external objects;
-3. objects that may remain authoritative in external enterprise systems.
-
-That pattern is retained in the governing migration architecture.
+For the NuBlox target architecture, this is treated as **migration evidence**, not as permission to retain operational dependencies. Source platforms may remain authoritative before cutover; once a supported capability is migrated to NuBlox, NuBlox becomes the authoritative operational system for that capability.
 
 ## Concepts to retain and redesign
 
@@ -105,7 +101,7 @@ That pattern is retained in the governing migration architecture.
 | contexts / teams / roles | Tenant/Organisation/Project context + deployment/responsibility/authority model |
 | content / Representations | Information and Representation services |
 | publication | Representation/publication services |
-| CAD integration | connected-authoring adapters |
+| CAD/technical authoring patterns | native NuBlox design/BIM/CAD authoring and control capability |
 | access control | contextual Permission/scope/Authority model |
 | packages / collections | governed collections, transmittals and exchange packages |
 | history | Audit, Event, Decision and provenance Evidence |
@@ -150,23 +146,13 @@ The study reinforces these NuBlox invariants:
 - Organisation context != Product structure;
 - Project context != Organisation Unit.
 
-## System-of-record patterns
+## System-of-record target
 
-### Native NuBlox authoritative
+For capabilities NuBlox supports, NuBlox owns canonical identity, operative state, Lifecycle, Work, Decisions and Evidence.
 
-NuBlox owns canonical identity, state and Lifecycle.
+External platforms may supply migration source data or receive exported data, but they do not remain required systems of record after cutover.
 
-### NuBlox governed extension / relationship
-
-NuBlox owns the enterprise obligation/context/Decision around a specialist or externally authored object.
-
-Example: an external CAD model can remain authored in a specialist tool while NuBlox owns the Deliverable Requirement, responsible deployment, review/approval Decision, issue/Acceptance and Project/Asset relationships.
-
-### External authoritative
-
-Another platform remains source of record.
-
-NuBlox preserves external identity, provenance, canonical relationship, required state and reconciliation Evidence.
+This includes specialist authoring. If a supported Job Profile must create drawings, models, calculations, schedules or other technical work products, NuBlox must provide the native authoring capability required to perform that work.
 
 ## Migration use
 

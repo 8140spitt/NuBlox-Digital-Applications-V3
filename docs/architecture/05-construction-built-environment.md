@@ -39,7 +39,7 @@ They are composition structures used for:
 - terminology;
 - typical process participation;
 - competence requirements;
-- typical native/connected tools;
+- typical native NuBlox tools;
 - typical work products;
 - likely deployment contexts.
 
@@ -63,7 +63,7 @@ A Job Profile can define:
 - qualification where applicable;
 - process participation;
 - typical work products;
-- native/connected tool needs;
+- native NuBlox tool needs;
 - assurance responsibilities;
 - Authority expectations.
 
@@ -192,6 +192,14 @@ The Industry Solution must support runtime contexts such as:
 - statutory/compliance Evidence;
 - service report.
 
+## Unified work experience
+
+For every one of the 84 Job Profiles, the operative tools required to perform the supported job must be provided natively by NuBlox.
+
+An architect must not need a separate PLM/CDE/BIM application to perform the NuBlox-managed job. A quantity surveyor must not need a separate commercial system. A planner must not need a separate planning platform. Finance, HR, procurement, quality, HSE, project controls, asset management and the other supported functions follow the same rule.
+
+External files and datasets may be imported or exported where business exchange requires them, but the user's governed work remains inside NuBlox.
+
 ## Information-to-physical continuity
 
 The Industry Solution must preserve continuity across technical definition and physical delivery.
@@ -246,7 +254,7 @@ For each Job Profile NuBlox must answer:
 - Which Functions and Delivery Domains does it participate in?
 - What competence is required?
 - Into which construction contexts can it be deployed?
-- What native/connected tools are needed?
+- What native NuBlox tools are needed?
 - What Work is assigned?
 - What outputs does it produce?
 - Which controls, reviews and Decisions apply?

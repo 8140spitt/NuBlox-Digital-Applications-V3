@@ -36,7 +36,7 @@ The platform has four primary architectural layers:
 
 **NuBlox Construction & Built Environment is the first Industry Solution.**
 
-PTC Windchill and other external products are reference architectures, benchmarks, integration targets and migration sources. They do not define the NuBlox platform boundary.
+PTC Windchill and other external products are reference architectures, benchmarks and migration/import/export sources or targets. They do not define the NuBlox platform boundary and are not runtime dependencies.
 
 ## Consequences
 

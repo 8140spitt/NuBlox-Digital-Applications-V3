@@ -48,10 +48,13 @@ Implement the common identity and control spine first:
 
 Implement complete native capabilities across all 29 enterprise functions using the shared kernel and runtime.
 
-## Phase 5 — Connected ecosystem and migration
+## Phase 5 — Portability and migration
 
 - reference-platform mappings;
-- authoring adapters;
-- ERP/PLM/CDE/BIM/EAM integrations;
-- governed migration;
-- federation where ownership remains external.
+- governed migration from incumbent systems;
+- controlled import/export formats;
+- historical provenance preservation;
+- open data portability;
+- native authoring depth for all supported Job Profiles.
+
+External applications do not become runtime dependencies of NuBlox.

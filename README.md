@@ -48,4 +48,4 @@ Start with [the architecture index](docs/architecture/README.md).
 
 ## Non-negotiable rule
 
-**NuBlox is the product. External systems are references, integration endpoints or migration sources/targets. They do not define NuBlox's product boundaries.**
+**NuBlox is the product and the operating environment. External products are benchmarks or migration/import/export sources and targets only. No external application may be required to execute a NuBlox capability or complete a user's work.**

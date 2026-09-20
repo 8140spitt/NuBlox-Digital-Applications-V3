@@ -1,3 +1,5 @@
+export * from './deliverables.js';
+export * from './deliverable-factories.js';
 export * from './functional.js';
 export * from './functional-factories.js';
 export * from './portability.js';

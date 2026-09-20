@@ -153,7 +153,7 @@ Implement:
 - deployment gates;
 - authority/competence evaluation.
 
-## Phase 3 — Native Work-Delivery Runtime — CURRENT
+## Phase 3 — Native Work-Delivery Runtime — IMPLEMENTED
 
 Implement:
 
@@ -170,7 +170,7 @@ Implement:
 - downstream consequence hooks;
 - complete My Work composition.
 
-## Phase 4 — Construction & Built Environment
+## Phase 4 — Construction & Built Environment — CURRENT
 
 Implement:
 

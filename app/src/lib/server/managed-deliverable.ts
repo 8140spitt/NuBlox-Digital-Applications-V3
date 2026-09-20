@@ -790,9 +790,7 @@ export async function applyDeliverableReviewDecision(
         objectType: 'deliverable_item',
         objectId: item.id,
         action:
-          outcome === 'APPROVED'
-            ? 'DELIVERABLE_REVIEW_COMPLETED'
-            : 'DELIVERABLE_REVIEW_RETURNED',
+          outcome === 'APPROVED' ? 'DELIVERABLE_REVIEW_COMPLETED' : 'DELIVERABLE_REVIEW_RETURNED',
         fromState: item.status,
         toState: nextState,
         version: nextVersion,
@@ -820,7 +818,9 @@ export async function submitDeliverableForApproval(
       }
     } else {
       if (!['PLANNED', 'REWORK'].includes(item.status)) {
-        throw new Error('Only authored or reworked Deliverable Items can be submitted for approval.');
+        throw new Error(
+          'Only authored or reworked Deliverable Items can be submitted for approval.'
+        );
       }
       if (item.workStatus !== 'COMPLETED') {
         throw new Error('Authoring work must be completed before approval.');
@@ -882,7 +882,9 @@ export async function applyDeliverableApprovalDecision(
     const item = await lockDeliverable(context, deliverableItemId, connection);
     assertExpectedVersion(item, expectedVersion);
     if (item.status !== 'IN_APPROVAL') {
-      throw new Error('Only a Deliverable Item awaiting approval can receive an approval decision.');
+      throw new Error(
+        'Only a Deliverable Item awaiting approval can receive an approval decision.'
+      );
     }
 
     await assertWorkDecisionReference(
@@ -951,10 +953,7 @@ export async function applyDeliverableApprovalDecision(
       {
         objectType: 'deliverable_item',
         objectId: item.id,
-        action:
-          outcome === 'APPROVED'
-            ? 'DELIVERABLE_APPROVED'
-            : 'DELIVERABLE_APPROVAL_RETURNED',
+        action: outcome === 'APPROVED' ? 'DELIVERABLE_APPROVED' : 'DELIVERABLE_APPROVAL_RETURNED',
         fromState: item.status,
         toState: nextState,
         version: nextVersion,
@@ -974,7 +973,9 @@ export async function recordDeliverableRecipientResponse(
 ) {
   assertPermission(context, 'deliverable.accept');
   const outcome = code(outcomeInput, 'Recipient response', 32);
-  if (!['ACCEPTED', 'ACCEPTED_WITH_COMMENTS', 'NO_OBJECTION', 'REJECTED', 'REVISE'].includes(outcome)) {
+  if (
+    !['ACCEPTED', 'ACCEPTED_WITH_COMMENTS', 'NO_OBJECTION', 'REJECTED', 'REVISE'].includes(outcome)
+  ) {
     throw new Error(
       'Recipient response must be ACCEPTED, ACCEPTED_WITH_COMMENTS, NO_OBJECTION, REJECTED or REVISE.'
     );
@@ -1107,12 +1108,7 @@ export async function recordDeliverableRecipientResponse(
           approvalRequired: recipient.approvalRequired,
           acceptanceRequired: recipient.acceptanceRequired
         };
-        reworkItemId = await createDeliverableReworkItem(
-          context,
-          locked,
-          nextVersion,
-          connection
-        );
+        reworkItemId = await createDeliverableReworkItem(context, locked, nextVersion, connection);
         nextState = 'REWORK';
         await executeMutation(
           `UPDATE deliverable_items
@@ -1170,12 +1166,7 @@ export async function recordDeliverableRecipientResponse(
                       version = version + 1,
                       updated_at = ?
                 WHERE id = ? AND tenant_id = ?`,
-              [
-                timestamp,
-                timestamp,
-                recipient.workflowInstanceId,
-                context.tenantId
-              ],
+              [timestamp, timestamp, recipient.workflowInstanceId, context.tenantId],
               connection
             );
           }

@@ -134,13 +134,18 @@ describe('managed deliverable governance runtime', () => {
     expect(item.status).toBe('APPROVED');
     expect(item.version).toBe(5);
 
-    const issueId = await deliverableService.recordDeliverableIssue(context, item.id, item.version, {
-      issueRef: 'T-' + suffix,
-      issueType: 'TRANSMITTAL',
-      recipientPartyId: context.actorPartyId,
-      recipientRole: 'CLIENT',
-      purposeOfIssue: 'FOR ACCEPTANCE'
-    });
+    const issueId = await deliverableService.recordDeliverableIssue(
+      context,
+      item.id,
+      item.version,
+      {
+        issueRef: 'T-' + suffix,
+        issueType: 'TRANSMITTAL',
+        recipientPartyId: context.actorPartyId,
+        recipientRole: 'CLIENT',
+        purposeOfIssue: 'FOR ACCEPTANCE'
+      }
+    );
     expect(issueId).toBeTruthy();
 
     item = await deliverableService.getDeliverableItem(context, item.id);

@@ -23,9 +23,9 @@
   function reviewReady(item: typeof data.selected) {
     return Boolean(
       item &&
-        item.reviewRequired &&
-        ['PLANNED', 'REWORK'].includes(item.status) &&
-        item.workStatus === 'COMPLETED'
+      item.reviewRequired &&
+      ['PLANNED', 'REWORK'].includes(item.status) &&
+      item.workStatus === 'COMPLETED'
     );
   }
 
@@ -451,7 +451,11 @@
                     <strong>{decision.stage} · {decision.outcome.replaceAll('_', ' ')}</strong>
                     <span>{decision.reason}</span>
                   </div>
-                  <small>{decision.deciderName || decision.deciderPartyId} · {fmt(decision.decidedAt)}</small>
+                  <small
+                    >{decision.deciderName || decision.deciderPartyId} · {fmt(
+                      decision.decidedAt
+                    )}</small
+                  >
                 </div>
               {/each}
             </section>

@@ -20,7 +20,7 @@ The 29 enterprise functions remain the governed capability architecture, but the
 
 Canonical business objects remain the persistent unit of record/work, but object-centricity alone is also insufficient. Users need role, process and operating context.
 
-Role/persona support is now governed through the [Job-to-Work-Product Architecture](../product/job-to-work-product-architecture.md): the product must enable people to perform the work expected from their Position/Job Profile and produce the corresponding work products without creating role-specific data silos.
+Role/persona support is now governed through the [Job-to-Work-Product Architecture](../evidence/product-analysis/job-to-work-product-architecture.md): the product must enable people to perform the work expected from their Position/Job Profile and produce the corresponding work products without creating role-specific data silos.
 
 The governing interaction hierarchy is now:
 

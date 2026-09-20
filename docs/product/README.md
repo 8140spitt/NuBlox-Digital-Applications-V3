@@ -11,12 +11,21 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Priority Job Work-Product Wave 1](priority-job-work-product-wave-1.csv) — 118 candidate Work Products across ten priority employment jobs.
 - [Priority Job Work-Product Wave 2](priority-job-work-product-wave-2.csv) — 165 candidate Work Products across sixteen further control, engineering, assurance and field jobs.
 - [Priority Job Work-Product Wave 3](priority-job-work-product-wave-3.csv) — 200 candidate Work Products across twenty professional, technical, property, geospatial, energy and planning jobs.
-- [Work-Product Family Taxonomy](work-product-family-taxonomy.md) — shared experience/completeness families derived from the first 283 candidate Work Products.
+- [Priority Job Work-Product Wave 4](priority-job-work-product-wave-4.csv) — 392 candidate Work Products across the 49 remaining external careers, closing the 84-career candidate coverage baseline.
+- [Work-Product Family Taxonomy](work-product-family-taxonomy.md) — shared experience/completeness families evidenced by 875 candidate Work Products across 95 job archetypes.
 - [Wave 1 Professional Role Challenge](job-work-product-wave-1.md) — findings from the first cross-functional role decomposition.
 - [Wave 2 Controls, Engineering, Assurance & Field Work](job-work-product-wave-2.md) — findings from the second decomposition wave.
 - [Wave 3 Professional, Technical, Property & Planning Work](job-work-product-wave-3.md) — findings from the third decomposition wave.
+- [Wave 4 Field, Trades, Utilities, Plant & Supply Work](job-work-product-wave-4.md) — closes the remaining external-career decomposition and records the internal-profile reconciliation gate.
 - [Professional Job Architecture Gap Register](professional-job-architecture-gap-register.csv) — explicit gaps/partial matches between real sector jobs and the prior function-derived Job Profile baseline.
 - [Stakeholder Design Review — 17 September 2026](stakeholder-design-review-2026-09-17.md) — earlier stakeholder design baseline.
+
+## Current job/work-product checkpoint
+
+- **84 / 84 external careers** have an explicit candidate NuBlox treatment.
+- **95 employment-job archetypes** are represented across Waves 1-4.
+- **875 candidate Work Products** are decomposed.
+- **J1 remains open** until the 382 prior function-derived candidate Job Profiles are reconciled and given explicit Work-Product/activity/handoff treatment.
 
 ## Product completeness model
 

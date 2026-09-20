@@ -415,13 +415,17 @@ describe('kernel controlled information and configuration invariants', () => {
     expect(effectivity.subjectVersion).toBe('A');
     expect(effectivity.scopeId).toBe('PROJECT-1');
 
+    const {
+      effectiveFrom: _effectiveFrom,
+      effectiveTo: _effectiveTo,
+      ...effectivityWithoutDates
+    } = effectivity;
+
     expect(() =>
       createEffectivity(
         {
-          ...effectivity,
-          id: asId<'EffectivityId'>('EFF-BAD', 'Effectivity'),
-          effectiveFrom: undefined,
-          effectiveTo: undefined
+          ...effectivityWithoutDates,
+          id: asId<'EffectivityId'>('EFF-BAD', 'Effectivity')
         },
         configurationItem
       )

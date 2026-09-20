@@ -2,7 +2,7 @@
 
 **Status:** governing product-definition taxonomy  
 **Established:** 20 September 2026  
-**Evidence base:** J1 Waves 1-7 — 262 employment jobs / 1,604 candidate or explicit Work Products; all 84 external careers explicitly treated  
+**Evidence base:** J1 Waves 1-8 — 339 employment jobs / 1,942 candidate or explicit Work Products; all 84 external careers explicitly treated  
 **Purpose:** classify user-visible work products without creating a universal runtime Work Product aggregate
 
 ## Governing rule

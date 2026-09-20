@@ -2,7 +2,7 @@
 
 **Audience:** tenant administrators, business configuration owners, security administrators and technical operators
 
-Start with the [Product Handbook](../handbook/README.md) and [System Architecture](../handbook/07-system-architecture.md).
+Start with the [Product Handbook](../handbook/README.md) and [System Architecture](../handbook/10-system-architecture.md).
 
 ## Administration model
 
@@ -107,6 +107,10 @@ Delegated Authority must have explicit:
 An access request is a request for authority, not authority itself.
 
 Approval should create/update the governed access assignment/grant and retain the decision evidence.
+
+## Deliverable configuration
+
+Administrators and business owners can govern deliverable types, numbering, disciplines, metadata, lifecycle/status, revision rules, review/approval routes, issue/transmittal rules, templates, retention and connected-authoring behaviour.
 
 ## Reference data
 

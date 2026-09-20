@@ -230,7 +230,7 @@ async function assertActiveCurrency(context: CommandContext, id: string, executo
   if (!row) throw new Error('Active Currency not found.');
 }
 
-async function getItem(
+async function getItemRow(
   context: CommandContext,
   id: string,
   executor?: DbExecutor,
@@ -337,9 +337,32 @@ export async function listItems(context: CommandContext, itemType?: string) {
   );
 }
 
+export async function getItem(context: CommandContext, id: string) {
+  assertPermission(context, 'product.innovation.read');
+  return getItemRow(context, id);
+}
+
+export async function searchItems(
+  context: CommandContext,
+  query: string,
+  requestedLimit = 25
+) {
+  assertPermission(context, 'product.innovation.read');
+  const needle = query.trim().slice(0, 191);
+  if (!needle) return [] as ProductItem[];
+  const pattern = '%' + needle + '%';
+  const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
+  return queryRows<RowDataPacket & ProductItem>(
+    itemSelect +
+      ' WHERE i.tenant_id=? AND (i.item_number LIKE ? OR i.name LIKE ? OR i.description LIKE ? OR i.classification_code LIKE ? OR p.need_summary LIKE ? OR p.opportunity_summary LIKE ?) ORDER BY i.updated_at DESC,i.item_number LIMIT ' +
+      limit,
+    [context.tenantId, pattern, pattern, pattern, pattern, pattern, pattern]
+  );
+}
+
 export async function listConceptAssessments(context: CommandContext, itemId: string) {
   assertPermission(context, 'product.innovation.read');
-  await getItem(context, itemId);
+  await getItemRow(context, itemId);
   return queryRows<
     RowDataPacket & {
       id: string;
@@ -449,7 +472,7 @@ export async function assessProductServiceConcept(
 ) {
   assertPermission(context, 'product.concept.manage');
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, itemId, connection, true);
+    const item = await getItemRow(context, itemId, connection, true);
     if (item.aggregateVersion !== expectedVersion) throw new Error('Item changed.');
     if (item.status !== 'DRAFT' || item.conceptStatus === 'SELECTED') {
       throw new Error('Only unselected draft concepts can be assessed.');
@@ -528,7 +551,7 @@ export async function applyConceptSelectionDecision(
 ) {
   assertPermission(context, 'product.concept.approve');
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, itemId, connection, true);
+    const item = await getItemRow(context, itemId, connection, true);
     if (item.aggregateVersion !== expectedVersion) throw new Error('Item changed.');
     if (item.status !== 'DRAFT') throw new Error('Only draft concepts can be selected.');
     if (!['ASSESSED', 'CAPTURED'].includes(item.conceptStatus || '')) {
@@ -658,7 +681,7 @@ export async function createProductConfiguration(
   const versionId = randomUUID();
   const createdAt = now();
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, required(input.itemId, 'Item ID'), connection);
+    const item = await getItemRow(context, required(input.itemId, 'Item ID'), connection);
     if (item.conceptStatus !== 'SELECTED') {
       throw new Error(
         'A Product Configuration Model requires a selected Product / Service Concept.'
@@ -1218,7 +1241,7 @@ export async function createProductBusinessCase(
     const sponsorPartyId = input.sponsorPartyId?.trim() || context.actorPartyId;
     await assertActiveParty(context, sponsorPartyId, connection);
     const itemId = input.itemId?.trim() || null;
-    if (itemId) await getItem(context, itemId, connection);
+    if (itemId) await getItemRow(context, itemId, connection);
     const insightId = input.primaryMarketInsightId?.trim() || null;
     if (insightId) await getMarketInsight(context, insightId, connection);
     await executeMutation(
@@ -1667,7 +1690,7 @@ export async function configureItemLaunch(
   }
 ) {
   assertPermission(context, 'product.launch.manage');
-  await getItem(context, itemId);
+  await getItemRow(context, itemId);
   const updatedAt = now();
   await executeMutation(
     `INSERT INTO item_launch_profiles
@@ -1699,7 +1722,7 @@ export async function launchOffering(
 ) {
   assertPermission(context, 'product.launch.manage');
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, itemId, connection, true);
+    const item = await getItemRow(context, itemId, connection, true);
     if (item.aggregateVersion !== expectedVersion) throw new Error('Item changed.');
     if (item.status !== 'DRAFT') throw new Error('Only draft Items can be launched.');
     if (item.conceptStatus !== 'SELECTED' || !item.selectedDecisionId) {
@@ -1790,7 +1813,7 @@ export async function recordItemLifecycleReview(
 ) {
   assertPermission(context, 'product.lifecycle.manage');
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, itemId, connection, true);
+    const item = await getItemRow(context, itemId, connection, true);
     const configurationModelId = input.configurationModelId?.trim() || null;
     if (configurationModelId) {
       const model = await getConfiguration(context, configurationModelId, connection);
@@ -1852,7 +1875,7 @@ export async function beginItemRetirement(
 ) {
   assertPermission(context, 'product.retirement.manage');
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, itemId, connection, true);
+    const item = await getItemRow(context, itemId, connection, true);
     if (item.aggregateVersion !== expectedVersion) throw new Error('Item changed.');
     if (!['ACTIVE', 'BLOCKED', 'OBSOLETE'].includes(item.status)) {
       throw new Error('Only active, blocked or obsolete Items can enter retirement.');
@@ -1914,7 +1937,7 @@ export async function completeItemRetirement(
 ) {
   assertPermission(context, 'product.retirement.manage');
   return dbTransaction(async (connection) => {
-    const item = await getItem(context, itemId, connection, true);
+    const item = await getItemRow(context, itemId, connection, true);
     if (item.aggregateVersion !== expectedVersion) throw new Error('Item changed.');
     if (item.status !== 'OBSOLETE') throw new Error('Item must be obsolete before retirement.');
     const profile = await queryOne<
@@ -2012,7 +2035,7 @@ export async function listProductConfigurationRules(
 
 export async function getItemLaunchProfile(context: CommandContext, itemId: string) {
   assertPermission(context, 'product.innovation.read');
-  await getItem(context, itemId);
+  await getItemRow(context, itemId);
   return (
     (await queryOne<
       RowDataPacket & {
@@ -2035,7 +2058,7 @@ export async function getItemLaunchProfile(context: CommandContext, itemId: stri
 
 export async function listItemLifecycleReviews(context: CommandContext, itemId: string) {
   assertPermission(context, 'product.innovation.read');
-  await getItem(context, itemId);
+  await getItemRow(context, itemId);
   return queryRows<
     RowDataPacket & {
       id: string;
@@ -2054,7 +2077,7 @@ export async function listItemLifecycleReviews(context: CommandContext, itemId: 
 
 export async function getItemRetirementProfile(context: CommandContext, itemId: string) {
   assertPermission(context, 'product.innovation.read');
-  await getItem(context, itemId);
+  await getItemRow(context, itemId);
   return (
     (await queryOne<
       RowDataPacket & {

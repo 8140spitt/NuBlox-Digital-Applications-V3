@@ -1,0 +1,846 @@
+{
+  "version": 1,
+  "industrySolutionId": "CBE",
+  "jobProfiles": [
+    {
+      "id": "CBE-JP-001",
+      "jobProfileId": "JP-CBE-001",
+      "sequence": 1,
+      "canonicalName": "Acoustics consultant",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-002",
+      "jobProfileId": "JP-CBE-002",
+      "sequence": 2,
+      "canonicalName": "Agricultural contractor",
+      "primaryDeliveryDomainId": "D16",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-003",
+      "jobProfileId": "JP-CBE-003",
+      "sequence": 3,
+      "canonicalName": "Architect",
+      "primaryDeliveryDomainId": "D01",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-004",
+      "jobProfileId": "JP-CBE-004",
+      "sequence": 4,
+      "canonicalName": "Architectural technician",
+      "primaryDeliveryDomainId": "D01",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-005",
+      "jobProfileId": "JP-CBE-005",
+      "sequence": 5,
+      "canonicalName": "Architectural technologist",
+      "primaryDeliveryDomainId": "D01",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-006",
+      "jobProfileId": "JP-CBE-006",
+      "sequence": 6,
+      "canonicalName": "Bricklayer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-007",
+      "jobProfileId": "JP-CBE-007",
+      "sequence": 7,
+      "canonicalName": "Builders' merchant",
+      "primaryDeliveryDomainId": "D14",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-008",
+      "jobProfileId": "JP-CBE-008",
+      "sequence": 8,
+      "canonicalName": "Building control officer",
+      "primaryDeliveryDomainId": "D15",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-009",
+      "jobProfileId": "JP-CBE-009",
+      "sequence": 9,
+      "canonicalName": "Building services engineer",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-010",
+      "jobProfileId": "JP-CBE-010",
+      "sequence": 10,
+      "canonicalName": "Building surveyor",
+      "primaryDeliveryDomainId": "D03",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-011",
+      "jobProfileId": "JP-CBE-011",
+      "sequence": 11,
+      "canonicalName": "Building technician",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-012",
+      "jobProfileId": "JP-CBE-012",
+      "sequence": 12,
+      "canonicalName": "Caretaker",
+      "primaryDeliveryDomainId": "D10",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-013",
+      "jobProfileId": "JP-CBE-013",
+      "sequence": 13,
+      "canonicalName": "Carpenter",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-014",
+      "jobProfileId": "JP-CBE-014",
+      "sequence": 14,
+      "canonicalName": "Carpet fitter and floor layer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-015",
+      "jobProfileId": "JP-CBE-015",
+      "sequence": 15,
+      "canonicalName": "Cartographer",
+      "primaryDeliveryDomainId": "D05",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-016",
+      "jobProfileId": "JP-CBE-016",
+      "sequence": 16,
+      "canonicalName": "Cavity insulation installer",
+      "primaryDeliveryDomainId": "D09",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-017",
+      "jobProfileId": "JP-CBE-017",
+      "sequence": 17,
+      "canonicalName": "Ceiling fixer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-018",
+      "jobProfileId": "JP-CBE-018",
+      "sequence": 18,
+      "canonicalName": "Civil engineer",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-019",
+      "jobProfileId": "JP-CBE-019",
+      "sequence": 19,
+      "canonicalName": "Civil engineering technician",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-020",
+      "jobProfileId": "JP-CBE-020",
+      "sequence": 20,
+      "canonicalName": "Commercial energy assessor",
+      "primaryDeliveryDomainId": "D09",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-021",
+      "jobProfileId": "JP-CBE-021",
+      "sequence": 21,
+      "canonicalName": "Conservator",
+      "primaryDeliveryDomainId": "D13",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-022",
+      "jobProfileId": "JP-CBE-022",
+      "sequence": 22,
+      "canonicalName": "Construction contracts manager",
+      "primaryDeliveryDomainId": "D04",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-023",
+      "jobProfileId": "JP-CBE-023",
+      "sequence": 23,
+      "canonicalName": "Construction labourer",
+      "primaryDeliveryDomainId": "D06",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-024",
+      "jobProfileId": "JP-CBE-024",
+      "sequence": 24,
+      "canonicalName": "Construction manager",
+      "primaryDeliveryDomainId": "D06",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-025",
+      "jobProfileId": "JP-CBE-025",
+      "sequence": 25,
+      "canonicalName": "Construction plant mechanic",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-026",
+      "jobProfileId": "JP-CBE-026",
+      "sequence": 26,
+      "canonicalName": "Construction plant operator",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-027",
+      "jobProfileId": "JP-CBE-027",
+      "sequence": 27,
+      "canonicalName": "Construction site supervisor",
+      "primaryDeliveryDomainId": "D06",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-028",
+      "jobProfileId": "JP-CBE-028",
+      "sequence": 28,
+      "canonicalName": "Crane driver",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-029",
+      "jobProfileId": "JP-CBE-029",
+      "sequence": 29,
+      "canonicalName": "Demolition operative",
+      "primaryDeliveryDomainId": "D06",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-030",
+      "jobProfileId": "JP-CBE-030",
+      "sequence": 30,
+      "canonicalName": "Domestic energy assessor",
+      "primaryDeliveryDomainId": "D09",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-031",
+      "jobProfileId": "JP-CBE-031",
+      "sequence": 31,
+      "canonicalName": "Dryliner",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-032",
+      "jobProfileId": "JP-CBE-032",
+      "sequence": 32,
+      "canonicalName": "Electrician",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-033",
+      "jobProfileId": "JP-CBE-033",
+      "sequence": 33,
+      "canonicalName": "Engineering construction technician",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-034",
+      "jobProfileId": "JP-CBE-034",
+      "sequence": 34,
+      "canonicalName": "Estimator",
+      "primaryDeliveryDomainId": "D04",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-035",
+      "jobProfileId": "JP-CBE-035",
+      "sequence": 35,
+      "canonicalName": "Facilities manager",
+      "primaryDeliveryDomainId": "D10",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-036",
+      "jobProfileId": "JP-CBE-036",
+      "sequence": 36,
+      "canonicalName": "Fence installer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-037",
+      "jobProfileId": "JP-CBE-037",
+      "sequence": 37,
+      "canonicalName": "Fire safety engineer",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-038",
+      "jobProfileId": "JP-CBE-038",
+      "sequence": 38,
+      "canonicalName": "Formworker",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-039",
+      "jobProfileId": "JP-CBE-039",
+      "sequence": 39,
+      "canonicalName": "Furniture maker",
+      "primaryDeliveryDomainId": "D14",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-040",
+      "jobProfileId": "JP-CBE-040",
+      "sequence": 40,
+      "canonicalName": "Gas mains layer",
+      "primaryDeliveryDomainId": "D12",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-041",
+      "jobProfileId": "JP-CBE-041",
+      "sequence": 41,
+      "canonicalName": "Gas service technician",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-042",
+      "jobProfileId": "JP-CBE-042",
+      "sequence": 42,
+      "canonicalName": "General practice surveyor",
+      "primaryDeliveryDomainId": "D03",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-043",
+      "jobProfileId": "JP-CBE-043",
+      "sequence": 43,
+      "canonicalName": "Geospatial technician",
+      "primaryDeliveryDomainId": "D05",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-044",
+      "jobProfileId": "JP-CBE-044",
+      "sequence": 44,
+      "canonicalName": "Glazier",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-045",
+      "jobProfileId": "JP-CBE-045",
+      "sequence": 45,
+      "canonicalName": "Heat pump engineer",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-046",
+      "jobProfileId": "JP-CBE-046",
+      "sequence": 46,
+      "canonicalName": "Heating and ventilation engineer",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-047",
+      "jobProfileId": "JP-CBE-047",
+      "sequence": 47,
+      "canonicalName": "Heritage officer",
+      "primaryDeliveryDomainId": "D13",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-048",
+      "jobProfileId": "JP-CBE-048",
+      "sequence": 48,
+      "canonicalName": "Kitchen and bathroom designer",
+      "primaryDeliveryDomainId": "D01",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-049",
+      "jobProfileId": "JP-CBE-049",
+      "sequence": 49,
+      "canonicalName": "Kitchen and bathroom fitter",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-050",
+      "jobProfileId": "JP-CBE-050",
+      "sequence": 50,
+      "canonicalName": "Land surveyor",
+      "primaryDeliveryDomainId": "D03",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-051",
+      "jobProfileId": "JP-CBE-051",
+      "sequence": 51,
+      "canonicalName": "Landscape architect",
+      "primaryDeliveryDomainId": "D13",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-052",
+      "jobProfileId": "JP-CBE-052",
+      "sequence": 52,
+      "canonicalName": "Landscaper",
+      "primaryDeliveryDomainId": "D13",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-053",
+      "jobProfileId": "JP-CBE-053",
+      "sequence": 53,
+      "canonicalName": "Lighting technician",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-054",
+      "jobProfileId": "JP-CBE-054",
+      "sequence": 54,
+      "canonicalName": "Locksmith",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-055",
+      "jobProfileId": "JP-CBE-055",
+      "sequence": 55,
+      "canonicalName": "Painter and decorator",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-056",
+      "jobProfileId": "JP-CBE-056",
+      "sequence": 56,
+      "canonicalName": "Pipe fitter",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-057",
+      "jobProfileId": "JP-CBE-057",
+      "sequence": 57,
+      "canonicalName": "Planning and development surveyor",
+      "primaryDeliveryDomainId": "D03",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-058",
+      "jobProfileId": "JP-CBE-058",
+      "sequence": 58,
+      "canonicalName": "Plasterer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-059",
+      "jobProfileId": "JP-CBE-059",
+      "sequence": 59,
+      "canonicalName": "Plumber",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-060",
+      "jobProfileId": "JP-CBE-060",
+      "sequence": 60,
+      "canonicalName": "Quantity surveyor",
+      "primaryDeliveryDomainId": "D04",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-061",
+      "jobProfileId": "JP-CBE-061",
+      "sequence": 61,
+      "canonicalName": "Quarry engineer",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-062",
+      "jobProfileId": "JP-CBE-062",
+      "sequence": 62,
+      "canonicalName": "Quarry worker",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-063",
+      "jobProfileId": "JP-CBE-063",
+      "sequence": 63,
+      "canonicalName": "Refrigeration and air-conditioning installer",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-064",
+      "jobProfileId": "JP-CBE-064",
+      "sequence": 64,
+      "canonicalName": "Road worker",
+      "primaryDeliveryDomainId": "D12",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-065",
+      "jobProfileId": "JP-CBE-065",
+      "sequence": 65,
+      "canonicalName": "Roofer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-066",
+      "jobProfileId": "JP-CBE-066",
+      "sequence": 66,
+      "canonicalName": "Rural surveyor",
+      "primaryDeliveryDomainId": "D03",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-067",
+      "jobProfileId": "JP-CBE-067",
+      "sequence": 67,
+      "canonicalName": "Scaffolder",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-068",
+      "jobProfileId": "JP-CBE-068",
+      "sequence": 68,
+      "canonicalName": "Security systems installer",
+      "primaryDeliveryDomainId": "D08",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-069",
+      "jobProfileId": "JP-CBE-069",
+      "sequence": 69,
+      "canonicalName": "Shopfitter",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-070",
+      "jobProfileId": "JP-CBE-070",
+      "sequence": 70,
+      "canonicalName": "Solar panel installer",
+      "primaryDeliveryDomainId": "D09",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-071",
+      "jobProfileId": "JP-CBE-071",
+      "sequence": 71,
+      "canonicalName": "Steel erector",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-072",
+      "jobProfileId": "JP-CBE-072",
+      "sequence": 72,
+      "canonicalName": "Steel fixer",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-073",
+      "jobProfileId": "JP-CBE-073",
+      "sequence": 73,
+      "canonicalName": "Steeplejack",
+      "primaryDeliveryDomainId": "D11",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-074",
+      "jobProfileId": "JP-CBE-074",
+      "sequence": 74,
+      "canonicalName": "Stonemason",
+      "primaryDeliveryDomainId": "D13",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-075",
+      "jobProfileId": "JP-CBE-075",
+      "sequence": 75,
+      "canonicalName": "Structural engineer",
+      "primaryDeliveryDomainId": "D02",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-076",
+      "jobProfileId": "JP-CBE-076",
+      "sequence": 76,
+      "canonicalName": "Surveying technician",
+      "primaryDeliveryDomainId": "D03",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-077",
+      "jobProfileId": "JP-CBE-077",
+      "sequence": 77,
+      "canonicalName": "Thermal insulation engineer",
+      "primaryDeliveryDomainId": "D09",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-078",
+      "jobProfileId": "JP-CBE-078",
+      "sequence": 78,
+      "canonicalName": "Tiler",
+      "primaryDeliveryDomainId": "D07",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-079",
+      "jobProfileId": "JP-CBE-079",
+      "sequence": 79,
+      "canonicalName": "Town planner",
+      "primaryDeliveryDomainId": "D05",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-080",
+      "jobProfileId": "JP-CBE-080",
+      "sequence": 80,
+      "canonicalName": "Town planning assistant",
+      "primaryDeliveryDomainId": "D05",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-081",
+      "jobProfileId": "JP-CBE-081",
+      "sequence": 81,
+      "canonicalName": "Transport planner",
+      "primaryDeliveryDomainId": "D05",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-082",
+      "jobProfileId": "JP-CBE-082",
+      "sequence": 82,
+      "canonicalName": "Water network operative",
+      "primaryDeliveryDomainId": "D12",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-083",
+      "jobProfileId": "JP-CBE-083",
+      "sequence": 83,
+      "canonicalName": "Welder",
+      "primaryDeliveryDomainId": "D14",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CBE-JP-084",
+      "jobProfileId": "JP-CBE-084",
+      "sequence": 84,
+      "canonicalName": "Wood machinist",
+      "primaryDeliveryDomainId": "D14",
+      "source": "National Careers Service",
+      "sourceVerifiedDate": "2026-08-15",
+      "status": "ACTIVE"
+    }
+  ]
+}

@@ -37,6 +37,12 @@ export type ConfigurationItemId = Brand<string, 'ConfigurationItemId'>;
 export type BaselineId = Brand<string, 'BaselineId'>;
 export type BaselineItemId = Brand<string, 'BaselineItemId'>;
 export type EffectivityId = Brand<string, 'EffectivityId'>;
+export type ChangeId = Brand<string, 'ChangeId'>;
+export type ChangeAffectedObjectId = Brand<string, 'ChangeAffectedObjectId'>;
+export type ChangeImpactAssessmentId = Brand<string, 'ChangeImpactAssessmentId'>;
+export type ChangeImplementationActionId = Brand<string, 'ChangeImplementationActionId'>;
+export type ChangeVerificationId = Brand<string, 'ChangeVerificationId'>;
+export type ChangeDiscrepancyId = Brand<string, 'ChangeDiscrepancyId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

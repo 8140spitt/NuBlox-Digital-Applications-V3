@@ -9,6 +9,7 @@ import {
 import { getInformationContainer } from '$lib/server/information-container';
 import { getLead } from '$lib/server/marketing-lead';
 import { hasPermission, type CommandContext } from '$lib/server/platform-context';
+import { getItem } from '$lib/server/product-innovation';
 import { getStrategicObjective } from '$lib/server/strategic-objective';
 import { getStrategyFramework } from '$lib/server/strategy-framework';
 
@@ -277,6 +278,48 @@ const resolvers: Record<string, Resolver> = {
       originFunctionId: definition.originFunctionId,
       originHref: null,
       originLabel: null,
+      sections: definition.sections,
+      relationships: [],
+      auditObjectTypes: [definition.auditObjectType]
+    };
+  },
+
+  item: async (context, objectId) => {
+    const definition = runtimeObjectDefinition('item');
+    if (!definition) throw new Error('Item runtime definition is missing.');
+    const item = await getItem(context, objectId);
+    const originHref =
+      tenantPath(context, '/functions/f05/ideation?item=') + encodeURIComponent(item.id);
+
+    return {
+      objectType: definition.type,
+      objectId: item.id,
+      reference: item.itemNumber,
+      title: item.name,
+      subtitle: item.itemType.replaceAll('_', ' '),
+      status: item.status,
+      objectVersion: String(item.aggregateVersion),
+      summary: item.description,
+      metadata: [
+        { label: 'Item type', value: item.itemType.replaceAll('_', ' ') },
+        { label: 'Concept status', value: item.conceptStatus ?? '—' },
+        { label: 'Classification', value: item.classificationCode ?? '—' }
+      ],
+      fields: [
+        { label: 'Description', value: item.description },
+        { label: 'Need', value: item.needSummary ?? '—' },
+        { label: 'Opportunity', value: item.opportunitySummary ?? '—' },
+        { label: 'Feasibility', value: item.feasibilitySummary ?? '—' },
+        { label: 'Score', value: item.score ?? '—' },
+        { label: 'Base UOM', value: item.baseUomId ?? '—' },
+        { label: 'Selection decision', value: item.selectedDecisionId ?? '—' },
+        { label: 'Last updated', value: item.updatedAt }
+      ],
+      workspaceHref: tenantPath(context, '/data'),
+      workspaceLabel: 'Enterprise Data',
+      originFunctionId: definition.originFunctionId,
+      originHref,
+      originLabel: 'Open Product & Service Ideation actions',
       sections: definition.sections,
       relationships: [],
       auditObjectTypes: [definition.auditObjectType]

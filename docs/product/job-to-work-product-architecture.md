@@ -705,6 +705,18 @@ External career treatment is now **84/84** at candidate-decomposition level. Thi
 
 The next J1 gate is therefore **internal Job Profile reconciliation**, not blanket progression of all candidate rows into J2.
 
+The working reconciliation baseline is now:
+
+```text
+382 inherited candidate Job Profiles
+  2 candidate direct employment-profile bases
+ 32 candidate composition sources
+  2 candidate adjacent sources only
+346 candidate unreconciled source profiles
+```
+
+See `job-profile-reconciliation.md` and `job-profile-reconciliation-register.csv`.
+
 ---
 
 # 12. Implementation programme

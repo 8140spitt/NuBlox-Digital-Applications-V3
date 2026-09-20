@@ -1,0 +1,11 @@
+job_archetype_id,job_title,career_index,prior_job_profile_ids,mapping_state,finding
+JOB-QS,Quantity Surveyor,60,,gap-no-sector-job-profile,"Cross-functional commercial/cost role spans estimating, procurement, finance and project control."
+JOB-EST,Estimator,34,,gap-no-sector-job-profile,Pre-contract estimating role requires dedicated work-product composition across F07/F09.
+JOB-PM,Project Manager,,JP-F27.04-PROFESSIONAL|JP-F27.06-PROFESSIONAL|JP-F27.08-PROFESSIONAL,candidate-multi-profile-composition,"Current generated architecture splits one employable job across initiation, execution and closure profiles."
+JOB-CM,Construction Manager,24,JP-F22.05-PROFESSIONAL,candidate-partial-match,"Construction Project Manager is a partial base but site execution work products span project, field, QHSE, logistics and information."
+JOB-SUP,Construction Site Supervisor,27,,gap-no-sector-job-profile,No direct sector Job Profile exists in the generated function-derived baseline.
+JOB-ARCH,Architect,3,,gap-no-sector-job-profile,"Existing Architect titles are IT/enterprise architecture roles, not built-environment architectural practice."
+JOB-BSE,Building Services Engineer,9,,gap-no-sector-job-profile,No direct professional MEP/building-services Job Profile exists.
+JOB-BS,Building Surveyor,10,,gap-no-sector-job-profile,No direct professional building-surveying Job Profile exists.
+JOB-FM,Facilities Manager,35,JP-F22.10-PROFESSIONAL,candidate-partial-match,"F22 Facilities Manager is useful but requires explicit asset, maintenance, compliance, contractor, budget and service work products."
+JOB-PROC,Procurement Manager,,JP-F09-FUNCTION-LEAD|JP-F09.01-PROFESSIONAL|JP-F09.06-PROFESSIONAL,candidate-multi-profile-composition,"Employable procurement management role composes strategy, sourcing, contracting, supplier and operational work."

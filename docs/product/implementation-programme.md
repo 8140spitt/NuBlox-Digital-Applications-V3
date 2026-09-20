@@ -61,7 +61,25 @@ Implement:
 
 This slice establishes the control semantics required by Workflow, Deliverables, Change and Configuration.
 
-### P1.3 Workflow & Work Runtime
+### P1.3 Access, Scope & Permission Runtime
+
+Implement:
+
+- Permission Definition;
+- Access Role Definition;
+- Access Role to Permission relationship;
+- scoped Access Role Assignment;
+- Person / Position / Organisation Unit principals;
+- effective dates;
+- tenant/data/resource scope;
+- permission evaluation;
+- controlled ALLOW / DENY result with reason;
+- access-request hook without turning denial into a server failure;
+- audit evidence for permission-changing commands.
+
+This remains separate from Responsibility and Authority. A user may have permission to perform an action yet still lack the delegated Authority required to approve or commit it.
+
+### P1.4 Workflow & Work Runtime
 
 Implement:
 
@@ -77,7 +95,7 @@ Implement:
 - My Work projection;
 - controlled permission-denied/business-blocked outcomes.
 
-### P1.4 Information & Configuration Kernel
+### P1.5 Information & Configuration Kernel
 
 Implement:
 
@@ -92,7 +110,7 @@ Implement:
 - Effectivity;
 - configuration status accounting.
 
-### P1.5 Change Runtime
+### P1.6 Change Runtime
 
 Implement:
 
@@ -106,7 +124,7 @@ Implement:
 - closure;
 - resulting Baseline/configuration update.
 
-### P1.6 Platform Events & Portability
+### P1.7 Platform Events & Portability
 
 Implement:
 

@@ -277,3 +277,41 @@ export function createProjectionCheckpoint(
   if (input.lastOccurredAt) assertDate(input.lastOccurredAt, 'Projection Checkpoint lastOccurredAt');
   return Object.freeze({ ...input });
 }
+
+
+export function advanceProjectionCheckpoint(
+  current: ProjectionCheckpoint,
+  next: ProjectionCheckpoint
+): ProjectionCheckpoint {
+  assertSameTenant(current.tenantId, next.tenantId, 'Projection Checkpoints');
+  invariant(
+    current.projectionName === next.projectionName &&
+      current.partitionKey === next.partitionKey,
+    'Projection Checkpoint identity cannot change.'
+  );
+  createProjectionCheckpoint(next);
+
+  if (
+    current.lastEventSequence !== undefined &&
+    next.lastEventSequence !== undefined
+  ) {
+    invariant(
+      next.lastEventSequence >= current.lastEventSequence,
+      'Projection Checkpoint event sequence cannot move backwards.'
+    );
+  }
+
+  if (current.lastOccurredAt && next.lastOccurredAt) {
+    invariant(
+      Date.parse(next.lastOccurredAt) >= Date.parse(current.lastOccurredAt),
+      'Projection Checkpoint occurredAt cannot move backwards.'
+    );
+  }
+
+  invariant(
+    Date.parse(next.updatedAt) >= Date.parse(current.updatedAt),
+    'Projection Checkpoint updatedAt cannot move backwards.'
+  );
+
+  return Object.freeze({ ...next });
+}

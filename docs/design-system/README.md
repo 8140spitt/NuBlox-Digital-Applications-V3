@@ -10,8 +10,9 @@ The user-facing hierarchy is:
 
 ~~~text
 Tenant / Enterprise
-  -> Role / My Work
-     -> Enterprise Context
+  -> Person / Position / Job Profile
+     -> Job Workbench / My Work
+        -> Enterprise Context
         -> Operate / Deliver / Enterprise Data
            -> process / function / context workspace
               -> collection / grid / structure / map / viewer
@@ -27,6 +28,8 @@ Canonical business objects can appear across several functions, processes and co
 
 The runtime should always help the user answer:
 
+- **What job am I here to perform?**
+- **What work product am I producing or progressing?**
 - **What am I responsible for?**
 - **Where am I operating?**
 - **What business outcome/process am I working on?**
@@ -92,6 +95,8 @@ The target Experience System includes:
 - Enterprise Context Bar / Selector
 - Home
 - My Work
+- Job Workbench
+- Work-Product Authoring Surface
 - Workspace / Cockpit
 - Collection View
 - Split Work Mode

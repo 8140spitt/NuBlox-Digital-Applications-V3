@@ -22,8 +22,8 @@ Until that decision is made, the profile remains candidate architecture rather t
 
 ```text
 Source candidate Job Profiles:                 382
-Reconciled to an employment treatment:          146
-Still requiring employment reconciliation:      236
+Reconciled to an employment treatment:          185
+Still requiring employment reconciliation:      197
 ```
 
 The referenced profiles are not automatically approved. Their Wave mapping states distinguish direct, partial, adjacent and multi-profile composition evidence.
@@ -41,7 +41,11 @@ Completed reconciliation tranches:
 - complete F14 Finance, Accounting, Treasury & Tax reconciliation;
 - complete F07 Sales & Commercial Management reconciliation;
 - complete F09 Procurement & Supplier Management reconciliation;
-- complete F20 Risk, Compliance & Assurance reconciliation.
+- complete F20 Risk, Compliance & Assurance reconciliation;
+- complete F19 Legal & Corporate Secretariat reconciliation;
+- complete F21 Privacy & Information Governance reconciliation;
+- complete F24 Business Continuity, Crisis & Physical Security reconciliation;
+- complete F26 Knowledge, Document & Records Management reconciliation.
 
 Key outcomes include:
 
@@ -53,7 +57,7 @@ Key outcomes include:
 - Crisis Communications composed across F24/F25;
 - Business Process Analyst modelling/analysis slices composed.
 
-The unresolved inventory is now **236 source profiles**.
+The unresolved inventory is now **197 source profiles**.
 
 ## Reconciliation states
 

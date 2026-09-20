@@ -10,9 +10,11 @@ This directory contains the governing product-definition artefacts for NuBlox V3
 - [Job Profile Work-Product Coverage Register](job-profile-work-product-coverage-register.csv) — 382 prior candidate Job Profiles imported as explicit work-product decomposition gaps.
 - [Priority Job Work-Product Wave 1](priority-job-work-product-wave-1.csv) — 118 candidate Work Products across ten priority employment jobs.
 - [Priority Job Work-Product Wave 2](priority-job-work-product-wave-2.csv) — 165 candidate Work Products across sixteen further control, engineering, assurance and field jobs.
+- [Priority Job Work-Product Wave 3](priority-job-work-product-wave-3.csv) — 200 candidate Work Products across twenty professional, technical, property, geospatial, energy and planning jobs.
 - [Work-Product Family Taxonomy](work-product-family-taxonomy.md) — shared experience/completeness families derived from the first 283 candidate Work Products.
 - [Wave 1 Professional Role Challenge](job-work-product-wave-1.md) — findings from the first cross-functional role decomposition.
 - [Wave 2 Controls, Engineering, Assurance & Field Work](job-work-product-wave-2.md) — findings from the second decomposition wave.
+- [Wave 3 Professional, Technical, Property & Planning Work](job-work-product-wave-3.md) — findings from the third decomposition wave.
 - [Professional Job Architecture Gap Register](professional-job-architecture-gap-register.csv) — explicit gaps/partial matches between real sector jobs and the prior function-derived Job Profile baseline.
 - [Stakeholder Design Review — 17 September 2026](stakeholder-design-review-2026-09-17.md) — earlier stakeholder design baseline.
 

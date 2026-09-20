@@ -1,3 +1,5 @@
+export * from './work.js';
+export * from './work-factories.js';
 export * from './access.js';
 export * from './access-factories.js';
 export * from './control.js';

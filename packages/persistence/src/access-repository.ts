@@ -20,6 +20,7 @@ import type {
   RowDataPacket
 } from 'mysql2/promise';
 import { withTransaction } from './database.js';
+import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface AccessRoleRow extends RowDataPacket {
@@ -146,6 +147,14 @@ function validateRequestedScope(scope: PermissionScope): void {
   if (!scope.scopeId?.trim()) {
     throw new Error('Non-TENANT permission scope must specify scopeId.');
   }
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 export class MySqlAccessRepository {

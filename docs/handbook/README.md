@@ -3,165 +3,100 @@
 **Status:** authoritative product description  
 **Audience:** business stakeholders, product, design, engineering, implementation, support and assurance
 
-## 1. What NuBlox is
+## What NuBlox is
 
-NuBlox Construction & The Built Environment is a **single enterprise-grade software platform that enables a construction and built-environment organisation to operate the business and deliver its work in one governed system**.
+**NuBlox Construction & The Built Environment is a single enterprise-grade software system that enables a business operating in the construction and built-environment sector to carry out all of the functional activities required to run the enterprise and deliver its work within one connected system.**
 
-It connects corporate management, customers, opportunities, estimating, contracts, projects, programmes, design and information, procurement, construction, commercial management, finance, people, quality, health and safety, assets, facilities, service, governance, risk, legal, data and technology without turning them into disconnected software silos.
+It is intended to replace the fragmented departmental landscape in which strategy, CRM, estimating, procurement, projects, commercial management, finance, HCM, quality, HSE, documents, assets, facilities and service operations are separated into independent tools and spreadsheets.
 
-The governing product test is:
+The primary product model is therefore the **functional areas of the business**.
 
-> **Can a person sit down in NuBlox and perform the job they are employed to do, create the required work products, obtain the necessary decisions, hand work to the next responsible person, and leave complete evidence of the result?**
+## The governing product test
 
-## 2. The product model
+For every functional area:
 
-NuBlox joins two views of the enterprise.
+> **Can the people responsible for this function carry out the complete function in NuBlox?**
 
-### Operate the business
+And for the enterprise as a whole:
 
-The permanent enterprise machinery that keeps the organisation governed and capable:
+> **Can those functions collaborate around the same customers, suppliers, people, projects, contracts, products, assets, transactions and evidence without recreating business truth in disconnected systems?**
 
-- strategy and planning;
-- governance and performance;
-- finance and treasury;
-- people and organisation;
-- risk, compliance, legal and privacy;
-- quality, HSE and sustainability;
-- technology, data and cybersecurity;
-- property, assets and facilities;
-- communications, knowledge and transformation.
+## Functional areas first
 
-### Deliver the business
+NuBlox covers 29 functional areas.
 
-The value-delivery chain through which the organisation wins, plans, executes and hands over work:
+See the [Functional Areas of the Business](functional-areas/README.md) for the complete model and detailed operating chapters.
+
+The functions describe the business. They are not vendor-style software modules and they do not own separate databases.
+
+## How the business delivers work
+
+Construction and built-environment delivery cuts across the functional areas.
 
 ```text
 Market / Client
-  -> Lead / Opportunity
-  -> Bid / Estimate / Proposal
-  -> Contract / Appointment
-  -> Portfolio / Programme / Project
-  -> Design / Information / Planning
-  -> Procurement / Supply Chain
-  -> Construction / Field Execution
-  -> Commercial / Cost / Change
-  -> Quality / HSE / Assurance
-  -> Commissioning / Handover
-  -> Asset / Facilities / Service
+ -> Lead / Opportunity
+ -> Estimate / Tender / Proposal
+ -> Contract / Appointment
+ -> Portfolio / Programme / Project
+ -> Design / Information / Planning
+ -> Procurement / Supply Chain
+ -> Construction / Field Execution
+ -> Commercial / Cost / Change
+ -> Quality / HSE / Assurance
+ -> Commissioning / Handover
+ -> Asset / Facilities / Service
 ```
 
-Both streams operate on shared **Enterprise Data** rather than copies.
+See [04 — Deliver the Business](04-deliver-the-business.md).
 
-## 3. The human operating model
+## People perform the functions
+
+The product connects enterprise functions to real organisational responsibility:
 
 ```text
 Person
-  -> Worker Relationship
-  -> Position
-  -> Job Profile
-  -> Functional Roles
-  -> Activities
-  -> Work Products
-  -> Canonical Business Objects
-  -> Decisions / Evidence / Handoffs
-  -> Business Outcomes
+ -> Worker Relationship
+ -> Position
+ -> Job Profile
+ -> Functional Responsibilities
+ -> Business Processes / Activities
+ -> Transactions / Records / Decisions / Outputs
+ -> Business Outcome
 ```
 
-A Job Profile describes expected professional work. A Position applies that work in a tenant's organisation. A Person occupies a Position through an effective assignment.
+The job model supports the functional-area model; it is not the top-level product architecture.
 
-Security is deliberately separate:
+See [02 — People, Jobs & Work](02-people-jobs-and-work.md).
 
-```text
-Job Profile
-  != Access Role
-  != Permission
-  != Scope
-  != Delegated Authority
-  != Approval Authority
-```
+## Shared enterprise truth
 
-## 4. The enterprise application model
+All functional areas operate on shared canonical enterprise data.
 
-The user works through one application shell containing:
+Examples include:
 
-- **Home** — enterprise/context overview;
-- **My Work** — assigned, eligible, pending and overdue work;
-- **Job Workbench** — work expected because of the user's Position and Job Profile;
-- **Operate** — persistent enterprise operations;
-- **Deliver** — value-delivery processes and contexts;
-- **Enterprise Data** — governed master/reference data;
-- **Functions** — the complete F01-F29 capability directory;
-- **Search** — authorised search across canonical objects;
-- **Task Bar** — active personal work contexts and recoverable drafts;
-- **Administration** — business configuration, security and technical administration.
+- people and organisations;
+- customers and suppliers;
+- products, services and items;
+- projects, programmes and contracts;
+- sites, properties, spaces and assets;
+- budgets, transactions and financial consequences;
+- controlled information and evidence.
 
-Users may enter from their job, a function, a process, a project, search or a related object and still reach the same canonical record.
+See [05 — Enterprise Data, Objects & Information](05-enterprise-data-and-information.md).
 
-## 5. Shared work-product experiences
+## Common enterprise controls
 
-NuBlox does not need a bespoke screen for every work product. It composes a governed set of reusable authoring experiences:
+NuBlox provides shared workflow, authority, evidence, audit, lifecycle, search and interaction capabilities so each function does not reinvent them.
 
-- Object Workspace;
-- Collection View;
-- Enterprise Grid;
-- Structure Browser;
-- Plan / Schedule Workspace;
-- Calculation / Model Workbench;
-- Controlled Information Editor;
-- Case / Assessment Workspace;
-- Inspection / Test Workbench;
-- Change Workspace;
-- Decision / Approval Workspace;
-- Transaction / Commitment Workspace;
-- Execution / Field Record;
-- Report / Snapshot;
-- Handover / Closeout Package;
-- Evidence / History / Relationship panels;
-- Viewer and Map / Spatial workspaces where required.
+See [06 — Workflow, Authority, Evidence & Experience](06-workflow-authority-evidence-and-experience.md).
 
-## 6. The 29 business-function workspaces
-
-The function model is the complete capability directory of the enterprise:
-
-| ID | Function |
-| --- | --- |
-| F01 | Strategy & Enterprise Planning |
-| F02 | Corporate Governance |
-| F03 | Enterprise Performance Management |
-| F04 | Corporate Development & M&A |
-| F05 | Product, Service & Innovation Management |
-| F06 | Marketing & Brand |
-| F07 | Sales & Commercial Management |
-| F08 | Customer Service, Experience & Success |
-| F09 | Procurement & Supplier Management |
-| F10 | Demand, Supply Chain & Logistics |
-| F11 | Manufacturing / Production Operations |
-| F12 | Service Delivery & Field Operations |
-| F13 | Quality Management |
-| F14 | Finance, Accounting, Treasury & Tax |
-| F15 | Human Resources / Human Capital |
-| F16 | Information Technology |
-| F17 | Data, Analytics & AI |
-| F18 | Cybersecurity & Information Security |
-| F19 | Legal & Corporate Secretariat |
-| F20 | Risk, Compliance, Internal Control & Audit |
-| F21 | Privacy & Information Governance |
-| F22 | Property, Facilities & Physical Assets |
-| F23 | Health, Safety, Environment & Sustainability |
-| F24 | Business Continuity, Crisis & Physical Security |
-| F25 | Communications, Public Affairs & Investor Relations |
-| F26 | Knowledge, Document & Records Management |
-| F27 | Portfolio, Programme & Project Management |
-| F28 | Change & Transformation Management |
-| F29 | Business Process & Continuous Improvement |
-
-The 29 workspaces are **not 29 separate applications or databases**. They are governed perspectives over shared business truth.
-
-## 7. Handbook chapters
+## Handbook
 
 - [01 — Product & Enterprise Model](01-product-and-enterprise-model.md)
 - [02 — People, Jobs & Work](02-people-jobs-and-work.md)
-- [03 — Operate the Business](03-operate-the-business.md)
+- [03 — Functional Areas of the Business](03-operate-the-business.md)
+- [Functional Area Chapters F01–F29](functional-areas/README.md)
 - [04 — Deliver the Business](04-deliver-the-business.md)
 - [05 — Enterprise Data, Objects & Information](05-enterprise-data-and-information.md)
 - [06 — Workflow, Authority, Evidence & Experience](06-workflow-authority-evidence-and-experience.md)
@@ -169,6 +104,8 @@ The 29 workspaces are **not 29 separate applications or databases**. They are go
 - [08 — Product State & Roadmap](08-product-state-and-roadmap.md)
 - [09 — Glossary](09-glossary.md)
 
-## 8. Supporting evidence
+## Supporting evidence
 
-Detailed registers and benchmark material remain in `docs/product/`, `docs/data-model/` and `docs/benchmarks/`. They support traceability but are not required reading to understand how the product works.
+Historical product analysis and market benchmarking are preserved under `docs/evidence/`.
+
+They explain why decisions were made. They are not the primary description of the product.

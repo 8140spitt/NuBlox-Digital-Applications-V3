@@ -1,186 +1,73 @@
-# 03 — Operate the Business
+# 03 — Functional Areas of the Business
 
-Operate contains the persistent enterprise machinery required to govern and run the organisation.
+NuBlox Construction & The Built Environment is organised around the **functional areas required to run a sophisticated construction and built-environment enterprise**.
 
-It is not a single department. It is a connected set of enterprise functions using shared canonical data and controls.
+This is the primary business view of the product.
 
-## Direction and governance
+## The proposition
 
-### F01 Strategy & Enterprise Planning
+> **NuBlox digitises every functional area of a construction and built-environment business and connects those areas into one enterprise system.**
 
-Defines purpose, strategic objectives, business plans, operating model, scenarios and strategic reviews.
+Each function must be able to perform its complete responsibilities in NuBlox: day-to-day work, specialist processes, transactions, calculations, controlled information, decisions, approvals, evidence, handoffs and reporting.
 
-Key outputs include:
+The functional areas are not independent applications. They collaborate using shared enterprise data and shared business objects.
 
-- strategy;
-- assumptions;
-- objectives;
-- annual/business-unit plans;
-- operating-model structures;
-- KPI frameworks;
-- strategic reviews.
+## The 29 functional areas
 
-### F02 Corporate Governance
+See the full [Functional Areas of the Business](functional-areas/README.md).
 
-Controls governance bodies, meetings, policy, delegated authority, ethics and executive decisions.
+- [F01 — Strategy & Enterprise Planning](functional-areas/f01-strategy-and-enterprise-planning.md)
+- [F02 — Corporate Governance](functional-areas/f02-corporate-governance.md)
+- [F03 — Enterprise Performance Management](functional-areas/f03-enterprise-performance-management.md)
+- [F04 — Corporate Development & M&A](functional-areas/f04-corporate-development-and-manda.md)
+- [F05 — Product, Service & Innovation Management](functional-areas/f05-product-service-and-innovation-management.md)
+- [F06 — Marketing & Brand](functional-areas/f06-marketing-and-brand.md)
+- [F07 — Sales & Commercial Management](functional-areas/f07-sales-and-commercial-management.md)
+- [F08 — Customer Service, Experience & Success](functional-areas/f08-customer-service-experience-and-success.md)
+- [F09 — Procurement & Supplier Management](functional-areas/f09-procurement-and-supplier-management.md)
+- [F10 — Demand, Supply Chain & Logistics](functional-areas/f10-demand-supply-chain-and-logistics.md)
+- [F11 — Manufacturing / Production Operations](functional-areas/f11-manufacturing-production-operations.md)
+- [F12 — Service Delivery & Field Operations](functional-areas/f12-service-delivery-and-field-operations.md)
+- [F13 — Quality Management](functional-areas/f13-quality-management.md)
+- [F14 — Finance, Accounting, Treasury & Tax](functional-areas/f14-finance-accounting-treasury-and-tax.md)
+- [F15 — Human Resources / Human Capital](functional-areas/f15-human-resources-human-capital.md)
+- [F16 — Information Technology](functional-areas/f16-information-technology.md)
+- [F17 — Data, Analytics & AI](functional-areas/f17-data-analytics-and-ai.md)
+- [F18 — Cybersecurity & Information Security](functional-areas/f18-cybersecurity-and-information-security.md)
+- [F19 — Legal & Corporate Secretariat](functional-areas/f19-legal-and-corporate-secretariat.md)
+- [F20 — Risk, Compliance, Internal Control & Audit](functional-areas/f20-risk-compliance-internal-control-and-audit.md)
+- [F21 — Privacy & Information Governance](functional-areas/f21-privacy-and-information-governance.md)
+- [F22 — Property, Facilities & Physical Assets](functional-areas/f22-property-facilities-and-physical-assets.md)
+- [F23 — Health, Safety, Environment & Sustainability](functional-areas/f23-health-safety-environment-and-sustainability.md)
+- [F24 — Business Continuity, Crisis & Physical Security](functional-areas/f24-business-continuity-crisis-and-physical-security.md)
+- [F25 — Communications, Public Affairs & Investor Relations](functional-areas/f25-communications-public-affairs-and-investor-relations.md)
+- [F26 — Knowledge, Document & Records Management](functional-areas/f26-knowledge-document-and-records-management.md)
+- [F27 — Portfolio, Programme & Project Management](functional-areas/f27-portfolio-programme-and-project-management.md)
+- [F28 — Change & Transformation Management](functional-areas/f28-change-and-transformation-management.md)
+- [F29 — Business Process & Continuous Improvement](functional-areas/f29-business-process-and-continuous-improvement.md)
 
-### F03 Enterprise Performance
+## How functions become an enterprise
 
-Defines KPI structures, observations, performance snapshots, variance, corrective action, benchmarking and benefits realisation.
+A functional area owns business responsibility, not a private copy of enterprise data.
 
-### F04 Corporate Development & M&A
+Examples:
 
-Manages opportunities, valuation, due diligence, transactions, integration, divestiture and partnerships.
+- Sales and Finance use the same Customer/Organisation identity;
+- Procurement, Quality, HSE and Finance use the same Supplier identity;
+- Project Management, Commercial, Finance, Design, Quality and HSE work around the same Project and Contract;
+- HCM, IT and Security use the same Person, Worker Relationship and Position;
+- Project delivery and Asset Management share the same handed-over asset/system/component identity.
 
-### F05 Product, Service & Innovation
+## Delivery is cross-functional
 
-Manages portfolio, market need, concepts, business cases, requirements, development, testing, launch, lifecycle and retirement.
+Construction delivery is not a thirtieth function.
 
-### F06 Marketing & Brand
+It is a value stream created when the functional areas collaborate around a client, opportunity, contract, project, site, asset or service.
 
-Manages market intelligence, segmentation, brand, campaigns, channels, content, events, demand generation and marketing performance.
+See [04 — Deliver the Business](04-deliver-the-business.md).
 
-## Commercial and customer operations
+## Functional completeness
 
-### F07 Sales & Commercial Management
+A function is product-complete only when a representative organisation could operate that department/function in NuBlox without needing another core departmental system for the work NuBlox claims to cover.
 
-Manages accounts, opportunities, pipeline, pricing, quotations, bids, negotiation, sales orders, channels, sales forecast and performance.
-
-### F08 Customer Service, Experience & Success
-
-Manages onboarding, enquiries, customer cases, complaints, technical support, returns, warranty, success, retention, feedback, knowledge and SLA performance.
-
-## Procurement, supply and production
-
-### F09 Procurement & Supplier Management
-
-Manages procurement strategy, categories, supplier discovery, sourcing, negotiation, supplier contracts, onboarding, requisitions, purchase orders, supplier performance, supplier risk and supplier relationships.
-
-### F10 Demand, Supply Chain & Logistics
-
-Manages demand forecast, S&OP, supply plan, inventory planning, material requirements, warehouse operations, stock control, transport, distribution, customs and reverse logistics.
-
-### F11 Manufacturing / Production
-
-Manages production planning, scheduling, material staging, execution, process control, WIP, packaging, production reporting, capacity and lean improvement.
-
-### F12 Service Delivery & Field Operations
-
-Manages service models, appointments, dispatch, work execution, field inspection/repair/testing, professional services, acceptance, SLA quality, capacity and performance.
-
-## Corporate control
-
-### F13 Quality Management
-
-Manages quality strategy, quality plans, inspection/test, assurance, non-conformance, CAPA, supplier quality, quality-controlled information, continuous improvement and analytics.
-
-### F14 Finance, Accounting, Treasury & Tax
-
-Manages:
-
-- financial strategy;
-- budgets and forecasts;
-- general ledger;
-- AP and AR;
-- credit and collections;
-- expenses;
-- fixed-asset accounting;
-- cost accounting;
-- close and consolidation;
-- reporting;
-- cash and treasury;
-- payment runs;
-- FX;
-- financing;
-- tax;
-- financial controls;
-- profitability;
-- capital investment.
-
-Financial truth remains linked to source commercial and operational transactions.
-
-## People and digital operations
-
-### F15 Human Resources / Human Capital
-
-Manages workforce planning, organisation design, job architecture, recruitment, screening, onboarding, worker administration, time, payroll, reward, benefits, performance, learning, talent, engagement, employee relations, absence, offboarding and people analytics.
-
-### F16 Information Technology
-
-Manages technology strategy, architecture, applications, software engineering, DevOps, infrastructure, cloud, networks, endpoints, identity provisioning, IT service, incidents, problems, change, release, configuration, IT assets, availability, DR and vendors.
-
-### F17 Data, Analytics & AI
-
-Manages data strategy, governance, architecture, master/reference data, quality, engineering, data platforms, BI, analytics, data science, AI use cases, AI governance, MLOps, metadata, access and lifecycle.
-
-### F18 Cybersecurity & Information Security
-
-Manages security strategy, policy, architecture, IAM controls, vulnerability, patching, SOC monitoring, cyber incidents, threat intelligence, penetration testing, application security, third-party security, awareness, cryptography and security compliance.
-
-## Legal, assurance and resilience
-
-### F19 Legal & Corporate Secretariat
-
-Manages legal advice, contracts, legal entities, corporate records, IP, litigation, regulatory advice, employment law, external counsel, legal hold/eDiscovery and legal obligations.
-
-### F20 Risk, Compliance, Internal Control & Audit
-
-Manages enterprise risk, risk assessment/treatment/monitoring, compliance, controls, control testing, audit planning/execution/reporting, remediation, fraud, ethics and assurance coordination.
-
-### F21 Privacy & Information Governance
-
-Manages privacy governance, processing records, DPIAs, consent/preferences, data-subject rights, privacy incidents, international transfers, retention and privacy assurance.
-
-### F22 Property, Facilities & Physical Assets
-
-Manages asset strategy, capital planning, acquisition, property acquisition, construction/asset projects, asset master data, preventive/reactive maintenance, reliability, facilities, space, leases, utilities and asset disposal.
-
-### F23 HSE & Sustainability
-
-Manages H&S frameworks, hazards, inspections, incidents, occupational health, permit-to-work, environmental management, waste, carbon, energy, sustainability, ESG reporting, responsible procurement and environmental compliance.
-
-### F24 Business Continuity, Crisis & Physical Security
-
-Manages continuity policy, business impact analysis, recovery strategies, exercises, crisis response, emergency response, crisis communications, disaster recovery, physical security, visitors, investigations and travel security.
-
-## Communication, knowledge and enterprise change
-
-### F25 Communications, Public Affairs & Investor Relations
-
-Manages corporate/internal/media communications, PR/reputation, public affairs, government relations, investor communications, annual reporting, stakeholder and community engagement.
-
-### F26 Knowledge, Document & Records Management
-
-Manages knowledge strategy, capture, sharing, content lifecycle, documents, records, controlled information, retention/disposition, enterprise search and lessons learned.
-
-### F27 Portfolio, Programme & Project Management
-
-Manages portfolio selection, investment governance, programmes, projects, planning, controls, PMO and portfolio resources.
-
-### F28 Change & Transformation Management
-
-Manages target state, transformation roadmap, change impacts, stakeholders, communications, training/readiness, adoption and organisational transition.
-
-### F29 Business Process & Continuous Improvement
-
-Manages process architecture, ownership, modelling, analysis, redesign, SOPs, workflow automation, compliance, performance and improvement.
-
-## Cross-functional operation
-
-An enterprise activity rarely ends in the workspace where it starts.
-
-For example:
-
-```text
-Recruit Position
- -> appoint Worker
- -> request equipment
- -> request approved access
- -> train / certify
- -> assign work
- -> record time
- -> calculate payroll
- -> post financial consequence
-```
-
-NuBlox preserves the handoffs while maintaining one canonical Person, Position, Worker Relationship and financial truth.
+That includes normal work and exceptions, approvals, authority, audit evidence, reporting and cross-functional handoffs.

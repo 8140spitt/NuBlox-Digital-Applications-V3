@@ -1,5 +1,13 @@
 # 04 — Deliver the Business
 
+## Delivery is cross-functional
+
+Delivering construction and built-environment work is not a separate module or function. It is the coordinated operation of the functional areas around a client, contract, project, programme, site, property or asset.
+
+For example, a project may simultaneously involve F07 Sales & Commercial, F09 Procurement, F13 Quality, F14 Finance, F15 HCM, F19 Legal, F23 HSE, F26 Information Management and F27 Project Management.
+
+The delivery journey below explains how those functions collaborate.
+
 Deliver is the end-to-end value-delivery environment for construction and built-environment work.
 
 The precise route varies by contractor, consultant, developer, owner/operator, manufacturer or service provider, but the underlying operating chain is connected.

@@ -22,8 +22,8 @@ Until that decision is made, the profile remains candidate architecture rather t
 
 ```text
 Source candidate Job Profiles:                 382
-Reconciled to an employment treatment:           81
-Still requiring employment reconciliation:      301
+Reconciled to an employment treatment:           92
+Still requiring employment reconciliation:      290
 ```
 
 The referenced profiles are not automatically approved. Their Wave mapping states distinguish direct, partial, adjacent and multi-profile composition evidence.
@@ -35,7 +35,9 @@ Completed reconciliation tranches:
 - 36 Wave-evidenced source profiles;
 - duplicate-title / semantic-collision review;
 - 27 additional function-lead profiles;
-- complete F27 Portfolio, Programme & Project Management employment reconciliation.
+- complete F27 Portfolio, Programme & Project Management employment reconciliation;
+- complete F22 Property, Facilities & Physical Assets reconciliation;
+- complete F23 Health, Safety, Environment & Sustainability reconciliation.
 
 Key outcomes include:
 
@@ -47,7 +49,7 @@ Key outcomes include:
 - Crisis Communications composed across F24/F25;
 - Business Process Analyst modelling/analysis slices composed.
 
-The unresolved inventory is now **301 source profiles**.
+The unresolved inventory is now **290 source profiles**.
 
 ## Reconciliation states
 

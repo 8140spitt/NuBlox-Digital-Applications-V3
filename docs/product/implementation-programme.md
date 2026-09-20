@@ -79,7 +79,7 @@ Implement:
 
 This remains separate from Responsibility and Authority. A user may have permission to perform an action yet still lack the delegated Authority required to approve or commit it.
 
-### P1.4 Workflow & Work Runtime — CURRENT
+### P1.4 Workflow & Work Runtime — IMPLEMENTED
 
 Implement:
 
@@ -95,7 +95,7 @@ Implement:
 - My Work projection;
 - controlled permission-denied/business-blocked outcomes.
 
-### P1.5 Information & Configuration Kernel
+### P1.5 Information & Configuration Kernel — CURRENT
 
 Implement:
 

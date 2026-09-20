@@ -33,6 +33,7 @@ import type {
   RowDataPacket
 } from 'mysql2/promise';
 import { withTransaction } from './database.js';
+import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface WorkflowDefinitionRow extends RowDataPacket {
@@ -219,6 +220,14 @@ function mapCanonicalObject(row: CanonicalObjectRow): CanonicalObjectIdentity {
     stableKey: row.stable_key,
     createdAt: row.created_at.toISOString()
   };
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 export class MySqlWorkRepository {

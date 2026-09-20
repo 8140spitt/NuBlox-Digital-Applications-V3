@@ -44,19 +44,38 @@ It is not yet safe to claim:
 - all specialist integrations exist;
 - all field/mobile/offline/viewer capabilities are implemented.
 
-## Immediate priority 1 — managed deliverable runtime
+## Immediate priority 1 — functional governance and deployment runtime
+
+Implement reusable support for:
+
+- Functional Definition and controlled baseline;
+- enterprise-function and sector-delivery-domain relationships;
+- Job-to-Function relationships (PRIMARY / DELIVERY / GOVERNANCE / ASSURANCE / SUPPORT);
+- competence requirements and evidence;
+- Deployment Requirement;
+- Functional Deployment;
+- organisation / Position / Person assignment;
+- project / contract / package / site / asset responsibility scope;
+- effective dates, capacity and workload;
+- permission and delegated-authority validation;
+- deployment verification, change/substitution and demobilisation;
+- status accounting, evidence and audit.
+
+This is the runtime bridge between the 29 enterprise functions and the 84 identified Construction & Built Environment jobs.
+
+## Immediate priority 2 — managed deliverable runtime
 
 Implement reusable support for deliverable requirements, deliverable items, responsibility, dates, lifecycle/status, revision/version, representations, review/comments, approval, issue/transmittal, acceptance, supersession and history/evidence.
 
-## Immediate priority 2 — enterprise interaction foundation
+## Immediate priority 3 — enterprise interaction foundation
 
 Complete the stable shell, My Work, functional-area workspaces, Deliver, Deliverables, object workspaces, high-volume grids/import and controlled denied/conflict/error states.
 
-## Immediate priority 3 — construction delivery verticals
+## Immediate priority 4 — construction delivery verticals
 
 Build coherent journeys across opportunity/tender, contract/project, design deliverables, procurement, site execution, commercial/cost/change, quality/HSE, commissioning/handover and asset/service.
 
-## Immediate priority 4 — representative job acceptance
+## Immediate priority 5 — representative job acceptance
 
 Prove realistic jobs end-to-end, including Architect, Quantity Surveyor, Estimator, Planner, Design Manager, Buyer, Project Manager, Site Manager, Safety Inspector, Project Accountant, Asset Manager and Maintenance Planner/Technician.
 

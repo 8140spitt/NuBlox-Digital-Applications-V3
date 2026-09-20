@@ -246,6 +246,23 @@ suite('MySQL functional framework and deployment runtime', () => {
     );
     expect(publishedGovernance.status).toBe('PUBLISHED');
 
+    const governanceV2: FunctionGovernanceVersion = {
+      ...governance,
+      id: asId<'FunctionGovernanceVersionId'>(`F01-GOV-V2-${suffix}`, 'Function Governance Version'),
+      version: 2
+    };
+    await functional.createGovernanceVersion(tenantId, governanceV2, {
+      actorPersonId: person.id
+    });
+    await expect(
+      functional.publishGovernanceVersion(
+        tenantId,
+        governanceV2.id,
+        '2026-09-21T09:30:00.000Z',
+        { actorPersonId: person.id }
+      )
+    ).rejects.toThrow('another version is PUBLISHED');
+
     const participation: FunctionJobProfileParticipation = {
       id: asId<'FunctionJobProfileParticipationId'>(`PARTICIPATION-${suffix}`, 'Function Job Profile Participation'),
       catalogueScope: 'TENANT',
@@ -342,6 +359,18 @@ suite('MySQL functional framework and deployment runtime', () => {
       capacity,
       { actorPersonId: person.id }
     );
+
+    await expect(
+      functional.createDeploymentCapacity(
+        tenantId,
+        {
+          ...capacity,
+          id: asId<'DeploymentCapacityId'>(`CAP-OVER-${suffix}`, 'Deployment Capacity'),
+          capacityPercent: 70
+        },
+        { actorPersonId: person.id }
+      )
+    ).rejects.toThrow('exceed 100%');
 
     const permission: PermissionDefinition = {
       key: `function.f01.execute.${suffix}`,

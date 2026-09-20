@@ -1141,7 +1141,7 @@ export async function recordDeliverableRecipientResponse(
           [context.tenantId, recipient.deliverableIssueId],
           connection
         );
-        if ((pending?.remaining ?? 0) === 0) {
+        if (Number(pending?.remaining ?? 0) === 0) {
           nextState = 'ACCEPTED';
           nextVersion = recipient.itemVersion + 1;
           await executeMutation(

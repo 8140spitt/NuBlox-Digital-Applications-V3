@@ -5,6 +5,7 @@ import {
   createConstructionContextProfile,
   createConstructionWorkProductType,
   createDeliveryDomainDefinition,
+  createIndustryJobCapabilityProfile,
   createIndustryJobProfileDefinition,
   createIndustryObjectClassification,
   createIndustrySolutionDefinition,
@@ -94,6 +95,27 @@ describe('construction industry solution invariants', () => {
     expect(profile.jobProfileId).toBe(architectJob.id);
     expect(profile.canonicalName).toBe('Architect');
     expect(profile.id).not.toBe(architect.id);
+
+    const capabilities = createIndustryJobCapabilityProfile(
+      {
+        industryJobProfileId: profile.id,
+        specialistCapabilities: ['Briefing', 'Design coordination', 'Site review'],
+        primaryStructuredRecords: ['Drawings', 'Models', 'Design decisions'],
+        lifecycleStages: ['Brief', 'Design', 'Construction', 'Handover']
+      },
+      profile
+    );
+    expect(capabilities.primaryStructuredRecords).toContain('Drawings');
+
+    expect(() =>
+      createIndustryJobCapabilityProfile(
+        {
+          ...capabilities,
+          specialistCapabilities: ['Briefing', 'Briefing']
+        },
+        profile
+      )
+    ).toThrow(KernelInvariantError);
   });
 
   it('overlays Construction context semantics on the canonical object graph', () => {

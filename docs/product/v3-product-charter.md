@@ -8,11 +8,19 @@ NuBlox V3 will be the operational system of record and system of work for constr
 
 The application is not a collection of modules or pages. It is a connected operating model.
 
-Every user-facing capability must be derived through the same traceability chain:
+Every user-facing capability must be derived through two connected traceability chains:
 
-`business function -> sub-function -> capability -> workflow -> business object -> control -> permission -> experience -> evidence`
+```text
+business function -> sub-function -> activity -> capability -> workflow -> business object -> control -> permission -> experience -> evidence
 
-If an implementation cannot be traced through that chain, it is not ready to build.
+person -> position -> job profile -> functional role -> activity -> work product -> authoring experience -> business object -> handoff -> outcome
+```
+
+The first chain proves that NuBlox supports the enterprise operating model.
+
+The second proves that the people employed by that enterprise can actually perform their jobs and produce the work products expected from them.
+
+If an implementation cannot be traced through both chains where applicable, it is not ready to build.
 
 ## Product outcomes
 
@@ -25,6 +33,8 @@ NuBlox V3 must allow an organisation to:
 - maintain a reliable commercial and operational record of decisions and transactions;
 - expose the right information at the right level: enterprise, business unit, programme, project, package, asset and task;
 - support role-specific work without creating role-specific copies of the underlying truth;
+- enable a person in a governed Position/Job Profile to perform the work they are accountable for and create the required work products;
+- distinguish NATIVE, ASSISTED, CONNECTED and INGESTED work-product authoring so specialist tools can participate without fragmenting enterprise truth;
 - provide auditable evidence of who did what, when, why and under what authority;
 - integrate external systems without surrendering ownership of the NuBlox canonical model;
 - support analytics and automation from governed operational data rather than reconstructed reporting extracts.
@@ -53,13 +63,16 @@ A capability cannot enter implementation until the following are defined:
 1. Business function and sub-function coverage.
 2. Actors and accountable roles.
 3. Trigger, inputs, lifecycle and completion criteria.
-4. Canonical business objects and ownership.
-5. State transitions and business rules.
-6. Permission and delegated-authority requirements.
-7. Approval, control and audit requirements.
-8. Upstream and downstream workflow dependencies.
-9. Primary user journey and exception journeys.
-10. Acceptance criteria and observable evidence.
+4. Job Profiles / Functional Roles expected to perform or consume the work.
+5. Material Work Products and their authoring mode.
+6. Canonical business objects and ownership.
+7. State transitions and business rules.
+8. Permission and delegated-authority requirements.
+9. Approval, control and audit requirements.
+10. Upstream and downstream workflow dependencies.
+11. Primary user journey and exception journeys.
+12. Work-product creation/review/issue/handoff experience.
+13. Acceptance criteria and observable evidence, including a realistic role/job scenario where material.
 
 ## Programme sequence
 
@@ -81,4 +94,12 @@ Add integrations, automation, analytics, configurable policy, performance harden
 
 ## Success test
 
-NuBlox V3 succeeds when a sophisticated business can explain how each of its 29 functions operates in NuBlox, follow the information as it crosses functional boundaries, identify who is accountable at every control point, and retrieve the evidence behind a material business decision without reconstructing the story from disconnected systems.
+NuBlox V3 succeeds when a sophisticated business can explain how each of its 29 functions operates in NuBlox, define the Positions and Job Profiles required to run that business, assign people to those Positions, and show that each person can perform the work they are accountable for and produce the required work products.
+
+The organisation must also be able to follow information across functional boundaries, identify who is accountable at every control point, hand work products into downstream processes, and retrieve the evidence behind a material business decision without reconstructing the story from disconnected systems.
+
+The governing job-level acceptance question is:
+
+> **If I employ this person tomorrow, can they sit down in NuBlox and perform the job I hired them to do?**
+
+See [Job-to-Work-Product Architecture](job-to-work-product-architecture.md).

@@ -84,7 +84,7 @@ The `0038`, `0039` and `0040` migrations form the current functional-deployment 
 
 `pnpm db:validate` verifies contiguous ordering and rejects business-table DDL in runtime server modules. `pnpm test:migrations` creates an isolated temporary MySQL database from `NUBLOX_TEST_DATABASE_URL` credentials, migrates it from zero, reapplies the migration set to prove repeat safety, verifies the migration ledger/checksums, runs the platform/Strategy services against that migrated schema, and drops the temporary database. The configured test database name must contain a standalone `test` segment; production databases are refused.
 
-`pnpm db:seed:platform` idempotently synchronises required platform reference definitions such as the permission catalog after schema migration. It is production-safe and creates no tenant, user or development fixture.
+`pnpm db:seed:platform` idempotently synchronises required platform reference definitions such as the permission catalog after schema migration and keeps every active canonical `tenant-admin` role aligned to the complete platform permission set. It is production-safe and creates no tenant, user or development fixture.
 
 Development bootstrap records are application/test fixtures, not migration content. Migrations establish schema and required structural constraints only; `pnpm db:seed:dev -- <tenant>` remains explicitly development-only.
 

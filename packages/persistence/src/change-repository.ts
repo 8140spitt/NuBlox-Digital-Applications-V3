@@ -179,6 +179,14 @@ async function writeAudit(
       JSON.stringify(payload)
     ]
   );
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 function mapChange(row: ChangeRow): Change {
@@ -317,14 +325,6 @@ function mapBaseline(row: BaselineRow): Baseline {
       ? { supersededByBaselineId: row.superseded_by_baseline_id as NonNullable<Baseline['supersededByBaselineId']> }
       : {})
   };
-  await writeOutboxEvent(connection, {
-    tenantId,
-    aggregateType: entityType,
-    aggregateId: entityId,
-    eventType: `${entityType}.${action}`,
-    payload
-  });
-
 }
 
 export class MySqlChangeRepository {

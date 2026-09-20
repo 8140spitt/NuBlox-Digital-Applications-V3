@@ -1,7 +1,0 @@
-gap_id,job_archetype_id,work_product_id,gap_type,current_evidence,required_outcome,state
-GAP-PM-001,JOB-PM,WP-PM-004,missing-source-activity,"AGG-06-WBS exists as F27.05 secondary aggregate but no WBS activity exists","Explicit WBS create/structure/baseline/change activities mapped to AGG-06-WBS",open
-GAP-PM-002,JOB-PM,WP-PM-009,incomplete-source-activity,"F27.07.A01 manages scope only","Explicit Project Change request/impact/decision/implementation/verification activity semantics",open
-GAP-PM-003,JOB-PM,WP-PM-010,missing-source-activity,"F27.06.A03 monitors progress only","Explicit controlled Project Status Report / period snapshot activity",open
-GAP-PM-004,JOB-PM,WP-PM-011,missing-source-activity,"F27.07 budget/schedule/risk controls provide inputs only","Explicit versioned Project Forecast create/update/review activity",open
-GAP-PM-005,JOB-PM,WP-PM-012,missing-project-governance-activity,"F02 Board/Committee meetings are not ordinary Project governance","Explicit Project meeting/decision/action activity using shared decision semantics without board-only meaning",open
-GAP-PM-006,JOB-PM,WP-PM-005,incomplete-baseline-semantics,"F27.05.A01 builds schedule and F27.07.A03 controls schedule","Explicit Schedule Baseline approval/version/effectivity activity or governed mapping",open

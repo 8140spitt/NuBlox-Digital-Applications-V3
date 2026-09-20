@@ -89,11 +89,11 @@ The machine-checkable register is:
 
 The governing programme is:
 
-`docs/benchmarks/market-benchmark-programme.md`
+`docs/evidence/benchmarks/market-benchmark-programme.md`
 
 The current baseline registers **23 relevant products/suites** spanning all **29 tenant workspaces**, including SAP, Oracle, Microsoft, IFS, Workday, ServiceNow, Procore, Autodesk, Bentley, Trimble, IBM Maximo, PTC Windchill, Siemens Teamcenter, Deltek, Asite, Thinkproject/CEMAR, Hexagon EcoSys, Planon, Sage, Causeway, Salesforce and Diligent.
 
-The prior **64-line SAP capability coverage register** is preserved under `docs/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only. The V3 remap and architecture challenge are now **64/64 complete** in `docs/benchmarks/sap-v3-capability-map.csv`: 47 native-core rows, 9 contextual extensions and 8 platform enablers. This is architectural challenge closure, not runtime feature parity.
+The prior **64-line SAP capability coverage register** is preserved under `docs/evidence/benchmarks/sap-capability-coverage-register.csv` as outside-in enterprise-completeness evidence. Its old NuBlox-domain/slice fields are provenance only. The V3 remap and architecture challenge are now **64/64 complete** in `docs/evidence/benchmarks/sap-v3-capability-map.csv`: 47 native-core rows, 9 contextual extensions and 8 platform enablers. This is architectural challenge closure, not runtime feature parity.
 
 Gate 3 is now complete at architecture-challenge level: 23/23 market benchmark suites challenged, 29/29 benchmark findings resolved, 12/12 standards/reference challenges completed and 12/12 deliberately rejected vendor patterns documented with rationale. Vendor module boundaries remain non-authoritative, and completion does not imply runtime parity or certification.
 

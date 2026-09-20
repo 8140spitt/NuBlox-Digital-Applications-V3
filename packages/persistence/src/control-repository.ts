@@ -161,6 +161,14 @@ async function writeAudit(
       JSON.stringify(payload)
     ]
   );
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 function mapLifecycleDefinition(row: LifecycleDefinitionRow): LifecycleDefinition {
@@ -282,14 +290,6 @@ function mapObjectLifecycle(row: ObjectLifecycleStateRow): ObjectLifecycleState 
       ? { decisionId: row.decision_id as NonNullable<ObjectLifecycleState['decisionId']> }
       : {})
   };
-  await writeOutboxEvent(connection, {
-    tenantId,
-    aggregateType: entityType,
-    aggregateId: entityId,
-    eventType: `${entityType}.${action}`,
-    payload
-  });
-
 }
 
 export class MySqlKernelControlRepository {

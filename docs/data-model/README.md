@@ -1,224 +1,84 @@
-# Canonical Data Model
+# Canonical Data Model — Reference Index
 
-This directory governs the NuBlox V3 canonical information model.
+> Start with [Enterprise Data, Objects & Information](../handbook/05-enterprise-data-and-information.md).
+>
+> This directory is a **deep technical/semantic reference**, not the primary NuBlox product description.
 
-## Governing artefacts
+## Governing rules
 
-- `canonical-business-object-discovery.md` — discovery method, modelling rules and the 29 business-object families.
-- `canonical-business-object-register.csv` — generated machine-readable candidate-object register.
-- `canonical-business-object-duplicates.csv` — generated discovery signal listing the 26 exact duplicate-name groups; governed resolution is held in the alias-convergence audit.
-- `canonical-business-object-summary.md` — generated counts and review sequence.
-- `canonical-business-object-normalization-review.md` — governed Gate 2 record for exact duplicate and near-alias convergence.
-- `app/src/lib/data/canonical-alias-convergence-audit.ts` — machine-checkable proof that all 26 exact duplicate groups and the documented near-alias challenge set are resolved.
-- `canonical-model-convergence-audit.md` — machine-checkable convergence and five-lens coverage gate across all 29 discovery families.
-- `../benchmarks/market-benchmark-programme.md` — governed Gate 3 market benchmark across enterprise suites and Construction & Built Environment specialist products.
-- `../benchmarks/sap-capability-coverage-register.csv` — preserved 64-line SAP outside-in completeness benchmark awaiting V3 workspace/object remapping.
-- `foundation-canonicalization-baseline.md` — reviewed first-pass decisions for the foundation identity spine.
-- `foundation-object-semantics.md` — governed identity, scope, lifecycle, versioning and relationship semantics for the foundation objects.
-- `authority-participation-model.md` — governed authentication, membership, role, responsibility and delegated-authority semantics.
-- `crm-business-development-semantics.md` — governed market, Party Relationship/account context, Lead, Opportunity, Pursuit, decision, interaction, onboarding and customer-case semantics.
-- `delivery-context-semantics.md` — governed Portfolio, Programme, Project, stage, WBS, work-package, schedule, baseline, progress and resource-planning semantics.
-- `built-environment-spatial-physical-semantics.md` — governed Estate, Network, Site, land/property, facility/building/infrastructure, spatial, system, asset and component semantics.
-- `commercial-procurement-semantics.md` — governed Contract, party-role, obligation, commercial/procurement package, change, sourcing, award, purchase-order and receipt semantics.
-- `item-product-manufacturing-semantics.md` — governed Item, specification, variant, catalogue, pricing, BOM, manufacturing definition/process, Lot/Batch/Serial and as-manufactured semantics.
-- `inventory-logistics-semantics.md` — governed Warehouse/Store/Bin, reservation, movement, stock-control, shipment, transport, delivery and trade-declaration semantics.
-- `controlled-information-semantics.md` — governed Information Requirement, Deliverable, Information Container, revision/representation, issue/transmittal, query, review and design-change semantics.
-- `asset-operations-semantics.md` — governed commissioning, handover, maintenance, Work Order, service, failure/defect, warranty, occupancy and whole-life asset-history semantics.
-- `finance-accounting-semantics.md` — governed Ledger, AP/AR, settlement, tax, fixed-asset accounting, treasury, project financial-control and immutable posting semantics.
-- `shared-work-evidence-semantics.md` — governed Workflow Definition/Instance, Work Item, assignment, request/decision, evidence, audit, correction/reversal, retention, legal-hold and outbox semantics.
-- `reference-configuration-semantics.md` — governed reference data, classification, jurisdiction, lifecycle/workflow configuration, permission/authority policy and retention-policy semantics.
-- `crm-business-development-semantics.md` — governed market, CRM, Lead, Opportunity, Pursuit, interaction, onboarding and customer-case semantics.
-- `estimating-tendering-semantics.md` — governed Estimate/version, breakdown, measurement, build-up/rate, provision, tender-package, adjudication, proposal/quotation and offer-acceptance semantics.
-- `people-hcm-semantics.md` — governed Person/Worker Relationship, Position/Job Profile, competence/credential, learning, workforce, time, payroll, recruitment and people-case semantics.
-- `qhse-assurance-semantics.md` — governed quality planning, inspection/test, NCR/Defect/CAPA, safe-work controls, incident/investigation, compliance and environmental-assurance semantics.
-- `building-safety-regulatory-semantics.md` — governed dutyholder, competence evidence, regulator case/application, controlled change, statutory inspection/finding, occurrence reporting, notices, decisions, completion and golden-thread semantics.
-- `sustainability-carbon-semantics.md` — governed carbon methodology/factors, baseline/budget/target, embodied and operational assessment, utility/waste/circularity, EPD/provenance, responsible procurement, biodiversity/environmental measures and social-value semantics.
-- `risk-compliance-audit-semantics.md` — governed Enterprise Risk, Risk Assessment/Treatment, regulatory obligation, compliance requirement/assessment/evidence, internal control/testing, assurance planning, audit, remediation and integrity-case semantics.
-- `legal-privacy-semantics.md` — governed legal matter/advice/obligation/filing/IP/dispute/proceeding, legal hold/eDiscovery, privacy framework/processing/DPIA, consent/preferences, data-subject rights, privacy incident, international-transfer and assurance semantics.
-- `knowledge-records-communications-semantics.md` — governed Knowledge Article/Collection, record declaration/series/file, retention/disposition, communication planning/publication, media/external-affairs and stakeholder-engagement semantics.
-- `land-development-investment-semantics.md` — governed development opportunity/business case/appraisal, land option, property-interest, valuation/survey, planning/consent/conditions/obligations and funding-evidence semantics.
-- `strategy-governance-performance-semantics.md` — governed strategy framework/objectives/themes/initiatives, business planning/scenarios/assumptions, KPI/target/observation/snapshot, governance bodies/meetings and shared decision/authority semantics.
-- `continuity-crisis-security-semantics.md` — governed business-impact/recovery requirements, continuity strategy/plans/exercises, crisis/event/action/communication, disaster-recovery invocation and physical-security zone/credential/access/incident semantics.
-- `technology-data-cyber-ai-semantics.md` — governed technology-service/ITSM/configuration, disaster-recovery, data domain/product/dataset/quality/pipeline, analytics/AI, access-control and cybersecurity semantics.
-- `transformation-process-improvement-semantics.md` — governed transformation portfolio/initiative, impact/readiness/adoption/transition, enterprise process/model/version/ownership/measurement and continuous-improvement semantics.
-- `site-field-operations-semantics.md` — governed site/field execution, work-area, mobilisation/access, diary/progress/labour/plant/material/delivery, temporary-works, permit/isolation, instruction/constraint and completion/readiness semantics.
-- `core-business-object-map.md` — conceptual identity and relationship backbone for stakeholder review.
-- `../../scripts/generate-business-object-register.mjs` — reproducible source used to generate the register and summary.
-- `../product/stakeholder-design-review-2026-09-17.md` — stakeholder review pack for the object-model baseline.
+1. One business concept has one canonical meaning.
+2. Function workspaces are perspectives over shared objects, not data silos.
+3. Stable identity is distinct from revision/version, lifecycle, effectivity and representation.
+4. Workflow coordinates work but does not replace domain truth.
+5. Documents/evidence do not replace structured business state.
+6. Role, responsibility, permission and delegated authority are separate concepts.
+7. Historical evidence is retained where accountability requires it.
+8. Read models, search and analytics are projections, not competing masters.
+9. Integrations adapt external schemas to NuBlox canonical semantics.
+10. Physical schema/API implementation may evolve without changing governed business meaning.
 
-The generated register is a **discovery baseline**, not yet a physical-schema specification. Candidate objects become canonical only after semantic review, deduplication, relationship modelling, lifecycle/version review and cross-workspace/process coverage validation.
+## Foundation and cross-cutting semantics
 
-## Principles
+- `core-business-object-map.md`
+- `foundation-object-semantics.md`
+- `authority-participation-model.md`
+- `shared-work-evidence-semantics.md`
+- `reference-configuration-semantics.md`
+- `controlled-information-semantics.md`
 
-- Business meaning is defined before physical schema design.
-- Every material business object has one authoritative owner.
-- The 29 enterprise functions are tenant workspaces that act on shared objects; they do not own duplicate copies of business truth.
-- Shared identifiers do not imply shared write ownership.
-- Authentication is not authorization; role is not identity; responsibility is not permission; permission is not delegated authority.
-- Role is not identity; state is not an object; workflow work is not domain truth.
-- Stable identity is separated from revision/version/iteration, representation/content, lifecycle state and effectivity where applicable.
-- Lifecycle state is explicit where business rules depend on it.
-- Historical and audit evidence is preserved rather than overwritten when accountability requires it.
-- Tenant, organisation, project/programme, contract, property/site, asset and other relevant scopes are explicit.
-- Prospect, customer and account terminology uses canonical Party/Organisation plus governed Party Relationships rather than duplicate CRM masters.
-- Lead, Opportunity and Pursuit are separate commercial identities; Estimate, Proposal, Contract and Project remain separate downstream identities linked by provenance.
-- CRM Activity is distinct from Project Schedule Activity, Work Order and shared workflow Work Item; pipeline/forecast snapshots are projections rather than mutable source truth.
-- Estimate is a stable identity with controlled versions; Estimate Breakdown is distinct from WBS, finance structures and procurement/commercial packages.
-- Take-off and measurement retain exact information-source provenance; build-ups reference shared Items/resources and applied rates retain historical basis.
-- Estimating supplier/subcontract market testing reuses shared sourcing semantics; Tender Adjudication remains a separate internal bid decision.
-- Proposal/Quotation and Offer Acceptance are separate from internal Estimate truth and from downstream Contract, Sales Order and Project identities.
-- Candidate, employee and contractor contexts reuse canonical Person identity; employment/engagement are effective Worker Relationships.
-- Position, Job Profile and Role Assignment remain distinct; organisation occupancy/reporting history is effective-dated.
-- Skill/Competence definitions, Person Competence, Credentials, Training Sessions and Learning Records remain distinct evidence layers.
-- Worker Availability is derived; Attendance, Time Entry, Timesheet and Payroll Result are separate truth layers.
-- Payroll/expense financial consequences post through Finance without turning finance into the worker, time or payroll master.
-- Quality Plan/ITP definitions remain separate from Inspection/Test execution evidence; Hold/Witness use one Verification Point pattern.
-- NCR, Defect and CAPA remain separate semantic layers; Snag is a Defect classification and corrective/preventive work uses one CAPA Action pattern.
-- QHSE Risk Assessment, Audit Engagement and Compliance Requirement reuse enterprise-shared semantics rather than local duplicates.
-- Method Statement/RAMS use controlled Information Container identity; Permit to Work and Isolation are shared with site operations.
-- Near Miss and Pollution Event are Incident classifications; Investigation/Cause/CAPA retain independent evidence and lifecycles.
-- Compliance Register is a projection of applicable requirements/evidence, not editable regulatory truth.
-- Dutyholder Assignment is statutory accountability context, distinct from organisational position, generic role assignment, permission and delegated authority.
-- Building Control Application is a Regulatory Application type; Regulatory Inspection reuses shared QHSE Inspection semantics.
-- Regulatory Controlled Change remains distinct from Design Change and Commercial Change.
-- Mandatory Occurrence Report is reporting evidence, not Incident identity; Regulatory Decision is immutable attributable evidence.
-- Statutory Completion Certificate remains distinct from Delivery Completion Certificate.
-- Golden Thread is a reconstructable source-linked information/evidence set, not one document, folder or duplicate truth store.
-- Regulatory Submission reuses shared External Submission semantics and pins exact information/evidence versions.
-- Sustainability assessments reference canonical Item, Asset, Project, Site, Party, Utility, Waste and financial/commercial truth rather than maintaining parallel masters.
-- Carbon Methodology/factor datasets are versioned and published assessments pin exact source versions; baseline, budget, target and assessment remain distinct.
-- Embodied carbon uses assessment lines referencing canonical Items; Operational Energy/Carbon derive from shared Utility Consumption evidence.
-- Waste Stream, Waste Consignment, Recovery, Reuse and Circularity Assessment remain distinct layers.
-- EPD and Material Provenance retain source/version/provenance while preserving Item/Organisation/inventory identity.
-- Social Value Commitment, Evidence and Outcome are distinct; Climate/Resilience Risk reuse Enterprise Risk.
-- Enterprise Risk identity remains separate from dated Risk Assessments and Treatment Plans; current risk position is derived from retained evidence.
-- Regulatory Obligation is source duty while Compliance Requirement is the actionable/testable requirement; assessment and evidence remain separate.
-- Internal Control is a persistent controlled definition; Control Test is a dated execution/evidence occurrence against an exact version.
-- Audit Plan is an Assurance Plan type; Audit Engagement, Audit Finding and Remediation Action retain independent identities/lifecycles.
-- Fraud and Conduct use one restricted Integrity Case architecture; workflow Work Items coordinate remediation but never replace domain truth.
-- Legal Matter, Dispute and Legal Proceeding retain separate identities; statutory filing uses immutable External Submission evidence for actual filing occurrences.
-- Legal Hold is the preservation instruction while Legal Hold Link places exact records/objects under hold; eDiscovery Collection preserves source provenance and chain of custody.
-- Privacy Policy reuses Information Container; Processing Activity is a stable governed processing definition and DPIA is assessment evidence.
-- Consent and Preference are distinct evidence histories; Privacy Breach is a Privacy Incident classification with retained notification/breach-decision provenance.
-- International Data Transfer is a governed arrangement/relationship; Privacy Assurance Review reuses shared Assurance Review semantics.
-- Knowledge Article, Controlled Document, Media Release, Statement and Annual Report reuse canonical Information Container identity/revision semantics.
-- Record Declaration overlays authoritative business truth; Record Series/File are classification/aggregation structures rather than copied content or filesystem folders.
-- Retention Schedule is policy, Disposition Request is domain request and BOF-28 Retention Disposition Decision remains the immutable disposition outcome; Legal Hold overrides eligibility.
-- Communication activity remains separate from its controlled content; Reputation/Public Affairs share one External Affairs Issue case pattern.
-- Investor Engagement is typed Stakeholder Engagement evidence linked to canonical Parties; Stakeholder Engagement Plan remains distinct from Communications Plan.
-- Development work reuses canonical Site, Land Parcel, Property, Party, Contract and Project identities; Development Opportunity remains distinct from CRM Opportunity.
-- Investment Case is a Business Case type; Development Appraisal is decision-support projection and approval uses shared immutable Decision evidence.
-- Land Option reuses Contract; Ownership/Occupation are typed Property Interest relationships; Development Constraint remains distinct from Project Delivery Constraint.
-- Property Valuation is distinct from BOF-08 contract/payment Valuation; planning Application, Consent and Conditions remain separate layers.
-- Planning Obligation reuses Legal Obligation; Survey, Site Appraisal and Funding/Grant Evidence remain attributable evidence around canonical source objects.
-- Strategy Framework, Objective, Theme, Initiative and Business Plan remain distinct governed concepts; Strategic Initiative links to delivery vehicles rather than becoming Project/Programme identity.
-- KPI Definition, Performance Target, Performance Observation and Performance Snapshot remain separate definition, plan, evidence and projection layers.
-- Strategic Review produces separately governed shared Decisions and Decision Actions; BOF-02 and BOF-06 converge on the same enterprise decision/action spine.
-- Policy and Governance Record reuse Information Container; Authority Framework is configuration/governance and remains distinct from Delegated Authority, permission, role and assignment.
-- Business Impact Assessment, Recovery Requirement, Continuity Strategy and Continuity Plan remain separate layers; exercises and invocations are occurrence evidence against exact versions.
-- Emergency Event is occurrence evidence while Crisis is the response case; Crisis Action and Crisis Communication reuse shared enterprise action/communication patterns.
-- Physical Security Zone overlays canonical spatial extents; Visitor Pass is a Physical Access Credential type and access events are immutable evidence.
-- Travel and Security Risk Assessments reuse enterprise Risk Assessment; BOF-23 DR Invocation links to BOF-24 Disaster Recovery Plan without duplicating it.
-- Application Service is a Technology Service type; Configuration Item is a Configuration Registration over authoritative objects and never a duplicate CMDB master.
-- Endpoint and IT Asset reuse canonical Asset where independently governed; Technology Resource covers service infrastructure without forcing every resource into Asset semantics.
-- IT Service Request, IT Incident, Problem, Technology Change and Technology Release remain separate; DR Plan implements BOF-23 Recovery Requirements.
-- Data Domain, Data Product and Dataset remain separate; Reference Dataset is a Dataset type and quality rules/issues/pipelines retain distinct semantics.
-- AI Use Case, AI Model and AI Risk Assessment remain separate; AI risk reuses enterprise Risk Assessment.
-- Data/Privileged Access Request is not Access Grant; technical access never becomes business Delegated Authority.
-- Security Policy reuses enterprise Policy; Vulnerability, Alert, Cybersecurity Incident, Threat Intelligence, Penetration Test and Security Finding remain distinct.
-- Transformation Portfolio reuses shared Portfolio; Transformation Initiative remains distinct from Strategic Initiative, Programme and Project while Improvement Initiative uses the same initiative pattern.
-- Change Action and Change Communication reuse shared Decision Action and Communication Item; Change Learning Plan coordinates HCM learning without replacing Learning Plan/Session/Record truth.
-- Enterprise Process identity remains stable across Process Model/Version/SOP/workflow changes; approved Process Versions are immutable.
-- Process Owner Assignment reuses Responsibility Assignment, Process Measure reuses enterprise KPI/metric semantics, SOP reuses Information Container and Process Compliance Assessment reuses Compliance Assessment.
-- Site operations reuse canonical Site, Delivery Stage and Zone; Work Area is a temporary execution overlay rather than permanent spatial/WBS identity.
-- Field Progress reuses Progress Record, Material Usage reuses Inventory Movement, Delivery Record reuses Delivery, and field labour/plant remain operational evidence around canonical Worker/Asset identities.
-- Temporary Works Control Item is a governed register/control identity distinct from Product/Material Item and permanent Asset; temporary-works design/check reuse Information Container and Design Review.
-- Field Permit/Isolation reuse QHSE controls; Field Constraint and project-controls Constraint converge on Delivery Constraint; field photos/geospatial captures reuse Evidence Item.
-- Field Completion and Handover Readiness are evidence and never automatically close Project, Contract, regulatory or handover lifecycle.
-- WBS/scope, schedule/time, commercial packages, procurement packages, physical assets and controlled information are related structures, not one universal hierarchy.
-- Project delivery structure is distinct from permanent built-environment structure; Projects deliver/change Sites, Buildings, Infrastructure, Systems and Assets without owning their whole-life identity.
-- Building and linear-infrastructure spatial patterns coexist; NuBlox does not force every sector into one spatial hierarchy.
-- Appointment, Subcontract and Framework Agreement are governed Contract types rather than duplicate agreement-master systems.
-- Requisition, sourcing, evaluation, Award, commitment and receipt remain separate traceable records; no single mutable procurement record replaces the end-to-end evidence chain.
-- Product, material and service are governed Item classifications/behaviours, not separate master-data silos.
-- Item definition, Lot/Batch, Serial Identity and installed Asset identity are distinct semantic layers with traceable relationships.
-- BOM/product structure is distinct from Project WBS and from permanent Asset/System configuration.
-- Manufacturer and supplier identities reuse canonical Party/Organisation records through governed relationships.
-- Stock Position is a projection from posted inventory events, reservations and restrictions; it is not independently editable business truth.
-- Warehouse, Store and Bin Location form an inventory-storage hierarchy, not a Project/WBS, Site or Asset hierarchy.
-- Issue, Return and Transfer are governed Inventory Movement types with immutable posting/correction evidence.
-- Pick, Pack, Shipment, Transport Order and Delivery remain distinct logistics execution/evidence records.
-- Information Container is the stable business identity; file/rendition/native-model content is a representation of a governed revision/iteration.
-- Document, Drawing, Model, Specification, Technical Schedule and Calculation are governed Information Container types unless semantic review proves a genuinely distinct aggregate.
-- Information Requirement, Deliverable, Delivery Plan and Information Container are separate identities connected by traceable satisfaction relationships.
-- Information Issue and Transmittal are immutable release/exchange evidence, not mutable folders or file copies.
-- RFI and Technical Query share one Information Query pattern; Design Change remains technically distinct from Commercial Change.
-- CDE/folder structures are collaboration/storage views around canonical information and do not redefine NuBlox business identity.
-- Handover changes stewardship and operational state but never recreates System, Asset or Component identity.
-- Commissioning evidence is immutable; retest creates new evidence rather than replacing failed or previous evidence.
-- Maintenance Strategy, Maintenance Plan, Task Template and Work Order are distinct semantic layers.
-- Work Order is operational work and is not a workflow task or Project Schedule Activity.
-- Failure is an event; Defect is a governed case; current condition is derived from retained observations/assessments.
-- Service Request, Service Case, Service Appointment and Work Order remain separate identities.
-- Service History is a rebuildable projection of canonical work/evidence, never independently editable truth.
-- Parts Consumption posts through Inventory Movement; operations does not create a separate material truth store.
-- Finance references canonical Legal Entity, Party, Project, WBS, Contract, Purchase Order and Asset identities rather than creating finance-owned duplicates.
-- Posted Ledger Entries are immutable; correction uses reversal or new adjusting entries with retained source provenance.
-- Budget and Forecast are plans; Commitment, Actual, Open Item and Cash positions are derived views and are never independently editable source truth.
-- Supplier/Customer Invoice, Payment/Receipt and Bank Transaction evidence remain separate financial records linked by settlement and reconciliation.
-- Fixed Asset Accounting Record is separate from the whole-life physical Asset identity and links to it explicitly where applicable.
-- Consolidation and elimination preserve source Legal Entity Ledgers; controlled reporting snapshots are projections/evidence rather than substitute Ledgers.
-- Workflow Definition/Instance and Work Item coordinate work around canonical subjects; workflow runtime never becomes authoritative domain truth.
-- Work Item is distinct from Project Schedule Activity, Work Order, Service Appointment and specialist domain work/cases.
-- Work Assignment, responsibility, permission and Delegated Authority remain separate; assignment alone cannot authorise a protected decision.
-- Work Delegation never grants Delegated Authority and cannot bypass segregation-of-duties or scope controls.
-- Review Request, Approval Request and Decision Request are distinct; Response is not Decision, and Decision is immutable attributable outcome evidence.
-- Domain state changes happen through explicit domain commands after business rules, permissions and authority have been validated.
-- User interfaces expose the current authorised action rather than the complete workflow/lifecycle graph by default.
-- Business Event, Change Event, Audit Event and Outbox Message have distinct semantics and must not collapse into one generic event store contract.
-- Evidence, signatures, attestations, corrections and reversals preserve append-only provenance where accountability requires it.
-- Active Legal Hold blocks retention disposition without changing the canonical object's business identity or lifecycle.
-- Reference/configuration data defines allowable meaning and policy but never becomes transactional truth.
-- Historical transactions retain the exact reference/configuration version needed to interpret their original meaning.
-- Classification is an overlay on canonical identity; Uniclass and other systems use one System → Release → Code architecture.
-- Lifecycle, workflow and Project Stage definitions are versioned configuration; runtime state remains on the governed domain/work object.
-- Role Definition is not Role Assignment; Permission Definition is not effective authorization; Delegated Authority Rule is not a Delegated Authority grant.
-- Approval Authority Rule is policy rather than Approval Request, Decision or Approval Evidence.
-- Retention Rule is policy; Legal Hold and Retention Disposition Decision remain runtime control/evidence.
-- Numbering Scheme creates business identifiers but never replaces immutable system identity.
-- Canonical completeness is measured against five independent lenses: sector lifecycle, 29 workspaces, specialist overlays, end-to-end chains and external benchmarks.
-- Family-level and candidate-level convergence are closed: all 29 families are governed and all 750 candidate occurrences have explicit baseline decisions. Duplicate/alias convergence, external benchmark/standards challenge, the activity-refined canonical aggregate-boundary freeze and L2/L3 activity → canonical object/action mapping are all closed.
-- Reference data and classifications are governed separately from transactional records.
-- Documents may support evidence but do not replace structured business state.
-- Read models, analytics and search indexes are projections of canonical truth.
-- Integration payloads adapt to the canonical model rather than redefining it.
+## Business-domain semantics
 
-## Canonicalization sequence
+### Customer, commercial and delivery
 
-1. Tenant, party, person, organisation and enterprise identity.
-2. Organisation structure, membership, roles and delegated authority.
-3. Portfolio, programme, project/job and delivery context.
-4. Estate/network, site, land/property, facility/building/infrastructure and spatial context.
-5. Contract/appointment/package identity and commercial relationships.
-6. Product/material/service and manufactured-product identity.
-7. Inventory, warehouse and logistics identity/event semantics.
-8. Information-container and controlled-information identity.
-9. Physical asset/system/component/maintainable-item identity.
-10. Commissioning, handover, maintenance, service and whole-life Asset operations semantics.
-11. Finance/accounting identity and immutable recognition semantics.
-12. Shared work, workflow, decision, evidence, audit and retention semantics.
-13. Reference data, classification, jurisdiction and configuration/policy primitives.
-14. Convergence/coverage audit across the 750-candidate universe, all 29 workspaces, lifecycle stages, specialist overlays, E2E chains and external benchmarks.
-15. Cross-family duplicate/alias convergence — **closed**: 26/26 exact duplicate groups plus the governed near-alias challenge set.
-16. External benchmark/standards challenge — **closed**: 23/23 market suites, 12/12 standards/reference challenges, 29/29 findings resolved and 12/12 rejection rationales recorded.
-17. Canonical aggregate-boundary freeze — **closed and activity-refined**: 174 logical boundaries across all 29 families; all 79 benchmark refinements assigned; independently operated L2 records split into their correct write boundaries; one-aggregate command transaction rule established.
-18. L2/L3 activity → canonical object/action mapping — **closed**: 29/29 workspaces, 353/353 L2 sub-functions and 1,510/1,510 source activities mapped with zero ambiguous/unmapped routes, zero unknown object IDs and zero invalid write placements.
-19. Controlled aggregate-aligned physical schema/API implementation waves may proceed; every wave must retain accepted canonical semantics, authority, evidence and cross-aggregate transaction rules.
+- `crm-business-development-semantics.md`
+- `estimating-tendering-semantics.md`
+- `commercial-procurement-semantics.md`
+- `delivery-context-semantics.md`
+- `site-field-operations-semantics.md`
+
+### Product, supply, asset and built environment
+
+- `item-product-manufacturing-semantics.md`
+- `inventory-logistics-semantics.md`
+- `built-environment-spatial-physical-semantics.md`
+- `asset-operations-semantics.md`
+- `land-development-investment-semantics.md`
+
+### Enterprise control
+
+- `finance-accounting-semantics.md`
+- `people-hcm-semantics.md`
+- `qhse-assurance-semantics.md`
+- `building-safety-regulatory-semantics.md`
+- `sustainability-carbon-semantics.md`
+- `risk-compliance-audit-semantics.md`
+- `legal-privacy-semantics.md`
+
+### Information, technology and transformation
+
+- `knowledge-records-communications-semantics.md`
+- `technology-data-cyber-ai-semantics.md`
+- `continuity-crisis-security-semantics.md`
+- `strategy-governance-performance-semantics.md`
+- `transformation-process-improvement-semantics.md`
+
+## Discovery / convergence evidence
+
+The following are retained as architecture evidence:
+
+- `canonical-business-object-register.csv`
+- `canonical-business-object-duplicates.csv`
+- `canonical-business-object-discovery.md`
+- `canonical-business-object-normalization-review.md`
+- `canonical-model-convergence-audit.md`
+- `canonical-aggregate-boundary-freeze.md`
+- `benchmark-driven-canonical-refinements.md`
+- `activity-object-action-map.csv`
+
+These files explain how the canonical model was derived. They are not a substitute for the Handbook or for executable implementation.
 
 ## Implementation authority
 
-The architecture discovery/convergence hold is now lifted for **controlled aggregate-aligned implementation waves**. Candidate/family convergence, duplicate/alias convergence, external benchmark/standards challenge, the 174-boundary aggregate freeze and the complete 1,510-activity object/action map are closed.
+No table, route, page or API becomes canonical merely because it was implemented first.
 
-The current F01.01 slice remains a learning prototype. It must not establish platform-wide object, lifecycle, workflow, permissions or versioning patterns by accident.
-
-No physical table, route, screen or API is considered canonical merely because it was implemented first.
+For current implementation state, see [Product State & Roadmap](../handbook/08-product-state-and-roadmap.md).

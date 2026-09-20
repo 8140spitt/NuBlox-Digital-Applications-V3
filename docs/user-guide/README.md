@@ -1,141 +1,69 @@
 # NuBlox User Guide
 
-**Audience:** people using NuBlox to perform business work  
-**Product scope:** target interaction model; current availability varies by implemented capability
+This guide explains the target user experience. Current availability depends on implementation state.
 
-For a description of the complete product, see the [Product Handbook](../handbook/README.md). For what is implemented today, see [Product State & Roadmap](../handbook/08-product-state-and-roadmap.md).
+For the complete product definition see the [Product Handbook](../handbook/README.md).
 
-## 1. Sign in and tenant context
+## Home
 
-After authentication, NuBlox resolves your tenant membership and business authority.
+Home provides current enterprise/project context, priorities and important exceptions.
 
-Authentication proves who you are. It does not automatically permit business actions.
+## My Work
 
-## 2. Home
+My Work contains what requires the user's attention:
 
-Home provides an enterprise/context-oriented starting point.
-
-It should answer:
-
-- where am I working;
-- what needs attention;
-- what recent/important business context applies;
-- where should I go next.
-
-## 3. My Work
-
-Use **My Work** for things requiring your attention:
-
-- assigned work;
-- available queue work;
+- assignments;
+- deliverables due;
 - reviews;
 - approvals;
 - decisions;
-- exceptions;
-- overdue actions.
+- cases;
+- inspections;
+- actions;
+- exceptions.
 
-My Work is the operational inbox for governed work.
+## Functional Areas
 
-## 4. Job Workbench
+F01-F29 provide the business-function workspaces used to operate the organisation.
 
-The Job Workbench is the role-oriented view of work expected from your Position and Job Profile.
+## Deliver
 
-It combines expected Work Products with current context, assignments and actual authority.
+Deliver brings together the cross-functional journey around clients, opportunities, contracts, projects, sites, assets and services.
 
-A Job Workbench does not grant permissions simply because the job normally performs the activity.
+## Deliverables
 
-## 5. Operate
+Deliverables shows what the organisation is required to produce.
 
-Use **Operate** for persistent enterprise activities such as strategy, finance, people, risk, legal, quality, technology and asset operations.
+Users can work by project, discipline, package, role, organisation, due date, state, revision or acceptance status.
 
-## 6. Deliver
+An Architect should see drawings, models and specifications due. A Quantity Surveyor should see cost/commercial outputs. A Planner should see programmes, baselines and updates.
 
-Use **Deliver** for end-to-end value delivery such as opportunities, bids, contracts, projects, procurement, construction, commercial control, handover and asset/service continuity.
+## Object workspaces
 
-## 7. Enterprise Data
+Opening a Project, Contract, Supplier, Asset, Deliverable or other canonical object should provide a consistent workspace with status, details, relationships, actions, evidence and history.
 
-Use **Enterprise Data** to work with authorised shared operational master/reference information.
+## Creating and editing work
 
-Examples include:
+Some outputs are created natively in NuBlox.
 
-- Parties and Organisations;
-- organisation structure;
-- customers/suppliers through relationships;
-- items;
-- assets;
-- classifications;
-- governed reference data.
+Some are produced in connected specialist applications while NuBlox manages the deliverable lifecycle.
 
-## 8. Functions
+Some are received from external organisations and brought under NuBlox control.
 
-The **Functions** directory provides F01-F29 capability navigation.
+## Review, approval and issue
 
-Use it when you need to understand or enter work from a functional perspective.
+Where relevant, users can submit for review, review/comment, respond to comments, submit for approval, approve/reject, issue/transmit, record recipient response and revise/supersede.
 
-A function is a workspace perspective, not a separate application.
+## Search
 
-## 9. Search
+Search returns authorised business objects and information.
 
-Search finds authorised canonical business objects.
+## Permissions
 
-Search results are security-trimmed. Not seeing an object in search does not imply that it does not exist.
+Authentication does not automatically grant business authority.
 
-## 10. Object Workspace
+If an action is denied, NuBlox should show a controlled denied experience and, where appropriate, allow an access request.
 
-When you open a canonical object, its workspace may provide:
+## Evidence and history
 
-- identity and status;
-- details;
-- available actions;
-- relationships;
-- structures;
-- evidence;
-- decisions;
-- documents/information;
-- history.
-
-The same object should behave consistently regardless of whether you entered from Search, My Work, a function or a process.
-
-## 11. Task Bar and drafts
-
-The Task Bar tracks what you are actively working on.
-
-A draft is your recoverable working copy. It is not automatically a new canonical business-object version.
-
-## 12. Reviews, approvals and decisions
-
-When asked to review or decide:
-
-1. inspect the subject and evidence;
-2. check the decision requested;
-3. confirm scope/conditions;
-4. make the authorised response;
-5. provide rationale/evidence where required.
-
-Assignment to a task does not guarantee that you have authority to approve it.
-
-## 13. Permission denied
-
-A controlled denied page means NuBlox recognised the request but your effective authority does not allow the action.
-
-Where enabled, use **Request access** to send an access request to the appropriate administrator/authority.
-
-A permission denial should not appear as a generic 500 error.
-
-## 14. Evidence and history
-
-Use Evidence/History to understand:
-
-- who changed something;
-- what decision was made;
-- what version/state applied;
-- what supporting evidence existed;
-- which authority was used.
-
-## 15. Working principle
-
-When unsure where to begin, ask:
-
-> What Work Product am I trying to create or progress, and what business object carries the truth?
-
-That is the core navigation principle of NuBlox.
+Users can inspect who created, changed, reviewed, approved, issued or accepted a material item and which revision/state applied.

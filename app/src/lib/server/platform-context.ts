@@ -55,6 +55,36 @@ export const platformPermissions = [
     'Create and maintain Organisation Units and hierarchy.'
   ],
   [
+    'functional.capability.read',
+    'functional.capability',
+    'read',
+    'Read governed enterprise functions, delivery domains, Job Profiles and functional deployment state.'
+  ],
+  [
+    'functional.capability.manage',
+    'functional.capability',
+    'manage',
+    'Bootstrap and maintain governed functional definitions and Job-to-Function relationships.'
+  ],
+  [
+    'functional.deployment.manage',
+    'functional.deployment',
+    'manage',
+    'Create and maintain functional deployments and deployment assignments.'
+  ],
+  [
+    'people.position.manage',
+    'people.position',
+    'manage',
+    'Create and maintain governed organisational Positions used by functional deployment.'
+  ],
+  [
+    'people.competence.manage',
+    'people.competence',
+    'manage',
+    'Create and maintain competence definitions, requirements and evidenced Person competence.'
+  ],
+  [
     'authority.delegation.read',
     'authority.delegation',
     'read',

@@ -1,3 +1,5 @@
+export * from './commercial.js';
+export * from './commercial-factories.js';
 export * from './industry.js';
 export * from './industry-factories.js';
 export * from './my-work.js';

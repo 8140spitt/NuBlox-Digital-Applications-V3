@@ -7,6 +7,7 @@ import type {
   CommercialValuationId,
   CommercialValuationLineId,
   CommercialVariationId,
+  CommercialVariationDecisionId,
   CommercialVariationLineId,
   CommercialVariationVersionId,
   CostPlanId,
@@ -123,6 +124,22 @@ export interface CommercialVariationLine {
   costCodeId?: ProjectCostCodeId;
   description: string;
   amount: CommercialMoney;
+}
+
+export type CommercialVariationDecisionOutcome =
+  | 'ACCEPTED'
+  | 'PARTIALLY_ACCEPTED'
+  | 'REJECTED'
+  | 'WITHDRAWN';
+
+export interface CommercialVariationDecision {
+  id: CommercialVariationDecisionId;
+  tenantId: TenantId;
+  variationVersionId: CommercialVariationVersionId;
+  decisionId: DecisionId;
+  outcome: CommercialVariationDecisionOutcome;
+  decidedAmount: CommercialMoney;
+  decidedAt: string;
 }
 
 export type CommercialValuationKind =

@@ -198,6 +198,14 @@ async function writeAudit(
       JSON.stringify(payload)
     ]
   );
+  await writeOutboxEvent(connection, {
+    tenantId,
+    aggregateType: entityType,
+    aggregateId: entityId,
+    eventType: `${entityType}.${action}`,
+    payload
+  });
+
 }
 
 function mapInformationContainer(row: InformationContainerRow): InformationContainer {
@@ -346,14 +354,6 @@ function mapEffectivity(row: EffectivityRow): Effectivity {
     ...(row.expression ? { expression: row.expression } : {}),
     status: row.status
   };
-  await writeOutboxEvent(connection, {
-    tenantId,
-    aggregateType: entityType,
-    aggregateId: entityId,
-    eventType: `${entityType}.${action}`,
-    payload
-  });
-
 }
 
 export class MySqlInformationRepository {

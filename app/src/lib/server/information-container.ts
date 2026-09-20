@@ -198,6 +198,29 @@ export async function listInformationContainers(
     params
   );
 }
+
+export async function getInformationContainer(context: CommandContext, id: string) {
+  assertPermission(context, 'information.container.read');
+  return getContainer(context, id);
+}
+
+export async function searchInformationContainers(
+  context: CommandContext,
+  query: string,
+  requestedLimit = 25
+) {
+  assertPermission(context, 'information.container.read');
+  const needle = query.trim().slice(0, 191);
+  if (!needle) return [] as InformationContainer[];
+  const pattern = '%' + needle + '%';
+  const limit = Math.max(1, Math.min(50, Math.floor(requestedLimit)));
+  return queryRows<RowDataPacket & InformationContainer>(
+    containerSelect +
+      ' WHERE c.tenant_id = ? AND (c.container_ref LIKE ? OR c.title LIKE ? OR c.container_type LIKE ? OR c.subject_type LIKE ? OR c.subject_id LIKE ? OR c.classification_code LIKE ?) ORDER BY c.updated_at DESC, c.container_ref LIMIT ' +
+      limit,
+    [context.tenantId, pattern, pattern, pattern, pattern, pattern, pattern]
+  );
+}
 export async function listInformationRevisions(c: CommandContext, id: string) {
   assertPermission(c, 'information.container.read');
   await getContainer(c, id);

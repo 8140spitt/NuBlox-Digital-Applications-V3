@@ -99,13 +99,16 @@ const approveTransition: LifecycleTransitionDefinition = createLifecycleTransiti
 
 describe('kernel control spine invariants', () => {
   it('requires decision-controlled transitions to declare exact Decision constraints', () => {
+    const invalidTransition = { ...approveTransition };
+    delete invalidTransition.requiredDecisionOutcome;
+    invalidTransition.id = asId<'LifecycleTransitionDefinitionId'>(
+      'LC-TRANS-BAD',
+      'Lifecycle Transition'
+    );
+
     expect(() =>
       createLifecycleTransitionDefinition(
-        {
-          ...approveTransition,
-          id: asId<'LifecycleTransitionDefinitionId'>('LC-TRANS-BAD', 'Lifecycle Transition'),
-          requiredDecisionOutcome: undefined
-        },
+        invalidTransition,
         lifecycle,
         draft,
         approved

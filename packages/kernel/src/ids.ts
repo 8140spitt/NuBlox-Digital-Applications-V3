@@ -63,6 +63,16 @@ export type FunctionalDeploymentId = Brand<string, 'FunctionalDeploymentId'>;
 export type DeploymentAssignmentId = Brand<string, 'DeploymentAssignmentId'>;
 export type ResponsibilityScopeId = Brand<string, 'ResponsibilityScopeId'>;
 export type DeploymentCapacityId = Brand<string, 'DeploymentCapacityId'>;
+export type DeliverableRequirementId = Brand<string, 'DeliverableRequirementId'>;
+export type DeliverableItemId = Brand<string, 'DeliverableItemId'>;
+export type DeliverableResponsibilityId = Brand<string, 'DeliverableResponsibilityId'>;
+export type DeliverableReviewId = Brand<string, 'DeliverableReviewId'>;
+export type DeliverableApprovalId = Brand<string, 'DeliverableApprovalId'>;
+export type TransmittalId = Brand<string, 'TransmittalId'>;
+export type TransmittalRecipientId = Brand<string, 'TransmittalRecipientId'>;
+export type RecipientResponseId = Brand<string, 'RecipientResponseId'>;
+export type DeliverableReworkId = Brand<string, 'DeliverableReworkId'>;
+export type DeliverableConsequenceId = Brand<string, 'DeliverableConsequenceId'>;
 
 export function asId<T extends string>(value: string, label: string): Brand<string, T> {
   const trimmed = value.trim();

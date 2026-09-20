@@ -7,6 +7,7 @@ import {
   listPartyDirectoryRelationships
 } from '$lib/server/foundation-party-directory';
 import { getInformationContainer } from '$lib/server/information-container';
+import { getDeliverableItem } from '$lib/server/managed-deliverable';
 import { getLead } from '$lib/server/marketing-lead';
 import { hasPermission, type CommandContext } from '$lib/server/platform-context';
 import { getItem } from '$lib/server/product-innovation';
@@ -281,6 +282,55 @@ const resolvers: Record<string, Resolver> = {
       originFunctionId: definition.originFunctionId,
       originHref: null,
       originLabel: null,
+      sections: definition.sections,
+      relationships: [],
+      auditObjectTypes: [definition.auditObjectType]
+    };
+  },
+
+  'deliverable-item': async (context, objectId) => {
+    const definition = runtimeObjectDefinition('deliverable-item');
+    if (!definition) throw new Error('Deliverable Item runtime definition is missing.');
+    const item = await getDeliverableItem(context, objectId);
+    const originHref =
+      tenantPath(context, '/deliverables?deliverable=') + encodeURIComponent(item.id);
+
+    return {
+      objectType: definition.type,
+      objectId: item.id,
+      reference: item.deliverableRef,
+      title: item.title,
+      subtitle: item.deliverableType.replaceAll('_', ' '),
+      status: item.effectiveStatus,
+      objectVersion: String(item.version),
+      summary:
+        item.contextType.replaceAll('_', ' ') +
+        ' · ' +
+        item.contextId +
+        (item.responsiblePartyName ? ' · ' + item.responsiblePartyName : ''),
+      metadata: [
+        { label: 'Output kind', value: item.outputKind.replaceAll('_', ' ') },
+        { label: 'Authoring mode', value: item.authoringMode },
+        { label: 'Revision', value: item.currentRevisionLabel ?? '—' },
+        { label: 'Due', value: item.dueAt ?? '—' }
+      ],
+      fields: [
+        { label: 'Requirement', value: item.requirementRef },
+        { label: 'Context type', value: item.contextType },
+        { label: 'Context ID', value: item.contextId },
+        { label: 'Discipline', value: item.disciplineCode ?? '—' },
+        { label: 'Classification', value: item.classificationCode ?? '—' },
+        { label: 'Responsible Position', value: item.responsiblePositionName ?? '—' },
+        { label: 'Responsible Person', value: item.responsiblePartyName ?? '—' },
+        { label: 'Originating Organisation', value: item.originatingOrganisationName ?? '—' },
+        { label: 'Work status', value: item.workStatus ?? '—' },
+        { label: 'Information Container', value: item.informationContainerRef ?? '—' }
+      ],
+      workspaceHref: tenantPath(context, '/deliverables'),
+      workspaceLabel: 'Deliverables',
+      originFunctionId: definition.originFunctionId,
+      originHref,
+      originLabel: 'Open Deliverable workspace',
       sections: definition.sections,
       relationships: [],
       auditObjectTypes: [definition.auditObjectType]

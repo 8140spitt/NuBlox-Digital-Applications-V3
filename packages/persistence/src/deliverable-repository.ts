@@ -718,7 +718,33 @@ export class MySqlDeliverableRepository {
     at: string,
     audit: AuditContext = {}
   ): Promise<DeliverableItem> {
-    return this.transitionItem(tenantId, itemId, at, 'STARTED', 'Deliverable execution started.', startDeliverable, audit);
+    databaseDate(at);
+    return withTransaction(this.pool, async (connection) => {
+      const row = await this.requireItemForUpdate(connection, tenantId, itemId);
+      const current = mapItem(row);
+      const [requirement, binding] = await Promise.all([
+        this.requireRequirement(tenantId, current.requirementId, connection),
+        this.requireAuthoringBinding(tenantId, current.id, connection)
+      ]);
+
+      if (binding.status !== 'ACTIVE') {
+        throw new Error('Deliverable execution requires an ACTIVE Authoring Binding.');
+      }
+      if (binding.mode !== requirement.authoringMode) {
+        throw new Error('Deliverable Authoring Binding no longer matches the Requirement authoring mode.');
+      }
+
+      const next = startDeliverable(current);
+      await this.updateItem(connection, row, next, audit);
+      await this.insertHistory(connection, next, at, 'Deliverable execution started.', audit);
+      await writeAudit(connection, tenantId, 'DELIVERABLE_ITEM', itemId, 'STARTED', audit, {
+        item: next,
+        authoringBindingId: binding.id,
+        authoringMode: binding.mode,
+        providerKey: binding.providerKey
+      });
+      return next;
+    });
   }
 
   async bindOutput(
@@ -1173,6 +1199,26 @@ export class MySqlDeliverableRepository {
         audit.actorPersonId ?? null, audit.correlationId ?? null
       ]
     );
+  }
+
+  private async requireAuthoringBinding(
+    tenantId: TenantId,
+    itemId: DeliverableItem['id'],
+    connection: Pool | PoolConnection = this.pool
+  ): Promise<DeliverableAuthoringBinding> {
+    const [rows] = await connection.execute<AuthoringBindingRow[]>(
+      `SELECT id, tenant_id, deliverable_item_id, mode, provider_key,
+              authoritative_object_id, external_identity_id, connected_reference,
+              created_at, status
+         FROM deliverable_authoring_bindings
+        WHERE tenant_id = ? AND deliverable_item_id = ?`,
+      [tenantId, itemId]
+    );
+    const row = rows[0];
+    if (!row) {
+      throw new Error('Deliverable execution requires an Authoring Binding.');
+    }
+    return mapAuthoringBinding(row);
   }
 
   private async requireRequirement(

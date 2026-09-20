@@ -1,3 +1,5 @@
+export * from './industry.js';
+export * from './industry-factories.js';
 export * from './my-work.js';
 export * from './deliverables.js';
 export * from './deliverable-factories.js';

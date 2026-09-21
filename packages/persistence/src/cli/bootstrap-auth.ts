@@ -1,5 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import { asId, type Party, type Person, type Tenant } from '@nublox/kernel';
+import {
+  asId,
+  PLATFORM_ADMINISTRATOR_ROLE_ID,
+  type AccessRoleAssignment,
+  type Party,
+  type Person,
+  type Tenant
+} from '@nublox/kernel';
+import { MySqlAccessRepository } from '../access-repository.js';
 import { MySqlAuthRepository } from '../auth-repository.js';
 import { createDatabasePool } from '../database.js';
 import { migrate } from '../migrations.js';
@@ -64,10 +72,49 @@ try {
     personId: personIdValue
   });
 
+  const grantPlatformAdministrator =
+    process.env.NUBLOX_BOOTSTRAP_GRANT_PLATFORM_ADMIN !== 'false';
+
+  if (grantPlatformAdministrator) {
+    const access = new MySqlAccessRepository(pool);
+    const tenantId = asId<'TenantId'>(principal.tenantId, 'Tenant');
+    const existingAssignment = await access.findActiveRoleAssignment(
+      tenantId,
+      PLATFORM_ADMINISTRATOR_ROLE_ID,
+      'PERSON',
+      principal.personId,
+      { scopeType: 'TENANT' }
+    );
+
+    if (!existingAssignment) {
+      const assignment: AccessRoleAssignment = {
+        id: asId<'AccessRoleAssignmentId'>(
+          `ARA-BOOTSTRAP-${randomUUID()}`,
+          'Access Role Assignment'
+        ),
+        tenantId,
+        accessRoleId: PLATFORM_ADMINISTRATOR_ROLE_ID,
+        principalType: 'PERSON',
+        principalId: principal.personId,
+        scopeType: 'TENANT',
+        effectiveFrom: new Date().toISOString(),
+        status: 'ACTIVE'
+      };
+
+      await access.assignAccessRole(tenantId, assignment, {
+        actorPersonId: principal.personId,
+        correlationId: 'APPLICATION-BOOTSTRAP'
+      });
+    }
+  }
+
   console.log('NuBlox application account ready.');
   console.log(`Tenant: ${principal.tenantName} (${principal.tenantId})`);
   console.log(`Person: ${principal.personName} (${principal.personId})`);
   console.log(`Login: ${principal.email}`);
+  console.log(
+    `Platform administrator: ${grantPlatformAdministrator ? 'GRANTED' : 'NOT GRANTED'}`
+  );
 } finally {
   await pool.end();
 }

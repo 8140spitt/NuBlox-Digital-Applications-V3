@@ -1,0 +1,224 @@
+# Canonical Native Tool Implementation Waves
+
+**Status:** Governing dependency-ordered implementation sequence  
+**Effective:** 21 September 2026  
+**Scope:** 57 canonical native engines derived from the completed market benchmark
+
+## Purpose
+
+These waves convert the canonical capability architecture into executable NuBlox product depth.
+
+They are **not an MVP reduction**. Every engine in the canonical registry remains in scope. The waves only establish dependency order so shared semantics are implemented once and later capability composes them safely.
+
+The authoritative inputs are:
+
+- `11-canonical-capability-and-native-tool-architecture.md`;
+- `canonical-native-tool-engine-register.csv`;
+- `canonical-l2-native-engine-map.csv`;
+- `canonical-activity-capability-map.csv`;
+- `canonical-native-tool-implementation-gap-register.csv`.
+
+## Completion rule for every engine
+
+An engine is not complete until all applicable layers are complete:
+
+1. canonical domain objects and invariants;
+2. persistence migration and repositories;
+3. application services/commands/queries;
+4. permissions, responsibility, competence and Authority gates;
+5. lifecycle/workflow/Decision/Evidence;
+6. complete Function/L2 workspace interaction;
+7. My Work composition where work is assignable;
+8. native authoring/calculation/transaction experience;
+9. reporting/search/integration;
+10. automated domain and integration tests;
+11. representative end-to-end journey;
+12. implementation-gap register updated truthfully.
+
+A backend type or database table alone is not engine completion.
+
+## Wave 0 — Activate the shared platform in the product UI
+
+**Engines:** NTE-001 to NTE-009
+
+Backend foundations exist for these shared engines. The current web application does not yet expose them as a usable operating system.
+
+Deliver:
+
+- authenticated tenant application shell;
+- 29 Function workspace navigation;
+- Function -> L2 -> work/register/tool navigation;
+- canonical object workspace pattern;
+- My Work;
+- Organisation/Position/Person/Deployment experiences;
+- permissions and controlled denial/request-access experience;
+- lifecycle/Decision/Evidence panels;
+- information/revision/representation panels;
+- Change/Configuration/Baseline panels;
+- Deliverable/review/issue/acceptance panels;
+- audit/history;
+- responsive information architecture and consistent interaction patterns.
+
+**Gate:** a user can enter NuBlox and perform shared governed work without dropping to backend-only capability.
+
+## Wave 1 — Construction information, project and commercial spine
+
+**Engines:** NTE-043, NTE-044, NTE-045, NTE-052, NTE-053, NTE-054, NTE-056
+
+This creates the first complete operational spine for the Construction & Built Environment Industry Solution.
+
+Deliver:
+
+- knowledge/document/records/CDE;
+- Portfolio/Programme/Project/WBS/resource core;
+- CPM schedules, baselines, progress, project controls, 4D/EVM foundations;
+- measurement, take-off, estimating, cost plan and BoQ;
+- construction commercial/contract administration;
+- site production, daily evidence and progress;
+- commissioning, handover and asset-information requirements.
+
+Existing construction-commercial kernel/persistence work becomes part of these engines rather than a standalone technical slice.
+
+**Gate:** a real project can be established, planned, costed, controlled, issued, progressed, commercially administered and handed over through governed NuBlox objects.
+
+## Wave 2 — Native design, engineering and digital asset authoring
+
+**Engines:** NTE-049, NTE-050, NTE-051, NTE-055, NTE-057
+
+Deliver:
+
+- 2D/3D CAD/BIM/model authoring;
+- parametric/computational design;
+- discipline engineering calculation and simulation;
+- survey/GIS/reality capture;
+- fabrication/off-site production definition and traceability;
+- digital twin and operational asset-information continuity.
+
+These engines must comply with the native-execution invariants. External CAD/BIM/analysis systems may be import/export or migration boundaries, not required runtime dependencies.
+
+**Gate:** representative design and engineering Job Profiles can create, revise, coordinate, review and issue their primary professional work products natively.
+
+## Wave 3 — Procurement, supply, production, field, quality and HSE operations
+
+**Engines:** NTE-020, NTE-021, NTE-022, NTE-023, NTE-024, NTE-025, NTE-039, NTE-040
+
+Deliver:
+
+- supplier/sourcing/procurement;
+- demand/supply/MRP planning;
+- inventory/warehouse/logistics;
+- manufacturing/production execution;
+- service planning/dispatch/field execution;
+- quality/inspection/test/CAPA;
+- asset/property/facilities/maintenance;
+- HSE/permit/environment/ESG.
+
+**Gate:** requirements can flow through sourcing, material/production/service execution, inspection, safe delivery, asset creation and maintenance without disconnected external operational systems.
+
+## Wave 4 — Finance, workforce, legal, risk and privacy
+
+**Engines:** NTE-026, NTE-027, NTE-028, NTE-036, NTE-037, NTE-038
+
+Deliver:
+
+- accounting/ledger/financial close;
+- treasury/cash/tax;
+- HCM/payroll/talent;
+- legal matter/contract/entity;
+- enterprise risk/compliance/control/audit;
+- privacy/information governance.
+
+**Gate:** commercial and operational work can create authoritative financial, workforce, contractual, compliance and privacy consequences inside NuBlox.
+
+## Wave 5 — Product, market, sales and customer operating chain
+
+**Engines:** NTE-015, NTE-016, NTE-017, NTE-018, NTE-019
+
+Deliver:
+
+- product/service/innovation lifecycle;
+- marketing/campaign/brand;
+- CRM/account/opportunity;
+- pricing/CPQ/bid/sales order;
+- customer service/case/success.
+
+**Gate:** NuBlox supports an end-to-end market-to-cash/customer-service chain using shared product, customer, commercial and delivery truth.
+
+## Wave 6 — Strategy, governance, performance, transformation and process
+
+**Engines:** NTE-011, NTE-012, NTE-013, NTE-014, NTE-046, NTE-047, NTE-048
+
+Deliver:
+
+- strategy/scenario/enterprise planning;
+- board/committee governance;
+- EPM/KPI/benefits;
+- M&A/corporate development;
+- transformation/change/adoption;
+- process architecture/BPMN/DMN/orchestration;
+- process mining/continuous improvement.
+
+**Gate:** the enterprise can govern, plan, transform, measure and improve itself using the same authoritative execution evidence generated by the operating engines.
+
+## Wave 7 — Digital platform, data, AI, security, resilience and communications
+
+**Engines:** NTE-010, NTE-029, NTE-030, NTE-031, NTE-032, NTE-033, NTE-034, NTE-035, NTE-041, NTE-042
+
+Deliver:
+
+- enterprise search/knowledge retrieval;
+- IT service/configuration management;
+- DevOps/platform/endpoint operations;
+- data integration/engineering/lakehouse;
+- MDM/catalogue/governance;
+- BI/semantic analytics/reporting;
+- AI/ML/agents/model governance;
+- cybersecurity operations/exposure;
+- continuity/crisis/physical security;
+- communications/media/public affairs/investor relations.
+
+**Gate:** the platform can operate and assure its own digital/data/security estate while providing enterprise-wide search, analytics, AI, resilience and communications.
+
+## Wave execution unit
+
+Within each wave the implementation unit is:
+
+~~~text
+Canonical Engine
+-> mapped Functions
+-> mapped L2 Sub-functions
+-> mapped canonical Activity Capabilities
+-> canonical objects / aggregates
+-> commands / calculations / authoring operations
+-> persistence migration
+-> workspace / My Work UX
+-> lifecycle / Authority / Evidence
+-> tests
+-> end-to-end journey
+~~~
+
+Implementation must not start from screen mock-ups and work backwards into arbitrary local data models.
+
+## Progress accounting
+
+Progress is reported against all three levels:
+
+- **Engine coverage:** 57 canonical native engines;
+- **L2 coverage:** 353 governed L2 Sub-functions;
+- **Activity coverage:** 1,510 canonical Activity Capabilities.
+
+A wave is closed only when its mapped activities are executable and tested, not when the engine shell exists.
+
+## Current baseline
+
+As of 21 September 2026:
+
+- 57 canonical engines defined;
+- 353 / 353 L2 Sub-functions mapped to native engines;
+- 1,510 / 1,510 Activities assigned canonical capability IDs;
+- 9 shared engines have backend implementation but still require full product UI exposure;
+- 3 domain engines have partial implementation and require completion;
+- 45 engines remain to build;
+- the current web route set is still only the application/architecture landing shell.
+
+Wave 0 therefore precedes further claims of end-user operational completion.

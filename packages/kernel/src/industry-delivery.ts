@@ -3,6 +3,7 @@ import type {
   DeliveryCapabilityFulfilmentId,
   DeliveryCapabilityRequirementId,
   DeliveryDomainId,
+  IndustryDisciplineDeploymentId,
   IndustryJobProfileId,
   IndustrySolutionId,
   OrganisationId,
@@ -12,6 +13,12 @@ import type {
   TenantServiceOfferingId
 } from './ids.js';
 import type { RecordStatus } from './model.js';
+import type {
+  DeploymentAssigneeType,
+  DeploymentContextType,
+  DeploymentPurpose
+} from './functional.js';
+import type { WorkResponsibilityRole } from './work.js';
 
 export type ServiceCapabilityRole = 'CORE' | 'SUPPORTING' | 'ASSURANCE';
 export type TenantCapabilitySupplyModel = 'INTERNAL' | 'HYBRID';
@@ -75,6 +82,26 @@ export interface DeliveryCapabilityRequirement {
   effectiveFrom?: string;
   effectiveTo?: string;
   status: DeliveryCapabilityRequirementStatus;
+}
+
+export interface IndustryDisciplineDeployment {
+  id: IndustryDisciplineDeploymentId;
+  tenantId: TenantId;
+  industryJobProfileId: IndustryJobProfileId;
+  deploymentPurpose: DeploymentPurpose;
+  organisationId: OrganisationId;
+  organisationUnitId?: import('./ids.js').OrganisationUnitId;
+  assigneeType: Exclude<DeploymentAssigneeType, 'ORGANISATION_UNIT'>;
+  assigneeId: string;
+  roleTitle: string;
+  responsibilityRole: WorkResponsibilityRole;
+  contextType: DeploymentContextType;
+  contextObjectId?: CanonicalObjectId;
+  scopeDescription: string;
+  capacityPercent?: number;
+  effectiveFrom: string;
+  effectiveTo?: string;
+  status: RecordStatus;
 }
 
 export interface DeliveryCapabilityFulfilment {

@@ -20,6 +20,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [CBE Module/Task Verification Backlog](cbe-job-tool-module-task-backlog.csv) — controlled 570-record backlog for product-module, task, input/output, lifecycle, authority, evidence and format verification.
 - [Deep Market Capability Register](market-tool-deep-capability-register.csv) — web-verified module/task benchmark records with explicit native NuBlox requirements.
 - [Market Tool Research Programme](market-tool-research-programme.md) — research waves, prioritisation and verification acceptance test.
+- [CBE Specialist Capability Pattern Closure](cbe-specialist-capability-pattern-closure.csv) — canonical specialist capability gaps closed using deep-verified market anchors and equivalent-product classification.
+- [Market Tool Equivalence Classification](market-tool-equivalence-classification.csv) — separates genuinely different capability patterns from alternative vendor implementations and low-value duplicates.
 - [PTC Windchill 13](windchill.md) — controlled objects, technical information, PLM/configuration/change, publication, integration and migration reference.
 
 ## Research progression

@@ -149,6 +149,8 @@ export interface CompetenceEvidence {
   status: RecordStatus;
 }
 
+export type DeploymentPurpose = 'FUNCTIONAL_GOVERNANCE' | 'FUNCTIONAL_DELIVERY';
+
 export type DeploymentContextType =
   | 'TENANT'
   | 'ORGANISATION'
@@ -165,6 +167,7 @@ export interface FunctionalDeployment {
   tenantId: TenantId;
   functionId: FunctionId;
   subFunctionId?: SubFunctionId;
+  deploymentPurpose: DeploymentPurpose;
   organisationId: OrganisationId;
   organisationUnitId?: OrganisationUnitId;
   contextType: DeploymentContextType;

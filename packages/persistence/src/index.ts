@@ -1,3 +1,4 @@
+export * from './access-permission-request-repository.js';
 export * from './access-administration-command-service.js';
 export * from './access-administration-read-repository.js';
 export * from './organisation-command-service.js';

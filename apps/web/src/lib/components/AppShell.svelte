@@ -60,6 +60,10 @@
         <span class="nav-symbol">CF</span>
         <span>Change &amp; Configuration</span>
       </a>
+      <a class:active={isActive('/app/deliverables')} href="/app/deliverables" onclick={closeNavigation}>
+        <span class="nav-symbol">DL</span>
+        <span>Deliverables</span>
+      </a>
     </nav>
 
     <div class="function-nav">

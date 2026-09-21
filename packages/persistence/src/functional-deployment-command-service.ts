@@ -6,6 +6,7 @@ import {
   type DeploymentAssigneeType,
   type DeploymentCapacity,
   type DeploymentContextType,
+  type DeploymentPurpose,
   type FunctionalDeployment,
   type ResponsibilityScope,
   type TenantId,
@@ -111,6 +112,11 @@ function mapRepositoryError(error: unknown): never {
   throw error;
 }
 
+const DEPLOYMENT_PURPOSES: ReadonlySet<DeploymentPurpose> = new Set([
+  'FUNCTIONAL_GOVERNANCE',
+  'FUNCTIONAL_DELIVERY'
+]);
+
 const CONTEXT_TYPES: ReadonlySet<DeploymentContextType> = new Set([
   'TENANT',
   'ORGANISATION',
@@ -157,6 +163,7 @@ export class MySqlFunctionalDeploymentCommandService {
     input: {
       functionId: string;
       subFunctionId?: string;
+      deploymentPurpose: DeploymentPurpose;
       organisationId: string;
       organisationUnitId?: string;
       contextType: DeploymentContextType;
@@ -167,6 +174,13 @@ export class MySqlFunctionalDeploymentCommandService {
     }
   ): Promise<FunctionalDeployment> {
     await this.requireManageDeployment(tenantId, actorPersonId);
+
+    if (!DEPLOYMENT_PURPOSES.has(input.deploymentPurpose)) {
+      throw new FunctionalDeploymentCommandError(
+        'Deployment purpose must be Functional Governance or Functional Delivery.',
+        'INVALID_INPUT'
+      );
+    }
 
     if (!CONTEXT_TYPES.has(input.contextType)) {
       throw new FunctionalDeploymentCommandError(
@@ -213,6 +227,7 @@ export class MySqlFunctionalDeploymentCommandService {
             >
           }
         : {}),
+      deploymentPurpose: input.deploymentPurpose,
       organisationId: required(
         input.organisationId,
         'Organisation'

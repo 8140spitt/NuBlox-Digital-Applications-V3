@@ -17,6 +17,11 @@ import { MySqlInformationRepository } from './information-repository.js';
 
 interface AuthorityBackedDecisionRow extends RowDataPacket {
   id: string;
+  decision_type: string;
+  subject_object_id: string;
+  subject_version: string | null;
+  canonical_object_id: string;
+  revision: string;
   outcome: string;
   authority_grant_id: string | null;
   decided_at: Date;
@@ -259,7 +264,11 @@ export class MySqlInformationCommandService {
   ): Promise<InformationRevision> {
     await this.requireManage(tenantId, actorPersonId);
     const decisionId = required(input.decisionId, 'Approved release Decision');
-    await this.requireAuthorityBackedDecision(tenantId, decisionId);
+    await this.requireAuthorityBackedDecision(
+      tenantId,
+      decisionId,
+      required(input.informationRevisionId, 'Information Revision')
+    );
     try {
       return await this.information.releaseInformationRevision(
         tenantId,
@@ -333,18 +342,37 @@ export class MySqlInformationCommandService {
     }
   }
 
-  private async requireAuthorityBackedDecision(tenantId: TenantId, decisionId: string): Promise<void> {
+  private async requireAuthorityBackedDecision(
+    tenantId: TenantId,
+    decisionId: string,
+    informationRevisionId: string
+  ): Promise<void> {
     const [rows] = await this.pool.query<AuthorityBackedDecisionRow[]>(
-      `SELECT d.id, d.outcome, d.authority_grant_id, d.decided_at,
+      `SELECT d.id, d.decision_type, d.subject_object_id, d.subject_version,
+              ic.canonical_object_id, ir.revision, d.outcome, d.authority_grant_id, d.decided_at,
               ag.status AS grant_status, ag.effective_from, ag.effective_to
          FROM decisions d
+         JOIN information_revisions ir
+           ON ir.tenant_id = d.tenant_id AND ir.id = ?
+         JOIN information_containers ic
+           ON ic.tenant_id = ir.tenant_id AND ic.id = ir.information_container_id
          LEFT JOIN authority_grants ag
            ON ag.tenant_id = d.tenant_id AND ag.id = d.authority_grant_id
         WHERE d.tenant_id = ? AND d.id = ?`,
-      [tenantId, decisionId]
+      [informationRevisionId, tenantId, decisionId]
     );
     const row = rows[0];
-    if (!row) throw new InformationCommandError('Release Decision was not found in tenant.', 'NOT_FOUND');
+    if (!row) throw new InformationCommandError('Release Decision or Information Revision was not found in tenant.', 'NOT_FOUND');
+    if (
+      row.decision_type !== 'INFORMATION_RELEASE' ||
+      row.subject_object_id !== row.canonical_object_id ||
+      row.subject_version !== row.revision
+    ) {
+      throw new InformationCommandError(
+        'Release Decision does not govern the selected Information Revision.',
+        'INVALID_INPUT'
+      );
+    }
     if (row.outcome !== 'APPROVED' || !row.authority_grant_id || row.grant_status !== 'ACTIVE') {
       throw new InformationCommandError(
         'Release requires an APPROVED Decision backed by an active Authority Grant.',

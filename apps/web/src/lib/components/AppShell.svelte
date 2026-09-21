@@ -32,6 +32,10 @@
         <span class="nav-symbol">29</span>
         <span>Functions</span>
       </a>
+      <a class:active={isActive('/app/organisation')} href="/app/organisation" onclick={closeNavigation}>
+        <span class="nav-symbol">OR</span>
+        <span>Organisation</span>
+      </a>
     </nav>
 
     <div class="function-nav">

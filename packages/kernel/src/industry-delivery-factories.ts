@@ -4,10 +4,11 @@ import type {
   IndustryJobProfileDefinition,
   IndustrySolutionDefinition
 } from './industry.js';
-import type { CanonicalObjectIdentity } from './model.js';
+import type { CanonicalObjectIdentity, Organisation, OrganisationUnit, Person, Position } from './model.js';
 import type {
   DeliveryCapabilityFulfilment,
   DeliveryCapabilityRequirement,
+  IndustryDisciplineDeployment,
   TenantIndustryCapability,
   TenantServiceJobProfile,
   TenantServiceOffering
@@ -143,6 +144,88 @@ export function createDeliveryCapabilityFulfilment(
   if (input.fulfilmentType === 'EXTERNAL' && input.providerType !== 'ORGANISATION') {
     throw new Error('External capability must initially be fulfilled by an Organisation.');
   }
+  assertPeriod(input.effectiveFrom, input.effectiveTo);
+  return Object.freeze({ ...input });
+}
+
+
+export function createIndustryDisciplineDeployment(
+  input: IndustryDisciplineDeployment,
+  profile: IndustryJobProfileDefinition,
+  organisation: Organisation,
+  assignee: Person | Position,
+  options: {
+    organisationUnit?: OrganisationUnit;
+    contextObject?: CanonicalObjectIdentity;
+  } = {}
+): IndustryDisciplineDeployment {
+  assertSameTenant(input.tenantId, organisation.tenantId, 'Discipline Deployment and Organisation');
+  assertSameTenant(input.tenantId, assignee.tenantId, 'Discipline Deployment and assignee');
+
+  if (profile.id !== input.industryJobProfileId || profile.status !== 'ACTIVE') {
+    throw new Error('Discipline Deployment requires an ACTIVE CBE Job Profile.');
+  }
+
+  if (input.organisationId !== organisation.id) {
+    throw new Error('Discipline Deployment must reference the supplied Organisation.');
+  }
+
+  if (
+    (input.assigneeType === 'PERSON' && !('partyId' in assignee)) ||
+    (input.assigneeType === 'POSITION' && !('organisationUnitId' in assignee))
+  ) {
+    throw new Error('Discipline Deployment assignee type does not match the supplied assignee.');
+  }
+
+  if (input.assigneeId !== assignee.id) {
+    throw new Error('Discipline Deployment must reference the supplied assignee.');
+  }
+
+  if (!input.roleTitle.trim() || !input.scopeDescription.trim()) {
+    throw new Error('Discipline Deployment role title and scope description are required.');
+  }
+
+  if (
+    input.capacityPercent !== undefined &&
+    (input.capacityPercent < 0 || input.capacityPercent > 100)
+  ) {
+    throw new Error('Discipline Deployment capacity must be between 0 and 100 percent.');
+  }
+
+  if (options.organisationUnit) {
+    assertSameTenant(
+      input.tenantId,
+      options.organisationUnit.tenantId,
+      'Discipline Deployment and Organisation Unit'
+    );
+    if (
+      input.organisationUnitId !== options.organisationUnit.id ||
+      options.organisationUnit.organisationId !== organisation.id
+    ) {
+      throw new Error('Discipline Deployment Organisation Unit must belong to the supplied Organisation.');
+    }
+  } else if (input.organisationUnitId) {
+    throw new Error('Discipline Deployment cannot reference an unsupplied Organisation Unit.');
+  }
+
+  if (input.contextType === 'TENANT' || input.contextType === 'ORGANISATION') {
+    if (input.contextObjectId || options.contextObject) {
+      throw new Error('TENANT or ORGANISATION Discipline Deployment must not specify a context object.');
+    }
+  } else {
+    if (!input.contextObjectId || !options.contextObject) {
+      throw new Error('Scoped Discipline Deployment requires a context object.');
+    }
+    assertSameTenant(
+      input.tenantId,
+      options.contextObject.tenantId,
+      'Discipline Deployment and context object'
+    );
+    if (input.contextObjectId !== options.contextObject.id) {
+      throw new Error('Discipline Deployment context must reference the supplied canonical object.');
+    }
+  }
+
   assertPeriod(input.effectiveFrom, input.effectiveTo);
   return Object.freeze({ ...input });
 }

@@ -17,6 +17,9 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [CBE 84-Job Tool Landscape](cbe-job-tool-landscape.md) — all 84 Construction & Built Environment Job Profiles mapped to the initial market-tool universe and native NuBlox requirements.
 - [CBE Job Market Tool Matrix](cbe-job-market-tool-matrix.csv) — one governed row per Job Profile preserving existing capabilities, structured records, lifecycle and representative market tools.
 - [CBE Job × Tool Capability Register](cbe-job-tool-capability-register.csv) — 570 initial Job × Tool mappings across 84 Job Profiles and 199 distinct products/tools; designed for module/workflow/output-level verification.
+- [CBE Module/Task Verification Backlog](cbe-job-tool-module-task-backlog.csv) — controlled 570-record backlog for product-module, task, input/output, lifecycle, authority, evidence and format verification.
+- [Deep Market Capability Register](market-tool-deep-capability-register.csv) — web-verified module/task benchmark records with explicit native NuBlox requirements.
+- [Market Tool Research Programme](market-tool-research-programme.md) — research waves, prioritisation and verification acceptance test.
 - [PTC Windchill 13](windchill.md) — controlled objects, technical information, PLM/configuration/change, publication, integration and migration reference.
 
 ## Research progression

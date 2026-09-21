@@ -67,7 +67,7 @@ suite('competence administration',()=>{
     });
 
     const deployment=await deployments.createDeployment(tenantId,admin.id,{
-      functionId:'F01',organisationId:organisation.id,contextType:'ORGANISATION',
+      functionId:'F01',deploymentPurpose:'FUNCTIONAL_DELIVERY',organisationId:organisation.id,contextType:'ORGANISATION',
       scopeDescription:'F01 competence-gated deployment.',effectiveFrom:'2026-09-21T08:00:00.000Z'
     });
     const assignment=await deployments.createAssignment(tenantId,admin.id,{

@@ -118,6 +118,7 @@ suite('functional deployment administration', () => {
       {
         functionId: 'F01',
         subFunctionId: 'F01.01',
+        deploymentPurpose: 'FUNCTIONAL_DELIVERY',
         organisationId: organisation.id,
         organisationUnitId: unit.id,
         contextType: 'ORGANISATION',
@@ -174,6 +175,7 @@ suite('functional deployment administration', () => {
           id: deployment.id,
           functionCode: 'F01',
           subFunctionCode: 'F01.01',
+          deploymentPurpose: 'FUNCTIONAL_DELIVERY',
           organisationId: organisation.id,
           organisationUnitId: unit.id,
           contextType: 'ORGANISATION',
@@ -244,6 +246,7 @@ suite('functional deployment administration', () => {
     await expect(
       commands.createDeployment(tenantId, worker.id, {
         functionId: 'F02',
+        deploymentPurpose: 'FUNCTIONAL_DELIVERY',
         organisationId: organisation.id,
         contextType: 'ORGANISATION',
         scopeDescription: 'Unauthorised deployment attempt.',

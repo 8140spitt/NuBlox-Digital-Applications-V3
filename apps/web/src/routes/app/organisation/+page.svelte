@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  import type { ActionData, PageData } from './$types';
 
-  let { data }: { data: PageData } = $props();
+  let { data, form }: { data: PageData; form: ActionData } = $props();
 
   function statusLabel(status: string) {
     return status === 'ACTIVE' ? 'Active' : 'Inactive';
@@ -40,6 +40,230 @@
       </p>
     </div>
   </section>
+
+  {#if form?.message || form?.error}
+    <div class:success={form?.ok} class:error={!form?.ok} class="admin-feedback" role="status">
+      <strong>{form?.ok ? 'Completed' : 'Action not completed'}</strong>
+      <span>{form?.message ?? form?.error}</span>
+    </div>
+  {/if}
+
+  {#if data.canManageOrganisation || data.canManagePeople}
+    <section class="organisation-admin">
+      <header>
+        <div>
+          <p class="app-eyebrow">Controlled administration</p>
+          <h2>Maintain organisation structure</h2>
+        </div>
+        <p>
+          Each command is tenant-scoped, permission-checked, transactional and attributable.
+          Organisation structure changes do not grant business Authority.
+        </p>
+      </header>
+
+      <div class="admin-command-grid">
+        {#if data.canManageOrganisation}
+          <details>
+            <summary>
+              <span>01</span>
+              <div>
+                <strong>Create Organisation</strong>
+                <small>Legal/trading entity master</small>
+              </div>
+            </summary>
+            <form method="POST" action="?/createOrganisation" class="admin-form">
+              <label>
+                <span>Legal name</span>
+                <input name="legalName" required maxlength="255" />
+              </label>
+              <label>
+                <span>Trading name</span>
+                <input name="tradingName" maxlength="255" />
+              </label>
+              <button type="submit">Create Organisation <span>→</span></button>
+            </form>
+          </details>
+
+          <details>
+            <summary>
+              <span>02</span>
+              <div>
+                <strong>Add Organisation Unit</strong>
+                <small>Governed structural unit</small>
+              </div>
+            </summary>
+            <form method="POST" action="?/createUnit" class="admin-form">
+              <label>
+                <span>Organisation</span>
+                <select name="organisationId" required>
+                  <option value="">Select Organisation</option>
+                  {#each data.structure.organisations as organisation}
+                    <option value={organisation.id}>
+                      {organisation.tradingName ?? organisation.legalName}
+                    </option>
+                  {/each}
+                </select>
+              </label>
+              <label>
+                <span>Parent Unit</span>
+                <select name="parentUnitId">
+                  <option value="">Root Unit</option>
+                  {#each data.structure.organisations as organisation}
+                    {#each organisation.units as unit}
+                      <option value={unit.id}>
+                        {organisation.tradingName ?? organisation.legalName} · {unit.code} — {unit.name}
+                      </option>
+                    {/each}
+                  {/each}
+                </select>
+              </label>
+              <div class="admin-form-split">
+                <label>
+                  <span>Unit code</span>
+                  <input name="code" required maxlength="80" autocomplete="off" />
+                </label>
+                <label>
+                  <span>Unit name</span>
+                  <input name="name" required maxlength="255" />
+                </label>
+              </div>
+              <button type="submit" disabled={data.structure.organisations.length === 0}>
+                Add Unit <span>→</span>
+              </button>
+            </form>
+          </details>
+
+          <details>
+            <summary>
+              <span>03</span>
+              <div>
+                <strong>Create Position</strong>
+                <small>Organisational seat linked to Job Profile</small>
+              </div>
+            </summary>
+            <form method="POST" action="?/createPosition" class="admin-form">
+              <label>
+                <span>Organisation Unit</span>
+                <select name="organisationUnitId" required>
+                  <option value="">Select Unit</option>
+                  {#each data.structure.organisations as organisation}
+                    {#each organisation.units as unit}
+                      <option value={unit.id}>
+                        {organisation.tradingName ?? organisation.legalName} · {unit.code} — {unit.name}
+                      </option>
+                    {/each}
+                  {/each}
+                </select>
+              </label>
+              <label>
+                <span>Job Profile</span>
+                <select name="jobProfileId">
+                  <option value="">No Job Profile yet</option>
+                  {#each data.structure.jobProfiles as profile}
+                    <option value={profile.id}>
+                      {profile.code} — {profile.name} ({profile.catalogueScope.toLowerCase()})
+                    </option>
+                  {/each}
+                </select>
+              </label>
+              <div class="admin-form-split">
+                <label>
+                  <span>Position code</span>
+                  <input name="code" required maxlength="80" autocomplete="off" />
+                </label>
+                <label>
+                  <span>Position title</span>
+                  <input name="title" required maxlength="255" />
+                </label>
+              </div>
+              <button
+                type="submit"
+                disabled={data.structure.organisations.every((organisation) => organisation.units.length === 0)}
+              >
+                Create Position <span>→</span>
+              </button>
+            </form>
+          </details>
+        {/if}
+
+        {#if data.canManagePeople}
+          <details>
+            <summary>
+              <span>04</span>
+              <div>
+                <strong>Create Person</strong>
+                <small>Canonical tenant Person master</small>
+              </div>
+            </summary>
+            <form method="POST" action="?/createPerson" class="admin-form">
+              <label>
+                <span>Legal name</span>
+                <input name="legalName" required maxlength="255" />
+              </label>
+              <label>
+                <span>Preferred name</span>
+                <input name="preferredName" maxlength="255" />
+              </label>
+              <button type="submit">Create Person <span>→</span></button>
+            </form>
+          </details>
+
+          <details>
+            <summary>
+              <span>05</span>
+              <div>
+                <strong>Assign Person to Position</strong>
+                <small>Create effective Position occupancy</small>
+              </div>
+            </summary>
+            <form method="POST" action="?/assignPerson" class="admin-form">
+              <label>
+                <span>Person</span>
+                <select name="personId" required>
+                  <option value="">Select Person</option>
+                  {#each data.structure.people as person}
+                    {#if person.status === 'ACTIVE'}
+                      <option value={person.id}>{person.name}</option>
+                    {/if}
+                  {/each}
+                </select>
+              </label>
+              <label>
+                <span>Position</span>
+                <select name="positionId" required>
+                  <option value="">Select Position</option>
+                  {#each data.structure.organisations as organisation}
+                    {#each organisation.units as unit}
+                      {#each unit.positions as position}
+                        <option value={position.id}>
+                          {unit.code} · {position.code} — {position.title}
+                        </option>
+                      {/each}
+                    {/each}
+                  {/each}
+                </select>
+              </label>
+              <label>
+                <span>Effective from</span>
+                <input name="effectiveFrom" type="datetime-local" />
+              </label>
+              <button
+                type="submit"
+                disabled={
+                  data.structure.people.length === 0 ||
+                  data.structure.organisations.every((organisation) =>
+                    organisation.units.every((unit) => unit.positions.length === 0)
+                  )
+                }
+              >
+                Assign Person <span>→</span>
+              </button>
+            </form>
+          </details>
+        {/if}
+      </div>
+    </section>
+  {/if}
 
   <section class="architecture-metrics organisation-metrics" aria-label="Organisation structure totals">
     <article>

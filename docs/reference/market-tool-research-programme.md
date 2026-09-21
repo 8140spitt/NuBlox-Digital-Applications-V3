@@ -101,6 +101,8 @@ Alternative vendors remain evidence for market equivalence and migration/integra
 
 The benchmark is now sufficient to stop designing the application from vendor names or generic ERP menu structures.
 
+The canonical capability/tool architecture baseline is now established in `docs/architecture/11-canonical-capability-and-native-tool-architecture.md` and `docs/architecture/canonical-native-tool-engine-register.csv`.
+
 The next governed programme is:
 
 ```text
@@ -116,4 +118,4 @@ market capability pattern
 -> implementation wave
 ```
 
-The immediate next output should therefore be a **NuBlox Canonical Capability & Tool Architecture** derived from these benchmark registers, not another uncontrolled list of products.
+The immediate next output is now the **353-L2 Canonical Capability / Native Engine Mapping**, followed by the 1,510-Activity executable capability map and implementation-gap register.

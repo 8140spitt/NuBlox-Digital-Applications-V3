@@ -1,4 +1,5 @@
 import {
+  PLATFORM_PERMISSION_KEYS,
   type DeliverableItemStatus,
   type NativeMyWorkKind,
   type NativeMyWorkProjectionItem,
@@ -7,6 +8,7 @@ import {
   type WorkResponsibilityRole
 } from '@nublox/kernel';
 import type { Pool, RowDataPacket } from 'mysql2/promise';
+import { MySqlAccessRepository } from './access-repository.js';
 import { MySqlWorkRepository } from './work-repository.js';
 
 interface DeliverableMyWorkRow extends RowDataPacket {
@@ -42,6 +44,17 @@ interface PersonPartyRow extends RowDataPacket {
   party_id: string;
 }
 
+interface AccessRequestMyWorkRow extends RowDataPacket {
+  request_id: string;
+  requestor_name: string;
+  permission_key: string;
+  permission_name: string;
+  scope_type: string;
+  scope_id: string | null;
+  reason: string;
+  requested_at: Date;
+}
+
 function databaseDate(value: string): Date {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
@@ -66,9 +79,11 @@ function deliverableKind(
 }
 
 export class MySqlMyWorkRepository {
+  private readonly access: MySqlAccessRepository;
   private readonly work: MySqlWorkRepository;
 
   constructor(private readonly pool: Pool) {
+    this.access = new MySqlAccessRepository(pool);
     this.work = new MySqlWorkRepository(pool);
   }
 
@@ -91,13 +106,29 @@ export class MySqlMyWorkRepository {
       at.getTime() + competenceExpiryHorizonDays * 24 * 60 * 60 * 1000
     );
 
-    const [workItems, deliverables, recipientActions, competenceExpiries] =
-      await Promise.all([
-        this.work.listMyWork(tenantId, personId, evaluatedAt),
-        this.listDeliverableActions(tenantId, personId, at),
-        this.listRecipientActions(tenantId, personId, at),
-        this.listCompetenceExpiries(tenantId, personId, at, horizon)
-      ]);
+    const [
+      workItems,
+      deliverables,
+      recipientActions,
+      competenceExpiries,
+      accessManageEvaluation
+    ] = await Promise.all([
+      this.work.listMyWork(tenantId, personId, evaluatedAt),
+      this.listDeliverableActions(tenantId, personId, at),
+      this.listRecipientActions(tenantId, personId, at),
+      this.listCompetenceExpiries(tenantId, personId, at, horizon),
+      this.access.evaluatePermission(
+        tenantId,
+        personId,
+        PLATFORM_PERMISSION_KEYS.ACCESS_MANAGE,
+        { scopeType: 'TENANT' },
+        evaluatedAt
+      )
+    ]);
+
+    const accessRequests = accessManageEvaluation.allowed
+      ? await this.listAccessRequests(tenantId)
+      : [];
 
     const result = new Map<string, NativeMyWorkProjectionItem>();
 
@@ -201,6 +232,22 @@ export class MySqlMyWorkRepository {
         dueAt: row.effective_to.toISOString(),
         isOverdue: row.effective_to.getTime() < at.getTime(),
         reason: `${row.competence_code} at level ${row.attained_level} expires within ${competenceExpiryHorizonDays} days.`
+      });
+    }
+
+    for (const row of accessRequests) {
+      const key = `ACCESS_REQUEST:${row.request_id}`;
+      result.set(key, {
+        key,
+        tenantId,
+        personId,
+        kind: 'ACCESS_REQUEST',
+        title: `Access request: ${row.permission_name}`,
+        sourceId: row.request_id as NativeMyWorkProjectionItem['sourceId'],
+        isOverdue: false,
+        reason:
+          `${row.requestor_name} requested ${row.permission_key} in ${row.scope_type}` +
+          `${row.scope_id ? ` · ${row.scope_id}` : ''} scope: ${row.reason}`
       });
     }
 
@@ -370,6 +417,33 @@ export class MySqlMyWorkRepository {
         ORDER BY effective_to, competence_code, id`,
       [tenantId, personId, at, horizon]
     );
+    return rows;
+  }
+
+  private async listAccessRequests(
+    tenantId: TenantId
+  ): Promise<AccessRequestMyWorkRow[]> {
+    const [rows] = await this.pool.execute<AccessRequestMyWorkRow[]>(
+      `SELECT r.id AS request_id,
+              COALESCE(p.preferred_name, p.legal_name) AS requestor_name,
+              r.permission_key,
+              pd.name AS permission_name,
+              r.scope_type,
+              r.scope_id,
+              r.reason,
+              r.requested_at
+         FROM access_permission_requests r
+         JOIN persons p
+           ON p.tenant_id = r.tenant_id
+          AND p.id = r.requestor_person_id
+         JOIN permission_definitions pd
+           ON pd.permission_key = r.permission_key
+        WHERE r.tenant_id = ?
+          AND r.status = 'PENDING'
+        ORDER BY r.requested_at, r.id`,
+      [tenantId]
+    );
+
     return rows;
   }
 

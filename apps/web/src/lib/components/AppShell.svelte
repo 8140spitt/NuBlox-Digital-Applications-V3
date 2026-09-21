@@ -1,9 +1,10 @@
 <script lang="ts">
   import { page } from '$app/state';
+  import type { AuthSession } from '@nublox/persistence';
   import type { Snippet } from 'svelte';
   import { functionGroups, functionsForGroup } from '$lib/function-catalog';
 
-  let { children }: { children: Snippet } = $props();
+  let { children, session }: { children: Snippet; session: AuthSession } = $props();
   let navigationOpen = $state(false);
 
   function isActive(href: string) {
@@ -56,8 +57,8 @@
     <div class="sidebar-footer">
       <span class="system-indicator" aria-hidden="true"></span>
       <div>
-        <strong>Platform workspace</strong>
-        <span>Wave 0 activation</span>
+        <strong>{session.tenantName}</strong>
+        <span>{session.personName}</span>
       </div>
     </div>
   </aside>
@@ -80,8 +81,13 @@
       </div>
 
       <div class="topbar-actions">
-        <a href="/" class="quiet-link">Product home</a>
-        <span class="environment-chip">Main</span>
+        <div class="session-context">
+          <strong>{session.personName}</strong>
+          <span>{session.tenantName}</span>
+        </div>
+        <form method="POST" action="/logout">
+          <button type="submit" class="quiet-button">Sign out</button>
+        </form>
       </div>
     </header>
 

@@ -40,10 +40,16 @@
   <section class="hero">
     <p class="eyebrow">Enterprise Operating Platform</p>
     <h1>Govern capability.<br />Deploy it.<br />Deliver the work.</h1>
-    <p class="lede">
-      One canonical enterprise platform for how an organisation operates, how it delivers value,
-      and the controlled work products it creates.
-    </p>
+    <div>
+      <p class="lede">
+        One canonical enterprise platform for how an organisation operates, how it delivers value,
+        and the controlled work products it creates.
+      </p>
+      <a class="primary-action landing-action" href="/app">
+        Enter NuBlox
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
   </section>
 
   <section class="architecture" aria-labelledby="architecture-title">

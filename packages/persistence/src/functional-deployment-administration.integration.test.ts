@@ -201,10 +201,10 @@ suite('functional deployment administration', () => {
       tenantId,
       deployment.id,
       worker.id,
-      '2026-09-21T12:00:00.000Z',
       {
         minimumCapacityPercent: 50
-      }
+      },
+      '2026-09-21T12:00:00.000Z'
     );
 
     expect(gate.allowed).toBe(true);

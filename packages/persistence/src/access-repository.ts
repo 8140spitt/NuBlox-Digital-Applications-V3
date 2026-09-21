@@ -301,6 +301,47 @@ export class MySqlAccessRepository {
     });
   }
 
+  async findActiveRoleAssignment(
+    tenantId: TenantId,
+    accessRoleId: AccessRoleAssignment['accessRoleId'],
+    principalType: AccessPrincipalType,
+    principalId: string,
+    scope: PermissionScope,
+    evaluatedAt = new Date().toISOString()
+  ): Promise<AccessRoleAssignment | undefined> {
+    validateRequestedScope(scope);
+    const at = databaseDate(evaluatedAt);
+    const [rows] = await this.pool.execute<AssignmentCandidateRow[]>(
+      `SELECT id, tenant_id, access_role_id, principal_type, principal_id,
+              scope_type, scope_id, effective_from, effective_to, status
+         FROM access_role_assignments
+        WHERE tenant_id = ?
+          AND access_role_id = ?
+          AND principal_type = ?
+          AND principal_id = ?
+          AND scope_type = ?
+          AND ((scope_id IS NULL AND ? IS NULL) OR scope_id = ?)
+          AND status = 'ACTIVE'
+          AND effective_from <= ?
+          AND (effective_to IS NULL OR effective_to >= ?)
+        ORDER BY effective_from DESC, id
+        LIMIT 1`,
+      [
+        tenantId,
+        accessRoleId,
+        principalType,
+        principalId,
+        scope.scopeType,
+        scope.scopeId ?? null,
+        scope.scopeId ?? null,
+        at,
+        at
+      ]
+    );
+
+    return rows[0] ? mapAssignment(rows[0]) : undefined;
+  }
+
   async evaluatePermission(
     tenantId: TenantId,
     personId: string,

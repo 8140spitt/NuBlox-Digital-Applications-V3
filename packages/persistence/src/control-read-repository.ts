@@ -76,14 +76,18 @@ interface EvidenceRow extends RowDataPacket {
 }
 
 interface AuditRow extends RowDataPacket {
-  id: number;
+  audit_id: number;
   entity_type: string;
   entity_id: string;
   action: string;
   actor_person_id: string | null;
   actor_name: string | null;
   correlation_id: string | null;
-  created_at: Date;
+  occurred_at: Date;
+}
+
+interface CountRow extends RowDataPacket {
+  total: number | string;
 }
 
 export interface ControlLifecycleDefinitionView {
@@ -183,8 +187,19 @@ export class MySqlControlReadRepository {
   ): Promise<ControlProjection> {
     const safeLimit = Math.max(1, Math.min(500, Math.floor(limit)));
 
-    const [definitionResult, stateResult, transitionResult, objectStateResult, decisionResult, evidenceResult, auditResult] =
-      await Promise.all([
+    const [
+      definitionResult,
+      stateResult,
+      transitionResult,
+      objectStateResult,
+      decisionResult,
+      evidenceResult,
+      auditResult,
+      governedObjectCountResult,
+      decisionCountResult,
+      evidenceCountResult,
+      auditCountResult
+    ] = await Promise.all([
         this.pool.query<DefinitionRow[]>(
           `SELECT id, code, name, object_type, status
              FROM lifecycle_definitions
@@ -259,15 +274,31 @@ export class MySqlControlReadRepository {
           [tenantId]
         ),
         this.pool.query<AuditRow[]>(
-          `SELECT a.id, a.entity_type, a.entity_id, a.action, a.actor_person_id,
+          `SELECT a.audit_id, a.entity_type, a.entity_id, a.action, a.actor_person_id,
                   CASE WHEN p.id IS NULL THEN NULL ELSE COALESCE(p.preferred_name, p.legal_name) END AS actor_name,
-                  a.correlation_id, a.created_at
+                  a.correlation_id, a.occurred_at
              FROM kernel_audit_entries a
              LEFT JOIN persons p
                ON p.tenant_id = a.tenant_id AND p.id = a.actor_person_id
             WHERE a.tenant_id = ?
-            ORDER BY a.created_at DESC, a.id DESC
+            ORDER BY a.occurred_at DESC, a.audit_id DESC
             LIMIT ${safeLimit}`,
+          [tenantId]
+        ),
+        this.pool.query<CountRow[]>(
+          'SELECT COUNT(*) AS total FROM object_lifecycle_states WHERE tenant_id = ?',
+          [tenantId]
+        ),
+        this.pool.query<CountRow[]>(
+          'SELECT COUNT(*) AS total FROM decisions WHERE tenant_id = ?',
+          [tenantId]
+        ),
+        this.pool.query<CountRow[]>(
+          'SELECT COUNT(*) AS total FROM evidence_records WHERE tenant_id = ?',
+          [tenantId]
+        ),
+        this.pool.query<CountRow[]>(
+          'SELECT COUNT(*) AS total FROM kernel_audit_entries WHERE tenant_id = ?',
           [tenantId]
         )
       ]);
@@ -348,21 +379,21 @@ export class MySqlControlReadRepository {
         ...(row.integrity_hash ? { integrityHash: row.integrity_hash } : {})
       })),
       audit: auditResult[0].map((row) => ({
-        id: Number(row.id),
+        id: Number(row.audit_id),
         entityType: row.entity_type,
         entityId: row.entity_id,
         action: row.action,
         ...(row.actor_person_id ? { actorPersonId: row.actor_person_id } : {}),
         ...(row.actor_name ? { actorName: row.actor_name } : {}),
         ...(row.correlation_id ? { correlationId: row.correlation_id } : {}),
-        createdAt: row.created_at.toISOString()
+        createdAt: row.occurred_at.toISOString()
       })),
       totals: {
         lifecycleDefinitions: definitions.length,
-        governedObjects: objectStateResult[0].length,
-        decisions: decisionResult[0].length,
-        evidenceRecords: evidenceResult[0].length,
-        auditEntries: auditResult[0].length
+        governedObjects: Number(governedObjectCountResult[0][0]?.total ?? 0),
+        decisions: Number(decisionCountResult[0][0]?.total ?? 0),
+        evidenceRecords: Number(evidenceCountResult[0][0]?.total ?? 0),
+        auditEntries: Number(auditCountResult[0][0]?.total ?? 0)
       }
     };
   }

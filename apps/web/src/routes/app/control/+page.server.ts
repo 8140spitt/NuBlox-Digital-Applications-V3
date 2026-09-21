@@ -52,6 +52,12 @@ export const load: PageServerLoad = async ({ locals }) => {
     allowed: true,
     canReadAudit: auditRead.allowed,
     reason: configurationRead.reason,
-    control: auditRead.allowed ? control : { ...control, audit: [] }
+    control: auditRead.allowed
+      ? control
+      : {
+          ...control,
+          audit: [],
+          totals: { ...control.totals, auditEntries: 0 }
+        }
   };
 };

@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Redact common secrets from terminal streams before writing logs.
 perl -pe '
-BEGIN { $in_private_key = 0; }
+BEGIN { $| = 1; $in_private_key = 0; }
 
 if (/-----BEGIN [A-Z ]*PRIVATE KEY-----/) {
   $in_private_key = 1;
@@ -16,7 +16,8 @@ if (/-----BEGIN [A-Z ]*PRIVATE KEY-----/) {
 }
 
 s/(Authorization:\s*(?:Bearer|Token)\s+)[^\s"\047]+/${1}[REDACTED]/ig;
-s/(\b(?:api[_-]?key|access[_-]?key|token|secret|password|passwd|pwd|client[_-]?secret|private[_-]?key)\b\s*[:=]\s*)(\"[^\"]*\"|\047[^\047]*\047|[^\s]+)/${1}[REDACTED]/ig;
+s#(\b[a-z][a-z0-9+.-]*://[^/\s:@]+:)[^@\s/]+(@)#${1}[REDACTED]${2}#ig;
+s/(\b(?:api[_-]?key|access[_-]?key|token|secret|password|passwd|pwd|client[_-]?secret|private[_-]?key|database[_-]?url)\b\s*[:=]\s*)(\"[^\"]*\"|\047[^\047]*\047|[^\s]+)/${1}[REDACTED]/ig;
 s/(AKIA|ASIA)[A-Z0-9]{16}/[REDACTED_AWS_KEY]/g;
 s/\bgh[pousr]_[A-Za-z0-9_]{20,}\b/[REDACTED_GITHUB_TOKEN]/g;
 s/\bglpat-[A-Za-z0-9_-]{20,}\b/[REDACTED_GITLAB_TOKEN]/g;

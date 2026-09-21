@@ -415,6 +415,12 @@ export class MySqlStrategyCommandService {
     await this.requireWork(tenantId,actorPersonId);
     if(!input.entityType||!TABLES[input.entityType]) throw new StrategyCommandError('Valid strategy entity type is required.','INVALID_INPUT');
     if(!input.status||!STATUSES.has(input.status)) throw new StrategyCommandError('Valid strategy status is required.','INVALID_INPUT');
+    if (['APPROVED','FUNDED','SELECTED','COMMITTED'].includes(input.status)) {
+      throw new StrategyCommandError(
+        'This state requires an Authority-backed Decision. Use of privileged strategy states is blocked until that control is wired.',
+        'INVALID_INPUT'
+      );
+    }
     const id=required(input.entityId,'Strategy record');
     await this.requireRow(tenantId,TABLES[input.entityType],id,'Strategy record');
     await withTransaction(this.pool,async connection=>{

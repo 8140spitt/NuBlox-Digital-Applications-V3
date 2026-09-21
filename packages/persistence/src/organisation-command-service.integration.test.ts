@@ -14,7 +14,7 @@ import { createDatabasePool } from './database.js';
 import { migrate } from './migrations.js';
 import {
   MySqlOrganisationCommandService,
-  OrganisationCommandError
+  MySqlOrganisationCommandService
 } from './organisation-command-service.js';
 import { MySqlOrganisationReadRepository } from './organisation-read-repository.js';
 import { MySqlKernelRepository } from './repository.js';
@@ -260,7 +260,7 @@ suite('organisation administration command service', () => {
       commands.createOrganisation(tenantId, ordinaryPerson.id, {
         legalName: 'Unauthorised Organisation'
       })
-    ).rejects.toMatchObject<Partial<OrganisationCommandError>>({
+    ).rejects.toMatchObject({
       name: 'OrganisationCommandError',
       code: 'PERMISSION_DENIED'
     });

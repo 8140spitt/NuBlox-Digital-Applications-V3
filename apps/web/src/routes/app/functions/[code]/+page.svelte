@@ -95,6 +95,57 @@
   </aside>
 </div>
 
+<section class="workspace-panel subfunction-panel">
+  <div class="panel-heading">
+    <div>
+      <p class="app-eyebrow">Governed scope</p>
+      <h2>L2 sub-functions &amp; activities</h2>
+    </div>
+    <span>{workspace.subfunctions.length}</span>
+  </div>
+
+  <div class="subfunction-list">
+    {#each workspace.subfunctions as subfunction}
+      <details>
+        <summary>
+          <div>
+            <span class="subfunction-code">{subfunction.code}</span>
+            <strong>{subfunction.name}</strong>
+          </div>
+          <span class="subfunction-count">{subfunction.activities.length} activities</span>
+        </summary>
+
+        <div class="subfunction-detail">
+          <div>
+            <h3>Activities</h3>
+            <ol class="activity-list">
+              {#each subfunction.activities as activity, index}
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{activity}</strong>
+                </li>
+              {/each}
+            </ol>
+          </div>
+
+          <div>
+            <h3>Native engine composition</h3>
+            <div class="subfunction-engines">
+              {#each subfunction.engineNames as engineName, index}
+                <span><strong>{subfunction.engineIds[index]}</strong>{engineName}</span>
+              {/each}
+            </div>
+            <p class="subfunction-note">
+              Shared workflow, lifecycle, authority, information, deliverable and evidence controls
+              are composed from the Enterprise Kernel and are not duplicated inside this L2.
+            </p>
+          </div>
+        </div>
+      </details>
+    {/each}
+  </div>
+</section>
+
 <section class="activation-strip">
   <div>
     <span class="activation-status complete">Mapped</span>

@@ -1,3 +1,5 @@
+export * from './functional-deployment-command-service.js';
+export * from './functional-deployment-read-repository.js';
 export * from './access-permission-request-repository.js';
 export * from './access-administration-command-service.js';
 export * from './access-administration-read-repository.js';

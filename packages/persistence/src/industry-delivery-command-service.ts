@@ -5,6 +5,7 @@ import {
   createConstructionContextProfile,
   createDeliveryCapabilityFulfilment,
   createDeliveryCapabilityRequirement,
+  createIndustryDisciplineDeployment,
   createTenantIndustryCapability,
   createTenantServiceJobProfile,
   createTenantServiceOffering,
@@ -16,6 +17,9 @@ import {
   type DeliveryCapabilityRequirement,
   type DeliveryCapabilitySourcingStrategy,
   type DeliveryDomainDefinition,
+  type DeploymentContextType,
+  type DeploymentPurpose,
+  type IndustryDisciplineDeployment,
   type IndustryJobProfileDefinition,
   type IndustrySolutionDefinition,
   type ServiceCapabilityRole,
@@ -23,7 +27,8 @@ import {
   type TenantId,
   type TenantIndustryCapability,
   type TenantServiceJobProfile,
-  type TenantServiceOffering
+  type TenantServiceOffering,
+  type WorkResponsibilityRole
 } from '@nublox/kernel';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { MySqlAccessRepository } from './access-repository.js';
@@ -67,7 +72,7 @@ interface RequirementRow extends RowDataPacket {
 interface ShareRow extends RowDataPacket { total_share: string | number | null; }
 interface IdRow extends RowDataPacket { id: string; }
 interface PositionMatchRow extends RowDataPacket {
-  id: string; organisation_id: string; job_profile_id: string | null;
+  id: string; organisation_id: string; organisation_unit_id: string; job_profile_id: string | null;
 }
 
 export class IndustryDeliveryCommandError extends Error {
@@ -359,6 +364,175 @@ export class MySqlIndustryDeliveryCommandService {
     } catch (error) { return this.mapError(error); }
   }
 
+  async createDisciplineDeployment(
+    tenantId: TenantId,
+    actorPersonId: string,
+    input: {
+      industryJobProfileId: string;
+      deploymentPurpose: DeploymentPurpose;
+      assigneeType: IndustryDisciplineDeployment['assigneeType'];
+      assigneeId: string;
+      roleTitle: string;
+      responsibilityRole: WorkResponsibilityRole;
+      contextType: DeploymentContextType;
+      contextObjectId?: string;
+      scopeDescription: string;
+      capacityPercent?: number | string;
+      effectiveFrom?: string;
+      effectiveTo?: string;
+    }
+  ): Promise<IndustryDisciplineDeployment> {
+    await this.requireManage(tenantId, actorPersonId);
+
+    if (
+      input.deploymentPurpose !== 'FUNCTIONAL_GOVERNANCE' &&
+      input.deploymentPurpose !== 'FUNCTIONAL_DELIVERY'
+    ) {
+      throw new IndustryDeliveryCommandError(
+        'Deployment purpose must be Functional Governance or Functional Delivery.',
+        'INVALID_INPUT'
+      );
+    }
+
+    const supportedContexts: DeploymentContextType[] = [
+      'TENANT',
+      'ORGANISATION',
+      'PROJECT',
+      'CONTRACT',
+      'PACKAGE',
+      'SITE',
+      'ASSET',
+      'SERVICE',
+      'CUSTOM'
+    ];
+    if (!supportedContexts.includes(input.contextType)) {
+      throw new IndustryDeliveryCommandError('Discipline deployment context is invalid.', 'INVALID_INPUT');
+    }
+
+    const industryJobProfileId = required(input.industryJobProfileId, 'CBE profession');
+    await this.requireTenantCapability(tenantId, industryJobProfileId);
+    const profile = await this.requireIndustryJob(industryJobProfileId);
+
+    if (input.assigneeType !== 'PERSON' && input.assigneeType !== 'POSITION') {
+      throw new IndustryDeliveryCommandError(
+        'CBE discipline deployment requires an employed Person or Position.',
+        'INVALID_INPUT'
+      );
+    }
+
+    const provider = await this.requireInternalProviderDetails(
+      tenantId,
+      input.assigneeType,
+      required(input.assigneeId, 'Assignee'),
+      industryJobProfileId
+    );
+
+    const contextObjectId = optional(input.contextObjectId);
+    if (
+      (input.contextType === 'TENANT' || input.contextType === 'ORGANISATION') &&
+      contextObjectId
+    ) {
+      throw new IndustryDeliveryCommandError(
+        'TENANT or ORGANISATION discipline deployment must not specify a context object.',
+        'INVALID_INPUT'
+      );
+    }
+    if (
+      input.contextType !== 'TENANT' &&
+      input.contextType !== 'ORGANISATION' &&
+      !contextObjectId
+    ) {
+      throw new IndustryDeliveryCommandError(
+        'Scoped discipline deployment requires a context object.',
+        'INVALID_INPUT'
+      );
+    }
+
+    const contextObject = contextObjectId
+      ? await this.requireCanonicalObject(tenantId, contextObjectId)
+      : undefined;
+    const effectiveFrom = dateValue(input.effectiveFrom, 'Effective from') ?? now();
+    const effectiveTo = dateValue(input.effectiveTo, 'Effective to');
+    const capacityPercent = optionalPercent(input.capacityPercent, 'Capacity');
+
+    const deployment: IndustryDisciplineDeployment = {
+      id: asId<'IndustryDisciplineDeploymentId'>(
+        `CBEDEP-${randomUUID()}`,
+        'Industry Discipline Deployment'
+      ),
+      tenantId,
+      industryJobProfileId: profile.id,
+      deploymentPurpose: input.deploymentPurpose,
+      organisationId: provider.organisationId as IndustryDisciplineDeployment['organisationId'],
+      organisationUnitId:
+        provider.organisationUnitId as NonNullable<IndustryDisciplineDeployment['organisationUnitId']>,
+      assigneeType: input.assigneeType,
+      assigneeId: input.assigneeId,
+      roleTitle: required(input.roleTitle, 'Deployment role title'),
+      responsibilityRole: input.responsibilityRole,
+      contextType: input.contextType,
+      ...(contextObjectId
+        ? {
+            contextObjectId:
+              contextObjectId as NonNullable<IndustryDisciplineDeployment['contextObjectId']>
+          }
+        : {}),
+      scopeDescription: required(input.scopeDescription, 'Scope description'),
+      ...(capacityPercent !== undefined ? { capacityPercent } : {}),
+      effectiveFrom,
+      ...(effectiveTo ? { effectiveTo } : {}),
+      status: 'ACTIVE'
+    };
+
+    createIndustryDisciplineDeployment(deployment, profile, contextObject);
+
+    try {
+      await withTransaction(this.pool, async (connection) => {
+        await connection.execute(
+          `INSERT INTO industry_discipline_deployments
+            (id, tenant_id, industry_job_profile_id, deployment_purpose,
+             organisation_id, organisation_unit_id, assignee_type, assignee_id,
+             role_title, responsibility_role, context_type, context_object_id,
+             scope_description, capacity_percent, effective_from, effective_to,
+             status, created_by_person_id, updated_by_person_id)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?)`,
+          [
+            deployment.id,
+            tenantId,
+            deployment.industryJobProfileId,
+            deployment.deploymentPurpose,
+            deployment.organisationId,
+            deployment.organisationUnitId ?? null,
+            deployment.assigneeType,
+            deployment.assigneeId,
+            deployment.roleTitle,
+            deployment.responsibilityRole,
+            deployment.contextType,
+            deployment.contextObjectId ?? null,
+            deployment.scopeDescription,
+            deployment.capacityPercent ?? null,
+            new Date(deployment.effectiveFrom),
+            databaseDate(deployment.effectiveTo),
+            actorPersonId,
+            actorPersonId
+          ]
+        );
+        await writeAudit(
+          connection,
+          tenantId,
+          'INDUSTRY_DISCIPLINE_DEPLOYMENT',
+          deployment.id,
+          'CREATED',
+          actorPersonId,
+          deployment
+        );
+      });
+      return deployment;
+    } catch (error) {
+      return this.mapError(error);
+    }
+  }
+
   async createRequirement(
     tenantId: TenantId,
     actorPersonId: string,
@@ -606,52 +780,98 @@ export class MySqlIndustryDeliveryCommandService {
     if (!rows[0]) throw new IndustryDeliveryCommandError('Active Organisation was not found in tenant.', 'NOT_FOUND');
   }
 
+  private async requireCanonicalObject(
+    tenantId: TenantId,
+    id: string
+  ): Promise<CanonicalObjectIdentity> {
+    const [rows] = await this.pool.query<ObjectRow[]>(
+      `SELECT id, tenant_id, object_type, stable_key, created_at
+         FROM canonical_objects
+        WHERE tenant_id = ? AND id = ?`,
+      [tenantId, required(id, 'Context object')]
+    );
+    if (!rows[0]) {
+      throw new IndustryDeliveryCommandError('Canonical context object was not found in tenant.', 'NOT_FOUND');
+    }
+    return mapObject(rows[0]);
+  }
+
+  private async requireInternalProviderDetails(
+    tenantId: TenantId,
+    providerType: 'PERSON' | 'POSITION',
+    providerId: string,
+    industryJobProfileId: string
+  ): Promise<{ organisationId: string; organisationUnitId: string }> {
+    const profile = await this.requireIndustryJob(industryJobProfileId);
+
+    if (providerType === 'POSITION') {
+      const [rows] = await this.pool.query<PositionMatchRow[]>(
+        `SELECT p.id, ou.organisation_id, p.organisation_unit_id, p.job_profile_id
+           FROM positions p
+           JOIN organisation_units ou
+             ON ou.tenant_id = p.tenant_id AND ou.id = p.organisation_unit_id
+          WHERE p.tenant_id = ? AND p.id = ? AND p.status = 'ACTIVE'`,
+        [tenantId, providerId]
+      );
+      const row = rows[0];
+      if (!row || row.job_profile_id !== profile.jobProfileId) {
+        throw new IndustryDeliveryCommandError(
+          'Position does not match the required CBE Job Profile.',
+          'INVALID_INPUT'
+        );
+      }
+      return {
+        organisationId: row.organisation_id,
+        organisationUnitId: row.organisation_unit_id
+      };
+    }
+
+    const [rows] = await this.pool.query<PositionMatchRow[]>(
+      `SELECT p.id, ou.organisation_id, p.organisation_unit_id, p.job_profile_id
+         FROM position_occupancies po
+         JOIN positions p
+           ON p.tenant_id = po.tenant_id AND p.id = po.position_id
+         JOIN organisation_units ou
+           ON ou.tenant_id = p.tenant_id AND ou.id = p.organisation_unit_id
+        WHERE po.tenant_id = ? AND po.person_id = ? AND p.status = 'ACTIVE'
+          AND p.job_profile_id = ?
+          AND po.effective_from <= CURRENT_TIMESTAMP(6)
+          AND (po.effective_to IS NULL OR po.effective_to >= CURRENT_TIMESTAMP(6))
+        LIMIT 1`,
+      [tenantId, providerId, profile.jobProfileId]
+    );
+    const row = rows[0];
+    if (!row) {
+      throw new IndustryDeliveryCommandError(
+        'Person does not currently occupy a Position matching the required CBE Job Profile.',
+        'INVALID_INPUT'
+      );
+    }
+    return {
+      organisationId: row.organisation_id,
+      organisationUnitId: row.organisation_unit_id
+    };
+  }
+
   private async requireInternalProvider(
     tenantId: TenantId,
     providerType: DeliveryCapabilityProviderType,
     providerId: string,
     industryJobProfileId: string
   ): Promise<string | undefined> {
-    const profile = await this.requireIndustryJob(industryJobProfileId);
-    if (providerType === 'POSITION') {
-      const [rows] = await this.pool.query<PositionMatchRow[]>(
-        `SELECT p.id, ou.organisation_id, p.job_profile_id
-           FROM positions p
-           JOIN organisation_units ou ON ou.tenant_id = p.tenant_id AND ou.id = p.organisation_unit_id
-          WHERE p.tenant_id = ? AND p.id = ? AND p.status = 'ACTIVE'`,
-        [tenantId, providerId]
+    if (providerType !== 'PERSON' && providerType !== 'POSITION') {
+      throw new IndustryDeliveryCommandError(
+        'Internal CBE fulfilment requires a Person or Position with the matching Job Profile.',
+        'INVALID_INPUT'
       );
-      const row = rows[0];
-      if (!row || row.job_profile_id !== profile.jobProfileId) {
-        throw new IndustryDeliveryCommandError('Position does not match the required CBE Job Profile.', 'INVALID_INPUT');
-      }
-      return row.organisation_id;
     }
-    if (providerType === 'PERSON') {
-      const [rows] = await this.pool.query<PositionMatchRow[]>(
-        `SELECT p.id, ou.organisation_id, p.job_profile_id
-           FROM position_occupancies po
-           JOIN positions p ON p.tenant_id = po.tenant_id AND p.id = po.position_id
-           JOIN organisation_units ou ON ou.tenant_id = p.tenant_id AND ou.id = p.organisation_unit_id
-          WHERE po.tenant_id = ? AND po.person_id = ? AND p.status = 'ACTIVE'
-            AND p.job_profile_id = ?
-            AND po.effective_from <= CURRENT_TIMESTAMP(6)
-            AND (po.effective_to IS NULL OR po.effective_to >= CURRENT_TIMESTAMP(6))
-          LIMIT 1`,
-        [tenantId, providerId, profile.jobProfileId]
-      );
-      if (!rows[0]) {
-        throw new IndustryDeliveryCommandError(
-          'Person does not currently occupy a Position matching the required CBE Job Profile.',
-          'INVALID_INPUT'
-        );
-      }
-      return rows[0].organisation_id;
-    }
-    throw new IndustryDeliveryCommandError(
-      'Internal CBE fulfilment currently requires a Person or Position with the matching Job Profile.',
-      'INVALID_INPUT'
+    const details = await this.requireInternalProviderDetails(
+      tenantId,
+      providerType,
+      providerId,
+      industryJobProfileId
     );
+    return details.organisationId;
   }
 
   private mapError(error: unknown): never {

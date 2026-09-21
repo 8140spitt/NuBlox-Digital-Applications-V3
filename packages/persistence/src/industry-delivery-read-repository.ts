@@ -43,6 +43,30 @@ interface InternalProviderRow extends RowDataPacket {
   organisation_id: string; organisation_name: string; industry_job_profile_id: string;
   canonical_name: string;
 }
+interface DisciplineDeploymentRow extends RowDataPacket {
+  id: string;
+  industry_job_profile_id: string;
+  canonical_name: string;
+  domain_name: string;
+  deployment_purpose: string;
+  organisation_id: string;
+  organisation_name: string;
+  organisation_unit_id: string | null;
+  organisation_unit_name: string | null;
+  assignee_type: 'PERSON' | 'POSITION';
+  assignee_id: string;
+  assignee_name: string;
+  role_title: string;
+  responsibility_role: string;
+  context_type: string;
+  context_object_id: string | null;
+  context_key: string | null;
+  scope_description: string;
+  capacity_percent: string | number | null;
+  effective_from: Date;
+  effective_to: Date | null;
+  status: string;
+}
 interface OrganisationRow extends RowDataPacket {
   id: string; name: string;
 }
@@ -64,6 +88,30 @@ export interface IndustryDeliveryProjection {
     id: string; industryJobProfileId: string; canonicalName: string;
     primaryDeliveryDomainId: string; domainName: string; supplyModel: string;
     notes?: string; status: string;
+  }>;
+  disciplineDeployments: Array<{
+    id: string;
+    industryJobProfileId: string;
+    canonicalName: string;
+    domainName: string;
+    deploymentPurpose: string;
+    organisationId: string;
+    organisationName: string;
+    organisationUnitId?: string;
+    organisationUnitName?: string;
+    assigneeType: 'PERSON' | 'POSITION';
+    assigneeId: string;
+    assigneeName: string;
+    roleTitle: string;
+    responsibilityRole: string;
+    contextType: string;
+    contextObjectId?: string;
+    contextKey?: string;
+    scopeDescription: string;
+    capacityPercent?: number;
+    effectiveFrom: string;
+    effectiveTo?: string;
+    status: string;
   }>;
   deliveryContexts: Array<{
     id: string; canonicalObjectId: string; contextType: string; code: string; name: string;
@@ -90,6 +138,8 @@ export interface IndustryDeliveryProjection {
   totals: {
     services: number;
     internalCapabilities: number;
+    governanceDeployments: number;
+    deliveryDeployments: number;
     projects: number;
     requirements: number;
     fulfilled: number;
@@ -104,7 +154,7 @@ export class MySqlIndustryDeliveryReadRepository {
   async getProjection(tenantId: TenantId): Promise<IndustryDeliveryProjection> {
     const [
       domainResult, jobResult, serviceResult, serviceJobResult, capabilityResult,
-      contextResult, requirementResult, fulfilmentResult, positionProviderResult,
+      disciplineDeploymentResult, contextResult, requirementResult, fulfilmentResult, positionProviderResult,
       personProviderResult, organisationResult
     ] = await Promise.all([
       this.pool.query<DomainRow[]>(
@@ -146,6 +196,35 @@ export class MySqlIndustryDeliveryReadRepository {
            JOIN delivery_domains d ON d.id = ijp.primary_delivery_domain_id
           WHERE c.tenant_id = ?
           ORDER BY d.sequence, ijp.sequence`, [tenantId]
+      ),
+      this.pool.query<DisciplineDeploymentRow[]>(
+        `SELECT dd.id, dd.industry_job_profile_id, ijp.canonical_name,
+                dom.name AS domain_name, dd.deployment_purpose,
+                dd.organisation_id,
+                COALESCE(org.trading_name, org.legal_name) AS organisation_name,
+                dd.organisation_unit_id, ou.name AS organisation_unit_name,
+                dd.assignee_type, dd.assignee_id,
+                COALESCE(pe.preferred_name, pe.legal_name, pos.title, dd.assignee_id) AS assignee_name,
+                dd.role_title, dd.responsibility_role, dd.context_type,
+                dd.context_object_id, co.stable_key AS context_key,
+                dd.scope_description, dd.capacity_percent,
+                dd.effective_from, dd.effective_to, dd.status
+           FROM industry_discipline_deployments dd
+           JOIN industry_job_profiles ijp ON ijp.id = dd.industry_job_profile_id
+           JOIN delivery_domains dom ON dom.id = ijp.primary_delivery_domain_id
+           JOIN organisations org
+             ON org.tenant_id = dd.tenant_id AND org.id = dd.organisation_id
+           LEFT JOIN organisation_units ou
+             ON ou.tenant_id = dd.tenant_id AND ou.id = dd.organisation_unit_id
+           LEFT JOIN persons pe
+             ON dd.assignee_type = 'PERSON' AND pe.tenant_id = dd.tenant_id AND pe.id = dd.assignee_id
+           LEFT JOIN positions pos
+             ON dd.assignee_type = 'POSITION' AND pos.tenant_id = dd.tenant_id AND pos.id = dd.assignee_id
+           LEFT JOIN canonical_objects co
+             ON co.tenant_id = dd.tenant_id AND co.id = dd.context_object_id
+          WHERE dd.tenant_id = ?
+          ORDER BY dd.status = 'ACTIVE' DESC, dom.sequence, ijp.sequence,
+                   dd.deployment_purpose, dd.effective_from DESC`, [tenantId]
       ),
       this.pool.query<ContextRow[]>(
         `SELECT id, canonical_object_id, context_type, code, name
@@ -308,6 +387,32 @@ export class MySqlIndustryDeliveryReadRepository {
         domainName: row.domain_name, supplyModel: row.supply_model,
         ...(row.notes ? { notes: row.notes } : {}), status: row.status
       })),
+      disciplineDeployments: disciplineDeploymentResult[0].map((row) => ({
+        id: row.id,
+        industryJobProfileId: row.industry_job_profile_id,
+        canonicalName: row.canonical_name,
+        domainName: row.domain_name,
+        deploymentPurpose: row.deployment_purpose,
+        organisationId: row.organisation_id,
+        organisationName: row.organisation_name,
+        ...(row.organisation_unit_id ? { organisationUnitId: row.organisation_unit_id } : {}),
+        ...(row.organisation_unit_name ? { organisationUnitName: row.organisation_unit_name } : {}),
+        assigneeType: row.assignee_type,
+        assigneeId: row.assignee_id,
+        assigneeName: row.assignee_name,
+        roleTitle: row.role_title,
+        responsibilityRole: row.responsibility_role,
+        contextType: row.context_type,
+        ...(row.context_object_id ? { contextObjectId: row.context_object_id } : {}),
+        ...(row.context_key ? { contextKey: row.context_key } : {}),
+        scopeDescription: row.scope_description,
+        ...(row.capacity_percent !== null
+          ? { capacityPercent: Number(row.capacity_percent) }
+          : {}),
+        effectiveFrom: row.effective_from.toISOString(),
+        ...(row.effective_to ? { effectiveTo: row.effective_to.toISOString() } : {}),
+        status: row.status
+      })),
       deliveryContexts: contextResult[0].map((row) => ({
         id: row.id, canonicalObjectId: row.canonical_object_id,
         contextType: row.context_type, code: row.code, name: row.name
@@ -326,6 +431,12 @@ export class MySqlIndustryDeliveryReadRepository {
       totals: {
         services: serviceResult[0].filter((row) => row.status === 'ACTIVE').length,
         internalCapabilities: capabilityResult[0].filter((row) => row.status === 'ACTIVE').length,
+        governanceDeployments: disciplineDeploymentResult[0].filter(
+          (row) => row.status === 'ACTIVE' && row.deployment_purpose === 'FUNCTIONAL_GOVERNANCE'
+        ).length,
+        deliveryDeployments: disciplineDeploymentResult[0].filter(
+          (row) => row.status === 'ACTIVE' && row.deployment_purpose === 'FUNCTIONAL_DELIVERY'
+        ).length,
         projects,
         requirements: requirements.filter((row) => row.status !== 'CANCELLED').length,
         fulfilled: requirements.filter((row) => row.status === 'FULFILLED').length,

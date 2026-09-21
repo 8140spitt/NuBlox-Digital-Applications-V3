@@ -173,7 +173,7 @@ export class MySqlInformationCommandService {
       iteration: Number(rows[0]?.next_iteration ?? 1),
       status: 'WORKING',
       createdAt: now(),
-      authorPersonId: actorPersonId as InformationIteration['authorPersonId']
+      authorPersonId: actorPersonId as NonNullable<InformationIteration['authorPersonId']>
     };
     try {
       await this.information.createInformationIteration(
@@ -220,6 +220,8 @@ export class MySqlInformationCommandService {
     if (!REPRESENTATION_TYPES.has(input.representationType)) {
       throw new InformationCommandError('Representation type is not supported.', 'INVALID_INPUT');
     }
+    const fileName = optional(input.fileName);
+    const integrityHash = optional(input.integrityHash);
     const representation: Representation = {
       id: asId<'RepresentationId'>(`REP-${randomUUID()}`, 'Representation'),
       tenantId,
@@ -229,9 +231,9 @@ export class MySqlInformationCommandService {
       ) as Representation['informationIterationId'],
       representationType: input.representationType,
       mediaType: required(input.mediaType, 'Media type'),
-      ...(optional(input.fileName) ? { fileName: optional(input.fileName) } : {}),
+      ...(fileName ? { fileName } : {}),
       contentReference: required(input.contentReference, 'Content reference'),
-      ...(optional(input.integrityHash) ? { integrityHash: optional(input.integrityHash) } : {}),
+      ...(integrityHash ? { integrityHash } : {}),
       generatedAt: now()
     };
     try {

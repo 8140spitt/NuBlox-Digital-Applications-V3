@@ -10,7 +10,8 @@
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",
     "db:migrate": "tsx src/cli/migrate.ts",
-    "db:status": "tsx src/cli/status.ts"
+    "db:status": "tsx src/cli/status.ts",
+    "auth:bootstrap": "tsx src/cli/bootstrap-auth.ts"
   },
   "dependencies": {
     "@nublox/kernel": "workspace:*",
@@ -21,5 +22,12 @@
     "tsx": "^4.20.6",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts"
 }

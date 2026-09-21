@@ -677,6 +677,89 @@ export class MySqlDeliverableRepository {
     return rows[0] ? mapAuthoringBinding(rows[0]) : undefined;
   }
 
+  async createItemWithCanonicalObject(
+    tenantId: TenantId,
+    object: CanonicalObjectIdentity,
+    item: DeliverableItem,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    if (object.tenantId !== tenantId || item.tenantId !== tenantId) {
+      throw new Error('Persistence operation crossed tenant boundary.');
+    }
+
+    const [requirement, context, deployment] = await Promise.all([
+      this.requireRequirement(tenantId, item.requirementId),
+      this.requireObject(tenantId, item.contextObjectId),
+      item.functionalDeploymentId
+        ? this.requireDeployment(tenantId, item.functionalDeploymentId)
+        : Promise.resolve(undefined)
+    ]);
+    createDeliverableItem(item, object, requirement, context, deployment);
+
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO canonical_objects (id, tenant_id, object_type, stable_key, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          object.id,
+          object.tenantId,
+          object.objectType,
+          object.stableKey,
+          databaseDate(object.createdAt)
+        ]
+      );
+      await writeAudit(
+        connection,
+        tenantId,
+        'CANONICAL_OBJECT',
+        object.id,
+        'CREATED',
+        audit,
+        object
+      );
+
+      await connection.execute(
+        `INSERT INTO deliverable_items
+          (id, tenant_id, canonical_object_id, requirement_id, context_object_id,
+           functional_deployment_id, code, title, deliverable_type, status,
+           planned_at, forecast_at, created_by_person_id, updated_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          item.id,
+          item.tenantId,
+          item.canonicalObjectId,
+          item.requirementId,
+          item.contextObjectId,
+          item.functionalDeploymentId ?? null,
+          item.code,
+          item.title,
+          item.deliverableType,
+          item.status,
+          item.plannedAt ? databaseDate(item.plannedAt) : null,
+          item.forecastAt ? databaseDate(item.forecastAt) : null,
+          audit.actorPersonId ?? null,
+          audit.actorPersonId ?? null
+        ]
+      );
+      await this.insertHistory(
+        connection,
+        item,
+        item.plannedAt ?? object.createdAt,
+        'Deliverable Item created.',
+        audit
+      );
+      await writeAudit(
+        connection,
+        tenantId,
+        'DELIVERABLE_ITEM',
+        item.id,
+        'CREATED',
+        audit,
+        item
+      );
+    });
+  }
+
   async createItem(
     tenantId: TenantId,
     item: DeliverableItem,

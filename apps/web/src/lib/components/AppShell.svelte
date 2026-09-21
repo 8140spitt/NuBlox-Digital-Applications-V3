@@ -56,6 +56,10 @@
         <span class="nav-symbol">IN</span>
         <span>Information</span>
       </a>
+      <a class:active={isActive('/app/configuration')} href="/app/configuration" onclick={closeNavigation}>
+        <span class="nav-symbol">CF</span>
+        <span>Change &amp; Configuration</span>
+      </a>
     </nav>
 
     <div class="function-nav">

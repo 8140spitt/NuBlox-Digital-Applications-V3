@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  import type { ActionData, PageData } from './$types';
 
-  let { data }: { data: PageData } = $props();
+  let { data, form }: { data: PageData; form: ActionData } = $props();
 
   function dateTime(value: string) {
     return new Intl.DateTimeFormat('en-GB', {
@@ -53,6 +53,13 @@
     {/if}
   </section>
 
+  {#if form?.message || form?.error}
+    <div class:success={form?.ok} class:error={!form?.ok} class="admin-feedback" role="status">
+      <strong>{form?.ok ? 'Completed' : 'Action not completed'}</strong>
+      <span>{form?.message ?? form?.error}</span>
+    </div>
+  {/if}
+
   <section class="architecture-metrics configuration-metrics" aria-label="Configuration totals">
     <article>
       <span>Changes</span>
@@ -75,6 +82,175 @@
       <p>Version applicability rules</p>
     </article>
   </section>
+
+  {#if data.canManage}
+    <section class="information-admin configuration-admin">
+      <header class="information-admin-heading">
+        <div>
+          <p class="app-eyebrow">Controlled commands</p>
+          <h2>Change &amp; configuration administration</h2>
+        </div>
+        <p>
+          Commitments are permission-gated. Change approval and Baseline establishment additionally
+          require a Decision backed by an effective Authority Grant.
+        </p>
+      </header>
+
+      <div class="information-command-grid">
+        <details>
+          <summary><span>01</span><strong>Raise change</strong></summary>
+          <form method="POST" action="?/raiseChange" class="admin-form">
+            <label><span>Code</span><input name="code" required maxlength="160" placeholder="CHG-0001" /></label>
+            <label><span>Type</span><input name="changeType" required maxlength="120" placeholder="DESIGN_CHANGE" /></label>
+            <label class="information-wide"><span>Title</span><input name="title" required maxlength="255" /></label>
+            <label class="information-wide"><span>Description</span><textarea name="description" required rows="3"></textarea></label>
+            <button type="submit">Raise Change <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>02</span><strong>Create configuration item</strong></summary>
+          <form method="POST" action="?/createConfigurationItem" class="admin-form">
+            <label class="information-wide">
+              <span>Canonical object</span>
+              <select name="canonicalObjectId" required>
+                <option value="">Select controlled object</option>
+                {#each data.projection.canonicalObjects.filter((object) => object.objectType !== 'CHANGE') as object}
+                  <option value={object.id}>{object.objectType} · {object.stableKey}</option>
+                {/each}
+              </select>
+            </label>
+            <label><span>Code</span><input name="code" required maxlength="160" /></label>
+            <label><span>Name</span><input name="name" required maxlength="255" /></label>
+            <button type="submit">Create Configuration Item <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>03</span><strong>Create baseline</strong></summary>
+          <form method="POST" action="?/createBaseline" class="admin-form">
+            <label class="information-wide">
+              <span>Context object</span>
+              <select name="contextObjectId" required>
+                <option value="">Select context</option>
+                {#each data.projection.canonicalObjects.filter((object) => object.objectType !== 'CHANGE') as object}
+                  <option value={object.id}>{object.objectType} · {object.stableKey}</option>
+                {/each}
+              </select>
+            </label>
+            <label><span>Code</span><input name="code" required maxlength="160" /></label>
+            <label><span>Name</span><input name="name" required maxlength="255" /></label>
+            <button type="submit">Create draft Baseline <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>04</span><strong>Add baseline item</strong></summary>
+          <form method="POST" action="?/addBaselineItem" class="admin-form">
+            <label>
+              <span>Draft Baseline</span>
+              <select name="baselineId" required>
+                <option value="">Select Baseline</option>
+                {#each data.projection.baselines.filter((baseline) => baseline.status === 'DRAFT') as baseline}
+                  <option value={baseline.id}>{baseline.code} · {baseline.name}</option>
+                {/each}
+              </select>
+            </label>
+            <label>
+              <span>Configuration Item</span>
+              <select name="configurationItemId" required>
+                <option value="">Select item</option>
+                {#each data.projection.configurationItems as item}
+                  <option value={item.id}>{item.code} · {item.name}</option>
+                {/each}
+              </select>
+            </label>
+            <label><span>Subject version</span><input name="subjectVersion" required maxlength="120" /></label>
+            <button type="submit">Add Baseline Item <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>05</span><strong>Establish baseline</strong></summary>
+          <form method="POST" action="?/establishBaseline" class="admin-form">
+            <label>
+              <span>Draft Baseline</span>
+              <select name="baselineId" required>
+                <option value="">Select Baseline</option>
+                {#each data.projection.baselines.filter((baseline) => baseline.status === 'DRAFT') as baseline}
+                  <option value={baseline.id}>{baseline.code} · {baseline.name}</option>
+                {/each}
+              </select>
+            </label>
+            <label class="information-wide">
+              <span>Approved Authority-backed Decision ID</span>
+              <input name="decisionId" required maxlength="64" placeholder="DEC-…" />
+            </label>
+            <button type="submit">Establish Baseline <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>06</span><strong>Create effectivity</strong></summary>
+          <form method="POST" action="?/createEffectivity" class="admin-form">
+            <label>
+              <span>Configuration Item</span>
+              <select name="configurationItemId" required>
+                <option value="">Select item</option>
+                {#each data.projection.configurationItems as item}
+                  <option value={item.id}>{item.code} · {item.name}</option>
+                {/each}
+              </select>
+            </label>
+            <label><span>Subject version</span><input name="subjectVersion" required maxlength="120" /></label>
+            <label>
+              <span>Effectivity type</span>
+              <select name="effectivityType" required>
+                <option value="PROJECT">Project</option>
+                <option value="DATE">Date</option>
+                <option value="LOCATION">Location</option>
+                <option value="SERIAL">Serial</option>
+                <option value="LOT">Lot</option>
+                <option value="UNIT">Unit</option>
+                <option value="CUSTOM">Custom</option>
+              </select>
+            </label>
+            <label><span>Scope type</span><input name="scopeType" required maxlength="80" placeholder="PROJECT" /></label>
+            <label><span>Scope ID</span><input name="scopeId" maxlength="160" /></label>
+            <label><span>Effective from</span><input type="datetime-local" name="effectiveFrom" /></label>
+            <label><span>Effective to</span><input type="datetime-local" name="effectiveTo" /></label>
+            <label class="information-wide"><span>Expression</span><input name="expression" /></label>
+            <button type="submit">Create Effectivity <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>07</span><strong>Supersede baseline</strong></summary>
+          <form method="POST" action="?/supersedeBaseline" class="admin-form">
+            <label>
+              <span>Current established Baseline</span>
+              <select name="currentBaselineId" required>
+                <option value="">Select current</option>
+                {#each data.projection.baselines.filter((baseline) => baseline.status === 'ESTABLISHED') as baseline}
+                  <option value={baseline.id}>{baseline.code}</option>
+                {/each}
+              </select>
+            </label>
+            <label>
+              <span>Replacement established Baseline</span>
+              <select name="replacementBaselineId" required>
+                <option value="">Select replacement</option>
+                {#each data.projection.baselines.filter((baseline) => baseline.status === 'ESTABLISHED') as baseline}
+                  <option value={baseline.id}>{baseline.code}</option>
+                {/each}
+              </select>
+            </label>
+            <button type="submit">Supersede Baseline <span>→</span></button>
+          </form>
+        </details>
+      </div>
+    </section>
+  {/if}
 
   <section class="configuration-workspace-grid">
     <div class="configuration-primary">
@@ -112,6 +288,177 @@
                 <span>{change.implementationActions.length} implementation action{change.implementationActions.length === 1 ? '' : 's'}</span>
                 <span>{change.verifications.length} verification{change.verifications.length === 1 ? '' : 's'}</span>
               </div>
+
+              {#if data.canManage}
+                <div class="change-command-strip">
+                  {#if change.status === 'DRAFT'}
+                    <form method="POST" action="?/startAssessment">
+                      <input type="hidden" name="changeId" value={change.id} />
+                      <button type="submit">Start assessment</button>
+                    </form>
+                  {:else if change.status === 'UNDER_ASSESSMENT'}
+                    <details>
+                      <summary>Assessment commands</summary>
+                      <div class="change-command-forms">
+                        <form method="POST" action="?/addAffectedObject" class="admin-form">
+                          <input type="hidden" name="changeId" value={change.id} />
+                          <label>
+                            <span>Affected object</span>
+                            <select name="subjectObjectId" required>
+                              <option value="">Select object</option>
+                              {#each data.projection.canonicalObjects.filter((object) => object.id !== change.canonicalObjectId) as object}
+                                <option value={object.id}>{object.objectType} · {object.stableKey}</option>
+                              {/each}
+                            </select>
+                          </label>
+                          <label><span>Version</span><input name="subjectVersion" maxlength="120" /></label>
+                          <label>
+                            <span>Disposition</span>
+                            <select name="disposition" required>
+                              <option value="MODIFY">Modify</option>
+                              <option value="ADD">Add</option>
+                              <option value="REMOVE">Remove</option>
+                              <option value="REVIEW">Review</option>
+                            </select>
+                          </label>
+                          <label class="information-wide"><span>Rationale</span><input name="rationale" required /></label>
+                          <button type="submit">Add affected object</button>
+                        </form>
+
+                        <form method="POST" action="?/addImpactAssessment" class="admin-form">
+                          <input type="hidden" name="changeId" value={change.id} />
+                          <label><span>Domain</span><input name="domain" required maxlength="120" /></label>
+                          <label>
+                            <span>Impact level</span>
+                            <select name="impactLevel" required>
+                              <option value="LOW">Low</option>
+                              <option value="MEDIUM">Medium</option>
+                              <option value="HIGH">High</option>
+                              <option value="CRITICAL">Critical</option>
+                              <option value="NONE">None</option>
+                            </select>
+                          </label>
+                          <label><span>Cost impact</span><input type="number" step="0.01" name="costImpact" /></label>
+                          <label><span>Schedule days</span><input type="number" step="0.1" name="scheduleImpactDays" /></label>
+                          <label class="information-wide"><span>Summary</span><textarea name="summary" required rows="2"></textarea></label>
+                          <button type="submit">Record impact</button>
+                        </form>
+                      </div>
+                    </details>
+                    <form method="POST" action="?/submitForDecision">
+                      <input type="hidden" name="changeId" value={change.id} />
+                      <button type="submit">Submit for Decision</button>
+                    </form>
+                  {:else if change.status === 'AWAITING_DECISION'}
+                    <form method="POST" action="?/applyDecision" class="inline-command-form">
+                      <input type="hidden" name="changeId" value={change.id} />
+                      <input name="decisionId" required maxlength="64" placeholder="Authority-backed Decision ID" />
+                      <button type="submit">Apply Decision</button>
+                    </form>
+                  {:else if change.status === 'APPROVED'}
+                    <form method="POST" action="?/startImplementation">
+                      <input type="hidden" name="changeId" value={change.id} />
+                      <button type="submit">Start implementation</button>
+                    </form>
+                  {:else if change.status === 'IMPLEMENTING'}
+                    <details>
+                      <summary>Implementation commands</summary>
+                      <form method="POST" action="?/createImplementationAction" class="admin-form">
+                        <input type="hidden" name="changeId" value={change.id} />
+                        <label><span>Action type</span><input name="actionType" required maxlength="120" /></label>
+                        <label class="information-wide"><span>Description</span><input name="description" required /></label>
+                        <label>
+                          <span>Target object</span>
+                          <select name="targetObjectId">
+                            <option value="">No target</option>
+                            {#each data.projection.canonicalObjects.filter((object) => object.id !== change.canonicalObjectId) as object}
+                              <option value={object.id}>{object.objectType} · {object.stableKey}</option>
+                            {/each}
+                          </select>
+                        </label>
+                        <label><span>Target version</span><input name="targetVersion" maxlength="120" /></label>
+                        <button type="submit">Create action</button>
+                      </form>
+                      <div class="change-action-controls">
+                        {#each change.implementationActions as action}
+                          {#if action.status === 'PLANNED'}
+                            <form method="POST" action="?/startImplementationAction">
+                              <input type="hidden" name="actionId" value={action.id} />
+                              <button type="submit">Start · {action.actionType}</button>
+                            </form>
+                          {/if}
+                          {#if action.status === 'PLANNED' || action.status === 'IN_PROGRESS'}
+                            <form method="POST" action="?/completeImplementationAction">
+                              <input type="hidden" name="actionId" value={action.id} />
+                              <button type="submit">Complete · {action.actionType}</button>
+                            </form>
+                          {/if}
+                        {/each}
+                      </div>
+                    </details>
+                    <form method="POST" action="?/beginVerification">
+                      <input type="hidden" name="changeId" value={change.id} />
+                      <button type="submit">Begin verification</button>
+                    </form>
+                  {:else if change.status === 'VERIFYING'}
+                    <details>
+                      <summary>Verification commands</summary>
+                      <div class="change-command-forms">
+                        <form method="POST" action="?/recordVerification" class="admin-form">
+                          <input type="hidden" name="changeId" value={change.id} />
+                          <label>
+                            <span>Outcome</span>
+                            <select name="outcome" required>
+                              <option value="PASS">Pass</option>
+                              <option value="PARTIAL">Partial</option>
+                              <option value="FAIL">Fail</option>
+                            </select>
+                          </label>
+                          <label><span>Evidence record ID</span><input name="evidenceRecordId" maxlength="64" /></label>
+                          <label class="information-wide"><span>Notes</span><textarea name="notes" required rows="2"></textarea></label>
+                          <button type="submit">Record verification</button>
+                        </form>
+
+                        <form method="POST" action="?/createDiscrepancy" class="admin-form">
+                          <input type="hidden" name="changeId" value={change.id} />
+                          <label>
+                            <span>Affected object</span>
+                            <select name="affectedObjectId">
+                              <option value="">General discrepancy</option>
+                              {#each change.affectedObjects as affected}
+                                <option value={affected.id}>{affected.stableKey}</option>
+                              {/each}
+                            </select>
+                          </label>
+                          <label class="information-wide"><span>Description</span><input name="description" required /></label>
+                          <button type="submit">Open discrepancy</button>
+                        </form>
+                      </div>
+                      {#each change.discrepancies.filter((discrepancy) => discrepancy.status === 'OPEN') as discrepancy}
+                        <form method="POST" action="?/resolveDiscrepancy" class="inline-command-form">
+                          <input type="hidden" name="discrepancyId" value={discrepancy.id} />
+                          <select name="status" required>
+                            <option value="RESOLVED">Resolved</option>
+                            <option value="ACCEPTED">Accepted</option>
+                          </select>
+                          <input name="resolution" required placeholder={discrepancy.description} />
+                          <button type="submit">Close discrepancy</button>
+                        </form>
+                      {/each}
+                    </details>
+                    <form method="POST" action="?/closeChange" class="inline-command-form">
+                      <input type="hidden" name="changeId" value={change.id} />
+                      <select name="resultingBaselineId">
+                        <option value="">No resulting Baseline</option>
+                        {#each data.projection.baselines.filter((baseline) => baseline.status === 'ESTABLISHED') as baseline}
+                          <option value={baseline.id}>{baseline.code}</option>
+                        {/each}
+                      </select>
+                      <button type="submit">Close Change</button>
+                    </form>
+                  {/if}
+                </div>
+              {/if}
 
               <details>
                 <summary>Change evidence and lineage</summary>

@@ -84,7 +84,13 @@
   </section>
 
   {#if data.canManage}
-    <section class="information-admin deliverable-admin">
+    <details class="workspace-command-drawer">
+      <summary>
+        <span>Actions</span>
+        <strong>Manage deliverables</strong>
+        <small>Create obligations and initiate governed delivery work</small>
+      </summary>
+      <section class="information-admin deliverable-admin">
       <header class="information-admin-heading">
         <div>
           <p class="app-eyebrow">Controlled commands</p>
@@ -144,7 +150,8 @@
           </form>
         </details>
       </div>
-    </section>
+      </section>
+    </details>
   {/if}
 
   <section class="deliverable-register">

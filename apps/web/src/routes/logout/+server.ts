@@ -1,4 +1,5 @@
-import { redirect, type RequestHandler } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 import {
   clearApplicationSession,
   SESSION_COOKIE

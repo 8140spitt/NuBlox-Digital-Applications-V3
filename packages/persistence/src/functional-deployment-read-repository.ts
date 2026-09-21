@@ -2,6 +2,7 @@ import type { Pool, RowDataPacket } from 'mysql2/promise';
 import type {
   DeploymentContextType,
   DeploymentAssigneeType,
+  DeploymentPurpose,
   TenantId,
   WorkResponsibilityRole
 } from '@nublox/kernel';
@@ -57,6 +58,7 @@ interface DeploymentRow extends RowDataPacket {
   sub_function_id: string | null;
   sub_function_code: string | null;
   sub_function_name: string | null;
+  deployment_purpose: DeploymentPurpose;
   organisation_id: string;
   organisation_name: string;
   organisation_unit_id: string | null;
@@ -147,6 +149,7 @@ export interface FunctionalDeploymentView {
   subFunctionId?: string;
   subFunctionCode?: string;
   subFunctionName?: string;
+  deploymentPurpose: DeploymentPurpose;
   organisationId: string;
   organisationName: string;
   organisationUnitId?: string;
@@ -259,7 +262,7 @@ export class MySqlFunctionalDeploymentReadRepository {
       this.pool.execute<DeploymentRow[]>(
         `SELECT d.id, d.function_id, f.code AS function_code, f.name AS function_name,
                 d.sub_function_id, sf.code AS sub_function_code, sf.name AS sub_function_name,
-                d.organisation_id, COALESCE(o.trading_name, o.legal_name) AS organisation_name,
+                d.deployment_purpose, d.organisation_id, COALESCE(o.trading_name, o.legal_name) AS organisation_name,
                 d.organisation_unit_id, ou.name AS unit_name,
                 d.context_type, d.context_object_id, d.scope_description,
                 d.effective_from, d.effective_to, d.status
@@ -416,6 +419,7 @@ export class MySqlFunctionalDeploymentReadRepository {
         ...(row.sub_function_id ? { subFunctionId: row.sub_function_id } : {}),
         ...(row.sub_function_code ? { subFunctionCode: row.sub_function_code } : {}),
         ...(row.sub_function_name ? { subFunctionName: row.sub_function_name } : {}),
+        deploymentPurpose: row.deployment_purpose,
         organisationId: row.organisation_id,
         organisationName: row.organisation_name,
         ...(row.organisation_unit_id ? { organisationUnitId: row.organisation_unit_id } : {}),

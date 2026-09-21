@@ -19,7 +19,7 @@
   function currentArea(pathname: string) {
     if (pathname.startsWith('/app/my-work')) return 'My Work';
     if (pathname.startsWith('/app/functions')) return 'Functions';
-    if (pathname.startsWith('/app/delivery')) return 'Services & Delivery';
+    if (pathname.startsWith('/app/delivery')) return 'CBE Disciplines';
     if (pathname.startsWith('/app/information')) return 'Information';
     if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
@@ -61,7 +61,7 @@
           <h2>Delivery</h2>
           <a class:active={isActive('/app/delivery')} href="/app/delivery" onclick={closeNavigation}>
             <span class="nav-symbol">SD</span>
-            <span>Services &amp; delivery</span>
+            <span>CBE disciplines</span>
           </a>
         </section>
 

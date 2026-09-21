@@ -300,6 +300,7 @@ suite('MySQL functional framework and deployment runtime', () => {
       tenantId,
       functionId: asId<'FunctionId'>('F01', 'Function'),
       subFunctionId: asId<'SubFunctionId'>('F01.01', 'Sub-function'),
+      deploymentPurpose: 'FUNCTIONAL_GOVERNANCE',
       organisationId: organisation.id,
       organisationUnitId: unit.id,
       contextType: 'PROJECT',

@@ -26,6 +26,8 @@ export const PLATFORM_PERMISSION_KEYS = {
   INFORMATION_MANAGE: 'platform.information.manage',
   DELIVERABLE_READ: 'platform.deliverable.read',
   DELIVERABLE_MANAGE: 'platform.deliverable.manage',
+  INDUSTRY_DELIVERY_READ: 'platform.industry_delivery.read',
+  INDUSTRY_DELIVERY_MANAGE: 'platform.industry_delivery.manage',
   AUDIT_READ: 'platform.audit.read',
   CONFIGURATION_READ: 'platform.configuration.read',
   CONFIGURATION_MANAGE: 'platform.configuration.manage'

@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-  <title>Services &amp; Delivery — NuBlox</title>
+  <title>CBE Disciplines — NuBlox</title>
 </svelte:head>
 
 {#if !data.allowed || !data.projection}
@@ -21,7 +21,7 @@
     <div class="permission-state-code">403</div>
     <div>
       <p class="app-eyebrow">Controlled access outcome</p>
-      <h1>Your role does not permit Services &amp; Delivery planning.</h1>
+      <h1>Your role does not permit CBE Discipline deployment.</h1>
       <p>
         NuBlox evaluated <code>platform.industry_delivery.read</code> in the current tenant scope
         and did not find an active matching Access Role Assignment.
@@ -42,12 +42,11 @@
   <section class="workspace-hero compact delivery-hero">
     <div>
       <p class="app-eyebrow">Construction &amp; Built Environment</p>
-      <h1>Services &amp; Delivery</h1>
+      <h1>CBE Disciplines</h1>
       <p class="workspace-lede">
-        Define what the business can deliver, the CBE professions it can supply internally, and
-        the capability each Project needs. Fulfil demand from internal People and Positions or
-        external provider Organisations without mixing service delivery with the 29 enterprise
-        Functions.
+        Deploy employees into Construction &amp; Built Environment discipline roles for either
+        Functional Governance or Functional Delivery. Project capability demand and external
+        sourcing remain separate delivery mechanisms beneath the discipline model.
       </p>
     </div>
   </section>
@@ -61,19 +60,19 @@
 
   <section class="architecture-metrics delivery-metrics" aria-label="Delivery capability totals">
     <article>
-      <span>Services</span>
-      <strong>{data.projection.totals.services}</strong>
-      <p>Tenant CBE service offerings</p>
-    </article>
-    <article>
       <span>Internal professions</span>
       <strong>{data.projection.totals.internalCapabilities}</strong>
       <p>of {data.projection.jobProfiles.length} CBE Job Profiles</p>
     </article>
     <article>
-      <span>Projects</span>
-      <strong>{data.projection.totals.projects}</strong>
-      <p>Active CBE delivery contexts</p>
+      <span>Governance roles</span>
+      <strong>{data.projection.totals.governanceDeployments}</strong>
+      <p>CBE discipline governance deployments</p>
+    </article>
+    <article>
+      <span>Delivery roles</span>
+      <strong>{data.projection.totals.deliveryDeployments}</strong>
+      <p>CBE discipline delivery deployments</p>
     </article>
     <article>
       <span>Sourcing gaps</span>
@@ -86,19 +85,19 @@
     <details class="workspace-command-drawer delivery-command-drawer">
       <summary>
         <span>Actions</span>
-        <strong>Configure services &amp; capability</strong>
-        <small>Create Project contexts, define Services and raise professional capability demand</small>
+        <strong>Configure CBE disciplines</strong>
+        <small>Declare internal professions, deploy roles, define delivery contexts and source gaps</small>
       </summary>
 
       <section class="information-admin delivery-admin">
         <header class="information-admin-heading">
           <div>
-            <p class="app-eyebrow">Delivery configuration</p>
-            <h2>Build the supply and demand model</h2>
+            <p class="app-eyebrow">CBE capability configuration</p>
+            <h2>Govern and deploy professional capability</h2>
           </div>
           <p>
-            Configure the tenant's market-facing Services and internal professional capability,
-            then raise demand against real Project contexts.
+            Internal capability is deployed into explicit Functional Governance or Functional
+            Delivery roles. Project requirements can then consume that capability or source gaps externally.
           </p>
         </header>
 
@@ -199,7 +198,74 @@
           </details>
 
           <details>
-            <summary><span>05</span><strong>Raise Project capability demand</strong></summary>
+            <summary><span>05</span><strong>Deploy CBE discipline role</strong></summary>
+            <form method="POST" action="?/createDisciplineDeployment" class="admin-form">
+              <label class="information-wide">
+                <span>Employee / Position and CBE profession</span>
+                <select name="disciplineProvider" required>
+                  <option value="">Select matching internal capability</option>
+                  {#each data.projection.internalProviders as provider}
+                    <option value={`${provider.industryJobProfileId}|${provider.providerType}|${provider.providerId}`}>
+                      {provider.canonicalName} · {provider.label} · {provider.organisationName}
+                    </option>
+                  {/each}
+                </select>
+              </label>
+              <label>
+                <span>Deployment purpose</span>
+                <select name="deploymentPurpose" required>
+                  <option value="FUNCTIONAL_GOVERNANCE">Functional Governance</option>
+                  <option value="FUNCTIONAL_DELIVERY">Functional Delivery</option>
+                </select>
+              </label>
+              <label>
+                <span>Role title</span>
+                <input name="roleTitle" required maxlength="255" placeholder="Architecture Standards Lead" />
+              </label>
+              <label>
+                <span>Responsibility</span>
+                <select name="responsibilityRole" required>
+                  <option value="ACCOUNTABLE">Accountable</option>
+                  <option value="RESPONSIBLE">Responsible</option>
+                  <option value="CONTRIBUTOR">Contributor</option>
+                  <option value="REVIEWER">Reviewer</option>
+                  <option value="CHECKER">Checker</option>
+                  <option value="APPROVER">Approver</option>
+                  <option value="ASSURANCE">Assurance</option>
+                  <option value="CONSULTED">Consulted</option>
+                  <option value="INFORMED">Informed</option>
+                </select>
+              </label>
+              <label class="information-wide">
+                <span>Context</span>
+                <select name="context" required>
+                  <option value="TENANT|">Tenant-wide</option>
+                  <option value="ORGANISATION|">Organisation-wide</option>
+                  {#each data.projection.deliveryContexts as context}
+                    <option value={`${context.contextType}|${context.canonicalObjectId}`}>
+                      {context.contextType} · {context.code} — {context.name}
+                    </option>
+                  {/each}
+                </select>
+              </label>
+              <label>
+                <span>Capacity %</span>
+                <input name="capacityPercent" type="number" min="0" max="100" step="0.01" />
+              </label>
+              <label><span>Effective from</span><input name="effectiveFrom" type="datetime-local" /></label>
+              <label><span>Effective to</span><input name="effectiveTo" type="datetime-local" /></label>
+              <label class="information-wide">
+                <span>Role scope</span>
+                <textarea name="scopeDescription" required rows="3"></textarea>
+              </label>
+              <button type="submit" disabled={data.projection.internalProviders.length === 0}>
+                Deploy CBE role <span>→</span>
+              </button>
+            </form>
+          </details>
+
+          <details>
+            <summary><span>06</span><strong>Raise Project capability demand</strong></summary>
             <form method="POST" action="?/createRequirement" class="admin-form">
               <label>
                 <span>Delivery context</span>
@@ -250,6 +316,61 @@
       </section>
     </details>
   {/if}
+
+  <section class="delivery-demand-section cbe-deployment-section">
+    <header class="home-section-heading">
+      <div>
+        <p class="app-eyebrow">Deployed discipline roles</p>
+        <h2>Functional Governance &amp; Functional Delivery</h2>
+      </div>
+      <p>
+        Employment identifies the person and Position. Deployment identifies the role they are
+        performing in the CBE discipline, why it exists, its responsibility, context and capacity.
+      </p>
+    </header>
+
+    {#if data.projection.disciplineDeployments.length === 0}
+      <section class="empty-work-state">
+        <div class="empty-state-mark">CBE</div>
+        <div>
+          <p class="app-eyebrow">No discipline deployments yet</p>
+          <h2>No CBE employee roles have been deployed.</h2>
+          <p>Declare an internal profession, ensure a matching Position exists, then deploy the role.</p>
+        </div>
+      </section>
+    {:else}
+      <div class="delivery-requirement-list">
+        {#each data.projection.disciplineDeployments as deployment}
+          <article class="delivery-requirement-card cbe-deployment-card">
+            <header>
+              <div>
+                <span class="delivery-context-code">{deployment.deploymentPurpose.replaceAll('_', ' ')}</span>
+                <h3>{deployment.roleTitle}</h3>
+                <p>{deployment.canonicalName} · {deployment.assigneeName}</p>
+              </div>
+              <div class="delivery-requirement-state">
+                <span>{deployment.responsibilityRole}</span>
+                {#if deployment.capacityPercent !== undefined}
+                  <strong>{deployment.capacityPercent.toFixed(0)}%</strong>
+                {:else}
+                  <strong>—</strong>
+                {/if}
+              </div>
+            </header>
+            <div class="delivery-requirement-meta">
+              <span>{deployment.domainName}</span>
+              <span>{deployment.organisationName}</span>
+              {#if deployment.organisationUnitName}<span>{deployment.organisationUnitName}</span>{/if}
+              <span>{deployment.contextType}{deployment.contextKey ? ` · ${deployment.contextKey}` : ''}</span>
+              <span>From {dateOnly(deployment.effectiveFrom)}</span>
+              {#if deployment.effectiveTo}<span>To {dateOnly(deployment.effectiveTo)}</span>{/if}
+            </div>
+            <p class="delivery-requirement-description">{deployment.scopeDescription}</p>
+          </article>
+        {/each}
+      </div>
+    {/if}
+  </section>
 
   <section class="delivery-demand-section">
     <header class="home-section-heading">

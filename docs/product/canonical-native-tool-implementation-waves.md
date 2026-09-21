@@ -222,6 +222,7 @@ As of 21 September 2026:
 - Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, Functional Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
 - Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;
-- control mutation workflows plus Change/Configuration/Baseline, Deliverable/Issue/Acceptance and remaining audit/history composition are still incomplete.
+- Change/Configuration/Baseline is now exposed through a tenant-scoped read projection and lifecycle-aware command surface covering Change assessment, affected objects, impact, Decision application, implementation, verification, discrepancy, closure, Configuration Items, Baselines and Effectivity; commitment Decisions are permission-gated and require an effective Authority Grant;
+- control mutation workflows, Deliverable/Issue/Acceptance, deeper Change/Control composition and remaining audit/history composition are still incomplete.
 
 Wave 0 remains open until the shared platform can be operated end-to-end through the product UI.

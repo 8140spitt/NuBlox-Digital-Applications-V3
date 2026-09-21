@@ -1,30 +1,15 @@
-<script lang="ts">
-  import { functionGroups, functions, functionsForGroup } from '$lib/function-catalog';
-
-  const totals = {
-    functions: functions.length,
-    subfunctions: functions.reduce((sum, fn) => sum + fn.subfunctionCount, 0),
-    activities: functions.reduce((sum, fn) => sum + fn.activityCount, 0),
-    engines: new Set(functions.flatMap((fn) => fn.engines.map((engine) => engine.id))).size
-  };
-</script>
-
 <svelte:head>
-  <title>Functions — NuBlox</title>
-  <meta
-    name="description"
-    content="NuBlox governed enterprise function workspaces"
-  />
+  <title>Home — NuBlox</title>
+  <meta name="description" content="NuBlox operational home" />
 </svelte:head>
 
-<section class="workspace-hero">
+<section class="workspace-hero home-hero">
   <div>
-    <p class="app-eyebrow">Tenant application</p>
-    <h1>Operate the enterprise from one governed system.</h1>
+    <p class="app-eyebrow">Operational home</p>
+    <h1>What needs your attention?</h1>
     <p class="workspace-lede">
-      The 29 Functions are stable workspaces over one canonical object graph. Each workspace
-      composes the native tools, work, records, decisions and evidence required to perform the
-      function without creating another application silo.
+      Start with assigned work, then move into the Function or governed work product that carries
+      the responsibility, Decision, evidence and delivery state.
     </p>
   </div>
 
@@ -34,65 +19,85 @@
   </a>
 </section>
 
-<section class="architecture-metrics" aria-label="Governed architecture coverage">
-  <article>
-    <span>Functions</span>
-    <strong>{totals.functions}</strong>
-    <p>Stable enterprise workspaces</p>
-  </article>
-  <article>
-    <span>L2 sub-functions</span>
-    <strong>{totals.subfunctions}</strong>
-    <p>Governed functional depth</p>
-  </article>
-  <article>
-    <span>Activities</span>
-    <strong>{totals.activities.toLocaleString()}</strong>
-    <p>Canonical work capabilities</p>
-  </article>
-  <article>
-    <span>Primary engines</span>
-    <strong>{totals.engines}</strong>
-    <p>Function-owned native engines</p>
-  </article>
+<section class="home-primary-grid" aria-label="Primary work areas">
+  <a class="home-primary-card" href="/app/my-work">
+    <span>01</span>
+    <div>
+      <strong>My Work</strong>
+      <p>Assignments, reviews, approvals, acceptance actions and competence obligations.</p>
+    </div>
+    <span aria-hidden="true">→</span>
+  </a>
+
+  <a class="home-primary-card" href="/app/functions">
+    <span>02</span>
+    <div>
+      <strong>Functions</strong>
+      <p>Enter one of the 29 enterprise Functions and work through its governed scope.</p>
+    </div>
+    <span aria-hidden="true">→</span>
+  </a>
+
+  <a class="home-primary-card" href="/app/deliverables">
+    <span>03</span>
+    <div>
+      <strong>Deliverables</strong>
+      <p>Control required work products from responsibility through review, issue and acceptance.</p>
+    </div>
+    <span aria-hidden="true">→</span>
+  </a>
 </section>
 
-<section class="workspace-section">
-  <div class="workspace-section-heading">
+<section class="home-section">
+  <header class="home-section-heading">
     <div>
-      <p class="app-eyebrow">Function directory</p>
-      <h2>29 governed workspaces</h2>
+      <p class="app-eyebrow">Operational workspaces</p>
+      <h2>Work with governed business objects</h2>
     </div>
-    <p>
-      Open a Function to see its governed scope and the canonical native engines that will execute
-      its work.
-    </p>
-  </div>
+    <p>These workspaces operate shared canonical objects rather than separate application silos.</p>
+  </header>
 
-  <div class="function-directory">
-    {#each functionGroups as group}
-      <section class="function-group-card">
-        <header>
-          <h3>{group.name}</h3>
-          <span>{group.functionCodes.length} functions</span>
-        </header>
-        <div class="function-card-grid">
-          {#each functionsForGroup(group.id) as fn}
-            <a class="function-card" href={`/app/functions/${fn.code.toLowerCase()}`}>
-              <div class="function-card-topline">
-                <span class="function-code">{fn.code}</span>
-                <span class="function-arrow" aria-hidden="true">↗</span>
-              </div>
-              <strong>{fn.name}</strong>
-              <div class="function-card-meta">
-                <span>{fn.subfunctionCount} L2</span>
-                <span>{fn.activityCount} activities</span>
-                <span>{fn.engines.length} primary engines</span>
-              </div>
-            </a>
-          {/each}
-        </div>
-      </section>
-    {/each}
+  <div class="home-workspace-grid">
+    <a href="/app/information">
+      <span>IN</span>
+      <div>
+        <strong>Information</strong>
+        <p>Authoritative information, revisions, iterations, Representations and controlled issue.</p>
+      </div>
+      <span aria-hidden="true">→</span>
+    </a>
+    <a href="/app/configuration">
+      <span>CC</span>
+      <div>
+        <strong>Change &amp; configuration</strong>
+        <p>Changes, affected objects, Configuration Items, Baselines and Effectivity.</p>
+      </div>
+      <span aria-hidden="true">→</span>
+    </a>
+    <a href="/app/deliverables">
+      <span>DL</span>
+      <div>
+        <strong>Deliverables</strong>
+        <p>Requirements, Items, reviews, approvals, Transmittals, responses and acceptance.</p>
+      </div>
+      <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>
+
+<section class="home-section home-governance">
+  <header class="home-section-heading">
+    <div>
+      <p class="app-eyebrow">Enterprise governance</p>
+      <h2>Configure how the organisation operates</h2>
+    </div>
+  </header>
+
+  <div class="home-governance-links">
+    <a href="/app/organisation"><strong>Organisation</strong><span>People, positions and organisation structure</span></a>
+    <a href="/app/deployments"><strong>Deployments</strong><span>Deploy functional capability into operating context</span></a>
+    <a href="/app/competence"><strong>Competence</strong><span>Required capability and evidence</span></a>
+    <a href="/app/control"><strong>Control</strong><span>Lifecycle, Decision and evidence state</span></a>
+    <a href="/app/access"><strong>Access</strong><span>Roles, permissions and access requests</span></a>
   </div>
 </section>

@@ -1,6 +1,6 @@
 # Market Tool Research Programme
 
-**Status:** CBE specialist market baseline architecturally closed; enterprise benchmark active through F15  
+**Status:** CBE specialist market baseline architecturally closed; enterprise benchmark active through F20  
 **Effective:** 21 September 2026
 
 ## Governing benchmark unit
@@ -26,46 +26,75 @@ Function
 - 570 / 570 Job × Tool relationships architecturally classified.
 - 511 web-verified specialist module/task capabilities.
 - 99 specialist products deeply benchmarked.
-- 462 mappings point directly to deep-verified products.
-- 106 mappings are covered by a deep-verified equivalent capability pattern.
-- 2 mappings are low relevance / duplicate.
 - 0 specialist capability-pattern mappings unresolved.
 
 ## Enterprise benchmark baseline
 
 - 29 / 29 enterprise Functions seeded.
 - 326 Function × Product relationships across 303 distinct enterprise products.
-- 208 web-verified enterprise module/task capability records.
-- 41 Function × Product relationships point to deep-verified anchors.
-- 114 relationships are covered by verified equivalent patterns.
-- 171 relationships remain for F16-F29.
-- **F01-F15 are closed at market capability-pattern level.**
+- 306 web-verified enterprise module/task capability records.
+- 62 Function × Product relationships point to deep-verified anchors.
+- 155 relationships are covered by verified equivalent patterns.
+- 109 relationships remain for F21-F29.
+- **F01-F20 are closed at market capability-pattern level.**
 
-### E1 — F01-F05 closed
-Strategy/planning; corporate governance; enterprise performance; M&A; product/service/innovation.
+## Enterprise waves closed
 
-### E2 — F06-F10 closed
-Marketing/brand; sales/commercial; customer service; procurement/supplier; demand/supply chain/logistics.
+- **E1 F01-F05:** strategy/planning; corporate governance; EPM; M&A; product/service/innovation.
+- **E2 F06-F10:** marketing/brand; sales/commercial; customer service; procurement/supplier; supply chain/logistics.
+- **E3 F11-F15:** manufacturing; field/service operations; quality; finance/treasury/tax; HCM.
+- **E4 F16-F20:** IT; data/analytics/AI; cybersecurity; legal/corporate secretariat; GRC/internal control/audit.
 
-### E3 — F11-F15 closed
+### E4 canonical patterns
 
-- **F11 Manufacturing / Production Operations** — SAP Digital Manufacturing, Siemens Opcenter and Tulip anchors establish MES execution, WIP/genealogy, resource performance, operator guidance, electronic records and frontline/composable operations.
-- **F12 Service Delivery & Field Operations** — Salesforce Field Service and ServiceNow FSM establish work orders/tasks, service appointments, scheduling/dispatch, skills/territories/crews, mobile execution, assets and parts/inventory.
-- **F13 Quality Management** — ETQ Reliance and MasterControl establish controlled quality documents, inspection/nonconformance, CAPA, audits, supplier quality, training, risk/change and closed-loop evidence; construction field-quality products are equivalence evidence for execution at site.
-- **F14 Finance, Accounting, Treasury & Tax** — Oracle Fusion Financials anchors core accounting; Trimble Viewpoint Vista anchors construction job-cost/project finance; Kyriba anchors cash/liquidity/payments/risk; Avalara anchors VAT/GST/e-invoicing/statutory tax compliance.
-- **F15 Human Resources / Human Capital** — Workday HCM anchors worker/recruiting/talent/learning/benefits; UKG Pro anchors time/scheduling/absence/payroll for complex workforces; Deel anchors global payroll, EOR and contractor/classification operations.
+**F16 Information Technology**
+- ITSM: incident, problem, change, request/catalog, CMDB/service/configuration.
+- Endpoint: enrollment, configuration, compliance, security policy, remote administration.
+- Cloud infrastructure: compute, network, storage/backup, monitoring, resource governance.
+- Software engineering/DevOps: Git repositories, pull requests/reviews, CI/CD, packages/releases and work items.
 
-## Next enterprise wave — E4 F16-F20
+**F17 Data, Analytics & AI**
+- Enterprise lakehouse/OneLake and data engineering pipelines.
+- Lakehouse/ML/AI execution and model lifecycle.
+- Data catalog, governance, glossary, lineage, quality and access governance.
+- Version-controlled analytics transformation/testing/semantic metrics.
+- Managed connector replication and CDC.
+- BI semantic models, reports and real-time analytics.
 
-- F16 Information Technology
-- F17 Data, Analytics & AI
-- F18 Cybersecurity & Information Security
-- F19 Legal & Corporate Secretariat
-- F20 Risk, Compliance, Internal Control & Audit
+**F18 Cybersecurity & Information Security**
+- SIEM/XDR, security incidents, threat hunting and automated response.
+- Identity and conditional access.
+- PAM, zero-standing privilege, session recording and secrets.
+- Asset/vulnerability/exposure discovery and risk-based remediation.
+- Application security across code, OSS, containers and IaC.
+- Zero-trust internet/private application access and DLP.
+- Email protection, human-risk training and account-takeover controls.
+
+**F19 Legal & Corporate Secretariat**
+- Contract intake, authoring, negotiation, approval/execution, obligations and renewals.
+- Legal matter intake, matter/litigation workflow, tasks, evidence, spend and risk.
+- Legal entity/subsidiary master, ownership structure, statutory compliance and reporting.
+- Electronic signature envelope lifecycle and defensible transaction audit evidence.
+
+**F20 Risk, Compliance, Internal Control & Audit**
+- Enterprise risk register, assessment and treatment.
+- Regulatory/policy/control mapping and continuous compliance evidence.
+- Control testing, deficiencies and remediation.
+- Risk-based internal audit and findings/actions.
+- Third-party risk lifecycle.
+- Whistleblowing, investigations, ethics training, policies, disclosures and third-party screening.
+
+## Next enterprise wave — E5 F21-F25
+
+- F21 Privacy & Information Governance
+- F22 Property, Facilities & Physical Assets
+- F23 Health, Safety, Environment & Sustainability
+- F24 Business Continuity, Crisis & Physical Security
+- F25 Communications, Public Affairs & Investor Relations
 
 ## Architectural rule
 
-A vendor does not create NuBlox architecture merely because its product exists. Alternative products remain market/equivalence evidence. A new or extended canonical NuBlox capability is justified only by a materially different job operation, calculation, business object, work product, lifecycle, authority model or evidence requirement.
+A vendor does not create NuBlox architecture merely because its product exists. Alternative products remain market/equivalence evidence. A new or extended canonical capability is justified only by a materially different operation, calculation, business object, work product, lifecycle, authority model or evidence requirement.
 
 ## Completion condition
 

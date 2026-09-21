@@ -29,29 +29,39 @@ Job Profile
 - 570 Job × Tool relationships.
 - 199 distinct products/tools in the initial CBE discovery universe.
 - 570 / 570 module/task verification backlog records created.
-- 291 web-verified module/task capability records.
-- 52 products have entered deep module/task verification.
-- 384 / 570 Job × Tool backlog records now point to products with a deep capability benchmark; job-specific module applicability still requires explicit verification.
+- 344 web-verified module/task capability records.
+- 62 products have entered deep module/task verification.
+- 404 / 570 Job × Tool backlog records now point to products with a deep capability benchmark; job-specific module applicability still requires explicit verification.
 - Every deep-verified capability carries an explicit NuBlox native requirement.
 
 ## Deep-verified products
 
 - ALLPLAN
 - ARGUS Enterprise
+- Agisoft Metashape
 - ArcGIS Field Maps
 - ArcGIS Urban
+- Arches
+- Asite
 - AutoCAD
 - Autodesk Build
 - Autodesk Civil 3D
 - Autodesk Docs
+- Autodesk Fusion
 - Autodesk Navisworks
 - Autodesk ReCap Pro
 - Autodesk Revit
 - Autodesk Takeoff
+- Axiell Collections
+- Bentley MicroStation
 - Bentley OpenRoads Designer
+- Bentley OpenUtilities
 - BigChange
 - Bluebeam Revu
+- Causeway Estimating
+- Command Alkon
 - Commusoft
+- ConQuest Estimating
 - Dalux Field
 - DesignBuilder
 - Esri ArcGIS Pro
@@ -95,66 +105,66 @@ Priority is based on reuse across the 84-job discovery matrix. It is a research-
 
 | Priority | Pending product / tool | Current Job mappings |
 | ---: | --- | ---: |
-| 1 | Agisoft Metashape | 2 |
-| 2 | Arches | 2 |
-| 3 | Asite | 2 |
-| 4 | Autodesk Fusion | 2 |
-| 5 | Axiell Collections | 2 |
-| 6 | Bentley MicroStation | 2 |
-| 7 | Bentley OpenUtilities | 2 |
-| 8 | Causeway Estimating | 2 |
-| 9 | Command Alkon | 2 |
-| 10 | ConQuest Estimating | 2 |
-| 11 | Cyncly 3CAD | 2 |
-| 12 | Danfoss Coolselector2 | 2 |
-| 13 | DIALux evo | 2 |
-| 14 | Elmhurst Design SAP 10 | 2 |
-| 15 | Eptura / Archibus | 2 |
-| 16 | Esri ArcGIS Utility Network | 2 |
-| 17 | Genetec Security Center | 2 |
-| 18 | HCSS Equipment360 | 2 |
-| 19 | Hexagon Cabinet Vision | 2 |
-| 20 | Hexagon MinePlan | 2 |
-| 21 | LenelS2 OnGuard | 2 |
-| 22 | Matterport | 2 |
-| 23 | MeasureSquare | 2 |
-| 24 | Microvellum | 2 |
-| 25 | MRI Horizon | 2 |
-| 26 | Oracle Primavera Unifier | 2 |
-| 27 | Planon IWMS | 2 |
-| 28 | Re-Leased | 2 |
-| 29 | Rhino | 2 |
-| 30 | RIB Candy | 2 |
-| 31 | Safe Software FME | 2 |
-| 32 | Thinkproject CEMAR | 2 |
-| 33 | Topcon MAGNET | 2 |
-| 34 | Trimble Access | 2 |
-| 35 | Trimble Field View | 2 |
-| 36 | Trimble ProDesign | 2 |
-| 37 | Vectorworks Landmark | 2 |
-| 38 | WeldEye | 2 |
-| 39 | Wenco | 2 |
-| 40 | 12d Model | 1 |
-| 41 | 2020 Design Live | 1 |
-| 42 | 3D Lift Plan | 1 |
-| 43 | Adobe Illustrator | 1 |
-| 44 | AggFlow DM | 1 |
-| 45 | Aimsun Next 26 | 1 |
-| 46 | ALPHACAM | 1 |
-| 47 | ArcGIS Online | 1 |
-| 48 | ArtiCAD | 1 |
-| 49 | Asta Powerproject | 1 |
-| 50 | AutoCAD Plant 3D | 1 |
-| 51 | Autodesk InfraWorks | 1 |
-| 52 | Autodesk Robot Structural Analysis | 1 |
-| 53 | AVEVA E3D Design | 1 |
-| 54 | Avontus Quantify | 1 |
-| 55 | Avontus Scaffold Designer | 1 |
-| 56 | Bentley CUBE | 1 |
-| 57 | Bentley EnergySimulator | 1 |
-| 58 | Bentley ProjectWise | 1 |
-| 59 | Capture | 1 |
-| 60 | CAST WYSIWYG | 1 |
+| 1 | Cyncly 3CAD | 2 |
+| 2 | Danfoss Coolselector2 | 2 |
+| 3 | DIALux evo | 2 |
+| 4 | Elmhurst Design SAP 10 | 2 |
+| 5 | Eptura / Archibus | 2 |
+| 6 | Esri ArcGIS Utility Network | 2 |
+| 7 | Genetec Security Center | 2 |
+| 8 | HCSS Equipment360 | 2 |
+| 9 | Hexagon Cabinet Vision | 2 |
+| 10 | Hexagon MinePlan | 2 |
+| 11 | LenelS2 OnGuard | 2 |
+| 12 | Matterport | 2 |
+| 13 | MeasureSquare | 2 |
+| 14 | Microvellum | 2 |
+| 15 | MRI Horizon | 2 |
+| 16 | Oracle Primavera Unifier | 2 |
+| 17 | Planon IWMS | 2 |
+| 18 | Re-Leased | 2 |
+| 19 | Rhino | 2 |
+| 20 | RIB Candy | 2 |
+| 21 | Safe Software FME | 2 |
+| 22 | Thinkproject CEMAR | 2 |
+| 23 | Topcon MAGNET | 2 |
+| 24 | Trimble Access | 2 |
+| 25 | Trimble Field View | 2 |
+| 26 | Trimble ProDesign | 2 |
+| 27 | Vectorworks Landmark | 2 |
+| 28 | WeldEye | 2 |
+| 29 | Wenco | 2 |
+| 30 | 12d Model | 1 |
+| 31 | 2020 Design Live | 1 |
+| 32 | 3D Lift Plan | 1 |
+| 33 | Adobe Illustrator | 1 |
+| 34 | AggFlow DM | 1 |
+| 35 | Aimsun Next 26 | 1 |
+| 36 | ALPHACAM | 1 |
+| 37 | ArcGIS Online | 1 |
+| 38 | ArtiCAD | 1 |
+| 39 | Asta Powerproject | 1 |
+| 40 | AutoCAD Plant 3D | 1 |
+| 41 | Autodesk InfraWorks | 1 |
+| 42 | Autodesk Robot Structural Analysis | 1 |
+| 43 | AVEVA E3D Design | 1 |
+| 44 | Avontus Quantify | 1 |
+| 45 | Avontus Scaffold Designer | 1 |
+| 46 | Bentley CUBE | 1 |
+| 47 | Bentley EnergySimulator | 1 |
+| 48 | Bentley ProjectWise | 1 |
+| 49 | Capture | 1 |
+| 50 | CAST WYSIWYG | 1 |
+| 51 | Cityworks | 1 |
+| 52 | Cyncly EQ Flex | 1 |
+| 53 | Cyncly Innoplus | 1 |
+| 54 | Cyncly Soft Tech | 1 |
+| 55 | Cyncly Winner Flex | 1 |
+| 56 | Dalux | 1 |
+| 57 | DataKustik CadnaA | 1 |
+| 58 | Dlubal RFEM | 1 |
+| 59 | Doka Tipos / planning tools | 1 |
+| 60 | ElectricalOM | 1 |
 
 ## Verification acceptance test
 
@@ -185,14 +195,11 @@ A Job × Tool mapping is not considered complete merely because the product itse
 - Wave 3: analytics, task/field systems, document control, GIS, conceptual/civil authoring and regulatory case management.
 - Wave 4: equipment telematics, architecture/reinforcement, reality capture, building-performance simulation, land development, BIM assurance, survey processing and road/drainage design.
 - Wave 5: architectural BIM, regulatory cloud casework, point-cloud registration, survey adjustment, MEP calculation, specification authoring, model collaboration, construction stakeout, urban scenario planning, property valuation and 2D/3D take-off.
+- Wave 6: photogrammetry, heritage information management, CDE/form workflows, integrated CAD/CAM, collections management, infrastructure CAD, utility-network design, construction estimating and concrete/material quote-to-cash operations.
 
-### Wave 6 — remaining high-reuse and specialist tools
+### Wave 7 — specialist long tail
 
-Continue using the priority table above, then close the lower-reuse products where they contain professionally critical authoring, analysis, field or regulatory functionality.
-
-### Wave 7 — commercial / contractual / property / regulatory
-
-Deepen remaining contract administration, estimating, development appraisal, valuation, certification and statutory case systems.
+Continue the remaining lower-reuse tools, prioritising products whose capabilities are professionally critical, regulated, computational or create controlled physical/technical outputs.
 
 ### Wave 8 — full 29-function enterprise benchmark
 

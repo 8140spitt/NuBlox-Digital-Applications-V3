@@ -81,7 +81,13 @@
   </section>
 
   {#if data.canManage}
-    <section class="information-admin">
+    <details class="workspace-command-drawer">
+      <summary>
+        <span>Actions</span>
+        <strong>Manage information</strong>
+        <small>Create, revise, release and issue governed information</small>
+      </summary>
+      <section class="information-admin">
       <header class="information-admin-heading">
         <div>
           <p class="app-eyebrow">Controlled authoring</p>
@@ -319,7 +325,8 @@
           </form>
         </details>
       </div>
-    </section>
+      </section>
+    </details>
   {/if}
 
   <section class="information-register">

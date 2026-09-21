@@ -10,6 +10,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@nublox/kernel':
+        specifier: workspace:*
+        version: link:../../packages/kernel
       '@nublox/persistence':
         specifier: workspace:*
         version: link:../../packages/persistence

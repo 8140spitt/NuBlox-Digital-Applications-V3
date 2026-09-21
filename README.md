@@ -52,6 +52,10 @@ The V3 web application now has a protected tenant shell. Application login ident
 
 ```bash
 cp .env.example .env
+# Edit .env, then load it into the shell for database/bootstrap CLI commands.
+set -a
+source .env
+set +a
 pnpm install
 pnpm db:migrate
 ```

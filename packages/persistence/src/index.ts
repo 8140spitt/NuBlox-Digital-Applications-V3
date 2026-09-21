@@ -1,3 +1,4 @@
+export * from './control-read-repository.js';
 export * from './competence-command-service.js';
 export * from './competence-read-repository.js';
 export * from './functional-deployment-command-service.js';

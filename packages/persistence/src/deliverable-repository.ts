@@ -520,6 +520,7 @@ function mapDeployment(row: DeploymentRow): FunctionalDeployment {
     tenantId: row.tenant_id as TenantId,
     functionId: row.function_id as FunctionalDeployment['functionId'],
     ...(row.sub_function_id ? { subFunctionId: row.sub_function_id as NonNullable<FunctionalDeployment['subFunctionId']> } : {}),
+    deploymentPurpose: row.deployment_purpose,
     organisationId: row.organisation_id as FunctionalDeployment['organisationId'],
     ...(row.organisation_unit_id ? { organisationUnitId: row.organisation_unit_id as NonNullable<FunctionalDeployment['organisationUnitId']> } : {}),
     contextType: row.context_type,

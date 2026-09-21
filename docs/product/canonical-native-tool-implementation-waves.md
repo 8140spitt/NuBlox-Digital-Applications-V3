@@ -221,6 +221,7 @@ As of 21 September 2026:
 - 45 engines remain to build;
 - Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, Functional Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
-- control mutation workflows plus Information/Revision/Representation, Change/Configuration/Baseline, Deliverable/Issue/Acceptance and remaining audit/history composition are still incomplete.
+- Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;
+- control mutation workflows plus Change/Configuration/Baseline, Deliverable/Issue/Acceptance and remaining audit/history composition are still incomplete.
 
 Wave 0 remains open until the shared platform can be operated end-to-end through the product UI.

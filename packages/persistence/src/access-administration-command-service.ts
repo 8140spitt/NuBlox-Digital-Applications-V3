@@ -63,13 +63,14 @@ export class MySqlAccessAdministrationCommandService {
   ): Promise<AccessRoleDefinition> {
     await this.requireManageAccess(tenantId, actorPersonId);
 
+    const description = optional(input.description);
     const role: AccessRoleDefinition = {
       id: asId<'AccessRoleId'>(`ROLE-${randomUUID()}`, 'Access Role'),
       catalogueScope: 'TENANT',
       tenantId,
       code: required(input.code, 'Role code').toUpperCase(),
       name: required(input.name, 'Role name'),
-      ...(optional(input.description) ? { description: optional(input.description) } : {}),
+      ...(description ? { description } : {}),
       status: 'ACTIVE'
     };
 

@@ -90,7 +90,7 @@ suite('control-spine read projection', () => {
       lifecycleDefinitionId: lifecycle.id,
       code: 'ACTIVE',
       name: 'Active',
-      category: 'IN_WORK',
+      category: 'ACTIVE',
       initial: true,
       terminal: false,
       status: 'ACTIVE'

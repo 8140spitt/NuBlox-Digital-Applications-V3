@@ -14,6 +14,8 @@ import {
   MySqlChangeConfigurationCommandService,
   MySqlInformationCommandService,
   MySqlInformationReadRepository,
+  MySqlIndustryDeliveryCommandService,
+  MySqlIndustryDeliveryReadRepository,
   MySqlFunctionalDeploymentCommandService,
   MySqlFunctionalDeploymentReadRepository,
   MySqlMyWorkRepository,
@@ -36,6 +38,8 @@ let deliverableCommandServiceInstance: MySqlDeliverableCommandService | undefine
 let changeConfigurationCommandServiceInstance: MySqlChangeConfigurationCommandService | undefined;
 let informationCommandServiceInstance: MySqlInformationCommandService | undefined;
 let informationReadRepositoryInstance: MySqlInformationReadRepository | undefined;
+let industryDeliveryCommandServiceInstance: MySqlIndustryDeliveryCommandService | undefined;
+let industryDeliveryReadRepositoryInstance: MySqlIndustryDeliveryReadRepository | undefined;
 let functionalDeploymentCommandServiceInstance: MySqlFunctionalDeploymentCommandService | undefined;
 let functionalDeploymentReadRepositoryInstance: MySqlFunctionalDeploymentReadRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
@@ -142,6 +146,22 @@ export function getControlReadRepository(): MySqlControlReadRepository {
     controlReadRepositoryInstance = new MySqlControlReadRepository(getDatabasePool());
   }
   return controlReadRepositoryInstance;
+}
+
+export function getIndustryDeliveryCommandService(): MySqlIndustryDeliveryCommandService {
+  if (!industryDeliveryCommandServiceInstance) {
+    industryDeliveryCommandServiceInstance =
+      new MySqlIndustryDeliveryCommandService(getDatabasePool());
+  }
+  return industryDeliveryCommandServiceInstance;
+}
+
+export function getIndustryDeliveryReadRepository(): MySqlIndustryDeliveryReadRepository {
+  if (!industryDeliveryReadRepositoryInstance) {
+    industryDeliveryReadRepositoryInstance =
+      new MySqlIndustryDeliveryReadRepository(getDatabasePool());
+  }
+  return industryDeliveryReadRepositoryInstance;
 }
 
 export function getInformationCommandService(): MySqlInformationCommandService {

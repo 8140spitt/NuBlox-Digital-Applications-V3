@@ -1,5 +1,7 @@
 import {
   createDatabasePool,
+  MySqlAccessAdministrationCommandService,
+  MySqlAccessAdministrationReadRepository,
   MySqlAccessRepository,
   MySqlAuthRepository,
   MySqlMyWorkRepository,
@@ -8,6 +10,8 @@ import {
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
+let accessAdministrationCommandServiceInstance: MySqlAccessAdministrationCommandService | undefined;
+let accessAdministrationReadRepositoryInstance: MySqlAccessAdministrationReadRepository | undefined;
 let accessRepositoryInstance: MySqlAccessRepository | undefined;
 let authRepositoryInstance: MySqlAuthRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
@@ -20,6 +24,24 @@ export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   }
 
   return poolInstance;
+}
+
+export function getAccessAdministrationCommandService(): MySqlAccessAdministrationCommandService {
+  if (!accessAdministrationCommandServiceInstance) {
+    accessAdministrationCommandServiceInstance =
+      new MySqlAccessAdministrationCommandService(getDatabasePool());
+  }
+
+  return accessAdministrationCommandServiceInstance;
+}
+
+export function getAccessAdministrationReadRepository(): MySqlAccessAdministrationReadRepository {
+  if (!accessAdministrationReadRepositoryInstance) {
+    accessAdministrationReadRepositoryInstance =
+      new MySqlAccessAdministrationReadRepository(getDatabasePool());
+  }
+
+  return accessAdministrationReadRepositoryInstance;
 }
 
 export function getAccessRepository(): MySqlAccessRepository {

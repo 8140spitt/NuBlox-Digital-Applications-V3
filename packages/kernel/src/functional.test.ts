@@ -265,6 +265,7 @@ describe('functional framework and deployment invariants', () => {
         tenantId,
         functionId: f01.id,
         subFunctionId: f01_01.id,
+        deploymentPurpose: 'FUNCTIONAL_GOVERNANCE',
         organisationId: organisation.id,
         organisationUnitId: unit.id,
         contextType: 'PROJECT',
@@ -324,6 +325,7 @@ describe('functional framework and deployment invariants', () => {
       assignment
     );
 
+    expect(deployment.deploymentPurpose).toBe('FUNCTIONAL_GOVERNANCE');
     expect(deployment.contextObjectId).toBe(project.id);
     expect(assignment.assigneeId).toBe(position.id);
     expect(responsibility.scopeId).toBe(project.id);

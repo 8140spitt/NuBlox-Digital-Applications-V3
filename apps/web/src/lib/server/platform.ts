@@ -9,6 +9,7 @@ import {
   MySqlCompetenceReadRepository,
   MySqlControlReadRepository,
   MySqlChangeConfigurationReadRepository,
+  MySqlChangeConfigurationCommandService,
   MySqlInformationCommandService,
   MySqlInformationReadRepository,
   MySqlFunctionalDeploymentCommandService,
@@ -28,6 +29,7 @@ let competenceCommandServiceInstance: MySqlCompetenceCommandService | undefined;
 let competenceReadRepositoryInstance: MySqlCompetenceReadRepository | undefined;
 let controlReadRepositoryInstance: MySqlControlReadRepository | undefined;
 let changeConfigurationReadRepositoryInstance: MySqlChangeConfigurationReadRepository | undefined;
+let changeConfigurationCommandServiceInstance: MySqlChangeConfigurationCommandService | undefined;
 let informationCommandServiceInstance: MySqlInformationCommandService | undefined;
 let informationReadRepositoryInstance: MySqlInformationReadRepository | undefined;
 let functionalDeploymentCommandServiceInstance: MySqlFunctionalDeploymentCommandService | undefined;
@@ -99,6 +101,14 @@ export function getCompetenceReadRepository(): MySqlCompetenceReadRepository {
     competenceReadRepositoryInstance = new MySqlCompetenceReadRepository(getDatabasePool());
   }
   return competenceReadRepositoryInstance;
+}
+
+export function getChangeConfigurationCommandService(): MySqlChangeConfigurationCommandService {
+  if (!changeConfigurationCommandServiceInstance) {
+    changeConfigurationCommandServiceInstance =
+      new MySqlChangeConfigurationCommandService(getDatabasePool());
+  }
+  return changeConfigurationCommandServiceInstance;
 }
 
 export function getChangeConfigurationReadRepository(): MySqlChangeConfigurationReadRepository {

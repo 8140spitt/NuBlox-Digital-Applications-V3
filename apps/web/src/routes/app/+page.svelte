@@ -38,11 +38,11 @@
     <span aria-hidden="true">→</span>
   </a>
 
-  <a class="home-primary-card" href="/app/deliverables">
+  <a class="home-primary-card" href="/app/delivery">
     <span>03</span>
     <div>
-      <strong>Deliverables</strong>
-      <p>Control required work products from responsibility through review, issue and acceptance.</p>
+      <strong>Services &amp; Delivery</strong>
+      <p>Plan CBE services, professional capability, Project demand and internal/external supply.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>

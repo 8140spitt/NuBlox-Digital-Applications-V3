@@ -46,6 +46,27 @@ NuBlox Enterprise Operating Platform
 
 Start with [the architecture index](docs/architecture/README.md).
 
+## Local application
+
+The V3 web application now has a protected tenant shell. Application login identity is deliberately separate from NuBlox Permission, Responsibility and Authority.
+
+```bash
+cp .env.example .env
+pnpm install
+pnpm db:migrate
+```
+
+For the first controlled local account, set the `NUBLOX_BOOTSTRAP_*` values shown in `.env.example`, then run:
+
+```bash
+pnpm auth:bootstrap
+pnpm dev
+```
+
+Open the local URL shown by Vite. The public product page remains public; `/app` redirects to `/login` until a valid tenant/person session exists.
+
+Authentication uses a provisioned application account mapped to an active tenant-scoped `Person`, scrypt password hashing and server-side opaque sessions. Public self-registration is intentionally not provided.
+
 ## Non-negotiable rule
 
 **NuBlox is the product and the operating environment. External products are benchmarks or migration/import/export sources and targets only. No external application may be required to execute a NuBlox capability or complete a user's work.**

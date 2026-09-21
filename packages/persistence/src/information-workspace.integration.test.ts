@@ -154,6 +154,38 @@ suite('information workspace', () => {
       correlationId: 'INFORMATION-TEST'
     });
 
+    const unrelatedContainer = await information.createContainer(tenantId, admin.id, {
+      containerType: 'DRAWING',
+      code: `A-2001-${suffix}`,
+      title: 'Unrelated Drawing'
+    });
+    const unrelatedDecision: Decision = {
+      id: asId<'DecisionId'>(`DEC-INFO-OTHER-${suffix}`, 'Decision'),
+      tenantId,
+      decisionType: 'INFORMATION_RELEASE',
+      subjectObjectId: unrelatedContainer.canonicalObjectId,
+      subjectVersion: revision.revision,
+      outcome: 'APPROVED',
+      reason: 'Approval belongs to another Information object.',
+      deciderPersonId: admin.id,
+      authorityGrantId: authorityGrant.id,
+      decidedAt: new Date().toISOString()
+    };
+    await control.createDecision(tenantId, unrelatedDecision, {
+      actorPersonId: admin.id,
+      correlationId: 'INFORMATION-TEST'
+    });
+    await expect(
+      information.releaseRevision(tenantId, admin.id, {
+        informationRevisionId: revision.id,
+        releasedIterationId: frozen.id,
+        decisionId: unrelatedDecision.id
+      })
+    ).rejects.toMatchObject({
+      name: 'InformationCommandError',
+      code: 'INVALID_INPUT'
+    } satisfies Partial<InformationCommandError>);
+
     const released = await information.releaseRevision(tenantId, admin.id, {
       informationRevisionId: revision.id,
       releasedIterationId: frozen.id,

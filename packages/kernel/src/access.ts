@@ -6,6 +6,27 @@ import type {
 } from './ids.js';
 import type { PermissionDefinition, RecordStatus } from './model.js';
 
+export const PLATFORM_ADMINISTRATOR_ROLE_ID =
+  'ROLE-PLATFORM-ADMINISTRATOR' as AccessRoleId;
+
+export const PLATFORM_PERMISSION_KEYS = {
+  FUNCTION_READ: 'platform.function.read',
+  WORK_READ: 'platform.work.read',
+  ORGANISATION_READ: 'platform.organisation.read',
+  ORGANISATION_MANAGE: 'platform.organisation.manage',
+  PEOPLE_READ: 'platform.people.read',
+  PEOPLE_MANAGE: 'platform.people.manage',
+  ACCESS_MANAGE: 'platform.access.manage',
+  DEPLOYMENT_READ: 'platform.deployment.read',
+  DEPLOYMENT_MANAGE: 'platform.deployment.manage',
+  AUDIT_READ: 'platform.audit.read',
+  CONFIGURATION_READ: 'platform.configuration.read',
+  CONFIGURATION_MANAGE: 'platform.configuration.manage'
+} as const;
+
+export type PlatformPermissionKey =
+  (typeof PLATFORM_PERMISSION_KEYS)[keyof typeof PLATFORM_PERMISSION_KEYS];
+
 export type AccessCatalogueScope = 'PLATFORM' | 'TENANT';
 export type AccessPrincipalType = 'PERSON' | 'POSITION' | 'ORGANISATION_UNIT';
 

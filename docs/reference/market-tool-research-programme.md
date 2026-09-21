@@ -1,6 +1,6 @@
 # Market Tool Research Programme
 
-**Status:** CBE specialist market baseline architecturally closed; enterprise benchmark active through F25  
+**Status:** Market capability-pattern baseline architecturally closed across CBE and all 29 enterprise Functions  
 **Effective:** 21 September 2026
 
 ## Governing benchmark unit
@@ -24,49 +24,96 @@ Function
 
 - 84 / 84 CBE Job Profiles covered.
 - 570 / 570 Job × Tool relationships architecturally classified.
-- 511 web-verified specialist module/task capabilities.
+- 511 web-verified specialist module/task capability records.
 - 99 specialist products deeply benchmarked.
-- 0 specialist capability-pattern mappings unresolved.
+- 462 mappings point directly to deep-verified products.
+- 106 mappings are covered by deep-verified equivalent patterns.
+- 2 mappings are low relevance / duplicate.
+- **0 specialist capability-pattern mappings unresolved.**
 
 ## Enterprise benchmark baseline
 
-- 29 / 29 enterprise Functions seeded.
-- 326 Function × Product relationships across 303 distinct enterprise products.
-- 360 web-verified enterprise module/task capability records.
-- 74 Function × Product relationships point to deep-verified anchors.
-- 197 relationships are covered by verified equivalent patterns.
-- 55 relationships remain for F26-F29.
-- **F01-F25 are closed at market capability-pattern level.**
+- 29 / 29 enterprise Functions covered.
+- 326 / 326 Function × Product relationships architecturally classified.
+- 303 distinct enterprise products represented.
+- 425 web-verified enterprise module/task capability records.
+- 88 relationships use deep-verified representative anchors.
+- 238 relationships are explicitly covered by equivalent deep-verified patterns.
+- **0 enterprise Function × Product relationships unresolved at market capability-pattern level.**
 
-## Waves closed
+## Enterprise waves closed
 
-- E1 F01-F05 — strategy, governance, performance, M&A, product/innovation.
-- E2 F06-F10 — marketing, sales, service, procurement, supply chain.
-- E3 F11-F15 — manufacturing, field operations, quality, finance, HCM.
-- E4 F16-F20 — IT, data/AI, cybersecurity, legal/secretariat, GRC/audit.
-- E5 F21-F25 — privacy/information governance, property/assets, HSE/sustainability, continuity/crisis/physical security, communications/public affairs/investor relations.
+- **E1 F01-F05:** Strategy & Enterprise Planning; Corporate Governance; Enterprise Performance; Corporate Development & M&A; Product/Service/Innovation.
+- **E2 F06-F10:** Marketing & Brand; Sales & Commercial; Customer Service; Procurement & Supplier; Demand/Supply Chain/Logistics.
+- **E3 F11-F15:** Manufacturing; Service Delivery/Field Operations; Quality; Finance/Treasury/Tax; HCM.
+- **E4 F16-F20:** IT; Data/Analytics/AI; Cybersecurity; Legal/Corporate Secretariat; Risk/Compliance/Internal Control/Audit.
+- **E5 F21-F25:** Privacy/Information Governance; Property/Facilities/Assets; HSE/Sustainability; Business Continuity/Crisis/Physical Security; Communications/Public Affairs/IR.
+- **E6 F26-F29:** Knowledge/Documents/Records; PPM; Change/Transformation; Business Process/Continuous Improvement.
 
-### E5 canonical patterns
+## Final E6 canonical patterns
 
-- **F21:** RoPA/data mapping, DPIA/privacy risk, DSRs, consent, privacy incidents; classification, retention/records, eDiscovery and DLP.
-- **F22:** asset master/hierarchy, preventive/reactive work, inspections/reliability; property/lease, space/workplace and facility-service management.
-- **F23:** HSE incidents, audits/inspections, risk, environment and competence; enterprise ESG/carbon accounting/reporting; project/building LCA and lifecycle costing.
-- **F24:** BIA, continuity/recovery plans, exercises and crisis activation; mass notification/critical event communication; access control, video and unified security incidents.
-- **F25:** journalist/media relationship management, monitoring, distribution and PR analytics; IR website, earnings/events, investor CRM, shareholder surveillance and engagement analytics.
+### F26 Knowledge, Document & Records Management
 
-## Final enterprise wave — E6 F26-F29
+- Enterprise document libraries, metadata, versioning and approval.
+- Knowledge sites/pages and enterprise search.
+- Records declaration, retention, disposition and legal hold.
+- Enterprise content repositories, business workspaces, content workflow and document generation.
+- Construction/engineering CDE controls: technical-file versions, reviews/approvals, transmittals, markups and model/document collaboration.
 
-- F26 Knowledge, Document & Records Management
-- F27 Portfolio, Programme & Project Management
-- F28 Change & Transformation Management
-- F29 Business Process & Continuous Improvement
+### F27 Portfolio, Programme & Project Management
 
-## Architectural rule
+- Project/programme CPM schedules, baselines, progress and resource/capacity management.
+- Portfolio intake, prioritization, scenarios, roadmaps and benefits/outcome realization.
+- Capital-project cost sheets, contracts, changes, workflow approvals and payments.
+- Construction execution: RFIs, submittals, daily evidence, variations, quality and closeout.
+- 4D model–schedule linking, construction-sequence simulation and progress visualization.
+- Earned-value baselines, CPI/SPI/variance, EAC forecasts and compliance/audit reporting.
 
-A vendor does not create NuBlox architecture merely because its product exists. Alternative products remain market/equivalence evidence. A new or extended canonical capability is justified only by a materially different operation, calculation, business object, work product, lifecycle, authority model or evidence requirement.
+### F28 Change & Transformation Management
 
-## Completion condition
+- Transformation strategy, demand, portfolio plans, investment/outcome tracking and roadmaps.
+- Digital adoption: contextual guidance, change communications and adoption/friction analytics.
 
-The market benchmark is ready to drive canonical NuBlox tool architecture only when every material enterprise and CBE capability can answer:
+### F29 Business Process & Continuous Improvement
 
-> What does the person do, which market operation enables it, what controlled output results, and what equivalent or improved governed NuBlox capability must exist?
+- BPMN process modelling, repository and governance.
+- Journey-to-process linkage and stakeholder experience models.
+- Process mining, object-centric operational models, conformance, root cause and value opportunities.
+- Improvement initiatives, scenarios and benefits.
+- Executable BPMN/DMN orchestration across people, systems, services, events and AI agents with runtime incident/audit state.
+
+## Architectural rule established by the benchmark
+
+A market product does **not** create NuBlox architecture merely because it exists.
+
+A new or extended canonical NuBlox capability is justified only when market/job evidence shows a materially different:
+
+- operation or professional calculation;
+- business object, transaction or controlled deliverable;
+- lifecycle/status model;
+- responsibility, authority, review or approval model;
+- audit/evidence requirement; or
+- interoperability/migration semantic.
+
+Alternative vendors remain evidence for market equivalence and migration/integration requirements without creating duplicate NuBlox modules.
+
+## What the completed market baseline means for NuBlox
+
+The benchmark is now sufficient to stop designing the application from vendor names or generic ERP menu structures.
+
+The next governed programme is:
+
+```text
+market capability pattern
+-> NuBlox canonical capability
+-> canonical business objects
+-> required professional/transactional engine
+-> Function / L2 / Activity ownership
+-> participating Job Profiles
+-> lifecycle + authority + evidence
+-> workspace/tool interaction model
+-> implementation gap
+-> implementation wave
+```
+
+The immediate next output should therefore be a **NuBlox Canonical Capability & Tool Architecture** derived from these benchmark registers, not another uncontrolled list of products.

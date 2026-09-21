@@ -43,6 +43,15 @@ interface PersonRow extends RowDataPacket {
   status: 'ACTIVE' | 'INACTIVE';
 }
 
+interface JobProfileRow extends RowDataPacket {
+  id: string;
+  catalogue_scope: 'PLATFORM' | 'TENANT';
+  tenant_id: string | null;
+  code: string;
+  name: string;
+  status: 'ACTIVE' | 'INACTIVE';
+}
+
 export interface OrganisationOccupantView {
   occupancyId: string;
   personId: string;
@@ -85,9 +94,17 @@ export interface OrganisationPersonView {
   hasCurrentPosition: boolean;
 }
 
+export interface OrganisationJobProfileView {
+  id: string;
+  code: string;
+  name: string;
+  catalogueScope: 'PLATFORM' | 'TENANT';
+}
+
 export interface OrganisationStructureProjection {
   organisations: OrganisationView[];
   people: OrganisationPersonView[];
+  jobProfiles: OrganisationJobProfileView[];
   totals: {
     organisations: number;
     units: number;
@@ -110,8 +127,14 @@ export class MySqlOrganisationReadRepository {
       throw new Error('Organisation structure evaluation time is invalid.');
     }
 
-    const [organisationRows, unitRows, positionRows, occupancyRows, personRows] =
-      await Promise.all([
+    const [
+      organisationRows,
+      unitRows,
+      positionRows,
+      occupancyRows,
+      personRows,
+      jobProfileRows
+    ] = await Promise.all([
         this.pool.execute<OrganisationRow[]>(
           `SELECT id, legal_name, trading_name, status
              FROM organisations
@@ -156,6 +179,14 @@ export class MySqlOrganisationReadRepository {
             WHERE tenant_id = ?
             ORDER BY status = 'ACTIVE' DESC, COALESCE(preferred_name, legal_name), id`,
           [tenantId]
+        ),
+        this.pool.execute<JobProfileRow[]>(
+          `SELECT id, catalogue_scope, tenant_id, code, name, status
+             FROM job_profiles
+            WHERE status = 'ACTIVE'
+              AND (catalogue_scope = 'PLATFORM' OR tenant_id = ?)
+            ORDER BY catalogue_scope, code, name, id`,
+          [tenantId]
         )
       ]);
 
@@ -164,6 +195,7 @@ export class MySqlOrganisationReadRepository {
     const positions = positionRows[0];
     const occupancies = occupancyRows[0];
     const people = personRows[0];
+    const jobProfiles = jobProfileRows[0];
 
     const occupantsByPosition = new Map<string, OrganisationOccupantView[]>();
     const occupiedPersonIds = new Set<string>();
@@ -228,6 +260,12 @@ export class MySqlOrganisationReadRepository {
     return {
       organisations: organisationViews,
       people: personViews,
+      jobProfiles: jobProfiles.map((row) => ({
+        id: row.id,
+        code: row.code,
+        name: row.name,
+        catalogueScope: row.catalogue_scope
+      })),
       totals: {
         organisations: organisations.length,
         units: units.length,

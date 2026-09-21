@@ -5,6 +5,8 @@ import {
   MySqlAccessPermissionRequestRepository,
   MySqlAccessRepository,
   MySqlAuthRepository,
+  MySqlFunctionalDeploymentCommandService,
+  MySqlFunctionalDeploymentReadRepository,
   MySqlMyWorkRepository,
   MySqlOrganisationCommandService,
   MySqlOrganisationReadRepository
@@ -16,6 +18,8 @@ let accessAdministrationReadRepositoryInstance: MySqlAccessAdministrationReadRep
 let accessPermissionRequestRepositoryInstance: MySqlAccessPermissionRequestRepository | undefined;
 let accessRepositoryInstance: MySqlAccessRepository | undefined;
 let authRepositoryInstance: MySqlAuthRepository | undefined;
+let functionalDeploymentCommandServiceInstance: MySqlFunctionalDeploymentCommandService | undefined;
+let functionalDeploymentReadRepositoryInstance: MySqlFunctionalDeploymentReadRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
 let organisationCommandServiceInstance: MySqlOrganisationCommandService | undefined;
 let organisationReadRepositoryInstance: MySqlOrganisationReadRepository | undefined;
@@ -69,6 +73,24 @@ export function getAuthRepository(): MySqlAuthRepository {
   }
 
   return authRepositoryInstance;
+}
+
+export function getFunctionalDeploymentCommandService(): MySqlFunctionalDeploymentCommandService {
+  if (!functionalDeploymentCommandServiceInstance) {
+    functionalDeploymentCommandServiceInstance =
+      new MySqlFunctionalDeploymentCommandService(getDatabasePool());
+  }
+
+  return functionalDeploymentCommandServiceInstance;
+}
+
+export function getFunctionalDeploymentReadRepository(): MySqlFunctionalDeploymentReadRepository {
+  if (!functionalDeploymentReadRepositoryInstance) {
+    functionalDeploymentReadRepositoryInstance =
+      new MySqlFunctionalDeploymentReadRepository(getDatabasePool());
+  }
+
+  return functionalDeploymentReadRepositoryInstance;
 }
 
 export function getMyWorkRepository(): MySqlMyWorkRepository {

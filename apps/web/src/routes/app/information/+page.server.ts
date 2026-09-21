@@ -97,13 +97,13 @@ export const load: PageServerLoad = async ({ locals }) => {
     access.evaluatePermission(
       tenantId,
       session.personId,
-      PLATFORM_PERMISSION_KEYS.CONFIGURATION_READ,
+      PLATFORM_PERMISSION_KEYS.INFORMATION_READ,
       { scopeType: 'TENANT' }
     ),
     access.evaluatePermission(
       tenantId,
       session.personId,
-      PLATFORM_PERMISSION_KEYS.CONFIGURATION_MANAGE,
+      PLATFORM_PERMISSION_KEYS.INFORMATION_MANAGE,
       { scopeType: 'TENANT' }
     )
   ]);

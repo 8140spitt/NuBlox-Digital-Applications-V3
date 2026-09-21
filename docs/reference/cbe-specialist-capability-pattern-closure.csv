@@ -1,0 +1,16 @@
+canonical_capability_pattern,job_profile_ids,deep_verified_anchor_product,alternative_products,architecture_status,verified_date
+Acoustic / noise / room-acoustics analysis,CBE-JP-001,SoundPLANnoise,DataKustik CadnaA; ODEON Room Acoustics Software; Marshall Day Acoustics INSUL,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Agricultural field operations / machine/task records,CBE-JP-002,John Deere Operations Center,Trimble Agriculture software,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Freeform NURBS/SubD and computational design,CBE-JP-003,Rhino,Grasshopper,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Trade-specific flooring takeoff / layout / waste optimisation,CBE-JP-014,MeasureSquare,RFMS MeasureMobile,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Crane lift planning / crane selection / ground-bearing and rigging,CBE-JP-028,3D Lift Plan,Liebherr Crane Planner 2.0,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Formwork planning / material scheduling / temporary works,CBE-JP-038,Doka Tipos / planning tools,PERI CAD / planning tools,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Scaffold design / quantification / inspection planning,CBE-JP-067,SMART Scaffolder,Avontus Scaffold Designer; Avontus Quantify,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Fire dynamics / smoke simulation,CBE-JP-037,Thunderhead Engineering PyroSim,NIST Fire Dynamics Simulator (FDS); NIST CFAST,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Evacuation / pedestrian movement simulation,CBE-JP-037,Thunderhead Engineering Pathfinder,Oasys MassMotion,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Window/glazing system configuration and fabrication,CBE-JP-044,Cyncly Soft Tech,Orgadata Logikal,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Domestic heat-loss / heat-pump sizing and retrofit design,CBE-JP-045,Heat Engineer Software,,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Entertainment/event lighting design and operation,CBE-JP-053,Vectorworks Spotlight,Capture; CAST WYSIWYG; Lightwright; grandMA3 onPC,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Process/piping plant design / isometrics,CBE-JP-056,AutoCAD Plant 3D,AVEVA E3D Design; Hexagon Smart 3D; Hexagon Isogen,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Welding procedure / traceability / quality records,CBE-JP-056; CBE-JP-083,WeldEye,WeldTrace; Fronius WeldCube; EWM Xnet,CLOSED_BY_DEEP_ANCHOR,2026-09-21
+Solar PV sizing / layout / yield design,CBE-JP-070,Valentin PV*SOL premium,OpenSolar; SolarEdge Designer; PVcase,CLOSED_BY_DEEP_ANCHOR,2026-09-21

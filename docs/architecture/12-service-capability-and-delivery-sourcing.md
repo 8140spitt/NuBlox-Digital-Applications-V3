@@ -2,31 +2,34 @@
 
 ## Purpose
 
-NuBlox separates the way an organisation **operates** from the services it **delivers**.
+This document governs CBE service capability demand and sourcing. It does **not** define the
+primary distinction between the 29 Core Business Functions and CBE professional disciplines.
 
-The 29 Core Business Functions define the enterprise operating model. Construction & Built
-Environment (CBE) Industry capability defines the professional services, disciplines and work
-products that the tenant can deploy to Projects, Programmes, Contracts, Appointments and other
-delivery contexts.
+Both Core Business Functions and CBE disciplines support employee role deployments for
+**Functional Governance** and **Functional Delivery**, as defined by
+`13-functional-governance-and-functional-delivery.md`.
 
-This distinction is normative.
+The sourcing model in this document applies when a delivery context creates professional capability
+demand that must be supplied internally, externally or through a hybrid arrangement.
 
 ## Core model
 
 ```text
 TENANT
-├── OPERATES THROUGH
-│   └── 29 Core Business Functions
+├── EMPLOYEE DEPLOYMENTS
+│   ├── Core Business Functions
+│   │   ├── Functional Governance
+│   │   └── Functional Delivery
+│   └── CBE Disciplines
+│       ├── Functional Governance
+│       └── Functional Delivery
 │
-└── DELIVERS THROUGH
-    └── Industry Solution
-        └── Service Portfolio
-            └── Service Offering
-                └── Required CBE Job Profiles / Professions
-                    └── Project Capability Demand
-                        ├── Internal Fulfilment
-                        ├── External Fulfilment
-                        └── Hybrid Fulfilment
+└── DELIVERY CAPABILITY DEMAND
+    └── Project / Contract / Appointment / other delivery context
+        └── Required CBE Job Profile / profession
+            ├── Internal Fulfilment
+            ├── External Fulfilment
+            └── Hybrid Fulfilment
 ```
 
 ## Service != profession
@@ -174,25 +177,28 @@ Active fulfilment may never exceed 100%.
 
 `FunctionalDeployment` and delivery capability fulfilment are deliberately different concepts.
 
-### Functional Deployment
+### Employee role deployments
 
-Deploys one of the 29 enterprise Functions or L2 sub-functions into an Organisation and operating
-context.
+A Core Business Function deployment or CBE Discipline Deployment assigns an employed Person,
+Position or organisational responsibility to a governed role with an explicit purpose:
+`FUNCTIONAL_GOVERNANCE` or `FUNCTIONAL_DELIVERY`.
 
 It answers:
 
-> Who carries responsibility for operating this enterprise Function here?
+> Which role is this employee or Position performing, in which capability and context, and for what
+> governance or delivery purpose?
 
 ### Delivery Capability Fulfilment
 
-Supplies an Industry profession into a Project/delivery requirement.
+Delivery Capability Fulfilment satisfies Project or other delivery-context demand from internal
+capacity, an external Organisation, or both.
 
 It answers:
 
-> Who or which provider supplies the professional capability needed to deliver this Service here?
+> How is this professional capability requirement being supplied?
 
-The two models may intersect through the same Person, Position, Organisation, Authority, Work and
-Evidence objects, but one must not replace the other.
+Internal fulfilment may be associated with an employee who also has a CBE Discipline Deployment.
+External fulfilment remains a supply-chain relationship and is not converted into tenant employment.
 
 ## Relationship to Deliverables
 
@@ -227,7 +233,7 @@ The first implementation slice provides:
 - exact profession matching for internal Person/Position supply;
 - external Organisation supply;
 - requirement fulfilment percentages and status;
-- permission-gated Services & Delivery workspace;
+- permission-gated CBE Disciplines workspace;
 - audit/outbox evidence for material creation and fulfilment state changes.
 
 The lightweight Project context establishes a governed delivery context only. It does not replace
@@ -259,6 +265,6 @@ Subsequent implementation should connect this model to:
 6. Internal fulfilment must match the required CBE Job Profile.
 7. External fulfilment is an Organisation relationship, not employment.
 8. Requirement fulfilment cannot exceed 100%.
-9. Functional Deployment != Project professional capability fulfilment.
+9. Employee role deployment != Project capability fulfilment.
 10. Capability fulfilment != Deliverable; it supplies the capability that performs work producing
     Deliverables.

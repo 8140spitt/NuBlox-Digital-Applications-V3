@@ -7,6 +7,7 @@ import {
   MySqlAuthRepository,
   MySqlCompetenceCommandService,
   MySqlCompetenceReadRepository,
+  MySqlControlReadRepository,
   MySqlFunctionalDeploymentCommandService,
   MySqlFunctionalDeploymentReadRepository,
   MySqlMyWorkRepository,
@@ -22,6 +23,7 @@ let accessRepositoryInstance: MySqlAccessRepository | undefined;
 let authRepositoryInstance: MySqlAuthRepository | undefined;
 let competenceCommandServiceInstance: MySqlCompetenceCommandService | undefined;
 let competenceReadRepositoryInstance: MySqlCompetenceReadRepository | undefined;
+let controlReadRepositoryInstance: MySqlControlReadRepository | undefined;
 let functionalDeploymentCommandServiceInstance: MySqlFunctionalDeploymentCommandService | undefined;
 let functionalDeploymentReadRepositoryInstance: MySqlFunctionalDeploymentReadRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
@@ -91,6 +93,13 @@ export function getCompetenceReadRepository(): MySqlCompetenceReadRepository {
     competenceReadRepositoryInstance = new MySqlCompetenceReadRepository(getDatabasePool());
   }
   return competenceReadRepositoryInstance;
+}
+
+export function getControlReadRepository(): MySqlControlReadRepository {
+  if (!controlReadRepositoryInstance) {
+    controlReadRepositoryInstance = new MySqlControlReadRepository(getDatabasePool());
+  }
+  return controlReadRepositoryInstance;
 }
 
 export function getFunctionalDeploymentCommandService(): MySqlFunctionalDeploymentCommandService {

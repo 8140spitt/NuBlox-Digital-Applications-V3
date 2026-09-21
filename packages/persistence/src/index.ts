@@ -1,3 +1,5 @@
+export * from './information-command-service.js';
+export * from './information-read-repository.js';
 export * from './control-read-repository.js';
 export * from './competence-command-service.js';
 export * from './competence-read-repository.js';

@@ -359,6 +359,70 @@ function mapEffectivity(row: EffectivityRow): Effectivity {
 export class MySqlInformationRepository {
   constructor(private readonly pool: Pool) {}
 
+
+  async createInformationContainerWithCanonicalObject(
+    tenantId: TenantId,
+    object: CanonicalObjectIdentity,
+    container: InformationContainer,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    if (object.tenantId !== tenantId || container.tenantId !== tenantId) {
+      throw new Error('Persistence operation crossed tenant boundary.');
+    }
+
+    createInformationContainer(container, object);
+
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO canonical_objects (id, tenant_id, object_type, stable_key, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          object.id,
+          object.tenantId,
+          object.objectType,
+          object.stableKey,
+          databaseDate(object.createdAt)
+        ]
+      );
+      await writeAudit(
+        connection,
+        tenantId,
+        'CANONICAL_OBJECT',
+        object.id,
+        'CREATED',
+        audit,
+        object
+      );
+
+      await connection.execute(
+        `INSERT INTO information_containers
+          (id, tenant_id, canonical_object_id, container_type, code, title, status,
+           created_by_person_id, updated_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          container.id,
+          container.tenantId,
+          container.canonicalObjectId,
+          container.containerType,
+          container.code,
+          container.title,
+          container.status,
+          audit.actorPersonId ?? null,
+          audit.actorPersonId ?? null
+        ]
+      );
+      await writeAudit(
+        connection,
+        tenantId,
+        'INFORMATION_CONTAINER',
+        container.id,
+        'CREATED',
+        audit,
+        container
+      );
+    });
+  }
+
   async createInformationContainer(
     tenantId: TenantId,
     container: InformationContainer,

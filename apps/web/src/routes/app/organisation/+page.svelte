@@ -23,10 +23,16 @@
         did not find an active matching Access Role Assignment.
       </p>
       <p class="permission-reason">{data.reason}</p>
-      <a class="primary-action permission-back" href="/app">
-        Back to Functions
-        <span aria-hidden="true">→</span>
-      </a>
+      <div class="permission-actions">
+        <a
+          class="primary-action permission-back"
+          href="/app/request-access?permission=platform.organisation.read&returnTo=/app/organisation"
+        >
+          Request access
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="quiet-link" href="/app">Back to Functions</a>
+      </div>
     </div>
   </section>
 {:else}

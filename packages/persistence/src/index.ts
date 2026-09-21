@@ -1,3 +1,4 @@
+export * from './change-configuration-command-service.js';
 export * from './change-configuration-read-repository.js';
 export * from './information-command-service.js';
 export * from './information-read-repository.js';

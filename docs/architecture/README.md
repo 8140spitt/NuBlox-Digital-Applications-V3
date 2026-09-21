@@ -39,7 +39,11 @@ NuBlox Enterprise Operating Platform
 The market benchmark is translated into NuBlox-native architecture through:
 
 - [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md);
-- [Canonical Native Tool Engine Register](canonical-native-tool-engine-register.csv).
+- [Canonical Native Tool Engine Register](canonical-native-tool-engine-register.csv);
+- [353-L2 Native Engine Map](canonical-l2-native-engine-map.csv);
+- [1,510-Activity Canonical Capability Map](canonical-activity-capability-map.csv);
+- [Native Tool Implementation Gap Register](canonical-native-tool-implementation-gap-register.csv);
+- [Implementation Waves](../product/canonical-native-tool-implementation-waves.md).
 
 These are the governing bridge between market evidence, the 29 Function/L2/Activity taxonomy, the 84 Construction & Built Environment Job Profiles and implementation-gap planning.
 

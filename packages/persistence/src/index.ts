@@ -1,3 +1,5 @@
+export * from './access-administration-command-service.js';
+export * from './access-administration-read-repository.js';
 export * from './organisation-command-service.js';
 export * from './organisation-read-repository.js';
 export * from './auth-repository.js';

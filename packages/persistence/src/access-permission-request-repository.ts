@@ -348,6 +348,25 @@ export class MySqlAccessPermissionRequestRepository {
         );
       }
 
+      if (outcome === 'FULFILLED') {
+        const effective = await this.access.evaluatePermission(
+          tenantId,
+          row.requestor_person_id,
+          row.permission_key,
+          {
+            scopeType: row.scope_type,
+            ...(row.scope_id ? { scopeId: row.scope_id } : {})
+          }
+        );
+
+        if (!effective.allowed) {
+          throw new AccessPermissionRequestError(
+            'The requested permission is not yet effective. Assign an appropriate Access Role before marking the request fulfilled.',
+            'CONFLICT'
+          );
+        }
+      }
+
       const resolvedAt = new Date();
       await connection.execute(
         `UPDATE access_permission_requests

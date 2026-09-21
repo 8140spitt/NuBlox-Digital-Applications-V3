@@ -1,3 +1,5 @@
+export * from './industry-delivery-command-service.js';
+export * from './industry-delivery-read-repository.js';
 export * from './deliverable-command-service.js';
 export * from './deliverable-read-repository.js';
 export * from './change-configuration-command-service.js';

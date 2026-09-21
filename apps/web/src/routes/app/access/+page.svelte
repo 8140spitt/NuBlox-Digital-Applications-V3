@@ -27,10 +27,16 @@
         find an active matching Access Role Assignment.
       </p>
       <p class="permission-reason">{data.reason}</p>
-      <a class="primary-action permission-back" href="/app">
-        Back to Functions
-        <span aria-hidden="true">→</span>
-      </a>
+      <div class="permission-actions">
+        <a
+          class="primary-action permission-back"
+          href="/app/request-access?permission=platform.access.manage&returnTo=/app/access"
+        >
+          Request access
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="quiet-link" href="/app">Back to Functions</a>
+      </div>
     </div>
   </section>
 {:else}
@@ -51,6 +57,89 @@
       <strong>{form?.ok ? 'Completed' : 'Action not completed'}</strong>
       <span>{form?.message ?? form?.error}</span>
     </div>
+  {/if}
+
+  {#if data.pendingRequests.length > 0}
+    <section class="access-request-register">
+      <header>
+        <div>
+          <p class="app-eyebrow">Administrator My Work</p>
+          <h2>Pending access requests</h2>
+        </div>
+        <span>{data.pendingRequests.length} pending</span>
+      </header>
+
+      <div class="access-request-list">
+        {#each data.pendingRequests as request}
+          <article id={`request-${request.id}`}>
+            <div class="request-summary">
+              <span class="request-person">{request.requestorName}</span>
+              <h3>{request.permissionName}</h3>
+              <code>{request.permissionKey}</code>
+              <p>{request.reason}</p>
+              <div>
+                <span>{request.scopeType}{request.scopeId ? ` · ${request.scopeId}` : ''}</span>
+                <span>{formatDate(request.requestedAt)}</span>
+                <span>{request.id}</span>
+              </div>
+            </div>
+
+            <div class="request-resolution">
+              <div class="request-role-assignment">
+                <h4>1. Establish effective access</h4>
+                {#if data.projection.roles.some((role) => role.permissionKeys.includes(request.permissionKey))}
+                  <form method="POST" action="?/assignRole" class="inline-access-form">
+                    <input
+                      type="hidden"
+                      name="principal"
+                      value={`PERSON|${request.requestorPersonId}`}
+                    />
+                    <select name="accessRoleId" required>
+                      <option value="">Select compatible role</option>
+                      {#each data.projection.roles.filter((role) => role.permissionKeys.includes(request.permissionKey)) as role}
+                        <option value={role.id}>
+                          {role.code} — {role.name} ({role.catalogueScope.toLowerCase()})
+                        </option>
+                      {/each}
+                    </select>
+                    <button type="submit">Assign role</button>
+                  </form>
+                {:else}
+                  <p>
+                    No available role currently carries this permission. Create a tenant role and
+                    grant the requested permission first.
+                  </p>
+                {/if}
+              </div>
+
+              <div class="request-outcome">
+                <h4>2. Record request outcome</h4>
+                <form method="POST" action="?/resolveRequest" class="request-resolution-form">
+                  <input type="hidden" name="requestId" value={request.id} />
+                  <label>
+                    <span>Resolution reason</span>
+                    <textarea
+                      name="resolutionReason"
+                      rows="3"
+                      required
+                      placeholder="Record why this request is fulfilled or rejected."
+                    ></textarea>
+                  </label>
+                  <div>
+                    <button name="outcome" value="FULFILLED" type="submit">
+                      Mark fulfilled
+                    </button>
+                    <button name="outcome" value="REJECTED" type="submit" class="reject-action">
+                      Reject
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </article>
+        {/each}
+      </div>
+    </section>
   {/if}
 
   <section class="architecture-metrics access-metrics" aria-label="Access control totals">

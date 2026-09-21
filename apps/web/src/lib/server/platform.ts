@@ -5,6 +5,8 @@ import {
   MySqlAccessPermissionRequestRepository,
   MySqlAccessRepository,
   MySqlAuthRepository,
+  MySqlCompetenceCommandService,
+  MySqlCompetenceReadRepository,
   MySqlFunctionalDeploymentCommandService,
   MySqlFunctionalDeploymentReadRepository,
   MySqlMyWorkRepository,
@@ -18,6 +20,8 @@ let accessAdministrationReadRepositoryInstance: MySqlAccessAdministrationReadRep
 let accessPermissionRequestRepositoryInstance: MySqlAccessPermissionRequestRepository | undefined;
 let accessRepositoryInstance: MySqlAccessRepository | undefined;
 let authRepositoryInstance: MySqlAuthRepository | undefined;
+let competenceCommandServiceInstance: MySqlCompetenceCommandService | undefined;
+let competenceReadRepositoryInstance: MySqlCompetenceReadRepository | undefined;
 let functionalDeploymentCommandServiceInstance: MySqlFunctionalDeploymentCommandService | undefined;
 let functionalDeploymentReadRepositoryInstance: MySqlFunctionalDeploymentReadRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
@@ -73,6 +77,20 @@ export function getAuthRepository(): MySqlAuthRepository {
   }
 
   return authRepositoryInstance;
+}
+
+export function getCompetenceCommandService(): MySqlCompetenceCommandService {
+  if (!competenceCommandServiceInstance) {
+    competenceCommandServiceInstance = new MySqlCompetenceCommandService(getDatabasePool());
+  }
+  return competenceCommandServiceInstance;
+}
+
+export function getCompetenceReadRepository(): MySqlCompetenceReadRepository {
+  if (!competenceReadRepositoryInstance) {
+    competenceReadRepositoryInstance = new MySqlCompetenceReadRepository(getDatabasePool());
+  }
+  return competenceReadRepositoryInstance;
 }
 
 export function getFunctionalDeploymentCommandService(): MySqlFunctionalDeploymentCommandService {

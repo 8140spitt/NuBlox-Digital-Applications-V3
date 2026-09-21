@@ -19,6 +19,17 @@ Every implementation slice must:
 8. update the Product Roadmap truthfully;
 9. leave `main` buildable with no residual branch or pull request.
 
+## Implementation status interpretation
+
+Phase labels below describe the architecture/kernel delivery sequence. An `IMPLEMENTED` phase means the required backend/domain/persistence foundation exists at the phase level; it does **not** by itself mean that every capability is exposed as a complete end-user workspace.
+
+User-executable truth is governed by:
+
+- [Canonical Native Tool Implementation Gap Register](../architecture/canonical-native-tool-implementation-gap-register.csv); and
+- [Canonical Native Tool Implementation Waves](canonical-native-tool-implementation-waves.md).
+
+The current V3 web application still requires Wave 0 product-UI activation before the backend platform can be described as an end-to-end user-operable ERP.
+
 ## Phase 1 — Enterprise Kernel
 
 ### P1.1 Identity, Organisation & Authority — IMPLEMENTED

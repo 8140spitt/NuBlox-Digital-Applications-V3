@@ -16,6 +16,8 @@ import {
   MySqlInformationReadRepository,
   MySqlIndustryDeliveryCommandService,
   MySqlIndustryDeliveryReadRepository,
+  MySqlStrategyCommandService,
+  MySqlStrategyReadRepository,
   MySqlFunctionalDeploymentCommandService,
   MySqlFunctionalDeploymentReadRepository,
   MySqlMyWorkRepository,
@@ -40,6 +42,8 @@ let informationCommandServiceInstance: MySqlInformationCommandService | undefine
 let informationReadRepositoryInstance: MySqlInformationReadRepository | undefined;
 let industryDeliveryCommandServiceInstance: MySqlIndustryDeliveryCommandService | undefined;
 let industryDeliveryReadRepositoryInstance: MySqlIndustryDeliveryReadRepository | undefined;
+let strategyCommandServiceInstance: MySqlStrategyCommandService | undefined;
+let strategyReadRepositoryInstance: MySqlStrategyReadRepository | undefined;
 let functionalDeploymentCommandServiceInstance: MySqlFunctionalDeploymentCommandService | undefined;
 let functionalDeploymentReadRepositoryInstance: MySqlFunctionalDeploymentReadRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
@@ -162,6 +166,20 @@ export function getIndustryDeliveryReadRepository(): MySqlIndustryDeliveryReadRe
       new MySqlIndustryDeliveryReadRepository(getDatabasePool());
   }
   return industryDeliveryReadRepositoryInstance;
+}
+
+export function getStrategyCommandService(): MySqlStrategyCommandService {
+  if (!strategyCommandServiceInstance) {
+    strategyCommandServiceInstance = new MySqlStrategyCommandService(getDatabasePool());
+  }
+  return strategyCommandServiceInstance;
+}
+
+export function getStrategyReadRepository(): MySqlStrategyReadRepository {
+  if (!strategyReadRepositoryInstance) {
+    strategyReadRepositoryInstance = new MySqlStrategyReadRepository(getDatabasePool());
+  }
+  return strategyReadRepositoryInstance;
 }
 
 export function getInformationCommandService(): MySqlInformationCommandService {

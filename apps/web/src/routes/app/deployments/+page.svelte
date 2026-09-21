@@ -71,9 +71,9 @@
       <p class="app-eyebrow">Functional operating model</p>
       <h1>Deployments</h1>
       <p class="workspace-lede">
-        Deploy governed Function capability into a real organisational or delivery context, assign
-        responsibility to People, Positions or Units, and record responsibility scope and capacity.
-        Deployment does not itself grant system Permission or business Authority.
+        Deploy governed Function capability into a real organisational or delivery context for either
+        Functional Governance or Functional Delivery, then assign responsibility, scope and capacity.
+        Employment, Permission and business Authority remain separate controls.
       </p>
     </div>
   </section>
@@ -153,6 +153,14 @@
                     </option>
                   {/each}
                 {/each}
+              </select>
+            </label>
+
+            <label>
+              <span>Deployment purpose</span>
+              <select name="deploymentPurpose" required>
+                <option value="FUNCTIONAL_GOVERNANCE">Functional Governance</option>
+                <option value="FUNCTIONAL_DELIVERY">Functional Delivery</option>
               </select>
             </label>
 
@@ -466,8 +474,9 @@
               </div>
 
               <div class="deployment-context">
-                <span>{deployment.contextType}</span>
-                <strong>{deployment.organisationName}</strong>
+                <span>{deployment.deploymentPurpose.replaceAll('_', ' ')}</span>
+                <strong>{deployment.contextType}</strong>
+                <small>{deployment.organisationName}</small>
                 {#if deployment.organisationUnitName}
                   <small>{deployment.organisationUnitName}</small>
                 {/if}

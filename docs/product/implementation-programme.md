@@ -28,7 +28,7 @@ User-executable truth is governed by:
 - [Canonical Native Tool Implementation Gap Register](../architecture/canonical-native-tool-implementation-gap-register.csv); and
 - [Canonical Native Tool Implementation Waves](canonical-native-tool-implementation-waves.md).
 
-The current V3 web application still requires Wave 0 product-UI activation before the backend platform can be described as an end-to-end user-operable ERP.
+Wave 0 product-UI activation is now active. The tenant shell, secure application session boundary, live My Work projection, platform permission catalogue and permission-gated Organisation structure are implemented. Organisation/Person/Position administration, access administration, deployment administration and the remaining shared control-object workspaces are still required before the backend platform can be described as end-to-end user-operable.
 
 ## Phase 1 — Enterprise Kernel
 

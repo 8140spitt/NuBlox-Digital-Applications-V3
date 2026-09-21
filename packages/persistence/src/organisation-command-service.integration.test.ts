@@ -12,10 +12,7 @@ import {
 import { MySqlAccessRepository } from './access-repository.js';
 import { createDatabasePool } from './database.js';
 import { migrate } from './migrations.js';
-import {
-  MySqlOrganisationCommandService,
-  MySqlOrganisationCommandService
-} from './organisation-command-service.js';
+import { MySqlOrganisationCommandService } from './organisation-command-service.js';
 import { MySqlOrganisationReadRepository } from './organisation-read-repository.js';
 import { MySqlKernelRepository } from './repository.js';
 

@@ -7,7 +7,7 @@
 
 This programme controls the transition from a market-product list to an executable NuBlox capability benchmark.
 
-The governing research unit is not the vendor or product name. It is:
+The governing research unit is:
 
 ```text
 Job Profile
@@ -26,81 +26,103 @@ Job Profile
 ## Current baseline
 
 - 84 / 84 Construction & Built Environment Job Profiles covered.
-- 570 Job × Tool relationships in the capability register.
+- 570 Job × Tool relationships.
 - 199 distinct products/tools in the initial CBE discovery universe.
 - 570 / 570 module/task verification backlog records created.
-- 64 module/task capabilities web-verified across the first 10 high-impact products.
-- Verified capabilities already carry explicit NuBlox native requirements.
+- 130 web-verified module/task capability records.
+- 20 products have entered deep module/task verification.
+- 250 / 570 Job × Tool backlog records now point to products with a deep capability benchmark; job-specific module applicability still requires explicit verification.
+- Every deep-verified capability carries an explicit NuBlox native requirement.
 
-## Deep-verified Wave 1
+## Deep-verified products
 
+- AutoCAD
+- Autodesk Build
+- Autodesk Navisworks
 - Autodesk Revit
+- BigChange
+- Bluebeam Revu
 - Esri ArcGIS Pro
+- Fergus
 - IBM Maximo Application Suite
 - Joblogic
 - Oracle Aconex
 - Oracle Primavera P6
+- PlanRadar
 - Procore
 - RIB CostX
+- SafetyCulture
+- ServiceM8
 - Tekla Structures
+- Tradify
 - simPRO
 
-## Research prioritisation
+## Next research priority
 
-The next products are prioritised using current Job × Tool reuse. High reuse does not mean "better"; it means verifying the product can resolve more outstanding job mappings efficiently.
+Priority is based on reuse across the 84-job discovery matrix. It is a research-efficiency measure, **not a vendor ranking**.
 
-| Priority | Product / tool | Current Job mappings |
+| Priority | Pending product / tool | Current Job mappings |
 | ---: | --- | ---: |
-| 1 | SafetyCulture | 27 |
-| 2 | Bluebeam Revu | 21 |
-| 3 | Tradify | 20 |
-| 4 | BigChange | 19 |
-| 5 | ServiceM8 | 17 |
-| 6 | Autodesk Build | 15 |
-| 7 | AutoCAD | 14 |
-| 8 | Fergus | 12 |
-| 9 | Autodesk Navisworks | 9 |
-| 10 | PlanRadar | 9 |
-| 11 | Microsoft Power BI | 8 |
-| 12 | Jobber | 7 |
-| 13 | ArcGIS Field Maps | 6 |
-| 14 | Autodesk Docs | 6 |
-| 15 | Commusoft | 6 |
-| 16 | Dalux Field | 6 |
-| 17 | QGIS | 6 |
-| 18 | SketchUp | 6 |
-| 19 | Autodesk Civil 3D | 5 |
-| 20 | Idox Uniform | 5 |
-| 21 | Samsara | 5 |
-| 22 | ALLPLAN | 4 |
-| 23 | Autodesk ReCap Pro | 4 |
-| 24 | DesignBuilder | 4 |
-| 25 | IES VE 2026 | 4 |
-| 26 | LandTech | 4 |
-| 27 | Solibri | 4 |
-| 28 | Tenna | 4 |
-| 29 | Trimble Business Center | 4 |
-| 30 | Bentley OpenRoads Designer | 3 |
-| 31 | Graphisoft Archicad | 3 |
-| 32 | Idox Cloud | 3 |
-| 33 | Leica Cyclone | 3 |
-| 34 | Leica Infinity | 3 |
-| 35 | MagiCAD | 3 |
-| 36 | NBS Chorus | 3 |
-| 37 | Trimble Connect | 3 |
-| 38 | Trimble Siteworks | 3 |
-| 39 | Vectorworks Architect | 3 |
-| 40 | Agisoft Metashape | 2 |
-| 41 | ArcGIS Urban | 2 |
-| 42 | Arches | 2 |
-| 43 | ARGUS Enterprise | 2 |
-| 44 | Asite | 2 |
-| 45 | Autodesk Fusion | 2 |
-| 46 | Autodesk Takeoff | 2 |
-| 47 | Axiell Collections | 2 |
-| 48 | Bentley MicroStation | 2 |
-| 49 | Bentley OpenUtilities | 2 |
-| 50 | Causeway Estimating | 2 |
+| 1 | Microsoft Power BI | 8 |
+| 2 | Jobber | 7 |
+| 3 | ArcGIS Field Maps | 6 |
+| 4 | Autodesk Docs | 6 |
+| 5 | Commusoft | 6 |
+| 6 | Dalux Field | 6 |
+| 7 | QGIS | 6 |
+| 8 | SketchUp | 6 |
+| 9 | Autodesk Civil 3D | 5 |
+| 10 | Idox Uniform | 5 |
+| 11 | Samsara | 5 |
+| 12 | ALLPLAN | 4 |
+| 13 | Autodesk ReCap Pro | 4 |
+| 14 | DesignBuilder | 4 |
+| 15 | IES VE 2026 | 4 |
+| 16 | LandTech | 4 |
+| 17 | Solibri | 4 |
+| 18 | Tenna | 4 |
+| 19 | Trimble Business Center | 4 |
+| 20 | Bentley OpenRoads Designer | 3 |
+| 21 | Graphisoft Archicad | 3 |
+| 22 | Idox Cloud | 3 |
+| 23 | Leica Cyclone | 3 |
+| 24 | Leica Infinity | 3 |
+| 25 | MagiCAD | 3 |
+| 26 | NBS Chorus | 3 |
+| 27 | Trimble Connect | 3 |
+| 28 | Trimble Siteworks | 3 |
+| 29 | Vectorworks Architect | 3 |
+| 30 | Agisoft Metashape | 2 |
+| 31 | ArcGIS Urban | 2 |
+| 32 | Arches | 2 |
+| 33 | ARGUS Enterprise | 2 |
+| 34 | Asite | 2 |
+| 35 | Autodesk Fusion | 2 |
+| 36 | Autodesk Takeoff | 2 |
+| 37 | Axiell Collections | 2 |
+| 38 | Bentley MicroStation | 2 |
+| 39 | Bentley OpenUtilities | 2 |
+| 40 | Causeway Estimating | 2 |
+| 41 | Command Alkon | 2 |
+| 42 | ConQuest Estimating | 2 |
+| 43 | Cyncly 3CAD | 2 |
+| 44 | Danfoss Coolselector2 | 2 |
+| 45 | DIALux evo | 2 |
+| 46 | Elmhurst Design SAP 10 | 2 |
+| 47 | Eptura / Archibus | 2 |
+| 48 | Esri ArcGIS Utility Network | 2 |
+| 49 | Genetec Security Center | 2 |
+| 50 | HCSS Equipment360 | 2 |
+| 51 | Hexagon Cabinet Vision | 2 |
+| 52 | Hexagon MinePlan | 2 |
+| 53 | LenelS2 OnGuard | 2 |
+| 54 | Matterport | 2 |
+| 55 | MeasureSquare | 2 |
+| 56 | Microvellum | 2 |
+| 57 | MRI Horizon | 2 |
+| 58 | Oracle Primavera Unifier | 2 |
+| 59 | Planon IWMS | 2 |
+| 60 | Re-Leased | 2 |
 
 ## Verification acceptance test
 
@@ -109,29 +131,39 @@ A tool is not considered deeply benchmarked until the applicable product capabil
 1. current product/module identity;
 2. exact user operation or workflow;
 3. input objects/data;
-4. produced business object / deliverable / transaction / evidence;
+4. produced business object / Deliverable / transaction / evidence;
 5. lifecycle/status semantics;
-6. review, approval and authority semantics where applicable;
+6. review, approval and Authority semantics where applicable;
 7. audit/history/evidence semantics;
 8. supported exchange/integration formats where material;
 9. affected NuBlox Function / Job Profile mappings; and
 10. explicit native NuBlox requirement.
 
+A Job × Tool mapping is not considered complete merely because the product itself has been benchmarked. The exact modules/capabilities applicable to that Job Profile must also be confirmed.
+
 ## Research waves
 
-### Wave 2 — common construction execution and document tools
+### Completed discovery / active deep verification
 
-Prioritise the highest-reuse pending products such as Autodesk Build, SafetyCulture, Bluebeam Revu, BigChange, ServiceM8, Tradify, Fergus, Dalux, PlanRadar and related field/project systems.
+- Enterprise-function market discovery seed.
+- 84-job market-tool matrix.
+- 570 Job × Tool mapping register.
+- Wave 1 deep verification: design, structural, planning, estimating, CDE, project management, asset management, GIS and field-service platforms.
+- Wave 2 deep verification: common construction execution, review and trade job-management platforms.
 
-### Wave 3 — professional technical engines
+### Wave 3 — remaining high-reuse tools
 
-Deepen discipline-specific authoring/calculation products: structural, MEP, energy, fire, acoustics, geospatial, transport, survey, fabrication and specialist trade design.
+Continue using the priority table above, particularly field, drawing/review, CAD/CDE, job-management and GIS/mobile products with repeated Job Profile applicability.
 
-### Wave 4 — commercial / contractual / property / regulatory
+### Wave 4 — professional technical engines
+
+Deepen discipline-specific structural, MEP, energy, fire, acoustics, geospatial, transport, survey, fabrication and specialist trade design/calculation products.
+
+### Wave 5 — commercial / contractual / property / regulatory
 
 Deepen CEMAR, Unifier, estimating suites, property/valuation platforms, Idox, energy-assessment applications and statutory case systems.
 
-### Wave 5 — full 29-function enterprise benchmark
+### Wave 6 — full 29-function enterprise benchmark
 
 Join the CBE research back to the 29-Function market register and verify ERP/HCM/CRM/GRC/data/security/legal/finance tools at the same module/task level.
 

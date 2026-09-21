@@ -52,6 +52,10 @@
         <span class="nav-symbol">CT</span>
         <span>Control</span>
       </a>
+      <a class:active={isActive('/app/information')} href="/app/information" onclick={closeNavigation}>
+        <span class="nav-symbol">IN</span>
+        <span>Information</span>
+      </a>
     </nav>
 
     <div class="function-nav">

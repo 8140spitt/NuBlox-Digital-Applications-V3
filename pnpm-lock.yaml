@@ -9,6 +9,10 @@ importers:
   .: {}
 
   apps/web:
+    dependencies:
+      '@nublox/persistence':
+        specifier: workspace:*
+        version: link:../../packages/persistence
     devDependencies:
       '@sveltejs/adapter-node':
         specifier: ^5.5.4

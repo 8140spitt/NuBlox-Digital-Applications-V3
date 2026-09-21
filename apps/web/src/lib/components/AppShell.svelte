@@ -2,17 +2,32 @@
   import { page } from '$app/state';
   import type { AuthSession } from '@nublox/persistence';
   import type { Snippet } from 'svelte';
-  import { functionGroups, functionsForGroup } from '$lib/function-catalog';
 
   let { children, session }: { children: Snippet; session: AuthSession } = $props();
   let navigationOpen = $state(false);
 
-  function isActive(href: string) {
-    return page.url.pathname === href || page.url.pathname.startsWith(`${href}/`);
+  function isActive(href: string, exact = false) {
+    return exact
+      ? page.url.pathname === href
+      : page.url.pathname === href || page.url.pathname.startsWith(`${href}/`);
   }
 
   function closeNavigation() {
     navigationOpen = false;
+  }
+
+  function currentArea(pathname: string) {
+    if (pathname.startsWith('/app/my-work')) return 'My Work';
+    if (pathname.startsWith('/app/functions')) return 'Functions';
+    if (pathname.startsWith('/app/information')) return 'Information';
+    if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
+    if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
+    if (pathname.startsWith('/app/organisation')) return 'Organisation';
+    if (pathname.startsWith('/app/deployments')) return 'Deployments';
+    if (pathname.startsWith('/app/competence')) return 'Competence';
+    if (pathname.startsWith('/app/control')) return 'Control';
+    if (pathname.startsWith('/app/access')) return 'Access';
+    return 'Home';
   }
 </script>
 
@@ -23,67 +38,64 @@
       <span class="app-version">V3</span>
     </div>
 
-    <nav class="primary-nav" aria-label="Primary">
-      <a class:active={isActive('/app/my-work')} href="/app/my-work" onclick={closeNavigation}>
-        <span class="nav-symbol">MW</span>
-        <span>My Work</span>
-      </a>
-      <a class:active={page.url.pathname === '/app'} href="/app" onclick={closeNavigation}>
-        <span class="nav-symbol">29</span>
-        <span>Functions</span>
-      </a>
-      <a class:active={isActive('/app/organisation')} href="/app/organisation" onclick={closeNavigation}>
-        <span class="nav-symbol">OR</span>
-        <span>Organisation</span>
-      </a>
-      <a class:active={isActive('/app/access')} href="/app/access" onclick={closeNavigation}>
-        <span class="nav-symbol">AC</span>
-        <span>Access</span>
-      </a>
-      <a class:active={isActive('/app/deployments')} href="/app/deployments" onclick={closeNavigation}>
-        <span class="nav-symbol">DP</span>
-        <span>Deployments</span>
-      </a>
-      <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
-        <span class="nav-symbol">CP</span>
-        <span>Competence</span>
-      </a>
-      <a class:active={isActive('/app/control')} href="/app/control" onclick={closeNavigation}>
-        <span class="nav-symbol">CT</span>
-        <span>Control</span>
-      </a>
-      <a class:active={isActive('/app/information')} href="/app/information" onclick={closeNavigation}>
-        <span class="nav-symbol">IN</span>
-        <span>Information</span>
-      </a>
-      <a class:active={isActive('/app/configuration')} href="/app/configuration" onclick={closeNavigation}>
-        <span class="nav-symbol">CF</span>
-        <span>Change &amp; Configuration</span>
-      </a>
-      <a class:active={isActive('/app/deliverables')} href="/app/deliverables" onclick={closeNavigation}>
-        <span class="nav-symbol">DL</span>
-        <span>Deliverables</span>
-      </a>
-    </nav>
-
-    <div class="function-nav">
-      {#each functionGroups as group}
-        <section class="function-nav-group">
-          <h2>{group.name}</h2>
-          <div class="function-nav-links">
-            {#each functionsForGroup(group.id) as fn}
-              <a
-                class:active={isActive(`/app/functions/${fn.code.toLowerCase()}`)}
-                href={`/app/functions/${fn.code.toLowerCase()}`}
-                onclick={closeNavigation}
-              >
-                <span>{fn.code}</span>
-                <strong>{fn.name}</strong>
-              </a>
-            {/each}
-          </div>
+    <div class="app-navigation">
+      <nav class="primary-nav" aria-label="Workspace navigation">
+        <section class="nav-section">
+          <h2>Work</h2>
+          <a class:active={isActive('/app', true)} href="/app" onclick={closeNavigation}>
+            <span class="nav-symbol">HM</span>
+            <span>Home</span>
+          </a>
+          <a class:active={isActive('/app/my-work')} href="/app/my-work" onclick={closeNavigation}>
+            <span class="nav-symbol">MW</span>
+            <span>My Work</span>
+          </a>
+          <a class:active={isActive('/app/functions')} href="/app/functions" onclick={closeNavigation}>
+            <span class="nav-symbol">FN</span>
+            <span>Functions</span>
+          </a>
         </section>
-      {/each}
+
+        <section class="nav-section">
+          <h2>Work products</h2>
+          <a class:active={isActive('/app/information')} href="/app/information" onclick={closeNavigation}>
+            <span class="nav-symbol">IN</span>
+            <span>Information</span>
+          </a>
+          <a class:active={isActive('/app/deliverables')} href="/app/deliverables" onclick={closeNavigation}>
+            <span class="nav-symbol">DL</span>
+            <span>Deliverables</span>
+          </a>
+          <a class:active={isActive('/app/configuration')} href="/app/configuration" onclick={closeNavigation}>
+            <span class="nav-symbol">CC</span>
+            <span>Change &amp; configuration</span>
+          </a>
+        </section>
+
+        <section class="nav-section">
+          <h2>Governance</h2>
+          <a class:active={isActive('/app/organisation')} href="/app/organisation" onclick={closeNavigation}>
+            <span class="nav-symbol">OR</span>
+            <span>Organisation</span>
+          </a>
+          <a class:active={isActive('/app/deployments')} href="/app/deployments" onclick={closeNavigation}>
+            <span class="nav-symbol">DP</span>
+            <span>Deployments</span>
+          </a>
+          <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
+            <span class="nav-symbol">CP</span>
+            <span>Competence</span>
+          </a>
+          <a class:active={isActive('/app/control')} href="/app/control" onclick={closeNavigation}>
+            <span class="nav-symbol">CT</span>
+            <span>Control</span>
+          </a>
+          <a class:active={isActive('/app/access')} href="/app/access" onclick={closeNavigation}>
+            <span class="nav-symbol">AC</span>
+            <span>Access</span>
+          </a>
+        </section>
+      </nav>
     </div>
 
     <div class="sidebar-footer">
@@ -97,19 +109,21 @@
 
   <div class="app-stage">
     <header class="app-topbar">
-      <button
-        class="nav-toggle"
-        type="button"
-        aria-label="Toggle navigation"
-        aria-expanded={navigationOpen}
-        onclick={() => (navigationOpen = !navigationOpen)}
-      >
-        Menu
-      </button>
+      <div class="topbar-leading">
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-label="Toggle navigation"
+          aria-expanded={navigationOpen}
+          onclick={() => (navigationOpen = !navigationOpen)}
+        >
+          Menu
+        </button>
 
-      <div class="topbar-context">
-        <strong>Enterprise Operating Platform</strong>
-        <span>One governed system of work</span>
+        <div class="topbar-context">
+          <span>NuBlox</span>
+          <strong>{currentArea(page.url.pathname)}</strong>
+        </div>
       </div>
 
       <div class="topbar-actions">

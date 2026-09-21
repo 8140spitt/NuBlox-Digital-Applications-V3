@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import type { RowDataPacket } from 'mysql2/promise';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   PLATFORM_ADMINISTRATOR_ROLE_ID,
@@ -12,7 +13,7 @@ import {
   type Tenant
 } from '@nublox/kernel';
 import { MySqlAccessRepository } from './access-repository.js';
-import { MySqlControlRepository } from './control-repository.js';
+import { MySqlKernelControlRepository } from './control-repository.js';
 import { createDatabasePool } from './database.js';
 import { InformationCommandError, MySqlInformationCommandService } from './information-command-service.js';
 import { MySqlInformationReadRepository } from './information-read-repository.js';
@@ -37,7 +38,7 @@ suite('information workspace', () => {
     const tenantId = asId<'TenantId'>(`TENANT-INFO-${suffix}`, 'Tenant');
     const kernel = new MySqlKernelRepository(pool);
     const access = new MySqlAccessRepository(pool);
-    const control = new MySqlControlRepository(pool);
+    const control = new MySqlKernelControlRepository(pool);
     const information = new MySqlInformationCommandService(pool);
     const reads = new MySqlInformationReadRepository(pool);
 
@@ -202,7 +203,7 @@ suite('information workspace', () => {
       ])
     );
 
-    const [objectRows] = await pool.query<Array<{ object_type: string; stable_key: string }>>(
+    const [objectRows] = await pool.query<Array<RowDataPacket & { object_type: string; stable_key: string }>>(
       'SELECT object_type, stable_key FROM canonical_objects WHERE tenant_id = ? AND id = ?',
       [tenantId, container.canonicalObjectId]
     );

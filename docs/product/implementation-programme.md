@@ -28,7 +28,7 @@ User-executable truth is governed by:
 - [Canonical Native Tool Implementation Gap Register](../architecture/canonical-native-tool-implementation-gap-register.csv); and
 - [Canonical Native Tool Implementation Waves](canonical-native-tool-implementation-waves.md).
 
-Wave 0 product-UI activation is now active. The tenant shell, secure application session boundary, live My Work projection, platform permission catalogue and permission-gated Organisation structure are implemented. Organisation/Person/Position administration, access administration, deployment administration and the remaining shared control-object workspaces are still required before the backend platform can be described as end-to-end user-operable.
+Wave 0 product-UI activation is active. The tenant shell, secure application session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, Functional Deployment administration, competence administration and a permission-gated Lifecycle/Decision/Evidence read workspace are implemented. Control mutation workflows and the Information/Revision/Representation, Change/Configuration/Baseline and Deliverable/Issue/Acceptance product surfaces are still required before the shared platform is end-to-end user-operable.
 
 ## Phase 1 — Enterprise Kernel
 

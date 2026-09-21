@@ -110,6 +110,7 @@ interface DeploymentRow extends RowDataPacket {
   tenant_id: string;
   function_id: string;
   sub_function_id: string | null;
+  deployment_purpose: FunctionalDeployment['deploymentPurpose'];
   organisation_id: string;
   organisation_unit_id: string | null;
   context_type: FunctionalDeployment['contextType'];
@@ -355,6 +356,7 @@ function mapDeployment(row: DeploymentRow): FunctionalDeployment {
     ...(row.sub_function_id
       ? { subFunctionId: row.sub_function_id as NonNullable<FunctionalDeployment['subFunctionId']> }
       : {}),
+    deploymentPurpose: row.deployment_purpose,
     organisationId: row.organisation_id as FunctionalDeployment['organisationId'],
     ...(row.organisation_unit_id
       ? { organisationUnitId: row.organisation_unit_id as NonNullable<FunctionalDeployment['organisationUnitId']> }
@@ -863,15 +865,16 @@ export class MySqlFunctionalRepository {
     await withTransaction(this.pool, async (connection) => {
       await connection.execute(
         `INSERT INTO functional_deployments
-          (id, tenant_id, function_id, sub_function_id, organisation_id,
+          (id, tenant_id, function_id, sub_function_id, deployment_purpose, organisation_id,
            organisation_unit_id, context_type, context_object_id, scope_description,
            effective_from, effective_to, status, created_by_person_id, updated_by_person_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           deployment.id,
           deployment.tenantId,
           deployment.functionId,
           deployment.subFunctionId ?? null,
+          deployment.deploymentPurpose,
           deployment.organisationId,
           deployment.organisationUnitId ?? null,
           deployment.contextType,
@@ -1523,7 +1526,7 @@ export class MySqlFunctionalRepository {
     id: string
   ): Promise<FunctionalDeployment> {
     const [rows] = await this.pool.execute<DeploymentRow[]>(
-      `SELECT id, tenant_id, function_id, sub_function_id, organisation_id,
+      `SELECT id, tenant_id, function_id, sub_function_id, deployment_purpose, organisation_id,
               organisation_unit_id, context_type, context_object_id, scope_description,
               effective_from, effective_to, status
          FROM functional_deployments WHERE tenant_id = ? AND id = ?`,

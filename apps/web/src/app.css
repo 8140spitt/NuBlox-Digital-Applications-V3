@@ -4893,3 +4893,70 @@ h1 {
     grid-template-columns: 1fr;
   }
 }
+
+
+.workspace-command-drawer {
+  margin-top: 18px;
+  border: 1px solid var(--app-line);
+  background: var(--app-surface);
+}
+
+.workspace-command-drawer > summary {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 50px;
+  padding: 0 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.workspace-command-drawer > summary::-webkit-details-marker {
+  display: none;
+}
+
+.workspace-command-drawer > summary > span {
+  color: var(--app-accent);
+  font-size: 0.6rem;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workspace-command-drawer > summary > strong {
+  color: var(--app-navy);
+  font-size: 0.76rem;
+}
+
+.workspace-command-drawer > summary > small {
+  color: var(--app-muted);
+  font-size: 0.64rem;
+}
+
+.workspace-command-drawer[open] > summary {
+  border-bottom: 1px solid var(--app-line);
+}
+
+.workspace-command-drawer .information-admin,
+.workspace-command-drawer .configuration-admin,
+.workspace-command-drawer .deliverable-admin {
+  margin-top: 0;
+  border: 0;
+}
+
+.workspace-command-drawer .information-admin-heading {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+@media (max-width: 760px) {
+  .workspace-command-drawer > summary {
+    grid-template-columns: auto 1fr;
+  }
+
+  .workspace-command-drawer > summary > small {
+    grid-column: 1 / -1;
+    padding-bottom: 12px;
+  }
+}

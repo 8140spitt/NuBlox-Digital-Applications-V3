@@ -71,6 +71,18 @@ Open the local URL shown by Vite. The public product page remains public; `/app`
 
 Authentication uses a provisioned application account mapped to an active tenant-scoped `Person`, scrypt password hashing and server-side opaque sessions. Public self-registration is intentionally not provided.
 
+## Terminal logging
+
+NuBlox includes terminal logging utilities that redact common secrets before writing logs.
+
+- Logs are written to `logs/terminal/`.
+- Redaction is handled by `scripts/redact-terminal-log.sh`.
+- Start a logged interactive shell with `pnpm terminal:logged`.
+- List recent logs with `pnpm terminal:logs`.
+- Tail the latest log with `pnpm terminal:tail`.
+
+If you source `scripts/terminal-logging/auto-start-hook.sh` from your `~/.zshrc`, new interactive shells started in this workspace automatically relaunch through the logged terminal wrapper. Set `NUBLOX_TERMINAL_LOGGING_DISABLE=1` to skip this behavior temporarily.
+
 ## Non-negotiable rule
 
 **NuBlox is the product and the operating environment. External products are benchmarks or migration/import/export sources and targets only. No external application may be required to execute a NuBlox capability or complete a user's work.**

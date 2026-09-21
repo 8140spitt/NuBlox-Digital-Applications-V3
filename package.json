@@ -12,6 +12,9 @@
     "db:status": "pnpm --dir packages/persistence db:status",
     "format": "pnpm --dir apps/web format",
     "format:check": "pnpm --dir apps/web format:check",
-    "auth:bootstrap": "pnpm --dir packages/persistence auth:bootstrap"
+    "auth:bootstrap": "pnpm --dir packages/persistence auth:bootstrap",
+    "terminal:logged": "./scripts/start-logged-terminal.sh",
+    "terminal:logs": "./scripts/list-terminal-logs.sh",
+    "terminal:tail": "./scripts/tail-latest-terminal-log.sh"
   }
 }

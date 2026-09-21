@@ -1,0 +1,11 @@
+{
+  "terminal.integrated.profiles.osx": {
+    "NuBlox Logged zsh": {
+      "path": "${workspaceFolder}/scripts/start-logged-terminal.sh",
+      "args": [],
+      "overrideName": true,
+      "icon": "terminal"
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "NuBlox Logged zsh"
+}

@@ -54,8 +54,10 @@ else
 fi
 
 # mktemp guarantees a unique log file per terminal launch, even if metadata repeats.
-# On macOS, the template must end with XXXXXX.
-LOG_FILE="$(mktemp "$LOG_DIR/terminal-${TIMESTAMP}-${BRANCH}-${COMMIT}-${TTY_NAME}-${SESSION_PID}-XXXXXX.log")"
+# On macOS, the template must end with XXXXXX, so append .log after creation.
+LOG_FILE_BASE="$(mktemp "$LOG_DIR/terminal-${TIMESTAMP}-${BRANCH}-${COMMIT}-${TTY_NAME}-${SESSION_PID}-XXXXXX")"
+LOG_FILE="${LOG_FILE_BASE}.log"
+mv "$LOG_FILE_BASE" "$LOG_FILE"
 
 printf 'NuBlox terminal logging to: %s\n' "$LOG_FILE"
 printf 'Terminal session: %s | PID %s | Git %s (%s)\n' "$TTY_NAME" "$SESSION_PID" "$BRANCH" "$COMMIT"
@@ -67,6 +69,7 @@ else
 fi
 
 cd "$WORK_DIR"
+export NUBLOX_TERMINAL_LOGGING_ACTIVE=1
 if (( $# == 0 )); then
   "$SCRIPT_BIN" -q /dev/null "$SHELL_BIN" -il | tee >("$REDACTOR_BIN" > "$LOG_FILE")
   exit $?

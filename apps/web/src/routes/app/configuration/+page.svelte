@@ -84,7 +84,13 @@
   </section>
 
   {#if data.canManage}
-    <section class="information-admin configuration-admin">
+    <details class="workspace-command-drawer">
+      <summary>
+        <span>Actions</span>
+        <strong>Manage change &amp; configuration</strong>
+        <small>Raise Changes, control Baselines and maintain Effectivity</small>
+      </summary>
+      <section class="information-admin configuration-admin">
       <header class="information-admin-heading">
         <div>
           <p class="app-eyebrow">Controlled commands</p>
@@ -249,7 +255,8 @@
           </form>
         </details>
       </div>
-    </section>
+      </section>
+    </details>
   {/if}
 
   <section class="configuration-workspace-grid">

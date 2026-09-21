@@ -175,6 +175,46 @@ suite('CBE service capability delivery', () => {
       }
     );
 
+    const governanceDeployment = await commands.createDisciplineDeployment(
+      tenantId,
+      admin.id,
+      {
+        industryJobProfileId: 'CBE-JP-003',
+        deploymentPurpose: 'FUNCTIONAL_GOVERNANCE',
+        assigneeType: 'PERSON',
+        assigneeId: architect.id,
+        roleTitle: 'Architecture Standards Lead',
+        responsibilityRole: 'ACCOUNTABLE',
+        contextType: 'ORGANISATION',
+        scopeDescription:
+          'Govern architectural standards, methods, templates and technical assurance.',
+        capacityPercent: 15,
+        effectiveFrom: '2026-09-21T08:00:00.000Z'
+      }
+    );
+
+    const deliveryDeployment = await commands.createDisciplineDeployment(
+      tenantId,
+      admin.id,
+      {
+        industryJobProfileId: 'CBE-JP-003',
+        deploymentPurpose: 'FUNCTIONAL_DELIVERY',
+        assigneeType: 'PERSON',
+        assigneeId: architect.id,
+        roleTitle: 'Project Architect',
+        responsibilityRole: 'RESPONSIBLE',
+        contextType: 'PROJECT',
+        contextObjectId: project.canonicalObjectId,
+        scopeDescription:
+          'Lead architectural design and coordination for the City Centre Development.',
+        capacityPercent: 60,
+        effectiveFrom: '2026-10-01T08:00:00.000Z'
+      }
+    );
+
+    expect(governanceDeployment.deploymentPurpose).toBe('FUNCTIONAL_GOVERNANCE');
+    expect(deliveryDeployment.deploymentPurpose).toBe('FUNCTIONAL_DELIVERY');
+
     const requirement = await commands.createRequirement(
       tenantId,
       admin.id,
@@ -222,12 +262,38 @@ suite('CBE service capability delivery', () => {
     expect(projection.totals).toMatchObject({
       services: 1,
       internalCapabilities: 1,
+      governanceDeployments: 1,
+      deliveryDeployments: 1,
       projects: 1,
       requirements: 1,
       fulfilled: 1,
       partiallyFulfilled: 0,
       sourcingRequired: 0
     });
+    expect(projection.disciplineDeployments).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: governanceDeployment.id,
+          canonicalName: 'Architect',
+          deploymentPurpose: 'FUNCTIONAL_GOVERNANCE',
+          roleTitle: 'Architecture Standards Lead',
+          assigneeName: 'Project Architect',
+          contextType: 'ORGANISATION',
+          capacityPercent: 15
+        }),
+        expect.objectContaining({
+          id: deliveryDeployment.id,
+          canonicalName: 'Architect',
+          deploymentPurpose: 'FUNCTIONAL_DELIVERY',
+          roleTitle: 'Project Architect',
+          assigneeName: 'Project Architect',
+          contextType: 'PROJECT',
+          contextObjectId: project.canonicalObjectId,
+          capacityPercent: 60
+        })
+      ])
+    );
+
     expect(projection.requirements).toEqual([
       expect.objectContaining({
         id: requirement.id,
@@ -269,6 +335,24 @@ suite('CBE service capability delivery', () => {
       status: 'ACTIVE'
     };
     await kernel.createPerson(tenantId, unprivileged);
+
+    await expect(
+      commands.createDisciplineDeployment(tenantId, unprivileged.id, {
+        industryJobProfileId: 'CBE-JP-003',
+        deploymentPurpose: 'FUNCTIONAL_DELIVERY',
+        assigneeType: 'PERSON',
+        assigneeId: architect.id,
+        roleTitle: 'Unauthorised Project Architect',
+        responsibilityRole: 'RESPONSIBLE',
+        contextType: 'PROJECT',
+        contextObjectId: project.canonicalObjectId,
+        scopeDescription: 'Unauthorised discipline deployment.',
+        capacityPercent: 10
+      })
+    ).rejects.toMatchObject({
+      name: 'IndustryDeliveryCommandError',
+      code: 'PERMISSION_DENIED'
+    } satisfies Partial<IndustryDeliveryCommandError>);
 
     await expect(
       commands.createProjectContext(tenantId, unprivileged.id, {

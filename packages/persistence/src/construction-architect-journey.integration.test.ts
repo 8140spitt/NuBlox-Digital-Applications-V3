@@ -265,6 +265,7 @@ suite('Construction Architect representative job journey', () => {
       id: asId<'FunctionalDeploymentId'>(`DEPLOY-${suffix}`, 'Functional Deployment'),
       tenantId,
       functionId: asId<'FunctionId'>('F27', 'Function'),
+      deploymentPurpose: 'FUNCTIONAL_DELIVERY',
       organisationId: practice.id,
       organisationUnitId: designUnit.id,
       contextType: 'PROJECT',

@@ -48,6 +48,10 @@
         <span class="nav-symbol">CP</span>
         <span>Competence</span>
       </a>
+      <a class:active={isActive('/app/control')} href="/app/control" onclick={closeNavigation}>
+        <span class="nav-symbol">CT</span>
+        <span>Control</span>
+      </a>
     </nav>
 
     <div class="function-nav">

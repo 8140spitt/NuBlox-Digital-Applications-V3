@@ -4960,3 +4960,297 @@ h1 {
     padding-bottom: 12px;
   }
 }
+
+
+/* Services & Delivery */
+
+.delivery-metrics,
+.delivery-demand-section,
+.delivery-portfolio-grid {
+  margin-top: 24px;
+}
+
+.delivery-demand-section .home-section-heading {
+  margin-bottom: 16px;
+}
+
+.delivery-requirement-list {
+  display: grid;
+  gap: 12px;
+}
+
+.delivery-requirement-card {
+  border: 1px solid var(--app-line);
+  background: var(--app-surface);
+}
+
+.delivery-requirement-card > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: start;
+  padding: 18px 20px 12px;
+}
+
+.delivery-context-code {
+  color: var(--app-accent);
+  font-size: 0.61rem;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.delivery-requirement-card h3 {
+  margin: 5px 0 0;
+  color: var(--app-navy);
+  font-size: 1rem;
+}
+
+.delivery-requirement-card header p {
+  margin: 5px 0 0;
+  color: var(--app-muted);
+  font-size: 0.7rem;
+}
+
+.delivery-requirement-state {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+
+.delivery-requirement-state span {
+  color: #7a858c;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.delivery-requirement-state span.fulfilled {
+  color: #3d7254;
+}
+
+.delivery-requirement-state strong {
+  color: var(--app-navy);
+  font-size: 1.15rem;
+}
+
+.delivery-progress {
+  height: 3px;
+  margin: 0 20px;
+  overflow: hidden;
+  background: #e8ebed;
+}
+
+.delivery-progress span {
+  display: block;
+  height: 100%;
+  background: var(--app-accent);
+}
+
+.delivery-requirement-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding: 11px 20px 0;
+  color: #76838b;
+  font-size: 0.62rem;
+}
+
+.delivery-requirement-description {
+  margin: 11px 20px 14px;
+  color: #53616b;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.delivery-fulfilments {
+  border-top: 1px solid var(--app-line);
+}
+
+.delivery-fulfilment-row {
+  display: grid;
+  grid-template-columns: 78px minmax(150px, 1fr) minmax(100px, 0.45fr) auto auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 20px;
+  border-bottom: 1px solid #edf0f1;
+}
+
+.delivery-fulfilment-row:last-child {
+  border-bottom: 0;
+}
+
+.delivery-fulfilment-row > span:first-child {
+  color: var(--app-accent);
+  font-size: 0.58rem;
+  font-weight: 820;
+}
+
+.delivery-fulfilment-row strong {
+  color: var(--app-navy);
+  font-size: 0.68rem;
+}
+
+.delivery-fulfilment-row small,
+.delivery-fulfilment-row > span:not(:first-child) {
+  color: #7f8b92;
+  font-size: 0.6rem;
+}
+
+.delivery-sourcing-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--app-line);
+  background: #fbfcfc;
+}
+
+.delivery-sourcing-actions > details {
+  min-width: 0;
+  border-right: 1px solid var(--app-line);
+}
+
+.delivery-sourcing-actions > details:last-child {
+  border-right: 0;
+}
+
+.delivery-sourcing-actions summary {
+  padding: 12px 20px;
+  cursor: pointer;
+  color: var(--app-navy);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.delivery-sourcing-actions .admin-form {
+  border-top: 1px solid var(--app-line);
+}
+
+.delivery-portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.delivery-service-list,
+.delivery-capability-list {
+  display: grid;
+}
+
+.delivery-service-list > article,
+.delivery-capability-list > article {
+  padding: 14px 18px;
+  border-top: 1px solid var(--app-line);
+}
+
+.delivery-service-list > article:first-child,
+.delivery-capability-list > article:first-child {
+  border-top: 0;
+}
+
+.delivery-service-list header,
+.delivery-capability-list > article {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.delivery-service-list header > div,
+.delivery-capability-list > article > div {
+  display: grid;
+  gap: 3px;
+}
+
+.delivery-service-list header span,
+.delivery-capability-list > article > div > span {
+  color: var(--app-accent);
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.delivery-service-list header strong,
+.delivery-capability-list strong {
+  color: var(--app-navy);
+  font-size: 0.72rem;
+}
+
+.delivery-service-list header small {
+  color: var(--app-muted);
+  font-size: 0.6rem;
+}
+
+.delivery-service-list > article > p,
+.delivery-capability-list > article > p {
+  margin: 8px 0 0;
+  color: var(--app-muted);
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+.delivery-profession-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.delivery-profession-tags span {
+  padding: 4px 6px;
+  border: 1px solid var(--app-line);
+  color: #5d6971;
+  font-size: 0.58rem;
+}
+
+.delivery-profession-tags small {
+  color: #8c969c;
+  font-size: 0.6rem;
+}
+
+.delivery-command-drawer .information-command-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1050px) {
+  .delivery-portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-fulfilment-row {
+    grid-template-columns: 70px minmax(0, 1fr) auto;
+  }
+
+  .delivery-fulfilment-row small {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 760px) {
+  .delivery-sourcing-actions,
+  .delivery-command-drawer .information-command-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-sourcing-actions > details {
+    border-right: 0;
+    border-bottom: 1px solid var(--app-line);
+  }
+
+  .delivery-requirement-card > header {
+    flex-direction: column;
+  }
+
+  .delivery-requirement-state {
+    justify-items: start;
+  }
+
+  .delivery-fulfilment-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .delivery-fulfilment-row small {
+    grid-column: auto;
+  }
+}

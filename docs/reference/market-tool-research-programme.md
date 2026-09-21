@@ -1,6 +1,6 @@
 # Market Tool Research Programme
 
-**Status:** CBE specialist market baseline architecturally closed; enterprise benchmark active through F20  
+**Status:** CBE specialist market baseline architecturally closed; enterprise benchmark active through F25  
 **Effective:** 21 September 2026
 
 ## Governing benchmark unit
@@ -32,65 +32,34 @@ Function
 
 - 29 / 29 enterprise Functions seeded.
 - 326 Function × Product relationships across 303 distinct enterprise products.
-- 306 web-verified enterprise module/task capability records.
-- 62 Function × Product relationships point to deep-verified anchors.
-- 155 relationships are covered by verified equivalent patterns.
-- 109 relationships remain for F21-F29.
-- **F01-F20 are closed at market capability-pattern level.**
+- 360 web-verified enterprise module/task capability records.
+- 74 Function × Product relationships point to deep-verified anchors.
+- 197 relationships are covered by verified equivalent patterns.
+- 55 relationships remain for F26-F29.
+- **F01-F25 are closed at market capability-pattern level.**
 
-## Enterprise waves closed
+## Waves closed
 
-- **E1 F01-F05:** strategy/planning; corporate governance; EPM; M&A; product/service/innovation.
-- **E2 F06-F10:** marketing/brand; sales/commercial; customer service; procurement/supplier; supply chain/logistics.
-- **E3 F11-F15:** manufacturing; field/service operations; quality; finance/treasury/tax; HCM.
-- **E4 F16-F20:** IT; data/analytics/AI; cybersecurity; legal/corporate secretariat; GRC/internal control/audit.
+- E1 F01-F05 — strategy, governance, performance, M&A, product/innovation.
+- E2 F06-F10 — marketing, sales, service, procurement, supply chain.
+- E3 F11-F15 — manufacturing, field operations, quality, finance, HCM.
+- E4 F16-F20 — IT, data/AI, cybersecurity, legal/secretariat, GRC/audit.
+- E5 F21-F25 — privacy/information governance, property/assets, HSE/sustainability, continuity/crisis/physical security, communications/public affairs/investor relations.
 
-### E4 canonical patterns
+### E5 canonical patterns
 
-**F16 Information Technology**
-- ITSM: incident, problem, change, request/catalog, CMDB/service/configuration.
-- Endpoint: enrollment, configuration, compliance, security policy, remote administration.
-- Cloud infrastructure: compute, network, storage/backup, monitoring, resource governance.
-- Software engineering/DevOps: Git repositories, pull requests/reviews, CI/CD, packages/releases and work items.
+- **F21:** RoPA/data mapping, DPIA/privacy risk, DSRs, consent, privacy incidents; classification, retention/records, eDiscovery and DLP.
+- **F22:** asset master/hierarchy, preventive/reactive work, inspections/reliability; property/lease, space/workplace and facility-service management.
+- **F23:** HSE incidents, audits/inspections, risk, environment and competence; enterprise ESG/carbon accounting/reporting; project/building LCA and lifecycle costing.
+- **F24:** BIA, continuity/recovery plans, exercises and crisis activation; mass notification/critical event communication; access control, video and unified security incidents.
+- **F25:** journalist/media relationship management, monitoring, distribution and PR analytics; IR website, earnings/events, investor CRM, shareholder surveillance and engagement analytics.
 
-**F17 Data, Analytics & AI**
-- Enterprise lakehouse/OneLake and data engineering pipelines.
-- Lakehouse/ML/AI execution and model lifecycle.
-- Data catalog, governance, glossary, lineage, quality and access governance.
-- Version-controlled analytics transformation/testing/semantic metrics.
-- Managed connector replication and CDC.
-- BI semantic models, reports and real-time analytics.
+## Final enterprise wave — E6 F26-F29
 
-**F18 Cybersecurity & Information Security**
-- SIEM/XDR, security incidents, threat hunting and automated response.
-- Identity and conditional access.
-- PAM, zero-standing privilege, session recording and secrets.
-- Asset/vulnerability/exposure discovery and risk-based remediation.
-- Application security across code, OSS, containers and IaC.
-- Zero-trust internet/private application access and DLP.
-- Email protection, human-risk training and account-takeover controls.
-
-**F19 Legal & Corporate Secretariat**
-- Contract intake, authoring, negotiation, approval/execution, obligations and renewals.
-- Legal matter intake, matter/litigation workflow, tasks, evidence, spend and risk.
-- Legal entity/subsidiary master, ownership structure, statutory compliance and reporting.
-- Electronic signature envelope lifecycle and defensible transaction audit evidence.
-
-**F20 Risk, Compliance, Internal Control & Audit**
-- Enterprise risk register, assessment and treatment.
-- Regulatory/policy/control mapping and continuous compliance evidence.
-- Control testing, deficiencies and remediation.
-- Risk-based internal audit and findings/actions.
-- Third-party risk lifecycle.
-- Whistleblowing, investigations, ethics training, policies, disclosures and third-party screening.
-
-## Next enterprise wave — E5 F21-F25
-
-- F21 Privacy & Information Governance
-- F22 Property, Facilities & Physical Assets
-- F23 Health, Safety, Environment & Sustainability
-- F24 Business Continuity, Crisis & Physical Security
-- F25 Communications, Public Affairs & Investor Relations
+- F26 Knowledge, Document & Records Management
+- F27 Portfolio, Programme & Project Management
+- F28 Change & Transformation Management
+- F29 Business Process & Continuous Improvement
 
 ## Architectural rule
 
@@ -98,6 +67,6 @@ A vendor does not create NuBlox architecture merely because its product exists. 
 
 ## Completion condition
 
-The overall benchmark is complete enough to freeze NuBlox tool architecture only when every material enterprise and CBE capability can answer:
+The market benchmark is ready to drive canonical NuBlox tool architecture only when every material enterprise and CBE capability can answer:
 
 > What does the person do, which market operation enables it, what controlled output results, and what equivalent or improved governed NuBlox capability must exist?

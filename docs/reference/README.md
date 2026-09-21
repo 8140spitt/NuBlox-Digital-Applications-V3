@@ -12,6 +12,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 
 ## Current reference studies
 
+- [Market Tool & Job Capability Landscape](market-tool-landscape.md) — current market-discovery framework across the 29 enterprise Functions and the Construction & Built Environment specialist-tool layer.
+- [Machine-readable Market Tool Register](market-tool-register.csv) — product-level discovery register designed to expand through Function → Sub-function → Activity → Job Profile → task → tool → work product → NuBlox requirement.
 - [PTC Windchill 13](windchill.md) — controlled objects, technical information, PLM/configuration/change, publication, integration and migration reference.
 
 ## Architectural boundary

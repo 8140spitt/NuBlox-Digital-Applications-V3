@@ -325,7 +325,7 @@ export class MySqlInformationCommandService {
     const evaluation = await this.access.evaluatePermission(
       tenantId,
       actorPersonId,
-      PLATFORM_PERMISSION_KEYS.CONFIGURATION_MANAGE,
+      PLATFORM_PERMISSION_KEYS.INFORMATION_MANAGE,
       { scopeType: 'TENANT' }
     );
     if (!evaluation.allowed) {

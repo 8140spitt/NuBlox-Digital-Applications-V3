@@ -29,6 +29,7 @@
     "node": ">=22.9.0"
   },
   "dependencies": {
+    "@nublox/kernel": "workspace:*",
     "@nublox/persistence": "workspace:*"
   }
 }

@@ -44,6 +44,10 @@
         <span class="nav-symbol">DP</span>
         <span>Deployments</span>
       </a>
+      <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
+        <span class="nav-symbol">CP</span>
+        <span>Competence</span>
+      </a>
     </nav>
 
     <div class="function-nav">

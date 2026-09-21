@@ -30,7 +30,9 @@ export const PLATFORM_PERMISSION_KEYS = {
   INDUSTRY_DELIVERY_MANAGE: 'platform.industry_delivery.manage',
   AUDIT_READ: 'platform.audit.read',
   CONFIGURATION_READ: 'platform.configuration.read',
-  CONFIGURATION_MANAGE: 'platform.configuration.manage'
+  CONFIGURATION_MANAGE: 'platform.configuration.manage',
+  F01_READ: 'function.f01.read',
+  F01_WORK: 'function.f01.work'
 } as const;
 
 export type PlatformPermissionKey =

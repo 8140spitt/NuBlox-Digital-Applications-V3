@@ -23,6 +23,7 @@ export type EvidenceRecordId = Brand<string, 'EvidenceRecordId'>;
 export type AccessRoleId = Brand<string, 'AccessRoleId'>;
 export type AccessRolePermissionId = Brand<string, 'AccessRolePermissionId'>;
 export type AccessRoleAssignmentId = Brand<string, 'AccessRoleAssignmentId'>;
+export type AccessPermissionRequestId = Brand<string, 'AccessPermissionRequestId'>;
 export type WorkflowDefinitionId = Brand<string, 'WorkflowDefinitionId'>;
 export type WorkflowDefinitionVersionId = Brand<string, 'WorkflowDefinitionVersionId'>;
 export type WorkflowInstanceId = Brand<string, 'WorkflowInstanceId'>;

@@ -239,6 +239,7 @@ interface DeploymentRow extends RowDataPacket {
   tenant_id: string;
   function_id: string;
   sub_function_id: string | null;
+  deployment_purpose: FunctionalDeployment['deploymentPurpose'];
   organisation_id: string;
   organisation_unit_id: string | null;
   context_type: FunctionalDeployment['contextType'];
@@ -1445,7 +1446,7 @@ export class MySqlDeliverableRepository {
 
   private async requireDeployment(tenantId: TenantId, id: string): Promise<FunctionalDeployment> {
     const [rows] = await this.pool.execute<DeploymentRow[]>(
-      `SELECT id, tenant_id, function_id, sub_function_id, organisation_id,
+      `SELECT id, tenant_id, function_id, sub_function_id, deployment_purpose, organisation_id,
               organisation_unit_id, context_type, context_object_id, scope_description,
               effective_from, effective_to, status
          FROM functional_deployments WHERE tenant_id = ? AND id = ?`, [tenantId, id]

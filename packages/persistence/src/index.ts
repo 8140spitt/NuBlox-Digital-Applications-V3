@@ -1,3 +1,4 @@
+export * from './auth-repository.js';
 export * from './commercial-repository.js';
 export * from './industry-repository.js';
 export * from './my-work-repository.js';

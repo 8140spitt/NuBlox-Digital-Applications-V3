@@ -14,7 +14,8 @@ export type NativeMyWorkKind =
   | 'REVIEW'
   | 'APPROVAL'
   | 'ACCEPTANCE'
-  | 'COMPETENCE';
+  | 'COMPETENCE'
+  | 'ACCESS_REQUEST';
 
 export interface NativeMyWorkProjectionItem {
   key: string;

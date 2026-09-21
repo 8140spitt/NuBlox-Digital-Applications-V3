@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  import type { ActionData, PageData } from './$types';
 
-  let { data }: { data: PageData } = $props();
+  let { data, form }: { data: PageData; form: ActionData } = $props();
 
   function dateTime(value: string) {
     return new Intl.DateTimeFormat('en-GB', {
@@ -44,13 +44,21 @@
       <h1>Deliverable, Issue &amp; Acceptance</h1>
       <p class="workspace-lede">
         Control required work products from requirement and responsibility through exact-version
-        review, approval, issue, recipient response, rework, acceptance and closure.
+        review, Authority-backed approval, controlled issue, recipient response, rework,
+        acceptance and closure.
       </p>
     </div>
     {#if !data.canManage}
       <div class="workspace-readonly">Read access only</div>
     {/if}
   </section>
+
+  {#if form?.message || form?.error}
+    <div class:success={form?.ok} class:error={!form?.ok} class="admin-feedback" role="status">
+      <strong>{form?.ok ? 'Completed' : 'Action not completed'}</strong>
+      <span>{form?.message ?? form?.error}</span>
+    </div>
+  {/if}
 
   <section class="architecture-metrics deliverable-metrics" aria-label="Deliverable totals">
     <article>
@@ -75,13 +83,77 @@
     </article>
   </section>
 
+  {#if data.canManage}
+    <section class="information-admin deliverable-admin">
+      <header class="information-admin-heading">
+        <div>
+          <p class="app-eyebrow">Controlled commands</p>
+          <h2>Delivery setup</h2>
+        </div>
+        <p>
+          NuBlox creates native Deliverable obligations and execution Items against canonical
+          context. Approval cannot be applied without an exact-subject Decision backed by active
+          Authority.
+        </p>
+      </header>
+
+      <div class="information-command-grid">
+        <details>
+          <summary><span>01</span><strong>Create requirement</strong></summary>
+          <form method="POST" action="?/createRequirement" class="admin-form">
+            <label><span>Code</span><input name="code" required maxlength="160" placeholder="REQ-A-1001" /></label>
+            <label><span>Deliverable type</span><input name="deliverableType" required maxlength="120" placeholder="DRAWING" /></label>
+            <label class="information-wide"><span>Title</span><input name="title" required maxlength="255" /></label>
+            <label class="information-wide"><span>Description</span><textarea name="description" required rows="3"></textarea></label>
+            <label class="information-wide">
+              <span>Context object</span>
+              <select name="contextObjectId" required>
+                <option value="">Select project, package, asset or other context</option>
+                {#each data.projection.canonicalObjects.filter((object) => object.objectType !== 'DELIVERABLE_ITEM') as object}
+                  <option value={object.id}>{object.objectType} · {object.stableKey}</option>
+                {/each}
+              </select>
+            </label>
+            <label><span>Required Representations</span><input name="requiredRepresentationTypes" placeholder="PDF, IFC" /></label>
+            <label><span>Planned due</span><input type="datetime-local" name="plannedDueAt" /></label>
+            <label class="information-checkbox">
+              <input type="checkbox" name="acceptanceRequired" />
+              <span>Recipient acceptance required</span>
+            </label>
+            <button type="submit">Create Requirement <span>→</span></button>
+          </form>
+        </details>
+
+        <details>
+          <summary><span>02</span><strong>Create Deliverable Item</strong></summary>
+          <form method="POST" action="?/createItem" class="admin-form">
+            <label class="information-wide">
+              <span>Requirement</span>
+              <select name="requirementId" required>
+                <option value="">Select Requirement</option>
+                {#each data.projection.requirements.filter((requirement) => requirement.status === 'ACTIVE') as requirement}
+                  <option value={requirement.id}>{requirement.code} · {requirement.title}</option>
+                {/each}
+              </select>
+            </label>
+            <label><span>Item code</span><input name="code" required maxlength="160" /></label>
+            <label><span>Title</span><input name="title" required maxlength="255" /></label>
+            <label><span>Planned start</span><input type="datetime-local" name="plannedAt" /></label>
+            <label><span>Forecast</span><input type="datetime-local" name="forecastAt" /></label>
+            <button type="submit">Create Item <span>→</span></button>
+          </form>
+        </details>
+      </div>
+    </section>
+  {/if}
+
   <section class="deliverable-register">
     <header class="configuration-section-heading">
       <div>
         <p class="app-eyebrow">Requirement to acceptance</p>
         <h2>Delivery register</h2>
       </div>
-      <p>All controls remain bound to the exact governed output object and version.</p>
+      <p>All assurance and issue controls remain bound to the exact governed output object/version.</p>
     </header>
 
     {#if data.projection.requirements.length === 0}
@@ -144,6 +216,254 @@
                       <span>{item.approvals.length} approvals</span>
                       <span>{item.transmittals.length} issues</span>
                     </div>
+
+                    {#if data.canManage && item.status !== 'CLOSED' && item.status !== 'CANCELLED'}
+                      <div class="deliverable-command-strip">
+                        {#if !item.authoringBinding}
+                          <details>
+                            <summary>Bind native authoring</summary>
+                            <form method="POST" action="?/createAuthoringBinding" class="admin-form">
+                              <input type="hidden" name="itemId" value={item.id} />
+                              <label class="information-wide">
+                                <span>Authoritative NuBlox Information object</span>
+                                <select name="authoritativeObjectId" required>
+                                  <option value="">Select Information Container</option>
+                                  {#each data.projection.canonicalObjects.filter((object) => object.objectType === 'INFORMATION_CONTAINER') as object}
+                                    <option value={object.id}>{object.stableKey}</option>
+                                  {/each}
+                                </select>
+                              </label>
+                              <button type="submit">Bind native authoring</button>
+                            </form>
+                          </details>
+                        {/if}
+
+                        <details>
+                          <summary>Assign responsibility</summary>
+                          <form method="POST" action="?/addResponsibility" class="admin-form">
+                            <input type="hidden" name="itemId" value={item.id} />
+                            <input type="hidden" name="principalType" value="PERSON" />
+                            <label>
+                              <span>Person</span>
+                              <select name="principalId" required>
+                                <option value="">Select person</option>
+                                {#each data.projection.people as person}
+                                  <option value={person.id}>{person.displayName}</option>
+                                {/each}
+                              </select>
+                            </label>
+                            <label>
+                              <span>Responsibility</span>
+                              <select name="responsibilityRole" required>
+                                <option value="RESPONSIBLE">Responsible</option>
+                                <option value="ACCOUNTABLE">Accountable</option>
+                                <option value="CONTRIBUTOR">Contributor</option>
+                                <option value="REVIEWER">Reviewer</option>
+                                <option value="CHECKER">Checker</option>
+                                <option value="APPROVER">Approver</option>
+                                <option value="ACCEPTOR">Acceptor</option>
+                                <option value="ASSURANCE">Assurance</option>
+                                <option value="CONSULTED">Consulted</option>
+                                <option value="INFORMED">Informed</option>
+                              </select>
+                            </label>
+                            <label><span>Effective from</span><input type="datetime-local" name="effectiveFrom" /></label>
+                            <label><span>Effective to</span><input type="datetime-local" name="effectiveTo" /></label>
+                            <button type="submit">Assign responsibility</button>
+                          </form>
+                        </details>
+
+                        {#if item.status === 'PLANNED'}
+                          <form method="POST" action="?/startItem">
+                            <input type="hidden" name="itemId" value={item.id} />
+                            <button type="submit" disabled={!item.authoringBinding}>Start execution</button>
+                          </form>
+                        {:else if item.status === 'IN_PROGRESS' || item.status === 'REWORK'}
+                          <details>
+                            <summary>Bind exact output</summary>
+                            <form method="POST" action="?/bindOutput" class="admin-form">
+                              <input type="hidden" name="itemId" value={item.id} />
+                              <label>
+                                <span>Governed Information object</span>
+                                <select name="outputObjectId" required>
+                                  <option value="">Select output</option>
+                                  {#each data.projection.canonicalObjects.filter((object) => object.objectType === 'INFORMATION_CONTAINER') as object}
+                                    <option value={object.id}>{object.stableKey}</option>
+                                  {/each}
+                                </select>
+                              </label>
+                              <label><span>Exact revision/version</span><input name="outputVersion" maxlength="120" placeholder="A" /></label>
+                              <button type="submit">Bind output</button>
+                            </form>
+                          </details>
+                          <form method="POST" action="?/submitForReview">
+                            <input type="hidden" name="itemId" value={item.id} />
+                            <button type="submit" disabled={!item.governedOutputObjectId}>Submit for review</button>
+                          </form>
+                        {:else if item.status === 'IN_REVIEW'}
+                          <details>
+                            <summary>Record exact-version review</summary>
+                            <form method="POST" action="?/recordReview" class="admin-form">
+                              <input type="hidden" name="itemId" value={item.id} />
+                              <label>
+                                <span>Review type</span>
+                                <select name="reviewType" required>
+                                  <option value="CHECK">Check</option>
+                                  <option value="PEER_REVIEW">Peer review</option>
+                                  <option value="TECHNICAL_REVIEW">Technical review</option>
+                                  <option value="ASSURANCE">Assurance</option>
+                                  <option value="AUTHOR_REVIEW">Author review</option>
+                                  <option value="CUSTOM">Custom</option>
+                                </select>
+                              </label>
+                              <label>
+                                <span>Outcome</span>
+                                <select name="outcome" required>
+                                  <option value="NO_COMMENT">No comment</option>
+                                  <option value="COMMENTS">Comments</option>
+                                  <option value="REVISE">Revise</option>
+                                  <option value="REJECTED">Rejected</option>
+                                </select>
+                              </label>
+                              <label class="information-wide"><span>Comments</span><textarea name="comments" rows="2"></textarea></label>
+                              <label><span>Evidence record ID</span><input name="evidenceRecordId" maxlength="64" /></label>
+                              <button type="submit">Record review</button>
+                            </form>
+                          </details>
+                          <form method="POST" action="?/approve" class="inline-command-form">
+                            <input type="hidden" name="itemId" value={item.id} />
+                            <input name="decisionId" required maxlength="64" placeholder="Authority-backed approval Decision ID" />
+                            <button type="submit">Apply approval</button>
+                          </form>
+                          {#if item.reviews.length > 0}
+                            <details>
+                              <summary>Require rework</summary>
+                              <form method="POST" action="?/createRework" class="admin-form">
+                                <input type="hidden" name="itemId" value={item.id} />
+                                <input type="hidden" name="triggerType" value="REVIEW" />
+                                <label>
+                                  <span>Review trigger</span>
+                                  <select name="triggerId" required>
+                                    {#each item.reviews as review}
+                                      <option value={review.id}>{review.outcome} · {review.reviewType} · {dateTime(review.reviewedAt)}</option>
+                                    {/each}
+                                  </select>
+                                </label>
+                                <label class="information-wide"><span>Reason</span><input name="reason" required /></label>
+                                <button type="submit">Enter rework</button>
+                              </form>
+                            </details>
+                          {/if}
+                        {:else if item.status === 'APPROVED'}
+                          <details>
+                            <summary>Issue controlled Transmittal</summary>
+                            <form method="POST" action="?/issue" class="admin-form">
+                              <input type="hidden" name="itemId" value={item.id} />
+                              <label><span>Issue reference</span><input name="issueReference" required maxlength="160" /></label>
+                              <label><span>Issue purpose</span><input name="issuePurpose" required maxlength="160" placeholder="FOR CONSTRUCTION" /></label>
+                              <label><span>Representation ID</span><input name="representationId" maxlength="64" placeholder="Optional exact Representation" /></label>
+                              <label class="information-checkbox">
+                                <input type="checkbox" name="responseRequired" />
+                                <span>Recipient response required</span>
+                              </label>
+                              <button type="submit">Issue Deliverable</button>
+                            </form>
+                          </details>
+                        {:else if item.status === 'ISSUED'}
+                          {#each item.transmittals.slice(0, 1) as transmittal}
+                            <details>
+                              <summary>Add recipient</summary>
+                              <form method="POST" action="?/addRecipient" class="admin-form">
+                                <input type="hidden" name="transmittalId" value={transmittal.id} />
+                                <label>
+                                  <span>Recipient</span>
+                                  <select name="recipientPartyId" required>
+                                    <option value="">Select Party</option>
+                                    {#each data.projection.parties as party}
+                                      <option value={party.id}>{party.displayName} · {party.kind}</option>
+                                    {/each}
+                                  </select>
+                                </label>
+                                <label><span>Due</span><input type="datetime-local" name="dueAt" /></label>
+                                <label class="information-checkbox">
+                                  <input type="checkbox" name="responseRequired" />
+                                  <span>Response required</span>
+                                </label>
+                                <button type="submit">Add recipient</button>
+                              </form>
+                            </details>
+
+                            {#each transmittal.recipients.filter((recipient) => !recipient.response) as recipient}
+                              <details>
+                                <summary>Record response · {recipient.recipientName}</summary>
+                                <form method="POST" action="?/recordResponse" class="admin-form">
+                                  <input type="hidden" name="recipientId" value={recipient.id} />
+                                  <label>
+                                    <span>Outcome</span>
+                                    <select name="outcome" required>
+                                      <option value="ACCEPTED">Accepted</option>
+                                      <option value="ACCEPTED_WITH_COMMENTS">Accepted with comments</option>
+                                      <option value="NO_OBJECTION">No objection</option>
+                                      <option value="REVISE">Revise</option>
+                                      <option value="REJECTED">Rejected</option>
+                                    </select>
+                                  </label>
+                                  <label class="information-wide"><span>Comments</span><textarea name="comments" rows="2"></textarea></label>
+                                  <label><span>Evidence record ID</span><input name="evidenceRecordId" maxlength="64" /></label>
+                                  <button type="submit">Record response</button>
+                                </form>
+                              </details>
+                            {/each}
+
+                            <form method="POST" action="?/accept">
+                              <input type="hidden" name="itemId" value={item.id} />
+                              <input type="hidden" name="transmittalId" value={transmittal.id} />
+                              <button type="submit">Complete acceptance</button>
+                            </form>
+
+                            {#each transmittal.recipients.filter((recipient) => recipient.response && ['REVISE', 'REJECTED'].includes(recipient.response.outcome)) as recipient}
+                              <form method="POST" action="?/createRework" class="inline-command-form">
+                                <input type="hidden" name="itemId" value={item.id} />
+                                <input type="hidden" name="triggerType" value="RECIPIENT_RESPONSE" />
+                                <input type="hidden" name="triggerId" value={recipient.response?.id} />
+                                <input name="reason" required placeholder="Rework reason from recipient response" />
+                                <button type="submit">Enter rework</button>
+                              </form>
+                            {/each}
+                          {/each}
+                        {:else if item.status === 'ACCEPTED'}
+                          <details>
+                            <summary>Create downstream consequence</summary>
+                            <form method="POST" action="?/createConsequence" class="admin-form">
+                              <input type="hidden" name="itemId" value={item.id} />
+                              <label><span>Consequence type</span><input name="consequenceType" required maxlength="120" placeholder="RELEASE_DOWNSTREAM_WORK" /></label>
+                              <label>
+                                <span>Target object</span>
+                                <select name="targetObjectId">
+                                  <option value="">No target</option>
+                                  {#each data.projection.canonicalObjects.filter((object) => object.id !== item.canonicalObjectId) as object}
+                                    <option value={object.id}>{object.objectType} · {object.stableKey}</option>
+                                  {/each}
+                                </select>
+                              </label>
+                              <label><span>Target version</span><input name="targetVersion" maxlength="120" /></label>
+                              <label><span>Evidence record ID</span><input name="evidenceRecordId" maxlength="64" /></label>
+                              <button type="submit">Create consequence</button>
+                            </form>
+                          </details>
+                          {#each item.consequences.filter((consequence) => consequence.status === 'PENDING') as consequence}
+                            <form method="POST" action="?/applyConsequence">
+                              <input type="hidden" name="consequenceId" value={consequence.id} />
+                              <button type="submit">Apply consequence · {consequence.consequenceType}</button>
+                            </form>
+                          {/each}
+                          <form method="POST" action="?/close">
+                            <input type="hidden" name="itemId" value={item.id} />
+                            <button type="submit">Close Deliverable</button>
+                          </form>
+                        {/if}
+                      </div>
+                    {/if}
 
                     <details>
                       <summary>Responsibility, assurance &amp; issue history</summary>

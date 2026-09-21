@@ -3298,3 +3298,242 @@ h1 {
   .competence-command-grid > article:first-child { border-right:0; border-bottom:1px solid var(--app-line); }
   .requirement-flags { align-items:flex-start; }
 }
+
+
+.control-metrics {
+  margin-top: 26px;
+}
+
+.control-workspace-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.control-definition-list details {
+  border-bottom: 1px solid var(--app-line);
+}
+
+.control-definition-list details:last-child {
+  border-bottom: 0;
+}
+
+.control-definition-list summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  min-height: 58px;
+  padding: 12px 22px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.control-definition-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.control-definition-list summary > div {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.control-definition-list summary span,
+.control-type {
+  color: var(--app-accent);
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.control-definition-list summary strong {
+  color: var(--app-navy);
+  font-size: 0.77rem;
+  font-weight: 680;
+}
+
+.control-definition-list summary em {
+  color: #87949c;
+  font-size: 0.61rem;
+  font-style: normal;
+}
+
+.control-definition-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 4px 22px 22px;
+  background: #f8f9f8;
+  border-top: 1px solid #e2e7e9;
+}
+
+.control-definition-detail h3 {
+  margin: 18px 0 10px;
+  color: #6f7c84;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.control-chip-list,
+.control-transition-list {
+  display: grid;
+  gap: 7px;
+}
+
+.control-chip-list > span,
+.control-transition-list > span {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 9px;
+  background: white;
+  border: 1px solid #dde3e5;
+  color: #55636c;
+  font-size: 0.66rem;
+}
+
+.control-chip-list strong,
+.control-transition-list strong {
+  color: var(--app-accent);
+  font-size: 0.58rem;
+  font-weight: 800;
+}
+
+.control-chip-list small,
+.control-transition-list small {
+  color: #8d989f;
+  font-size: 0.56rem;
+}
+
+.control-table > article {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(150px, 0.8fr) minmax(140px, 0.55fr);
+  gap: 18px;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.control-table > article:last-child {
+  border-bottom: 0;
+}
+
+.control-table > article > div {
+  display: grid;
+  gap: 4px;
+}
+
+.control-table strong {
+  color: #33434d;
+  font-size: 0.7rem;
+  font-weight: 660;
+}
+
+.control-table span,
+.control-table small {
+  color: #8b979e;
+  font-size: 0.58rem;
+}
+
+.control-record-list > article {
+  padding: 17px 20px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.control-record-list > article:last-child {
+  border-bottom: 0;
+}
+
+.control-record-list header,
+.control-record-list footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control-record-list header span {
+  color: var(--app-accent);
+  font-size: 0.59rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.control-record-list header strong {
+  color: #466f5c;
+  font-size: 0.62rem;
+}
+
+.control-record-list h3 {
+  margin: 13px 0 0;
+  color: var(--app-navy);
+  font-size: 0.76rem;
+  font-weight: 680;
+}
+
+.control-record-list p {
+  margin: 7px 0 0;
+  color: #66737c;
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.control-record-list footer {
+  justify-content: flex-start;
+  margin-top: 12px;
+  color: #8d989e;
+  font-size: 0.58rem;
+}
+
+.control-audit-panel {
+  margin-top: 24px;
+}
+
+.audit-list > article {
+  display: grid;
+  grid-template-columns: 150px minmax(180px, 0.65fr) minmax(220px, 1fr) minmax(140px, 0.45fr);
+  gap: 14px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.audit-list > article:last-child {
+  border-bottom: 0;
+}
+
+.audit-list span {
+  color: #8d989e;
+  font-size: 0.59rem;
+}
+
+.audit-list strong {
+  color: #40515b;
+  font-size: 0.65rem;
+  font-weight: 670;
+}
+
+.control-empty {
+  margin: 0;
+  padding: 18px 20px;
+  color: #849098;
+  font-size: 0.68rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 920px) {
+  .control-workspace-grid,
+  .control-definition-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .control-table > article,
+  .audit-list > article {
+    grid-template-columns: 1fr;
+  }
+}

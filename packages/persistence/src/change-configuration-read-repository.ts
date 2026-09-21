@@ -76,6 +76,12 @@ interface HistoryRow extends RowDataPacket {
   note: string | null;
   actor_name: string | null;
 }
+interface CanonicalObjectRow extends RowDataPacket {
+  id: string;
+  object_type: string;
+  stable_key: string;
+}
+
 interface ConfigurationItemRow extends RowDataPacket {
   id: string;
   canonical_object_id: string;
@@ -188,6 +194,11 @@ export interface ChangeConfigurationProjection {
       actorName?: string;
     }>;
   }>;
+  canonicalObjects: Array<{
+    id: string;
+    objectType: string;
+    stableKey: string;
+  }>;
   configurationItems: Array<{
     id: string;
     canonicalObjectId: string;
@@ -251,6 +262,7 @@ export class MySqlChangeConfigurationReadRepository {
       verificationResult,
       discrepancyResult,
       historyResult,
+      canonicalObjectResult,
       configurationItemResult,
       baselineResult,
       baselineItemResult,
@@ -316,6 +328,13 @@ export class MySqlChangeConfigurationReadRepository {
            LEFT JOIN persons p ON p.tenant_id = h.tenant_id AND p.id = h.actor_person_id
           WHERE h.tenant_id = ?
           ORDER BY h.change_id, h.history_id`,
+        [tenantId]
+      ),
+      this.pool.query<CanonicalObjectRow[]>(
+        `SELECT id, object_type, stable_key
+           FROM canonical_objects
+          WHERE tenant_id = ?
+          ORDER BY object_type, stable_key`,
         [tenantId]
       ),
       this.pool.query<ConfigurationItemRow[]>(
@@ -487,6 +506,11 @@ export class MySqlChangeConfigurationReadRepository {
 
     return {
       changes,
+      canonicalObjects: canonicalObjectResult[0].map((row) => ({
+        id: row.id,
+        objectType: row.object_type,
+        stableKey: row.stable_key
+      })),
       configurationItems: configurationItemResult[0].map((row) => ({
         id: row.id,
         canonicalObjectId: row.canonical_object_id,

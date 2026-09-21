@@ -12,7 +12,12 @@
     items.filter((item) => item.kind === 'APPROVAL' || item.kind === 'ACCEPTANCE').length
   );
   const attentionCount = $derived(
-    items.filter((item) => item.isOverdue || item.kind === 'COMPETENCE').length
+    items.filter(
+      (item) =>
+        item.isOverdue ||
+        item.kind === 'COMPETENCE' ||
+        item.kind === 'ACCESS_REQUEST'
+    ).length
   );
 
   function kindLabel(kind: string) {
@@ -29,6 +34,8 @@
         return 'Acceptance';
       case 'COMPETENCE':
         return 'Competence';
+      case 'ACCESS_REQUEST':
+        return 'Access request';
       default:
         return kind;
     }
@@ -138,6 +145,11 @@
                 <span>Version <strong>{item.subjectVersion}</strong></span>
               {/if}
             </div>
+            {#if item.kind === 'ACCESS_REQUEST'}
+              <a class="my-work-action-link" href={`/app/access?request=${item.sourceId}`}>
+                Review access request →
+              </a>
+            {/if}
           </div>
 
           <dl class="my-work-meta">

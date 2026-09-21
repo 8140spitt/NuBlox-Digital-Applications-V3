@@ -2,6 +2,7 @@ import {
   createDatabasePool,
   MySqlAccessAdministrationCommandService,
   MySqlAccessAdministrationReadRepository,
+  MySqlAccessPermissionRequestRepository,
   MySqlAccessRepository,
   MySqlAuthRepository,
   MySqlMyWorkRepository,
@@ -12,6 +13,7 @@ import {
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
 let accessAdministrationCommandServiceInstance: MySqlAccessAdministrationCommandService | undefined;
 let accessAdministrationReadRepositoryInstance: MySqlAccessAdministrationReadRepository | undefined;
+let accessPermissionRequestRepositoryInstance: MySqlAccessPermissionRequestRepository | undefined;
 let accessRepositoryInstance: MySqlAccessRepository | undefined;
 let authRepositoryInstance: MySqlAuthRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
@@ -42,6 +44,15 @@ export function getAccessAdministrationReadRepository(): MySqlAccessAdministrati
   }
 
   return accessAdministrationReadRepositoryInstance;
+}
+
+export function getAccessPermissionRequestRepository(): MySqlAccessPermissionRequestRepository {
+  if (!accessPermissionRequestRepositoryInstance) {
+    accessPermissionRequestRepositoryInstance =
+      new MySqlAccessPermissionRequestRepository(getDatabasePool());
+  }
+
+  return accessPermissionRequestRepositoryInstance;
 }
 
 export function getAccessRepository(): MySqlAccessRepository {

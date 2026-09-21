@@ -1,6 +1,15 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
+import { fileURLToPath } from 'node:url';
 
-export default defineConfig({
-  plugins: [sveltekit()]
+const repositoryRoot = fileURLToPath(new URL('../..', import.meta.url));
+
+export default defineConfig(({ mode }) => {
+  const nubloxEnvironment = loadEnv(mode, repositoryRoot, 'NUBLOX_');
+  Object.assign(process.env, nubloxEnvironment);
+
+  return {
+    envDir: repositoryRoot,
+    plugins: [sveltekit()]
+  };
 });

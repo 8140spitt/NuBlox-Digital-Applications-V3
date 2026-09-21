@@ -10,10 +10,7 @@ import {
 } from '@nublox/kernel';
 import { MySqlAccessRepository } from './access-repository.js';
 import { createDatabasePool } from './database.js';
-import {
-  FunctionalDeploymentCommandError,
-  MySqlFunctionalDeploymentCommandService
-} from './functional-deployment-command-service.js';
+import { MySqlFunctionalDeploymentCommandService } from './functional-deployment-command-service.js';
 import { MySqlFunctionalDeploymentReadRepository } from './functional-deployment-read-repository.js';
 import { MySqlFunctionalRepository } from './functional-repository.js';
 import { migrate } from './migrations.js';
@@ -252,7 +249,7 @@ suite('functional deployment administration', () => {
         scopeDescription: 'Unauthorised deployment attempt.',
         effectiveFrom: '2026-09-21T08:00:00.000Z'
       })
-    ).rejects.toMatchObject<Partial<FunctionalDeploymentCommandError>>({
+    ).rejects.toMatchObject({
       name: 'FunctionalDeploymentCommandError',
       code: 'PERMISSION_DENIED'
     });

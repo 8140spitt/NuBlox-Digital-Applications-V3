@@ -219,6 +219,7 @@ As of 21 September 2026:
 - 9 shared engines have backend implementation but still require full product UI exposure;
 - 3 domain engines have partial implementation and require completion;
 - 45 engines remain to build;
-- the current web route set is still only the application/architecture landing shell.
+- Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, live My Work projection, platform permission catalogue and permission-gated Organisation structure workspace are implemented;
+- Organisation/Person/Position mutation workflows, access administration, deployment administration and shared control-object workspaces remain incomplete.
 
-Wave 0 therefore precedes further claims of end-user operational completion.
+Wave 0 remains open until the shared platform can be operated end-to-end through the product UI.

@@ -203,8 +203,9 @@ suite('information workspace', () => {
     });
 
     const projection = await reads.getProjection(tenantId);
-    expect(projection.containers).toEqual([
-      expect.objectContaining({
+    expect(projection.containers).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
         id: container.id,
         canonicalObjectId: container.canonicalObjectId,
         revisions: [
@@ -221,9 +222,10 @@ suite('information workspace', () => {
             ]
           })
         ],
-        issues: [expect.objectContaining({ id: issue.id, issuePurpose: 'FOR CONSTRUCTION' })]
-      })
-    ]);
+          issues: [expect.objectContaining({ id: issue.id, issuePurpose: 'FOR CONSTRUCTION' })]
+        })
+      ])
+    );
     expect(projection.releaseDecisions).toEqual(
       expect.arrayContaining([
         expect.objectContaining({

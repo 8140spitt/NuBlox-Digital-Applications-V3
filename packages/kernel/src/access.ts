@@ -24,6 +24,8 @@ export const PLATFORM_PERMISSION_KEYS = {
   COMPETENCE_MANAGE: 'platform.competence.manage',
   INFORMATION_READ: 'platform.information.read',
   INFORMATION_MANAGE: 'platform.information.manage',
+  DELIVERABLE_READ: 'platform.deliverable.read',
+  DELIVERABLE_MANAGE: 'platform.deliverable.manage',
   AUDIT_READ: 'platform.audit.read',
   CONFIGURATION_READ: 'platform.configuration.read',
   CONFIGURATION_MANAGE: 'platform.configuration.manage'

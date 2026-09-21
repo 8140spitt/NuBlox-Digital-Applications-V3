@@ -189,13 +189,15 @@ export const actions: Actions = {
     try {
       const session = signedIn(locals);
       const formData = await request.formData();
+      const [serviceOfferingId = '', industryJobProfileId = ''] =
+        value(formData, 'serviceProfession').split('|');
       const requirement = await getIndustryDeliveryCommandService().createRequirement(
         session.tenantId as TenantId,
         session.personId,
         {
           contextObjectId: value(formData, 'contextObjectId'),
-          serviceOfferingId: value(formData, 'serviceOfferingId'),
-          industryJobProfileId: value(formData, 'industryJobProfileId'),
+          serviceOfferingId,
+          industryJobProfileId,
           description: value(formData, 'description'),
           requiredHeadcount: value(formData, 'requiredHeadcount'),
           sourcingStrategy: parseEnum<DeliveryCapabilitySourcingStrategy>(

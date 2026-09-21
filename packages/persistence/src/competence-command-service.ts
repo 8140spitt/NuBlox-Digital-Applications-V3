@@ -74,6 +74,7 @@ export class MySqlCompetenceCommandService {
   }):Promise<CompetenceEvidence>{
     await this.requireManage(tenantId,actorPersonId);
     const evidenceRecordId=optional(input.evidenceRecordId);
+    const effectiveTo=optionalDate(input.effectiveTo,'Effective to');
     const evidence:CompetenceEvidence={
       id:asId<'CompetenceEvidenceId'>(`CEV-${randomUUID()}`,'Competence Evidence'),
       tenantId,personId:required(input.personId,'Person') as CompetenceEvidence['personId'],
@@ -82,7 +83,7 @@ export class MySqlCompetenceCommandService {
       ...(evidenceRecordId?{evidenceRecordId:evidenceRecordId as NonNullable<CompetenceEvidence['evidenceRecordId']>}:{}),
       issuedAt:dateValue(input.issuedAt,'Issued at'),
       effectiveFrom:dateValue(input.effectiveFrom,'Effective from'),
-      ...(optionalDate(input.effectiveTo,'Effective to')?{effectiveTo:optionalDate(input.effectiveTo,'Effective to')}:{}),
+      ...(effectiveTo?{effectiveTo}:{}),
       status:'ACTIVE'
     };
     try{

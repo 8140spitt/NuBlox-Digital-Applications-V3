@@ -472,7 +472,12 @@ export class MySqlIndustryDeliveryCommandService {
       id: asId<'DeliveryCapabilityFulfilmentId'>(`CAPFUL-${randomUUID()}`, 'Delivery Capability Fulfilment'),
       tenantId, requirementId: requirement.id, fulfilmentType: input.fulfilmentType,
       providerType: input.providerType, providerId: required(input.providerId, 'Provider'),
-      ...(providerOrganisationId ? { providerOrganisationId: providerOrganisationId as DeliveryCapabilityFulfilment['providerOrganisationId'] } : {}),
+      ...(providerOrganisationId
+        ? {
+            providerOrganisationId:
+              providerOrganisationId as NonNullable<DeliveryCapabilityFulfilment['providerOrganisationId']>
+          }
+        : {}),
       requirementSharePercent: share,
       ...(resourceCapacityPercent !== undefined ? { resourceCapacityPercent } : {}),
       effectiveFrom, ...(effectiveTo ? { effectiveTo } : {}), status: 'ACTIVE'

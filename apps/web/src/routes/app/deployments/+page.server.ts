@@ -7,6 +7,7 @@ import {
   PLATFORM_PERMISSION_KEYS,
   type DeploymentAssigneeType,
   type DeploymentContextType,
+  type DeploymentPurpose,
   type WorkResponsibilityRole
 } from '@nublox/kernel';
 import { fail } from '@sveltejs/kit';
@@ -142,6 +143,16 @@ function parseContext(raw: string): {
   };
 }
 
+function parseDeploymentPurpose(raw: string): DeploymentPurpose {
+  if (raw !== 'FUNCTIONAL_GOVERNANCE' && raw !== 'FUNCTIONAL_DELIVERY') {
+    throw new FunctionalDeploymentCommandError(
+      'Choose Functional Governance or Functional Delivery.',
+      'INVALID_INPUT'
+    );
+  }
+  return raw;
+}
+
 function parseResponsibilityRole(raw: string): WorkResponsibilityRole {
   const roles: WorkResponsibilityRole[] = [
     'ACCOUNTABLE',
@@ -242,6 +253,7 @@ export const actions: Actions = {
             ...capability,
             ...organisation,
             ...context,
+            deploymentPurpose: parseDeploymentPurpose(value(formData, 'deploymentPurpose')),
             scopeDescription: value(formData, 'scopeDescription'),
             effectiveFrom: optionalValue(formData, 'effectiveFrom'),
             effectiveTo: optionalValue(formData, 'effectiveTo')

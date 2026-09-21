@@ -1,3 +1,5 @@
+export * from './strategy-command-service.js';
+export * from './strategy-read-repository.js';
 export * from './industry-delivery-command-service.js';
 export * from './industry-delivery-read-repository.js';
 export * from './deliverable-command-service.js';

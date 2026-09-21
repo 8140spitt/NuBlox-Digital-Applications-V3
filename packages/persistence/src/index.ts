@@ -1,3 +1,4 @@
+export * from './deliverable-command-service.js';
 export * from './deliverable-read-repository.js';
 export * from './change-configuration-command-service.js';
 export * from './change-configuration-read-repository.js';

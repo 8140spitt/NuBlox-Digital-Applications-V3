@@ -88,6 +88,7 @@ export type TenantServiceJobProfileId = Brand<string, 'TenantServiceJobProfileId
 export type TenantIndustryCapabilityId = Brand<string, 'TenantIndustryCapabilityId'>;
 export type DeliveryCapabilityRequirementId = Brand<string, 'DeliveryCapabilityRequirementId'>;
 export type DeliveryCapabilityFulfilmentId = Brand<string, 'DeliveryCapabilityFulfilmentId'>;
+export type IndustryDisciplineDeploymentId = Brand<string, 'IndustryDisciplineDeploymentId'>;
 export type ProjectCostCodeId = Brand<string, 'ProjectCostCodeId'>;
 export type CostPlanId = Brand<string, 'CostPlanId'>;
 export type CostPlanVersionId = Brand<string, 'CostPlanVersionId'>;

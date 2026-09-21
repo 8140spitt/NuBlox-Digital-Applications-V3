@@ -36,6 +36,10 @@
         <span class="nav-symbol">OR</span>
         <span>Organisation</span>
       </a>
+      <a class:active={isActive('/app/access')} href="/app/access" onclick={closeNavigation}>
+        <span class="nav-symbol">AC</span>
+        <span>Access</span>
+      </a>
     </nav>
 
     <div class="function-nav">

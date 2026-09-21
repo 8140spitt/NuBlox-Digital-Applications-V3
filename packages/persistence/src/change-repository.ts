@@ -330,6 +330,57 @@ function mapBaseline(row: BaselineRow): Baseline {
 export class MySqlChangeRepository {
   constructor(private readonly pool: Pool) {}
 
+  async createChangeWithCanonicalObject(
+    tenantId: TenantId,
+    object: CanonicalObjectIdentity,
+    change: Change,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    if (object.tenantId !== tenantId || change.tenantId !== tenantId) {
+      throw new Error('Persistence operation crossed tenant boundary.');
+    }
+    const raiser = await this.requirePerson(tenantId, change.raisedByPersonId);
+    createChange(change, object, raiser);
+
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO canonical_objects (id, tenant_id, object_type, stable_key, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+        [object.id, object.tenantId, object.objectType, object.stableKey, databaseDate(object.createdAt)]
+      );
+      await writeAudit(connection, tenantId, 'CANONICAL_OBJECT', object.id, 'CREATED', audit, object);
+
+      await connection.execute(
+        `INSERT INTO changes
+          (id, tenant_id, canonical_object_id, code, title, description, change_type,
+           status, raised_by_person_id, raised_at, created_by_person_id, updated_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          change.id,
+          change.tenantId,
+          change.canonicalObjectId,
+          change.code,
+          change.title,
+          change.description,
+          change.changeType,
+          change.status,
+          change.raisedByPersonId,
+          databaseDate(change.raisedAt),
+          audit.actorPersonId ?? null,
+          audit.actorPersonId ?? null
+        ]
+      );
+      await this.insertStatusHistory(
+        connection,
+        change,
+        change.raisedAt,
+        'Change raised.',
+        audit
+      );
+      await writeAudit(connection, tenantId, 'CHANGE', change.id, 'CREATED', audit, change);
+    });
+  }
+
   async createChange(
     tenantId: TenantId,
     change: Change,

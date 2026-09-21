@@ -146,7 +146,7 @@
               {/if}
             </div>
             {#if item.kind === 'ACCESS_REQUEST'}
-              <a class="my-work-action-link" href={`/app/access?request=${item.sourceId}`}>
+              <a class="my-work-action-link" href={`/app/access#request-${item.sourceId}`}>
                 Review access request →
               </a>
             {/if}

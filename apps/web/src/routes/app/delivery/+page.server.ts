@@ -2,9 +2,12 @@ import {
   PLATFORM_PERMISSION_KEYS,
   type DeliveryCapabilityFulfilmentType,
   type DeliveryCapabilityProviderType,
+  type DeploymentContextType,
+  type DeploymentPurpose,
   type DeliveryCapabilitySourcingStrategy,
   type ServiceCapabilityRole,
-  type TenantCapabilitySupplyModel
+  type TenantCapabilitySupplyModel,
+  type WorkResponsibilityRole
 } from '@nublox/kernel';
 import {
   IndustryDeliveryCommandError,
@@ -182,6 +185,72 @@ export const actions: Actions = {
       return { action: 'declareCapability', ok: true, message: `Internal capability ${capability.supplyModel.toLowerCase()} recorded.` };
     } catch (error) {
       return commandFailure(error, 'declareCapability');
+    }
+  },
+
+  createDisciplineDeployment: async ({ request, locals }) => {
+    try {
+      const session = signedIn(locals);
+      const formData = await request.formData();
+      const [industryJobProfileId = '', assigneeTypeRaw = '', ...assigneeParts] =
+        value(formData, 'disciplineProvider').split('|');
+      const assigneeId = assigneeParts.join('|');
+      const [contextTypeRaw = '', ...contextParts] = value(formData, 'context').split('|');
+      const contextObjectId = contextParts.join('|').trim();
+
+      const deployment = await getIndustryDeliveryCommandService().createDisciplineDeployment(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          industryJobProfileId,
+          deploymentPurpose: parseEnum<DeploymentPurpose>(
+            value(formData, 'deploymentPurpose'),
+            ['FUNCTIONAL_GOVERNANCE', 'FUNCTIONAL_DELIVERY'],
+            'deployment purpose'
+          ),
+          assigneeType: parseEnum<'PERSON' | 'POSITION'>(
+            assigneeTypeRaw,
+            ['PERSON', 'POSITION'],
+            'discipline assignee'
+          ),
+          assigneeId,
+          roleTitle: value(formData, 'roleTitle'),
+          responsibilityRole: parseEnum<WorkResponsibilityRole>(
+            value(formData, 'responsibilityRole'),
+            [
+              'ACCOUNTABLE',
+              'RESPONSIBLE',
+              'CONTRIBUTOR',
+              'REVIEWER',
+              'CHECKER',
+              'APPROVER',
+              'ACCEPTOR',
+              'CONSULTED',
+              'INFORMED',
+              'ASSURANCE'
+            ],
+            'responsibility role'
+          ),
+          contextType: parseEnum<DeploymentContextType>(
+            contextTypeRaw,
+            ['TENANT', 'ORGANISATION', 'PROJECT', 'CONTRACT', 'PACKAGE', 'SITE', 'ASSET', 'SERVICE', 'CUSTOM'],
+            'deployment context'
+          ),
+          ...(contextObjectId ? { contextObjectId } : {}),
+          scopeDescription: value(formData, 'scopeDescription'),
+          capacityPercent: optionalValue(formData, 'capacityPercent'),
+          effectiveFrom: optionalValue(formData, 'effectiveFrom'),
+          effectiveTo: optionalValue(formData, 'effectiveTo')
+        }
+      );
+
+      return {
+        action: 'createDisciplineDeployment',
+        ok: true,
+        message: `${deployment.roleTitle} deployed for ${deployment.deploymentPurpose.replaceAll('_', ' ').toLowerCase()}.`
+      };
+    } catch (error) {
+      return commandFailure(error, 'createDisciplineDeployment');
     }
   },
 

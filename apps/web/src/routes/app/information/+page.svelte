@@ -22,14 +22,14 @@
       <p class="app-eyebrow">Controlled access outcome</p>
       <h1>Your role does not permit Information control.</h1>
       <p>
-        NuBlox evaluated <code>platform.configuration.read</code> in the current tenant scope and
+        NuBlox evaluated <code>platform.information.read</code> in the current tenant scope and
         did not find an active matching Access Role Assignment.
       </p>
       <p class="permission-reason">{data.reason}</p>
       <div class="permission-actions">
         <a
           class="primary-action permission-back"
-          href="/app/request-access?permission=platform.configuration.read&returnTo=/app/information"
+          href="/app/request-access?permission=platform.information.read&returnTo=/app/information"
         >
           Request access <span aria-hidden="true">→</span>
         </a>

@@ -14,6 +14,7 @@ NuBlox is the product. Industry solutions configure it. External products inform
 6. [Reference Architecture, Benchmark & Migration](06-reference-architecture-and-migration.md)
 7. [Canonical Object Model](07-canonical-object-model.md)
 8. [Architecture Invariants](08-architecture-invariants.md)
+9. [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md)
 
 ## Governing proposition
 
@@ -32,6 +33,15 @@ NuBlox Enterprise Operating Platform
         +-- 16 Delivery Domains
         +-- 84 Job Profiles
 ~~~
+
+## Canonical capability/tool baseline
+
+The market benchmark is translated into NuBlox-native architecture through:
+
+- [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md);
+- [Canonical Native Tool Engine Register](canonical-native-tool-engine-register.csv).
+
+These are the governing bridge between market evidence, the 29 Function/L2/Activity taxonomy, the 84 Construction & Built Environment Job Profiles and implementation-gap planning.
 
 ## Documentation authority
 

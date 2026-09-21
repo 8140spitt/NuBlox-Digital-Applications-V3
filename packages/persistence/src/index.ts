@@ -1,3 +1,4 @@
+export * from './organisation-command-service.js';
 export * from './organisation-read-repository.js';
 export * from './auth-repository.js';
 export * from './commercial-repository.js';

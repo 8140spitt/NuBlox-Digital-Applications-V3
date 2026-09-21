@@ -1,4 +1,5 @@
 import type {
+  AccessPermissionRequestId,
   AccessRoleAssignmentId,
   AccessRoleId,
   AccessRolePermissionId,
@@ -81,4 +82,26 @@ export interface PermissionEvaluation {
   matchedRoleId?: AccessRoleId;
   matchedAssignmentId?: AccessRoleAssignmentId;
   matchedPrincipalType?: AccessPrincipalType;
+}
+
+
+export type AccessPermissionRequestStatus =
+  | 'PENDING'
+  | 'FULFILLED'
+  | 'REJECTED'
+  | 'CANCELLED';
+
+export interface AccessPermissionRequest {
+  id: AccessPermissionRequestId;
+  tenantId: TenantId;
+  requestorPersonId: string;
+  permissionKey: string;
+  scopeType: string;
+  scopeId?: string;
+  reason: string;
+  status: AccessPermissionRequestStatus;
+  requestedAt: string;
+  resolvedByPersonId?: string;
+  resolvedAt?: string;
+  resolutionReason?: string;
 }

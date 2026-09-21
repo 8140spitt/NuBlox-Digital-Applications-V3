@@ -40,6 +40,10 @@
         <span class="nav-symbol">AC</span>
         <span>Access</span>
       </a>
+      <a class:active={isActive('/app/deployments')} href="/app/deployments" onclick={closeNavigation}>
+        <span class="nav-symbol">DP</span>
+        <span>Deployments</span>
+      </a>
     </nav>
 
     <div class="function-nav">

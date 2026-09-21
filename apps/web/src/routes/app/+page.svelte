@@ -41,8 +41,8 @@
   <a class="home-primary-card" href="/app/delivery">
     <span>03</span>
     <div>
-      <strong>Services &amp; Delivery</strong>
-      <p>Plan CBE services, professional capability, Project demand and internal/external supply.</p>
+      <strong>CBE Disciplines</strong>
+      <p>Deploy CBE professionals into Functional Governance or Functional Delivery roles, then manage Project capability demand and sourcing.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>

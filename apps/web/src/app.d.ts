@@ -1,5 +1,11 @@
+import type { AuthSession } from '@nublox/persistence';
+
 declare global {
-  namespace App {}
+  namespace App {
+    interface Locals {
+      auth: AuthSession | null;
+    }
+  }
 }
 
 export {};

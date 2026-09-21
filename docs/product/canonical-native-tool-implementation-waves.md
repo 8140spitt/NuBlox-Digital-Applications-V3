@@ -219,7 +219,8 @@ As of 21 September 2026:
 - 9 shared engines have backend implementation but still require full product UI exposure;
 - 3 domain engines have partial implementation and require completion;
 - 45 engines remain to build;
-- Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, live My Work projection, platform permission catalogue and permission-gated Organisation structure workspace are implemented;
-- Organisation/Person/Position mutation workflows, access administration, deployment administration and shared control-object workspaces remain incomplete.
+- Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, Functional Deployment administration and competence administration are implemented;
+- the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
+- control mutation workflows plus Information/Revision/Representation, Change/Configuration/Baseline, Deliverable/Issue/Acceptance and remaining audit/history composition are still incomplete.
 
 Wave 0 remains open until the shared platform can be operated end-to-end through the product UI.

@@ -5,6 +5,7 @@ import {
   closeCommercialFinalAccount,
   closeCommercialValuation,
   closeCommercialVariation,
+  certifyCommercialValuation,
   createCommercialFinalAccount,
   createCommercialForecast,
   createCommercialForecastLine,
@@ -638,7 +639,7 @@ export class MySqlCommercialRepository {
           WHERE tenant_id = ? AND id = ? AND row_version = ?`,
         [
           next.status,
-          next.approvedDecisionId,
+          next.approvedDecisionId ?? null,
           databaseDate(next.approvedAt!),
           tenantId,
           versionId,
@@ -1064,7 +1065,7 @@ export class MySqlCommercialRepository {
           WHERE tenant_id = ? AND id = ? AND row_version = ?`,
         [
           next.status,
-          next.approvedDecisionId,
+          next.approvedDecisionId ?? null,
           databaseDate(next.approvedAt!),
           tenantId,
           forecastId,
@@ -1136,7 +1137,7 @@ export class MySqlCommercialRepository {
           WHERE tenant_id = ? AND id = ? AND row_version = ?`,
         [
           next.status,
-          next.decisionId,
+          next.decisionId ?? null,
           databaseDate(next.agreedAt!),
           next.evidenceRecordId ?? null,
           tenantId,

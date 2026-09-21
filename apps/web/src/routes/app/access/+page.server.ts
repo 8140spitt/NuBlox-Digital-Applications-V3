@@ -1,5 +1,6 @@
 import {
   AccessAdministrationCommandError,
+  AccessPermissionRequestError,
   type MySqlAccessAdministrationReadRepository,
   type MySqlAccessRepository
 } from '@nublox/persistence';
@@ -9,6 +10,7 @@ import type { Actions, PageServerLoad } from './$types';
 import {
   getAccessAdministrationCommandService,
   getAccessAdministrationReadRepository,
+  getAccessPermissionRequestRepository,
   getAccessRepository
 } from '$lib/server/platform';
 
@@ -25,11 +27,14 @@ function optionalValue(formData: FormData, name: string): string | undefined {
 }
 
 function failure(error: unknown, action: string) {
-  if (error instanceof AccessAdministrationCommandError) {
+  if (
+    error instanceof AccessAdministrationCommandError ||
+    error instanceof AccessPermissionRequestError
+  ) {
     const status =
       error.code === 'PERMISSION_DENIED'
         ? 403
-        : error.code === 'CONFLICT'
+        : error.code === 'CONFLICT' || error.code === 'ALREADY_GRANTED'
           ? 409
           : 400;
 
@@ -74,7 +79,8 @@ export const load: PageServerLoad = async ({ locals }) => {
     return {
       allowed: false,
       reason: 'No authenticated tenant context is available.',
-      projection: null
+      projection: null,
+      pendingRequests: []
     };
   }
 
@@ -90,16 +96,23 @@ export const load: PageServerLoad = async ({ locals }) => {
     return {
       allowed: false,
       reason: evaluation.reason,
-      projection: null
+      projection: null,
+      pendingRequests: []
     };
   }
+
+  const [projection, pendingRequests] = await Promise.all([
+    getAccessAdministrationReadRepository().getProjection(
+      session.tenantId as ProjectionTenantId
+    ),
+    getAccessPermissionRequestRepository().listPending(tenantId)
+  ]);
 
   return {
     allowed: true,
     reason: evaluation.reason,
-    projection: await getAccessAdministrationReadRepository().getProjection(
-      session.tenantId as ProjectionTenantId
-    )
+    projection,
+    pendingRequests
   };
 };
 
@@ -203,6 +216,49 @@ export const actions: Actions = {
       };
     } catch (error) {
       return failure(error, 'assignRole');
+    }
+  },
+
+  resolveRequest: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) {
+      return fail(401, {
+        action: 'resolveRequest',
+        ok: false,
+        error: 'Sign in required.'
+      });
+    }
+
+    const formData = await request.formData();
+    const outcome = value(formData, 'outcome');
+
+    if (outcome !== 'FULFILLED' && outcome !== 'REJECTED') {
+      return fail(400, {
+        action: 'resolveRequest',
+        ok: false,
+        error: 'A valid access-request outcome is required.'
+      });
+    }
+
+    try {
+      const resolved = await getAccessPermissionRequestRepository().resolveRequest(
+        session.tenantId as TenantId,
+        session.personId,
+        value(formData, 'requestId'),
+        outcome,
+        value(formData, 'resolutionReason')
+      );
+
+      return {
+        action: 'resolveRequest',
+        ok: true,
+        message:
+          resolved.status === 'FULFILLED'
+            ? 'Access request marked fulfilled after permission verification.'
+            : 'Access request rejected.'
+      };
+    } catch (error) {
+      return failure(error, 'resolveRequest');
     }
   }
 };

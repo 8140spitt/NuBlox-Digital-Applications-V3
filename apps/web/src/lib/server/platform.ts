@@ -1,12 +1,16 @@
 import {
   createDatabasePool,
+  MySqlAccessRepository,
   MySqlAuthRepository,
-  MySqlMyWorkRepository
+  MySqlMyWorkRepository,
+  MySqlOrganisationReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
+let accessRepositoryInstance: MySqlAccessRepository | undefined;
 let authRepositoryInstance: MySqlAuthRepository | undefined;
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
+let organisationReadRepositoryInstance: MySqlOrganisationReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -14,6 +18,14 @@ export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   }
 
   return poolInstance;
+}
+
+export function getAccessRepository(): MySqlAccessRepository {
+  if (!accessRepositoryInstance) {
+    accessRepositoryInstance = new MySqlAccessRepository(getDatabasePool());
+  }
+
+  return accessRepositoryInstance;
 }
 
 export function getAuthRepository(): MySqlAuthRepository {
@@ -30,4 +42,12 @@ export function getMyWorkRepository(): MySqlMyWorkRepository {
   }
 
   return myWorkRepositoryInstance;
+}
+
+export function getOrganisationReadRepository(): MySqlOrganisationReadRepository {
+  if (!organisationReadRepositoryInstance) {
+    organisationReadRepositoryInstance = new MySqlOrganisationReadRepository(getDatabasePool());
+  }
+
+  return organisationReadRepositoryInstance;
 }

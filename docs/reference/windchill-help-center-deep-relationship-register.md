@@ -788,6 +788,63 @@ CAD Document Structure
 The relationship type determines **what authority the CAD object has over the Part definition**. File presence alone does not.
 
 
+
+---
+
+# 34. Digital Product Traceability and external requirements
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| DPT-001 | Windchill Digital Product Traceability links native Windchill traceable objects to requirements/architecture resources whose authoritative records remain in external OSLC systems. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/NewandChanged_12_0_00_WindchillALMIntegration.html |
+| DPT-002 | External requirement/architecture resources can be represented to Windchill as remote resource types without importing them as native Windchill product objects. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ChgMgmtRemoteAbout.html |
+| DPT-003 | Remote affected objects can participate in local Problem Report, Variance and Change Request affected-object relationships while remaining externally managed. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ChgMgmtRemoteAbout.html |
+| DPT-004 | Out-of-the-box trace semantics distinguish Allocate, Satisfy and Implement relationships. Allocate associates high-level requirement intent with high-level Part/assembly scope; Satisfy records that a Windchill object fulfils a remote requirement; Implement links a Windchill object to a remote architecture item. | VERIFIED pattern; exact 12.0.2 DPT branch with later-version detailed corroboration | PTC Traced To / Working with Traces |
+| DPT-005 | Windchill models requirement and architecture external resources, plus separate modeled trace-link types, allowing relationship constraints/subtypes rather than a generic URL-only link. | VERIFIED — later-version detailed corroboration of 12.0.2 DPT model | PTC System Compatibility and Requirements |
+| DPT-006 | External resource data is fetched/displayed through the connected external system rather than requiring the authoritative requirement content to be duplicated into Windchill. | VERIFIED pattern | DPT Traced To / OSLC integration evidence |
+| DPT-007 | DPT supports a Suspect state on trace links. External-resource modification can cause the Windchill trace relationship to be visibly flagged so downstream engineers can assess impact and clear the flag after review. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/NewandChanged_12_0_00_WindchillALMIntegration.html |
+| DPT-008 | Trace relationships participate in Windchill version history rather than floating outside version control. Satisfy/Implement changes can create new iterations; trace-link copy-forward behaviour differs by link type. | VERIFIED pattern; later-version detailed corroboration | PTC Working with Traces / Managing Trace Links |
+| DPT-009 | Allocate trace semantics are revision-oriented/high-level: the link is propagated across iterations of a revision, whereas Satisfy/Implement are introduced from the iteration where the relationship becomes true and remain visible forward. | VERIFIED — later-version detailed corroboration | PTC Working with Traces |
+| DPT-010 | Removing Satisfy/Implement from a later version does not erase the historical relationship from earlier versions; the changed trace state is represented through versioning. | VERIFIED — later-version detailed corroboration | PTC Managing Trace Links |
+| DPT-011 | Trace-link management is itself permission/profile controlled; DPT relationship management is not merely unrestricted hyperlink creation. | VERIFIED pattern | PTC DPT profile/action visibility evidence |
+| DPT-012 | Remote affected resources have limitations compared with native objects: for example, Windchill business rules are not supported for remote affected object types, and remote objects in Packages are preview-only rather than imported/exported. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ChgMgmtRemoteAbout.html |
+| DPT-013 | NuBlox should distinguish Authoritative Requirement, External Resource Reference, typed Trace Relationship, trace version/provenance and Suspect/impact-review state. | HYPOTHESIS | NuBlox inference |
+| DPT-014 | NuBlox should be able to retain requirements in specialist authoritative tools while natively governing the typed evidence that a design, calculation, document, asset, test/control characteristic or work product allocates/satisfies/implements that requirement. | HYPOTHESIS | CBE/interoperability translation |
+| DPT-015 | Requirement change should create an explicit downstream impact/suspect condition requiring review rather than silently assuming prior satisfaction remains valid. | HYPOTHESIS | NuBlox translation of verified DPT suspect semantics |
+
+## Traceability graph
+
+```text
+Authoritative external system
+│
+├── Requirement Resource
+└── Architecture Resource
+          │
+          │ OSLC / typed trace
+          ▼
+Windchill Trace Link
+├── ALLOCATE
+├── SATISFY
+└── IMPLEMENT
+          │
+          ▼
+Windchill traceable object/version
+Part / Document / Option / Choice /
+Resource / Control Characteristic ...
+          │
+          │ external resource changes
+          ▼
+SUSPECT TRACE
+          │
+          ▼
+impact review
+          │
+          ├── relationship still valid → clear suspect
+          └── design/change action required
+```
+
+The trace is itself governed evidence. It is not equivalent to copying the remote requirement into the local object.
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

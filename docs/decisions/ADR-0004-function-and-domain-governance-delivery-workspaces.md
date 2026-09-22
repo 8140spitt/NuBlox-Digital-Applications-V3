@@ -66,6 +66,35 @@ CBE-specific reusable engines, tools and capabilities may be composed across Dom
 
 The system may package or license capability commercially, but commercial packaging must not become the canonical professional domain model.
 
+## HCM Position Management and deployment
+
+F15 Human Resources / Human Capital owns the user-facing Position Management experience for workforce deployment.
+
+Position Management manages:
+
+- Organisation and Organisation Unit structure;
+- Position and Job Profile association;
+- Person-to-Position occupancy and effectivity;
+- deployment of employed People, Positions or organisational capacity into an enterprise Function or CBE Domain;
+- the explicit deployment purpose: **Governance** or **Delivery**;
+- responsibility, context, scope, capacity and effectivity.
+
+The canonical records remain deliberately separate:
+
+~~~text
+Person
+-> Position occupancy          (employment structure)
+-> Position / Job Profile
+-> Deployment                  (Function or CBE Domain)
+   -> Governance | Delivery
+   -> responsibility
+   -> context
+   -> capacity / effectivity
+-> Work
+~~~
+
+Position occupancy does not itself grant Permission, Responsibility or Authority, and a Deployment does not rewrite the employment Position.
+
 ## Shared platform
 
 Functions and Domains reuse shared services for:
@@ -89,7 +118,9 @@ Cross-functional and cross-domain processes preserve one end-to-end business con
 - `/app/functions/[code]` exposes Overview / Governance / Delivery / Performance / Records.
 - `/app/domains` is the directory for D01-D16.
 - `/app/domains/[code]` exposes the same five views.
-- CBE capability configuration, service setup, professional deployment, demand and sourcing remain administrative operations and are not the primary CBE professional workspace.
+- `/app/hcm` is the HCM Position Management surface for Position/occupancy truth and Function/CBE Domain deployment.
+- Function and Domain workspaces consume deployment state rather than owning duplicate workforce administration.
+- CBE service setup, delivery demand and sourcing remain adjacent capability administration and are not the primary CBE professional workspace.
 - My Work remains the cross-Function/cross-Domain attention surface.
 
 ## Invariants
@@ -102,3 +133,4 @@ Cross-functional and cross-domain processes preserve one end-to-end business con
 6. Governance rules must be enforceable by Delivery where the rule is machine-actionable.
 7. Functions and Domains share canonical platform services rather than creating isolated application silos.
 8. Reusable specialist engines may cross Function/Domain boundaries without becoming a new top-level taxonomy.
+9. HCM Position Management is the workforce deployment administration surface; Position occupancy and Deployment remain separate canonical records.

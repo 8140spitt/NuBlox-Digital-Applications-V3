@@ -463,6 +463,131 @@ Research must continue before architecture is frozen.
 
 ---
 
+
+---
+
+# 26. Document Control and training
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| DOC-001 | Windchill Document Control is a separate quality capability family and can track training against controlled documents such as policies, procedures and work instructions. | VERIFIED | PTC Windchill Quality Management Solutions / Document Control branch |
+| DOC-002 | Roles, groups and organisations can be associated with controlled documents for training purposes. | VERIFIED | https://support.ptc.com/help/windchill/plus/r13.1.2.0/en/Windchill_Help_Center/wqCommon/WQCommonVRDTrainingMatrix.html |
+| DOC-003 | Training records are distinct objects associated with an assignee and one controlled document. | VERIFIED — later-version English corroboration | https://support.ptc.com/help/windchill/r13.1.2.0/en/Windchill_Help_Center/WCRESTFramework/documentcontroldomain.html |
+| DOC-004 | Training validity intervals and late/incomplete monitoring allow controlled information to drive recurring competence evidence. | VERIFIED — later-version English corroboration | https://support.ptc.com/help/windchill/plus/r13.1.2.0/en/Windchill_Help_Center/wqCommon/WQCommonVRDTrainingMatrix.html |
+| DOC-005 | NuBlox should be able to connect governed procedures/work instructions to affected roles/positions, training requirements, completion evidence and expiry/retraining. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 27. Design Control, DHF and approved production/service record
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| DSC-001 | Windchill Design Control is a separate quality capability family including Design History File, Device Master Record, Design Review and electronic-signature capabilities. | VERIFIED | PTC Windchill Quality Management Solutions branch |
+| DSC-002 | Design History File is a managed historical collection/baseline of design-process artifacts related to the product/Part structure, including reference documents, change notices/records, problem reports and variances. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/de/Windchill_Help_Center/WQCommonVRDDesignHistoryFile.html |
+| DSC-003 | Objects removed from the current structure can remain represented in the DHF so design progression/maturity remains reconstructable. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/de/Windchill_Help_Center/WQCommonVRDDesignHistoryFile.html |
+| DSC-004 | Device Master Record is different from DHF: it contains approved information used to produce/service the product and is not simply kept synchronised with the full design-history collection. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/de/Windchill_Help_Center/WQCommonVRDDesignHistoryFile.html |
+| DSC-005 | NuBlox may need separate Design/Project History Evidence and Approved Handover/Asset Operating Record rather than one document collection. | HYPOTHESIS | CBE translation of verified DHF/DMR separation |
+
+---
+
+# 28. Customer Experience and field feedback
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| CEM-001 | Windchill Customer Experience Management is a distinct quality process used to collect, document, track, trend and report customer-recorded product-quality issues/complaints. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/de/Windchill_Help_Center/WQCEMOview.html |
+| CEM-002 | Customer Experience integrates with Parts, BOMs, suppliers, documents and other Windchill quality modules. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/de/Windchill_Help_Center/WQCEMOview.html |
+| CEM-003 | Field/customer feedback is therefore a first-class process source that can feed quality investigation/corrective-action processes rather than remaining unstructured correspondence. | VERIFIED pattern | Customer Experience Management evidence |
+| CEM-004 | NuBlox should distinguish operational/occupant/client feedback records from NCR/CAPA while preserving traceable escalation between them. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 29. Regulatory submissions
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| REG-001 | Windchill Regulatory Master / Regulatory Submission is a separate governed capability family from CAPA, NC, Audit and Customer Experience. | VERIFIED | PTC Windchill 12.0.2.0 solution/module evidence |
+| REG-002 | Regulatory Submission records track submissions made to agencies through their workflow/lifecycle state and preserve submission artifacts/content. | VERIFIED — later-version English detail | https://support.ptc.com/help/windchill/plus/r13.1.2.0/en/Windchill_Help_Center/wqregulatorymaster/WQRMWCRegSubmissionProcess.html |
+| REG-003 | A Regulatory Submission has Subject relationships to governed objects such as Parts and may have revisions/follow-ups depending on subtype. | VERIFIED — later-version English detail | https://support.ptc.com/help/windchill/plus/r13.1.2.0/en/Windchill_Help_Center/wqregulatorymaster/WQRMCreateNewRegSubmission.html |
+| REG-004 | NuBlox should keep statutory/regulatory submission obligation, submission record, submitted content, acknowledgement/response and underlying regulated object separate. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 30. Construction commissioning, test packs and handover — Windchill gap
+
+**Current evidence finding:** Windchill provides many of the underlying primitives required for commissioning and handover — controlled Documents, Parts/Instances, Process Plans, Control Characteristics, Quality processes, lifecycle/workflow, Packages/Deliveries, acceptance/rejection, baselines and service information — but the Windchill 12.0.2.0 Help Center research to date has **not identified a first-class construction commissioning/test-pack/system-handover object family**.
+
+This must therefore remain a **GAP / NuBlox CBE requirement**, not be marked as covered merely because PLM/QMS primitives exist.
+
+Candidate NuBlox concepts requiring independent CBE research:
+
+```text
+Commissioning System / Subsystem
+Commissioning Boundary
+Inspection & Test Plan
+Inspection/Test Requirement
+Test Pack
+Test Execution
+Measured Result
+Punch / Snag Item
+System Completion
+Mechanical Completion
+Pre-commissioning
+Commissioning
+Performance Test
+Certificate
+Turnover Package
+Handover Requirement
+Handover Package
+Acceptance / Rejection
+Asset Information Requirement
+As-Built / As-Commissioned Configuration
+Outstanding Work / Exception
+Final Completion
+```
+
+Required trace chain:
+
+```text
+Requirement
+→ design/configuration
+→ installation scope
+→ inspection/test requirement
+→ test execution/result
+→ NCR/exception where needed
+→ punch/snag closure
+→ completion decision
+→ certificate/evidence
+→ turnover/handover package
+→ recipient acceptance/rejection
+→ commissioned physical configuration
+→ asset/service information
+```
+
+**Status:** GAP — requires benchmarking against construction commissioning/CDE/field-quality market tools and CBE standards, not only Windchill.
+
+---
+
+# 31. Package receipt vs technical acceptance
+
+Windchill Package Delivery provides an explicit recipient response:
+
+- Received
+- Accepted
+- Rejected
+
+Source: https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PackageReceive.html
+
+This is **delivery/receipt acceptance** of the package exchange. It must not automatically be interpreted as:
+
+- technical approval of every contained object;
+- quality acceptance of installed work;
+- contractual acceptance;
+- commissioning acceptance;
+- maturity/release of the source objects.
+
+This reinforces the need for NuBlox to model **receipt, technical review, quality acceptance, contractual acceptance and lifecycle release as separate decisions**.
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

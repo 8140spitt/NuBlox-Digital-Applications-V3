@@ -5365,3 +5365,210 @@ h1 {
 .analysis-card {
   background: #fbfcfc;
 }
+
+
+/* Capability operating views: Functions and CBE Domains */
+
+.workspace-tabs {
+  display: flex;
+  gap: 0;
+  margin: -1px 0 28px;
+  border: 1px solid var(--app-line);
+  background: white;
+  overflow-x: auto;
+}
+
+.workspace-tabs a {
+  min-width: 116px;
+  padding: 12px 18px;
+  border-right: 1px solid var(--app-line);
+  color: #66747d;
+  font-size: 0.7rem;
+  font-weight: 720;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.workspace-tabs a:last-child {
+  border-right: 0;
+}
+
+.workspace-tabs a:hover {
+  color: var(--app-navy);
+  background: #f7f9f9;
+}
+
+.workspace-tabs a.active {
+  box-shadow: inset 0 -3px 0 var(--app-accent);
+  color: var(--app-navy);
+  background: #f8fafb;
+}
+
+.governance-capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.governance-capability-grid article {
+  min-height: 154px;
+  padding: 22px 24px;
+  border-right: 1px solid var(--app-line);
+  border-bottom: 1px solid var(--app-line);
+}
+
+.governance-capability-grid article:nth-child(2n) {
+  border-right: 0;
+}
+
+.governance-capability-grid article:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.governance-capability-grid strong {
+  display: block;
+  color: var(--app-navy);
+  font-size: 0.84rem;
+}
+
+.governance-capability-grid p {
+  margin: 8px 0 16px;
+  color: var(--app-muted);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
+.governance-capability-grid a {
+  color: var(--app-accent);
+  font-size: 0.66rem;
+  font-weight: 720;
+  text-decoration: none;
+}
+
+.domain-directory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  background: white;
+  border-top: 1px solid var(--app-line);
+  border-left: 1px solid var(--app-line);
+}
+
+.domain-directory-card {
+  min-height: 210px;
+  padding: 22px;
+  border-right: 1px solid var(--app-line);
+  border-bottom: 1px solid var(--app-line);
+  color: inherit;
+  text-decoration: none;
+}
+
+.domain-directory-card > strong {
+  display: block;
+  margin-top: 18px;
+  color: var(--app-navy);
+  font-size: 1rem;
+  font-weight: 690;
+}
+
+.domain-directory-card > p {
+  min-height: 44px;
+  margin: 8px 0 20px;
+  color: var(--app-muted);
+  font-size: 0.67rem;
+  line-height: 1.5;
+}
+
+.domain-directory-card:hover {
+  background: #f8fafb;
+}
+
+.domain-job-list,
+.workspace-register-list {
+  display: grid;
+}
+
+.domain-job-list article,
+.workspace-register-list article {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) minmax(130px, auto);
+  gap: 16px;
+  align-items: center;
+  min-height: 58px;
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.domain-job-list article:last-child,
+.workspace-register-list article:last-child {
+  border-bottom: 0;
+}
+
+.domain-job-list span {
+  color: var(--app-accent);
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.domain-job-list strong,
+.workspace-register-list strong {
+  color: var(--app-navy);
+  font-size: 0.75rem;
+}
+
+.domain-job-list small,
+.workspace-register-list small,
+.workspace-register-list span {
+  color: var(--app-muted);
+  font-size: 0.63rem;
+}
+
+.workspace-register-list article {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.workspace-register-list article > div {
+  display: grid;
+  gap: 5px;
+}
+
+.capability-operating-view {
+  align-items: start;
+}
+
+.workspace-action-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+@media (max-width: 1000px) {
+  .domain-directory {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .governance-capability-grid,
+  .domain-directory {
+    grid-template-columns: 1fr;
+  }
+
+  .governance-capability-grid article,
+  .governance-capability-grid article:nth-child(2n),
+  .governance-capability-grid article:nth-last-child(-n + 2) {
+    border-right: 0;
+    border-bottom: 1px solid var(--app-line);
+  }
+
+  .governance-capability-grid article:last-child {
+    border-bottom: 0;
+  }
+
+  .domain-job-list article {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .domain-job-list small {
+    grid-column: 2;
+  }
+}

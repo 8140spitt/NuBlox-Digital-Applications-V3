@@ -211,8 +211,8 @@ export class MySqlStrategyCommandService {
          owner_person_id, status, created_by_person_id, updated_by_person_id)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'DRAFT', ?, ?)`,
       [id,tenantId,objectiveId,required(input.title,'Key Result title'),required(input.measure,'Measure'),
-       numberValue(input.baselineValue,'Baseline'),numberValue(input.targetValue,'Target'),
-       numberValue(input.actualValue,'Actual'),ownerPersonId,actorPersonId,actorPersonId]
+       numberValue(input.baselineValue,'Baseline')??null,numberValue(input.targetValue,'Target')??null,
+       numberValue(input.actualValue,'Actual')??null,ownerPersonId,actorPersonId,actorPersonId]
     );
     return id;
   }
@@ -241,7 +241,7 @@ export class MySqlStrategyCommandService {
            VALUES (?,?,?,?,?,?,?,?,?,?,'PROPOSED',?,?,?,?)`,
           [id,tenantId,objectId,objectiveId,code,required(input.title,'Initiative title'),
            required(input.description,'Initiative description'),ownerPersonId,
-           numberValue(input.investmentAmount,'Investment amount'),numberValue(input.capacityDemand,'Capacity demand'),
+           numberValue(input.investmentAmount,'Investment amount')??null,numberValue(input.capacityDemand,'Capacity demand')??null,
            dateValue(input.startDate,'Start date')??null,dateValue(input.endDate,'End date')??null,actorPersonId,actorPersonId]
         );
         await evidence(connection,tenantId,'STRATEGY_INITIATIVE',id,'CREATED',actorPersonId,{objectiveId,benchmark:['ENT-MTC-0001','ENT-MTC-0005','ENT-MTC-0006']});
@@ -313,8 +313,8 @@ export class MySqlStrategyCommandService {
              assumptions,budget_amount,capacity_amount,expected_outcome,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,?,?,?,?,?,?,?,?,?, 'DRAFT',?,?)`,
           [id,tenantId,objectId,code,required(input.title,'Scenario title'),required(input.description,'Scenario description'),
-           owner,base??null,JSON.stringify(parseAssumptions(input.assumptions)),numberValue(input.budgetAmount,'Budget'),
-           numberValue(input.capacityAmount,'Capacity'),required(input.expectedOutcome,'Expected outcome'),actorPersonId,actorPersonId]
+           owner,base??null,JSON.stringify(parseAssumptions(input.assumptions)),numberValue(input.budgetAmount,'Budget')??null,
+           numberValue(input.capacityAmount,'Capacity')??null,required(input.expectedOutcome,'Expected outcome'),actorPersonId,actorPersonId]
         );
         await evidence(connection,tenantId,'STRATEGY_SCENARIO',id,'CREATED',actorPersonId,{baseScenarioId:base,benchmark:['ENT-MTC-0004','ENT-MTC-0008']});
       }); return id;
@@ -342,8 +342,8 @@ export class MySqlStrategyCommandService {
            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'DRAFT',?,?)`,
           [id,tenantId,objectId,code,required(input.title,'Plan title'),required(input.description,'Plan description'),owner,input.planType,
            dateValue(input.periodStart,'Period start')??null,dateValue(input.periodEnd,'Period end')??null,
-           JSON.stringify(parseAssumptions(input.assumptions)),numberValue(input.targetAmount,'Target amount'),
-           numberValue(input.forecastAmount,'Forecast amount'),numberValue(input.actualAmount,'Actual amount'),actorPersonId,actorPersonId]
+           JSON.stringify(parseAssumptions(input.assumptions)),numberValue(input.targetAmount,'Target amount')??null,
+           numberValue(input.forecastAmount,'Forecast amount')??null,numberValue(input.actualAmount,'Actual amount')??null,actorPersonId,actorPersonId]
         );
         const benchmark=input.planType==='CONNECTED_ENTERPRISE'?['ENT-MTC-0007']:
           input.planType==='CAPACITY_INVESTMENT'?['ENT-MTC-0005']:['ENT-MTC-0009'];
@@ -371,7 +371,7 @@ export class MySqlStrategyCommandService {
              owner_person_id,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,?,?,?,?,?,?,?,'TRACKING',?,?)`,
           [id,tenantId,objectId,initiativeId,required(input.title,'Outcome title'),required(input.measure,'Measure'),
-           numberValue(input.targetValue,'Target'),numberValue(input.actualValue,'Actual'),numberValue(input.realisedValue,'Realised value'),
+           numberValue(input.targetValue,'Target')??null,numberValue(input.actualValue,'Actual')??null,numberValue(input.realisedValue,'Realised value')??null,
            owner,actorPersonId,actorPersonId]
         );
         await evidence(connection,tenantId,'STRATEGY_OUTCOME',id,'CREATED',actorPersonId,{initiativeId,benchmark:['ENT-MTC-0006']});
@@ -413,7 +413,9 @@ export class MySqlStrategyCommandService {
     input:{entityType?:StrategyEntity;entityId?:string;status?:StrategyRecordStatus}
   ){
     await this.requireWork(tenantId,actorPersonId);
-    if(!input.entityType||!TABLES[input.entityType]) throw new StrategyCommandError('Valid strategy entity type is required.','INVALID_INPUT');
+    const entityType = input.entityType;
+    if(!entityType || !(entityType in TABLES)) throw new StrategyCommandError('Valid strategy entity type is required.','INVALID_INPUT');
+    const table = TABLES[entityType];
     if(!input.status||!STATUSES.has(input.status)) throw new StrategyCommandError('Valid strategy status is required.','INVALID_INPUT');
     if (['APPROVED','FUNDED','SELECTED','COMMITTED'].includes(input.status)) {
       throw new StrategyCommandError(
@@ -422,13 +424,13 @@ export class MySqlStrategyCommandService {
       );
     }
     const id=required(input.entityId,'Strategy record');
-    await this.requireRow(tenantId,TABLES[input.entityType],id,'Strategy record');
+    await this.requireRow(tenantId,table,id,'Strategy record');
     await withTransaction(this.pool,async connection=>{
       await connection.execute(
-        `UPDATE ${TABLES[input.entityType]} SET status=?, updated_by_person_id=? WHERE tenant_id=? AND id=?`,
+        `UPDATE ${table} SET status=?, updated_by_person_id=? WHERE tenant_id=? AND id=?`,
         [input.status,actorPersonId,tenantId,id]
       );
-      await evidence(connection,tenantId,`STRATEGY_${input.entityType}`,id,'STATUS_CHANGED',actorPersonId,{status:input.status});
+      await evidence(connection,tenantId,`STRATEGY_${entityType}`,id,'STATUS_CHANGED',actorPersonId,{status:input.status});
     });
   }
 

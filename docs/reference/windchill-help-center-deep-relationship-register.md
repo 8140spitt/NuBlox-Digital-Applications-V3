@@ -626,6 +626,99 @@ This is **delivery/receipt acceptance** of the package exchange. It must not aut
 This reinforces the need for NuBlox to model **receipt, technical review, quality acceptance, contractual acceptance and lifecycle release as separate decisions**.
 
 
+
+---
+
+# 32. Options, variants and Product Families
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| VAR-001 | Windchill models configuration using first-class Option, Choice, Choice Rule, Option Set, Configurable Module, Variant Specification and Variant objects rather than requiring a cloned structure for each possible product. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsObjectTypes.html |
+| VAR-002 | An Option represents a configurable product capability and a Choice represents one selectable value for that option. Options can be Design or Sales oriented and can be textual, numeric or Boolean. | VERIFIED | PTC Options and Choices branch / Object Types Used in List-based Option Selection |
+| VAR-003 | Choices are lifecycle/change-managed objects and may have effectivity; they can participate in advanced-selection parameter logic. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsObjectTypes.html |
+| VAR-004 | Choice Rules are first-class rule objects. Windchill provides Enable, Include, Exclude and Conditional rules. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsGlobalRules.html |
+| VAR-005 | Choice Rules can be defined globally in the Option Pool or locally in an Option Set. Option Sets can automatically inherit/reference global rules, selectively reuse them, ignore them, and add local rules. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsSetMappingsManage.html |
+| VAR-006 | Editing a local Choice Rule creates a new iteration; the Options and Variants administration model also explicitly provides revision, change-management and promotion support for Choice Rules. | VERIFIED | PTC 12.0.2 Options and Variants Help Center branch |
+| VAR-007 | An Option Set is a lifecycle/change-managed collection of options, choices and rules used to define configurations within a Product Family or functional/configurable module. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsObjectTypes.html |
+| VAR-008 | An Option Set must be assigned to a Product/Library/container or configurable part/module to govern choice assignment and filtering. A module-specific Option Set can specialise the option set used by the broader product/context. | VERIFIED | PTC Assigned Option Set branch; exact 12.0.2 TOC with later-version detailed corroboration |
+| VAR-009 | Windchill resolves which assigned Option Set applies using an ordered lookup across the configurable module, its context, root configurable module and root context depending on operation. | VERIFIED pattern; exact 12.0.2 branch with later-version detailed corroboration | PTC How Windchill Determines the Assigned Option Set To Use |
+| VAR-010 | A Configurable Module is a lifecycle/change-managed organising Part that captures one or more variations of a product function/capability. A top-level configurable end item can act as a Configurable Product. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsConfigProdCreate.html |
+| VAR-011 | Basic and Advanced Expressions can be assigned to Parts, usage links and occurrences to determine whether structure elements are included for a given configuration. | VERIFIED | PTC Options and Variants → Assigning Expressions branch |
+| VAR-012 | Advanced Selection Logic adds Parameters and Constraints to configurable modules. Constraint types include Expression, Case Table and External Application. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PMConstraintsTab.html |
+| VAR-013 | Advanced-selection parameters can be linked to Option values so user/rule-driven Option selections become inputs to deeper module logic. | VERIFIED pattern; exact 12.0.2 branch with later-version detailed corroboration | PTC Linking Advanced Logic Parameters with Options |
+| VAR-014 | The Configure process separates structure/filter criteria, parameter input, preview/reuse matching and creation of a Variant Specification before optionally generating a Variant Part. | VERIFIED | PTC 12.0.2 Creating and Managing Variants branch |
+| VAR-015 | A Variant Specification is a governed collection of inputs and selections for a configurable structure; it is distinct from the physical/Part Variant produced from it. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsVarSpeciDefine.html |
+| VAR-016 | Preview compares proposed configuration inputs and resulting structure against existing Variant Specifications and Variant Parts so existing solutions can be reused instead of duplicated. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsReusingVariantsSpecVariants.html |
+| VAR-017 | Variant Specifications support preview, comparison, reconfiguration, copy, revision/change-management and configuration capture; this makes the configuration specification itself a controlled object rather than transient wizard input. | VERIFIED pattern | PTC 12.0.2 Variant Specification branch; later-version detailed revision/change corroboration |
+| VAR-018 | A Product Family is a governed hierarchy within a Product or Library context. It may contain nested Product Model Groups, Product Models, managed/standalone Variant Specifications and Variant Baselines. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProdFamProductFamilyObjects.html |
+| VAR-019 | Product Model Group is an organisational grouping level; Product Model is the lowest organisational level and represents a marketable product beneath which Variant Specifications are organised. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProdFamProductFamilyObjects.html |
+| VAR-020 | Managed Variant Specification is created in Product Family context under a Product Model and represents option-filter criteria for a marketable configuration; standalone Variant Specifications can also exist independently and later be inserted/referenced by Product Family structures. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProdFamProductFamilyObjects.html |
+| VAR-021 | Variant Baseline is a prototype/development snapshot associating Variant Specification revisions and selected Part revisions. Baseline member links can themselves carry status/soft attributes. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProdFamilyVariantBaselineInformationPage.html |
+| VAR-022 | Updating a Variant Specification within a Variant Baseline can move it to the latest iteration of the same revision without automatically replacing it with a newer revision. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProdFamilyVariantBaselineInformationPage.html |
+| VAR-023 | The Product Family Matrix Editor compares released and unreleased Variant Specifications/Variants against a shared configurable structure and uses released configuration/variant baselines plus option filters when resolving released variants. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProdFamilyMatrixEditorPartStructureTable.html |
+| VAR-024 | Variant Specification filtering can propagate downstream to Process Plan structures, showing that one configuration definition can constrain more than the engineering BOM. | VERIFIED | PTC 12.0.2 Options/Variants + Manufacturing Process Plan filtering branch |
+| VAR-025 | Choice Where Used/traceability identifies the Parts, usage links, CAD/option structures, Option Sets and Choice Rules that depend upon a Choice, so option-model change has explicit impact scope. | VERIFIED | PTC Options and Variants → Where Used Information for a Choice branch |
+| VAR-026 | Dynamic Positioning keeps positioning logic separate from overloaded CAD occurrences: Configurable Modules plus Interfaces/Locators and choice expressions resolve the physical placement of selected module variants for visualisation/CAD work. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsArchEditor.html |
+| VAR-027 | A Locator represents a conceptual connection/location on a configurable module and maps generic positioning definitions to coordinate systems exposed by concrete module variants. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PMLocEditorTab.html |
+| VAR-028 | NuBlox should distinguish reusable configuration dimensions/options, permissible choices, constraint/rule model, configuration specification, resolved effective structure and realised/released instance/variant. | HYPOTHESIS | NuBlox inference |
+| VAR-029 | For repeatable CBE systems and standard designs, NuBlox should prefer a governed configurable definition plus rules/effectivity over cloning entire projects/assets/design structures for every variation. | HYPOTHESIS | CBE translation of verified configuration model |
+
+## Options / variants relationship graph
+
+```text
+Product / Library
+      │
+      ├── Option Pool
+      │    ├── Option
+      │    │    └── Choice
+      │    └── Global Choice Rules
+      │
+      ├── Option Set
+      │    ├── selected Options / Choices
+      │    ├── referenced Global Rules
+      │    └── Local Rules
+      │
+      └── Configurable Product / Module
+           ├── assigned/inherited Option Set
+           ├── Basic / Advanced Expressions
+           ├── Parameters
+           ├── Constraints
+           │    ├── Expression
+           │    ├── Case Table
+           │    └── External Application
+           └── configurable structure
+                    │
+                    ▼
+             Configure / resolve
+                    │
+           ┌────────┴─────────┐
+           ▼                  ▼
+  Variant Specification   matching existing
+   configuration inputs   Variant/Specification
+           │                  │
+           └────────┬─────────┘
+                    ▼
+             Variant / solution
+                    │
+                    ▼
+              Variant Baseline
+```
+
+Product Family organises the market/planning view above this configuration model:
+
+```text
+Product Family
+├── Product Model Group
+│   └── Product Model Group ...
+└── Product Model
+    ├── Managed Variant Specification
+    ├── Variant Specification reference
+    └── Variant Baseline
+```
+
+This is separate from the configurable Part structure itself.
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

@@ -81,7 +81,7 @@
           <article><strong>Standards &amp; methods</strong><p>Define the professional standards, methods, procedures and templates used by the Domain.</p><a href="/app/information">Controlled information →</a></article>
           <article><strong>Competence</strong><p>Define the competence and evidence required for people performing governed professional work.</p><a href="/app/competence">Competence →</a></article>
           <article><strong>Authority &amp; assurance</strong><p>Control review, checking, approval, assurance and decision rights.</p><a href="/app/control">Control →</a></article>
-          <article><strong>Deployment</strong><p>Assign accountable and responsible professional roles into tenant, project and delivery contexts.</p><a href="/app/delivery">CBE capability administration →</a></article>
+          <article><strong>Position &amp; deployment</strong><p>Use HCM Position Management to deploy employed People or Positions into this Domain for Governance or Delivery.</p><a href="/app/hcm">HCM Position Management →</a></article>
         </div>
       </section>
 

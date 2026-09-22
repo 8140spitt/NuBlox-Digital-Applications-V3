@@ -925,6 +925,43 @@ The trace is itself governed evidence. It is not equivalent to copying the remot
 | CLR-015 | NuBlox temporary controlled-access mechanisms should retain subject, scope, authorised participants, exact governed objects/configurations, permitted classification values, effective period, approval lifecycle and audit evidence rather than merely adding a user to a permanent role. | HYPOTHESIS | NuBlox inference |
 
 
+
+---
+
+# 37. Search, indexing and reusable search definitions
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| SRCH-001 | Windchill has two materially different search engines: database search and optional Windchill Index Search. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCSysAdminIndexSearchIntro.html |
+| SRCH-002 | Index Search searches indexed metadata and primary content, whereas non-indexed keyword search is primarily database/attribute based and cannot full-text search primary content. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/LclSrchAdvancedKeyword.html |
+| SRCH-003 | Advanced Search composes object Type, Context, attribute Criteria, keyword criteria and Related Object criteria rather than only free-text search. | VERIFIED | PTC Windchill Search / Advanced Search branch |
+| SRCH-004 | Related-object search is a first-class search dimension, reinforcing that relationship graph traversal is part of retrieval rather than only object-local metadata filtering. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/LclSrchAdvancedRelatedObject.html |
+| SRCH-005 | Search behaviour is version/iteration aware and indexed search has documented caveats for non-latest iteration queries because indexed keyword filtering and version criteria can be resolved in separate phases. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/LclSrchAdvancedSearchExampleNonLatest.html |
+| SRCH-006 | Content mastered in remote vaults is not full-text indexed; attribute search remains available. | VERIFIED | PTC Windchill Index Search architecture/upgrade branch |
+| SRCH-007 | Search criteria sets can be saved by users; administrators can also create saved searches and assign them to groups of users. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/CADxDBSearchLclSrchSearchSave.html |
+| SRCH-008 | Windchill additionally supports special searches within folders, tables and networks, search history and faceted results. | VERIFIED | PTC Windchill Search branch |
+| SRCH-009 | NuBlox should distinguish transactional/object-query search, relationship-aware search and indexed metadata/content search while presenting a coherent search experience. | HYPOTHESIS | NuBlox inference |
+| SRCH-010 | Search results must remain security-aware and version/configuration-aware; an index result cannot be treated as the authoritative business-object state by itself. | HYPOTHESIS | NuBlox inference based on Windchill search/version/security separation |
+
+---
+
+# 38. Representations, annotations and publishing
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| VIS-001 | A Representation is a derived/viewable rendition associated with a governed source object or structure and is separate from that authoritative source definition/content. | VERIFIED | PTC Windchill Visualization Services / Representations branches |
+| VIS-002 | An object can have multiple Representations and one may be designated as the Default Representation. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/VisualRepCreateClipboardContent.html |
+| VIS-003 | Representations can be created from governed content/structures and submitted as asynchronous Publish Jobs rather than being ordinary synchronous file transformations. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/sis4023.html |
+| VIS-004 | Publish Rules govern how publishing output is generated and can control fidelity, output parameters, triggers and post-publish behaviour. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WVSMultiFedConfiguration.html ; PTC WVS Publish Rules branch |
+| VIS-005 | Publishing can produce different derived outputs from different governed sources: for example Publication Structures to PDF/XSL/HTML/XML bundles, Parts Lists to graphical structures, and Information Structures to delivery bundles. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/sis7000.html |
+| VIS-006 | Publishing jobs are monitored and executed through WVS/VCS/background processing infrastructure with prioritised/shared/dedicated queues and worker/service capacity. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/Manage_WVS_Queues_and_Jobs.html ; https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/VisualAdmin_VCSOview.html |
+| VIS-007 | Service publishing supports incremental output using the same publishing rule/configuration specification as the original full publication, showing that derived deliverables can have controlled delta-publication semantics. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/sis7007.html |
+| VIS-008 | Representation validity/copy-forward is governed independently from source-object versioning; Windchill can configure when representations/markups are copied forward between iterations without pretending the derivative is the source. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WVSVisualizationCopyForwardProperties.html |
+| VIS-009 | Annotations/markups are separate governed collaborative artifacts associated with viewables/representations rather than modifications to the authoritative source geometry/content itself. | VERIFIED pattern | PTC Representations/Annotations and Creo View branches |
+| VIS-010 | NuBlox should distinguish Authoritative Content/Model, Representation/Rendition, Publishing Definition/Rule, Publish Job, Published Output and Annotation/Markup. | HYPOTHESIS | NuBlox inference |
+| VIS-011 | CBE issue PDFs, model viewables, thumbnails, issued renditions and published O&M outputs should retain source/version/configuration provenance rather than becoming detached duplicate files. | HYPOTHESIS | CBE translation |
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

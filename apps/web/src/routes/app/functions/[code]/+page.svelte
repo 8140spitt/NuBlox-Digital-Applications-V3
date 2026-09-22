@@ -4,6 +4,7 @@
   let { data, form }: { data: PageData; form: ActionData } = $props();
   const workspace = $derived(data.workspace);
   const strategy = $derived(data.strategyWorkbench);
+  const view = $derived(data.view);
 
   function engineStateLabel(state: string) {
     if (state === 'IMPLEMENTED_PLATFORM' || state === 'IMPLEMENTED_DOMAIN_CORE') return 'Available';
@@ -50,6 +51,14 @@
     {/if}
   </section>
 
+  <nav class="workspace-tabs" aria-label="Function workspace views">
+    <a class:active={view === 'overview'} aria-current={view === 'overview' ? 'page' : undefined} href="?view=overview">Overview</a>
+    <a class:active={view === 'governance'} aria-current={view === 'governance' ? 'page' : undefined} href="?view=governance">Governance</a>
+    <a class:active={view === 'delivery'} aria-current={view === 'delivery' ? 'page' : undefined} href="?view=delivery">Delivery</a>
+    <a class:active={view === 'performance'} aria-current={view === 'performance' ? 'page' : undefined} href="?view=performance">Performance</a>
+    <a class:active={view === 'records'} aria-current={view === 'records' ? 'page' : undefined} href="?view=records">Records</a>
+  </nav>
+
   {#if !data.strategyAllowed || !strategy}
     <section class="permission-state">
       <div class="permission-state-code">403</div>
@@ -66,6 +75,84 @@
       </div>
     </section>
   {:else}
+    {#if view === 'overview'}
+
+      <div class="function-workspace-grid">
+        <section class="workspace-panel function-scope-panel">
+          <div class="panel-heading"><div><p class="app-eyebrow">Function scope</p><h2>Sub-functions &amp; activities</h2></div><span>{workspace.subfunctions.length}</span></div>
+          <div class="subfunction-list">
+            {#each workspace.subfunctions as subfunction}
+              <details>
+                <summary><div><span class="subfunction-code">{subfunction.code}</span><strong>{subfunction.name}</strong></div><span class="subfunction-count">{subfunction.activities.length} activities</span></summary>
+                <div class="subfunction-detail redesigned">
+                  <div><h3>Activities</h3><ol class="activity-list">{#each subfunction.activities as activity, index}<li><span>{String(index + 1).padStart(2, '0')}</span><strong>{activity}</strong></li>{/each}</ol></div>
+                  <div><h3>Supporting capabilities</h3><div class="subfunction-engines">{#each subfunction.engineNames as engineName, index}<span><strong>{subfunction.engineIds[index]}</strong>{engineName}</span>{/each}</div></div>
+                </div>
+              </details>
+            {/each}
+          </div>
+        </section>
+        <aside class="workspace-panel function-tools-panel">
+          <div class="panel-heading"><div><p class="app-eyebrow">Native capabilities</p><h2>Available in this Function</h2></div></div>
+          <div class="engine-list compact-engine-list">
+            {#each workspace.engines as engine}
+              <article><div><span class="engine-id">{engine.id}</span><h3>{engine.name}</h3></div><span class="engine-state">{engineStateLabel(engine.state)}</span></article>
+            {/each}
+          </div>
+        </aside>
+      </div>
+
+    {:else if view === 'governance'}
+
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Functional Governance</p><h2>Govern how {workspace.name} operates</h2></div></div>
+        <div class="governance-capability-grid">
+          <article><strong>Mandate, policy &amp; standards</strong><p>Define purpose, scope, policies, standards, procedures and controlled templates for the Function.</p><a href="/app/information">Controlled information →</a></article>
+          <article><strong>Organisation &amp; deployment</strong><p>Assign accountable ownership and deploy governed roles into the organisational or delivery context.</p><a href="/app/deployments">Deployments →</a></article>
+          <article><strong>Competence</strong><p>Define the competence and evidence required to perform governed work.</p><a href="/app/competence">Competence →</a></article>
+          <article><strong>Authority, control &amp; assurance</strong><p>Control decision rights, lifecycle, review, approval, assurance and attributable evidence.</p><a href="/app/control">Control →</a></article>
+        </div>
+      </section>
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Governed scope</p><h2>What Governance controls</h2></div><span>{workspace.subfunctions.length}</span></div>
+        <div class="domain-job-list">
+          {#each workspace.subfunctions as subfunction}
+            <article><span>{subfunction.code}</span><strong>{subfunction.name}</strong><small>{subfunction.activities.length} governed activities</small></article>
+          {/each}
+        </div>
+      </section>
+
+    {:else if view === 'performance'}
+
+      <section class="architecture-metrics delivery-metrics">
+        <article><span>Sub-functions</span><strong>{workspace.subfunctionCount}</strong><p>Governed L2 capability areas</p></article>
+        <article><span>Activities</span><strong>{workspace.activityCount}</strong><p>Defined functional activities</p></article>
+        <article><span>Native capabilities</span><strong>{workspace.engines.length}</strong><p>Platform and Function engines composed here</p></article>
+        <article><span>Operating model</span><strong>G+D</strong><p>Governance and Delivery are measured as one capability</p></article>
+      </section>
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Performance</p><h2>Measure Function outcomes</h2></div></div>
+        <div class="governance-capability-grid">
+          <article><strong>Work</strong><p>Volume, backlog, cycle time, due dates, service level and throughput.</p></article>
+          <article><strong>Control</strong><p>Exceptions, approvals, assurance findings, control effectiveness and overdue action.</p></article>
+          <article><strong>Outputs</strong><p>Quality, acceptance, rework, defects and downstream handoff performance.</p></article>
+          <article><strong>Improvement</strong><p>KPI/KRI trend, variance, corrective action and governed improvement.</p></article>
+        </div>
+      </section>
+
+    {:else if view === 'records'}
+
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Function records</p><h2>Governed work products and evidence</h2></div></div>
+        <div class="governance-capability-grid">
+          <article><strong>Information</strong><p>Controlled documents, data, revisions, representations and issued information.</p><a href="/app/information">Open Information →</a></article>
+          <article><strong>Deliverables</strong><p>Required outputs, review, issue, response and acceptance.</p><a href="/app/deliverables">Open Deliverables →</a></article>
+          <article><strong>Change &amp; configuration</strong><p>Controlled change, configuration items, baselines and effectivity.</p><a href="/app/configuration">Open Change &amp; configuration →</a></article>
+          <article><strong>Decision &amp; evidence</strong><p>Review, approval, authority, evidence and audit traceability.</p><a href="/app/control">Open Control →</a></article>
+        </div>
+      </section>
+
+    {:else}
     {#if form?.message || form?.error}
       <div class:success={form?.ok} class:error={!form?.ok} class="admin-feedback" role="status">
         <strong>{form?.ok ? 'Completed' : 'Action not completed'}</strong>
@@ -335,6 +422,7 @@
         {#if strategy.outcomes.length===0 && strategy.analyses.length===0}<p class="information-empty">No outcomes or management analysis.</p>{/if}
       </section>
     </div>
+    {/if}
   {/if}
 
 {:else}
@@ -347,41 +435,119 @@
       </div>
       <h1>{workspace.name}</h1>
       <p class="workspace-lede">
-        Work within the governed scope of {workspace.name.toLowerCase()}, using shared NuBlox
-        information, workflow, responsibility, Decision, evidence and delivery controls.
+        Govern how the Function operates and deliver the work, outputs, decisions and evidence for which the capability exists.
       </p>
     </div>
-
     <dl class="workspace-stat-block">
       <div><dt>Sub-functions</dt><dd>{workspace.subfunctionCount}</dd></div>
       <div><dt>Activities</dt><dd>{workspace.activityCount}</dd></div>
     </dl>
   </section>
 
-  <div class="function-workspace-grid">
-    <section class="workspace-panel function-scope-panel">
-      <div class="panel-heading"><div><p class="app-eyebrow">Work scope</p><h2>Sub-functions &amp; activities</h2></div><span>{workspace.subfunctions.length}</span></div>
+  <nav class="workspace-tabs" aria-label="Function workspace views">
+    <a class:active={view === 'overview'} aria-current={view === 'overview' ? 'page' : undefined} href="?view=overview">Overview</a>
+    <a class:active={view === 'governance'} aria-current={view === 'governance' ? 'page' : undefined} href="?view=governance">Governance</a>
+    <a class:active={view === 'delivery'} aria-current={view === 'delivery' ? 'page' : undefined} href="?view=delivery">Delivery</a>
+    <a class:active={view === 'performance'} aria-current={view === 'performance' ? 'page' : undefined} href="?view=performance">Performance</a>
+    <a class:active={view === 'records'} aria-current={view === 'records' ? 'page' : undefined} href="?view=records">Records</a>
+  </nav>
+
+  {#if view === 'overview'}
+
+      <div class="function-workspace-grid">
+        <section class="workspace-panel function-scope-panel">
+          <div class="panel-heading"><div><p class="app-eyebrow">Function scope</p><h2>Sub-functions &amp; activities</h2></div><span>{workspace.subfunctions.length}</span></div>
+          <div class="subfunction-list">
+            {#each workspace.subfunctions as subfunction}
+              <details>
+                <summary><div><span class="subfunction-code">{subfunction.code}</span><strong>{subfunction.name}</strong></div><span class="subfunction-count">{subfunction.activities.length} activities</span></summary>
+                <div class="subfunction-detail redesigned">
+                  <div><h3>Activities</h3><ol class="activity-list">{#each subfunction.activities as activity, index}<li><span>{String(index + 1).padStart(2, '0')}</span><strong>{activity}</strong></li>{/each}</ol></div>
+                  <div><h3>Supporting capabilities</h3><div class="subfunction-engines">{#each subfunction.engineNames as engineName, index}<span><strong>{subfunction.engineIds[index]}</strong>{engineName}</span>{/each}</div></div>
+                </div>
+              </details>
+            {/each}
+          </div>
+        </section>
+        <aside class="workspace-panel function-tools-panel">
+          <div class="panel-heading"><div><p class="app-eyebrow">Native capabilities</p><h2>Available in this Function</h2></div></div>
+          <div class="engine-list compact-engine-list">
+            {#each workspace.engines as engine}
+              <article><div><span class="engine-id">{engine.id}</span><h3>{engine.name}</h3></div><span class="engine-state">{engineStateLabel(engine.state)}</span></article>
+            {/each}
+          </div>
+        </aside>
+      </div>
+
+  {:else if view === 'governance'}
+
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Functional Governance</p><h2>Govern how {workspace.name} operates</h2></div></div>
+        <div class="governance-capability-grid">
+          <article><strong>Mandate, policy &amp; standards</strong><p>Define purpose, scope, policies, standards, procedures and controlled templates for the Function.</p><a href="/app/information">Controlled information →</a></article>
+          <article><strong>Organisation &amp; deployment</strong><p>Assign accountable ownership and deploy governed roles into the organisational or delivery context.</p><a href="/app/deployments">Deployments →</a></article>
+          <article><strong>Competence</strong><p>Define the competence and evidence required to perform governed work.</p><a href="/app/competence">Competence →</a></article>
+          <article><strong>Authority, control &amp; assurance</strong><p>Control decision rights, lifecycle, review, approval, assurance and attributable evidence.</p><a href="/app/control">Control →</a></article>
+        </div>
+      </section>
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Governed scope</p><h2>What Governance controls</h2></div><span>{workspace.subfunctions.length}</span></div>
+        <div class="domain-job-list">
+          {#each workspace.subfunctions as subfunction}
+            <article><span>{subfunction.code}</span><strong>{subfunction.name}</strong><small>{subfunction.activities.length} governed activities</small></article>
+          {/each}
+        </div>
+      </section>
+
+  {:else if view === 'delivery'}
+    <section class="workspace-panel">
+      <div class="panel-heading"><div><p class="app-eyebrow">Functional Delivery</p><h2>Perform {workspace.name} work</h2></div><span>{workspace.activityCount}</span></div>
       <div class="subfunction-list">
         {#each workspace.subfunctions as subfunction}
           <details>
             <summary><div><span class="subfunction-code">{subfunction.code}</span><strong>{subfunction.name}</strong></div><span class="subfunction-count">{subfunction.activities.length} activities</span></summary>
             <div class="subfunction-detail redesigned">
-              <div><h3>Activities</h3><ol class="activity-list">{#each subfunction.activities as activity, index}<li><span>{String(index + 1).padStart(2, '0')}</span><strong>{activity}</strong></li>{/each}</ol></div>
-              <div><h3>Supporting capabilities</h3><div class="subfunction-engines">{#each subfunction.engineNames as engineName, index}<span><strong>{subfunction.engineIds[index]}</strong>{engineName}</span>{/each}</div></div>
+              <div><h3>Delivery activities</h3><ol class="activity-list">{#each subfunction.activities as activity, index}<li><span>{String(index + 1).padStart(2, '0')}</span><strong>{activity}</strong></li>{/each}</ol></div>
+              <div>
+                <h3>Tools &amp; controls</h3>
+                <div class="subfunction-engines">{#each subfunction.engineNames as engineName, index}<span><strong>{subfunction.engineIds[index]}</strong>{engineName}</span>{/each}</div>
+                <p class="subfunction-note">Assigned work, responsibility, workflow, lifecycle, Decision, Deliverable and evidence stay in the same governed Function context.</p>
+              </div>
             </div>
           </details>
         {/each}
       </div>
     </section>
+    <div class="workspace-action-row"><a class="primary-action" href="/app/my-work">Open My Work <span>→</span></a></div>
+  {:else if view === 'performance'}
 
-    <aside class="workspace-panel function-tools-panel">
-      <div class="panel-heading"><div><p class="app-eyebrow">Native capabilities</p><h2>Available in this Function</h2></div></div>
-      <div class="engine-list compact-engine-list">
-        {#each workspace.engines as engine}
-          <article><div><span class="engine-id">{engine.id}</span><h3>{engine.name}</h3></div><span class="engine-state">{engineStateLabel(engine.state)}</span></article>
-        {/each}
-      </div>
-      <div class="function-shared-controls"><h3>Shared controls</h3><p>Responsibility, access, workflow, lifecycle, Decision, evidence, information, change and audit remain in context across the Function.</p></div>
-    </aside>
-  </div>
+      <section class="architecture-metrics delivery-metrics">
+        <article><span>Sub-functions</span><strong>{workspace.subfunctionCount}</strong><p>Governed L2 capability areas</p></article>
+        <article><span>Activities</span><strong>{workspace.activityCount}</strong><p>Defined functional activities</p></article>
+        <article><span>Native capabilities</span><strong>{workspace.engines.length}</strong><p>Platform and Function engines composed here</p></article>
+        <article><span>Operating model</span><strong>G+D</strong><p>Governance and Delivery are measured as one capability</p></article>
+      </section>
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Performance</p><h2>Measure Function outcomes</h2></div></div>
+        <div class="governance-capability-grid">
+          <article><strong>Work</strong><p>Volume, backlog, cycle time, due dates, service level and throughput.</p></article>
+          <article><strong>Control</strong><p>Exceptions, approvals, assurance findings, control effectiveness and overdue action.</p></article>
+          <article><strong>Outputs</strong><p>Quality, acceptance, rework, defects and downstream handoff performance.</p></article>
+          <article><strong>Improvement</strong><p>KPI/KRI trend, variance, corrective action and governed improvement.</p></article>
+        </div>
+      </section>
+
+  {:else}
+
+      <section class="workspace-panel">
+        <div class="panel-heading"><div><p class="app-eyebrow">Function records</p><h2>Governed work products and evidence</h2></div></div>
+        <div class="governance-capability-grid">
+          <article><strong>Information</strong><p>Controlled documents, data, revisions, representations and issued information.</p><a href="/app/information">Open Information →</a></article>
+          <article><strong>Deliverables</strong><p>Required outputs, review, issue, response and acceptance.</p><a href="/app/deliverables">Open Deliverables →</a></article>
+          <article><strong>Change &amp; configuration</strong><p>Controlled change, configuration items, baselines and effectivity.</p><a href="/app/configuration">Open Change &amp; configuration →</a></article>
+          <article><strong>Decision &amp; evidence</strong><p>Review, approval, authority, evidence and audit traceability.</p><a href="/app/control">Open Control →</a></article>
+        </div>
+      </section>
+
+  {/if}
 {/if}

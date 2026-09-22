@@ -331,6 +331,7 @@ export class MySqlStrategyCommandService {
     const owner=optional(input.ownerPersonId)??actorPersonId; await this.requirePerson(tenantId,owner);
     const allowed:StrategyPlanType[]=['CONNECTED_ENTERPRISE','CAPACITY_INVESTMENT','BUDGET_FORECAST'];
     if(!input.planType||!allowed.includes(input.planType)) throw new StrategyCommandError('A valid plan type is required.','INVALID_INPUT');
+    const planType: StrategyPlanType = input.planType;
     const code=required(input.code,'Plan code').toUpperCase(),id=`PLAN-${randomUUID()}`;
     try{
       await withTransaction(this.pool,async connection=>{
@@ -340,14 +341,14 @@ export class MySqlStrategyCommandService {
             (id,tenant_id,canonical_object_id,code,title,description,owner_person_id,plan_type,period_start,period_end,
              assumptions,target_amount,forecast_amount,actual_amount,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?, 'DRAFT',?,?)`,
-          [id,tenantId,objectId,code,required(input.title,'Plan title'),required(input.description,'Plan description'),owner,input.planType,
+          [id,tenantId,objectId,code,required(input.title,'Plan title'),required(input.description,'Plan description'),owner,planType,
            dateValue(input.periodStart,'Period start')??null,dateValue(input.periodEnd,'Period end')??null,
            JSON.stringify(parseAssumptions(input.assumptions)),numberValue(input.targetAmount,'Target amount')??null,
            numberValue(input.forecastAmount,'Forecast amount')??null,numberValue(input.actualAmount,'Actual amount')??null,actorPersonId,actorPersonId]
         );
-        const benchmark=input.planType==='CONNECTED_ENTERPRISE'?['ENT-MTC-0007']:
-          input.planType==='CAPACITY_INVESTMENT'?['ENT-MTC-0005']:['ENT-MTC-0009'];
-        await evidence(connection,tenantId,'STRATEGY_PLAN',id,'CREATED',actorPersonId,{planType:input.planType,benchmark});
+        const benchmark=planType==='CONNECTED_ENTERPRISE'?['ENT-MTC-0007']:
+          planType==='CAPACITY_INVESTMENT'?['ENT-MTC-0005']:['ENT-MTC-0009'];
+        await evidence(connection,tenantId,'STRATEGY_PLAN',id,'CREATED',actorPersonId,{planType,benchmark});
       }); return id;
     }catch(e){return this.mapError(e);}
   }
@@ -417,7 +418,8 @@ export class MySqlStrategyCommandService {
     if(!entityType || !(entityType in TABLES)) throw new StrategyCommandError('Valid strategy entity type is required.','INVALID_INPUT');
     const table = TABLES[entityType];
     if(!input.status||!STATUSES.has(input.status)) throw new StrategyCommandError('Valid strategy status is required.','INVALID_INPUT');
-    if (['APPROVED','FUNDED','SELECTED','COMMITTED'].includes(input.status)) {
+    const status: StrategyRecordStatus = input.status;
+    if (['APPROVED','FUNDED','SELECTED','COMMITTED'].includes(status)) {
       throw new StrategyCommandError(
         'This state requires an Authority-backed Decision. Use of privileged strategy states is blocked until that control is wired.',
         'INVALID_INPUT'
@@ -428,9 +430,9 @@ export class MySqlStrategyCommandService {
     await withTransaction(this.pool,async connection=>{
       await connection.execute(
         `UPDATE ${table} SET status=?, updated_by_person_id=? WHERE tenant_id=? AND id=?`,
-        [input.status,actorPersonId,tenantId,id]
+        [status,actorPersonId,tenantId,id]
       );
-      await evidence(connection,tenantId,`STRATEGY_${entityType}`,id,'STATUS_CHANGED',actorPersonId,{status:input.status});
+      await evidence(connection,tenantId,`STRATEGY_${entityType}`,id,'STATUS_CHANGED',actorPersonId,{status});
     });
   }
 

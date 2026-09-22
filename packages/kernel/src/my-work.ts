@@ -15,7 +15,8 @@ export type NativeMyWorkKind =
   | 'APPROVAL'
   | 'ACCEPTANCE'
   | 'COMPETENCE'
-  | 'ACCESS_REQUEST';
+  | 'ACCESS_REQUEST'
+  | 'FUNCTION_WORK';
 
 export interface NativeMyWorkProjectionItem {
   key: string;
@@ -32,4 +33,5 @@ export interface NativeMyWorkProjectionItem {
   dueAt?: string;
   isOverdue: boolean;
   reason: string;
+  href?: string;
 }

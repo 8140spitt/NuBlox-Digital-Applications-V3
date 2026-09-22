@@ -39,7 +39,7 @@
 </script>
 
 <svelte:head>
-  <title>Functional Deployments — NuBlox</title>
+  <title>HCM Function Deployment — NuBlox</title>
 </svelte:head>
 
 {#if !data.allowed || !data.projection}
@@ -61,19 +61,19 @@
           Request access
           <span aria-hidden="true">→</span>
         </a>
-        <a class="quiet-link" href="/app">Back to Functions</a>
+        <a class="quiet-link" href="/app/hcm">Back to HCM Position Management</a>
       </div>
     </div>
   </section>
 {:else}
   <section class="workspace-hero compact deployment-hero">
     <div>
-      <p class="app-eyebrow">Functional operating model</p>
-      <h1>Deployments</h1>
+      <p class="app-eyebrow">HCM Position Management</p>
+      <h1>Function Deployment</h1>
       <p class="workspace-lede">
-        Deploy governed Function capability into a real organisational or delivery context for either
-        Functional Governance or Functional Delivery, then assign responsibility, scope and capacity.
-        Employment, Permission and business Authority remain separate controls.
+        Deploy an employed Person, Position or Organisation Unit into a governed Function/L2 context,
+        explicitly as Governance or Delivery, then assign responsibility, scope, capacity and effectivity.
+        Position occupancy remains the employment record; this deployment records the work role.
       </p>
     </div>
   </section>

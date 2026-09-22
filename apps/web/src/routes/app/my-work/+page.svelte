@@ -5,7 +5,7 @@
 
   const items = $derived(data.items ?? []);
   const assignedCount = $derived(
-    items.filter((item) => item.kind === 'WORK' || item.kind === 'DELIVERABLE').length
+    items.filter((item) => item.kind === 'WORK' || item.kind === 'DELIVERABLE' || item.kind === 'FUNCTION_WORK').length
   );
   const reviewCount = $derived(items.filter((item) => item.kind === 'REVIEW').length);
   const decisionCount = $derived(
@@ -36,6 +36,8 @@
         return 'Competence';
       case 'ACCESS_REQUEST':
         return 'Access request';
+      case 'FUNCTION_WORK':
+        return 'Function work';
       default:
         return kind;
     }
@@ -148,6 +150,10 @@
             {#if item.kind === 'ACCESS_REQUEST'}
               <a class="my-work-action-link" href={`/app/access#request-${item.sourceId}`}>
                 Review access request →
+              </a>
+            {:else if item.href}
+              <a class="my-work-action-link" href={item.href}>
+                Open Function work →
               </a>
             {/if}
           </div>

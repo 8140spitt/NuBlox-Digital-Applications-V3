@@ -18,8 +18,8 @@
 
   function currentArea(pathname: string) {
     if (pathname.startsWith('/app/my-work')) return 'My Work';
-    if (pathname.startsWith('/app/functions')) return 'Functions';
-    if (pathname.startsWith('/app/domains')) return 'CBE Domains';
+    if (pathname.startsWith('/app/contexts')) return 'Contexts';\n    if (pathname.startsWith('/app/teams')) return 'Teams';\n    if (pathname.startsWith('/app/functions')) return 'Teams';
+    if (pathname.startsWith('/app/domains')) return 'Teams';
     if (pathname.startsWith('/app/delivery')) return 'CBE Capability Administration';
     if (pathname.startsWith('/app/information')) return 'Information';
     if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
@@ -53,13 +53,13 @@
             <span class="nav-symbol">MW</span>
             <span>My Work</span>
           </a>
-          <a class:active={isActive('/app/functions')} href="/app/functions" onclick={closeNavigation}>
-            <span class="nav-symbol">FN</span>
-            <span>Functions</span>
+          <a class:active={isActive('/app/contexts')} href="/app/contexts" onclick={closeNavigation}>
+            <span class="nav-symbol">CX</span>
+            <span>Contexts</span>
           </a>
-          <a class:active={isActive('/app/domains')} href="/app/domains" onclick={closeNavigation}>
-            <span class="nav-symbol">CB</span>
-            <span>CBE Domains</span>
+          <a class:active={isActive('/app/teams')} href="/app/teams" onclick={closeNavigation}>
+            <span class="nav-symbol">TM</span>
+            <span>Teams</span>
           </a>
         </section>
 

@@ -8,7 +8,7 @@
     <p class="app-eyebrow">Operational home</p>
     <h1>What needs your attention?</h1>
     <p class="workspace-lede">
-      Start with assigned work, then move into the Function or CBE Domain that governs the capability and carries its delivery work, work products, Decisions and evidence.
+      Start with assigned work, choose the organisational Context, then enter the Team that owns the capability, its Governance, Delivery, People, work products, Decisions and evidence.
     </p>
   </div>
 
@@ -28,20 +28,20 @@
     <span aria-hidden="true">→</span>
   </a>
 
-  <a class="home-primary-card" href="/app/functions">
+  <a class="home-primary-card" href="/app/contexts">
     <span>02</span>
     <div>
-      <strong>Functions</strong>
-      <p>Enter one of the 29 enterprise Functions and work through its governed scope.</p>
+      <strong>Contexts</strong>
+      <p>Move from the Tenant Site into the Organisation or child organisational context where work and accountability apply.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>
 
-  <a class="home-primary-card" href="/app/domains">
+  <a class="home-primary-card" href="/app/teams">
     <span>03</span>
     <div>
-      <strong>CBE Domains</strong>
-      <p>Govern professional capability and perform the work required across the 16 CBE Domains and 84 Job Profiles.</p>
+      <strong>Teams</strong>
+      <p>Work through the 29 Core Function Teams and 16 CBE Professional Domain Teams in the selected Context.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>
@@ -93,7 +93,7 @@
   </header>
 
   <div class="home-governance-links">
-    <a href="/app/hcm"><strong>HCM &amp; Position Management</strong><span>People, positions, occupancy and Function/CBE Domain deployment</span></a>
+    <a href="/app/hcm"><strong>HCM &amp; Position Management</strong><span>People, positions, occupancy and Team membership</span></a>
     <a href="/app/competence"><strong>Competence</strong><span>Required capability and evidence</span></a>
     <a href="/app/control"><strong>Control</strong><span>Lifecycle, Decision and evidence state</span></a>
     <a href="/app/access"><strong>Access</strong><span>Roles, permissions and access requests</span></a>

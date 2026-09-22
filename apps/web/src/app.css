@@ -5584,3 +5584,250 @@ h1 {
 .hcm-panel-action .primary-action {
   justify-self: auto;
 }
+
+
+/* Context and Team operating model */
+
+.context-principle,
+.context-switcher,
+.team-context-strip {
+  margin-top: 24px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid var(--app-line);
+}
+
+.context-principle strong,
+.context-switcher strong,
+.team-context-strip strong {
+  color: var(--app-navy);
+}
+
+.context-principle p {
+  margin: 6px 0 0;
+  color: var(--app-muted);
+  font-size: 0.82rem;
+}
+
+.context-directory {
+  display: grid;
+  gap: 28px;
+  padding-top: 34px;
+}
+
+.context-site-card,
+.context-organisation-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-line);
+}
+
+.context-site-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 26px;
+}
+
+.context-site-card h2,
+.context-organisation-card h2 {
+  margin: 5px 0 6px;
+  color: var(--app-navy);
+  font-size: 1.35rem;
+  letter-spacing: -0.03em;
+}
+
+.context-site-card p,
+.context-organisation-card p {
+  margin: 0;
+  color: var(--app-muted);
+  font-size: 0.78rem;
+}
+
+.context-type {
+  color: var(--app-accent);
+  font-size: 0.62rem;
+  font-weight: 820;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.context-organisations {
+  display: grid;
+  gap: 18px;
+}
+
+.context-organisation-card > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--app-line);
+}
+
+.quiet-action {
+  color: var(--app-accent);
+  text-decoration: none;
+  font-size: 0.73rem;
+  font-weight: 760;
+}
+
+.context-unit-list {
+  display: grid;
+}
+
+.context-unit-row {
+  --context-depth: 0;
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 62px;
+  padding: 10px 20px 10px calc(20px + (var(--context-depth) * 24px));
+  border-top: 1px solid #eef0f1;
+  color: inherit;
+  text-decoration: none;
+}
+
+.context-unit-row:first-child {
+  border-top: 0;
+}
+
+.context-unit-row:hover {
+  background: #f7f9f9;
+}
+
+.context-unit-row div {
+  display: grid;
+  gap: 3px;
+}
+
+.context-unit-row strong {
+  color: var(--app-navy);
+  font-size: 0.82rem;
+}
+
+.context-unit-row small,
+.context-tree-mark {
+  color: #85919a;
+  font-size: 0.68rem;
+}
+
+.context-switcher {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 24px;
+  align-items: center;
+}
+
+.context-switcher > div,
+.team-context-strip > div {
+  display: grid;
+  gap: 3px;
+}
+
+.context-switcher span,
+.team-context-strip span {
+  color: #77858f;
+  font-size: 0.64rem;
+  font-weight: 760;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.context-switcher form {
+  display: flex;
+  gap: 8px;
+}
+
+.context-switcher select,
+.context-switcher button {
+  min-height: 38px;
+  border: 1px solid #cfd6da;
+  background: #fff;
+  color: var(--app-ink);
+  font: inherit;
+  font-size: 0.75rem;
+}
+
+.context-switcher select {
+  min-width: 300px;
+  padding: 0 10px;
+}
+
+.context-switcher button {
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.context-switcher > a,
+.team-context-strip > a {
+  color: var(--app-accent);
+  text-decoration: none;
+  font-size: 0.73rem;
+  font-weight: 740;
+}
+
+.team-context-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  margin-top: 0;
+  border-top: 0;
+}
+
+.team-member-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 22px;
+  border: 1px solid var(--app-line);
+}
+
+.team-member-summary div {
+  min-height: 110px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 18px;
+}
+
+.team-member-summary div + div {
+  border-left: 1px solid var(--app-line);
+}
+
+.team-member-summary strong {
+  color: var(--app-navy);
+  font-size: 2rem;
+  letter-spacing: -0.05em;
+}
+
+.team-member-summary span {
+  color: var(--app-muted);
+  font-size: 0.68rem;
+  font-weight: 720;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .context-switcher {
+    grid-template-columns: 1fr;
+  }
+
+  .context-switcher form {
+    display: grid;
+  }
+
+  .context-switcher select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .context-site-card,
+  .context-organisation-card > header,
+  .team-context-strip {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

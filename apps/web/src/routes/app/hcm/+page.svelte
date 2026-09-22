@@ -14,7 +14,7 @@
 
 <svelte:head>
   <title>HCM Position Management — NuBlox</title>
-  <meta name="description" content="People, positions, occupancy and capability deployment" />
+  <meta name="description" content="People, positions, occupancy and Team membership" />
 </svelte:head>
 
 {#if !data.allowed}
@@ -56,12 +56,12 @@
       <p>Current tenant workforce records</p>
     </article>
     <article>
-      <span>Governance deployments</span>
+      <span>Governance Team assignments</span>
       <strong>{functionalGovernance + domainGovernance}</strong>
       <p>{functionalGovernance} Function · {domainGovernance} CBE Domain</p>
     </article>
     <article>
-      <span>Delivery deployments</span>
+      <span>Delivery Team assignments</span>
       <strong>{functionalDelivery + domainDelivery}</strong>
       <p>{functionalDelivery} Function · {domainDelivery} CBE Domain</p>
     </article>
@@ -71,7 +71,7 @@
     <div class="panel-heading">
       <div>
         <p class="app-eyebrow">HCM operating model</p>
-        <h2>Employment Position → Capability Deployment</h2>
+        <h2>Employment Position → Team Membership</h2>
       </div>
     </div>
     <div class="governance-capability-grid">
@@ -81,12 +81,12 @@
         <a href="/app/organisation">Manage organisation &amp; positions →</a>
       </article>
       <article>
-        <strong>2. Choose capability</strong>
-        <p>Deploy the Person, Position or appropriate organisational capacity into an enterprise Function or CBE professional Domain.</p>
+        <strong>2. Choose Team</strong>
+        <p>Associate the Person or Position with the Core Function Team or CBE Professional Domain Team in which they operate.</p>
       </article>
       <article>
-        <strong>3. Choose purpose</strong>
-        <p>Every deployment is explicitly <b>Governance</b> or <b>Delivery</b>. This belongs to the deployment, not permanently to the Person or Job Profile.</p>
+        <strong>3. Choose operating side</strong>
+        <p>Every Team assignment is explicitly <b>Governance</b> or <b>Delivery</b>. The Person may contribute differently in another Team or Context.</p>
       </article>
       <article>
         <strong>4. Set operating context</strong>
@@ -98,7 +98,7 @@
   <div class="function-workspace-grid">
     <section class="workspace-panel">
       <div class="panel-heading">
-        <div><p class="app-eyebrow">Enterprise Functions</p><h2>Function deployments</h2></div>
+        <div><p class="app-eyebrow">Enterprise Functions</p><h2>Core Function Team membership</h2></div>
         <span>{data.functional?.deployments.length ?? 0}</span>
       </div>
       {#if data.functionalAllowed && data.functional}
@@ -115,7 +115,7 @@
             <p class="information-empty">No Function deployments have been created.</p>
           {/each}
         </div>
-        <div class="hcm-panel-action"><a class="primary-action" href="/app/deployments">Manage Function deployments <span>→</span></a></div>
+        <div class="hcm-panel-action"><a class="primary-action" href="/app/deployments">Manage Function Team assignments <span>→</span></a></div>
       {:else}
         <p class="information-empty">Function deployment access is not available to the current role.</p>
       {/if}
@@ -123,7 +123,7 @@
 
     <section class="workspace-panel">
       <div class="panel-heading">
-        <div><p class="app-eyebrow">CBE Professional Domains</p><h2>Domain deployments</h2></div>
+        <div><p class="app-eyebrow">CBE Professional Domain Teams</p><h2>Professional Domain Team membership</h2></div>
         <span>{data.domains?.disciplineDeployments.length ?? 0}</span>
       </div>
       {#if data.domainAllowed && data.domains}
@@ -140,7 +140,7 @@
             <p class="information-empty">No CBE Domain deployments have been created.</p>
           {/each}
         </div>
-        <div class="hcm-panel-action"><a class="primary-action" href="/app/delivery">Manage CBE Domain deployments <span>→</span></a></div>
+        <div class="hcm-panel-action"><a class="primary-action" href="/app/delivery">Manage Professional Team assignments <span>→</span></a></div>
       {:else}
         <p class="information-empty">CBE Domain deployment access is not available to the current role.</p>
       {/if}

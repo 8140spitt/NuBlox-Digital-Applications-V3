@@ -30,10 +30,10 @@
 {#if workspace.code === 'F01'}
   <section class="function-workspace-header redesigned">
     <div>
-      <a class="function-back-link" href="/app/functions">← All Functions</a>
+      <a class="function-back-link" href="/app/teams">← All Teams</a>
       <div class="function-title-line">
         <span class="function-code large">F01</span>
-        <p class="app-eyebrow">Enterprise Function</p>
+        <p class="app-eyebrow">Core Function Team</p>
       </div>
       <h1>Strategy &amp; Enterprise Planning</h1>
       <p class="workspace-lede">
@@ -108,7 +108,7 @@
         <div class="panel-heading"><div><p class="app-eyebrow">Functional Governance</p><h2>Govern how {workspace.name} operates</h2></div></div>
         <div class="governance-capability-grid">
           <article><strong>Mandate, policy &amp; standards</strong><p>Define purpose, scope, policies, standards, procedures and controlled templates for the Function.</p><a href="/app/information">Controlled information →</a></article>
-          <article><strong>Position &amp; deployment</strong><p>Use HCM Position Management to assign accountable ownership and deploy People or Positions into the Function for Governance or Delivery.</p><a href="/app/hcm">HCM Position Management →</a></article>
+          <article><strong>Positions &amp; Team membership</strong><p>Use HCM Position Management to establish accountable Positions and Team membership on the Governance or Delivery side.</p><a href="/app/hcm">HCM Position Management →</a></article>
           <article><strong>Competence</strong><p>Define the competence and evidence required to perform governed work.</p><a href="/app/competence">Competence →</a></article>
           <article><strong>Authority, control &amp; assurance</strong><p>Control decision rights, lifecycle, review, approval, assurance and attributable evidence.</p><a href="/app/control">Control →</a></article>
         </div>
@@ -428,10 +428,10 @@
 {:else}
   <section class="function-workspace-header redesigned">
     <div>
-      <a class="function-back-link" href="/app/functions">← All Functions</a>
+      <a class="function-back-link" href="/app/teams">← All Teams</a>
       <div class="function-title-line">
         <span class="function-code large">{workspace.code}</span>
-        <p class="app-eyebrow">Enterprise Function</p>
+        <p class="app-eyebrow">Core Function Team</p>
       </div>
       <h1>{workspace.name}</h1>
       <p class="workspace-lede">

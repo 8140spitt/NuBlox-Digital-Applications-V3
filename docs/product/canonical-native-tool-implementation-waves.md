@@ -219,7 +219,7 @@ As of 21 September 2026:
 - 9 shared engines have backend implementation but still require full product UI exposure;
 - 3 domain engines have partial implementation and require completion;
 - 45 engines remain to build;
-- Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, Functional Deployment administration and competence administration are implemented;
+- Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
 - Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;
 - Change/Configuration/Baseline is now exposed through a tenant-scoped read projection and lifecycle-aware command surface covering Change assessment, affected objects, impact, Decision application, implementation, verification, discrepancy, closure, Configuration Items, Baselines and Effectivity; commitment Decisions are permission-gated and require an effective Authority Grant;

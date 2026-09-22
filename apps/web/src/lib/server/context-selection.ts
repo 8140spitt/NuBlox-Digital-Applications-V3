@@ -92,8 +92,12 @@ export function functionalDeploymentMatchesContext(
   deployment: FunctionalDeploymentView,
   context: TeamContextSelection
 ): boolean {
-  if (context.kind === 'TENANT') return true;
-  if (context.kind === 'ORGANISATION') return deployment.organisationId === context.organisationId;
+  if (context.kind === 'TENANT') {
+    return !deployment.organisationId && !deployment.organisationUnitId;
+  }
+  if (context.kind === 'ORGANISATION') {
+    return deployment.organisationId === context.organisationId && !deployment.organisationUnitId;
+  }
   return deployment.organisationUnitId === context.organisationUnitId;
 }
 
@@ -103,7 +107,11 @@ export function domainDeploymentMatchesContext(
   deployment: DomainDeployment,
   context: TeamContextSelection
 ): boolean {
-  if (context.kind === 'TENANT') return true;
-  if (context.kind === 'ORGANISATION') return deployment.organisationId === context.organisationId;
+  if (context.kind === 'TENANT') {
+    return !deployment.organisationId && !deployment.organisationUnitId;
+  }
+  if (context.kind === 'ORGANISATION') {
+    return deployment.organisationId === context.organisationId && !deployment.organisationUnitId;
+  }
   return deployment.organisationUnitId === context.organisationUnitId;
 }

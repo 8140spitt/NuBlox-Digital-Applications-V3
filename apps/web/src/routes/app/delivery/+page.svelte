@@ -34,18 +34,19 @@
         >
           Request access <span aria-hidden="true">→</span>
         </a>
-        <a class="quiet-link" href="/app">Back Home</a>
+        <a class="quiet-link" href="/app/hcm">Back to HCM Position Management</a>
       </div>
     </div>
   </section>
 {:else}
   <section class="workspace-hero compact delivery-hero">
     <div>
-      <p class="app-eyebrow">Construction &amp; Built Environment</p>
+      <p class="app-eyebrow">HCM Position Management · CBE Capability</p>
       <h1>CBE Capability Administration</h1>
       <p class="workspace-lede">
-        Configure internal professional capability, governed role deployment, Services, delivery-context
-        demand and internal/external sourcing. Day-to-day professional work starts in the CBE Domain workspace.
+        Manage CBE professional capability and deploy employed People or Positions into CBE Domains as
+        Governance or Delivery roles. Service configuration, delivery-context demand and external sourcing
+        remain here as adjacent capability administration.
       </p>
     </div>
   </section>

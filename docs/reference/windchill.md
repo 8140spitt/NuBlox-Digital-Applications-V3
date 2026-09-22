@@ -4,6 +4,8 @@
 **Reviewed source:** PTC_Windchill_13_Architecture(4).drawio  
 **Review date:** 20 September 2026
 
+**Active deep-dive:** [Windchill Help Center — Deep Capability & Relationship Register](windchill-help-center-deep-relationship-register.md) — source-backed 12.0.2.0 Help Center traversal begun 22 September 2026. This register supersedes any unsupported inference in this overview where the two differ.
+
 ## Position
 
 PTC Windchill is a major source of architectural ideas for controlled enterprise objects, technical information, product definition, Lifecycle, Change, Configuration and publication.

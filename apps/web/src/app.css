@@ -5254,3 +5254,114 @@ h1 {
     grid-column: auto;
   }
 }
+
+
+/* F01 Strategy workbench */
+
+.strategy-secondary-grid {
+  margin-top: 18px;
+}
+
+.strategy-card {
+  padding: 14px 18px;
+  border-top: 1px solid var(--app-line);
+}
+
+.strategy-card:first-of-type {
+  border-top: 0;
+}
+
+.strategy-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+}
+
+.strategy-card header > div {
+  display: grid;
+  gap: 3px;
+}
+
+.strategy-card header span {
+  color: var(--app-accent);
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.strategy-card header strong {
+  color: var(--app-navy);
+  font-size: 0.75rem;
+}
+
+.strategy-card header small,
+.strategy-card > small {
+  color: var(--app-muted);
+  font-size: 0.6rem;
+}
+
+.strategy-card p {
+  margin: 8px 0 0;
+  color: var(--app-muted);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.strategy-numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 10px;
+  color: var(--app-muted);
+  font-size: 0.6rem;
+}
+
+.strategy-numbers strong {
+  margin-left: 4px;
+  color: var(--app-navy);
+}
+
+.function-record-row {
+  display: grid;
+  gap: 3px;
+  padding: 8px 0;
+  border-top: 1px solid #edf0f1;
+}
+
+.function-record-row:first-of-type {
+  border-top: 0;
+}
+
+.function-record-row strong {
+  color: var(--app-navy);
+  font-size: 0.66rem;
+}
+
+.function-record-row span,
+.function-record-row small,
+.function-record-meta {
+  color: var(--app-muted);
+  font-size: 0.6rem;
+}
+
+.inline-status-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.inline-status-form select {
+  min-width: 140px;
+}
+
+.inline-status-form button {
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+.analysis-card {
+  background: #fbfcfc;
+}

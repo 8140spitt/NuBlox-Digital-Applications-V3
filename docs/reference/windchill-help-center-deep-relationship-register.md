@@ -257,6 +257,19 @@ actual participant
 | PRJ-002 | Project Deliverable is a planned/managed obligation and can reference a governed object as its Subject. | VERIFIED | PTC Deliverable information-page branch |
 | PRJ-003 | Deliverable Requirement/Commitment and the controlled Work Product should therefore not be conflated. | HYPOTHESIS | NuBlox inference |
 | PRJ-004 | Project templates can instantiate reusable plans, deliverables and team/configuration structures. | VERIFIED | PTC Project template branch |
+| PRJ-005 | A Plan can contain hierarchical summary activities, activities, milestones and subplans; plans support scheduling, dependencies, effort, cost and critical-path/status roll-up. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtPlanInfo.html |
+| PRJ-006 | Automatic plan execution is state-driven: Project state constrains Plan state, and Plan state constrains Activity state; eligible activities start from schedule/constraints and generate task notifications. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtSchedulingAutoExecution.html |
+| PRJ-007 | Project/Program operational state and informational phase are different concepts; project state affects access/execution while phase describes maturity/stage. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProjMgmtPhaseState.html |
+| PRJ-008 | Plan Resources are separate from team membership and may be Windchill Users, Other resources, Windchill Groups or Windchill Team Roles. Team members/roles can automatically create corresponding resources. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtResourceAbout.html |
+| PRJ-009 | Resources have capacity/time semantics such as Max Units and can be assigned to activities so work and cost can be tracked. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtResourceAtts.html |
+| PRJ-010 | Action Items track issues/tasks within Product, Project or Program contexts but are explicitly not formally tracked in the Plan. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProjMgmtActItemAbout.html |
+| PRJ-011 | Deliverables are tangible/measurable outputs; they can be associated to Plan Activities and can reference a governed Windchill object such as a Document or Part as the Deliverable Subject. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtDeliverableInfoPageRef.html |
+| PRJ-012 | Deliverables therefore have planning/obligation semantics independently from the controlled object that embodies the delivered content. | VERIFIED pattern | Deliverable + Subject semantics |
+| PRJ-013 | Track New Work connects resource-assignment work/progress to an eligible deliverable activity and governed Subject object, with eligibility constrained by execution state and tracking policy. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtTrackWorkNew.html |
+| PRJ-014 | Plan Baseline snapshots the Plan state including Plan objects; this is distinct from product/configuration baselines. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtPlansTable.html |
+| PRJ-015 | Plans can be saved/exported as reusable Plan Templates and Windchill supports Microsoft Project interchange. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtPlansTable.html |
+| PRJ-016 | NuBlox must keep planned work, resource assignment, workflow task, action item, deliverable obligation and governed Subject/work product as separate but linkable canonical concepts. | HYPOTHESIS | NuBlox inference |
+
 
 ---
 

@@ -8,6 +8,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{workspace?.domain.code ?? 'CBE'} {workspace?.domain.name ?? 'Domain'} — NuBlox</title>
+</svelte:head>
+
 {#if !data.allowed || !workspace}
   <section class="permission-state">
     <div class="permission-state-code">403</div>
@@ -24,10 +28,6 @@
     </div>
   </section>
 {:else}
-  <svelte:head>
-    <title>{workspace.domain.code} {workspace.domain.name} — NuBlox</title>
-  </svelte:head>
-
   <section class="function-workspace-header redesigned">
     <div>
       <a class="function-back-link" href="/app/domains">← All CBE Domains</a>

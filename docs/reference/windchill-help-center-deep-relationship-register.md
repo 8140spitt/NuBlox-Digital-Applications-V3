@@ -1,0 +1,496 @@
+# PTC Windchill Help Center — Deep Capability & Relationship Register
+
+**Status:** Active evidence register — research in progress  
+**Primary source:** PTC Windchill Cloud 12.0.2.0 Help Center  
+**Started:** 22 September 2026  
+**Purpose:** Reverse-engineer Windchill as a graph of canonical objects, relationships, contexts, participation, inheritance, lifecycle, workflow, access, configuration and evidence before translating any concept into NuBlox architecture.
+
+> This is reference evidence, not NuBlox architecture. A Windchill fact is not automatically a NuBlox design decision.
+
+## Evidence states
+
+- **VERIFIED** — directly supported by PTC Help Center evidence.
+- **PROVISIONAL** — supported, but exact scope/variant/version still needs deeper verification.
+- **HYPOTHESIS** — possible NuBlox interpretation; not a PTC fact.
+- **GAP** — unresolved question requiring further traversal.
+
+## Research rule
+
+For every capability/object, determine:
+
+1. **NODE** — what is the canonical thing?
+2. **RELATIONSHIP** — what is it connected to?
+3. **CONTEXT** — where can it exist?
+4. **OWNER** — who administers/owns it?
+5. **PARTICIPATION** — which teams/roles interact?
+6. **INHERITANCE** — what inherits from what?
+7. **OVERRIDE** — what can specialise locally?
+8. **LIFECYCLE** — how does it change state?
+9. **WORKFLOW** — who does what?
+10. **ACCESS** — who can see/change it?
+11. **STRUCTURE** — what contains/references/uses it?
+12. **CHANGE** — how is controlled change applied?
+13. **EVIDENCE** — what history/audit/version/decision is retained?
+14. **CROSS-CONTEXT** — can it be shared/moved/copied/referenced elsewhere?
+
+---
+
+# 1. Context and administration
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| CTX-001 | Windchill context is the administrative/work framework where data, people and process are brought together. Application contexts include Product, Library, Project and Program. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/DataAccessContextTeam.html |
+| CTX-002 | Standard administrative hierarchy is Site → Organisation → application contexts. Standard Windchill does not prove recursive Organisation-context nesting. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminOviewHierarchyIntegWCSolutions.html |
+| CTX-003 | Context administration includes configuration, structure, participation, policy, types/attributes, templates, object-initialisation rules and preferences. | VERIFIED | PTC Windchill 12.0.2.0 Help Center context administration branch |
+| CTX-004 | Product, Library, Project and Program are semantically different application contexts, not generic folders. | VERIFIED | PTC Windchill 12.0.2.0 Help Center Product/Library/Project/Program branches |
+| CTX-005 | Context hierarchy and policy-domain hierarchy are separate structures. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PolicyAdminContextAbout.html |
+| CTX-006 | Business-network relationships between contexts are referential and do not redefine the administrative context hierarchy. | PROVISIONAL | PTC context-network Help Center branch |
+| CTX-007 | NuBlox may require a recursive business organisation/unit hierarchy beyond Windchill's standard Site → Organisation context hierarchy. | HYPOTHESIS | Derived NuBlox requirement; not a PTC fact |
+
+## Context distinction to preserve
+
+```text
+Administrative/Application Context
+≠ Policy Domain
+≠ Business Relationship Network
+≠ Configuration Context
+≠ Design Context
+≠ Sourcing Context
+```
+
+Windchill uses the word *context* for several different concepts. NuBlox must not collapse them.
+
+---
+
+# 2. Organisation participants, groups, roles and teams
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PAR-001 | Organisation Participant and Organisation Context are distinct concepts. The participant represents a business entity/people grouping; the context is an administrative framework. | VERIFIED | PTC Organisation Administration branch |
+| PAR-002 | Organisation-level user-defined groups provide reusable organisational membership. | VERIFIED | PTC Organisation Administration / group management branch |
+| PAR-003 | Context Teams are specific to an application context and assign participants to roles. Effective capability in context depends on role plus access permissions. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/DataAccessContextTeam.html |
+| PAR-004 | Shared Teams are defined at Organisation level and are reusable by application contexts. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamSharedTeamCreate.html |
+| PAR-005 | A Shared Team can be locally extendable; a Context Team can therefore be shared-only or shared plus local roles/members. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamSharedTeamCreate.html |
+| PAR-006 | Shared-team membership/roles are administered at Organisation level, not inside each Product/Library context using the team. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PDMAdminChp_ManageTeamMembersRoles.html |
+| PAR-007 | Windchill provides utilities to migrate local-team membership into Shared Teams, preserving roles. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamCommandUtilAbout.html |
+| PAR-008 | Organisation/user-defined groups can feed team-role membership; team/group synchronisation is an explicit mechanism. | VERIFIED | PTC Teams → Synchronizing Teams with User-Defined Groups branch |
+| PAR-009 | Context-team roles have system-group semantics that can be targeted by access-control rules and used by workflow/lifecycle resolution. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamRoleGroupAbout.html |
+| PAR-010 | Business-object teams are distinct again from Context Teams; lifecycle/workflow-managed objects can resolve effective participants from templates, lifecycle, context team and workflow roles. | VERIFIED | PTC Team Template / Team default behaviour branch |
+| PAR-011 | Windchill's Enterprise Organisation template creates capability-like groups including Engineering, Manufacturing, Procurement, Sales, Marketing, Service, Quality Assurance and Facilities. | VERIFIED | PTC Organisation Administration → Context Participation branch |
+| PAR-012 | F01–F29 may therefore be closer to enduring organisational capability than to per-context teams; work-context teams may draw participants from those capabilities. | HYPOTHESIS | NuBlox interpretation requiring further validation |
+
+## Current participation model
+
+```text
+Permanent organisational grouping/capability
+        ↓
+Organisation Groups / Roles / Shared Teams
+        ↓
+Application Context Team
+        ↓
+Object Team / Workflow role resolution
+        ↓
+actual participant
+```
+
+**Do not yet freeze F01–F29 as Shared Teams, Context Teams or Groups.** The evidence shows these are separate mechanisms.
+
+---
+
+# 3. Shared-team security and policy inheritance
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| SEC-001 | Creating a Shared Team creates a Shared Team domain under the Organisation /Default domain. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamSharedTeamAccessCtrlRuleAbout.html |
+| SEC-002 | Default policy rules in the Shared Team domain include Team Member and Guest permissions. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamSharedTeamAccessCtrlRuleAbout.html |
+| SEC-003 | Application-context access policy can therefore be influenced by Shared Team/domain inheritance, not just by direct membership. | VERIFIED | PTC access-control hierarchy + Shared Team domain evidence |
+| SEC-004 | Visibility/profile configuration and access permission are separate control dimensions. | VERIFIED | PTC profile/action-visibility branch |
+| SEC-005 | Security Labels add information-clearance controls that are conceptually separate from RBAC permissions. | VERIFIED | PTC Security Labels branch |
+| SEC-006 | Agreements can provide controlled exceptions to security-label restrictions over participants, objects/contexts, dates and lifecycle. | VERIFIED | PTC Agreements branch |
+| SEC-007 | Business authority should remain distinct from permission, UI visibility and information clearance in NuBlox. | HYPOTHESIS | NuBlox architectural inference |
+
+---
+
+# 4. Types, attributes, classification and relationship constraints
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| TYP-001 | Windchill supports type/subtype hierarchies and inherited type definitions. | VERIFIED | PTC Type and Attribute Management branch |
+| TYP-002 | Organisation-defined types/subtypes can be available in child application contexts rather than recreated per Product/Project. | VERIFIED | PTC Type and Attribute Management / context inheritance branch |
+| TYP-003 | Classification is a separate taxonomy from object type, with classification nodes, reusable attributes, constraints, units and search/reuse behaviour. | VERIFIED | PTC Classification Administration branch |
+| TYP-004 | Association constraints can limit which object types/subtypes may participate in relationships. | VERIFIED | PTC Type and Attribute Management → Association Constraints branch |
+| TYP-005 | NuBlox must distinguish object type, classification and relationship type. | HYPOTHESIS | NuBlox architectural inference |
+
+---
+
+# 5. Templates and object initialisation rules
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| TMP-001 | Windchill has multiple first-class template families: Context, Team, Lifecycle, Workflow, Task Form, Document, CAD Document, Report and others. | VERIFIED | PTC Templates table / administration branches |
+| TMP-002 | Context templates establish an initial administrative framework when an application context is created. | VERIFIED | PTC Context creation branch |
+| TMP-003 | Project/Program templates can include team roles/members, plan, deliverables, documents, folders/domains, OIRs and preferences. | VERIFIED | PTC Project/Program template branch |
+| TMP-004 | Product/Library templates centre on controlled PDM configuration, types, policy, lifecycles, workflows and OIR behaviour. | VERIFIED | PTC Product Design template branch |
+| OIR-001 | Object Initialisation Rules establish initial attribute values/display and basic relationships such as lifecycle association. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OrgAdminChp_ManageOrgOIRs.html |
+| OIR-002 | Site OIRs are inherited by Organisation contexts and can be overridden at Organisation level. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OrgAdminChp_ManageOrgOIRs.html |
+| OIR-003 | OIRs participate in defaults such as numbering, folder, lifecycle, team template, version scheme and attributes. | VERIFIED | PTC OIR best-practice branch |
+| OIR-004 | Windchill's recurring governance principle is: define high, inherit down, specialise locally where allowed. | VERIFIED pattern | Multiple PTC inheritance mechanisms |
+| OIR-005 | NuBlox likely needs a first-class Creation Policy / Effective Configuration service rather than hard-coded per-screen creation logic. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 6. Lifecycle, workflow, role resolution and release
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| LFW-001 | Lifecycle state and workflow are distinct but coordinated mechanisms. | VERIFIED | PTC Lifecycle and Workflow branches |
+| LFW-002 | Advanced lifecycle phases can carry roles, access-control behaviour and workflow processes. | VERIFIED | PTC Lifecycle Administration branch |
+| LFW-003 | Object-team role resolution can combine Team Template participants, lifecycle role mappings, Context Team membership and workflow roles. | VERIFIED | PTC Team Template default-behaviour branch |
+| LFW-004 | Promotion is a maturity transition process over checked-in objects and is distinct from Change Management. | VERIFIED | PTC Promotion Request branch |
+| LFW-005 | Business-rule validation can gate promotion/change release and surface conflicts. | VERIFIED | PTC Business Rules branch |
+| LFW-006 | Electronic signature is separate evidence from lifecycle state itself and can authenticate specific workflow activities. | VERIFIED | PTC Electronic Signature branch |
+| LFW-007 | NuBlox should keep technical approval, quality acceptance, disposition acceptance, maturity/release and business authority as distinct decisions. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 7. Revision, iteration, workspace and commonspace
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| VER-001 | Revision, iteration, lifecycle state, working state and view are separate axes. | VERIFIED | PTC version-control branches |
+| VER-002 | Check-in creates a new iteration; Revise creates a new revision. | VERIFIED | PTC PDM/Revise branches |
+| VER-003 | Workspace is a controlled work-in-progress area; commonspace is the shared authoritative area. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMGenericOverviewCapabilitiesCommonPDM.html |
+| VER-004 | Workspace Update resolves objects against the workspace configuration specification and commonspace changes. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMGenericOverviewCapabilitiesCommonPDM.html |
+| VER-005 | NuBlox must not treat every save, check-in, revision, promotion and change as the same operation. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 8. Product structures, CAD and views
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| STR-001 | Part is a controlled business object distinct from CAD Document. | VERIFIED | PTC Product Structure / CAD association branches |
+| STR-002 | Product structure is built from typed parent-child usage relationships. | VERIFIED | PTC Part structure branch |
+| STR-003 | Usage relationships and occurrences are distinct; occurrences can represent specific instances/locations/reference designators. | VERIFIED | PTC Part occurrence branch |
+| STR-004 | Alternate/substitute/supersede relationships are separate from ordinary usage. | VERIFIED | PTC replacement-parts branch |
+| STR-005 | CAD structures and Part structures are separate and connected via associations/build rules. | VERIFIED | PTC CAD-Part relationship branch |
+| STR-006 | Engineering and Manufacturing views can represent discipline-specific versions/structures of the same conceptual Part. | VERIFIED | PTC View Administration / MPMLink branches |
+| STR-007 | NuBlox should not force design, procurement, manufacturing, construction and asset breakdowns into a single universal tree. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 9. Baseline, managed collection and configuration resolution
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| CFG-001 | Baseline is a deliberate point-in-time collection/snapshot and can be protected/locked. | VERIFIED | PTC Baseline branch |
+| CFG-002 | Managed Collection differs from Baseline because collection rules can be reapplied/updated. | VERIFIED | PTC Managed Collection branch |
+| CFG-003 | Product structures can be dynamically resolved by configuration specifications such as Latest, Baseline, As Stored, As Matured, Change, Date Effectivity and Unit Effectivity. | VERIFIED | PTC configuration-specification branches |
+| CFG-004 | As Stored, Baseline and Effectivity are distinct configuration semantics. | VERIFIED | PTC configuration-specification branches |
+| CFG-005 | Configuration resolution can combine lifecycle state, effectivity, options/choices, variant rules and structure filters. | VERIFIED | PTC options/configuration branches |
+| CFG-006 | NuBlox should model effective structure as a governed query over version/configuration history rather than only a persisted current tree. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 10. Cross-context sharing and PDM exchange
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| XCX-001 | Windchill distinguishes Shared, PDM Checkout and Copy when exchanging objects into a Project. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/InteropShareTypes.html |
+| XCX-002 | Share gives Project members read-only access to the authoritative source object. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/InteropShareTypes.html |
+| XCX-003 | PDM Checkout creates a project-specific editable version while the source remains locked in PDM. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/InteropShareTypes.html |
+| XCX-004 | Copy creates an independent object rather than an editable project version of the same authoritative source. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/InteropShareTypes.html |
+| XCX-005 | PDM Checkout objects can become Sent to PDM, Deprecated or Abandoned depending on concurrent project activity. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/InteropStates.html |
+| XCX-006 | Object identity, authoritative context and contextual visibility/access are separate dimensions. | VERIFIED pattern | Cross-context sharing evidence |
+| XCX-007 | NuBlox should distinguish authoritative object, project-visible reference, project-working version and independent copy. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 11. Change Management and redlines
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| CHG-001 | Problem Report, Change Request, Change Notice and Change Task are distinct process objects. | VERIFIED | PTC Change Management branch |
+| CHG-002 | Change Tasks relate affected, impacted and resulting objects rather than holding only a generic description/status. | VERIFIED | PTC Change Task branch |
+| CHG-003 | Change Intent is distinct from the resulting object's release target/state. | VERIFIED | PTC Change Intent branch |
+| CHG-004 | Redlines represent proposed structural/object changes before the next authoritative revision is created. | VERIFIED | PTC Redline branch |
+| CHG-005 | Concurrent Change Notices can maintain separate redlines against the same released object; later releases trigger synchronisation/suspect-conflict behaviour. | VERIFIED | PTC Redline branch |
+| CHG-006 | Disposition of existing/on-order/WIP/finished material is separate from changing the authoritative design. | VERIFIED | PTC Change Disposition branch |
+| CHG-007 | NuBlox should preserve current approved state while allowing multiple controlled proposed futures with conflict awareness. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 12. Manufacturing, downstream transformation and process planning
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| MFG-001 | Engineering BOM and Manufacturing BOM are separate controlled structures linked through equivalence relationships. | VERIFIED | PTC MPMLink branch |
+| MFG-002 | Equivalent links can become out-of-date when upstream engineering changes; downstream reconciliation is explicit. | VERIFIED | PTC equivalence/discrepancy branch |
+| MFG-003 | Downstream structure may legitimately differ from upstream structure and can be created/transformed by rules. | VERIFIED | PTC downstream structure generation branch |
+| MFG-004 | Process Plan is a separate structure describing operations/sequences and allocations. | VERIFIED | PTC Process Plan branch |
+| MFG-005 | Operations can allocate parts/material, work centres, tooling, skills/resources and control characteristics. | VERIFIED | PTC MPMLink operation/resource branches |
+| MFG-006 | Alternate BOMs/process definitions can represent alternative production methods. | VERIFIED | PTC Alternate BOM branch |
+| MFG-007 | Manufacturing Capability, Standard Operation, Standard Procedure and actual Operation are distinct concepts. | VERIFIED | PTC manufacturing standards/capabilities branch |
+| MFG-008 | NuBlox may need a general source → downstream representation → discrepancy → reconciliation kernel capability. | HYPOTHESIS | Repeated Windchill pattern |
+
+---
+
+# 13. Supplier management and sourcing
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| SUP-001 | OEM Part, Manufacturer Part and Vendor Part are distinct objects connected by sourcing relationships. | VERIFIED | PTC Supplier Management branch |
+| SUP-002 | Preferred/Approved/Do Not Use sourcing status belongs to a sourcing relationship rather than globally to the supplier part. | VERIFIED | PTC supplier-part relationship/source-status branches |
+| SUP-003 | Sourcing Context qualifies the circumstances under which a sourcing decision applies. | VERIFIED | PTC Supplier Management terminology branch |
+| SUP-004 | Supplier Organisation identity is distinct from the OEM's supplier/manufacturer/vendor relationship to that organisation. | VERIFIED | PTC Supplier Management organisation branch |
+| SUP-005 | Part Request is a first-class controlled request/workflow that can precede creation/approval of the resulting Part. | VERIFIED | PTC New Part Request branch |
+| SUP-006 | Sourcing rules can use supplier, sourcing context and classification to derive sourcing status. | VERIFIED | PTC Sourcing Rules branch |
+| SUP-007 | NuBlox should not use a single global supplier.status field to express all approval/qualification/sourcing semantics. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 14. Project plans, activities and deliverables
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PRJ-001 | Project Plan Activity, Workflow Task, Action Item, Change Task and Quality Task are different work concepts. | VERIFIED | PTC Project Management / Workflow / Change / Quality branches |
+| PRJ-002 | Project Deliverable is a planned/managed obligation and can reference a governed object as its Subject. | VERIFIED | PTC Deliverable information-page branch |
+| PRJ-003 | Deliverable Requirement/Commitment and the controlled Work Product should therefore not be conflated. | HYPOTHESIS | NuBlox inference |
+| PRJ-004 | Project templates can instantiate reusable plans, deliverables and team/configuration structures. | VERIFIED | PTC Project template branch |
+
+---
+
+# 15. Quality context, nonconformance, CAPA and audit
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| QMS-001 | Windchill supports a Quality Context containing first-class Quality process objects. | VERIFIED | PTC Quality Management branch |
+| QMS-002 | Nonconformance is a governed process with initiation/evaluation/investigation/disposition/closure stages rather than a generic issue status. | VERIFIED | PTC Nonconformance branch |
+| QMS-003 | Nonconformance affected-item data can identify exact Part/version/iteration plus quantity, supplier, PO and lot/serial information. | VERIFIED | PTC Nonconformance service/UI evidence |
+| QMS-004 | Affected quantities can be split across different dispositions such as rework, return, scrap and use-as-is. | VERIFIED | PTC Nonconformance disposition branch |
+| QMS-005 | Decision authority and execution roles for dispositions are distinct. | VERIFIED | PTC Nonconformance roles branch |
+| QMS-006 | Deviation (permission before production) and Waiver (acceptance after nonconforming production) are distinct Variance semantics. | VERIFIED | PTC Variance branch |
+| QMS-007 | CAPA is a separate process related to, but not replacing, the originating Nonconformance. | VERIFIED | PTC CAPA/NC association branch |
+| QMS-008 | CAPA distinguishes plan, implementation, optional confirmation, effectiveness monitoring and closure. | VERIFIED | PTC CAPA Process Flow branch |
+| QMS-009 | Audit Findings can generate/associate Nonconformance and CAPA records. | VERIFIED | PTC Audit branch |
+| QMS-010 | NuBlox should distinguish correction, corrective action and verified effectiveness. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 16. Inspection and control characteristics
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| INS-001 | Control Characteristic is a governed object/definition that can carry measurable limits and be associated with Parts, Process Plans and Operations. | VERIFIED | PTC MPMLink Control Characteristics branch |
+| INS-002 | Inspection requirements can be published downstream to production systems; Windchill is not necessarily the primary shop-floor measurement-capture system. | VERIFIED | PTC MPMLink/ESI evidence |
+| INS-003 | Inspection Requirement, Inspection Execution and Inspection Result should remain distinct concepts even if NuBlox ultimately owns all three. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 17. Physical instances and as-maintained configuration
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PHY-001 | Part Instance represents a particular serial/lot-traceable physical product instance. | VERIFIED | PTC Part Instance branch |
+| PHY-002 | Part-instance structures can allocate specific child Part Instances and retain start-incorporation dates. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/CIInstanceStructureTabAbout.html |
+| PHY-003 | Part Instance structures can be filtered by Latest or Incorporation Date configuration specification. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/CIInstanceIncorporationConfigSpec.html |
+| PHY-004 | Physical/as-maintained configuration can evolve independently from the current engineering definition through allocation, replacement and instance revision. | VERIFIED | PTC Part Instance configuration branch |
+| PHY-005 | Asset Type/Definition, approved configuration and physical Asset Instance must remain distinct in NuBlox. | HYPOTHESIS | NuBlox inference |
+| PHY-006 | NuBlox should be able to reconstruct as-designed/as-approved/as-procured/as-fabricated/as-installed/as-commissioned/as-maintained states. | HYPOTHESIS | CBE application of verified configuration concepts |
+
+---
+
+# 18. Service information and publication
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| SVC-001 | Information Structure, Publication Structure, Parts List and Service BOM are separate governed structures. | VERIFIED | PTC Service Information Management branch |
+| SVC-002 | Publication Structures can be derived from filtered Information Structures while retaining source relationships. | VERIFIED | PTC Service Information branch |
+| SVC-003 | Published PDF/HTML/XML/content-bundle representations are not identical to the authoritative information structure. | VERIFIED | PTC Service publishing branch |
+| SVC-004 | Options/choices and service effectivity can control which service information applies to a product/instance. | VERIFIED | PTC Service applicability/effectivity branch |
+| SVC-005 | Downstream service structures/parts lists can become update-required when source structures change rather than mutating automatically. | VERIFIED | PTC Service update branch |
+| SVC-006 | O&M information in NuBlox should be resolvable against actual asset configuration/applicability rather than only attached as static PDFs. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 19. Packages, deliveries and controlled external exchange
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PKG-001 | Package is a governed collection and Delivery is a separate exchange object/action. | VERIFIED | PTC Package Management branch |
+| PKG-002 | Specialised package types include Technical Data Package, CDRL, SDRL and Replication Package. | VERIFIED | PTC Package Management branch |
+| PKG-003 | Received Delivery is a receiving-side process/object with upload, preview, mapping, import and evidence/logging. | VERIFIED | PTC Received Delivery branch |
+| PKG-004 | Receiving-side mapping can translate Context, Owning Organisation, View, Folder, Lifecycle, Security Label and Version semantics. | VERIFIED | PTC Received Delivery mapping branch |
+| PKG-005 | Imported package objects can remain locked because the receiving Windchill system is not authoritative for them. | VERIFIED | PTC Received Delivery branch |
+| PKG-006 | Full and incremental delivery semantics are different; incremental delivery can communicate moves/deletions relative to a base delivery. | VERIFIED | PTC Package best-practice branch |
+| PKG-007 | NuBlox should distinguish transmittal/package definition, delivery event, received delivery and source authority. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 20. Search, representations, reporting, events and APIs
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PLT-001 | Windchill separates database search from indexed metadata/content search. | VERIFIED | PTC Index Search administration branch |
+| PLT-002 | Derived representations/viewables are asynchronously published from authoritative objects rather than replacing them. | VERIFIED | PTC Visualization Services branch |
+| PLT-003 | Report Definition and Report Instance are distinct concepts where historical executed output may be retained. | VERIFIED | PTC Reporting branch |
+| PLT-004 | Audit and subscriptions are driven by meaningful service/domain events rather than only CRUD logging. | VERIFIED | PTC Audit/Subscription branches |
+| PLT-005 | Windchill REST Services expose business-domain-oriented OData services rather than one undifferentiated generic record API. | VERIFIED | PTC Windchill REST Services branch |
+| PLT-006 | NuBlox integrations should expose bounded capability APIs over canonical objects, with domain events/outbox for asynchronous work. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 21. Repeating architectural patterns observed
+
+These are **cross-cutting patterns supported by multiple verified Windchill mechanisms**.
+
+## P-01 — Define high, inherit down, specialise locally
+
+Seen in:
+
+- OIRs
+- templates
+- preferences
+- types/attributes
+- policy domains
+- shared teams
+- dynamic-role access rules
+
+## P-02 — Definition is not execution
+
+Seen in:
+
+- Control Characteristic vs inspection result
+- Process Plan vs actual operation
+- Capability/Standard Procedure vs scheduled work
+- Deliverable obligation vs deliverable Subject/work product
+- Requirement vs implementation object
+
+## P-03 — Source authority is not contextual visibility
+
+Seen in:
+
+- Product/Library object shared to Project
+- PDM Checkout
+- Received Delivery
+- supplier/client exchange
+
+## P-04 — Downstream is a governed transformation, not a mirror
+
+Seen in:
+
+- eBOM → mBOM
+- mBOM → Process Plan
+- source BOM → service Parts List
+- Information Structure → Publication Structure
+- released object → Redline → resulting revision
+
+## P-05 — Upstream change creates impact/discrepancy, not silent downstream mutation
+
+Seen in:
+
+- engineering/manufacturing equivalence
+- service update-required state
+- redline synchronisation
+- PDM project-share out-of-sync state
+
+## P-06 — Relationship often carries the governance
+
+Seen in:
+
+- sourcing status
+- usage/occurrence attributes
+- trace links
+- equivalence
+- share relationship
+- object associations
+- disposition/action links
+
+## P-07 — Identity, location, ownership, access and authority are separate
+
+Seen throughout context, participant, ownership and sharing models.
+
+---
+
+# 22. Current NuBlox hypotheses — not architecture decisions
+
+These are recorded to prevent conversational inference being mistaken for verified source fact.
+
+| ID | Hypothesis | Status |
+|---|---|---|
+| HYP-001 | F01–F29 represent enduring functional capability structures, not application-context teams themselves. | HYPOTHESIS — increasingly supported, not frozen |
+| HYP-002 | Positions/people in Functions supply capability into context-specific roles on Projects/Products/Contracts/Assets. | HYPOTHESIS |
+| HYP-003 | NuBlox requires separate Organisation hierarchy, participation structure, context hierarchy and policy hierarchy. | HYPOTHESIS |
+| HYP-004 | Contract, Asset, Facility and other CBE-specific context types may be required beyond Windchill's standard Product/Library/Project/Program set. | HYPOTHESIS |
+| HYP-005 | Context types should have distinct behaviour/configuration rather than being one generic container with a label. | HYPOTHESIS |
+| HYP-006 | NuBlox requires runtime role resolution across governance, context participation, workflow and object teams. | HYPOTHESIS |
+| HYP-007 | Deliverable obligation and governed work-product object must be distinct. | HYPOTHESIS |
+| HYP-008 | NuBlox requires a canonical provenance/traceability model across requirement → design → sourcing → fabrication → installation → commissioning → asset/service information. | HYPOTHESIS |
+| HYP-009 | Source/downstream discrepancy and controlled reconciliation should be a reusable platform capability. | HYPOTHESIS |
+| HYP-010 | Asset definition, physical asset instance and as-maintained configuration must be separate canonical concepts. | HYPOTHESIS |
+
+---
+
+# 23. Unresolved gaps
+
+Research must continue before architecture is frozen.
+
+1. Exact Group vs Shared Team vs Context Team use rules across all application-context types.
+2. Exact Team Template applicability differences between PDMLink and ProjectLink.
+3. Detailed role-resolution precedence and duplicate-role handling.
+4. Full policy-domain inheritance/override/composition rules.
+5. Context-template content and inheritance matrix by Product/Library/Project/Program.
+6. Exact type/subtype inheritance and constraint semantics at Site/Organisation/application context.
+7. Full preference locking/override model.
+8. Complete revision/iteration/version/view semantics by object family.
+9. Full CAD ↔ Part association/build-rule graph.
+10. Full configuration-specification/effectivity matrix.
+11. Managed Collection vs Baseline vs Package vs Project Baseline relationship details.
+12. Change-object optionality and process variants.
+13. Redline lifecycle/concurrency/merge detail.
+14. Manufacturing discrepancy/equivalence status model.
+15. Supplier qualification/relationship lifecycle in depth.
+16. Inspection-definition → execution-system integration boundaries.
+17. Quality process object graph including Complaint/Customer Experience/Regulatory objects.
+18. Part Instance / physical-configuration lifecycle and maintenance-event relationships.
+19. Service-product hierarchy and asset-instance applicability in depth.
+20. Package/Received Delivery incremental-sync semantics and authority transfer boundaries.
+21. Search/classification/reuse behaviour by object family.
+22. Audit/e-signature/event retention and immutable-evidence semantics.
+23. REST domain catalogue and canonical API boundaries.
+24. Migration/export/import semantics across object identity, versions, relationships and security.
+25. Every remaining top-level Help Center category not yet represented here.
+
+---
+
+# 24. Source-version policy
+
+The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.
+
+Where a specific 12.0.2.0 page is unavailable/indexed poorly, later-version PTC documentation may be used only as **fallback evidence** and must be labelled as such before it is treated as canonical for this study.
+
+---
+
+# 25. Architecture hold
+
+No further NuBlox architecture or implementation should be treated as accepted solely from this register.
+
+Required sequence:
+
+```text
+PTC Help Center traversal
+        ↓
+verified Windchill object/relationship graph
+        ↓
+gaps / variants / inheritance rules closed
+        ↓
+NuBlox requirement mapping
+        ↓
+NuBlox canonical model
+        ↓
+architecture decisions
+        ↓
+implementation
+```
+
+The current Teams/Contexts experiment already present in the application must therefore be treated as **reversible and non-canonical** until this research closes the relevant gaps.

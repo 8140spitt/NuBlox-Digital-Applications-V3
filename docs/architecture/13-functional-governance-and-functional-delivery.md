@@ -102,6 +102,22 @@ A Core Business Function deployment binds:
 
 Functional Deployment remains separate from employment, Permission and business Authority.
 
+### HCM Position Management
+
+F15 Human Resources / Human Capital is the administration owner for workforce Position Management.
+
+The HCM Position Management experience orchestrates the relationship between:
+
+1. **Person** — the employed individual;
+2. **Position** — the organisational seat;
+3. **Position occupancy** — the effective employment assignment of the Person to the Position;
+4. **Job Profile** — the reusable expectation/capability associated with the Position;
+5. **Deployment** — the governed assignment of that Person/Position into a Function or CBE Domain;
+6. **Deployment purpose** — Governance or Delivery;
+7. **Responsibility, context, capacity and effectivity** — how that deployment operates.
+
+This is a user-experience ownership decision, not a collapse of canonical entities. Person, Position, Occupancy, Job Profile and Deployment remain distinct records.
+
 ## CBE Discipline Deployment
 
 A CBE Discipline Deployment binds:
@@ -198,4 +214,4 @@ The same rule applies to `F01-F29` and `D01-D16`.
 
 Governance is not merely descriptive configuration. Where a governance rule is machine-actionable, Delivery must enforce it. Examples include required templates, classifications, lifecycle states, competence, segregation of duties, review steps, approval Authority and Evidence requirements.
 
-The CBE Domain workspace is the professional user's primary capability context. Service configuration, discipline deployment, capability demand and sourcing are administrative mechanisms beneath that context; they do not replace it.
+The CBE Domain workspace is the professional user's primary capability context. HCM Position Management is the workforce administration surface that deploys People/Positions into that Domain as Governance or Delivery. Service configuration, capability demand and sourcing are adjacent administrative mechanisms beneath the Domain context; they do not replace it.

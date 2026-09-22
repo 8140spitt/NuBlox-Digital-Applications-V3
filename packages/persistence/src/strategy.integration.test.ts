@@ -11,6 +11,7 @@ import {
 import { MySqlAccessRepository } from './access-repository.js';
 import { createDatabasePool } from './database.js';
 import { migrate } from './migrations.js';
+import { MySqlMyWorkRepository } from './my-work-repository.js';
 import { MySqlKernelRepository } from './repository.js';
 import { MySqlStrategyCommandService, StrategyCommandError } from './strategy-command-service.js';
 import { MySqlStrategyReadRepository } from './strategy-read-repository.js';
@@ -37,6 +38,7 @@ suite('F01 Strategy & Enterprise Planning workbench', () => {
     const access = new MySqlAccessRepository(pool);
     const commands = new MySqlStrategyCommandService(pool);
     const reads = new MySqlStrategyReadRepository(pool);
+    const myWork = new MySqlMyWorkRepository(pool);
 
     const tenant: Tenant = { id: tenantId, name: 'F01 Strategy Test', status: 'ACTIVE' };
     await kernel.createTenant(tenant);
@@ -232,6 +234,28 @@ suite('F01 Strategy & Enterprise Planning workbench', () => {
     );
     expect(projection.analyses).toEqual(
       expect.arrayContaining([expect.objectContaining({ id: analysisId, planId: connectedPlanId })])
+    );
+
+    const ownedWork = await myWork.listMyWork(tenantId, person.id, '2026-09-22T01:00:00.000Z');
+    expect(ownedWork).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          kind: 'FUNCTION_WORK',
+          sourceId: objectiveId,
+          title: 'Grow recurring revenue',
+          href: '/app/functions/F01'
+        }),
+        expect.objectContaining({
+          kind: 'FUNCTION_WORK',
+          sourceId: initiativeId,
+          title: 'Launch managed services portfolio'
+        }),
+        expect.objectContaining({
+          kind: 'FUNCTION_WORK',
+          sourceId: connectedPlanId,
+          title: 'Connected enterprise plan'
+        })
+      ])
     );
   });
 });

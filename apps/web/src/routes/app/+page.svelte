@@ -93,9 +93,7 @@
   </header>
 
   <div class="home-governance-links">
-    <a href="/app/organisation"><strong>Organisation</strong><span>People, positions and organisation structure</span></a>
-    <a href="/app/deployments"><strong>Deployments</strong><span>Deploy functional capability into operating context</span></a>
-    <a href="/app/delivery"><strong>CBE capability</strong><span>Configure professions, services, delivery demand and sourcing</span></a>
+    <a href="/app/hcm"><strong>HCM &amp; Position Management</strong><span>People, positions, occupancy and Function/CBE Domain deployment</span></a>
     <a href="/app/competence"><strong>Competence</strong><span>Required capability and evidence</span></a>
     <a href="/app/control"><strong>Control</strong><span>Lifecycle, Decision and evidence state</span></a>
     <a href="/app/access"><strong>Access</strong><span>Roles, permissions and access requests</span></a>

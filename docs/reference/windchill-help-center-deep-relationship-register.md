@@ -875,6 +875,56 @@ impact review
 The trace is itself governed evidence. It is not equivalent to copying the remote requirement into the local object.
 
 
+
+---
+
+# 35. Profiles, UI visibility and preference inheritance
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PRF-001 | Standard Profiles are Site/Organisation-managed UI-governance objects that control visibility of actions, interface areas and reusable attributes for associated users, groups and organisations. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProfileMgmtProfileCreate.html |
+| PRF-002 | Profile action visibility is context-sensitive: Product, Project, Library, Program and Global visibility can be configured separately. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProfileMgmtActionsTableRef.html |
+| PRF-003 | Profile attribute visibility is also governed separately through reusable-attribute constraints. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProfileMgmtSoftAttrTableRef.html |
+| PRF-004 | A participant can belong to multiple Standard Profiles; Windchill combines them using the least-restrictive visibility result. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProfileMgmtAbout.html |
+| PRF-005 | Organisation Standard Profiles are peers to Site Standard Profiles unless they share the same name, in which case the Organisation profile overrides the Site profile with that name. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ProfileMgmtProfileCreate.html |
+| PRF-006 | Context-level role visibility is distinct from Standard Profile visibility and can override profile visibility within the specific application context. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCCG_UICust_AddActionsHook_ActionVis.html |
+| PRF-007 | Role-based action visibility is explicitly not access-control permission; it governs what appears in the interface for a role in that context. | VERIFIED pattern; 12.0.2 role-visibility branch with later-version explicit wording | PTC Configuring Visibility of Actions for Roles |
+| PRF-008 | License Profiles are another separate layer used to expose capabilities associated with Windchill licence entitlements; they are not ordinary Standard Profiles. | VERIFIED pattern; 12.0.2 license-profile branch with later-version detailed corroboration | PTC Managing License Profiles |
+| PRF-009 | NuBlox should therefore keep Product/Feature Entitlement, UI Visibility and Operation Permission as separate evaluations. | HYPOTHESIS | NuBlox inference |
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| PREF-001 | Preference values can be administered at Site, Organisation and application-context levels and may also be available to individual users. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextPrefAdmin.html |
+| PREF-002 | Preferences inherit down Site → Organisation → application context when no lower-context value is explicitly set. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextPrefAdmin.html |
+| PREF-003 | An application context or user may override an inherited preference when the preference is available at that scope and is not locked above. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextPrefAdmin.html |
+| PREF-004 | Preferences can be locked at any administrative level above the user, preventing lower-level overrides. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextPrefAdmin.html |
+| PREF-005 | Site/Organisation administrators can delete lower child-instance values for a preference, re-establishing inherited behaviour from the higher context. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextPrefAdmin.html |
+| PREF-006 | If no explicit value exists at any applicable context, Windchill falls back to the preference's defined default value. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextPrefAdmin.html |
+| PREF-007 | NuBlox likely needs an effective-setting resolver that records value, source scope, inherited/overridden state and lock status rather than copying settings into every child context. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 36. Security Labels, clearance and Agreements
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| CLR-001 | Security Labels are evaluated in addition to policy/ad-hoc access-control permissions. Clearance cannot substitute for missing permissions, and permissions cannot substitute for missing label clearance. | VERIFIED; 12.0.2 branch with later-version exact explanatory corroboration | PTC Security Labels and Access Control |
+| CLR-002 | A user must be cleared for every restrictive security-label value applied to an object before access is granted. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SecurityLabelConfigBeforeBegin.html |
+| CLR-003 | Authorized participants for a label value may be users, groups or organisations; group-based clearance can be maintained through participant/group membership. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SecurityLabelAdminAuthParticipantManage.html |
+| CLR-004 | A label may be informative rather than restrictive when no authorized participant is configured for its value. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SecurityLabelConfigBeforeBegin.html |
+| CLR-005 | Security-label changes can be configured to apply only to edited versions or across all versions, so classification/clearance state is explicitly version-sensitive. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SecurityLabelConfigBeforeBegin.html |
+| CLR-006 | Agreements provide temporary/exceptional clearance for participants who are not ordinarily authorized for a label value; they still require underlying access-control permission on the object. | VERIFIED pattern; exact 12.0.2 agreement branch with later-version explanatory corroboration | PTC Accessing Objects Through an Agreement |
+| CLR-007 | Agreements can be Standard or context-based. Standard agreements authorize selected objects within their scope; context-based agreements can authorize security-labeled objects residing in the agreement's context. | VERIFIED pattern; 12.0.2 agreement branch with later-version detailed corroboration | PTC Agreement Authorized Objects / Creating Agreements |
+| CLR-008 | Agreement authorization can be constrained by authorized participants, label values, objects/contexts, object revisions and lifecycle states. | VERIFIED pattern; exact 12.0.2 agreement branch with later-version detailed corroboration | PTC Agreements |
+| CLR-009 | Agreement Status is distinct from agreement Lifecycle State. Effective status derives from lifecycle approval plus version, start time, end time and current time, producing Pending, Active, Expired, Superseded or Inactive states. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/AgreementStatus.html |
+| CLR-010 | Only the appropriate latest approved Active Agreement can authorize access; expired/superseded/inactive agreements no longer provide clearance even if their historical lifecycle/evidence remains. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/AgreementStatus.html |
+| CLR-011 | Agreement start/end dates define the temporal window in which an otherwise approved agreement may become Active. | VERIFIED pattern; 12.0.2 branch with later-version exact-content corroboration | PTC Agreement Starting and Ending Dates |
+| CLR-012 | Agreement lifecycle and effective status are therefore separate dimensions: lifecycle governs approval progression while effective status answers whether the agreement is currently in force. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/AgreementStatus.html |
+| CLR-013 | Security Labels participate in object creation, history, subscription/audit, copy/save-as/revise/move, import/export, visualization and related integrations rather than being a UI-only marking. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/sublandingpages/SublandingPageSecurityLabel.html |
+| CLR-014 | NuBlox information governance should keep operation Permission, information Clearance, UI Visibility, product Entitlement and business Authority distinct, composable controls. | HYPOTHESIS | NuBlox inference |
+| CLR-015 | NuBlox temporary controlled-access mechanisms should retain subject, scope, authorised participants, exact governed objects/configurations, permitted classification values, effective period, approval lifecycle and audit evidence rather than merely adding a user to a permanent role. | HYPOTHESIS | NuBlox inference |
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

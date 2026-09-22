@@ -15,6 +15,7 @@ NuBlox is the product. Industry solutions configure it. External products inform
 7. [Canonical Object Model](07-canonical-object-model.md)
 8. [Architecture Invariants](08-architecture-invariants.md)
 9. [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md)
+10. [Functional Governance and Functional Delivery](13-functional-governance-and-functional-delivery.md)
 
 ## Governing proposition
 

@@ -108,7 +108,7 @@
         <div class="panel-heading"><div><p class="app-eyebrow">Functional Governance</p><h2>Govern how {workspace.name} operates</h2></div></div>
         <div class="governance-capability-grid">
           <article><strong>Mandate, policy &amp; standards</strong><p>Define purpose, scope, policies, standards, procedures and controlled templates for the Function.</p><a href="/app/information">Controlled information →</a></article>
-          <article><strong>Organisation &amp; deployment</strong><p>Assign accountable ownership and deploy governed roles into the organisational or delivery context.</p><a href="/app/deployments">Deployments →</a></article>
+          <article><strong>Position &amp; deployment</strong><p>Use HCM Position Management to assign accountable ownership and deploy People or Positions into the Function for Governance or Delivery.</p><a href="/app/hcm">HCM Position Management →</a></article>
           <article><strong>Competence</strong><p>Define the competence and evidence required to perform governed work.</p><a href="/app/competence">Competence →</a></article>
           <article><strong>Authority, control &amp; assurance</strong><p>Control decision rights, lifecycle, review, approval, assurance and attributable evidence.</p><a href="/app/control">Control →</a></article>
         </div>
@@ -485,7 +485,7 @@
         <div class="panel-heading"><div><p class="app-eyebrow">Functional Governance</p><h2>Govern how {workspace.name} operates</h2></div></div>
         <div class="governance-capability-grid">
           <article><strong>Mandate, policy &amp; standards</strong><p>Define purpose, scope, policies, standards, procedures and controlled templates for the Function.</p><a href="/app/information">Controlled information →</a></article>
-          <article><strong>Organisation &amp; deployment</strong><p>Assign accountable ownership and deploy governed roles into the organisational or delivery context.</p><a href="/app/deployments">Deployments →</a></article>
+          <article><strong>Position &amp; deployment</strong><p>Use HCM Position Management to assign accountable ownership and deploy People or Positions into the Function for Governance or Delivery.</p><a href="/app/hcm">HCM Position Management →</a></article>
           <article><strong>Competence</strong><p>Define the competence and evidence required to perform governed work.</p><a href="/app/competence">Competence →</a></article>
           <article><strong>Authority, control &amp; assurance</strong><p>Control decision rights, lifecycle, review, approval, assurance and attributable evidence.</p><a href="/app/control">Control →</a></article>
         </div>

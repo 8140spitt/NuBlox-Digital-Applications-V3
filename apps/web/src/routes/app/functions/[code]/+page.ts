@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { getFunction } from '$lib/function-catalog';
 import type { PageLoad } from './$types';
 
@@ -17,6 +17,12 @@ export const load: PageLoad = ({ params, data, url }) => {
 
   if (!workspace) {
     error(404, 'Function workspace not found');
+  }
+
+  if (workspace.code !== 'F01') {
+    const search = new URLSearchParams(url.searchParams);
+    const query = search.size ? `?${search.toString()}` : '';
+    redirect(307, `/app/teams/${workspace.code.toLowerCase()}${query}`);
   }
 
   const requestedView = url.searchParams.get('view')?.toLowerCase() as FunctionWorkspaceView | undefined;

@@ -19,8 +19,8 @@ The application has six stable user-facing layers:
 4. **CBE Domains** — the 16 professional Domains and 84 governed CBE Job Profiles.
 5. **Work products** — shared execution surfaces such as Information, Deliverables and
    Change & Configuration.
-6. **Governance administration** — Organisation, functional/CBE capability deployment, Competence,
-   Control and Access administration.
+6. **Governance administration** — HCM Position Management (Organisation, Positions, occupants and
+   Function/CBE Domain deployment), Competence, Control and Access administration.
 
 The permanent navigation rail contains only these high-level destinations. The 29 Functions must
 not be repeated as a permanent navigation tree. Deeper hierarchy belongs inside the Functions
@@ -66,6 +66,20 @@ operates; Delivery is where professional work and outputs are performed.
 
 It must not expose implementation-wave language, internal development status, benchmark language,
 or other programme-management metadata to ordinary users.
+
+## HCM Position Management rules
+
+HCM Position Management is the workforce deployment administration surface.
+
+It must make this distinction visible:
+
+- Person occupancy answers **who holds the employment Position**;
+- Position/Job Profile answers **what organisational/professional capability the seat represents**;
+- Deployment answers **where that Person/Position is being used**;
+- deployment purpose answers **Governance or Delivery**;
+- responsibility/context/capacity/effectivity answer **how the deployment operates**.
+
+Function and CBE Domain workspaces display the relevant deployed roles but do not create a second, competing personnel administration model.
 
 ## Governed object workspace rules
 

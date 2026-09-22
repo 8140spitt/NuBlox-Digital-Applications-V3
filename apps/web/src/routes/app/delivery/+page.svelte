@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-  <title>CBE Disciplines — NuBlox</title>
+  <title>CBE Capability Administration — NuBlox</title>
 </svelte:head>
 
 {#if !data.allowed || !data.projection}
@@ -21,7 +21,7 @@
     <div class="permission-state-code">403</div>
     <div>
       <p class="app-eyebrow">Controlled access outcome</p>
-      <h1>Your role does not permit CBE Discipline deployment.</h1>
+      <h1>Your role does not permit CBE capability administration.</h1>
       <p>
         NuBlox evaluated <code>platform.industry_delivery.read</code> in the current tenant scope
         and did not find an active matching Access Role Assignment.
@@ -42,11 +42,10 @@
   <section class="workspace-hero compact delivery-hero">
     <div>
       <p class="app-eyebrow">Construction &amp; Built Environment</p>
-      <h1>CBE Disciplines</h1>
+      <h1>CBE Capability Administration</h1>
       <p class="workspace-lede">
-        Deploy employees into Construction &amp; Built Environment discipline roles for either
-        Functional Governance or Functional Delivery. Project capability demand and external
-        sourcing remain separate delivery mechanisms beneath the discipline model.
+        Configure internal professional capability, governed role deployment, Services, delivery-context
+        demand and internal/external sourcing. Day-to-day professional work starts in the CBE Domain workspace.
       </p>
     </div>
   </section>

@@ -19,7 +19,8 @@
   function currentArea(pathname: string) {
     if (pathname.startsWith('/app/my-work')) return 'My Work';
     if (pathname.startsWith('/app/functions')) return 'Functions';
-    if (pathname.startsWith('/app/delivery')) return 'CBE Disciplines';
+    if (pathname.startsWith('/app/domains')) return 'CBE Domains';
+    if (pathname.startsWith('/app/delivery')) return 'CBE Capability Administration';
     if (pathname.startsWith('/app/information')) return 'Information';
     if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
@@ -55,13 +56,9 @@
             <span class="nav-symbol">FN</span>
             <span>Functions</span>
           </a>
-        </section>
-
-        <section class="nav-section">
-          <h2>Delivery</h2>
-          <a class:active={isActive('/app/delivery')} href="/app/delivery" onclick={closeNavigation}>
-            <span class="nav-symbol">SD</span>
-            <span>CBE disciplines</span>
+          <a class:active={isActive('/app/domains')} href="/app/domains" onclick={closeNavigation}>
+            <span class="nav-symbol">CB</span>
+            <span>CBE Domains</span>
           </a>
         </section>
 
@@ -90,6 +87,10 @@
           <a class:active={isActive('/app/deployments')} href="/app/deployments" onclick={closeNavigation}>
             <span class="nav-symbol">DP</span>
             <span>Deployments</span>
+          </a>
+          <a class:active={isActive('/app/delivery')} href="/app/delivery" onclick={closeNavigation}>
+            <span class="nav-symbol">CD</span>
+            <span>CBE capability</span>
           </a>
           <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
             <span class="nav-symbol">CP</span>

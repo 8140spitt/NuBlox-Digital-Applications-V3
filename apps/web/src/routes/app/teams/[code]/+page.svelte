@@ -123,6 +123,14 @@
         <span>{data.kind === 'CORE_FUNCTION' ? team.subfunctions.length : team.jobs.length}</span>
       </div>
 
+      {#if team.code === 'F01'}
+        <div class="workspace-action-row">
+          <a class="primary-action" href="/app/functions/f01?view=delivery">
+            Open Strategy delivery workbench <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      {/if}
+
       {#if data.kind === 'CORE_FUNCTION'}
         <div class="subfunction-list">
           {#each team.subfunctions as subfunction}

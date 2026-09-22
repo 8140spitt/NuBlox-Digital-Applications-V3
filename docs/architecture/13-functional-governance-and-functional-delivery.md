@@ -180,3 +180,22 @@ Functional Delivery work produces the operational or professional outputs for wh
 8. A CBE internal deployment must match the employee's active professional Job Profile.
 9. External supplier fulfilment is separate from internal employee deployment.
 10. Projects and Services are delivery contexts, not definitions of the underlying Function or discipline.
+
+
+## User-facing workspace model
+
+The Governance/Delivery distinction is visible in the tenant application for both enterprise Functions and CBE professional Domains.
+
+Each capability context exposes:
+
+- **Overview** — scope and capability composition;
+- **Governance** — how the Function or Domain is defined, controlled, assured and improved;
+- **Delivery** — the work people perform and the operational/professional outputs they produce;
+- **Performance** — measures of capability, work, control, outputs and improvement;
+- **Records** — governed Information, Deliverables, Change/Configuration, Decisions and Evidence.
+
+The same rule applies to `F01-F29` and `D01-D16`.
+
+Governance is not merely descriptive configuration. Where a governance rule is machine-actionable, Delivery must enforce it. Examples include required templates, classifications, lifecycle states, competence, segregation of duties, review steps, approval Authority and Evidence requirements.
+
+The CBE Domain workspace is the professional user's primary capability context. Service configuration, discipline deployment, capability demand and sourcing are administrative mechanisms beneath that context; they do not replace it.

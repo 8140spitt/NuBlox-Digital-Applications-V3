@@ -3159,7 +3159,7 @@ export const functions: FunctionSummary[] = [
       },
       {
         "id": "NTE-009",
-        "name": "Functional Deployment & Competence",
+        "name": "HCM Position, Deployment & Competence",
         "state": "IMPLEMENTED_PLATFORM"
       },
       {

@@ -44,6 +44,15 @@ interface PersonPartyRow extends RowDataPacket {
   party_id: string;
 }
 
+interface StrategyMyWorkRow extends RowDataPacket {
+  source_id: string;
+  title: string;
+  work_type: string;
+  subject_object_id: string;
+  due_at: Date | null;
+  status: string;
+}
+
 interface AccessRequestMyWorkRow extends RowDataPacket {
   request_id: string;
   requestor_name: string;
@@ -111,7 +120,8 @@ export class MySqlMyWorkRepository {
       deliverables,
       recipientActions,
       competenceExpiries,
-      accessManageEvaluation
+      accessManageEvaluation,
+      f01ReadEvaluation
     ] = await Promise.all([
       this.work.listMyWork(tenantId, personId, evaluatedAt),
       this.listDeliverableActions(tenantId, personId, at),
@@ -123,11 +133,21 @@ export class MySqlMyWorkRepository {
         PLATFORM_PERMISSION_KEYS.ACCESS_MANAGE,
         { scopeType: 'TENANT' },
         evaluatedAt
+      ),
+      this.access.evaluatePermission(
+        tenantId,
+        personId,
+        PLATFORM_PERMISSION_KEYS.F01_READ,
+        { scopeType: 'TENANT' },
+        evaluatedAt
       )
     ]);
 
     const accessRequests = accessManageEvaluation.allowed
       ? await this.listAccessRequests(tenantId)
+      : [];
+    const strategyWork = f01ReadEvaluation.allowed
+      ? await this.listStrategyOwnedWork(tenantId, personId)
       : [];
 
     const result = new Map<string, NativeMyWorkProjectionItem>();
@@ -232,6 +252,24 @@ export class MySqlMyWorkRepository {
         dueAt: row.effective_to.toISOString(),
         isOverdue: row.effective_to.getTime() < at.getTime(),
         reason: `${row.competence_code} at level ${row.attained_level} expires within ${competenceExpiryHorizonDays} days.`
+      });
+    }
+
+    for (const row of strategyWork) {
+      const dueAt = row.due_at?.toISOString();
+      const key = `FUNCTION_WORK:F01:${row.work_type}:${row.source_id}`;
+      result.set(key, {
+        key,
+        tenantId,
+        personId,
+        kind: 'FUNCTION_WORK',
+        title: row.title,
+        sourceId: row.source_id,
+        subjectObjectId: row.subject_object_id as NonNullable<NativeMyWorkProjectionItem['subjectObjectId']>,
+        ...(dueAt ? { dueAt } : {}),
+        isOverdue: Boolean(dueAt && Date.parse(dueAt) < at.getTime() && row.status !== 'COMPLETE'),
+        reason: `F01 ${row.work_type.replaceAll('_', ' ').toLowerCase()} owned by you · ${row.status}.`,
+        href: '/app/functions/F01'
       });
     }
 
@@ -416,6 +454,54 @@ export class MySqlMyWorkRepository {
           AND effective_to <= ?
         ORDER BY effective_to, competence_code, id`,
       [tenantId, personId, at, horizon]
+    );
+    return rows;
+  }
+
+
+  private async listStrategyOwnedWork(
+    tenantId: TenantId,
+    personId: PersonId
+  ): Promise<StrategyMyWorkRow[]> {
+    const [rows] = await this.pool.execute<StrategyMyWorkRow[]>(
+      `SELECT id AS source_id, title, 'OBJECTIVE' AS work_type,
+              canonical_object_id AS subject_object_id, effective_to AS due_at, status
+         FROM strategy_objectives
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT id, title, 'INITIATIVE', canonical_object_id, end_date, status
+         FROM strategy_initiatives
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT id, title, 'ROADMAP', canonical_object_id, end_date, status
+         FROM strategy_roadmaps
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT id, title, 'SCENARIO', canonical_object_id, NULL, status
+         FROM strategy_scenarios
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT id, title, 'PLAN', canonical_object_id, period_end, status
+         FROM strategy_plans
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT id, title, 'OUTCOME', canonical_object_id, NULL, status
+         FROM strategy_outcomes
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT id, title, 'ANALYSIS', canonical_object_id, NULL, status
+         FROM strategy_analyses
+        WHERE tenant_id = ? AND owner_person_id = ? AND status NOT IN ('COMPLETE','CANCELLED')
+       ORDER BY due_at IS NULL, due_at, title`,
+      [
+        tenantId, personId,
+        tenantId, personId,
+        tenantId, personId,
+        tenantId, personId,
+        tenantId, personId,
+        tenantId, personId,
+        tenantId, personId
+      ]
     );
     return rows;
   }

@@ -150,6 +150,18 @@ actual participant
 | LFW-005 | Business-rule validation can gate promotion/change release and surface conflicts. | VERIFIED | PTC Business Rules branch |
 | LFW-006 | Electronic signature is separate evidence from lifecycle state itself and can authenticate specific workflow activities. | VERIFIED | PTC Electronic Signature branch |
 | LFW-007 | NuBlox should keep technical approval, quality acceptance, disposition acceptance, maturity/release and business authority as distinct decisions. | HYPOTHESIS | NuBlox inference |
+| LFW-008 | An Assigned Activity is a workflow-process node that creates one or more user Tasks at runtime; the Task is therefore an execution assignment, not the workflow definition itself. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFChp_AssignedActivityDefine.html |
+| LFW-009 | Workflow activity resource pools can resolve candidate participants from Groups, Team Templates, the Primary Business Object's Context Team, or Roles. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFTabAactResourcePool.html |
+| LFW-010 | Workflow Tasks support acceptance and reassignment; for an Any assignment, accepting one user's Task removes peer Tasks, while All assignments retain each assignee's Task. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/AssignmentsProductTasksTableRef.html |
+| LFW-011 | Task reassignment preserves reassignment history/reason, while calendar delegation is a separate temporary-availability mechanism. | VERIFIED | PTC Reassign Task / Delegate Work branches |
+| LFW-012 | Workflow routing can emit explicit outcomes and be automatic/conditional or user-selected; route outcomes determine subsequent process paths. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFRouting.html |
+| LFW-013 | Workflow connectors/robots provide orchestration beyond human Tasks, including event/state synchronisation, timers, notifications, expressions and subprocesses. | VERIFIED | PTC Workflow Editor Nodes / Synchronize Robot branches |
+| LFW-014 | Workflow process instances retain their Primary Business Object, initiating Context and Process Template identity; administrative process states include Running, Executed, Aborted, Suspended and Terminated. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFProcessAdminWFProcessTblRef.html |
+| LFW-015 | Workflow execution objects follow their own state model (normally Not Started → Running → Executed), independently from the lifecycle state of the Primary Business Object. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFChp_WFInstanceState.html |
+| LFW-016 | Workflow Templates are iterated, not revised; existing running process instances continue against the template iteration they started with while new instances use the latest checked-in iteration. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFChp_WFIteration.html |
+| LFW-017 | Windchill can defer participant resolution until runtime through Set Up Participants activities with constrained role-add/remove permissions and resource pools. | VERIFIED pattern; 12.0.2 branch with later-version detailed corroboration | PTC Workflow Set Up Participants branch |
+| LFW-018 | NuBlox therefore needs explicit Workflow Definition/Iteration, Workflow Instance, Activity Definition, Activity Instance, Task Assignment, Participant Resolution, Route/Decision and Process Evidence concepts rather than one generic task table. | HYPOTHESIS | NuBlox inference |
+
 
 ---
 

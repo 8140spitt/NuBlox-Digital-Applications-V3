@@ -161,6 +161,12 @@ actual participant
 | LFW-016 | Workflow Templates are iterated, not revised; existing running process instances continue against the template iteration they started with while new instances use the latest checked-in iteration. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFChp_WFIteration.html |
 | LFW-017 | Windchill can defer participant resolution until runtime through Set Up Participants activities with constrained role-add/remove permissions and resource pools. | VERIFIED pattern; 12.0.2 branch with later-version detailed corroboration | PTC Workflow Set Up Participants branch |
 | LFW-018 | NuBlox therefore needs explicit Workflow Definition/Iteration, Workflow Instance, Activity Definition, Activity Instance, Task Assignment, Participant Resolution, Route/Decision and Process Evidence concepts rather than one generic task table. | HYPOTHESIS | NuBlox inference |
+| LFW-019 | Workflow voting/tally logic can evaluate outcomes using Any, All, percentage, numeric-threshold, plurality and related tally functions; manual and manual-exclusive routing distinguish single from multiple user-selected outcomes. | VERIFIED pattern; 12.0.2 branch with later-version detailed corroboration | PTC Workflow Vote Tallies / Routing branches |
+| LFW-020 | Task completion is distinct from saving in-progress task input/comments; completion submits the assignee's input to the running workflow. | VERIFIED pattern | PTC Tasks / Task Assistant / change-process task completion branches |
+| LFW-021 | Workflow administration exposes process/node health and expression/error detail so failed workflow execution can be diagnosed, restarted or terminated rather than disappearing into generic job failure. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFProcessAdminWFActivityDetailTblRef.html |
+| LFW-022 | Workflow process administration can filter instances by Context, Process Template, Primary Business Object, initiator, dates and health/error state. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WFProcessAdminSearch.html |
+| LFW-023 | NuBlox Decision evidence should retain eligible participants, actual actors, route/vote outcome, tally rule, comments/signature where required, acted-on object/version and governing workflow/template iteration. | HYPOTHESIS | NuBlox inference |
+
 
 
 ---

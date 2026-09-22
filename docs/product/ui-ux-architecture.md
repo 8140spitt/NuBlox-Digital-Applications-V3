@@ -10,15 +10,17 @@ This document is normative for the tenant application.
 
 ## Information architecture
 
-The application has five stable user-facing layers:
+The application has six stable user-facing layers:
 
 1. **Home** — attention and launch point.
 2. **My Work** — work assigned to the signed-in person through responsibility, review, approval,
    acceptance, competence or workflow.
 3. **Functions** — the 29 enterprise Functions and their governed sub-functions/activities.
-4. **Work products** — shared execution surfaces such as Information, Deliverables and
+4. **CBE Domains** — the 16 professional Domains and 84 governed CBE Job Profiles.
+5. **Work products** — shared execution surfaces such as Information, Deliverables and
    Change & Configuration.
-5. **Governance** — Organisation, Deployments, Competence, Control and Access administration.
+6. **Governance administration** — Organisation, functional/CBE capability deployment, Competence,
+   Control and Access administration.
 
 The permanent navigation rail contains only these high-level destinations. The 29 Functions must
 not be repeated as a permanent navigation tree. Deeper hierarchy belongs inside the Functions
@@ -50,12 +52,17 @@ Do not place a large bank of creation/administration forms before the primary wo
 
 A Function page is a working context, not an architecture report.
 
-It shows:
+Every Function page exposes five real views of the same capability context:
 
-- Function identity and concise purpose;
-- governed L2 sub-functions and activities;
-- native capabilities available to perform the work;
-- shared controls relevant to the Function.
+- **Overview** — Function identity, L2 scope, activities and composed native capability;
+- **Governance** — mandate, policies, standards, competence, Authority, controls, assurance and deployment;
+- **Delivery** — operational work, activities, tasks, outputs, handoffs and outcomes;
+- **Performance** — work, control, output and improvement measures;
+- **Records** — governed Information, Deliverables, Change/Configuration, Decisions and Evidence.
+
+The same five-view interaction grammar applies to every CBE Domain. A Domain Overview is organised
+around professional scope and Job Profiles; Governance controls how the professional capability
+operates; Delivery is where professional work and outputs are performed.
 
 It must not expose implementation-wave language, internal development status, benchmark language,
 or other programme-management metadata to ordinary users.
@@ -144,11 +151,11 @@ On narrower screens:
 
 1. No fake navigation.
 2. No developer/programme metadata in ordinary user workspaces.
-3. No permanent 29-Function tree in global navigation.
+3. No permanent 29-Function or 16-Domain tree in global navigation.
 4. No workspace-specific design system.
 5. No uncontrolled 500 for permission denial.
 6. No management-form wall before the user's working content.
 7. No generic mutation that bypasses lifecycle, permission or Authority.
 8. No work-product action without exact governed object/version context where the domain requires it.
-9. My Work remains the cross-Function attention surface.
+9. My Work remains the cross-Function and cross-Domain attention surface.
 10. New native engines adopt this interaction grammar rather than inventing another page pattern.

@@ -32,7 +32,17 @@ const VALID_VIEWS = new Set<TeamView>(['overview', 'governance', 'delivery', 'pe
 export const load: PageServerLoad = async ({ locals, params, url }) => {
   const session = locals.auth;
   if (!session) {
-    return { allowed: false, reason: 'No authenticated tenant context is available.' };
+    return {
+      allowed: false,
+      reason: 'No authenticated tenant context is available.',
+      kind: null,
+      view: 'overview' as const,
+      contextOptions: [],
+      selectedContext: null,
+      team: null,
+      governanceMembers: [],
+      deliveryMembers: []
+    };
   }
 
   const code = params.code.toUpperCase();
@@ -121,7 +131,17 @@ export const load: PageServerLoad = async ({ locals, params, url }) => {
   }
 
   if (!domainRead.allowed) {
-    return { allowed: false, reason: domainRead.reason };
+    return {
+      allowed: false,
+      reason: domainRead.reason,
+      kind: null,
+      view,
+      contextOptions,
+      selectedContext,
+      team: null,
+      governanceMembers: [],
+      deliveryMembers: []
+    };
   }
 
   const projection = await getIndustryDeliveryReadRepository().getProjection(session.tenantId as DomainTenantId);

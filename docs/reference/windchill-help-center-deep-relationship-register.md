@@ -962,6 +962,84 @@ The trace is itself governed evidence. It is not equivalent to copying the remot
 | VIS-011 | CBE issue PDFs, model viewables, thumbnails, issued renditions and published O&M outputs should retain source/version/configuration provenance rather than becoming detached duplicate files. | HYPOTHESIS | CBE translation |
 
 
+
+---
+
+# 39. Reporting, report definitions and retained report instances
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| RPT-001 | A Windchill Report is a reusable reporting/query definition that executes against business information and may prompt for runtime input parameters. | VERIFIED | PTC Windchill 12.0.2.0 Report Information Page |
+| RPT-002 | A Report object can carry display-context configuration, an input page, resource bundle, reporting-engine selection and report-detail configuration. | VERIFIED | PTC Windchill 12.0.2.0 Report Information Page |
+| RPT-003 | ReportTemplate is itself a persistent Windchill business object containing a Query Builder query definition; Windchill APIs executing ReportTemplate queries apply Windchill business logic and access-control processing. | VERIFIED | PTC Query Builder / ReportTemplate 12.0.2.0 branch |
+| RPT-004 | A Report Instance is different from the Report definition: it is a snapshot produced when a report is executed at a particular time with particular input parameters, including the output data/formatting from that execution. | VERIFIED | PTC Windchill 12.0.2.0 Viewing a Report Instance |
+| RPT-005 | Two Report Instances of the same Report may legitimately differ because the underlying business data changed between executions. | VERIFIED | PTC Windchill 12.0.2.0 Viewing a Report Instance |
+| RPT-006 | A Report View saves report-input parameters for repeat execution; it is distinct from the historical output captured by a Report Instance. | VERIFIED | PTC Windchill 12.0.2.0 Viewing a Report Instance |
+| RPT-007 | Windchill Business Reporting supports scheduled/recurring execution and delivery in formats including HTML, PDF, Excel, CSV and XML, with delivery mechanisms including email/file/report-view-style outputs. | VERIFIED | PTC Windchill 12.0.2.0 Business Reporting |
+| RPT-008 | Query Builder, Info*Engine and optional report-authoring engines provide different report-definition/data-source mechanisms rather than one universal reporting implementation. | VERIFIED | PTC Reporting / Report Authoring branches |
+| RPT-009 | Project/Planning reports can exist independently from optional enterprise Business Reporting infrastructure, showing that operational reports and enterprise BI/report-authoring are distinct capability layers. | VERIFIED | PTC Project Planning Reports branch |
+| RPT-010 | External/optional business-reporting engines require their own security configuration; their data-access semantics must not be assumed to be identical to Windchill object-level access enforcement unless configured accordingly. | VERIFIED | PTC Windchill Business Reporting security guidance |
+| RPT-011 | NuBlox should distinguish Report Definition, saved input/view, Report Execution, retained Report Instance and published/exported Representation. | HYPOTHESIS | NuBlox inference |
+| RPT-012 | Governed board, project, regulatory, audit and contractual reports should be able to retain the exact executed output and parameters as evidence rather than relying only on rerunning a live query later. | HYPOTHESIS | NuBlox inference |
+
+---
+
+# 40. Audit framework, events, subscriptions and notification evidence
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| AUD-001 | Windchill has a dedicated Auditing Event Framework with configurable event recording, security-audit reporting, audit-log purge administration and scheduled purge management. | VERIFIED | PTC Windchill 12.0.2.0 Auditing Event Framework branch |
+| AUD-002 | Audit capture is event-driven. Windchill configAudit configuration identifies auditable service/summary events rather than merely recording every database CRUD statement. | VERIFIED | PTC Windchill 12.0.2.0 Sample configAudit.xml |
+| AUD-003 | Configurable auditable events include team-role changes, version-control events, association/disassociation, security-label acknowledgements, change implementation, PDM checkout, lifecycle/identity changes, check-in/out, creation/deletion/copy, import/export, content changes, access-policy changes, product-structure changes, security-label changes, team changes, move/share/revise, login/logout, content read/download, representation view, failed authorization and search-audit events. | VERIFIED | PTC Windchill 12.0.2.0 Sample configAudit.xml |
+| AUD-004 | Not every event in the sample configuration is necessarily enabled by default; audit policy is explicitly configurable and must distinguish available event types from enabled capture. | VERIFIED | PTC Windchill 12.0.2.0 Sample configAudit.xml |
+| AUD-005 | Audit records retain event-time context about the target and actor, including attributes such as user/organisation, object identity/version, context and event-specific additional information. | VERIFIED pattern; 12.0.2 auditing branch with later-version detailed corroboration | PTC Auditing Event Framework / Attributes Captured with Events |
+| AUD-006 | Summary Events are meaningful application-level events designed to record higher-level business activity independently from low-level service implementation detail. | VERIFIED pattern; 12.0.2 branch with later-version detailed corroboration | PTC Summary Events |
+| AUD-007 | Service Events originate in Windchill's service-event architecture and can be listened to by application services; selected service events can also be enabled for audit capture. | VERIFIED pattern; 12.0.2 branch with later-version detailed corroboration | PTC Service Events |
+| AUD-008 | Security Audit Reporting can query retained audit evidence by time, event, organisation, context/context type, object/object type and user, and can export/save audit queries. | VERIFIED pattern; 12.0.2 branch with later-version detailed corroboration | PTC Security Audit Reporting |
+| AUD-009 | Audit-log purge is separately administered and itself leaves purge-management history; retention/purge is therefore a governed operational concern rather than implicit database housekeeping. | VERIFIED | PTC Windchill 12.0.2.0 Audit Log Purge Management branch |
+| AUD-010 | A Subscription is a user-configured notification interest over an object, folder or context and selected event types. It is not the audit record itself. | VERIFIED | PTC Windchill 12.0.2.0 Subscribe |
+| AUD-011 | Subscriptions can target all versions, selected object types within folders/contexts, immediate or digest delivery, subject/message and expiry. | VERIFIED | PTC Windchill 12.0.2.0 Subscribe |
+| AUD-012 | Subscription delivery remains access-aware: subscribers generally receive notifications only for objects they are allowed to access, with documented event-specific exceptions such as deletion. | VERIFIED | PTC Windchill 12.0.2.0 Subscribe |
+| AUD-013 | Project-plan subscriptions expose domain-specific events such as deadline, owner, percent-complete, risk and status changes, showing that notification events can be business-semantic rather than generic record-update messages. | VERIFIED | PTC Windchill 12.0.2.0 Plan-item subscription events |
+| AUD-014 | Notification configuration maps event categories/object types to user-facing notifications and can specialise/override delivery behaviour independently from audit-event retention. | VERIFIED | PTC Windchill 12.0.2.0 Notification Configuration branch |
+| AUD-015 | NuBlox should distinguish Domain/Service Event, Audit Record, Subscription, Notification Delivery and Integration Event/Outbox message, even where one business event feeds all of them. | HYPOTHESIS | NuBlox inference |
+| AUD-016 | NuBlox audit evidence should capture actor, authority/role where relevant, event type, exact target identity/version/configuration, context, before/after or event-specific payload, timestamp and provenance so historical decisions remain reconstructable. | HYPOTHESIS | NuBlox inference |
+| AUD-017 | Audit/event retention should be governed by explicit retention/purge policy and legal/records requirements rather than coupled to transactional-object deletion. | HYPOTHESIS | NuBlox inference |
+
+## Evidence/event separation
+
+```text
+Business operation
+       │
+       ▼
+Domain / Service Event
+       │
+       ├──► Audit Record
+       │      durable historical evidence
+       │
+       ├──► Subscription match
+       │      user interest
+       │        ↓
+       │     Notification
+       │
+       ├──► Integration / Outbox
+       │      downstream system event
+       │
+       └──► Reporting / analytics input
+
+Report Definition
+       │
+       ├── saved Report View / parameters
+       │
+       └── execute at T1
+              ↓
+         Report Instance
+         snapshot of output at T1
+```
+
+Audit history and Report Instances solve different evidence problems and should not be collapsed.
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

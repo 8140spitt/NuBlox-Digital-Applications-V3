@@ -18,7 +18,9 @@
 
   function currentArea(pathname: string) {
     if (pathname.startsWith('/app/my-work')) return 'My Work';
-    if (pathname.startsWith('/app/contexts')) return 'Contexts';\n    if (pathname.startsWith('/app/teams')) return 'Teams';\n    if (pathname.startsWith('/app/functions')) return 'Teams';
+    if (pathname.startsWith('/app/contexts')) return 'Contexts';
+    if (pathname.startsWith('/app/teams')) return 'Teams';
+    if (pathname.startsWith('/app/functions')) return 'Teams';
     if (pathname.startsWith('/app/domains')) return 'Teams';
     if (pathname.startsWith('/app/delivery')) return 'CBE Capability Administration';
     if (pathname.startsWith('/app/information')) return 'Information';

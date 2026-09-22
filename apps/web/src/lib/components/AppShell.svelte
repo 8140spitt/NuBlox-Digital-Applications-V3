@@ -24,8 +24,9 @@
     if (pathname.startsWith('/app/information')) return 'Information';
     if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
-    if (pathname.startsWith('/app/organisation')) return 'Organisation';
-    if (pathname.startsWith('/app/deployments')) return 'Deployments';
+    if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
+    if (pathname.startsWith('/app/organisation')) return 'HCM Position Management';
+    if (pathname.startsWith('/app/deployments')) return 'HCM Position Management';
     if (pathname.startsWith('/app/competence')) return 'Competence';
     if (pathname.startsWith('/app/control')) return 'Control';
     if (pathname.startsWith('/app/access')) return 'Access';
@@ -80,17 +81,9 @@
 
         <section class="nav-section">
           <h2>Governance</h2>
-          <a class:active={isActive('/app/organisation')} href="/app/organisation" onclick={closeNavigation}>
-            <span class="nav-symbol">OR</span>
-            <span>Organisation</span>
-          </a>
-          <a class:active={isActive('/app/deployments')} href="/app/deployments" onclick={closeNavigation}>
-            <span class="nav-symbol">DP</span>
-            <span>Deployments</span>
-          </a>
-          <a class:active={isActive('/app/delivery')} href="/app/delivery" onclick={closeNavigation}>
-            <span class="nav-symbol">CD</span>
-            <span>CBE capability</span>
+          <a class:active={isActive('/app/hcm')} href="/app/hcm" onclick={closeNavigation}>
+            <span class="nav-symbol">HC</span>
+            <span>HCM &amp; positions</span>
           </a>
           <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
             <span class="nav-symbol">CP</span>

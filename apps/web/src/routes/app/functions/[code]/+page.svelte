@@ -171,7 +171,7 @@
                 <label><span>Base scenario</span><select name="baseScenarioId"><option value="">None / base case</option>{#each strategy.scenarios as scenario}<option value={scenario.id}>{scenario.code} · {scenario.title}</option>{/each}</select></label>
                 <label><span>Budget</span><input name="budgetAmount" type="number" step="0.01" /></label>
                 <label><span>Capacity</span><input name="capacityAmount" type="number" step="0.01" /></label>
-                <label class="information-wide"><span>Assumptions (JSON)</span><textarea name="assumptions" rows="3" placeholder='{"growth": 0.05}'></textarea></label>
+                <label class="information-wide"><span>Assumptions (JSON)</span><textarea name="assumptions" rows="3" placeholder="Enter assumptions as a JSON object"></textarea></label>
                 <label class="information-wide"><span>Expected outcome</span><textarea name="expectedOutcome" rows="2" required></textarea></label>
                 <button type="submit">Create Scenario <span>→</span></button>
               </form>

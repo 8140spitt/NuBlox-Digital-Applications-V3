@@ -719,6 +719,75 @@ Product Family
 This is separate from the configurable Part structure itself.
 
 
+
+---
+
+# 33. CAD Documents, Part associations and build semantics
+
+| ID | Evidence | Status | Source |
+|---|---|---|---|
+| CAD-001 | Windchill keeps CAD Documents and Parts as separate governed object structures connected by explicit typed associations; CAD geometry/model identity is not the same canonical thing as the enterprise Part. | VERIFIED | PTC 12.0.2 Managing CAD and Part Relationships branch |
+| CAD-002 | CAD-driven design can build an analogous Windchill Part/product structure from checked-in CAD Document structure, while top-down design can work in the opposite direction from Part structure toward CAD structure. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/CADdrivenFlow.html ; PTC Top-down Design branch |
+| CAD-003 | Association type controls which information a CAD Document contributes to the Part build. Windchill build rules distinguish Structure, Attribute and Representation build links. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| CAD-004 | Owner association participates in Structure + Attribute + Representation build; it is the primary association for CAD information that drives the Part/product definition. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| CAD-005 | Contributing Image participates in Attribute + Representation build but not Structure build. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| CAD-006 | Image participates in Representation build only. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| CAD-007 | Contributing Content participates in Attribute build only. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| CAD-008 | Content association does not participate in the Part build process; it is suitable for descriptive/supporting CAD content such as a drawing that describes a Part without defining its product structure. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html ; later-version English usage-example corroboration |
+| CAD-009 | The term 'contributing' specifically means the associated CAD object can pass attributes into the Part in addition to any representation/structure semantics of its association type. | VERIFIED — later-version English explanatory corroboration | PTC Association Usage Examples |
+| CAD-010 | Build is an explicit synchronisation operation between the CAD-side and Part-side definitions. A changed CAD structure can cause the associated Part to be iterated when build changes its governed structure; no Part iteration is created when no build change results. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| CAD-011 | Build can be automatic after configured events such as new CAD iteration/check-in or Send to PDM, or manually invoked; build timing is governed independently from ordinary file save. | VERIFIED pattern; exact 12.0.2 branch with later-version detailed corroboration | PTC When to Build |
+| CAD-012 | Auto Associate is governed: Windchill can find matching Parts, choose association type, optionally create a Part when no match exists, restrict association types by CAD type/subtype, and control the default location of created Parts. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_ControllingCreationOfPartsByAutoAssoc.html ; PTC Auto Associate administration branch |
+| CAD-013 | Auto Associate can create a new Part only for configured association classes; out of the box the creation preference defaults to Owner-only for supported CAD tools. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_ControllingCreationOfPartsByAutoAssoc.html |
+| CAD-014 | Windchill supports explicit comparison between CAD Document structure and Part structure so asynchronous changes/divergence can be reviewed and reconciled instead of silently forcing either structure to win. | VERIFIED | PTC 12.0.2 Comparing CAD Document Structure to Part Structure / Comparing Part Structure to CAD Document Structure branches |
+| CAD-015 | Top-down design supports reverse build from Part structure toward CAD Document structure, including optional update of CAD usage links after Part usage changes. | VERIFIED pattern; exact 12.0.2 Top-down branch with later-version detailed corroboration | PTC Building the CAD Structure from the Part Structure / Updating CAD Document Usage Links |
+| CAD-016 | A single CAD structure can drive multiple distinct Windchill Part structures through multiple Owner associations where geometry/quantity are shared but enterprise Part attributes such as colour/material/finish differ. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_DrivingMultiPartStruc.html |
+| CAD-017 | PTC recommends Options and Variants rather than multi-owner associations when product variability becomes highly complex, showing that CAD/Part association and product configuration are separate mechanisms. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_DrivingMultiPartStruc.html |
+| CAD-018 | Configuration Context is a governed/filterable subset of a larger product structure; Design Context derives the CAD subset relevant to a design task and places the CAD Documents into a workspace for authoring. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/DICAboutDesignContext.html |
+| CAD-019 | Design Context therefore represents task-specific design scope, not an administrative Product/Project context and not a copy of the whole product definition. | VERIFIED pattern | Design-in-Context evidence |
+| CAD-020 | CAD drawings/models, enterprise Parts/items, representations and physical instances must remain distinct NuBlox concepts linked by typed provenance/definition relationships. | HYPOTHESIS | NuBlox inference |
+| CAD-021 | NuBlox technical authoring should distinguish relationships such as DEFINES_STRUCTURE, CONTRIBUTES_ATTRIBUTES, PROVIDES_REPRESENTATION and DESCRIBES rather than treating every drawing/model attachment equivalently. | HYPOTHESIS | NuBlox translation of verified Windchill association/build semantics |
+| CAD-022 | A CBE design package/zone/system task may need a task-specific design scope derived from a larger authoritative asset/system structure without cloning that entire structure. | HYPOTHESIS | CBE translation of Configuration Context / Design Context |
+
+## CAD ↔ Part build graph
+
+```text
+CAD Document
+    │
+    ├── OWNER ───────────────► Part
+    │     structure
+    │     attributes
+    │     representation
+    │
+    ├── CONTRIBUTING IMAGE ─► Part
+    │     attributes
+    │     representation
+    │
+    ├── IMAGE ───────────────► Part
+    │     representation
+    │
+    ├── CONTRIBUTING CONTENT ► Part
+    │     attributes
+    │
+    └── CONTENT ─────────────► Part
+          descriptive relationship only
+
+CAD Document Structure
+        │
+        │ build / compare / reconcile
+        ▼
+Part / Product Structure
+
+Part / Product Structure
+        │
+        │ reverse build where governed
+        ▼
+CAD Document Structure
+```
+
+The relationship type determines **what authority the CAD object has over the Part definition**. File presence alone does not.
+
+
 # 24. Source-version policy
 
 The primary target is **Windchill Cloud 12.0.2.0**, matching the Help Center Stephen specified.

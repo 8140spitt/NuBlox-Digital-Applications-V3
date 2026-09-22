@@ -8,8 +8,7 @@
     <p class="app-eyebrow">Operational home</p>
     <h1>What needs your attention?</h1>
     <p class="workspace-lede">
-      Start with assigned work, then move into the Function or governed work product that carries
-      the responsibility, Decision, evidence and delivery state.
+      Start with assigned work, then move into the Function or CBE Domain that governs the capability and carries its delivery work, work products, Decisions and evidence.
     </p>
   </div>
 
@@ -38,11 +37,11 @@
     <span aria-hidden="true">→</span>
   </a>
 
-  <a class="home-primary-card" href="/app/delivery">
+  <a class="home-primary-card" href="/app/domains">
     <span>03</span>
     <div>
-      <strong>CBE Disciplines</strong>
-      <p>Deploy CBE professionals into Functional Governance or Functional Delivery roles, then manage Project capability demand and sourcing.</p>
+      <strong>CBE Domains</strong>
+      <p>Govern professional capability and perform the work required across the 16 CBE Domains and 84 Job Profiles.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>
@@ -96,6 +95,7 @@
   <div class="home-governance-links">
     <a href="/app/organisation"><strong>Organisation</strong><span>People, positions and organisation structure</span></a>
     <a href="/app/deployments"><strong>Deployments</strong><span>Deploy functional capability into operating context</span></a>
+    <a href="/app/delivery"><strong>CBE capability</strong><span>Configure professions, services, delivery demand and sourcing</span></a>
     <a href="/app/competence"><strong>Competence</strong><span>Required capability and evidence</span></a>
     <a href="/app/control"><strong>Control</strong><span>Lifecycle, Decision and evidence state</span></a>
     <a href="/app/access"><strong>Access</strong><span>Roles, permissions and access requests</span></a>

@@ -25,6 +25,8 @@ export * from './my-work-repository.js';
 export * from './deliverable-repository.js';
 export * from './functional-repository.js';
 export * from './portability-repository.js';
+export * from './publication-repository.js';
+export * from './publication-command-service.js';
 export * from './platform-writes.js';
 export * from './change-repository.js';
 export * from './information-repository.js';

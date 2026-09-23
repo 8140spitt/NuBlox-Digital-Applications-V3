@@ -1,0 +1,9 @@
+configuration_specification,resolution_basis,creates_version,freezes_membership,effectivity_aware,primary_semantic,evidence_status
+Latest,"Latest checked-in qualifying version constrained by View/state and other applicable criteria",No,No,No,"Current qualifying configuration","12.0.2 branch verified; detailed current PTC corroboration"
+As Matured,"Lifecycle/maturity history",No,No,No,"Historical maturity-relative configuration","12.0.2 branch verified; exact detailed page indexing incomplete"
+Baseline,"Explicit baseline member versions",No,"Uses named baseline membership",No,"Frozen/controlled snapshot resolution","12.0.2 branch verified; detailed current PTC corroboration"
+Change,"Selected Change Notice and resulting/associated versions",No,No,Indirect,"Change-transaction-relative structure","12.0.2 branch verified; detailed current PTC corroboration"
+Unit Effectivity,"Effectivity context plus serial/lot/unit criterion",No,No,Yes,"Unit-specific applicable configuration","12.0.2 branch verified; detailed current PTC corroboration"
+Date Effectivity,"Effective date criterion",No,No,Yes,"Date-applicable configuration","12.0.2 branch verified; detailed page indexing incomplete"
+Promotion Request,"Versions referenced by selected Promotion Request",No,"Candidate set is explicit",No,"Promotion/review candidate configuration","12.0.2 branch verified; detailed current PTC corroboration"
+As Stored,"CAD workspace/dependency versions captured at check-in",No,"Check-in snapshot",No,"Authoring/check-in provenance configuration","12.0.2 verified"

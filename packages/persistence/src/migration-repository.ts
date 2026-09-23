@@ -937,11 +937,51 @@ export class MySqlMigrationRepository {
     if (run.status !== 'RUNNING') {
       throw new Error('Migration Reconciliation evidence can only be recorded while Reconciliation Run is RUNNING.');
     }
-    const [identity, object] = await Promise.all([
+    const [identity, object, migrationRun] = await Promise.all([
       this.requireExternalIdentity(reconciliation.tenantId, reconciliation.externalIdentityId),
-      this.requireObject(reconciliation.tenantId, reconciliation.canonicalObjectId)
+      this.requireObject(reconciliation.tenantId, reconciliation.canonicalObjectId),
+      this.requireRun(reconciliation.tenantId, run.migrationRunId)
     ]);
     createMigrationReconciliation(reconciliation, identity, object);
+
+    const [itemRows] = await this.pool.execute<ItemRow[]>(
+      `SELECT id, tenant_id, migration_run_id, sequence, source_system,
+              source_object_type, source_object_id, source_version, source_envelope_id,
+              target_canonical_object_id, target_version, external_identity_id,
+              outcome, source_hash, target_hash, message, recorded_at
+         FROM migration_item_results
+        WHERE tenant_id = ?
+          AND migration_run_id = ?
+          AND external_identity_id = ?
+          AND target_canonical_object_id = ?
+        ORDER BY sequence, id
+        LIMIT 1`,
+      [
+        reconciliation.tenantId,
+        migrationRun.id,
+        reconciliation.externalIdentityId,
+        reconciliation.canonicalObjectId
+      ]
+    );
+    const item = itemRows[0] ? mapItem(itemRows[0]) : undefined;
+    if (!item) {
+      throw new Error(
+        'Migration Reconciliation must reference External Identity and canonical object evidence from the exact Migration Run.'
+      );
+    }
+    if (
+      reconciliation.sourceHash !== undefined &&
+      reconciliation.sourceHash !== item.sourceHash
+    ) {
+      throw new Error('Migration Reconciliation sourceHash does not match the Migration Item Result.');
+    }
+    if (
+      reconciliation.targetHash !== undefined &&
+      item.targetHash !== undefined &&
+      reconciliation.targetHash !== item.targetHash
+    ) {
+      throw new Error('Migration Reconciliation targetHash does not match the Migration Item Result.');
+    }
 
     await withTransaction(this.pool, async (connection) => {
       await connection.execute(

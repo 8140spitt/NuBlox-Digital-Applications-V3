@@ -28,7 +28,7 @@ User-executable truth is governed by:
 - [Canonical Native Tool Implementation Gap Register](../architecture/canonical-native-tool-implementation-gap-register.csv); and
 - [Canonical Native Tool Implementation Waves](canonical-native-tool-implementation-waves.md).
 
-Wave 0 product-UI activation is active. The tenant shell, secure application session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration, competence administration, a permission-gated Lifecycle/Decision/Evidence read workspace, and a governed Information/Revision/Representation workspace are implemented. Information release is bound to the exact canonical object/revision and requires an effective Authority-backed Decision. Managed content storage, control mutation workflows and Deliverable/Issue/Acceptance are still required before the shared platform is end-to-end user-operable. Change/Configuration/Baseline now has a governed tenant workspace with lifecycle-aware commands from Change assessment through implementation/verification/closure, plus Configuration Item, Baseline and Effectivity control; Change approval and Baseline establishment require effective Authority-backed Decisions.
+Wave 0 product-UI activation is active. The tenant shell, secure application session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration, competence administration, a permission-gated Lifecycle/Decision/Evidence read workspace, and a governed Information/Revision/Representation workspace are implemented. Information release is bound to the exact canonical object/revision and requires an effective Authority-backed Decision. Managed content storage, control mutation workflows and Deliverable/Issue/Acceptance are still required before the shared platform is end-to-end user-operable. Change/Configuration/Baseline now has a governed tenant workspace with lifecycle-aware commands from Change assessment through implementation/verification/closure, plus Configuration Item, Baseline and Effectivity control; Change approval and Baseline establishment require effective Authority-backed Decisions. The completed PTC evidence pass has since exposed additional shared-control gaps accepted by ADR-0006, so the relevant shared engines are now correctly treated as partial until P1.8 is implemented.
 
 ## Phase 1 — Enterprise Kernel
 
@@ -146,6 +146,23 @@ Implement:
 - external source/provenance identity;
 - migration reconciliation;
 - search/index projection contracts.
+
+### P1.8 Shared Control Plane Expansion — CURRENT
+
+ADR-0006 reopens a controlled part of Phase 1 because the completed Windchill evidence study proved additional cross-platform canonical controls are required.
+
+Implement in dependency order:
+
+- Policy Scope / Policy Definition / Policy Assignment;
+- Security Classification / Clearance / Security Access Exception;
+- Type / Attribute / Constraint / Enumeration definitions;
+- Configuration Resolution Definition / Criterion / Run / Result;
+- Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption;
+- Integration Endpoint / Publication Transaction / Acknowledgement / Source Authority;
+- Migration Plan / Mapping Version / Run / Item Result / Conflict / Cutover;
+- Retention Policy / Hold / Disposition / Archive / Restore / Destruction Evidence.
+
+This work extends NTE-002, NTE-006, NTE-007, NTE-008 and shared portions of NTE-032/NTE-043. It must not introduce parallel domain-specific policy, exchange, migration or retention frameworks.
 
 ## Phase 2 — Functional Framework & Deployment — IMPLEMENTED
 

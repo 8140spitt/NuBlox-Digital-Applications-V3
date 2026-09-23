@@ -28,8 +28,8 @@ interface RecipientRow extends RowDataPacket {
   response_outcome: string | null; response_comments: string | null; responded_at: Date | null;
 }
 interface DeltaRow extends RowDataPacket {
-  id: string; exchange_delivery_id: string; exchange_package_item_id: string;
-  delta_type: string; prior_delivery_id: string | null; prior_subject_version: string | null;
+  id: string; exchange_delivery_id: string; subject_object_id: string;
+  exchange_package_item_id: string | null; delta_type: string; prior_delivery_id: string | null; prior_subject_version: string | null;
   prior_location_reference: string | null; current_location_reference: string | null;
   details: string | null;
 }
@@ -65,7 +65,7 @@ export interface ExchangeWorkspaceProjection {
       priorDeliveryId?: string; dispatcherName: string; dispatchedAt: string;
       transportReference?: string; deliveryChecksum?: string; status: string;
       deltas: Array<{
-        id: string; packageItemId: string; deltaType: string; priorDeliveryId?: string;
+        id: string; subjectObjectId: string; packageItemId?: string; deltaType: string; priorDeliveryId?: string;
         priorSubjectVersion?: string; priorLocationReference?: string;
         currentLocationReference?: string; details?: string;
       }>;
@@ -179,7 +179,7 @@ export class MySqlExchangeReadRepository {
         [tenantId]
       ),
       this.pool.execute<DeltaRow[]>(
-        `SELECT id, exchange_delivery_id, exchange_package_item_id, delta_type,
+        `SELECT id, exchange_delivery_id, subject_object_id, exchange_package_item_id, delta_type,
                 prior_delivery_id, prior_subject_version, prior_location_reference,
                 current_location_reference, details
            FROM exchange_delta_items WHERE tenant_id = ?
@@ -306,7 +306,9 @@ export class MySqlExchangeReadRepository {
           ...(delivery.delivery_checksum ? { deliveryChecksum: delivery.delivery_checksum } : {}),
           status: delivery.status,
           deltas: (deltasByDelivery.get(delivery.id) ?? []).map((delta) => ({
-            id: delta.id, packageItemId: delta.exchange_package_item_id, deltaType: delta.delta_type,
+            id: delta.id, subjectObjectId: delta.subject_object_id,
+            ...(delta.exchange_package_item_id ? { packageItemId: delta.exchange_package_item_id } : {}),
+            deltaType: delta.delta_type,
             ...(delta.prior_delivery_id ? { priorDeliveryId: delta.prior_delivery_id } : {}),
             ...(delta.prior_subject_version ? { priorSubjectVersion: delta.prior_subject_version } : {}),
             ...(delta.prior_location_reference ? { priorLocationReference: delta.prior_location_reference } : {}),

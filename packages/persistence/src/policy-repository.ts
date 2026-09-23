@@ -3,8 +3,11 @@ import {
   createPolicyDefinition,
   createPolicyScope,
   isPolicyAssignmentEffective,
+  resolveEffectivePolicySet,
+  type EffectivePolicySet,
   type PolicyAssignment,
   type PolicyDefinition,
+  type PolicyResolutionCandidate,
   type PolicyScope,
   type PolicyScopeId,
   type TenantId
@@ -48,12 +51,6 @@ interface PolicyAssignmentRow extends RowDataPacket {
   effective_from: Date;
   effective_to: Date | null;
   status: PolicyAssignment['status'];
-}
-
-export interface ApplicablePolicyAssignment {
-  assignment: PolicyAssignment;
-  definition: PolicyDefinition;
-  scopeDepth: number;
 }
 
 function databaseDate(value: string): Date {
@@ -298,7 +295,7 @@ export class MySqlPolicyRepository {
     tenantId: TenantId,
     policyScopeId: PolicyScopeId,
     evaluatedAt = new Date().toISOString()
-  ): Promise<ApplicablePolicyAssignment[]> {
+  ): Promise<PolicyResolutionCandidate[]> {
     databaseDate(evaluatedAt);
 
     const lineage: PolicyScope[] = [];
@@ -320,7 +317,7 @@ export class MySqlPolicyRepository {
       }
     }
 
-    const results: ApplicablePolicyAssignment[] = [];
+    const results: PolicyResolutionCandidate[] = [];
 
     for (let scopeDepth = 0; scopeDepth < lineage.length; scopeDepth += 1) {
       const scope = lineage[scopeDepth];
@@ -371,6 +368,19 @@ export class MySqlPolicyRepository {
         b.assignment.precedence - a.assignment.precedence ||
         a.assignment.id.localeCompare(b.assignment.id)
     );
+  }
+
+  async resolveEffectivePolicies(
+    tenantId: TenantId,
+    policyScopeId: PolicyScopeId,
+    evaluatedAt = new Date().toISOString()
+  ): Promise<EffectivePolicySet> {
+    const candidates = await this.listApplicablePolicyAssignments(
+      tenantId,
+      policyScopeId,
+      evaluatedAt
+    );
+    return resolveEffectivePolicySet(candidates);
   }
 
   private async requirePolicyScope(

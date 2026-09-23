@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import type { RowDataPacket } from 'mysql2/promise';
 import {
   PLATFORM_ADMINISTRATOR_ROLE_ID,
   asId,
@@ -320,7 +321,7 @@ suite('closed-loop publication control', () => {
     const attempts = await repository.listAttempts(tenantId, activity.id);
     expect(attempts.map((item) => item.status)).toEqual(['FAILED', 'DELIVERED']);
 
-    const [auditRows] = await pool.query<Array<{ entity_type: string; action: string }>>(
+    const [auditRows] = await pool.query<Array<RowDataPacket & { entity_type: string; action: string }>>(
       `SELECT entity_type, action
          FROM kernel_audit_entries
         WHERE tenant_id = ?

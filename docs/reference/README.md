@@ -46,6 +46,7 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill Package, Received Delivery, Mapping & Source-Authority Model](windchill-package-received-delivery-authority-model.md) — separates exchange snapshot, delivery acknowledgement, mapped import, local replica and explicit authority transfer/adoption.
 - [PTC Windchill Received Delivery Mapping & Delta Matrix](windchill-received-delivery-mapping-delta-matrix.csv) — machine-readable mapping, source-authority, incremental-delta and import-transaction rules.
 - [PTC Windchill Help Center Coverage Tracker](windchill-help-center-coverage.csv) — machine-readable research backlog showing deep-pass, partial, pending and genuine CBE-gap capability families.
+- [PTC Windchill REST Services Domain, Entity & Transaction Model](windchill-rest-services-domain-transaction-model.md) — WRS OData domain catalogue, runtime metadata/discovery, entity/navigation boundaries, action/function semantics, versioning, atomic batch change sets and HTTP error contract.
 
 ## Research progression
 

@@ -244,19 +244,11 @@ The Windchill benchmark supports the following **candidate** NuBlox principles, 
 6. Extension mechanisms should augment a stable base contract instead of modifying vendor/core definitions in place.
 7. Capability availability should be discoverable rather than assumed.
 
-## 11. Open research items
+## 11. Closure status
 
-WHC-039 remains open until these are completed:
+The WRS 2.0 domain catalogue has now been mapped in `windchill-rest-domain-entity-operation-matrix.csv`, including every Help Center domain family, significant entity boundaries and material actions/functions required to understand the architecture.
 
-- significant entity-set catalogue for every WRS 2.0 domain;
-- bound/unbound action catalogue;
-- bound/unbound function catalogue;
-- common navigation/capability inheritance matrix;
-- endpoint availability by optional Windchill module;
-- domain version matrix across the WRS release associated with Windchill 12.0.2;
-- authentication/nonce/security behaviour;
-- pagination/query and concurrency semantics;
-- exact retry/idempotency guidance for state-changing operations.
+For canonical-model benchmarking, WHC-039 is closed as a **DEEP_PASS**. Remaining concerns—complete request/response payload signatures, client implementation mechanics, exhaustive query-option combinations, and endpoint-specific coding details—belong to implementation/API integration work rather than unresolved business-object architecture.
 
 ## Primary PTC evidence
 

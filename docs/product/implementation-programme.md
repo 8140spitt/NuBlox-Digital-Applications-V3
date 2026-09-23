@@ -153,7 +153,7 @@ ADR-0006 reopens a controlled part of Phase 1 because the completed Windchill ev
 
 Implement in dependency order:
 
-- Policy Scope / Policy Definition / Policy Assignment;
+- Policy Scope / Policy Definition / Policy Assignment — **BACKEND FOUNDATION IMPLEMENTED**: kernel identities/invariants, deterministic inherited-policy resolution, migration 0027, tenant-bound persistence, audit/outbox and MySQL integration test; permission-gated administration/read services and UI remain;
 - Security Classification / Clearance / Security Access Exception;
 - Type / Attribute / Constraint / Enumeration definitions;
 - Configuration Resolution Definition / Criterion / Run / Result;

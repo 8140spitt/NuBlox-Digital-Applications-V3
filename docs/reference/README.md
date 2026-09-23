@@ -12,6 +12,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 
 ## Current reference studies
 
+- [Market Tool Master Map](market-tool-master-map.md) — **canonical entry point** for the complete F01–F29 and D01–D16 market-tool benchmark, with coverage totals and evidence chain.
+- [Market Tool Master Register](market-tool-master-register.csv) — consolidated machine-readable enterprise Function × Product and CBE Job × Tool relationship index with source-record traceability.
 - [Market Tool & Job Capability Landscape](market-tool-landscape.md) — current market-discovery framework across the 29 enterprise Functions and the Construction & Built Environment specialist-tool layer.
 - [Machine-readable Market Tool Register](market-tool-register.csv) — enterprise Function / market-product discovery register.
 - [CBE 84-Job Tool Landscape](cbe-job-tool-landscape.md) — all 84 Construction & Built Environment Job Profiles mapped to the initial market-tool universe and native NuBlox requirements.

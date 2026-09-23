@@ -31,6 +31,8 @@ export * from './information-repository.js';
 export * from './work-repository.js';
 export * from './access-repository.js';
 export * from './policy-repository.js';
+export * from './policy-administration-command-service.js';
+export * from './policy-administration-read-repository.js';
 export * from './control-repository.js';
 export * from './database.js';
 export * from './migrations.js';

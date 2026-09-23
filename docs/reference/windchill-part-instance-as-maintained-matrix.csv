@@ -1,0 +1,14 @@
+concept,stable_identity,versioned_or_temporal,structure_role,physical_traceability,canonical_semantic,status
+Part,"Part master","Revision + iteration","Defines generic structure","Trace Code defines whether physical tracking is required","Product/type definition",VERIFIED
+Part Version,"Part master + revision/iteration","Yes","Version selected into configuration","Not itself the physical serial/lot item","Controlled definition version",VERIFIED
+Part Configuration,"Configuration identity","Can be updated before incorporated use and captures version/occurrence choices","Resolved/configured structure","Provides definition used by Part Instance","Explicit configured product state",VERIFIED
+Part Configuration occurrence override,"Occurrence in configuration","Captures exception/replacement choice","Changes one occurrence without replacing every usage","Can represent field replacement consequence","Occurrence-specific configuration override",VERIFIED
+Part Instance,"Serial/lot physical identity","Instance versions + incorporation period","Physical parent/child structure","Yes","Physical assembled unit/asset instance",VERIFIED_CORE
+Part Instance Allocation,"Parent-instance ↔ child-instance relationship","Current/historical through instance configuration/version","Connects actual child instance to actual parent","Yes","Physical installation/allocation relationship",VERIFIED_CORE
+Incorporation,"Part Instance version applicability","Estimated/Start/End dates","Determines time-in-effect of physical configuration","Yes","Physical assembly/effective period",VERIFIED_CORE
+Latest Instance Configuration Spec,"Resolver criteria","Selects latest qualifying instance version","Resolves physical structure","Yes","Current as-maintained view",VERIFIED
+Incorporation Date Configuration Spec,"Resolver criteria","Selects instance versions in effect at date","Resolves physical structure historically","Yes","Historical as-maintained view",VERIFIED
+Instance Document,"Document relationship to instance/version","Document version semantics","Evidence attached to physical instance","Yes","Asset-specific evidence such as inspection report",VERIFIED
+Maintenance Work Order/Event,"Operational transaction","Expected lifecycle/history","May cause configuration change","Targets physical asset/instance","Work that explains why/how physical configuration changed",GAP_FOR_NUBLOX_CBE
+Preventive Maintenance Plan,"Operational regime","Expected recurrence/revision","Schedules future work against asset","Targets physical asset/class","Maintenance strategy and recurring obligation",GAP_FOR_NUBLOX_CBE
+Failure/Defect Event,"Operational condition event","Event history","May trigger work/configuration consequence","Targets physical asset/instance","Condition/failure provenance",GAP_FOR_NUBLOX_CBE

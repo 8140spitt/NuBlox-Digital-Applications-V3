@@ -141,7 +141,7 @@ interface ResultRow extends RowDataPacket {
   id: string;
   tenant_id: string;
   publication_activity_id: string;
-  acknowledgement_id: string | null;
+  acknowledgement_id: string;
   outcome: PublicationResult['outcome'];
   completed_at: Date;
   external_object_id: string | null;
@@ -397,9 +397,7 @@ function mapResult(row: ResultRow): PublicationResult {
     id: row.id as PublicationResult['id'],
     tenantId: row.tenant_id as TenantId,
     publicationActivityId: row.publication_activity_id as PublicationResult['publicationActivityId'],
-    ...(row.acknowledgement_id
-      ? { acknowledgementId: row.acknowledgement_id as NonNullable<PublicationResult['acknowledgementId']> }
-      : {}),
+    acknowledgementId: row.acknowledgement_id as PublicationResult['acknowledgementId'],
     outcome: row.outcome,
     completedAt: row.completed_at.toISOString(),
     ...(row.external_object_id ? { externalObjectId: row.external_object_id } : {}),
@@ -1209,13 +1207,11 @@ export class MySqlPublicationRepository {
         result.publicationActivityId
       );
       const activity = mapActivity(activityRow);
-      const acknowledgement = result.acknowledgementId
-        ? await this.requireAcknowledgement(
-            result.tenantId,
-            result.acknowledgementId,
-            connection
-          )
-        : undefined;
+      const acknowledgement = await this.requireAcknowledgement(
+        result.tenantId,
+        result.acknowledgementId,
+        connection
+      );
 
       createPublicationResult(result, activity, acknowledgement);
       const nextActivity = applyPublicationResultToActivity(activity, result);
@@ -1230,7 +1226,7 @@ export class MySqlPublicationRepository {
           result.id,
           result.tenantId,
           result.publicationActivityId,
-          result.acknowledgementId ?? null,
+          result.acknowledgementId,
           result.outcome,
           databaseDate(result.completedAt),
           result.externalObjectId ?? null,

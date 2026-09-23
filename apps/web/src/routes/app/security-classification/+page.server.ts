@@ -41,7 +41,7 @@ function enumValue<T extends string>(
 ): T {
   if (!allowed.includes(raw as T)) {
     throw new SecurityClassificationAdministrationCommandError(
-      \`\${label} is invalid.\`,
+      `${label} is invalid.`,
       'INVALID_INPUT'
     );
   }
@@ -53,7 +53,7 @@ function integerValue(raw: string, label: string): number | undefined {
   const parsed = Number(raw);
   if (!Number.isInteger(parsed)) {
     throw new SecurityClassificationAdministrationCommandError(
-      \`\${label} must be an integer.\`,
+      `${label} must be an integer.`,
       'INVALID_INPUT'
     );
   }
@@ -187,7 +187,7 @@ export const actions: Actions = {
       return {
         action: 'createScheme',
         ok: true,
-        message: \`Classification Scheme \${scheme.code} — \${scheme.name} created.\`
+        message: `Classification Scheme ${scheme.code} — ${scheme.name} created.`
       };
     } catch (error) {
       return failure(error, 'createScheme');
@@ -223,7 +223,7 @@ export const actions: Actions = {
       return {
         action: 'createLevel',
         ok: true,
-        message: \`Classification Level \${level.code} — \${level.name} created.\`
+        message: `Classification Level ${level.code} — ${level.name} created.`
       };
     } catch (error) {
       return failure(error, 'createLevel');
@@ -262,7 +262,7 @@ export const actions: Actions = {
       return {
         action: 'grantClearance',
         ok: true,
-        message: \`Clearance Grant \${grant.id} created.\`
+        message: `Clearance Grant ${grant.id} created.`
       };
     } catch (error) {
       return failure(error, 'grantClearance');

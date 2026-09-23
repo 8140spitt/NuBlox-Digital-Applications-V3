@@ -31,6 +31,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill Context/Team Participation Matrix](windchill-context-team-participation-matrix.csv) — machine-readable context-type and participation-mechanism crosswalk for Product, Library, Project, Program and administrative contexts.
 - [PTC Windchill Access-Control Composition & Precedence Model](windchill-access-control-composition-model.md) — exact domain/type/state ACL derivation, participant resolution, grant/deny/absolute-deny precedence, ad-hoc access and administrative-lock benchmark semantics.
 - [PTC Windchill Access-Control Precedence Matrix](windchill-access-control-precedence-matrix.csv) — machine-readable effective-permission conflict and precedence rules.
+- [PTC Windchill Version, Revision, Iteration, View & Configuration Semantics](windchill-version-configuration-semantics.md) — separates master identity, revisions, iterations, Part View branches, lifecycle and configuration selection across contexts.
+- [PTC Windchill Version Object-Family Matrix](windchill-version-object-family-matrix.csv) — machine-readable verified core plus explicit edge-case backlog by object family.
 - [PTC Windchill Help Center Coverage Tracker](windchill-help-center-coverage.csv) — machine-readable research backlog showing deep-pass, partial, pending and genuine CBE-gap capability families.
 
 ## Research progression

@@ -2,7 +2,6 @@ import { randomUUID } from 'node:crypto';
 import {
   PLATFORM_PERMISSION_KEYS,
   asId,
-  type BaselineId,
   type ConfigurationCriterion,
   type ConfigurationCriterionType,
   type ConfigurationItemId,

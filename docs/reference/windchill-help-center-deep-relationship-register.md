@@ -1137,3 +1137,49 @@ No NuBlox application architecture is to be changed from these findings until th
 10. Package/Received Delivery authority-transfer edge cases.
 11. REST domain catalogue and integration transaction/error/retry behaviour.
 12. Remaining Help Center top-level categories not yet represented.
+
+
+## 23 September 2026 — context, access, configuration and concurrent-change checkpoint
+
+This checkpoint records the next completed evidence wave.
+
+### Evidence incorporated into dedicated reference models
+
+- Context participation now distinguishes Organisation Groups, Shared Teams, application Context Teams, role system groups, Object Teams, Team Templates and runtime workflow participant resolution.
+- PDMLink-style Team Template role resolution is separated from ProjectLink, which does not use Team Templates.
+- Shared Team reuse is separated from policy inheritance even though a Shared Team creates a policy domain inherited by consuming application contexts.
+- Effective access-control composition now includes ancestor-domain inheritance, ancestor-type inheritance, lifecycle-state matching, dynamic-role resolution, Grant/Deny/Absolute Deny precedence, object-specific ad-hoc ACLs and Administrative Lock.
+- Product/Library Master → Revision → Iteration semantics are separated from Project/Program object behaviour, and Part View versions are documented as independently revisable/lifecycled branches.
+- Managed Baseline, Managed Collection and Plan Baseline are separated by mutability/snapshot semantics.
+- Option Set revision behaviour and Service Structure version/regeneration behaviour have been added to the object-family matrix.
+- CAD ↔ Part associations are decomposed into five semantic relationship types with explicit Structure / Attribute / Representation build authority.
+- Build execution, reverse build, compare/reconciliation, deleted-occurrence propagation state and Design Context are separated from the CAD ↔ Part relationship itself.
+- Configuration Specifications now distinguish Latest, As Matured, Baseline, Change, Unit Effectivity, Date Effectivity, Promotion Request and As Stored as separate version-resolution authorities.
+- Redlines are now modelled as concurrent proposed-change branches which iterate independently, merge during controlled Revise, synchronize/rebase when another result is released, and raise granular Suspect conflicts instead of using whole-object last-write-wins.
+
+### Dedicated evidence artefacts
+
+- \`windchill-context-team-participation-model.md\`
+- \`windchill-context-team-participation-matrix.csv\`
+- \`windchill-access-control-composition-model.md\`
+- \`windchill-access-control-precedence-matrix.csv\`
+- \`windchill-version-configuration-semantics.md\`
+- \`windchill-version-object-family-matrix.csv\`
+- \`windchill-cad-part-association-build-model.md\`
+- \`windchill-cad-part-association-matrix.csv\`
+- \`windchill-configuration-effectivity-resolution-model.md\`
+- \`windchill-configuration-specification-matrix.csv\`
+- \`windchill-change-redline-concurrency-model.md\`
+- \`windchill-redline-conflict-resolution-matrix.csv\`
+
+### Refined immediate research queue
+
+1. Supplier qualification / sourcing-context lifecycle beyond manufacturer/vendor-part approval.
+2. Physical-instance maintenance-event / as-maintained configuration relationships.
+3. Package / Received Delivery authority-transfer and downgrade/security edge cases.
+4. REST Services complete domain/entity/action catalogue.
+5. ESI transaction, source-authority, error and retry semantics.
+6. Import/export/migration object/version/security preservation matrix.
+7. Quality submodule versionability and remaining version-object-family edge cases.
+8. MPMLink Process Plan / Operation / Resource version semantics.
+9. Remaining top-level Help Center categories, system operations and customization framework.

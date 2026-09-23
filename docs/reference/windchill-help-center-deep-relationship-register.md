@@ -225,6 +225,10 @@ actual participant
 | CFG-004 | As Stored, Baseline and Effectivity are distinct configuration semantics. | VERIFIED | PTC configuration-specification branches |
 | CFG-005 | Configuration resolution can combine lifecycle state, effectivity, options/choices, variant rules and structure filters. | VERIFIED | PTC options/configuration branches |
 | CFG-006 | NuBlox should model effective structure as a governed query over version/configuration history rather than only a persisted current tree. | HYPOTHESIS | NuBlox inference |
+| CFG-007 | As Stored configuration is created at check-in as a snapshot of the workspace contents used for that checked-in iteration and can later be used to reconstruct/retrieve the same assembly or drawing dependency state. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMInvAdminEnableasStored.html |
+| CFG-008 | As Stored is not equivalent to Baseline: As Stored is an automatic authoring/check-in snapshot, while Baseline is an explicit separately managed object created to capture a chosen configuration. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMInvAdminEnableasStored.html |
+| CFG-009 | Managed Collection Refresh reapplies the collection options to the initially selected objects and can therefore resolve updated versions/dependencies over time rather than remaining a frozen point-in-time snapshot. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MgdCollectionInfo.html |
+| CFG-010 | Option-filter configuration can independently resolve rule/expression versions by Latest lifecycle state, Date Effectivity, or Unit Effectivity such as serial/MSN or lot/block. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsConfigSpecRules.html |
 
 ---
 

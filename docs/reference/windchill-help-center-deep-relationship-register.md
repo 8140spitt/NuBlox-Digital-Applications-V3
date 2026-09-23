@@ -109,6 +109,9 @@ actual participant
 | SEC-005 | Security Labels add information-clearance controls that are conceptually separate from RBAC permissions. | VERIFIED | PTC Security Labels branch |
 | SEC-006 | Agreements can provide controlled exceptions to security-label restrictions over participants, objects/contexts, dates and lifecycle. | VERIFIED | PTC Agreements branch |
 | SEC-007 | Business authority should remain distinct from permission, UI visibility and information clearance in NuBlox. | HYPOTHESIS | NuBlox architectural inference |
+| SEC-008 | Effective policy ACLs are derived from the policy of the object's domain plus policies of ancestor domains; ad-hoc ACLs are then evaluated alongside those policy ACLs. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/ru/Windchill_Help_Center/AccessControlChp_AccessCtrlPolicyRuleAbout.html |
+| SEC-009 | For lifecycle-managed objects, domain + object type + lifecycle state select the applicable policy ACL, while lifecycle/workflow role bindings can contribute object-stored ad-hoc ACL permissions for the duration of a phase/activity. | VERIFIED | https://support.ptc.com/help/windchill/plus/r12.0.2.0/en/Windchill_Help_Center/AccessControlChp_LCManageInfo.html |
+| SEC-010 | Foldered objects inherit their associated domain from the parent unless explicitly assigned another domain; moving an inheriting folder can therefore change its effective policy domain, while explicitly assigned domains persist unless remapped during a cross-context move. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/AccessControlChp_WCFolderObjDomainInherit.html |
 
 ---
 
@@ -400,6 +403,8 @@ actual participant
 | PLT-005 | Windchill REST Services expose business-domain-oriented OData services rather than one undifferentiated generic record API. | VERIFIED | PTC Windchill REST Services branch |
 | PLT-006 | NuBlox integrations should expose bounded capability APIs over canonical objects, with domain events/outbox for asynchronous work. | HYPOTHESIS | NuBlox inference |
 | PLT-007 | Windchill REST Services exposes domain-specific OData entities/actions such as Document Management structure entities/actions rather than a single generic object endpoint; pagination and expansion depth are centrally configurable framework concerns. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/wrs_generalcapabilities_12_0_2_20.html |
+| PLT-008 | Windchill ESI treats a failed downstream publish as a failed release; resubmission creates a new transaction for each failed MES/distribution-target instance and republishes only to the targets that failed, normally sending only objects changed since the last successful publication. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MES_Impl_TransMgmt_Resubmission.html |
+| PLT-009 | ESI resubmission is a new publication transaction rather than replaying a stored downstream transaction payload, preserving Windchill/ESI as the publication source of truth. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MES_Impl_TransMgmt_Resubmission.html |
 
 ---
 

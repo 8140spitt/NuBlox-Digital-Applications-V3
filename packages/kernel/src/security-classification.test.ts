@@ -105,6 +105,7 @@ describe('kernel security classification invariants', () => {
       scheme,
       clearances: [{ grant, level: sensitive, scheme }],
       exceptions: [],
+      principals: [{ principalType: 'PERSON', principalId: 'PERSON-1' }],
       evaluatedAt: '2026-09-23T12:00:00.000Z',
       targetScopeType: 'PROJECT',
       targetScopeId: 'PROJECT-1'
@@ -114,6 +115,38 @@ describe('kernel security classification invariants', () => {
     expect(result.matchedClearanceGrantId).toBe(grant.id);
   });
 
+  it('does not accept a clearance granted to a different principal', () => {
+    const grant = createClearanceGrant(
+      {
+        id: asId<'ClearanceGrantId'>('CLR-OTHER', 'Clearance Grant'),
+        tenantId,
+        principalType: 'PERSON',
+        principalId: 'PERSON-OTHER',
+        classificationLevelId: sensitive.id,
+        includeLowerLevels: true,
+        scopeType: 'TENANT',
+        effectiveFrom: '2026-09-01T00:00:00.000Z',
+        status: 'ACTIVE'
+      },
+      sensitive,
+      scheme
+    );
+
+    const result = evaluateSecurityClassificationAccess({
+      assignment,
+      level: official,
+      scheme,
+      clearances: [{ grant, level: sensitive, scheme }],
+      exceptions: [],
+      principals: [{ principalType: 'PERSON', principalId: 'PERSON-1' }],
+      evaluatedAt: '2026-09-23T12:00:00.000Z',
+      targetScopeType: 'PROJECT',
+      targetScopeId: 'PROJECT-1'
+    });
+
+    expect(result.allowed).toBe(false);
+  });
+
   it('denies access when no clearance or exception covers the classification', () => {
     const result = evaluateSecurityClassificationAccess({
       assignment,
@@ -121,6 +154,7 @@ describe('kernel security classification invariants', () => {
       scheme,
       clearances: [],
       exceptions: [],
+      principals: [{ principalType: 'PERSON', principalId: 'PERSON-1' }],
       evaluatedAt: '2026-09-23T12:00:00.000Z',
       targetScopeType: 'PROJECT',
       targetScopeId: 'PROJECT-1'
@@ -154,6 +188,7 @@ describe('kernel security classification invariants', () => {
       scheme,
       clearances: [],
       exceptions: [exception],
+      principals: [{ principalType: 'PERSON', principalId: 'PERSON-1' }],
       evaluatedAt: '2026-09-23T12:00:00.000Z',
       targetScopeType: 'PROJECT',
       targetScopeId: 'PROJECT-1'

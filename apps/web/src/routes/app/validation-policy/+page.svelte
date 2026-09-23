@@ -273,7 +273,7 @@
   <section class="workspace-panel">
     <div class="panel-heading"><div><p class="app-eyebrow">Evaluation evidence</p><h2>Runs and conflicts</h2></div><span>{data.projection.evaluations.length}</span></div>
     {#if data.projection.evaluations.length === 0}
-      <p class="control-empty">No evaluation runs have been recorded yet. The execution runtime is the next slice.</p>
+      <p class="control-empty">No evaluation runs have been recorded yet. Governed release and change commands create retained evaluation evidence when an applicable rule set is configured.</p>
     {:else}
       <div class="access-assignment-list">
         {#each data.projection.evaluations as item}
@@ -282,6 +282,50 @@
             <div><span>Subject</span><strong>{item.subjectObjectId}</strong></div>
             <div><span>Status</span><strong>{item.status}</strong></div>
             <div><span>Conflicts</span><strong>{data.projection.conflicts.filter((conflict) => conflict.evaluationRunId === item.id).length}</strong></div>
+          </article>
+        {/each}
+      </div>
+    {/if}
+
+    {#if data.projection.conflicts.length > 0}
+      <div class="panel-heading">
+        <div><p class="app-eyebrow">Disposition evidence</p><h2>Validation conflicts</h2></div>
+        <span>{data.projection.conflicts.length}</span>
+      </div>
+      <div class="control-record-list">
+        {#each data.projection.conflicts as conflict}
+          <article>
+            <header><span>{conflict.status}</span><strong>{conflict.subjectObjectId}</strong></header>
+            <h3>{conflict.summary}</h3>
+            <p>Evaluation {conflict.evaluationRunId}</p>
+            {#if conflict.resolutionReason}
+              <p><strong>Disposition reason:</strong> {conflict.resolutionReason}</p>
+            {/if}
+            {#if conflict.status === 'OPEN'}
+              {#if data.canDisposition}
+                <form method="POST" action="?/dispositionConflict" class="admin-form access-form">
+                  <input type="hidden" name="conflictId" value={conflict.id} />
+                  <label>
+                    <span>Disposition</span>
+                    <select name="status" required>
+                      <option value="RESOLVED">Resolved</option>
+                      <option value="WAIVED">Waived</option>
+                      <option value="CANCELLED">Cancelled</option>
+                    </select>
+                  </label>
+                  <label class="wide-field">
+                    <span>Reason</span>
+                    <textarea name="resolutionReason" rows="2" required></textarea>
+                  </label>
+                  <button type="submit">Record disposition <span>→</span></button>
+                </form>
+              {:else}
+                <p>
+                  Conflict disposition requires
+                  <code>platform.validation.conflict.disposition</code>.
+                </p>
+              {/if}
+            {/if}
           </article>
         {/each}
       </div>

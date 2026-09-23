@@ -1340,6 +1340,22 @@ export class MySqlPublicationRepository {
     return rows[0] ? mapActivity(rows[0]) : undefined;
   }
 
+  async listAttempts(
+    tenantId: TenantId,
+    activityId: PublicationActivity['id']
+  ): Promise<PublicationAttempt[]> {
+    const [rows] = await this.pool.execute<AttemptRow[]>(
+      `SELECT id, tenant_id, publication_activity_id, attempt_number, data_envelope_id,
+              outbox_message_id, started_at, status, sent_at, completed_at,
+              transport_reference, error_message, row_version
+         FROM publication_attempts
+        WHERE tenant_id = ? AND publication_activity_id = ?
+        ORDER BY attempt_number, id`,
+      [tenantId, activityId]
+    );
+    return rows.map(mapAttempt);
+  }
+
   async getAttempt(
     tenantId: TenantId,
     id: PublicationAttempt['id']

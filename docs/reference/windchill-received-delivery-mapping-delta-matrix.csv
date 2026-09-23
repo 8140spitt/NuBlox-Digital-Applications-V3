@@ -1,0 +1,22 @@
+record_type,exchange_or_mapping_semantic,source_state,target_state_or_action,authority_effect,critical_rule,status
+OBJECT,Package,"Governed selected source content","Frozen exchange collection/snapshot","None by itself","Package membership is distinct from delivery and import",VERIFIED
+OBJECT,Delivery,"Package prepared/sent","Recipient exchange transaction","None by itself","Outbound delivery/transmittal is separate from Package",VERIFIED
+OBJECT,Received Delivery,"Received ZIP/manifest","Governed preview/mapping/import controller","None by itself","Receiving control object is separate from imported business objects",VERIFIED
+STATUS,Received,"Delivery received","Acknowledgement date/comment","No authority transfer","Receipt does not imply import or technical acceptance",VERIFIED
+STATUS,Accepted,"Delivery accepted","Acknowledgement/disposition","No authority transfer","Delivery acceptance is not source-object authority adoption",VERIFIED
+STATUS,Rejected,"Delivery rejected","Acknowledgement/disposition","No authority transfer","Reject is exchange disposition",VERIFIED
+AUTHORITY,Imported Object,"Source system object","Locked target replica/reference","Source remains authoritative","Target location/context does not imply target data authority",VERIFIED
+MAPPING,Context,"Source Context","Mapped target Context","No authority transfer","Context placement and source authority remain distinct",VERIFIED
+MAPPING,Organisation,"Source owning Organisation","Mapped target Organisation","No authority transfer","Organisation identity may require translation",VERIFIED
+MAPPING,View,"Source View","Distinct target View mapping","No authority transfer","View semantics must be preserved/mapped",VERIFIED
+MAPPING,Lifecycle,"Source lifecycle/state","Mapped target lifecycle/state","No authority transfer","Target lifecycle should avoid unintended modification of source-controlled replica",VERIFIED
+MAPPING,Folder,"Source folder/location","Mapped target folder/location","No authority transfer","Storage/navigation translation only",VERIFIED
+MAPPING,Version,"Source version scheme/version","Compatible or mapped target version","No authority transfer","Preservation of source lineage requires explicit mapping",VERIFIED
+MAPPING,Security Label,"Source label/value","Mapped target label/value","No authority transfer","Source labels are not applied if target security labels are disabled",VERIFIED_CRITICAL_EDGE
+DELTA,New,"Not in base","Create/import target object","No authority transfer","New relative to base delivery",VERIFIED
+DELTA,Changed,"Changed since base","Update target replica","No authority transfer","Target source-controlled content may be refreshed",VERIFIED
+DELTA,Deleted,"Deleted on source","Attempt target deletion","No authority transfer","Deletion can fail and must be reported",VERIFIED
+DELTA,Absent,"No longer included in current package","Report for target business action","No authority transfer","Absent is not Deleted",VERIFIED
+TRANSACTION,Partial Import,"One delivery split into transactions","Some transactions succeed; failed transaction may retry","No authority transfer","Delivery/import status must not be one boolean",VERIFIED
+LINEAGE,Incremental Base,"Prior full/incremental delivery","Ordered delta application","No authority transfer","Incremental delivery depends on base/sequence",VERIFIED
+ADOPTION,Authority Transfer,"Not provided merely by Received Delivery import","Requires separate explicit business process","Would change authority only if explicitly implemented","NuBlox must model separately from import/acceptance",NUBLOX_REQUIREMENT

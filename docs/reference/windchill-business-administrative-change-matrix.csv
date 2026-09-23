@@ -1,0 +1,13 @@
+bac_id,concern,windchill_semantics,nublox_benchmark,status
+BAC-001,Environment,"Development/integration/test/production are explicit system identities","Configuration promotion requires explicit environment identity",VERIFIED
+BAC-002,System registration,"Source can register target systems before promotion","Track permitted source→target promotion paths",VERIFIED
+BAC-003,Baseline,"Synchronized mode establishes a point from which administrative changes are tracked","Configuration baseline must be first-class and distinct from business baselines",VERIFIED
+BAC-004,Delta,"Exports can collect administrative changes since baseline/previous export","Promote controlled configuration delta rather than re-create manually",VERIFIED
+BAC-005,Package,"Administrative changes are exported as a package/ZIP for a target","First-class configuration change-set/package",VERIFIED
+BAC-006,Mapping,"Context/user/group/attribute differences can be mapped","Deployment mapping is governed evidence",VERIFIED
+BAC-007,Conflict resolution,"Default saved reused or bundled resolutions can be applied","Conflict disposition must be explicit and auditable",VERIFIED
+BAC-008,Import transaction,"Import generates report with source/package/object/status/conflict details","First-class deployment run/result",VERIFIED
+BAC-009,Privileges,"Package creator/importer role plus object-specific permissions are required","Separate promotion authority from authoring authority",VERIFIED
+BAC-010,Target state,"Imported administrative objects become normal target configuration","Promotion copies governed configuration rather than creating immutable replicas",VERIFIED
+BAC-011,Cross-release boundary,"BAC expects compatible environments rather than arbitrary cross-release conversion","Validate platform/configuration compatibility before promotion",VERIFIED
+BAC-012,Configuration vs data,"BAC promotes administration/configuration rather than normal operational business data","Separate configuration deployment from data migration",VERIFIED

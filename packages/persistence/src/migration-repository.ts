@@ -825,11 +825,17 @@ export class MySqlMigrationRepository {
       const next = completeMigrationLoad(mapRun(runRow), itemRows.map(mapItem), completedAt);
       const [result] = await connection.execute<ResultSetHeader>(
         `UPDATE migration_runs
-            SET status = ?, load_completed_at = ?, updated_by_person_id = ?,
-                row_version = row_version + 1
+            SET status = ?, load_completed_at = ?,
+                active_production_guard_key = ?,
+                updated_by_person_id = ?, row_version = row_version + 1
           WHERE tenant_id = ? AND id = ? AND row_version = ?`,
         [
-          next.status, dbDate(completedAt), audit.actorPersonId ?? null,
+          next.status,
+          dbDate(completedAt),
+          next.runType === 'PRODUCTION' && next.status === 'AWAITING_RECONCILIATION'
+            ? next.migrationPlanId
+            : null,
+          audit.actorPersonId ?? null,
           tenantId, runId, runRow.row_version
         ]
       );
@@ -1097,7 +1103,7 @@ export class MySqlMigrationRepository {
           nextRun.status,
           nextRun.completedAt ? dbDate(nextRun.completedAt) : null,
           nextRun.runType === 'PRODUCTION' &&
-            ['QUEUED','RUNNING','AWAITING_RECONCILIATION','BLOCKED'].includes(nextRun.status)
+            ['QUEUED','RUNNING','AWAITING_RECONCILIATION'].includes(nextRun.status)
             ? nextRun.migrationPlanId
             : null,
           audit.actorPersonId ?? null,

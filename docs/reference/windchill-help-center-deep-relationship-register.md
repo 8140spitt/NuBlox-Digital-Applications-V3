@@ -1358,3 +1358,36 @@ WHC-042 is promoted to **DEEP_PASS** for architecture benchmarking. Remaining wo
 3. Manufacturing Resource version semantics.
 4. Finish lower-value WRS domain/action/function coverage.
 5. Remaining top-level Help Center categories not yet represented.
+
+
+## 23 September 2026 — customization-framework closure checkpoint
+
+### Evidence incorporated
+
+- Windchill separates declarative administration/configuration from metadata extension, modeled persistent-object extension, server/business-logic services, event listeners, business rules, REST extension, UI actions/action models and lower-level site-file customization.
+- Modeled objects participate in the Windchill object/persistence model and can be inspected through modeled-object metadata/persistence reports; they are materially different from soft attributes/subtypes.
+- Event/listener services are separate from modeled persistence extensions and have explicit service registration/runtime lifecycle.
+- Business Rules are first-class rule/rule-set/execution/result concepts rather than being equivalent to workflow routing or UI validation.
+- WRS custom configuration extends vendor-supplied domain contracts without requiring edits to the supplied domain definitions.
+- The UI Action Framework separates executable Action definitions from Action Model placement/composition and from visibility controls.
+- Profile/action visibility remains distinct from access-control authorization.
+- `site.xconf` / `xconfmanager` is the supported configuration overlay for relevant properties rather than direct edits to generated/internal property artefacts.
+- Windchill's Safe Area retains site modification, original PTC version and current/new PTC version so upgrades can perform explicit three-way reconciliation.
+- Customization therefore carries version/ownership/upgrade evidence that should be governed separately from normal tenant configuration.
+
+### Dedicated evidence artefacts
+
+- `windchill-customization-extension-model.md`
+- `windchill-customization-extension-matrix.csv`
+
+### WHC-043 status
+
+WHC-043 is promoted to **DEEP_PASS** for architecture benchmarking. Remaining vendor-specific class/API implementation details are development mechanics, not unresolved canonical extension boundaries.
+
+### Refined immediate research queue
+
+1. Complete the remaining WRS domain/entity/action/function catalogue and close WHC-039.
+2. Close Quality-object versionability by individual process family.
+3. Close Manufacturing Resource version semantics.
+4. Reconcile the full Help Center top-level navigation against the coverage tracker for any missing capability families.
+5. Preserve WHC-044–046 as explicit CBE gaps requiring non-Windchill research.

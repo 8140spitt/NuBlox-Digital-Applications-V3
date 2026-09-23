@@ -72,6 +72,17 @@ export function approveMigrationPlan(
   });
 }
 
+
+export function activateMigrationPlan(current: MigrationPlan): MigrationPlan {
+  invariant(
+    current.status === 'APPROVED' || current.status === 'ACTIVE',
+    'Only an APPROVED or ACTIVE Migration Plan can execute.'
+  );
+  return current.status === 'ACTIVE'
+    ? current
+    : Object.freeze({ ...current, status: 'ACTIVE' });
+}
+
 export function createMigrationMappingVersion(
   input: MigrationMappingVersion,
   plan: MigrationPlan,
@@ -391,4 +402,23 @@ export function validateReconciliationRunCounts(input: MigrationReconciliationRu
   count(input.verifiedCount, 'Migration Reconciliation Run verifiedCount');
   count(input.conflictCount, 'Migration Reconciliation Run conflictCount');
   count(input.missingCount, 'Migration Reconciliation Run missingCount');
+}
+
+
+export function applyCutoverToMigrationPlan(
+  current: MigrationPlan,
+  cutover: CutoverDecision
+): MigrationPlan {
+  sameTenant(current, cutover, 'Migration Plan Cutover Decision');
+  invariant(
+    cutover.migrationPlanId === current.id,
+    'Cutover Decision must belong to the Migration Plan.'
+  );
+  invariant(
+    current.status === 'ACTIVE',
+    'Only an ACTIVE Migration Plan can consume a Cutover Decision.'
+  );
+  return cutover.outcome === 'APPROVED'
+    ? Object.freeze({ ...current, status: 'COMPLETED' })
+    : current;
 }

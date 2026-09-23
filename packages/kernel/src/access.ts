@@ -41,6 +41,9 @@ export const PLATFORM_PERMISSION_KEYS = {
   AUDIT_READ: 'platform.audit.read',
   CONFIGURATION_READ: 'platform.configuration.read',
   CONFIGURATION_MANAGE: 'platform.configuration.manage',
+  CONFIGURATION_RESOLUTION_READ: 'platform.configuration_resolution.read',
+  CONFIGURATION_RESOLUTION_MANAGE: 'platform.configuration_resolution.manage',
+  CONFIGURATION_RESOLUTION_EXECUTE: 'platform.configuration_resolution.execute',
   F01_READ: 'function.f01.read',
   F01_WORK: 'function.f01.work'
 } as const;

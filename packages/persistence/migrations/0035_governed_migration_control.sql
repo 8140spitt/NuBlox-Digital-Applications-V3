@@ -121,8 +121,8 @@ CREATE TABLE migration_runs (
     OR (status IN ('RECONCILED','FAILED','CANCELLED') AND completed_at IS NOT NULL)
   ),
   CONSTRAINT chk_migration_runs_guard CHECK (
-    (run_type = 'PRODUCTION' AND status IN ('QUEUED','RUNNING','AWAITING_RECONCILIATION','BLOCKED') AND active_production_guard_key IS NOT NULL)
-    OR (NOT (run_type = 'PRODUCTION' AND status IN ('QUEUED','RUNNING','AWAITING_RECONCILIATION','BLOCKED')) AND active_production_guard_key IS NULL)
+    (run_type = 'PRODUCTION' AND status IN ('QUEUED','RUNNING','AWAITING_RECONCILIATION') AND active_production_guard_key IS NOT NULL)
+    OR (NOT (run_type = 'PRODUCTION' AND status IN ('QUEUED','RUNNING','AWAITING_RECONCILIATION')) AND active_production_guard_key IS NULL)
   )
 ) ENGINE=InnoDB;
 

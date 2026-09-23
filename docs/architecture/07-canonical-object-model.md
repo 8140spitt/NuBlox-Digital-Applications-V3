@@ -40,6 +40,22 @@ The objective is not one giant table or one universal object type. The objective
 - Deployment Assignment;
 - Authority Assignment.
 
+### Policy, metadata and information security
+
+- Policy Scope;
+- Policy Definition;
+- Policy Assignment;
+- Security Classification Scheme;
+- Security Classification Level;
+- Security Classification Assignment;
+- Clearance Grant;
+- Security Access Exception;
+- Type Definition;
+- Attribute Definition;
+- Constraint Definition;
+- Enumeration Definition / Value;
+- Type Attribute Assignment.
+
 ### Commercial and relationship
 
 - Customer;
@@ -75,6 +91,8 @@ The objective is not one giant table or one universal object type. The objective
 - Configuration;
 - Baseline;
 - Effectivity;
+- Configuration Resolution Definition;
+- Configuration Resolution Run;
 - supplier/manufacturer relationship;
 - lot/batch/serial identity.
 
@@ -89,7 +107,11 @@ The objective is not one giant table or one universal object type. The objective
 - Representation;
 - Classification;
 - issue/transmittal;
-- recipient response.
+- recipient response;
+- Exchange Package;
+- Exchange Delivery;
+- Received Delivery;
+- Authority Adoption.
 
 ### Work and control
 
@@ -106,6 +128,27 @@ The objective is not one giant table or one universal object type. The objective
 - Evidence;
 - Audit Entry;
 - Notification.
+
+### Integration, migration and information governance
+
+- Integration Endpoint;
+- Publication Transaction;
+- Publication Acknowledgement;
+- Source Authority Rule;
+- Migration Plan;
+- Migration Mapping Version;
+- Migration Run;
+- Migration Conflict;
+- Migration Reconciliation Run;
+- Cutover Decision;
+- Retention Policy;
+- Hold;
+- Disposition Rule;
+- Disposition Schedule;
+- Disposition Run;
+- Archive Record;
+- Restore Run;
+- Destruction Evidence.
 
 ### Transactions
 
@@ -202,6 +245,14 @@ These may be related but must not be conflated.
 External identifiers and source references allow NuBlox to interoperate with specialist applications while preserving NuBlox canonical semantics.
 
 External source identity does not automatically become canonical NuBlox identity.
+
+Exchange receipt, acceptance and import do not automatically transfer master authority. Authority Adoption is an explicit governed action.
+
+## Aggregate-root principle
+
+A named canonical identity is not automatically a top-level aggregate root. Child records remain within the parent aggregate unless they require their own independent lifecycle, authority/command boundary, consistency boundary or durable historical identity.
+
+ADR-0006 applies this rule to the shared control-plane families.
 
 ## Canonical-model acceptance test
 

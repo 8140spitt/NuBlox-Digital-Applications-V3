@@ -4,14 +4,22 @@ import {
   createValidationRuleDefinition,
   createValidationRuleSet,
   createValidationRuleSetMember,
+  createValidationRuleEvaluationRun,
+  createValidationRuleResult,
+  createValidationConflict,
+  dispositionValidationConflict,
   type MappingPolicy,
   type RelationshipConstraintPolicy,
   type TenantId,
   type ValidationRuleDefinition,
   type ValidationRuleSet,
-  type ValidationRuleSetMember
+  type ValidationRuleSetMember,
+  type ValidationRuleEvaluationRun,
+  type ValidationRuleResult,
+  type ValidationConflict,
+  type ValidationConflictStatus
 } from '@nublox/kernel';
-import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
+import type { Pool, PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
@@ -30,6 +38,37 @@ interface RuleSetRow extends RowDataPacket {
   id: string; tenant_id: string; code: string; name: string; description: string | null;
   version: number; effective_from: Date | null; effective_to: Date | null;
   status: ValidationRuleSet['status'];
+}
+
+interface RuleSetMemberJoinRow extends RuleRow {
+  member_id: string;
+  rule_set_id: string;
+  sequence_no: number;
+  mandatory: number;
+  member_status: ValidationRuleSetMember['status'];
+}
+
+interface EvaluationRunRow extends RowDataPacket {
+  id: string;
+  tenant_id: string;
+  rule_set_id: string;
+  subject_object_id: string;
+  subject_version: string | null;
+  context_type: string | null;
+  context_id: string | null;
+  evaluated_at: Date;
+  evaluation_status: ValidationRuleEvaluationRun['status'];
+}
+
+interface ConflictRow extends RowDataPacket {
+  id: string;
+  tenant_id: string;
+  evaluation_run_id: string;
+  rule_result_id: string;
+  subject_object_id: string;
+  summary: string;
+  conflict_status: ValidationConflict['status'];
+  resolution_reason: string | null;
 }
 
 function dbDate(value: string): Date {
@@ -271,6 +310,220 @@ export class MySqlValidationPolicyRepository {
     const ruleSet = await this.getRuleSet(tenantId, id);
     if (!ruleSet) throw new Error('Validation Rule Set not found in tenant.');
     return ruleSet;
+  }
+
+
+  async getActiveRuleSetByCode(
+    tenantId: TenantId,
+    code: string,
+    evaluatedAt: string
+  ): Promise<ValidationRuleSet | undefined> {
+    const at = dbDate(evaluatedAt);
+    const [rows] = await this.pool.execute<RuleSetRow[]>(
+      `SELECT id, tenant_id, code, name, description, version, effective_from, effective_to, status
+         FROM validation_rule_sets
+        WHERE tenant_id = ? AND code = ? AND status = 'ACTIVE'
+          AND (effective_from IS NULL OR effective_from <= ?)
+          AND (effective_to IS NULL OR effective_to >= ?)
+        ORDER BY version DESC
+        LIMIT 1`,
+      [tenantId, code.toUpperCase(), at, at]
+    );
+    return rows[0] ? mapRuleSet(rows[0]) : undefined;
+  }
+
+  async listActiveRuleSetMembers(
+    tenantId: TenantId,
+    ruleSetId: ValidationRuleSet['id'],
+    evaluatedAt: string
+  ): Promise<Array<{ member: ValidationRuleSetMember; rule: ValidationRuleDefinition }>> {
+    const at = dbDate(evaluatedAt);
+    const [rows] = await this.pool.execute<RuleSetMemberJoinRow[]>(
+      `SELECT m.id AS member_id, m.rule_set_id, m.sequence_no, m.mandatory,
+              m.status AS member_status,
+              r.id, r.tenant_id, r.code, r.name, r.description, r.rule_type,
+              r.version, r.severity, r.handler_key, r.configuration,
+              r.effective_from, r.effective_to, r.status
+         FROM validation_rule_set_members m
+         JOIN validation_rule_definitions r
+           ON r.tenant_id = m.tenant_id AND r.id = m.rule_definition_id
+        WHERE m.tenant_id = ? AND m.rule_set_id = ?
+          AND m.status = 'ACTIVE' AND r.status = 'ACTIVE'
+          AND (r.effective_from IS NULL OR r.effective_from <= ?)
+          AND (r.effective_to IS NULL OR r.effective_to >= ?)
+        ORDER BY m.sequence_no ASC, r.code ASC, r.version DESC`,
+      [tenantId, ruleSetId, at, at]
+    );
+    return rows.map((row) => ({
+      member: {
+        id: row.member_id as ValidationRuleSetMember['id'],
+        tenantId: row.tenant_id as TenantId,
+        ruleSetId: row.rule_set_id as ValidationRuleSetMember['ruleSetId'],
+        ruleDefinitionId: row.id as ValidationRuleSetMember['ruleDefinitionId'],
+        sequence: Number(row.sequence_no),
+        mandatory: Boolean(row.mandatory),
+        status: row.member_status
+      },
+      rule: mapRule(row)
+    }));
+  }
+
+  async createEvaluationRun(
+    run: ValidationRuleEvaluationRun,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    createValidationRuleEvaluationRun(run);
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO validation_rule_evaluation_runs
+          (id, tenant_id, rule_set_id, subject_object_id, subject_version,
+           context_type, context_id, evaluated_at, evaluation_status, created_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          run.id, run.tenantId, run.ruleSetId, run.subjectObjectId,
+          run.subjectVersion ?? null, run.contextType ?? null, run.contextId ?? null,
+          dbDate(run.evaluatedAt), run.status, audit.actorPersonId ?? null
+        ]
+      );
+      await evidence(connection, run.tenantId, 'VALIDATION_EVALUATION_RUN', run.id, 'STARTED', audit, run);
+    });
+  }
+
+  async completeEvaluationRun(
+    tenantId: TenantId,
+    runId: ValidationRuleEvaluationRun['id'],
+    status: Exclude<ValidationRuleEvaluationRun['status'], 'RUNNING'>,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    await withTransaction(this.pool, async (connection) => {
+      const [result] = await connection.execute<ResultSetHeader>(
+        `UPDATE validation_rule_evaluation_runs
+            SET evaluation_status = ?
+          WHERE tenant_id = ? AND id = ? AND evaluation_status = 'RUNNING'`,
+        [status, tenantId, runId]
+      );
+      if (result.affectedRows !== 1) {
+        throw new Error('Validation Evaluation Run was not found in RUNNING state.');
+      }
+      await evidence(connection, tenantId, 'VALIDATION_EVALUATION_RUN', runId, 'COMPLETED', audit, { status });
+    });
+  }
+
+  async createRuleResult(
+    result: ValidationRuleResult,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    createValidationRuleResult(result);
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO validation_rule_results
+          (id, tenant_id, evaluation_run_id, rule_definition_id, result_status, message, evidence)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [
+          result.id, result.tenantId, result.evaluationRunId, result.ruleDefinitionId,
+          result.status, result.message ?? null,
+          result.evidence ? JSON.stringify(result.evidence) : null
+        ]
+      );
+      await evidence(connection, result.tenantId, 'VALIDATION_RULE_RESULT', result.id, 'RECORDED', audit, result);
+    });
+  }
+
+  async createConflict(
+    conflict: ValidationConflict,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    createValidationConflict(conflict);
+    await withTransaction(this.pool, async (connection) => {
+      await connection.execute(
+        `INSERT INTO validation_conflicts
+          (id, tenant_id, evaluation_run_id, rule_result_id, subject_object_id,
+           summary, conflict_status, resolution_reason, created_by_person_id, updated_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          conflict.id, conflict.tenantId, conflict.evaluationRunId, conflict.ruleResultId,
+          conflict.subjectObjectId, conflict.summary, conflict.status,
+          conflict.resolutionReason ?? null, audit.actorPersonId ?? null, audit.actorPersonId ?? null
+        ]
+      );
+      await evidence(connection, conflict.tenantId, 'VALIDATION_CONFLICT', conflict.id, 'OPENED', audit, conflict);
+    });
+  }
+
+  async getConflict(
+    tenantId: TenantId,
+    conflictId: ValidationConflict['id']
+  ): Promise<ValidationConflict | undefined> {
+    const [rows] = await this.pool.execute<ConflictRow[]>(
+      `SELECT id, tenant_id, evaluation_run_id, rule_result_id, subject_object_id,
+              summary, conflict_status, resolution_reason
+         FROM validation_conflicts
+        WHERE tenant_id = ? AND id = ?`,
+      [tenantId, conflictId]
+    );
+    const row = rows[0];
+    if (!row) return undefined;
+    return {
+      id: row.id as ValidationConflict['id'],
+      tenantId: row.tenant_id as TenantId,
+      evaluationRunId: row.evaluation_run_id as ValidationConflict['evaluationRunId'],
+      ruleResultId: row.rule_result_id as ValidationConflict['ruleResultId'],
+      subjectObjectId: row.subject_object_id as ValidationConflict['subjectObjectId'],
+      summary: row.summary,
+      status: row.conflict_status,
+      ...(row.resolution_reason ? { resolutionReason: row.resolution_reason } : {})
+    };
+  }
+
+  async dispositionConflict(
+    tenantId: TenantId,
+    conflictId: ValidationConflict['id'],
+    status: Exclude<ValidationConflictStatus, 'OPEN'>,
+    resolutionReason: string,
+    audit: AuditContext = {}
+  ): Promise<ValidationConflict> {
+    const existing = await this.getConflict(tenantId, conflictId);
+    if (!existing) throw new Error('Validation Conflict not found in tenant.');
+    const updated = dispositionValidationConflict(existing, status, resolutionReason);
+    await withTransaction(this.pool, async (connection) => {
+      const [result] = await connection.execute<ResultSetHeader>(
+        `UPDATE validation_conflicts
+            SET conflict_status = ?, resolution_reason = ?, updated_by_person_id = ?
+          WHERE tenant_id = ? AND id = ? AND conflict_status = 'OPEN'`,
+        [updated.status, updated.resolutionReason, audit.actorPersonId ?? null, tenantId, conflictId]
+      );
+      if (result.affectedRows !== 1) {
+        throw new Error('Validation Conflict is no longer OPEN.');
+      }
+      await evidence(connection, tenantId, 'VALIDATION_CONFLICT', conflictId, 'DISPOSITIONED', audit, updated);
+    });
+    return updated;
+  }
+
+  async getEvaluationRun(
+    tenantId: TenantId,
+    runId: ValidationRuleEvaluationRun['id']
+  ): Promise<ValidationRuleEvaluationRun | undefined> {
+    const [rows] = await this.pool.execute<EvaluationRunRow[]>(
+      `SELECT id, tenant_id, rule_set_id, subject_object_id, subject_version,
+              context_type, context_id, evaluated_at, evaluation_status
+         FROM validation_rule_evaluation_runs
+        WHERE tenant_id = ? AND id = ?`,
+      [tenantId, runId]
+    );
+    const row = rows[0];
+    if (!row) return undefined;
+    return {
+      id: row.id as ValidationRuleEvaluationRun['id'],
+      tenantId: row.tenant_id as TenantId,
+      ruleSetId: row.rule_set_id as ValidationRuleEvaluationRun['ruleSetId'],
+      subjectObjectId: row.subject_object_id as ValidationRuleEvaluationRun['subjectObjectId'],
+      ...(row.subject_version ? { subjectVersion: row.subject_version } : {}),
+      ...(row.context_type ? { contextType: row.context_type } : {}),
+      ...(row.context_id ? { contextId: row.context_id } : {}),
+      evaluatedAt: row.evaluated_at.toISOString(),
+      status: row.evaluation_status
+    };
   }
 
   async hasCanonicalObject(tenantId: TenantId, objectId: string): Promise<boolean> {

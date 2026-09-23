@@ -32,6 +32,7 @@
     if (pathname.startsWith('/app/competence')) return 'Competence';
     if (pathname.startsWith('/app/control')) return 'Control';
     if (pathname.startsWith('/app/access')) return 'Access';
+    if (pathname.startsWith('/app/policy')) return 'Policy Governance';
     return 'Home';
   }
 </script>
@@ -98,6 +99,10 @@
           <a class:active={isActive('/app/access')} href="/app/access" onclick={closeNavigation}>
             <span class="nav-symbol">AC</span>
             <span>Access</span>
+          </a>
+          <a class:active={isActive('/app/policy')} href="/app/policy" onclick={closeNavigation}>
+            <span class="nav-symbol">PL</span>
+            <span>Policy</span>
           </a>
         </section>
       </nav>

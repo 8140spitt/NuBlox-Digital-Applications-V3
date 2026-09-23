@@ -129,8 +129,7 @@ export function createExchangeDelivery(
   if (priorDelivery) {
     sameTenant(input, priorDelivery, 'Exchange Delivery prior Delivery');
     invariant(input.priorDeliveryId === priorDelivery.id, 'Exchange Delivery prior Delivery reference does not match.');
-    invariant(priorDelivery.exchangePackageId === input.exchangePackageId, 'Incremental delivery base must be for the same Exchange Package.');
-    invariant(input.deliverySequence > priorDelivery.deliverySequence, 'Delivery sequence must advance beyond the prior Delivery.');
+    invariant(priorDelivery.id !== input.id, 'Exchange Delivery cannot use itself as a prior Delivery.');
   } else {
     invariant(!input.priorDeliveryId, 'Exchange Delivery cannot reference an unsupplied prior Delivery.');
   }
@@ -169,23 +168,45 @@ export function createExchangeRecipient(
 export function createExchangeDeltaItem(
   input: ExchangeDeltaItem,
   delivery: ExchangeDelivery,
-  packageItem: ExchangePackageItem,
+  subject: CanonicalObjectIdentity,
+  packageItem?: ExchangePackageItem,
   priorDelivery?: ExchangeDelivery
 ): ExchangeDeltaItem {
   sameTenant(input, delivery, 'Exchange Delta Item and Delivery');
-  sameTenant(input, packageItem, 'Exchange Delta Item and Package Item');
+  sameTenant(input, subject, 'Exchange Delta Item subject');
   invariant(input.exchangeDeliveryId === delivery.id, 'Exchange Delta Item must reference the supplied Delivery.');
-  invariant(input.exchangePackageItemId === packageItem.id, 'Exchange Delta Item must reference the supplied Package Item.');
-  invariant(packageItem.exchangePackageId === delivery.exchangePackageId, 'Exchange Delta Item Package Item must belong to the Delivery Package.');
-  if (input.deltaType === 'NEW') {
-    invariant(!input.priorDeliveryId, 'NEW delta item must not reference a prior Delivery.');
+  invariant(input.subjectObjectId === subject.id, 'Exchange Delta Item must reference the supplied subject.');
+
+  if (packageItem) {
+    sameTenant(input, packageItem, 'Exchange Delta Item Package Item');
+    invariant(input.exchangePackageItemId === packageItem.id, 'Exchange Delta Item Package Item reference does not match.');
+    invariant(packageItem.exchangePackageId === delivery.exchangePackageId, 'Exchange Delta Item Package Item must belong to the current Delivery Package.');
+    invariant(packageItem.subjectObjectId === input.subjectObjectId, 'Exchange Delta Item subject must match its Package Item.');
   } else {
-    invariant(Boolean(priorDelivery), `${input.deltaType} delta item requires a prior Delivery.`);
+    invariant(!input.exchangePackageItemId, 'Exchange Delta Item cannot reference an unsupplied Package Item.');
+  }
+
+  if (delivery.priorDeliveryId) {
+    invariant(Boolean(priorDelivery), 'Incremental Exchange Delta Item requires the Delivery base.');
     if (priorDelivery) {
       sameTenant(input, priorDelivery, 'Exchange Delta Item prior Delivery');
       invariant(input.priorDeliveryId === priorDelivery.id, 'Exchange Delta Item prior Delivery reference does not match.');
       invariant(delivery.priorDeliveryId === priorDelivery.id, 'Delta prior Delivery must match the Delivery base.');
     }
+  } else {
+    invariant(!input.priorDeliveryId && !priorDelivery, 'Full Exchange Delivery delta must not reference a prior Delivery.');
+    invariant(input.deltaType === 'NEW', 'A full Exchange Delivery can only record NEW delta semantics.');
+  }
+
+  if (input.deltaType === 'NEW' || input.deltaType === 'CHANGED' || input.deltaType === 'MOVED') {
+    invariant(Boolean(packageItem), `${input.deltaType} delta requires current Package membership.`);
+  }
+  if (input.deltaType === 'DELETED' || input.deltaType === 'ABSENT') {
+    invariant(!packageItem, `${input.deltaType} delta must not claim current Package membership.`);
+    text(input.priorSubjectVersion ?? '', `${input.deltaType} delta prior subject version`);
+  }
+  if (input.deltaType === 'CHANGED') {
+    text(input.priorSubjectVersion ?? '', 'CHANGED delta prior subject version');
   }
   if (input.deltaType === 'MOVED') {
     text(input.priorLocationReference ?? '', 'MOVED delta prior location');

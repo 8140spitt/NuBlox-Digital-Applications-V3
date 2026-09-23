@@ -13,6 +13,8 @@ export * from './functional.js';
 export * from './functional-factories.js';
 export * from './portability.js';
 export * from './portability-factories.js';
+export * from './publication.js';
+export * from './publication-factories.js';
 export * from './change.js';
 export * from './change-factories.js';
 export * from './information.js';

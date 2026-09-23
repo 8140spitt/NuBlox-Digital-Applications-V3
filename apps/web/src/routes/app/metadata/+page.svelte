@@ -239,7 +239,7 @@
             </select>
           </label>
           <label><span>Version</span><input name="version" type="number" min="1" value="1" required /></label>
-          <label class="wide-field"><span>Configuration (JSON object)</span><textarea name="configuration" rows="3" placeholder='e.g. {"min":0,"max":100}'></textarea></label>
+          <label class="wide-field"><span>Configuration (JSON object)</span><textarea name="configuration" rows="3" placeholder="e.g. minimum/maximum JSON configuration"></textarea></label>
           <label class="wide-field"><span>Description</span><textarea name="description" rows="3"></textarea></label>
           <button type="submit">Create Constraint <span>→</span></button>
         </form>

@@ -65,3 +65,15 @@ export interface PolicyAssignment {
   effectiveTo?: string;
   status: RecordStatus;
 }
+
+
+export interface PolicyResolutionCandidate {
+  assignment: PolicyAssignment;
+  definition: PolicyDefinition;
+  scopeDepth: number;
+}
+
+export interface EffectivePolicySet {
+  active: ReadonlyArray<PolicyResolutionCandidate>;
+  blocked: ReadonlyArray<PolicyResolutionCandidate>;
+}

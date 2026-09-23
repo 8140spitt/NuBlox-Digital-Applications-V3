@@ -34,6 +34,7 @@
     if (pathname.startsWith('/app/access')) return 'Access';
     if (pathname.startsWith('/app/policy')) return 'Policy Governance';
     if (pathname.startsWith('/app/security-classification')) return 'Information Security';
+    if (pathname.startsWith('/app/validation-policy')) return 'Validation Policy';
     return 'Home';
   }
 </script>
@@ -112,6 +113,14 @@
           >
             <span class="nav-symbol">SC</span>
             <span>Information security</span>
+          </a>
+          <a
+            class:active={isActive('/app/validation-policy')}
+            href="/app/validation-policy"
+            onclick={closeNavigation}
+          >
+            <span class="nav-symbol">VR</span>
+            <span>Validation policy</span>
           </a>
         </section>
       </nav>

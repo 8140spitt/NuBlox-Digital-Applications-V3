@@ -26,7 +26,9 @@ import {
   MySqlPolicyAdministrationCommandService,
   MySqlPolicyAdministrationReadRepository,
   MySqlSecurityClassificationAdministrationCommandService,
-  MySqlSecurityClassificationAdministrationReadRepository
+  MySqlSecurityClassificationAdministrationReadRepository,
+  MySqlValidationPolicyAdministrationCommandService,
+  MySqlValidationPolicyAdministrationReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -57,6 +59,8 @@ let policyAdministrationCommandServiceInstance: MySqlPolicyAdministrationCommand
 let policyAdministrationReadRepositoryInstance: MySqlPolicyAdministrationReadRepository | undefined;
 let securityClassificationAdministrationCommandServiceInstance: MySqlSecurityClassificationAdministrationCommandService | undefined;
 let securityClassificationAdministrationReadRepositoryInstance: MySqlSecurityClassificationAdministrationReadRepository | undefined;
+let validationPolicyAdministrationCommandServiceInstance: MySqlValidationPolicyAdministrationCommandService | undefined;
+let validationPolicyAdministrationReadRepositoryInstance: MySqlValidationPolicyAdministrationReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -282,4 +286,21 @@ export function getSecurityClassificationAdministrationReadRepository(): MySqlSe
   }
 
   return securityClassificationAdministrationReadRepositoryInstance;
+}
+
+
+export function getValidationPolicyAdministrationCommandService(): MySqlValidationPolicyAdministrationCommandService {
+  if (!validationPolicyAdministrationCommandServiceInstance) {
+    validationPolicyAdministrationCommandServiceInstance =
+      new MySqlValidationPolicyAdministrationCommandService(getDatabasePool());
+  }
+  return validationPolicyAdministrationCommandServiceInstance;
+}
+
+export function getValidationPolicyAdministrationReadRepository(): MySqlValidationPolicyAdministrationReadRepository {
+  if (!validationPolicyAdministrationReadRepositoryInstance) {
+    validationPolicyAdministrationReadRepositoryInstance =
+      new MySqlValidationPolicyAdministrationReadRepository(getDatabasePool());
+  }
+  return validationPolicyAdministrationReadRepositoryInstance;
 }

@@ -1195,3 +1195,35 @@ Windchill Part Configuration and Part Instance now provide a verified benchmark 
 ### Package / Received Delivery closure note
 
 The package/exchange pass now separates Package, Delivery, Received Delivery, acknowledgement, mapped import, imported replica and source authority. The sending system remains authoritative for imported shared objects; receipt/acceptance is exchange disposition rather than authority transfer. Context/Organisation/View/lifecycle/folder/version/security mappings, partial import and incremental New/Changed/Deleted/Absent semantics are documented. A source-security-label/target-no-label configuration is explicitly retained as a critical governance edge case. Any NuBlox transfer of master authority must therefore be an explicit adoption/authority-transfer process rather than an implication of import.
+
+
+## 23 September 2026 — REST Services architecture checkpoint
+
+### Evidence incorporated
+
+- Windchill REST Services is a separately versioned OData layer organised into functional domains rather than one table-oriented API.
+- Domain roots expose installed entity sets, while `$metadata` exposes the machine-readable EDM contract for entities, relationships and operations.
+- Not every entity has an independent entity set; some objects are reachable only by navigation from another entity.
+- Bound/unbound **functions** and **actions** are distinct. Actions represent state-changing domain commands and use POST.
+- WRS 2.0 exposes a broad functional domain catalogue covering product, documents, administration, principals, quality, manufacturing, change, classification, visualisation, CAD, effectivity, supplier, workflow and other optional-module capabilities.
+- API compatibility depends on Windchill version, WRS module version, individual domain version, installed optional modules and customer extensions.
+- `$batch` supports independent requests and atomic **change sets**. A failed operation inside a change set causes the whole change set to fail and prior modifications in that set to roll back as a Windchill transaction.
+- WRS documents permission failure as HTTP 403 and unexpected runtime failure as HTTP 500; these are not equivalent outcomes.
+- PTC-supplied domain configuration and customer extension configuration are intentionally separated.
+
+### Dedicated evidence artefact
+
+- `windchill-rest-services-domain-transaction-model.md`
+
+### WHC-039 status
+
+WHC-039 remains **PARTIAL**, not closed. The API framework/domain architecture is now mapped, but the significant entity-set/action/function catalogue for each WRS 2.0 domain still needs to be enumerated.
+
+### Refined immediate research queue
+
+1. Complete WRS 2.0 domain → entity set → action → function matrix.
+2. ESI transaction, source-authority, result, error and retry semantics.
+3. Import/export/migration object/version/security preservation matrix.
+4. Quality submodule versionability and remaining object-family edge cases.
+5. MPMLink Process Plan / Operation / Resource version semantics.
+6. Remaining Help Center top-level categories, system operations and customization framework.

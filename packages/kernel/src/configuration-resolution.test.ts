@@ -81,9 +81,13 @@ describe('configuration resolution invariants', () => {
     expect(item.selectedVersion).toBe('A');
 
     expect(() => createConfigurationResolutionItem({
-      ...item,
       id: asId<'ConfigurationResolutionItemId'>('CRITEM-BAD', 'Configuration Resolution Item'),
-      selectedVersion: undefined
+      tenantId,
+      runId,
+      configurationItemId: itemId,
+      criterionId,
+      status: 'RESOLVED',
+      evidence: { source: 'BASELINE' }
     })).toThrow(KernelInvariantError);
   });
 });

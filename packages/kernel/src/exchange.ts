@@ -84,7 +84,8 @@ export interface ExchangeDeltaItem {
   id: ExchangeDeltaItemId;
   tenantId: TenantId;
   exchangeDeliveryId: ExchangeDeliveryId;
-  exchangePackageItemId: ExchangePackageItemId;
+  subjectObjectId: CanonicalObjectId;
+  exchangePackageItemId?: ExchangePackageItemId;
   deltaType: ExchangeDeltaType;
   priorDeliveryId?: ExchangeDeliveryId;
   priorSubjectVersion?: string;

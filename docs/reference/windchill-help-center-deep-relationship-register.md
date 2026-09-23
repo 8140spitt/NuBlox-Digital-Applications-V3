@@ -193,6 +193,9 @@ actual participant
 | VER-003 | Workspace is a controlled work-in-progress area; commonspace is the shared authoritative area. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMGenericOverviewCapabilitiesCommonPDM.html |
 | VER-004 | Workspace Update resolves objects against the workspace configuration specification and commonspace changes. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMGenericOverviewCapabilitiesCommonPDM.html |
 | VER-005 | NuBlox must not treat every save, check-in, revision, promotion and change as the same operation. | HYPOTHESIS | NuBlox inference |
+| VER-006 | A new Part view version inherits the parent-view information/structure at derivation time but can then be modified and maintained separately in the child view. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PMNewViewVersionCreate.html |
+| VER-007 | View hierarchy is parent/child with one root view; view-dependent Part versions can be derived down that hierarchy (for example Engineering → Manufacturing → plant views). | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ViewAdminViewWorkWith.html |
+| VER-008 | The first version in a new view starts its own revision sequence, independent from the parent view, and each view-dependent version follows its own lifecycle process. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ViewAdminViewWorkWith.html |
 
 ---
 
@@ -279,6 +282,9 @@ actual participant
 | SUP-005 | Part Request is a first-class controlled request/workflow that can precede creation/approval of the resulting Part. | VERIFIED | PTC New Part Request branch |
 | SUP-006 | Sourcing rules can use supplier, sourcing context and classification to derive sourcing status. | VERIFIED | PTC Sourcing Rules branch |
 | SUP-007 | NuBlox should not use a single global supplier.status field to express all approval/qualification/sourcing semantics. | HYPOTHESIS | NuBlox inference |
+| SUP-008 | Manufacturer/Vendor supplier objects have lifecycle state; the standard Supplier lifecycle exposes In Work, Released and Canceled states. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SumaSupplierLifeCycleSet.html |
+| SUP-009 | An Organisation can assign a different supplier lifecycle template to Manufacturer/Vendor object types through lifecycle Object Initialisation Rules; newly created suppliers then use that configured lifecycle. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SumaConfigureLifecycleTemplate.html |
+| SUP-010 | Windchill Supplier Management is not supported in Program contexts, reinforcing that capability availability is context-type-specific rather than uniform. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/SumaSuppTabAbout.html |
 
 ---
 

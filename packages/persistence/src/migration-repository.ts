@@ -1136,6 +1136,21 @@ export class MySqlMigrationRepository {
     });
   }
 
+  async getEnvelope(
+    tenantId: TenantId,
+    id: CanonicalDataEnvelope['id']
+  ): Promise<CanonicalDataEnvelope | undefined> {
+    const [rows] = await this.pool.execute<EnvelopeRow[]>(
+      `SELECT id, tenant_id, direction, schema_name, schema_version, object_type,
+              stable_key, payload, external_system, external_object_id,
+              checksum, created_at
+         FROM canonical_data_envelopes
+        WHERE tenant_id = ? AND id = ?`,
+      [tenantId, id]
+    );
+    return rows[0] ? mapEnvelope(rows[0]) : undefined;
+  }
+
   async getPlan(tenantId: TenantId, id: MigrationPlan['id']): Promise<MigrationPlan | undefined> {
     const [rows] = await this.pool.execute<PlanRow[]>(
       `SELECT id, tenant_id, code, name, source_system, target_system,

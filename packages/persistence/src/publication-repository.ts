@@ -1213,7 +1213,18 @@ export class MySqlPublicationRepository {
         connection
       );
 
-      createPublicationResult(result, activity, acknowledgement);
+      const acknowledgementAttemptRow = await this.requireAttemptRowForUpdate(
+        connection,
+        result.tenantId,
+        acknowledgement.publicationAttemptId
+      );
+      const acknowledgementAttempt = mapAttempt(acknowledgementAttemptRow);
+      createPublicationResult(
+        result,
+        activity,
+        acknowledgement,
+        acknowledgementAttempt
+      );
       const nextActivity = applyPublicationResultToActivity(activity, result);
 
       await connection.execute(

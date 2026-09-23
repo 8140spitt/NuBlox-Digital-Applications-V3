@@ -1455,3 +1455,77 @@ WHC-039 is promoted to **DEEP_PASS**. Endpoint-by-endpoint payload signatures, c
 2. Close Manufacturing Resource version semantics.
 3. Reconcile the full Windchill Help Center top-level navigation against the coverage tracker for any missing capability families.
 4. Preserve WHC-044–046 as explicit CBE gaps requiring non-Windchill market/standards research.
+
+
+## 23 September 2026 — version-edge and top-level Help Center reconciliation checkpoint
+
+### Version-edge conclusions
+
+The remaining object-family uncertainty has been narrowed without forcing false uniformity:
+
+- Nonconformance, CAPA, Customer Experience and Quality Audit are governed process/object families, but the reviewed 12.0.2 evidence does not establish one common Part-style revision/iteration contract across them.
+- Regulatory Submission is explicitly represented as a **version** in the WRS Regulatory Master domain and follow-up creation creates a **new iteration**; later WRS documentation further distinguishes revisable and non-revisable regulatory-submission families.
+- Process Plan, Operation, Sequence and Standard Control Characteristic have explicit version/workable semantics.
+- Work Center, Skill, Tooling and Processing Material are first-class manufacturing resources and participate in effectivity semantics, but WRS 2.0 does not describe them using the same explicit "version of" contract applied to Process Plan, Operation, Sequence and Standard Control Characteristic.
+- NuBlox must therefore model version semantics **per canonical object family**, not impose one global Master/Revision/Iteration rule.
+
+### Newly closed Help Center branches
+
+The top-level traversal identified two capability families that were previously submerged inside broader administration/operations research:
+
+#### Business Administrative Change Promotion — WHC-048
+
+Windchill provides a governed configuration-promotion process across development/integration/test/production environments with:
+
+- target-system registration;
+- configuration baseline;
+- tracked administrative deltas;
+- export package;
+- source/target mappings;
+- conflict resolution;
+- import transaction/result evidence;
+- separate package/import authority.
+
+Administrative configuration promotion is therefore distinct from business-data migration and code deployment.
+
+Dedicated evidence:
+
+- `windchill-business-administrative-change-model.md`
+- `windchill-business-administrative-change-matrix.csv`
+
+#### Purge / Archive / Restore & Retention — WHC-049
+
+Windchill treats retention/disposition as governed execution with:
+
+- reusable purge queries/criteria;
+- iteration-level purge;
+- schedules;
+- purge jobs;
+- conflict handling;
+- archive/restore where installed;
+- separate audit-log purge/retention mechanisms.
+
+This is distinct from backup/recovery and from ordinary object deletion.
+
+Dedicated evidence:
+
+- `windchill-purge-archive-retention-model.md`
+- `windchill-purge-archive-retention-matrix.csv`
+
+### Top-level navigation reconciliation
+
+`windchill-help-center-top-level-reconciliation.csv` now cross-references the major Help Center branches to the WHC evidence families.
+
+The reconciliation also explicitly maps lower-level administration concerns such as licensing/entitlement, calendars, properties/command-line utilities, diagnostics and CAD/Workgroup Manager integrations into the already deep-passed capability families instead of inventing duplicate canonical domains.
+
+### Windchill evidence coverage state
+
+The Windchill study now has **DEEP_PASS** evidence for WHC-001 through WHC-043, WHC-047, WHC-048 and WHC-049.
+
+WHC-044 through WHC-046 remain deliberate **GAP** records because Windchill does not provide sufficient first-class semantics for:
+
+1. construction commissioning/test packs/system completion/handover;
+2. construction commercial/contract administration;
+3. construction site production/field execution.
+
+Those three gaps must be closed through CBE standards and specialist-market benchmarking rather than by stretching Windchill concepts beyond their evidence.

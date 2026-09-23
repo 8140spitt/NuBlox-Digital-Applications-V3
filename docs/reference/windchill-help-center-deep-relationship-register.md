@@ -1290,3 +1290,38 @@ WHC-040 is promoted to **DEEP_PASS**. The core transaction, publication-history,
 5. Remaining Help Center top-level categories.
 6. System operations.
 7. Customization framework.
+
+
+## 23 September 2026 — migration-preservation closure checkpoint
+
+### Evidence incorporated
+
+- Windchill has multiple distinct data-movement mechanisms: spreadsheet bulk import, generic Windchill Import/Export, LoadFromFile/LoadFileSet administration/bootstrap loading, specialised administration-template migration and Package/Received Delivery exchange.
+- Core Part and Document Import/Export can transfer multiple revisions/iterations, but PTC separately identifies **version history, iteration history and lifecycle history as not preserved** by ordinary object transfer.
+- Original source context/location is not inherently preserved as target placement; supported objects can be imported into a mapped target context.
+- Lifecycle-template references can travel with supported objects while the actual lifecycle definition must already exist or be migrated separately; lifecycle execution history remains a separate concern.
+- Part Views require compatible target View definitions; configuration/effectivity families can require separate prerequisite migration.
+- Ordinary Part/Document migration does not recreate historical Change authority merely by moving the resulting objects.
+- Users, groups, organisation data, domains, access rules, team templates, lifecycle templates and workflow templates have separate loader/administration migration mechanisms and therefore form prerequisite waves rather than generic business-object payload.
+- Spreadsheet import creates a governed Import Job with validation/status/log evidence and documented rollback on failure/cancellation.
+- Mapping, conflict evaluation and resolution policy are separate migration concerns and must leave durable disposition evidence.
+- No single Windchill transfer mechanism preserves the complete semantic history of an object.
+
+### Dedicated evidence artefacts
+
+- `windchill-migration-preservation-model.md`
+- `windchill-migration-preservation-matrix.csv`
+
+### WHC-041 status
+
+WHC-041 is promoted to **DEEP_PASS** for canonical-model purposes. The remaining work is source-instance-specific migration design, extraction and cutover engineering rather than an unresolved Windchill semantic boundary.
+
+### Refined immediate research queue
+
+1. Change-object version/revision/iteration semantics.
+2. Quality-object versionability by submodule/object family.
+3. MPMLink Process Plan / Operation / Resource / Control Characteristic version semantics.
+4. Finish lower-value WRS domain/action/function coverage.
+5. Remaining Help Center top-level categories.
+6. System operations.
+7. Customization framework.

@@ -35,3 +35,5 @@ TOC-033,Desktop/CAD authoring integrations and Workgroup Manager,"WHC-018; WHC-0
 TOC-034,Construction commissioning test packs and handover,"WHC-044","No first-class Windchill branch/object family sufficient for CBE commissioning semantics",EXPLICIT_CBE_GAP
 TOC-035,Construction commercial and contract administration,"WHC-045","Outside Windchill core capability boundary",EXPLICIT_CBE_GAP
 TOC-036,Construction site production and field execution,"WHC-046","Outside Windchill core capability boundary; MPMLink patterns are not field execution",EXPLICIT_CBE_GAP
+TOC-037,Collaboration Meetings Discussions Notebooks and Networks,"WHC-050; WHC-038","Contextual collaboration conversation references and notification interests separated from governed workflow and authority",COVERED
+TOC-038,Business Rules Validation and Association Policy,"WHC-051; WHC-024","Reusable validation rule sets execution conflicts association constraints and mapping policy",COVERED

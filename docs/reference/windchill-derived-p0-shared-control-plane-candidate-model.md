@@ -471,7 +471,128 @@ Disposition must retain enough evidence to prove what was evaluated, under which
 
 ---
 
-# 10. Cross-cutting requirements
+# 10. Business validation, relationship and mapping policy
+
+The Windchill Business Rules pass exposes a control-plane concern that is currently implicit across NuBlox lifecycle, workflow, change and domain services: reusable business validation policy.
+
+## Candidate identities
+
+### ValidationRuleDefinition
+
+Defines one reusable validation rule with:
+
+- id;
+- tenantId;
+- code;
+- name;
+- ruleType;
+- version;
+- input/subject compatibility;
+- severity;
+- effective dates;
+- status;
+- implementation/handler reference.
+
+### ValidationRuleSet
+
+Defines a governed, versioned collection of validation rules.
+
+### ValidationRuleSetMember
+
+Defines membership, execution order, applicability conditions and mandatory/advisory behaviour.
+
+### ValidationRuleEvaluationRun
+
+Records evaluation against an exact governed subject/version/configuration and context.
+
+### ValidationRuleResult
+
+Records each pass/fail/not-applicable/error result.
+
+### ValidationConflict
+
+Represents a material failed rule requiring correction, waiver or authorised disposition.
+
+### RelationshipConstraintPolicy
+
+Defines which typed relationships are valid between governed object families and under which conditions.
+
+### MappingPolicy
+
+Defines governed source-to-target semantic mapping/defaulting rules with scope, precedence and effective dates.
+
+## Invariants
+
+```text
+Validation Rule != Workflow
+Validation Rule != Lifecycle Transition
+Validation Rule != UI validation
+Relationship Constraint != Permission
+Mapping Policy != Migration Mapping instance
+```
+
+A release, approval, change or other governed command must be able to prove:
+
+```text
+rule-set identity/version
++ exact evaluated subject/version/configuration
++ evaluation context
++ individual rule results
++ conflicts/waivers
++ final command/decision
+```
+
+A failed rule must become a controlled business result, not an unhandled server failure.
+
+---
+
+# 11. Collaboration and contextual reference layer
+
+Windchill Meetings, Discussions, Notebooks and Context Networks show that collaboration requires its own semantics without becoming the authority for governed Work or object state.
+
+## Candidate identities
+
+### CollaborationSession
+
+A scheduled or ad-hoc collaborative event linked to a governed context/subject.
+
+Specialisations may include formal Meeting where NTE-012 Board/Committee governance requires agenda, minutes and resolutions.
+
+### DiscussionThread
+
+A subject-linked conversation thread.
+
+### DiscussionContribution
+
+A comment/contribution with author, timestamp, status, attachment/reference links and optional draft/published state.
+
+### Subscription
+
+Expresses notification interest in a governed subject, event type or thread.
+
+### ReferenceCollection
+
+A user/team/context collection of references without taking ownership of the referenced objects.
+
+### CrossContextReference
+
+A typed reference from one Context to another without modifying either context's administrative hierarchy.
+
+## Invariants
+
+```text
+Conversation != Work Item
+Comment != Decision
+Subscription != Permission
+Reference Collection != authoritative containment
+Cross-context reference != context hierarchy
+```
+
+Collaboration records may reference governed Work, Decisions, Deliverables and business objects, but cannot silently change their authoritative state.
+
+---
+
+# 12. Cross-cutting requirements
 
 Every candidate aggregate above must support, where applicable:
 
@@ -513,27 +634,32 @@ These must not be implemented as arbitrary unrestricted row updates.
 
 ---
 
-# 11. Proposed implementation order
+# 13. Proposed implementation order
 
 ## P0-A — Governed metadata and policy
 
 1. PolicyScope / PolicyAssignment
 2. Security Classification / Clearance
 3. Type / Attribute / Constraint / Enumeration definitions
+4. Validation Rule / Rule Set / Relationship Constraint / Mapping Policy
 
 ## P0-B — Configuration and exchange authority
 
-4. Configuration Resolution Definition / Run
-5. Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption
+5. Configuration Resolution Definition / Run
+6. Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption
 
 ## P0-C — Integration and migration control
 
-6. Integration Endpoint / Publication Transaction / Acknowledgement
-7. Migration Plan / Run / Mapping / Conflict / Cutover
+7. Integration Endpoint / Publication Transaction / Acknowledgement
+8. Migration Plan / Run / Mapping / Conflict / Cutover
 
 ## P0-D — Information governance
 
-8. Retention / Hold / Disposition / Archive / Restore
+9. Retention / Hold / Disposition / Archive / Restore
+
+## P0-E — Collaboration references
+
+10. Discussion / Contribution / Subscription / Reference Collection / Cross-Context Reference
 
 Each implementation slice must include:
 
@@ -552,7 +678,7 @@ kernel types
 
 ---
 
-# 12. Acceptance gate before governing architecture change
+# 14. Acceptance gate before governing architecture change
 
 This candidate model should only be promoted into the governing architecture when each proposed identity passes the canonical acceptance test:
 

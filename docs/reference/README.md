@@ -54,6 +54,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill Migration Preservation Matrix](windchill-migration-preservation-matrix.csv) — machine-readable preservation crosswalk covering identity, versions, history, lifecycle, context, effectivity, Change, principals, security, mappings, conflicts and rollback.
 - [PTC Windchill System Operations, Queue, Vault, Replication & Observability Model](windchill-system-operations-model.md) — separates business work from asynchronous jobs/queues/workers and business authority from vault/replica/cache placement, with JMX and recovery semantics.
 - [PTC Windchill System Operations Matrix](windchill-system-operations-matrix.csv) — machine-readable operational runtime/storage/control-plane crosswalk.
+- [PTC Windchill Customization & Extension Boundary Model](windchill-customization-extension-model.md) — separates configuration, metadata/model extensions, server services/events, business rules, REST extension, UI action composition and upgrade-safe site-file customization.
+- [PTC Windchill Customization & Extension Matrix](windchill-customization-extension-matrix.csv) — machine-readable extension-layer, semantic-boundary and upgrade-risk crosswalk.
 
 ## Research progression
 

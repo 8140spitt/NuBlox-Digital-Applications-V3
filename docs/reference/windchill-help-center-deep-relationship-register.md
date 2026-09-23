@@ -1566,3 +1566,30 @@ The Windchill evidence can now be translated into a NuBlox candidate canonical-o
 - CBE/enterprise gap requiring another benchmark.
 
 No Windchill container, module, class or API domain should become a NuBlox product boundary merely because it exists in Windchill.
+
+
+## 23 September 2026 — final omitted-product closure checkpoint
+
+The final 12.0.2 reconciliation was checked against the Windchill 12.0.2 product/media inventory and Help Center branches rather than only the previously enumerated capability families.
+
+This exposed product/help families that were not explicit rows in the earlier tracker:
+
+- Aerospace & Defense CDRL/SDRL, CAGE Code and Unincorporated Change;
+- Aerospace & Defense Configuration Items and Design Solutions;
+- Windchill Integrations for Embedded Software / Integrated Software Management;
+- STEP / EXPRESS exchange including AP214, AP242 and PLCS;
+- Office Online / Desktop Integration;
+- Windchill Product Analytics integration;
+- Windchill Ship Building Template.
+
+Key semantic conclusions:
+
+- CDRL/SDRL are governed package specialisations carrying contractual delivery metadata; CAGE is an organisation-identifier scheme; Unincorporated Change preserves approved change for deferred planned-revision incorporation.
+- CI/DS separates configuration item, candidate/fulfilled design solution, optional placement/link object, change directive and generated change action with effectivity-aware fulfilment.
+- Integrated Software Management introduces software Part/Build/Document/Configuration Data specialisations plus exact source/build/configuration provenance and external SCM/defect relationships.
+- STEP/AP214/AP242/PLCS are versioned exchange/mapping profiles over existing governed product/document/CAD identities rather than replacement masters.
+- Office/Desktop integrations are client surfaces over existing document/content/version/work-state commands.
+- Product Analytics attaches compliance/cost/lifecycle analytic projections to governed Part/Supplier identities and therefore requires source/projection provenance rather than a second product master.
+- Ship Building is evidenced as a classification/template package layered on existing PartsLink/product semantics.
+
+The closure tracker is now expanded to WHC-058 and the top-level reconciliation to TOC-045. The authoritative closure statement is `windchill-help-center-closure-audit.md`.

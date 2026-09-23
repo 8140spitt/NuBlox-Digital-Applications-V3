@@ -14,6 +14,7 @@ import {
 import type { Pool, RowDataPacket } from 'mysql2/promise';
 import { MySqlAccessRepository } from './access-repository.js';
 import { MySqlInformationRepository } from './information-repository.js';
+import { MySqlValidationExecutionService } from './validation-execution-service.js';
 
 interface AuthorityBackedDecisionRow extends RowDataPacket {
   id: string;
@@ -86,10 +87,12 @@ const REPRESENTATION_TYPES: ReadonlySet<RepresentationType> = new Set([
 export class MySqlInformationCommandService {
   private readonly access: MySqlAccessRepository;
   private readonly information: MySqlInformationRepository;
+  private readonly validation: MySqlValidationExecutionService;
 
   constructor(private readonly pool: Pool) {
     this.access = new MySqlAccessRepository(pool);
     this.information = new MySqlInformationRepository(pool);
+    this.validation = new MySqlValidationExecutionService(pool);
   }
 
   async createContainer(
@@ -264,11 +267,35 @@ export class MySqlInformationCommandService {
   ): Promise<InformationRevision> {
     await this.requireManage(tenantId, actorPersonId);
     const decisionId = required(input.decisionId, 'Approved release Decision');
-    await this.requireAuthorityBackedDecision(
+    const decision = await this.requireAuthorityBackedDecision(
       tenantId,
       decisionId,
       required(input.informationRevisionId, 'Information Revision')
     );
+    const validation = await this.validation.evaluateRuleSetForCommand(
+      tenantId,
+      actorPersonId,
+      {
+        ruleSetCode: 'INFORMATION_RELEASE',
+        subjectObjectId: decision.canonical_object_id,
+        subjectVersion: decision.revision,
+        contextType: 'COMMAND',
+        contextId: 'INFORMATION_RELEASE',
+        subject: {
+          objectType: 'INFORMATION_CONTAINER',
+          revision: decision.revision,
+          releasedIterationId: required(input.releasedIterationId, 'Released Information Iteration'),
+          decisionOutcome: decision.outcome,
+          authorityBacked: Boolean(decision.authority_grant_id)
+        }
+      }
+    );
+    if (validation.blocked) {
+      throw new InformationCommandError(
+        `Information release is blocked by governed validation (${validation.conflicts.length} conflict(s)).`,
+        'INVALID_INPUT'
+      );
+    }
     try {
       return await this.information.releaseInformationRevision(
         tenantId,
@@ -346,7 +373,7 @@ export class MySqlInformationCommandService {
     tenantId: TenantId,
     decisionId: string,
     informationRevisionId: string
-  ): Promise<void> {
+  ): Promise<AuthorityBackedDecisionRow> {
     const [rows] = await this.pool.query<AuthorityBackedDecisionRow[]>(
       `SELECT d.id, d.decision_type, d.subject_object_id, d.subject_version,
               ic.canonical_object_id, ir.revision, d.outcome, d.authority_grant_id, d.decided_at,
@@ -389,5 +416,6 @@ export class MySqlInformationCommandService {
         'INVALID_INPUT'
       );
     }
+    return row;
   }
 }

@@ -37,7 +37,9 @@ import {
   MySqlExchangeCommandService,
   MySqlExchangeReadRepository,
   MySqlPublicationCommandService,
-  MySqlPublicationReadRepository
+  MySqlPublicationReadRepository,
+  MySqlMigrationCommandService,
+  MySqlMigrationReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -79,6 +81,8 @@ let exchangeCommandServiceInstance: MySqlExchangeCommandService | undefined;
 let exchangeReadRepositoryInstance: MySqlExchangeReadRepository | undefined;
 let publicationCommandServiceInstance: MySqlPublicationCommandService | undefined;
 let publicationReadRepositoryInstance: MySqlPublicationReadRepository | undefined;
+let migrationCommandServiceInstance: MySqlMigrationCommandService | undefined;
+let migrationReadRepositoryInstance: MySqlMigrationReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -395,4 +399,21 @@ export function getPublicationReadRepository(): MySqlPublicationReadRepository {
       new MySqlPublicationReadRepository(getDatabasePool());
   }
   return publicationReadRepositoryInstance;
+}
+
+
+export function getMigrationCommandService(): MySqlMigrationCommandService {
+  if (!migrationCommandServiceInstance) {
+    migrationCommandServiceInstance =
+      new MySqlMigrationCommandService(getDatabasePool());
+  }
+  return migrationCommandServiceInstance;
+}
+
+export function getMigrationReadRepository(): MySqlMigrationReadRepository {
+  if (!migrationReadRepositoryInstance) {
+    migrationReadRepositoryInstance =
+      new MySqlMigrationReadRepository(getDatabasePool());
+  }
+  return migrationReadRepositoryInstance;
 }

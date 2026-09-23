@@ -126,6 +126,31 @@ Policy scope, Organisation hierarchy, context hierarchy and object-type hierarch
 
 Existing runtime primitives such as Outbox Message, Integration Job, Data Envelope and Migration Reconciliation support these canonical controls; they do not replace their business/control identities.
 
+### Validation policy
+
+- Validation Rule Definition;
+- Validation Rule Set;
+- Validation Rule Set Member;
+- Validation Rule Evaluation Run;
+- Validation Rule Result;
+- Validation Conflict;
+- Relationship Constraint Policy;
+- Mapping Policy.
+
+Validation policy is reusable governed control. It may gate Lifecycle, Workflow, Change, release, acceptance and domain commands, but it does not replace those mechanisms.
+
+### Collaboration and contextual reference
+
+- Collaboration Session;
+- Meeting specialisation;
+- Discussion Thread;
+- Discussion Contribution;
+- Subscription;
+- Reference Collection;
+- Cross-Context Reference.
+
+Collaboration references governed objects and contexts without becoming authoritative Work, Decision, Permission or containment.
+
 ### Control runtimes
 
 - Workflow;

@@ -15,6 +15,8 @@ export * from './portability.js';
 export * from './portability-factories.js';
 export * from './publication.js';
 export * from './publication-factories.js';
+export * from './migration.js';
+export * from './migration-factories.js';
 export * from './change.js';
 export * from './change-factories.js';
 export * from './information.js';

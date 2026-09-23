@@ -48,5 +48,12 @@ These rules are architectural constraints, not implementation preferences.
 41. **Reference architectures inform what NuBlox builds natively; they do not become NuBlox.**
 42. **The 29 Functions and 84 Construction Job Profiles resolve through shared native runtimes rather than isolated or externally hosted applications.**
 43. **Native authoring is part of the unified platform obligation wherever authoring is required to perform a supported job.**
+44. **Validation Rule != Workflow.**
+45. **Validation Rule != Lifecycle transition.**
+46. **Conversation != Work Item.**
+47. **Comment != Decision.**
+48. **Subscription != Permission.**
+49. **Reference Collection != authoritative containment.**
+50. **Cross-Context Reference != context hierarchy.**
 
 Any implementation that violates an invariant requires an explicit architecture decision before it can be accepted.

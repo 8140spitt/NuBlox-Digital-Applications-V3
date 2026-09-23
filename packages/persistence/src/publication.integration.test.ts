@@ -326,7 +326,7 @@ suite('closed-loop publication control', () => {
          FROM kernel_audit_entries
         WHERE tenant_id = ?
           AND entity_type IN ('PUBLICATION_ATTEMPT','PUBLICATION_ACKNOWLEDGEMENT','PUBLICATION_RESULT')
-        ORDER BY id`,
+        ORDER BY audit_id`,
       [tenantId]
     );
     expect(auditRows).toEqual(expect.arrayContaining([

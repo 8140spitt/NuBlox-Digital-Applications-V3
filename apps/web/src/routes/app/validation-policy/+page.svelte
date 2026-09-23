@@ -102,7 +102,7 @@
           </label>
           <label><span>Version</span><input name="version" type="number" min="1" step="1" value="1" required /></label>
           <label><span>Handler key</span><input name="handlerKey" required placeholder="e.g. lifecycle.required_state" /></label>
-          <label class="wide-field"><span>Configuration (JSON object)</span><textarea name="configuration" rows="3" placeholder='{"allowedStates":["RELEASED"]}'></textarea></label>
+          <label class="wide-field"><span>Configuration (JSON object)</span><textarea name="configuration" rows="3" placeholder="Optional JSON configuration"></textarea></label>
           <label class="wide-field"><span>Description</span><textarea name="description" rows="3"></textarea></label>
           <div class="admin-form-split">
             <label><span>Effective from</span><input name="effectiveFrom" type="datetime-local" /></label>
@@ -179,7 +179,7 @@
           <label><span>Target type</span><input name="targetType" required /></label>
           <label><span>Precedence</span><input name="precedence" type="number" min="0" value="0" required /></label>
           <label><span>Version</span><input name="version" type="number" min="1" value="1" required /></label>
-          <label class="wide-field"><span>Mapping (JSON object)</span><textarea name="mapping" required rows="4" placeholder='{"source":"target"}'></textarea></label>
+          <label class="wide-field"><span>Mapping (JSON object)</span><textarea name="mapping" required rows="4" placeholder="JSON source-to-target mapping"></textarea></label>
           <button type="submit">Create Mapping <span>→</span></button>
         </form>
       </article>

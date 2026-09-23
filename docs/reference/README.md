@@ -29,6 +29,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill Help Center — Deep Capability & Relationship Register](windchill-help-center-deep-relationship-register.md) — active fine-tooth-comb decomposition of the Windchill 12.0.2.0 Help Center into canonical objects, relationships, contexts, participation, inheritance, lifecycle, workflow, access, configuration, evidence and unresolved gaps. Verified PTC facts are kept separate from NuBlox hypotheses.
 - [PTC Windchill Context, Team, Participation & Policy-Domain Model](windchill-context-team-participation-model.md) — verified decomposition of Organisation groups, Shared Teams, Context Teams, Object Teams, Team Templates, role-system groups, ProjectLink differences and policy-domain inheritance.
 - [PTC Windchill Context/Team Participation Matrix](windchill-context-team-participation-matrix.csv) — machine-readable context-type and participation-mechanism crosswalk for Product, Library, Project, Program and administrative contexts.
+- [PTC Windchill Access-Control Composition & Precedence Model](windchill-access-control-composition-model.md) — exact domain/type/state ACL derivation, participant resolution, grant/deny/absolute-deny precedence, ad-hoc access and administrative-lock benchmark semantics.
+- [PTC Windchill Access-Control Precedence Matrix](windchill-access-control-precedence-matrix.csv) — machine-readable effective-permission conflict and precedence rules.
 - [PTC Windchill Help Center Coverage Tracker](windchill-help-center-coverage.csv) — machine-readable research backlog showing deep-pass, partial, pending and genuine CBE-gap capability families.
 
 ## Research progression

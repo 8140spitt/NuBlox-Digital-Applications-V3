@@ -247,10 +247,55 @@ The core distinction is now verified, but the fine-tooth-comb object-family pass
 
 Until those are closed, WHC-017 remains a deep-pass area with explicit residual edge cases rather than a finished exhaustive object-family register.
 
+## 13. Edge-family findings — baseline, collection, options and service structures
+
+### Managed Baseline versus Managed Collection versus Plan Baseline
+
+These are now confirmed to have different control semantics.
+
+- A **Managed Baseline** is intended to preserve a static point-in-time configuration, but Windchill still permits membership/metadata changes when policy allows. `Lock` restricts who can change it; `Protected` controls whether referenced objects can be deleted from the system. PTC explicitly recommends a Managed Collection when a more modifiable collection is required.
+- A **Managed Collection** is a governed, deliberately refreshable collection. Its initially selected objects and collection options can be changed, and `Refresh` reapplies those rules and can resolve newer dependent object versions.
+- A **Plan Baseline** is a different snapshot type: once created it is read-only. The whole baseline may be selected as active or deleted, but its snapshot content is not maintained like a Managed Collection.
+
+Therefore NuBlox must not collapse all three into a generic `Baseline` table with one mutability rule.
+
+### Option Sets and Choice Rules
+
+An **Option Set** is explicitly revision-controlled. When assigned, the assignment captures a specific version. A user can temporarily override the assigned revision for testing without changing the assignment seen by other users.
+
+The 12.0.2 Help Center also exposes a dedicated **Revision Control of Choice Rules** branch. Later PTC documentation confirms that Choice Rules are revision-controlled and can participate in change/release/effectivity; the exact 12.0.2 content page still needs to be resolved before that detailed rule set is marked fully 12.0.2-verified.
+
+### Service structures
+
+Service Information Manager objects are version-aware.
+
+PTC states that service structures/components expose **Version** and **State**. Information between content holders and content objects can synchronize Version, State and checkout state, subject to exceptions such as different lifecycle templates or versioning schemes.
+
+Publication-structure regeneration is also controlled by lifecycle state:
+
+- configured states such as **In Work** can regenerate by creating an **iteration**;
+- configured states such as **Released** can regenerate by creating a **revision**.
+
+Regeneration therefore does not mean "overwrite the current service manual." It is a governed version transition whose behaviour depends on lifecycle configuration.
+
+### Remaining edge-family gap
+
+The object-family queue is now narrower:
+
+1. exact Change Notice / Change Task revision semantics from the 12.0.2 procedure page;
+2. full Choice Rule 12.0.2 revision page;
+3. Options and Choices themselves;
+4. Quality object versionability by submodule;
+5. Process Plan / Operation / Resource revision semantics in 12.0.2;
+6. one-off and inserted Part versions;
+7. non-latest revise restrictions;
+8. master-to-master versus master-to-version relationship families;
+9. CAD ↔ Part association/build/carry-forward matrix.
+
 ## Primary PTC sources
 
 - Administering the Versioning of Parts, Documents, and CAD Documents — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WCAdminContextAdminVersionPartDocCADDoc.html
 - Creating New View Version — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PMNewViewVersionCreate.html
 - Working with Views and View Associations — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ViewAdminViewWorkWith.html
 - Configuring the Revision of Associated Items — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/WWGMNXAdminConfigRevisionAssocItem.html
-- Non-Latest Iterations Using Multiple Criteria — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/LclSrchAdvancedSearchExampleNonLatest.html
+- Non-Latest Iterations Using Multiple Criteria — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/LclSrchAdvancedSearchExampleNonLatest.html\n- Editing a Baseline — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/BaselineEdit.html\n- Managed Collection Information Page — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MgdCollectionInfo.html\n- Manage Plan Baselines — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/PlanMgmtBaselineManage.html\n- Overriding the Revision of the Assigned Option Set — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/OptionsRevisionOverride.html\n- Service Structure Attributes — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/sis6220.html\n- Preferences for Regenerating a Service Structure — https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/sis3020.html

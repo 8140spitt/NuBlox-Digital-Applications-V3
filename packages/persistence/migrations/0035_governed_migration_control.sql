@@ -135,6 +135,7 @@ CREATE TABLE migration_item_results (
   source_object_type VARCHAR(160) NOT NULL,
   source_object_id VARCHAR(512) NOT NULL,
   source_version VARCHAR(160) NULL,
+  source_identity_key CHAR(64) NOT NULL,
   source_envelope_id VARCHAR(64) NOT NULL,
   target_canonical_object_id VARCHAR(64) NULL,
   target_version VARCHAR(160) NULL,
@@ -149,7 +150,7 @@ CREATE TABLE migration_item_results (
   UNIQUE KEY uq_migration_item_results_tenant_id_id (tenant_id, id),
   UNIQUE KEY uq_migration_item_results_sequence (tenant_id, migration_run_id, sequence),
   UNIQUE KEY uq_migration_item_results_source (
-    tenant_id, migration_run_id, source_system, source_object_type, source_object_id, source_version
+    tenant_id, migration_run_id, source_identity_key
   ),
   KEY ix_migration_item_results_outcome (tenant_id, migration_run_id, outcome),
   CONSTRAINT fk_migration_item_results_run

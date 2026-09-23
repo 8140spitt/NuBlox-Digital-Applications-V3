@@ -420,23 +420,24 @@ export class MySqlExchangeRepository {
   }
 
   async addDeltaItem(item: ExchangeDeltaItem, audit: AuditContext = {}): Promise<void> {
-    const [delivery, packageItem, priorDelivery] = await Promise.all([
+    const [delivery, subject, packageItem, priorDelivery] = await Promise.all([
       this.requireDelivery(item.tenantId, item.exchangeDeliveryId),
-      this.requirePackageItem(item.tenantId, item.exchangePackageItemId),
+      this.requireObject(item.tenantId, item.subjectObjectId),
+      item.exchangePackageItemId ? this.requirePackageItem(item.tenantId, item.exchangePackageItemId) : Promise.resolve(undefined),
       item.priorDeliveryId ? this.requireDelivery(item.tenantId, item.priorDeliveryId) : Promise.resolve(undefined)
     ]);
-    createExchangeDeltaItem(item, delivery, packageItem, priorDelivery);
+    createExchangeDeltaItem(item, delivery, subject, packageItem, priorDelivery);
     await withTransaction(this.pool, async (connection) => {
       await connection.execute(
         `INSERT INTO exchange_delta_items
-          (id, tenant_id, exchange_delivery_id, exchange_package_item_id, delta_type,
-           prior_delivery_id, prior_subject_version, prior_location_reference,
+          (id, tenant_id, exchange_delivery_id, subject_object_id, exchange_package_item_id,
+           delta_type, prior_delivery_id, prior_subject_version, prior_location_reference,
            current_location_reference, details, created_by_person_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [item.id, item.tenantId, item.exchangeDeliveryId, item.exchangePackageItemId,
-         item.deltaType, item.priorDeliveryId ?? null, item.priorSubjectVersion ?? null,
-         item.priorLocationReference ?? null, item.currentLocationReference ?? null,
-         item.details ?? null, audit.actorPersonId ?? null]
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [item.id, item.tenantId, item.exchangeDeliveryId, item.subjectObjectId,
+         item.exchangePackageItemId ?? null, item.deltaType, item.priorDeliveryId ?? null,
+         item.priorSubjectVersion ?? null, item.priorLocationReference ?? null,
+         item.currentLocationReference ?? null, item.details ?? null, audit.actorPersonId ?? null]
       );
       await evidence(connection, item.tenantId, 'EXCHANGE_DELTA_ITEM', item.id, 'RECORDED', audit, item);
     });

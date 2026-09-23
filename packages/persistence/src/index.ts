@@ -45,6 +45,7 @@ export * from './metadata-administration-command-service.js';
 export * from './metadata-administration-read-repository.js';
 export * from './configuration-resolution-repository.js';
 export * from './configuration-resolution-command-service.js';
+export * from './configuration-resolution-read-repository.js';
 export * from './control-repository.js';
 export * from './database.js';
 export * from './migrations.js';

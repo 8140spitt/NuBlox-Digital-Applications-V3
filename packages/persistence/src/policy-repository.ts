@@ -324,6 +324,8 @@ export class MySqlPolicyRepository {
 
     for (let scopeDepth = 0; scopeDepth < lineage.length; scopeDepth += 1) {
       const scope = lineage[scopeDepth];
+      if (!scope) continue;
+
       const [rows] = await this.pool.execute<PolicyAssignmentRow[]>(
         `SELECT id, tenant_id, policy_scope_id, policy_definition_id, assignment_mode,
                 precedence, effective_from, effective_to, status

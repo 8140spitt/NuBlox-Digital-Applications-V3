@@ -50,6 +50,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill REST Domain / Entity / Operation Matrix](windchill-rest-domain-entity-operation-matrix.csv) — machine-readable high-value domain/entity/navigation/action/function coverage with version-evidence status.
 - [PTC Windchill ESI Transaction, Publication History & Source-Authority Model](windchill-esi-transaction-source-authority-model.md) — distribution targets, transaction/subtransaction identity, closed-loop acknowledgement, retry/resubmission and system-of-record semantics.
 - [PTC Windchill ESI Transaction Matrix](windchill-esi-transaction-matrix.csv) — machine-readable publication-target, transaction, acknowledgement, retry and authority rules.
+- [PTC Windchill Import/Export & Migration Preservation Model](windchill-migration-preservation-model.md) — distinguishes spreadsheet import, generic object Import/Export, data loaders and package exchange, including exactly which version, lifecycle, context, participant and Change semantics are not implicitly preserved.
+- [PTC Windchill Migration Preservation Matrix](windchill-migration-preservation-matrix.csv) — machine-readable preservation crosswalk covering identity, versions, history, lifecycle, context, effectivity, Change, principals, security, mappings, conflicts and rollback.
 
 ## Research progression
 

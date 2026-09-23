@@ -30,6 +30,7 @@ export * from './change-repository.js';
 export * from './information-repository.js';
 export * from './work-repository.js';
 export * from './access-repository.js';
+export * from './policy-repository.js';
 export * from './control-repository.js';
 export * from './database.js';
 export * from './migrations.js';

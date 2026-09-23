@@ -50,6 +50,11 @@ export type SecurityPrincipalType =
   | 'ORGANISATION_UNIT'
   | 'ORGANISATION';
 
+export interface SecurityPrincipalReference {
+  principalType: SecurityPrincipalType;
+  principalId: string;
+}
+
 export interface ClearanceGrant {
   id: ClearanceGrantId;
   tenantId: TenantId;

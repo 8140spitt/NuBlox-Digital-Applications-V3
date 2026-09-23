@@ -490,7 +490,7 @@ export class MySqlValidationPolicyRepository {
         `UPDATE validation_conflicts
             SET conflict_status = ?, resolution_reason = ?, updated_by_person_id = ?
           WHERE tenant_id = ? AND id = ? AND conflict_status = 'OPEN'`,
-        [updated.status, updated.resolutionReason, audit.actorPersonId ?? null, tenantId, conflictId]
+        [updated.status, updated.resolutionReason ?? null, audit.actorPersonId ?? null, tenantId, conflictId]
       );
       if (result.affectedRows !== 1) {
         throw new Error('Validation Conflict is no longer OPEN.');

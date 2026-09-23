@@ -1,7 +1,9 @@
 import { invariant } from './errors.js';
 import type {
   PolicyAssignment,
+  EffectivePolicySet,
   PolicyDefinition,
+  PolicyResolutionCandidate,
   PolicyScope
 } from './policy.js';
 
@@ -103,4 +105,66 @@ export function isPolicyAssignmentEffective(
   }
 
   return true;
+}
+
+
+function policySemanticKey(candidate: PolicyResolutionCandidate): string {
+  return `${candidate.definition.policyType}:${candidate.definition.code}`;
+}
+
+export function resolveEffectivePolicySet(
+  candidates: ReadonlyArray<PolicyResolutionCandidate>
+): EffectivePolicySet {
+  const ordered = [...candidates].sort(
+    (a, b) =>
+      b.scopeDepth - a.scopeDepth ||
+      a.assignment.precedence - b.assignment.precedence ||
+      a.assignment.id.localeCompare(b.assignment.id)
+  );
+
+  const active = new Map<string, PolicyResolutionCandidate>();
+  const blocked = new Map<string, PolicyResolutionCandidate>();
+
+  for (const candidate of ordered) {
+    invariant(
+      Number.isInteger(candidate.scopeDepth) && candidate.scopeDepth >= 0,
+      'Policy resolution scopeDepth must be a non-negative integer.'
+    );
+    invariant(
+      candidate.assignment.tenantId === candidate.definition.tenantId,
+      'Policy resolution candidate must remain tenant-bound.'
+    );
+    invariant(
+      candidate.assignment.policyDefinitionId === candidate.definition.id,
+      'Policy resolution candidate assignment must reference its Policy Definition.'
+    );
+
+    const key = policySemanticKey(candidate);
+
+    if (candidate.assignment.assignmentMode === 'BLOCK') {
+      active.delete(key);
+      blocked.set(key, candidate);
+      continue;
+    }
+
+    if (candidate.assignment.assignmentMode === 'OVERRIDE') {
+      blocked.delete(key);
+      active.set(key, candidate);
+      continue;
+    }
+
+    if (!active.has(key) && !blocked.has(key)) {
+      active.set(key, candidate);
+    }
+  }
+
+  const bySemanticKey = (
+    a: PolicyResolutionCandidate,
+    b: PolicyResolutionCandidate
+  ): number => policySemanticKey(a).localeCompare(policySemanticKey(b));
+
+  return Object.freeze({
+    active: Object.freeze([...active.values()].sort(bySemanticKey)),
+    blocked: Object.freeze([...blocked.values()].sort(bySemanticKey))
+  });
 }

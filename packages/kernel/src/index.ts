@@ -7,6 +7,8 @@ export * from './industry-factories.js';
 export * from './my-work.js';
 export * from './deliverables.js';
 export * from './deliverable-factories.js';
+export * from './exchange.js';
+export * from './exchange-factories.js';
 export * from './functional.js';
 export * from './functional-factories.js';
 export * from './portability.js';

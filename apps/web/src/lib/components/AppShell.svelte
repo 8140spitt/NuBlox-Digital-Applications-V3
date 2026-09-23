@@ -27,6 +27,7 @@
     if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
     if (pathname.startsWith('/app/exchange')) return 'Exchange Control';
     if (pathname.startsWith('/app/integration')) return 'Integration & Publication';
+    if (pathname.startsWith('/app/migration')) return 'Migration Control';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
@@ -89,6 +90,10 @@
           <a class:active={isActive('/app/integration')} href="/app/integration" onclick={closeNavigation}>
             <span class="nav-symbol">IP</span>
             <span>Integration control</span>
+          </a>
+          <a class:active={isActive('/app/migration')} href="/app/migration" onclick={closeNavigation}>
+            <span class="nav-symbol">MG</span>
+            <span>Migration control</span>
           </a>
           <a class:active={isActive('/app/configuration')} href="/app/configuration" onclick={closeNavigation}>
             <span class="nav-symbol">CC</span>

@@ -52,6 +52,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill ESI Transaction Matrix](windchill-esi-transaction-matrix.csv) — machine-readable publication-target, transaction, acknowledgement, retry and authority rules.
 - [PTC Windchill Import/Export & Migration Preservation Model](windchill-migration-preservation-model.md) — distinguishes spreadsheet import, generic object Import/Export, data loaders and package exchange, including exactly which version, lifecycle, context, participant and Change semantics are not implicitly preserved.
 - [PTC Windchill Migration Preservation Matrix](windchill-migration-preservation-matrix.csv) — machine-readable preservation crosswalk covering identity, versions, history, lifecycle, context, effectivity, Change, principals, security, mappings, conflicts and rollback.
+- [PTC Windchill System Operations, Queue, Vault, Replication & Observability Model](windchill-system-operations-model.md) — separates business work from asynchronous jobs/queues/workers and business authority from vault/replica/cache placement, with JMX and recovery semantics.
+- [PTC Windchill System Operations Matrix](windchill-system-operations-matrix.csv) — machine-readable operational runtime/storage/control-plane crosswalk.
 
 ## Research progression
 

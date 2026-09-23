@@ -1,0 +1,17 @@
+object_family,context,stable_master,revision,iteration,view_branch,lifecycle_per_branch,relationship_version_notes,status
+Part,Product or Library,Yes,Yes,Yes,Yes,Yes,"Part View versions branch independently; structure/configuration resolution separate from revision",VERIFIED_CORE
+Document,Product or Library,Yes,Yes,Yes,No standard Part View,N/A,"Reference/described-by relationships may resolve master or version differently",VERIFIED_CORE
+CAD Document,Product or Library,Version-controlled identity,Yes,Yes,No Part View semantics,N/A,"CAD-Part/dependency links have separate build and carry-forward rules",VERIFIED_CORE
+Dynamic Document,Product or Library,Version-controlled identity,Yes,Yes,No Part View semantics,N/A,"Content association carry-forward varies when linked Part/Dynamic Document are revised separately or together",VERIFIED_CORE
+Part,Project or Program,Project-context identity,"No Product/Library revision model","No Product/Library revision model",N/A,N/A,"PTC states Parts created in Project/Program are not versioned objects",VERIFIED
+Document,Project or Program,Project-context identity,"No Product/Library revision model","No Product/Library revision model",N/A,N/A,"PTC states Documents created in Project/Program are not versioned objects",VERIFIED
+CAD Document,Project or Program,Project-context identity,"No Product/Library revision model","No Product/Library revision model",N/A,N/A,"PTC states CAD Documents created in Project/Program are not versioned objects",VERIFIED
+Part View Version,Product or Library,Same Part conceptual identity,Independent per View,Iterations within View,Yes,Yes,"Child View initially inherits parent information/structure then evolves independently",VERIFIED
+Workflow Template,Administrative definition,Controlled template identity,Not Part-style revision,Yes,N/A,N/A,"Running instances remain on starting iteration; new instances use latest checked-in iteration",VERIFIED
+Life Cycle Template,Administrative definition,Controlled template identity,Not Part-style revision,Yes,N/A,N/A,"Template iteration is distinct from business-object lifecycle state",VERIFIED
+Change objects,Product or Library,TBD,TBD,TBD,N/A,N/A,"Object-family-specific pass pending",PENDING_EDGE_PASS
+Managed Baseline / Managed Collection,Product or Library,TBD,TBD,TBD,N/A,N/A,"Mutability/version behaviour pending exact pass",PENDING_EDGE_PASS
+Option / Choice / Rule,Product or Library,TBD,TBD,TBD,N/A,N/A,"Revision-control family pending exact pass",PENDING_EDGE_PASS
+Quality objects,Quality context,TBD,TBD,TBD,N/A,N/A,"Versionability varies by quality object family; pending exact pass",PENDING_EDGE_PASS
+Service Information objects,Product or Library,TBD,TBD,TBD,N/A,N/A,"Publication/information structure version semantics pending exact pass",PENDING_EDGE_PASS
+Process Plan / Operation / Resource,Manufacturing context,TBD,TBD,TBD,Manufacturing View interactions possible,TBD,"MPMLink version semantics pending exact pass",PENDING_EDGE_PASS

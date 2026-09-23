@@ -1174,13 +1174,12 @@ This checkpoint records the next completed evidence wave.
 
 ### Refined immediate research queue
 
-1. Package / Received Delivery authority-transfer and downgrade/security edge cases.
-2. REST Services complete domain/entity/action catalogue.
-3. ESI transaction, source-authority, error and retry semantics.
-4. Import/export/migration object/version/security preservation matrix.
-5. Quality submodule versionability and remaining version-object-family edge cases.
-6. MPMLink Process Plan / Operation / Resource version semantics.
-7. Remaining top-level Help Center categories, system operations and customization framework.
+1. REST Services complete domain/entity/action catalogue.
+2. ESI transaction, source-authority, error and retry semantics.
+3. Import/export/migration object/version/security preservation matrix.
+4. Quality submodule versionability and remaining version-object-family edge cases.
+5. MPMLink Process Plan / Operation / Resource version semantics.
+6. Remaining top-level Help Center categories, system operations and customization framework.
 
 
 ### Supplier Management closure note
@@ -1191,3 +1190,8 @@ Windchill Supplier Management has now been decomposed into Supplier/Organisation
 ### Physical-instance / as-maintained closure note
 
 Windchill Part Configuration and Part Instance now provide a verified benchmark for definition vs configured state vs serial/lot-traced physical identity, parent/child physical allocation, incorporation dates and occurrence-specific field replacement. This is sufficient to benchmark as-maintained configuration history. The first-class maintenance transaction itself — work orders, PM regimes, inspections, failures, labour/resources, readings and return-to-service — remains outside the semantics established by this branch and is retained as a NuBlox CBE/EAM gap.
+
+
+### Package / Received Delivery closure note
+
+The package/exchange pass now separates Package, Delivery, Received Delivery, acknowledgement, mapped import, imported replica and source authority. The sending system remains authoritative for imported shared objects; receipt/acceptance is exchange disposition rather than authority transfer. Context/Organisation/View/lifecycle/folder/version/security mappings, partial import and incremental New/Changed/Deleted/Absent semantics are documented. A source-security-label/target-no-label configuration is explicitly retained as a critical governance edge case. Any NuBlox transfer of master authority must therefore be an explicit adoption/authority-transfer process rather than an implication of import.

@@ -1144,6 +1144,21 @@ export class MySqlMigrationRepository {
           : Promise.resolve(undefined)
       ]);
       const currentPlan = mapPlan(planRow);
+      const [otherProductionRows] = await connection.execute<Array<RowDataPacket & { total: number }>>(
+        `SELECT COUNT(*) AS total
+           FROM migration_runs
+          WHERE tenant_id = ?
+            AND migration_plan_id = ?
+            AND id <> ?
+            AND run_type = 'PRODUCTION'
+            AND status IN ('QUEUED','RUNNING','AWAITING_RECONCILIATION')`,
+        [cutover.tenantId, cutover.migrationPlanId, cutover.migrationRunId]
+      );
+      if (Number(otherProductionRows[0]?.total ?? 0) > 0) {
+        throw new Error(
+          'Cutover cannot proceed while another production Migration Run for the Plan is active.'
+        );
+      }
       const validated = createCutoverDecision(
         cutover, currentPlan, run, reconciliation, decision, decider, authorityRule
       );

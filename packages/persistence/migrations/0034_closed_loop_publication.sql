@@ -240,7 +240,7 @@ CREATE TABLE publication_results (
   id VARCHAR(64) NOT NULL PRIMARY KEY,
   tenant_id VARCHAR(64) NOT NULL,
   publication_activity_id VARCHAR(64) NOT NULL,
-  acknowledgement_id VARCHAR(64) NULL,
+  acknowledgement_id VARCHAR(64) NOT NULL,
   outcome VARCHAR(24) NOT NULL,
   completed_at DATETIME(6) NOT NULL,
   external_object_id VARCHAR(512) NULL,

@@ -1,0 +1,10 @@
+ret_id,concern,windchill_semantics,nublox_benchmark,status
+RET-001,Selection definition,"Reusable purge queries and criteria","First-class versioned retention/disposition policy",VERIFIED
+RET-002,Iteration disposition,"Purge branch explicitly supports purging iterations","Retention must operate at governed version/iteration granularity",VERIFIED
+RET-003,Schedule,"Purge schedules are separate from jobs","Separate recurrence definition from execution instance",VERIFIED
+RET-004,Execution,"Purge Job is a governed execution with job information","First-class disposition run identity/evidence",VERIFIED
+RET-005,Conflict framework,"Eligibility conflicts can block override or skip candidate objects","Relationship/authority/legal-hold-aware disposition",VERIFIED
+RET-006,Archive,"Optional archive retains data for later restoration","Archive is a reversible governed disposition state",CORROBORATED
+RET-007,Restore,"Archived data can be restored where archive capability is installed","Restore must preserve provenance and governance context",CORROBORATED
+RET-008,Audit retention,"Audit log has separate purge management/scheduler","Evidence retention policy must be independent of transactional object retention",VERIFIED
+RET-009,Backup distinction,"Purge/archive is application disposition; backup/recovery protects platform state","Do not couple records disposition to disaster-recovery retention",INFERENCE

@@ -179,6 +179,10 @@ export function createMigrationItemResult(
   text(input.sourceHash, 'Migration Item Result sourceHash');
   invariant(input.sourceEnvelopeId === envelope.id, 'Migration Item Result must reference the supplied source envelope.');
   invariant(envelope.direction === 'IMPORT', 'Migration Item Result requires an IMPORT Data Envelope.');
+  invariant(
+    input.sourceHash === envelope.checksum,
+    'Migration Item Result sourceHash must equal the exact source Data Envelope checksum.'
+  );
   invariant(!envelope.externalSystem || envelope.externalSystem === plan.sourceSystem, 'Migration Item Result envelope external system must match the Plan source.');
   date(input.recordedAt, 'Migration Item Result recordedAt');
 
@@ -195,6 +199,11 @@ export function createMigrationItemResult(
     invariant(Boolean(target), 'External Identity on Migration Item Result requires a target canonical object.');
     if (target) invariant(externalIdentity.canonicalObjectId === target.id, 'Migration Item Result External Identity must belong to the target object.');
     invariant(externalIdentity.externalSystem === plan.sourceSystem, 'Migration Item Result External Identity must belong to the source system.');
+    invariant(
+      externalIdentity.externalObjectType === input.sourceObjectType &&
+        externalIdentity.externalObjectId === input.sourceObjectId,
+      'Migration Item Result External Identity must match the exact source object identity.'
+    );
   } else {
     invariant(!input.externalIdentityId, 'Migration Item Result cannot reference an unsupplied External Identity.');
   }

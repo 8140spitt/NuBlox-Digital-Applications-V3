@@ -39,6 +39,7 @@ export * from './security-classification-administration-read-repository.js';
 export * from './validation-policy-repository.js';
 export * from './validation-policy-administration-command-service.js';
 export * from './validation-policy-administration-read-repository.js';
+export * from './validation-execution-service.js';
 export * from './control-repository.js';
 export * from './database.js';
 export * from './migrations.js';

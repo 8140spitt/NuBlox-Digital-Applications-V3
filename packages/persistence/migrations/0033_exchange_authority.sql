@@ -123,7 +123,8 @@ CREATE TABLE exchange_delta_items (
   id VARCHAR(64) NOT NULL PRIMARY KEY,
   tenant_id VARCHAR(64) NOT NULL,
   exchange_delivery_id VARCHAR(64) NOT NULL,
-  exchange_package_item_id VARCHAR(64) NOT NULL,
+  subject_object_id VARCHAR(64) NOT NULL,
+  exchange_package_item_id VARCHAR(64) NULL,
   delta_type VARCHAR(16) NOT NULL,
   prior_delivery_id VARCHAR(64) NULL,
   prior_subject_version VARCHAR(120) NULL,
@@ -133,9 +134,11 @@ CREATE TABLE exchange_delta_items (
   created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   created_by_person_id VARCHAR(64) NULL,
   UNIQUE KEY uq_exchange_delta_items_tenant_id_id (tenant_id, id),
-  UNIQUE KEY uq_exchange_delta_items_delivery_item (tenant_id, exchange_delivery_id, exchange_package_item_id),
+  UNIQUE KEY uq_exchange_delta_items_delivery_subject (tenant_id, exchange_delivery_id, subject_object_id),
   CONSTRAINT fk_exchange_delta_items_delivery FOREIGN KEY (tenant_id, exchange_delivery_id)
     REFERENCES exchange_deliveries(tenant_id, id),
+  CONSTRAINT fk_exchange_delta_items_subject FOREIGN KEY (tenant_id, subject_object_id)
+    REFERENCES canonical_objects(tenant_id, id),
   CONSTRAINT fk_exchange_delta_items_package_item FOREIGN KEY (tenant_id, exchange_package_item_id)
     REFERENCES exchange_package_items(tenant_id, id),
   CONSTRAINT fk_exchange_delta_items_prior FOREIGN KEY (tenant_id, prior_delivery_id)
@@ -143,9 +146,12 @@ CREATE TABLE exchange_delta_items (
   CONSTRAINT chk_exchange_delta_items_type CHECK (
     delta_type IN ('NEW','CHANGED','MOVED','DELETED','ABSENT')
   ),
-  CONSTRAINT chk_exchange_delta_items_prior CHECK (
-    (delta_type = 'NEW' AND prior_delivery_id IS NULL)
-    OR (delta_type <> 'NEW' AND prior_delivery_id IS NOT NULL)
+  CONSTRAINT chk_exchange_delta_items_membership CHECK (
+    (delta_type IN ('NEW','CHANGED','MOVED') AND exchange_package_item_id IS NOT NULL)
+    OR (delta_type IN ('DELETED','ABSENT') AND exchange_package_item_id IS NULL)
+  ),
+  CONSTRAINT chk_exchange_delta_items_prior_version CHECK (
+    delta_type NOT IN ('CHANGED','DELETED','ABSENT') OR prior_subject_version IS NOT NULL
   ),
   CONSTRAINT chk_exchange_delta_items_move CHECK (
     delta_type <> 'MOVED'

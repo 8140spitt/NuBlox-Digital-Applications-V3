@@ -13,6 +13,8 @@ They are **not an MVP reduction**. Every engine in the canonical registry remain
 The authoritative inputs are:
 
 - `11-canonical-capability-and-native-tool-architecture.md`;
+- `../decisions/ADR-0006-shared-control-plane-canonical-identities.md`;
+- `../reference/windchill-translation-implementation-priority-register.csv`;
 - `canonical-native-tool-engine-register.csv`;
 - `canonical-l2-native-engine-map.csv`;
 - `canonical-activity-capability-map.csv`;
@@ -60,6 +62,27 @@ Deliver:
 - responsive information architecture and consistent interaction patterns.
 
 **Gate:** a user can enter NuBlox and perform shared governed work without dropping to backend-only capability.
+
+## Wave 0A — Close the accepted shared control plane
+
+**Engine slices:** NTE-002, NTE-006, NTE-007, NTE-008, plus shared metadata from NTE-032 and records-governance controls from NTE-043.
+
+The completed Windchill evidence study proved that the earlier backend foundations do not yet implement the full canonical control semantics now accepted by ADR-0006.
+
+Deliver:
+
+- Policy Scope / Policy Definition / inheritance and override provenance;
+- Security Classification / Clearance / governed exception;
+- Type / Attribute / Constraint / Enumeration definitions;
+- Configuration Resolution Definition / Run and exact resolved-result evidence;
+- Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption;
+- Integration Endpoint / Publication Transaction / Acknowledgement / Source Authority;
+- Migration Plan / Mapping Version / Run / Conflict / Reconciliation / Cutover;
+- Retention Policy / Hold / Disposition / Archive / Restore / Destruction Evidence.
+
+These capabilities extend existing engines rather than creating duplicate platform engines.
+
+**Gate:** shared policy, configuration selection, exchange, integration, migration and records-governance behaviour is canonical, auditable and reusable before domain engines implement their own variants.
 
 ## Wave 1 — Construction information, project and commercial spine
 
@@ -216,13 +239,14 @@ As of 21 September 2026:
 - 57 canonical engines defined;
 - 353 / 353 L2 Sub-functions mapped to native engines;
 - 1,510 / 1,510 Activities assigned canonical capability IDs;
-- 9 shared engines have backend implementation but still require full product UI exposure;
+- 5 shared engines retain aligned backend foundations but still require full product UI exposure;
+- 4 shared engines (NTE-002, NTE-006, NTE-007, NTE-008) are now correctly classified as partial because ADR-0006 adds evidence-backed canonical control semantics not yet implemented;
 - 3 domain engines have partial implementation and require completion;
-- 45 engines remain to build;
+- 45 engines remain to build, including the NTE-032 metadata-governance and NTE-043 records-governance depth consumed by Wave 0A;
 - Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
 - Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;
 - Change/Configuration/Baseline is now exposed through a tenant-scoped read projection and lifecycle-aware command surface covering Change assessment, affected objects, impact, Decision application, implementation, verification, discrepancy, closure, Configuration Items, Baselines and Effectivity; commitment Decisions are permission-gated and require an effective Authority Grant;
 - control mutation workflows, Deliverable/Issue/Acceptance, deeper Change/Control composition and remaining audit/history composition are still incomplete.
 
-Wave 0 remains open until the shared platform can be operated end-to-end through the product UI.
+Wave 0 remains open until the shared platform can be operated end-to-end through the product UI. Wave 0A is also active as a dependency gate introduced by ADR-0006; Wave 1 domain implementation must consume these shared controls rather than create local substitutes.

@@ -112,9 +112,9 @@ export interface PublicationActivity {
   subjectVersion?: string;
   action: PublicationOperation;
   sequence: number;
-  dataEnvelopeId?: DataEnvelopeId;
+  dataEnvelopeId: DataEnvelopeId;
   externalIdentityId?: ExternalIdentityId;
-  sourceAuthorityRuleId?: SourceAuthorityRuleId;
+  sourceAuthorityRuleId: SourceAuthorityRuleId;
   status: PublicationActivityStatus;
 }
 

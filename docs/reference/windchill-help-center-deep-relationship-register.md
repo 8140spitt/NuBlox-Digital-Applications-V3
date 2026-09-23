@@ -1391,3 +1391,67 @@ WHC-043 is promoted to **DEEP_PASS** for architecture benchmarking. Remaining ve
 3. Close Manufacturing Resource version semantics.
 4. Reconcile the full Help Center top-level navigation against the coverage tracker for any missing capability families.
 5. Preserve WHC-044–046 as explicit CBE gaps requiring non-Windchill research.
+
+
+## 23 September 2026 — WRS 2.0 domain-catalogue closure checkpoint
+
+### Evidence incorporated
+
+The REST-domain matrix now represents every domain family exposed by the Windchill REST Services 2.0 Help Center at the architectural level:
+
+- Product Management;
+- Document Management;
+- Windchill Administration/security audit;
+- Data Administration;
+- Principal Management;
+- Common;
+- Navigation Criteria;
+- Dynamic Document Management;
+- Parts List Management;
+- Service Information Management;
+- Quality Management System;
+- Nonconformance;
+- CAPA;
+- Customer Experience Management;
+- Regulatory Master;
+- Quality Audit;
+- Info*Engine;
+- Factory;
+- Manufacturing Process Management;
+- Change Management;
+- Classification Structure;
+- Saved Search;
+- Visualization;
+- Product Platform Management;
+- CAD Document Management;
+- Effectivity Management;
+- Event Management;
+- Supplier Management;
+- Workflow;
+- UDI;
+- PDM conglomerate/read domain.
+
+Significant entity sets/navigations/actions/functions are recorded for each where the WRS 2.0 Help Center publishes them.
+
+### Important cross-domain conclusions
+
+- Principal Management is a read-oriented principal boundary; identity objects are not exposed as unrestricted CRUD.
+- Navigation Criteria is a first-class saved configuration/filter model, consumed by Product, CAD, Service and Manufacturing structure actions.
+- Service BOM/Parts List, Information Structure and Publication Structure are downstream governed structures distinct from engineering/manufacturing structures.
+- Quality uses a shared Quality container/people-place/subject model, extended by distinct Nonconformance, CAPA, Customer Experience, Regulatory and Audit process domains.
+- MPMLink APIs independently expose versioned Process Plans, Operations, Sequences, Standard Operations and Standard Control Characteristics rather than embedding them as task attributes.
+- Event Management models external webhook subscriptions separately from the events and subscribed object/context/folder.
+- Saved Search models an executable query definition and retains security-audit evidence of execution.
+- Visualization exposes Representation as a derivative object with download/dynamic-structure functions, not as the native authoring object.
+- PDM is deliberately a read/function-only conglomerate domain for reporting/analytics clients and does not become a write/command authority.
+
+### WHC-039 status
+
+WHC-039 is promoted to **DEEP_PASS**. Endpoint-by-endpoint payload signatures, client SDK mechanics and vendor-specific implementation code are now treated as API implementation detail rather than missing canonical capability semantics.
+
+### Remaining Windchill research queue
+
+1. Close Quality-object versionability by individual process family.
+2. Close Manufacturing Resource version semantics.
+3. Reconcile the full Windchill Help Center top-level navigation against the coverage tracker for any missing capability families.
+4. Preserve WHC-044–046 as explicit CBE gaps requiring non-Windchill market/standards research.

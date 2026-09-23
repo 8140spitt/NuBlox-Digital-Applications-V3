@@ -59,6 +59,11 @@ interface GrantRow extends RowDataPacket {
   status: 'ACTIVE' | 'INACTIVE';
 }
 
+interface PersonRow extends RowDataPacket { id: string; label: string; }
+interface PositionRow extends RowDataPacket { id: string; label: string; }
+interface UnitRow extends RowDataPacket { id: string; label: string; }
+interface OrganisationRow extends RowDataPacket { id: string; label: string; }
+
 interface ExceptionRow extends RowDataPacket {
   id: string;
   subject_object_id: string;
@@ -77,6 +82,11 @@ interface ExceptionRow extends RowDataPacket {
 }
 
 export interface SecurityClassificationAdministrationProjection {
+  principals: Array<{
+    type: SecurityPrincipalType;
+    id: string;
+    label: string;
+  }>;
   schemes: Array<{
     id: string;
     code: string;
@@ -163,7 +173,8 @@ export class MySqlSecurityClassificationAdministrationReadRepository {
   ): Promise<SecurityClassificationAdministrationProjection> {
     await this.requireRead(tenantId, actorPersonId);
 
-    const [schemes, levels, assignments, clearances, exceptions] = await Promise.all([
+    const [principals, schemes, levels, assignments, clearances, exceptions] = await Promise.all([
+      this.loadPrincipals(tenantId),
       this.pool.execute<SchemeRow[]>(
         `SELECT id, code, name, description, scheme_kind, status
            FROM security_classification_schemes
@@ -218,6 +229,7 @@ export class MySqlSecurityClassificationAdministrationReadRepository {
     ]);
 
     return {
+      principals,
       schemes: schemes[0].map((row) => ({
         id: row.id,
         code: row.code,
@@ -268,6 +280,48 @@ export class MySqlSecurityClassificationAdministrationReadRepository {
         status: row.status
       }))
     };
+  }
+
+  private async loadPrincipals(
+    tenantId: TenantId
+  ): Promise<SecurityClassificationAdministrationProjection['principals']> {
+    const [people, positions, units, organisations] = await Promise.all([
+      this.pool.execute<PersonRow[]>(
+        `SELECT id, COALESCE(preferred_name, legal_name) AS label
+           FROM persons
+          WHERE tenant_id = ? AND status = 'ACTIVE'
+          ORDER BY label, id`,
+        [tenantId]
+      ),
+      this.pool.execute<PositionRow[]>(
+        `SELECT id, CONCAT(code, ' — ', title) AS label
+           FROM positions
+          WHERE tenant_id = ? AND status = 'ACTIVE'
+          ORDER BY code, title, id`,
+        [tenantId]
+      ),
+      this.pool.execute<UnitRow[]>(
+        `SELECT id, CONCAT(code, ' — ', name) AS label
+           FROM organisation_units
+          WHERE tenant_id = ? AND status = 'ACTIVE'
+          ORDER BY code, name, id`,
+        [tenantId]
+      ),
+      this.pool.execute<OrganisationRow[]>(
+        `SELECT id, legal_name AS label
+           FROM organisations
+          WHERE tenant_id = ? AND status = 'ACTIVE'
+          ORDER BY legal_name, id`,
+        [tenantId]
+      )
+    ]);
+
+    return [
+      ...people[0].map((row) => ({ type: 'PERSON' as const, id: row.id, label: row.label })),
+      ...positions[0].map((row) => ({ type: 'POSITION' as const, id: row.id, label: row.label })),
+      ...units[0].map((row) => ({ type: 'ORGANISATION_UNIT' as const, id: row.id, label: row.label })),
+      ...organisations[0].map((row) => ({ type: 'ORGANISATION' as const, id: row.id, label: row.label }))
+    ];
   }
 
   private async loadClearances(

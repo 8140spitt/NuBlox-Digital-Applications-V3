@@ -411,7 +411,7 @@ export function applyPublicationAcknowledgementToActivity(
 export function createPublicationResult(
   input: PublicationResult,
   activity: PublicationActivity,
-  acknowledgement?: PublicationAcknowledgement
+  acknowledgement: PublicationAcknowledgement
 ): PublicationResult {
   sameTenant(input, activity, 'Publication Result Activity');
   invariant(input.publicationActivityId === activity.id, 'Publication Result must reference the supplied Activity.');
@@ -421,13 +421,15 @@ export function createPublicationResult(
   );
   date(input.completedAt, 'Publication Result completedAt');
 
-  if (acknowledgement) {
-    sameTenant(input, acknowledgement, 'Publication Result Acknowledgement');
-    invariant(input.acknowledgementId === acknowledgement.id, 'Publication Result Acknowledgement reference does not match.');
-    invariant(acknowledgement.outcome === 'ACKNOWLEDGED', 'Publication Result cannot rely on a negative Acknowledgement.');
-  } else {
-    invariant(!input.acknowledgementId, 'Publication Result cannot reference an unsupplied Acknowledgement.');
-  }
+  sameTenant(input, acknowledgement, 'Publication Result Acknowledgement');
+  invariant(
+    input.acknowledgementId === acknowledgement.id,
+    'Publication Result Acknowledgement reference does not match.'
+  );
+  invariant(
+    acknowledgement.outcome === 'ACKNOWLEDGED',
+    'Publication Result cannot rely on a negative Acknowledgement.'
+  );
 
   if (input.externalObjectId) text(input.externalObjectId, 'Publication Result externalObjectId');
   if (input.externalVersion) text(input.externalVersion, 'Publication Result externalVersion');

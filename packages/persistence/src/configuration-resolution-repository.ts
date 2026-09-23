@@ -422,7 +422,7 @@ export class MySqlConfigurationResolutionRepository {
     const rawIds = Array.isArray(raw.configurationItemIds) ? raw.configurationItemIds : [];
     const input = {
       configurationItemIds: rawIds.map((id) => String(id) as ConfigurationItemId),
-      ...(typeof raw.baselineId === 'string' ? { baselineId: raw.baselineId as ConfigurationResolutionRun['input']['baselineId'] } : {}),
+      ...(typeof raw.baselineId === 'string' ? { baselineId: raw.baselineId as NonNullable<ConfigurationResolutionRun['input']['baselineId']> } : {}),
       ...(raw.explicitVersions && typeof raw.explicitVersions === 'object' && !Array.isArray(raw.explicitVersions)
         ? { explicitVersions: raw.explicitVersions as Readonly<Record<string, string>> }
         : {}),

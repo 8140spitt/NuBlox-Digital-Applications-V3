@@ -408,6 +408,15 @@ export function createCutoverDecision(
       invariant(input.targetAuthorityRuleId === targetAuthorityRule.id, 'Cutover Decision target Source Authority Rule reference does not match.');
       invariant(targetAuthorityRule.status === 'ACTIVE', 'Cutover Decision requires an ACTIVE target Source Authority Rule.');
       invariant(targetAuthorityRule.authorityOwner === 'NUBLOX', 'Cutover target Source Authority Rule must establish NuBlox authority.');
+      const scopedObjectTypes = plan.scopeDefinition['objectTypes'];
+      if (Array.isArray(scopedObjectTypes) && scopedObjectTypes.length > 0) {
+        invariant(
+          scopedObjectTypes.some(
+            (item) => typeof item === 'string' && item === targetAuthorityRule.subjectObjectType
+          ),
+          'Cutover target Source Authority Rule must govern an object family included in the Migration Plan scope.'
+        );
+      }
       invariant(Date.parse(targetAuthorityRule.effectiveFrom) <= Date.parse(input.effectiveAt!), 'Target Source Authority Rule must be effective by cutover.');
     }
   } else {

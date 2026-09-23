@@ -211,7 +211,7 @@ export class MySqlMetadataAdministrationReadRepository {
       ...(row.description ? { description: row.description } : {}),
       objectFamily: row.object_family,
       ...(row.parent_type_definition_id
-        ? { parentTypeDefinitionId: row.parent_type_definition_id as TypeDefinition['parentTypeDefinitionId'] }
+        ? { parentTypeDefinitionId: row.parent_type_definition_id as NonNullable<TypeDefinition['parentTypeDefinitionId']> }
         : {}),
       ...(row.parent_code ? { parentCode: row.parent_code } : {}),
       version: Number(row.version),
@@ -298,7 +298,7 @@ export class MySqlMetadataAdministrationReadRepository {
         version: Number(row.version),
         ...(row.unit_code ? { unitCode: row.unit_code } : {}),
         ...(row.enumeration_definition_id
-          ? { enumerationDefinitionId: row.enumeration_definition_id as AttributeDefinition['enumerationDefinitionId'] }
+          ? { enumerationDefinitionId: row.enumeration_definition_id as NonNullable<AttributeDefinition['enumerationDefinitionId']> }
           : {}),
         ...(row.enumeration_code ? { enumerationCode: row.enumeration_code } : {}),
         ...(row.reference_object_family ? { referenceObjectFamily: row.reference_object_family } : {}),

@@ -399,6 +399,9 @@ actual participant
 | PKG-005 | Imported package objects can remain locked because the receiving Windchill system is not authoritative for them. | VERIFIED | PTC Received Delivery branch |
 | PKG-006 | Full and incremental delivery semantics are different; incremental delivery can communicate moves/deletions relative to a base delivery. | VERIFIED | PTC Package best-practice branch |
 | PKG-007 | NuBlox should distinguish transmittal/package definition, delivery event, received delivery and source authority. | HYPOTHESIS | NuBlox inference |
+| PKG-008 | Received Delivery mapping explicitly supports Context, Owning Organisation, View, Lifecycle, Folder, Security Label and Version mappings before import into the target system. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ReceivedDeliveryLCMap.html |
+| PKG-009 | Windchill import/export supports transformation/mapping rules using special rules, XSL or Java-backed mappings to adapt source data to target-environment semantics and resolve import conflicts. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ExpImpPolicyRulesChp_MapRule.html |
+| PKG-010 | Change-management import/export can preserve change-association status plus process and reference links; change objects replicated into a target system remain read-only. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ChgMgmtChgAssocImportExport.html |
 
 ---
 

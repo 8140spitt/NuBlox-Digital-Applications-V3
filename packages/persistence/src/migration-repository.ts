@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import {
   activateMigrationPlan,
   applyCutoverToMigrationPlan,
@@ -250,6 +251,17 @@ interface AuthorityRuleRow extends RowDataPacket {
   effective_from: Date;
   effective_to: Date | null;
   status: SourceAuthorityRule['status'];
+}
+
+function sourceIdentityKey(item: MigrationItemResult): string {
+  return createHash('sha256')
+    .update([
+      item.sourceSystem,
+      item.sourceObjectType,
+      item.sourceObjectId,
+      item.sourceVersion ?? ''
+    ].join('|'))
+    .digest('hex');
 }
 
 function dbDate(value: string): Date {
@@ -746,14 +758,15 @@ export class MySqlMigrationRepository {
       await connection.execute(
         `INSERT INTO migration_item_results
           (id, tenant_id, migration_run_id, sequence, source_system,
-           source_object_type, source_object_id, source_version, source_envelope_id,
-           target_canonical_object_id, target_version, external_identity_id, outcome,
-           source_hash, target_hash, message, recorded_at, created_by_person_id)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           source_object_type, source_object_id, source_version, source_identity_key,
+           source_envelope_id, target_canonical_object_id, target_version,
+           external_identity_id, outcome, source_hash, target_hash, message,
+           recorded_at, created_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           item.id, item.tenantId, item.migrationRunId, item.sequence,
           item.sourceSystem, item.sourceObjectType, item.sourceObjectId,
-          item.sourceVersion ?? null, item.sourceEnvelopeId,
+          item.sourceVersion ?? null, sourceIdentityKey(item), item.sourceEnvelopeId,
           item.targetCanonicalObjectId ?? null, item.targetVersion ?? null,
           item.externalIdentityId ?? null, item.outcome, item.sourceHash,
           item.targetHash ?? null, item.message ?? null, dbDate(item.recordedAt),

@@ -1,5 +1,6 @@
 import {
   InformationCommandError,
+  SecurityClassificationAdministrationCommandError,
   type MySqlAccessRepository,
   type MySqlInformationReadRepository
 } from '@nublox/persistence';
@@ -12,7 +13,9 @@ import type { Actions, PageServerLoad } from './$types';
 import {
   getAccessRepository,
   getInformationCommandService,
-  getInformationReadRepository
+  getInformationReadRepository,
+  getSecurityClassificationAdministrationCommandService,
+  getSecurityClassificationAdministrationReadRepository
 } from '$lib/server/platform';
 
 type TenantId = Parameters<MySqlAccessRepository['evaluatePermission']>[0];
@@ -28,7 +31,10 @@ function optionalValue(formData: FormData, name: string): string | undefined {
 }
 
 function commandFailure(error: unknown, action: string) {
-  if (error instanceof InformationCommandError) {
+  if (
+    error instanceof InformationCommandError ||
+    error instanceof SecurityClassificationAdministrationCommandError
+  ) {
     const status =
       error.code === 'PERMISSION_DENIED'
         ? 403
@@ -65,6 +71,20 @@ function parseRepresentationType(raw: string): RepresentationType {
   return raw as RepresentationType;
 }
 
+function parseClassificationSubject(raw: string): {
+  subjectObjectId: string;
+  subjectVersion: string;
+} {
+  const [subjectObjectId = '', subjectVersion = ''] = raw.split('|');
+  if (!subjectObjectId || !subjectVersion) {
+    throw new SecurityClassificationAdministrationCommandError(
+      'A valid Information Revision is required for classification.',
+      'INVALID_INPUT'
+    );
+  }
+  return { subjectObjectId, subjectVersion };
+}
+
 function parseRevisionReference(raw: string): {
   informationContainerId: string;
   informationRevisionId: string;
@@ -86,14 +106,21 @@ export const load: PageServerLoad = async ({ locals }) => {
     return {
       allowed: false,
       canManage: false,
+      canClassify: false,
       reason: 'No authenticated tenant context is available.',
-      projection: null
+      projection: null,
+      securityProjection: null
     };
   }
 
   const tenantId = session.tenantId as TenantId;
   const access = getAccessRepository();
-  const [readEvaluation, manageEvaluation] = await Promise.all([
+  const [
+    readEvaluation,
+    manageEvaluation,
+    securityReadEvaluation,
+    securityManageEvaluation
+  ] = await Promise.all([
     access.evaluatePermission(
       tenantId,
       session.personId,
@@ -105,6 +132,18 @@ export const load: PageServerLoad = async ({ locals }) => {
       session.personId,
       PLATFORM_PERMISSION_KEYS.INFORMATION_MANAGE,
       { scopeType: 'TENANT' }
+    ),
+    access.evaluatePermission(
+      tenantId,
+      session.personId,
+      PLATFORM_PERMISSION_KEYS.SECURITY_CLASSIFICATION_READ,
+      { scopeType: 'TENANT' }
+    ),
+    access.evaluatePermission(
+      tenantId,
+      session.personId,
+      PLATFORM_PERMISSION_KEYS.SECURITY_CLASSIFICATION_MANAGE,
+      { scopeType: 'TENANT' }
     )
   ]);
 
@@ -112,22 +151,74 @@ export const load: PageServerLoad = async ({ locals }) => {
     return {
       allowed: false,
       canManage: false,
+      canClassify: false,
       reason: readEvaluation.reason,
-      projection: null
+      projection: null,
+      securityProjection: null
     };
   }
+
+  const [projection, securityProjection] = await Promise.all([
+    getInformationReadRepository().getProjection(
+      session.tenantId as ProjectionTenantId
+    ),
+    securityReadEvaluation.allowed
+      ? getSecurityClassificationAdministrationReadRepository().getProjection(
+          tenantId,
+          session.personId
+        )
+      : Promise.resolve(null)
+  ]);
 
   return {
     allowed: true,
     canManage: manageEvaluation.allowed,
+    canClassify: securityReadEvaluation.allowed && securityManageEvaluation.allowed,
     reason: readEvaluation.reason,
-    projection: await getInformationReadRepository().getProjection(
-      session.tenantId as ProjectionTenantId
-    )
+    projection,
+    securityProjection
   };
 };
 
 export const actions: Actions = {
+  assignClassification: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) {
+      return fail(401, {
+        action: 'assignClassification',
+        ok: false,
+        error: 'Sign in required.'
+      });
+    }
+
+    const formData = await request.formData();
+    const subject = parseClassificationSubject(
+      value(formData, 'classificationSubject')
+    );
+
+    try {
+      const assignment =
+        await getSecurityClassificationAdministrationCommandService().assignClassification(
+          session.tenantId as TenantId,
+          session.personId,
+          {
+            ...subject,
+            classificationLevelId: value(formData, 'classificationLevelId'),
+            effectiveFrom: optionalValue(formData, 'effectiveFrom'),
+            effectiveTo: optionalValue(formData, 'effectiveTo')
+          }
+        );
+
+      return {
+        action: 'assignClassification',
+        ok: true,
+        message: `Security Classification ${assignment.id} assigned.`
+      };
+    } catch (error) {
+      return commandFailure(error, 'assignClassification');
+    }
+  },
+
   createContainer: async ({ request, locals }) => {
     const session = locals.auth;
     if (!session) {

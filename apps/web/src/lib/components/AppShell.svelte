@@ -25,6 +25,7 @@
     if (pathname.startsWith('/app/delivery')) return 'CBE Capability Administration';
     if (pathname.startsWith('/app/information')) return 'Information';
     if (pathname.startsWith('/app/deliverables')) return 'Deliverables';
+    if (pathname.startsWith('/app/exchange')) return 'Exchange Control';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
@@ -79,6 +80,10 @@
           <a class:active={isActive('/app/deliverables')} href="/app/deliverables" onclick={closeNavigation}>
             <span class="nav-symbol">DL</span>
             <span>Deliverables</span>
+          </a>
+          <a class:active={isActive('/app/exchange')} href="/app/exchange" onclick={closeNavigation}>
+            <span class="nav-symbol">EX</span>
+            <span>Exchange control</span>
           </a>
           <a class:active={isActive('/app/configuration')} href="/app/configuration" onclick={closeNavigation}>
             <span class="nav-symbol">CC</span>

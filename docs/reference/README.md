@@ -35,6 +35,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill Version Object-Family Matrix](windchill-version-object-family-matrix.csv) — machine-readable verified core plus explicit edge-case backlog by object family.
 - [PTC Windchill CAD ↔ Part Association, Build & Synchronisation Model](windchill-cad-part-association-build-model.md) — verified relationship/build decomposition covering association authority, build rules, bidirectional synchronisation, reconciliation and design-context separation.
 - [PTC Windchill CAD ↔ Part Association Matrix](windchill-cad-part-association-matrix.csv) — machine-readable Owner / Contributing Image / Image / Contributing Content / Content build-link matrix.
+- [PTC Windchill Configuration Specification & Effectivity Resolution Model](windchill-configuration-effectivity-resolution-model.md) — version-resolution semantics across Latest, As Matured, Baseline, Change, Unit/Date Effectivity, Promotion Request and As Stored.
+- [PTC Windchill Configuration Specification Matrix](windchill-configuration-specification-matrix.csv) — machine-readable configuration-resolution authority matrix.
 - [PTC Windchill Help Center Coverage Tracker](windchill-help-center-coverage.csv) — machine-readable research backlog showing deep-pass, partial, pending and genuine CBE-gap capability families.
 
 ## Research progression

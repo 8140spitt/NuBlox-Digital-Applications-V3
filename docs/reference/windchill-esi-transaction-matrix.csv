@@ -1,0 +1,13 @@
+rule_id,concern,windchill_semantics,nublox_benchmark,status
+ESI-001,Distribution Target,"Explicit downstream destination/organisation target associated with publishable objects","Integration endpoint/target must be governed identity",VERIFIED
+ESI-002,Transaction identity,"One ESI transaction represents publication to a downstream system instance","Retain first-class publication attempt identity",VERIFIED
+ESI-003,Subtransaction,"ReleaseActivity represents an individual object × target publication","Track per-object/per-target publication outcome",VERIFIED
+ESI-004,Pending concurrency,"Pending ReleaseActivity prevents duplicate concurrent publication to the same target","Use active-attempt/idempotency guard",CORROBORATED
+ESI-005,Acknowledgement,"Downstream result is returned and persisted against publication activity/transaction","Transport send is not equivalent to successful apply",VERIFIED
+ESI-006,Result correlation,"Result includes object/action/target/transaction/success and diagnostic information","Correlate integration evidence to exact object operation and target",VERIFIED
+ESI-007,Retry model,"Failed publication is corrected then republished from Windchill; old downstream transaction is not simply replayed","Retry creates new governed attempt from current authoritative state",VERIFIED
+ESI-008,Retry targeting,"New transaction is created for failed downstream instances and data is sent only to failed targets","Retry scope should preserve successful target outcomes",VERIFIED
+ESI-009,Delta republish,"By default only objects changed since last successful attempt are republished","Publication history participates in delta selection",VERIFIED
+ESI-010,System of record,"Object and attribute authority is explicitly split between Windchill and downstream enterprise systems","Authority must be explicit per object/attribute family",CORROBORATED
+ESI-011,Version ordering,"Published source objects are expected to remain version-aligned and not publish revisions out of order","Enforce ordered publication where downstream semantics require it",CORROBORATED
+ESI-012,Authority vs acknowledgement,"Successful downstream publication does not inherently mean source mastership has transferred","Authority transfer requires an explicit business rule/process",INFERENCE

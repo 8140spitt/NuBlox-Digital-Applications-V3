@@ -37,6 +37,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill CAD ↔ Part Association Matrix](windchill-cad-part-association-matrix.csv) — machine-readable Owner / Contributing Image / Image / Contributing Content / Content build-link matrix.
 - [PTC Windchill Configuration Specification & Effectivity Resolution Model](windchill-configuration-effectivity-resolution-model.md) — version-resolution semantics across Latest, As Matured, Baseline, Change, Unit/Date Effectivity, Promotion Request and As Stored.
 - [PTC Windchill Configuration Specification Matrix](windchill-configuration-specification-matrix.csv) — machine-readable configuration-resolution authority matrix.
+- [PTC Windchill Change Redline Concurrency, Synchronisation & Merge Model](windchill-change-redline-concurrency-model.md) — concurrent proposed-change branching, controlled merge, rebase/synchronisation and Suspect conflict semantics.
+- [PTC Windchill Redline Conflict Resolution Matrix](windchill-redline-conflict-resolution-matrix.csv) — machine-readable usage/attribute/occurrence conflict and retention rules.
 - [PTC Windchill Help Center Coverage Tracker](windchill-help-center-coverage.csv) — machine-readable research backlog showing deep-pass, partial, pending and genuine CBE-gap capability families.
 
 ## Research progression

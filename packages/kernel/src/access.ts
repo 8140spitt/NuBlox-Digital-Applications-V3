@@ -18,6 +18,8 @@ export const PLATFORM_PERMISSION_KEYS = {
   PEOPLE_READ: 'platform.people.read',
   PEOPLE_MANAGE: 'platform.people.manage',
   ACCESS_MANAGE: 'platform.access.manage',
+  POLICY_READ: 'platform.policy.read',
+  POLICY_MANAGE: 'platform.policy.manage',
   DEPLOYMENT_READ: 'platform.deployment.read',
   DEPLOYMENT_MANAGE: 'platform.deployment.manage',
   COMPETENCE_READ: 'platform.competence.read',

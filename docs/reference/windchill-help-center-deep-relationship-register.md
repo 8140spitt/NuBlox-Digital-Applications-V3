@@ -1227,3 +1227,66 @@ WHC-039 remains **PARTIAL**, not closed. The API framework/domain architecture i
 4. Quality submodule versionability and remaining object-family edge cases.
 5. MPMLink Process Plan / Operation / Resource version semantics.
 6. Remaining Help Center top-level categories, system operations and customization framework.
+
+
+## 23 September 2026 — REST domain expansion and ESI transaction closure checkpoint
+
+### REST domain expansion
+
+The WRS matrix has now been deepened beyond the framework layer.
+
+High-value domains now explicitly represented include:
+
+- Product Management — Part/BOM/usage/occurrence plus optional supplier entities and governed product-structure actions;
+- Document Management;
+- Data Administration;
+- Change Management;
+- Workflow;
+- CAD Document Management — CADDocument, use/reference/source relationships and structure retrieval;
+- Effectivity Management — typed date/unit/lot/serial/MSN/block effectivity plus effectivity context;
+- Supplier Management — SourcingContext separated from supplier/manufacturer/vendor Part entities exposed through Product Management;
+- Manufacturing Process Management — ProcessPlan, Operation, Sequence, BOP, WorkCenter, Skill, Tooling, ProcessingMaterial and StandardControlCharacteristic;
+- Factory — reusable Standard Operation relationship structures;
+- Quality/QMS, CAPA, Customer Experience and Quality Audit;
+- Common cross-domain metadata/security/lifecycle functions;
+- read-only PDM aggregate/reporting domain.
+
+The dedicated matrix records whether evidence is exact to the WRS 2.0 study target or explicitly corroborated from an earlier/later official PTC WRS version rather than silently merging versions.
+
+WHC-039 remains **PARTIAL** because the lower-value domain/action/function catalogue is not yet exhaustive.
+
+### ESI transaction/source-authority closure
+
+The ESI pass now establishes:
+
+- Distribution Target as explicit downstream endpoint identity;
+- Transaction as a publication attempt to a downstream system instance;
+- ReleaseActivity/subtransaction as per-object × target publication state;
+- pending publication state as a concurrency/duplicate-publication guard;
+- downstream result/acknowledgement as part of persisted publication history;
+- correlation of object/action/target/transaction/success plus diagnostic evidence;
+- transaction history as operational state used for subsequent delta publication;
+- retry/resubmission as a **new publication attempt generated from current Windchill state**, not blind replay of the old payload;
+- failed-target-only resubmission and default changed-since-last-success selection;
+- object/attribute system-of-record ownership as an explicit integration design requirement;
+- authority/acknowledgement as separate concerns.
+
+### Dedicated evidence artefacts
+
+- `windchill-rest-domain-entity-operation-matrix.csv`
+- `windchill-esi-transaction-source-authority-model.md`
+- `windchill-esi-transaction-matrix.csv`
+
+### WHC-040 status
+
+WHC-040 is promoted to **DEEP_PASS**. The core transaction, publication-history, acknowledgement, resubmission and source-authority semantics are now closed sufficiently for canonical-model comparison. Remaining SAP/Oracle/MES adapter internals are integration implementation detail rather than missing business semantics.
+
+### Refined immediate research queue
+
+1. Import/export/migration object/version/security/participant preservation matrix.
+2. Finish the lower-value WRS domain/entity/action/function catalogue.
+3. Quality submodule versionability and remaining object-family edge cases.
+4. MPMLink version semantics and manufacturing-data edge cases.
+5. Remaining Help Center top-level categories.
+6. System operations.
+7. Customization framework.

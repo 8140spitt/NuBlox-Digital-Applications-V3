@@ -28,6 +28,8 @@ export * from './validation-factories.js';
 export * from './validation-execution.js';
 export * from './metadata.js';
 export * from './metadata-factories.js';
+export * from './configuration-resolution.js';
+export * from './configuration-resolution-factories.js';
 export * from './control.js';
 export * from './control-factories.js';
 export * from './errors.js';

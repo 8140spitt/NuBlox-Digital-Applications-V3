@@ -128,6 +128,10 @@ export function createPublicationTransaction(
     endpoint.direction === 'OUTBOUND' || endpoint.direction === 'BIDIRECTIONAL',
     'Publication Transaction Endpoint does not permit outbound publication.'
   );
+  invariant(
+    endpoint.acknowledgementRequired && endpoint.businessResultRequired,
+    'Governed Publication Transaction requires closed-loop acknowledgement and business result support.'
+  );
   invariant(input.requestedByPersonId === requester.id, 'Publication Transaction requester reference does not match.');
   text(input.transactionReference, 'Publication Transaction reference');
   text(input.idempotencyKey, 'Publication Transaction idempotencyKey');
@@ -221,6 +225,12 @@ export function createPublicationActivity(
     invariant(
       authorityRule.endpointId === endpoint.id,
       'Endpoint-owned Source Authority Rule must reference the Publication Endpoint.'
+    );
+  }
+  if (authorityRule.authorityOwner !== 'NUBLOX') {
+    invariant(
+      input.action === 'PUBLISH' || input.action === 'SYNC',
+      'NuBlox cannot issue master-data mutation actions for an externally authoritative object family.'
     );
   }
 

@@ -1,0 +1,37 @@
+recon_id,windchill_help_branch,coverage_ids,canonical_significance,residual_status
+TOC-001,Fundamentals and common UI/object behaviour,"WHC-001; WHC-017; WHC-035","Common context/search/folder/task/object/version semantics",COVERED
+TOC-002,Contexts Product Library Project Program,"WHC-002; WHC-004; WHC-005; WHC-025; WHC-026","Administrative/work contexts participation planning and cross-context exchange",COVERED
+TOC-003,Participant Organization and Site Administration,"WHC-003; WHC-004; WHC-006; WHC-007; WHC-013","Principals organisations teams policies profiles preferences",COVERED
+TOC-004,Types Attributes Classification and Object Initialization,"WHC-009; WHC-010; WHC-012","Metadata taxonomy constraints defaults and subtype administration",COVERED
+TOC-005,Templates,"WHC-005; WHC-011; WHC-014; WHC-015","Context team lifecycle workflow document report and task-form definitions",COVERED
+TOC-006,Access Control Security Labels Agreements and Profiles,"WHC-006; WHC-007; WHC-008","Authorization visibility classification clearance and agreements",COVERED
+TOC-007,Life Cycle Workflow Tasks and Promotion,"WHC-014; WHC-015; WHC-016","State transition runtime work routing decisions and maturity",COVERED
+TOC-008,Parts Product Structures Versions and Configuration,"WHC-017; WHC-019; WHC-021; WHC-022; WHC-023; WHC-047","Definition structure configuration applicability baselines variants and physical instances",COVERED
+TOC-009,CAD Documents Workspaces and CAD-Part Build,"WHC-018; WHC-020","Authoring state CAD structures association/build/synchronisation",COVERED
+TOC-010,Change Management,"WHC-024","Problem/change objects redlines concurrency merge and disposition",COVERED
+TOC-011,Project and Program Planning,"WHC-025","Plans activities resources assignments deliverables risks and baselines",COVERED
+TOC-012,Project/PDM Interoperability,"WHC-026","Share PDM checkout Send-to-PDM copy authority and provenance",COVERED
+TOC-013,Packages and Received Deliveries,"WHC-027; WHC-041","Governed exchange delivery mapping source authority and import transactions",COVERED
+TOC-014,Service Information and Service Parts,"WHC-028","Information/publication structures parts lists applicability and publishing",COVERED
+TOC-015,Supplier Management and Sourcing,"WHC-029","Supplier identity lifecycle sourcing contexts AML/AVL and source approval",COVERED
+TOC-016,Manufacturing Process Management and Factory,"WHC-030","eBOM/mBOM process plans operations resources plants control characteristics and manufacturing data",COVERED
+TOC-017,Quality Management Solutions,"WHC-031; WHC-032; WHC-033","NC CAPA audit customer experience document/training/design/regulatory controls",COVERED
+TOC-018,Digital Product Traceability,"WHC-034","External requirement/architecture traces suspect status and impact",COVERED
+TOC-019,Search and Indexing,"WHC-035","Database/index/content search saved searches and facets",COVERED
+TOC-020,Visualization and Publishing,"WHC-036","Representations annotations publish rules jobs workers and derived output",COVERED
+TOC-021,Reporting and Query Builder,"WHC-037","Report definitions execution views snapshots schedules and security",COVERED
+TOC-022,Auditing Subscriptions Events and Notifications,"WHC-038","Audit/event history subscriptions notification and retention",COVERED
+TOC-023,Windchill REST Services,"WHC-039","OData domains entities navigation commands metadata transactions and error model",COVERED
+TOC-024,Windchill ESI ERP MES Integration,"WHC-040","Distribution targets publication transaction acknowledgement retry and source authority",COVERED
+TOC-025,Windchill Import Export Data Loading and Migration,"WHC-041","Spreadsheet/object import loaders mappings conflicts and semantic preservation",COVERED
+TOC-026,System Administration Operations,"WHC-042","Queues workers vaulting replication JMX logging backup and recovery",COVERED
+TOC-027,Customization and Extension,"WHC-043","Configuration metadata models services events business rules REST UI and upgrade reconciliation",COVERED
+TOC-028,Business Administrative Change Promotion,"WHC-048","Administrative configuration baselines deltas packages promotion mappings conflicts and deployment evidence",COVERED
+TOC-029,Purge Archive Restore and Retention,"WHC-038; WHC-049","Object/iteration disposition schedules conflicts archive restore and audit retention",COVERED
+TOC-030,License and entitlement administration,"WHC-007; WHC-038","License profiles/entitlement visibility and license-usage audit",COVERED_AS_ADMIN_DETAIL
+TOC-031,Calendars and resource availability,"WHC-025; WHC-013","Planning/resource calendars plus inherited preferences",COVERED_AS_PLANNING_DETAIL
+TOC-032,Properties command-line utilities diagnostics and maintenance,"WHC-042; WHC-043","Operational control/configuration mechanics rather than new business-object family",COVERED_AS_IMPLEMENTATION_DETAIL
+TOC-033,Desktop/CAD authoring integrations and Workgroup Manager,"WHC-018; WHC-020; WHC-042","Authoring integration workspace conflict/cache and worker operations",COVERED_AS_INTEGRATION_DETAIL
+TOC-034,Construction commissioning test packs and handover,"WHC-044","No first-class Windchill branch/object family sufficient for CBE commissioning semantics",EXPLICIT_CBE_GAP
+TOC-035,Construction commercial and contract administration,"WHC-045","Outside Windchill core capability boundary",EXPLICIT_CBE_GAP
+TOC-036,Construction site production and field execution,"WHC-046","Outside Windchill core capability boundary; MPMLink patterns are not field execution",EXPLICIT_CBE_GAP

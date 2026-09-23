@@ -47,6 +47,24 @@ The kernel keeps these concepts separate.
 
 **Job Profile != Person != Position != Project Role != access role != Permission != Authority.**
 
+### Governed policy, metadata and information security
+
+- Policy Scope;
+- Policy Definition;
+- Policy Assignment;
+- Security Classification Scheme;
+- Security Classification Level;
+- Security Classification Assignment;
+- Clearance Grant;
+- Security Access Exception;
+- Type Definition;
+- Attribute Definition;
+- Constraint Definition;
+- Enumeration Definition / Value;
+- Type Attribute Assignment.
+
+Policy scope, Organisation hierarchy, context hierarchy and object-type hierarchy are distinct structures. Effective policy and security decisions retain inheritance, override and exception provenance.
+
 ### Enterprise operating context
 
 - Portfolio;
@@ -82,7 +100,31 @@ The kernel keeps these concepts separate.
 - Baseline;
 - Configuration;
 - Effectivity;
+- Configuration Resolution Definition / Run;
+- Exchange Package / Delivery / Received Delivery;
+- Authority Adoption;
 - supersession.
+
+### Integration, migration and records governance
+
+- Integration Endpoint;
+- Publication Transaction;
+- Publication Acknowledgement;
+- Source Authority Rule;
+- Migration Plan;
+- Migration Mapping Version;
+- Migration Run;
+- Migration Conflict;
+- Migration Reconciliation Run;
+- Cutover Decision;
+- Retention Policy;
+- Hold;
+- Disposition Rule / Schedule / Run;
+- Archive Record;
+- Restore Run;
+- Destruction Evidence.
+
+Existing runtime primitives such as Outbox Message, Integration Job, Data Envelope and Migration Reconciliation support these canonical controls; they do not replace their business/control identities.
 
 ### Control runtimes
 
@@ -221,6 +263,8 @@ identify configuration item
 
 Configuration status accounting must support reconstruction of what was required, approved, issued, procured/fabricated, constructed/installed, tested, handed over and operational at a point in time.
 
+A controlled configuration is resolved using an explicit Configuration Resolution Definition and must retain the exact criteria, inputs and selected object versions used by a Resolution Run. "Latest" is not sufficient where a reproducible configuration is required.
+
 ## Information, content and records
 
 NuBlox distinguishes:
@@ -242,6 +286,8 @@ An Information Container manages controlled information identity/revision.
 A Representation is a consumable form such as PDF, native model, image or generated report.
 
 A Record is retained evidence of business truth according to retention/legal requirements.
+
+Retention, legal Hold, Disposition, Archive and Restore are governed controls. Delete is not Disposition; Archive is not Backup; Restore is not disaster recovery.
 
 ## Events, audit and provenance
 
@@ -269,6 +315,8 @@ External products may appear only at the platform boundary for:
 After migration into a NuBlox-owned capability, NuBlox is the authoritative operational system for that capability. External source identities may be retained as provenance, but an external application must not remain necessary to create, edit, approve, transact, control or complete the work.
 
 Vendor schemas must not become the NuBlox canonical model.
+
+For governed exchange, Package, Delivery, Receipt, Acceptance, Import and Authority Transfer are separate states/events. Import or acknowledgement never transfers master authority implicitly.
 
 ## Kernel rule
 

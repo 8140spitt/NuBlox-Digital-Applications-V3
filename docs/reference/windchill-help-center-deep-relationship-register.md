@@ -173,6 +173,8 @@ actual participant
 | LFW-027 | Workflow-authoring authority is distinct from normal context administration because embedded workflow expressions can execute server-side code; Windchill adds trusted administrative-group controls around expression authoring. | VERIFIED; 12.0.2 official PTC non-English detail + Help Center branch | PTC Workflow Creators / Restricting Workflow-Embedded Java Code |
 | LFW-028 | Workflow deadlines can drive overdue status, notification and escalation/consequence behaviour; the exact deadline configuration is part of the workflow definition rather than the business object's lifecycle state. | VERIFIED pattern; 12.0.2 Help Center branch with later-version detailed corroboration | PTC Workflow Deadline Tab |
 | LFW-029 | Workflow Task/Process history and Voting History are retained alongside object history, allowing reconstruction of process execution and participant decisions. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/ObjectOviewInfoTablesHistory.html |
+| LFW-030 | With the default role-resolution behaviour, Windchill resolves each lifecycle role in this order: direct Team Template role participants; mapped Team Template role participants; lifecycle-defined participants; additional occupants of the same role from the object's Context Team; workflow-only roles when the workflow starts; and finally unused Team Template roles. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TeamTemplateAdminDefaultBehavior.html |
+| LFW-031 | Team Templates are available in Site, Organisation, Product and Library contexts but the Team Templates view is not available in Windchill ProjectLink; ProjectLink therefore has materially different team-resolution semantics from PDMLink Product/Library contexts. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/TemplatesTableAbout.html |
 
 
 
@@ -202,6 +204,8 @@ actual participant
 | STR-005 | CAD structures and Part structures are separate and connected via associations/build rules. | VERIFIED | PTC CAD-Part relationship branch |
 | STR-006 | Engineering and Manufacturing views can represent discipline-specific versions/structures of the same conceptual Part. | VERIFIED | PTC View Administration / MPMLink branches |
 | STR-007 | NuBlox should not force design, procurement, manufacturing, construction and asset breakdowns into a single universal tree. | HYPOTHESIS | NuBlox inference |
+| STR-008 | CAD↔Part association types carry different build semantics: Owner builds structure + attributes + representation; Contributing Image builds attributes + representation; Image builds representation only; Contributing Content builds attributes only; Content does not participate in the build process. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
+| STR-009 | Build rules can iterate the corresponding Part only when the built structure actually changes; the CAD association/build relationship therefore governs propagation rather than making CAD and Part the same object. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/MCPR_BuildRulesAndLinksOview.html |
 
 ---
 
@@ -395,6 +399,7 @@ actual participant
 | PLT-004 | Audit and subscriptions are driven by meaningful service/domain events rather than only CRUD logging. | VERIFIED | PTC Audit/Subscription branches |
 | PLT-005 | Windchill REST Services expose business-domain-oriented OData services rather than one undifferentiated generic record API. | VERIFIED | PTC Windchill REST Services branch |
 | PLT-006 | NuBlox integrations should expose bounded capability APIs over canonical objects, with domain events/outbox for asynchronous work. | HYPOTHESIS | NuBlox inference |
+| PLT-007 | Windchill REST Services exposes domain-specific OData entities/actions such as Document Management structure entities/actions rather than a single generic object endpoint; pagination and expansion depth are centrally configurable framework concerns. | VERIFIED | https://support.ptc.com/help/windchill/cloud/r12.0.2.0/en/Windchill_Help_Center/wrs_generalcapabilities_12_0_2_20.html |
 
 ---
 

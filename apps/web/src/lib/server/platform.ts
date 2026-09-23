@@ -31,7 +31,9 @@ import {
   MySqlValidationPolicyAdministrationReadRepository,
   MySqlValidationExecutionService,
   MySqlMetadataAdministrationCommandService,
-  MySqlMetadataAdministrationReadRepository
+  MySqlMetadataAdministrationReadRepository,
+  MySqlConfigurationResolutionCommandService,
+  MySqlConfigurationResolutionReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -67,6 +69,8 @@ let validationPolicyAdministrationReadRepositoryInstance: MySqlValidationPolicyA
 let validationExecutionServiceInstance: MySqlValidationExecutionService | undefined;
 let metadataAdministrationCommandServiceInstance: MySqlMetadataAdministrationCommandService | undefined;
 let metadataAdministrationReadRepositoryInstance: MySqlMetadataAdministrationReadRepository | undefined;
+let configurationResolutionCommandServiceInstance: MySqlConfigurationResolutionCommandService | undefined;
+let configurationResolutionReadRepositoryInstance: MySqlConfigurationResolutionReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -334,4 +338,21 @@ export function getMetadataAdministrationReadRepository(): MySqlMetadataAdminist
       new MySqlMetadataAdministrationReadRepository(getDatabasePool());
   }
   return metadataAdministrationReadRepositoryInstance;
+}
+
+
+export function getConfigurationResolutionCommandService(): MySqlConfigurationResolutionCommandService {
+  if (!configurationResolutionCommandServiceInstance) {
+    configurationResolutionCommandServiceInstance =
+      new MySqlConfigurationResolutionCommandService(getDatabasePool());
+  }
+  return configurationResolutionCommandServiceInstance;
+}
+
+export function getConfigurationResolutionReadRepository(): MySqlConfigurationResolutionReadRepository {
+  if (!configurationResolutionReadRepositoryInstance) {
+    configurationResolutionReadRepositoryInstance =
+      new MySqlConfigurationResolutionReadRepository(getDatabasePool());
+  }
+  return configurationResolutionReadRepositoryInstance;
 }

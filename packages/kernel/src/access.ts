@@ -26,6 +26,8 @@ export const PLATFORM_PERMISSION_KEYS = {
   VALIDATION_POLICY_MANAGE: 'platform.validation_policy.manage',
   VALIDATION_EXECUTE: 'platform.validation.execute',
   VALIDATION_CONFLICT_DISPOSITION: 'platform.validation.conflict.disposition',
+  METADATA_READ: 'platform.metadata.read',
+  METADATA_MANAGE: 'platform.metadata.manage',
   DEPLOYMENT_READ: 'platform.deployment.read',
   DEPLOYMENT_MANAGE: 'platform.deployment.manage',
   COMPETENCE_READ: 'platform.competence.read',

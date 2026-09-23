@@ -6,7 +6,8 @@ import type {
   SecurityClassificationAssignment,
   SecurityClassificationLevel,
   SecurityClassificationScheme,
-  SecurityClearanceCandidate
+  SecurityClearanceCandidate,
+  SecurityPrincipalReference
 } from './security.js';
 
 function nonEmpty(value: string, label: string): void {
@@ -168,6 +169,7 @@ export function evaluateSecurityClassificationAccess(input: {
   scheme: SecurityClassificationScheme;
   clearances: ReadonlyArray<SecurityClearanceCandidate>;
   exceptions: ReadonlyArray<SecurityAccessException>;
+  principals: ReadonlyArray<SecurityPrincipalReference>;
   evaluatedAt: string;
   targetScopeType: string;
   targetScopeId?: string;
@@ -178,6 +180,7 @@ export function evaluateSecurityClassificationAccess(input: {
     scheme,
     clearances,
     exceptions,
+    principals,
     evaluatedAt,
     targetScopeType,
     targetScopeId
@@ -190,9 +193,16 @@ export function evaluateSecurityClassificationAccess(input: {
     return { allowed: true, reason: 'Classification Assignment is not effective at the evaluation time.' };
   }
 
+  const isPrincipal = (principalType: string, principalId: string) =>
+    principals.some(
+      (principal) =>
+        principal.principalType === principalType && principal.principalId === principalId
+    );
+
   const exception = exceptions.find(
     (item) =>
       item.tenantId === assignment.tenantId &&
+      isPrincipal(item.principalType, item.principalId) &&
       item.subjectObjectId === assignment.subjectObjectId &&
       item.subjectVersion === assignment.subjectVersion &&
       item.classificationLevelId === level.id &&
@@ -210,6 +220,7 @@ export function evaluateSecurityClassificationAccess(input: {
   const clearance = clearances.find(
     (candidate) =>
       candidate.grant.tenantId === assignment.tenantId &&
+      isPrincipal(candidate.grant.principalType, candidate.grant.principalId) &&
       effective(
         candidate.grant.status,
         candidate.grant.effectiveFrom,

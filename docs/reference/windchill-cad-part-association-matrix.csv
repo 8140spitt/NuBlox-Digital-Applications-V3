@@ -1,0 +1,6 @@
+association_type,structure_build,attribute_build,representation_build,participates_in_build,semantic_authority,typical_use,canonical_note
+Owner,Yes,Yes,Yes,Yes,"Primary CAD definition","Drive Part structure and attributes and representation","Structure contribution depends on qualifying child CAD-to-Part associations"
+Contributing Image,No,Yes,Yes,Yes,"Secondary contributing CAD definition","Secondary/multi-CAD definition where attributes and representation both matter","No structure build link"
+Image,No,No,Yes,Yes,"Representation source","Secondary CAD representation","Participates through Representation build link only"
+Contributing Content,No,Yes,No,Yes,"Attribute contributor","Secondary CAD definition whose attributes matter","No structure or representation build link"
+Content,No,No,No,No,"Passive descriptive content","Drawing or additional descriptive CAD content","No build links; must not be treated as structure authority"

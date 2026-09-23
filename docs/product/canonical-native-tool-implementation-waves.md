@@ -65,7 +65,7 @@ Deliver:
 
 ## Wave 0A — Close the accepted shared control plane
 
-**Engine slices:** NTE-002, NTE-006, NTE-007, NTE-008, plus shared metadata from NTE-032 and records-governance controls from NTE-043.
+**Engine slices:** NTE-002, NTE-004, NTE-006, NTE-007, NTE-008, plus shared metadata from NTE-032 and records-governance controls from NTE-043.
 
 The completed Windchill evidence study proved that the earlier backend foundations do not yet implement the full canonical control semantics now accepted by ADR-0006.
 
@@ -74,6 +74,7 @@ Deliver:
 - Policy Scope / Policy Definition / inheritance and override provenance;
 - Security Classification / Clearance / governed exception;
 - Type / Attribute / Constraint / Enumeration definitions;
+- Validation Rule Definition / Rule Set / Evaluation / Conflict / Relationship Constraint Policy / Mapping Policy;
 - Configuration Resolution Definition / Run and exact resolved-result evidence;
 - Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption;
 - Integration Endpoint / Publication Transaction / Acknowledgement / Source Authority;
@@ -174,7 +175,7 @@ Deliver:
 Deliver:
 
 - strategy/scenario/enterprise planning;
-- board/committee governance;
+- meeting/collaboration plus board/committee governance;
 - EPM/KPI/benefits;
 - M&A/corporate development;
 - transformation/change/adoption;

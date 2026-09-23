@@ -1,0 +1,15 @@
+ext_id,extension_layer,windchill_mechanism,semantic_boundary,upgrade_risk,nublox_benchmark,status
+EXT-001,Configuration,"Preferences / templates / OIR / access / profiles","Governed parameter/rule change without code fork",LOW,"Configuration-first extension",VERIFIED
+EXT-002,Metadata,"Types subtypes attributes enumerations","Extend data vocabulary/schema through supported metadata layer",LOW_TO_MEDIUM,"Schema extension should remain declarative where possible",VERIFIED
+EXT-003,Modeled domain object,"Modeled business object / Foundation abstractions","New persisted object/relationship participating in platform object model",HIGH,"Require explicit domain-model extension governance",VERIFIED
+EXT-004,Business logic,"Business services / lightweight services / delegates","Executable domain/server behaviour",MEDIUM_TO_HIGH,"Expose stable service contracts and ownership",VERIFIED
+EXT-005,Event listener,"Non-modeled service / Service Event Management","React to platform/domain events without new persisted object model",MEDIUM,"Use governed event subscription/handler contracts",VERIFIED
+EXT-006,Business rule,"Business Rule / Rule Set / execution plan","Validation/eligibility policy independent of workflow routing",MEDIUM,"Rules should be first-class/versioned and return evidence",VERIFIED
+EXT-007,REST API,"WRS custom domain/entity/action/function configuration","Extend external contract separately from PTC base domain config",MEDIUM,"Version base and extension contracts separately",VERIFIED
+EXT-008,UI command,"Action Framework custom action","UI invocation definition distinct from domain command",MEDIUM,"Keep UI action thin over domain command",VERIFIED
+EXT-009,UI composition,"Action Model / tabs / menus / component builders","Placement/composition of UI actions and components",MEDIUM,"UI placement is not capability ownership",VERIFIED
+EXT-010,UI visibility,"Profiles / role-based visibility / validators","Controls exposure of UI elements","LOW_TO_MEDIUM","Visibility must not substitute for authorization",VERIFIED
+EXT-011,Property configuration,"site.xconf / xconfmanager","Source-of-configuration overrides generated/runtime properties","MEDIUM,"Never directly mutate generated internals where overlay exists",VERIFIED
+EXT-012,Supplied-file modification,"wtSafeArea siteMod/ptcOrig/ptcCurrent","Explicit three-way reconciliation of site modification with vendor update",HIGH,"Track customization debt and upgrade reconciliation evidence",VERIFIED
+EXT-013,Text/resource tailoring,"wtCustom / RBINFO","Localized/display resource override","LOW_TO_MEDIUM,"Separate presentation resources from business semantics",VERIFIED
+EXT-014,Core fork,"Direct modification outside supported extension mechanisms","Unbounded coupling to vendor implementation","VERY_HIGH,"Prohibit by default; require exceptional architecture decision",INFERENCE

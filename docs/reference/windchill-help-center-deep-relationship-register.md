@@ -1174,12 +1174,16 @@ This checkpoint records the next completed evidence wave.
 
 ### Refined immediate research queue
 
-1. Supplier qualification / sourcing-context lifecycle beyond manufacturer/vendor-part approval.
-2. Physical-instance maintenance-event / as-maintained configuration relationships.
-3. Package / Received Delivery authority-transfer and downgrade/security edge cases.
-4. REST Services complete domain/entity/action catalogue.
-5. ESI transaction, source-authority, error and retry semantics.
-6. Import/export/migration object/version/security preservation matrix.
-7. Quality submodule versionability and remaining version-object-family edge cases.
-8. MPMLink Process Plan / Operation / Resource version semantics.
-9. Remaining top-level Help Center categories, system operations and customization framework.
+1. Physical-instance maintenance-event / as-maintained configuration relationships.
+2. Package / Received Delivery authority-transfer and downgrade/security edge cases.
+3. REST Services complete domain/entity/action catalogue.
+4. ESI transaction, source-authority, error and retry semantics.
+5. Import/export/migration object/version/security preservation matrix.
+6. Quality submodule versionability and remaining version-object-family edge cases.
+7. MPMLink Process Plan / Operation / Resource version semantics.
+8. Remaining top-level Help Center categories, system operations and customization framework.
+
+
+### Supplier Management closure note
+
+Windchill Supplier Management has now been decomposed into Supplier/Organisation identity, Supplier lifecycle, OEM/Manufacturer/Vendor Parts, AML/AVL relationship status, Sourcing Context, Sourcing Rule and Part Request. The critical distinction is that a Released Supplier is not equivalent to an Approved supplier-Part source: Preferred / Approved / Do Not Use is contextual relationship state. Comprehensive construction supplier qualification, assessment, audit, compliance, performance and reassessment remains outside the first-class semantics established by this Windchill evidence and is therefore retained as an external-market/CBE gap.

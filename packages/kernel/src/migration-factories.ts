@@ -340,10 +340,17 @@ export function applyReconciliationToMigrationRun(
   invariant(reconciliation.migrationRunId === run.id, 'Migration Reconciliation Run must belong to the Migration Run.');
   invariant(['AWAITING_RECONCILIATION', 'BLOCKED'].includes(run.status), 'Migration Run must be awaiting reconciliation or blocked.');
   invariant(reconciliation.status !== 'RUNNING', 'Migration Reconciliation Run must be complete.');
+  if (reconciliation.status === 'VERIFIED') {
+    return Object.freeze({
+      ...run,
+      status: 'RECONCILED',
+      completedAt: reconciliation.completedAt
+    });
+  }
+  const { completedAt: _completedAt, ...openRun } = run;
   return Object.freeze({
-    ...run,
-    status: reconciliation.status === 'VERIFIED' ? 'RECONCILED' : 'BLOCKED',
-    completedAt: reconciliation.completedAt
+    ...openRun,
+    status: 'BLOCKED'
   });
 }
 

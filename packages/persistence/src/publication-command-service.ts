@@ -709,7 +709,7 @@ export class MySqlPublicationCommandService {
     actorPersonId: string,
     input: {
       activityId: string;
-      acknowledgementId?: string;
+      acknowledgementId: string;
       outcome: PublicationResultOutcome;
       externalObjectId?: string;
       externalVersion?: string;
@@ -728,7 +728,10 @@ export class MySqlPublicationCommandService {
       PLATFORM_PERMISSION_KEYS.PUBLICATION_RESULT_RECORD
     );
     enumValue(input.outcome, RESULT_OUTCOMES, 'Publication result outcome');
-    const acknowledgementId = optional(input.acknowledgementId);
+    const acknowledgementId = required(
+      input.acknowledgementId,
+      'Publication Acknowledgement'
+    );
     const externalObjectId = optional(input.externalObjectId);
     const externalVersion = optional(input.externalVersion);
     const resultReference = optional(input.resultReference);
@@ -744,14 +747,10 @@ export class MySqlPublicationCommandService {
         required(input.activityId, 'Publication Activity'),
         'Publication Activity'
       ),
-      ...(acknowledgementId
-        ? {
-            acknowledgementId: asId<'PublicationAcknowledgementId'>(
-              acknowledgementId,
-              'Publication Acknowledgement'
-            )
-          }
-        : {}),
+      acknowledgementId: asId<'PublicationAcknowledgementId'>(
+        acknowledgementId,
+        'Publication Acknowledgement'
+      ),
       outcome: input.outcome,
       completedAt: iso(input.completedAt, 'Result completedAt'),
       ...(externalObjectId ? { externalObjectId } : {}),

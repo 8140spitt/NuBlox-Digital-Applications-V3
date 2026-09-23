@@ -161,7 +161,7 @@ describe('closed-loop publication invariants', () => {
       outcome: 'APPLIED',
       completedAt: '2026-09-23T18:07:00.000Z',
       externalObjectId: 'ERP-DOC-001'
-    }, acknowledged, acknowledgement);
+    }, acknowledged, acknowledgement, delivered);
     const applied = applyPublicationResultToActivity(acknowledged, result);
     const completed = updatePublicationTransactionFromActivities(
       afterAck,

@@ -29,7 +29,9 @@ import {
   MySqlSecurityClassificationAdministrationReadRepository,
   MySqlValidationPolicyAdministrationCommandService,
   MySqlValidationPolicyAdministrationReadRepository,
-  MySqlValidationExecutionService
+  MySqlValidationExecutionService,
+  MySqlMetadataAdministrationCommandService,
+  MySqlMetadataAdministrationReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -63,6 +65,8 @@ let securityClassificationAdministrationReadRepositoryInstance: MySqlSecurityCla
 let validationPolicyAdministrationCommandServiceInstance: MySqlValidationPolicyAdministrationCommandService | undefined;
 let validationPolicyAdministrationReadRepositoryInstance: MySqlValidationPolicyAdministrationReadRepository | undefined;
 let validationExecutionServiceInstance: MySqlValidationExecutionService | undefined;
+let metadataAdministrationCommandServiceInstance: MySqlMetadataAdministrationCommandService | undefined;
+let metadataAdministrationReadRepositoryInstance: MySqlMetadataAdministrationReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -313,4 +317,21 @@ export function getValidationExecutionService(): MySqlValidationExecutionService
     validationExecutionServiceInstance = new MySqlValidationExecutionService(getDatabasePool());
   }
   return validationExecutionServiceInstance;
+}
+
+
+export function getMetadataAdministrationCommandService(): MySqlMetadataAdministrationCommandService {
+  if (!metadataAdministrationCommandServiceInstance) {
+    metadataAdministrationCommandServiceInstance =
+      new MySqlMetadataAdministrationCommandService(getDatabasePool());
+  }
+  return metadataAdministrationCommandServiceInstance;
+}
+
+export function getMetadataAdministrationReadRepository(): MySqlMetadataAdministrationReadRepository {
+  if (!metadataAdministrationReadRepositoryInstance) {
+    metadataAdministrationReadRepositoryInstance =
+      new MySqlMetadataAdministrationReadRepository(getDatabasePool());
+  }
+  return metadataAdministrationReadRepositoryInstance;
 }

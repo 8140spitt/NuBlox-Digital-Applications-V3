@@ -1325,3 +1325,36 @@ WHC-041 is promoted to **DEEP_PASS** for canonical-model purposes. The remaining
 5. Remaining Help Center top-level categories.
 6. System operations.
 7. Customization framework.
+
+
+## 23 September 2026 — system-operations closure checkpoint
+
+### Evidence incorporated
+
+- Background Queue, Queue Entry, Queue Group and Background Method Server are separate runtime concepts.
+- Queue enabled/disabled state is separate from started/stopped execution state.
+- Queue groups allow asynchronous workloads to be placed across dedicated background Method Servers and can support high-availability processing without changing originating business objects.
+- Windchill separates Master Vault, Replica Vault and Cache Vault storage roles.
+- Vaulting rules can route physical content using class/domain/lifecycle-state policy without making storage location part of business-object identity.
+- Replication copies content for locality/performance; PTC explicitly states remote replication does not include metadata.
+- Ad-hoc and predictive caching are locality mechanisms, not source-authority transfer.
+- Publication uses separate priority/execution/status queue responsibilities.
+- JMX/MBeans provide an operational control plane over Method Servers, queues, properties, logging and cluster/runtime monitoring.
+- Backup/recovery scope spans database, configuration/source, index/search data, authentication/access dependencies and external vault content.
+
+### Dedicated evidence artefacts
+
+- `windchill-system-operations-model.md`
+- `windchill-system-operations-matrix.csv`
+
+### WHC-042 status
+
+WHC-042 is promoted to **DEEP_PASS** for architecture benchmarking. Remaining work is environment-specific topology, sizing, tuning and vendor deployment procedure rather than missing canonical semantics.
+
+### Refined immediate research queue
+
+1. Customization framework and extension boundaries.
+2. Quality-object versionability by family.
+3. Manufacturing Resource version semantics.
+4. Finish lower-value WRS domain/action/function coverage.
+5. Remaining top-level Help Center categories not yet represented.

@@ -1174,16 +1174,20 @@ This checkpoint records the next completed evidence wave.
 
 ### Refined immediate research queue
 
-1. Physical-instance maintenance-event / as-maintained configuration relationships.
-2. Package / Received Delivery authority-transfer and downgrade/security edge cases.
-3. REST Services complete domain/entity/action catalogue.
-4. ESI transaction, source-authority, error and retry semantics.
-5. Import/export/migration object/version/security preservation matrix.
-6. Quality submodule versionability and remaining version-object-family edge cases.
-7. MPMLink Process Plan / Operation / Resource version semantics.
-8. Remaining top-level Help Center categories, system operations and customization framework.
+1. Package / Received Delivery authority-transfer and downgrade/security edge cases.
+2. REST Services complete domain/entity/action catalogue.
+3. ESI transaction, source-authority, error and retry semantics.
+4. Import/export/migration object/version/security preservation matrix.
+5. Quality submodule versionability and remaining version-object-family edge cases.
+6. MPMLink Process Plan / Operation / Resource version semantics.
+7. Remaining top-level Help Center categories, system operations and customization framework.
 
 
 ### Supplier Management closure note
 
 Windchill Supplier Management has now been decomposed into Supplier/Organisation identity, Supplier lifecycle, OEM/Manufacturer/Vendor Parts, AML/AVL relationship status, Sourcing Context, Sourcing Rule and Part Request. The critical distinction is that a Released Supplier is not equivalent to an Approved supplier-Part source: Preferred / Approved / Do Not Use is contextual relationship state. Comprehensive construction supplier qualification, assessment, audit, compliance, performance and reassessment remains outside the first-class semantics established by this Windchill evidence and is therefore retained as an external-market/CBE gap.
+
+
+### Physical-instance / as-maintained closure note
+
+Windchill Part Configuration and Part Instance now provide a verified benchmark for definition vs configured state vs serial/lot-traced physical identity, parent/child physical allocation, incorporation dates and occurrence-specific field replacement. This is sufficient to benchmark as-maintained configuration history. The first-class maintenance transaction itself — work orders, PM regimes, inspections, failures, labour/resources, readings and return-to-service — remains outside the semantics established by this branch and is retained as a NuBlox CBE/EAM gap.

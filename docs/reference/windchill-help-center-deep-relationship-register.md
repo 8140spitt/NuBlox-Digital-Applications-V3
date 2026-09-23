@@ -3,6 +3,7 @@
 **Status:** Active evidence register — research in progress  
 **Primary source:** PTC Windchill Cloud 12.0.2.0 Help Center  
 **Started:** 22 September 2026  
+**Last updated:** 23 September 2026  
 **Purpose:** Reverse-engineer Windchill as a graph of canonical objects, relationships, contexts, participation, inheritance, lifecycle, workflow, access, configuration and evidence before translating any concept into NuBlox architecture.
 
 > This is reference evidence, not NuBlox architecture. A Windchill fact is not automatically a NuBlox design decision.
@@ -1071,3 +1072,44 @@ implementation
 ```
 
 The current Teams/Contexts experiment already present in the application must therefore be treated as **reversible and non-canonical** until this research closes the relevant gaps.
+
+
+---
+
+# 41. Research checkpoints
+
+## 23 September 2026 — physical lifecycle, quality and exchange closure pass
+
+This checkpoint records the latest evidence incorporated into this register so the research does not exist only in conversation history.
+
+### Verified areas incorporated
+
+- Quality process boundaries: Nonconformance, Deviation, Waiver, CAPA, disposition, effectiveness verification and release remain separate controls.
+- Inspection definition is distinct from inspection execution/result capture; Control Characteristics are governed definitions that can be associated with Parts, Process Plans and Operations.
+- Physical Part Instances are separate from design definition and may carry serial/lot identity, allocated child instances and incorporation dates.
+- As-maintained physical configuration can evolve independently from the latest engineering definition while retaining historical traceability.
+- Supplier identity, supplier relationship and OEM-part ↔ supplier-part sourcing approval are separate governed concepts.
+- Manufacturing resources and capabilities are first-class objects rather than free-text task attributes.
+- Service Information structures, publication structures, Parts Lists and published representations remain separate governed layers with applicability/effectivity.
+- Package/Delivery and Received Delivery preserve source authority and support explicit mapping/import semantics; receipt does not imply technical acceptance.
+- Full versus incremental delivery semantics are materially different; incremental delivery can carry moves/deletions relative to a base.
+- Construction commissioning/test-pack/handover remains a Windchill coverage gap requiring independent CBE research.
+
+### Current architectural hold
+
+No NuBlox application architecture is to be changed from these findings until the unresolved Help Center gaps are closed and the evidence is translated into a NuBlox canonical object/relationship model.
+
+### Immediate research queue
+
+1. Group vs Shared Team vs Context Team exact use rules by context type.
+2. PDMLink vs ProjectLink team-template/role-resolution differences.
+3. Policy-domain inheritance and override composition.
+4. Revision/iteration/view/configuration semantics by object family.
+5. CAD ↔ Part association/build-rule matrix.
+6. Configuration/effectivity resolution matrix.
+7. Change/redline concurrency and merge semantics.
+8. Supplier qualification lifecycle.
+9. Physical-instance maintenance-event relationships.
+10. Package/Received Delivery authority-transfer edge cases.
+11. REST domain catalogue and integration transaction/error/retry behaviour.
+12. Remaining Help Center top-level categories not yet represented.

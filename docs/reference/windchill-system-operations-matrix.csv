@@ -1,0 +1,16 @@
+ops_id,concern,canonical_operational_thing,key_semantics,nublox_benchmark,status
+OPS-001,Background execution,Queue,"Enabled/disabled and started/stopped are separate; owns queue entries","Separate execution channel from business transaction",VERIFIED
+OPS-002,Queued work,Queue Entry,"Executable asynchronous unit processed through queue","First-class execution attempt/job item",VERIFIED
+OPS-003,Workload placement,Queue Group,"Maps queues onto background Method Servers","Worker placement must not change business ownership",VERIFIED
+OPS-004,Async compute,Background Method Server,"Processes assigned queue groups; multiple servers can distribute workload/high availability","Horizontally scalable worker runtime",VERIFIED
+OPS-005,Content storage,Master Vault,"Stores master/revaulted content copies","Storage mastership is not business authority",VERIFIED
+OPS-006,Remote content locality,Replica Vault,"Stores replicated content for remote/local access","Replica is cache/locality copy, not authority transfer",VERIFIED
+OPS-007,Upload/local cache,Cache Vault,"Local/cache target distinct from permanent master storage","Model transient/cache placement separately",VERIFIED
+OPS-008,Storage routing,Vaulting Rule,"Can resolve vault based on object class/domain/lifecycle state","Storage policy may consume object metadata without becoming object identity",VERIFIED
+OPS-009,Content locality,Replication Rule/Schedule,"Copies content to replica vaults; remote replication does not include metadata","Metadata authority and content-copy distribution must remain distinct",VERIFIED
+OPS-010,Ad-hoc access cache,Ad Hoc Cache,"Fetches missing content locally and can establish predictive caching","Local acceleration must not create duplicate authoritative objects",VERIFIED
+OPS-011,Publication processing,Publishing/Priority/Status Queues,"Separate priority execution and status polling responsibilities","Job scheduling/priority/result are distinct concepts",VERIFIED
+OPS-012,Runtime process,Method Server,"Application execution process monitored/managed below business services","Separate runtime instance identity from logical service identity",VERIFIED
+OPS-013,Operations control,JMX MBean,"Monitoring restart property log queue and cluster controls","Separate operational control plane from business administration",VERIFIED
+OPS-014,Recovery,Backup Set,"Database config/source indexes auth dependencies and vault content require protection","Recovery completeness spans every authoritative state store",VERIFIED
+OPS-015,Operational evidence,Logs/Event Console/queue/replication history,"Operational diagnostics/results distinct from business decision evidence","Keep technical telemetry and business audit as separate evidence classes",INFERENCE

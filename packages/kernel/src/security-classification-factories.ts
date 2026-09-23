@@ -8,7 +8,7 @@ import type {
   SecurityClassificationScheme,
   SecurityClearanceCandidate,
   SecurityPrincipalReference
-} from './security.js';
+} from './security-classification.js';
 
 function nonEmpty(value: string, label: string): void {
   invariant(Boolean(value.trim()), `${label} must not be empty.`);

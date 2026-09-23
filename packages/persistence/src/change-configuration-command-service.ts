@@ -23,6 +23,7 @@ import type { Pool, RowDataPacket } from 'mysql2/promise';
 import { MySqlAccessRepository } from './access-repository.js';
 import { MySqlChangeRepository } from './change-repository.js';
 import { MySqlInformationRepository } from './information-repository.js';
+import { MySqlValidationExecutionService } from './validation-execution-service.js';
 
 interface AuthorityDecisionRow extends RowDataPacket {
   id: string;
@@ -115,11 +116,13 @@ export class MySqlChangeConfigurationCommandService {
   private readonly access: MySqlAccessRepository;
   private readonly changes: MySqlChangeRepository;
   private readonly information: MySqlInformationRepository;
+  private readonly validation: MySqlValidationExecutionService;
 
   constructor(private readonly pool: Pool) {
     this.access = new MySqlAccessRepository(pool);
     this.changes = new MySqlChangeRepository(pool);
     this.information = new MySqlInformationRepository(pool);
+    this.validation = new MySqlValidationExecutionService(pool);
   }
 
   async raiseChange(
@@ -466,10 +469,33 @@ export class MySqlChangeConfigurationCommandService {
   ): Promise<Change> {
     await this.requireManage(tenantId, actorPersonId);
     const resultingBaselineId = optional(input.resultingBaselineId);
+    const changeId = required(input.changeId, 'Change') as Change['id'];
     try {
+      const change = await this.changes.getChange(tenantId, changeId);
+      const validation = await this.validation.evaluateRuleSetForCommand(
+        tenantId,
+        actorPersonId,
+        {
+          ruleSetCode: 'CHANGE_CLOSE',
+          subjectObjectId: change.canonicalObjectId,
+          contextType: 'COMMAND',
+          contextId: 'CHANGE_CLOSE',
+          subject: {
+            objectType: 'CHANGE',
+            changeStatus: change.status,
+            resultingBaselineId: resultingBaselineId ?? null
+          }
+        }
+      );
+      if (validation.blocked) {
+        throw new ChangeConfigurationCommandError(
+          `Change closure is blocked by governed validation (${validation.conflicts.length} conflict(s)).`,
+          'INVALID_INPUT'
+        );
+      }
       return await this.changes.closeChange(
         tenantId,
-        required(input.changeId, 'Change') as Change['id'],
+        changeId,
         now(),
         resultingBaselineId as Baseline['id'] | undefined,
         this.audit(actorPersonId)

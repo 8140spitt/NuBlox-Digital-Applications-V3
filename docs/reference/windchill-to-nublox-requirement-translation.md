@@ -1,7 +1,7 @@
 # Windchill Evidence → NuBlox Canonical Requirement Translation
 
 **Status:** Candidate architecture input — evidence translation, not yet an accepted architecture decision  
-**Source evidence:** Closed PTC Windchill 12.0.2.0 Help Center study  
+**Source evidence:** Closed PTC Windchill 12.0.2.0 architecture/capability study; closure basis recorded in `windchill-help-center-closure-audit.md`  
 **Purpose:** Translate verified Windchill semantics into vendor-neutral NuBlox requirements while preventing Windchill product boundaries or schemas from becoming NuBlox architecture.
 
 ## 1. Translation rule

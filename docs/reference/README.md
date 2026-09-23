@@ -41,6 +41,8 @@ The policy defines how external products are decomposed, compared, mapped, migra
 - [PTC Windchill Redline Conflict Resolution Matrix](windchill-redline-conflict-resolution-matrix.csv) — machine-readable usage/attribute/occurrence conflict and retention rules.
 - [PTC Windchill Supplier Identity, Lifecycle, Sourcing Context & AML/AVL Model](windchill-supplier-sourcing-model.md) — separates supplier identity/lifecycle from contextual supplier-part approval and identifies the broader CBE qualification gap.
 - [PTC Windchill Supplier/Sourcing Matrix](windchill-supplier-sourcing-matrix.csv) — machine-readable Supplier, OEM/Manufacturer/Vendor Part, AML/AVL, Sourcing Context, Rule and Part Request crosswalk.
+- [PTC Windchill Part Configuration, Physical Instance & As-Maintained State Model](windchill-part-instance-as-maintained-model.md) — separates generic definition, resolved configuration, serial/lot physical identity, allocation, incorporation and field replacement; identifies the maintenance-event gap.
+- [PTC Windchill Part Instance / As-Maintained Matrix](windchill-part-instance-as-maintained-matrix.csv) — machine-readable physical identity/configuration and CBE/EAM gap matrix.
 - [PTC Windchill Help Center Coverage Tracker](windchill-help-center-coverage.csv) — machine-readable research backlog showing deep-pass, partial, pending and genuine CBE-gap capability families.
 
 ## Research progression

@@ -1,5 +1,6 @@
 import {
   ValidationPolicyAdministrationCommandError,
+  ValidationExecutionCommandError,
   type MySqlAccessRepository
 } from '@nublox/persistence';
 import {
@@ -12,7 +13,8 @@ import type { Actions, PageServerLoad } from './$types';
 import {
   getAccessRepository,
   getValidationPolicyAdministrationCommandService,
-  getValidationPolicyAdministrationReadRepository
+  getValidationPolicyAdministrationReadRepository,
+  getValidationExecutionService
 } from '$lib/server/platform';
 
 type TenantId = Parameters<MySqlAccessRepository['evaluatePermission']>[0];
@@ -59,7 +61,10 @@ function jsonObject(raw: string, label: string): Readonly<Record<string, unknown
   }
 }
 function failure(error: unknown, action: string) {
-  if (error instanceof ValidationPolicyAdministrationCommandError) {
+  if (
+    error instanceof ValidationPolicyAdministrationCommandError ||
+    error instanceof ValidationExecutionCommandError
+  ) {
     const status = error.code === 'PERMISSION_DENIED' ? 403
       : error.code === 'NOT_FOUND' ? 404
       : error.code === 'CONFLICT' ? 409 : 400;
@@ -71,19 +76,26 @@ function failure(error: unknown, action: string) {
 export const load: PageServerLoad = async ({ locals }) => {
   const session = locals.auth;
   if (!session) {
-    return { allowed: false, canManage: false, reason: 'No authenticated tenant context is available.', projection: null };
+    return { allowed: false, canManage: false, canDisposition: false, reason: 'No authenticated tenant context is available.', projection: null };
   }
   const tenantId = session.tenantId as TenantId;
   const access = getAccessRepository();
-  const [readEvaluation, manageEvaluation] = await Promise.all([
+  const [readEvaluation, manageEvaluation, dispositionEvaluation] = await Promise.all([
     access.evaluatePermission(tenantId, session.personId, PLATFORM_PERMISSION_KEYS.VALIDATION_POLICY_READ, { scopeType: 'TENANT' }),
-    access.evaluatePermission(tenantId, session.personId, PLATFORM_PERMISSION_KEYS.VALIDATION_POLICY_MANAGE, { scopeType: 'TENANT' })
+    access.evaluatePermission(tenantId, session.personId, PLATFORM_PERMISSION_KEYS.VALIDATION_POLICY_MANAGE, { scopeType: 'TENANT' }),
+    access.evaluatePermission(tenantId, session.personId, PLATFORM_PERMISSION_KEYS.VALIDATION_CONFLICT_DISPOSITION, { scopeType: 'TENANT' })
   ]);
   if (!readEvaluation.allowed) {
-    return { allowed: false, canManage: false, reason: readEvaluation.reason, projection: null };
+    return { allowed: false, canManage: false, canDisposition: false, reason: readEvaluation.reason, projection: null };
   }
   const projection = await getValidationPolicyAdministrationReadRepository().getProjection(tenantId, session.personId);
-  return { allowed: true, canManage: manageEvaluation.allowed, reason: readEvaluation.reason, projection };
+  return {
+    allowed: true,
+    canManage: manageEvaluation.allowed,
+    canDisposition: dispositionEvaluation.allowed,
+    reason: readEvaluation.reason,
+    projection
+  };
 };
 
 export const actions: Actions = {
@@ -165,6 +177,33 @@ export const actions: Actions = {
       );
       return { action: 'createConstraint', ok: true, message: `Relationship Constraint ${policy.code} created.` };
     } catch (error) { return failure(error, 'createConstraint'); }
+  },
+
+  dispositionConflict: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { action: 'dispositionConflict', ok: false, error: 'Sign in required.' });
+    const formData = await request.formData();
+    try {
+      const status = enumValue(
+        value(formData, 'status'),
+        ['RESOLVED', 'WAIVED', 'CANCELLED'] as const,
+        'Conflict disposition'
+      );
+      const conflict = await getValidationExecutionService().dispositionConflict(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          conflictId: value(formData, 'conflictId'),
+          status,
+          resolutionReason: value(formData, 'resolutionReason')
+        }
+      );
+      return {
+        action: 'dispositionConflict',
+        ok: true,
+        message: `Validation Conflict ${conflict.id} marked ${conflict.status}.`
+      };
+    } catch (error) { return failure(error, 'dispositionConflict'); }
   },
 
   createMapping: async ({ request, locals }) => {

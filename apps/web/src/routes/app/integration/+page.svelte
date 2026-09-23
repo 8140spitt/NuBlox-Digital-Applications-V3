@@ -273,7 +273,7 @@
             <label><span>External object ID</span><input name="externalObjectId" /></label>
             <label class="wide-field">
               <span>Canonical JSON payload</span>
-              <textarea name="payload" rows="8" required placeholder='{"stableKey":"...","version":"A"}'></textarea>
+              <textarea name="payload" rows="8" required placeholder="Canonical JSON object payload"></textarea>
             </label>
             <button type="submit">Freeze Envelope <span>→</span></button>
           </form>

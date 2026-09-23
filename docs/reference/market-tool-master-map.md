@@ -11,17 +11,21 @@ This is the single entry point for answering:
 
 > For each NuBlox enterprise Function and CBE professional Domain, which current market products enable the work, which jobs/capabilities use them, what work products are involved, and where is the deeper verification evidence?
 
-The master register does **not** replace the detailed benchmark files. It normalises their relationship records into one searchable index and preserves a pointer to the authoritative source record.
+The master register does **not** replace the detailed benchmark files. It normalises their canonical Function and Domain/Job relationship records into one searchable index and preserves a pointer to the authoritative source record.
 
 ## Current consolidated coverage
 
 - **29 / 29 enterprise Functions**
-- **366 enterprise Function × Product records**
-- **336 distinct enterprise products**
+- **326 canonical enterprise Function × Product records**
+- **303 distinct enterprise products across those Function records**
 - **16 / 16 CBE professional Domains**
 - **570 CBE Job × Tool records**
 - **199 distinct CBE specialist products/tools**
-- **936 consolidated market relationship records**
+- **896 canonical consolidated market relationship records**
+
+### Count semantics
+
+`market-tool-register.csv` currently contains 366 rows in total: **326 ENTERPRISE_FUNCTION** rows and **40 CBE_SPECIALIST** cross-function discovery seeds. The 40 specialist seed rows are deliberately **not duplicated** into this master register because CBE is represented here by the richer 570-row Job × Tool capability register mapped to D01-D16.
 
 ## Governing hierarchy
 
@@ -54,44 +58,28 @@ NuBlox Market Benchmark
 | F03 | Enterprise Performance Management | 11 | 11 |
 | F04 | Corporate Development & M&A | 8 | 8 |
 | F05 | Product, Service & Innovation Management | 10 | 10 |
-| F05;F11;F13;F26 | Construction & Built Environment cross-functional | 2 | 2 |
-| F05;F13;F26 | Construction & Built Environment cross-functional | 2 | 2 |
-| F05;F17;F26 | Construction & Built Environment cross-functional | 3 | 3 |
-| F05;F17;F26;F27 | Construction & Built Environment cross-functional | 1 | 1 |
-| F05;F26;F27 | Construction & Built Environment cross-functional | 8 | 8 |
 | F06 | Marketing & Brand | 10 | 10 |
 | F07 | Sales & Commercial Management | 10 | 10 |
-| F07;F14;F27 | Construction & Built Environment cross-functional | 3 | 3 |
 | F08 | Customer Service, Experience & Success | 10 | 10 |
 | F09 | Procurement & Supplier Management | 10 | 10 |
-| F09;F27 | Construction & Built Environment cross-functional | 1 | 1 |
 | F10 | Demand, Supply Chain & Logistics | 10 | 10 |
-| F10;F11;F27 | Construction & Built Environment cross-functional | 1 | 1 |
 | F11 | Manufacturing / Production Operations | 10 | 10 |
-| F11;F13;F26 | Construction & Built Environment cross-functional | 1 | 1 |
 | F12 | Service Delivery & Field Operations | 10 | 10 |
-| F12;F22 | Construction & Built Environment cross-functional | 2 | 2 |
 | F13 | Quality Management | 12 | 12 |
-| F13;F23;F26;F27 | Construction & Built Environment cross-functional | 2 | 2 |
-| F13;F23;F27 | Construction & Built Environment cross-functional | 2 | 2 |
-| F13;F26;F27 | Construction & Built Environment cross-functional | 6 | 6 |
 | F14 | Finance, Accounting, Treasury & Tax | 15 | 15 |
 | F15 | Human Resources / Human Capital | 12 | 12 |
 | F16 | Information Technology | 12 | 12 |
 | F17 | Data, Analytics & AI | 14 | 14 |
-| F17;F22;F26 | Construction & Built Environment cross-functional | 1 | 1 |
 | F18 | Cybersecurity & Information Security | 14 | 14 |
 | F19 | Legal & Corporate Secretariat | 12 | 12 |
-| F19;F27 | Construction & Built Environment cross-functional | 2 | 2 |
 | F20 | Risk, Compliance, Internal Control & Audit | 10 | 10 |
 | F21 | Privacy & Information Governance | 8 | 8 |
 | F22 | Property, Facilities & Physical Assets | 12 | 12 |
-| F22;F27 | Construction & Built Environment cross-functional | 1 | 1 |
 | F23 | Health, Safety, Environment & Sustainability | 14 | 14 |
 | F24 | Business Continuity, Crisis & Physical Security | 11 | 11 |
 | F25 | Communications, Public Affairs & Investor Relations | 9 | 9 |
 | F26 | Knowledge, Document & Records Management | 17 | 17 |
-| F27 | Portfolio, Programme & Project Management | 19 | 18 |
+| F27 | Portfolio, Programme & Project Management | 17 | 17 |
 | F28 | Change & Transformation Management | 9 | 9 |
 | F29 | Business Process & Continuous Improvement | 12 | 12 |
 
@@ -118,11 +106,11 @@ NuBlox Market Benchmark
 
 ## Evidence chain
 
-The master register is an **index layer**. Use these sources for deeper evidence:
+The master register is an **index layer**. Use these sources for deeper evidence.
 
 ### Enterprise
 
-1. [Market Tool Register](market-tool-register.csv) — Function × Product discovery spine.
+1. [Market Tool Register](market-tool-register.csv) — Function × Product discovery spine; the canonical enterprise subset is `market_layer=ENTERPRISE_FUNCTION`.
 2. [Enterprise Market Module/Task Backlog](enterprise-market-tool-module-task-backlog.csv) — controlled Function × Product research backlog.
 3. [Enterprise Deep Capability Register](enterprise-market-tool-deep-capability-register.csv) — verified module/task operations, inputs, outputs, lifecycle, authority, audit and integration semantics.
 4. [Enterprise Market Equivalence Classification](enterprise-market-tool-equivalence-classification.csv) — deep anchors versus equivalent product patterns.
@@ -134,10 +122,11 @@ The master register is an **index layer**. Use these sources for deeper evidence
 3. [CBE Module/Task Verification Backlog](cbe-job-tool-module-task-backlog.csv) — detailed product/module verification backlog.
 4. [Deep Market Capability Register](market-tool-deep-capability-register.csv) — verified specialist module/task capability evidence.
 5. [CBE Specialist Capability Pattern Closure](cbe-specialist-capability-pattern-closure.csv) — canonical capability-pattern closure.
+6. The 40 `CBE_SPECIALIST` rows retained in [Market Tool Register](market-tool-register.csv) remain historical/discovery evidence but are not the canonical Domain/Job relationship spine.
 
 ## Master register semantics
 
-Each row in `market-tool-master-register.csv` identifies one market relationship and carries:
+Each row in `market-tool-master-register.csv` identifies one canonical market relationship and carries:
 
 - scope type and canonical Function/Domain;
 - Function participation;
@@ -156,4 +145,4 @@ Market tools are benchmark evidence, migration/interoperability sources and capa
 
 ## Maintenance rule
 
-Whenever an enterprise Function × Product or CBE Job × Tool relationship is added or removed, regenerate this master register and update the counts in this map in the same change.
+Whenever an `ENTERPRISE_FUNCTION` Product relationship or CBE Job × Tool relationship is added or removed, regenerate this master register and update the counts in this map in the same change.

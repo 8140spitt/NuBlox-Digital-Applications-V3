@@ -171,7 +171,7 @@ export interface PublicationResult {
   id: PublicationResultId;
   tenantId: TenantId;
   publicationActivityId: PublicationActivityId;
-  acknowledgementId?: PublicationAcknowledgementId;
+  acknowledgementId: PublicationAcknowledgementId;
   outcome: PublicationResultOutcome;
   completedAt: string;
   externalObjectId?: string;

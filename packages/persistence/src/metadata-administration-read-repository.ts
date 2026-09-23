@@ -1,5 +1,6 @@
 import {
   PLATFORM_PERMISSION_KEYS,
+  isMetadataEffective,
   type AttributeDefinition,
   type ConstraintDefinition,
   type EnumerationDefinition,
@@ -227,6 +228,24 @@ export class MySqlMetadataAdministrationReadRepository {
       status: row.status
     }));
 
+    const attributes: MetadataAttributeView[] = attributeResult[0].map((row) => ({
+      id: row.id as AttributeDefinition['id'],
+      code: row.code,
+      name: row.name,
+      ...(row.description ? { description: row.description } : {}),
+      dataType: row.data_type,
+      version: Number(row.version),
+      ...(row.unit_code ? { unitCode: row.unit_code } : {}),
+      ...(row.enumeration_definition_id
+        ? { enumerationDefinitionId: row.enumeration_definition_id as NonNullable<AttributeDefinition['enumerationDefinitionId']> }
+        : {}),
+      ...(row.enumeration_code ? { enumerationCode: row.enumeration_code } : {}),
+      ...(row.reference_object_family ? { referenceObjectFamily: row.reference_object_family } : {}),
+      ...(row.effective_from ? { effectiveFrom: row.effective_from.toISOString() } : {}),
+      ...(row.effective_to ? { effectiveTo: row.effective_to.toISOString() } : {}),
+      status: row.status
+    }));
+
     const typeAttributes: MetadataTypeAttributeView[] = assignmentResult[0].map((row) => ({
       id: row.id,
       typeDefinitionId: row.type_definition_id,
@@ -245,6 +264,8 @@ export class MySqlMetadataAdministrationReadRepository {
     }));
 
     const typeById = new Map(types.map((type) => [type.id as string, type]));
+    const attributeById = new Map(attributes.map((attribute) => [attribute.id as string, attribute]));
+    const evaluatedAt = new Date().toISOString();
     const directByType = new Map<string, MetadataTypeAttributeView[]>();
     for (const assignment of typeAttributes) {
       const list = directByType.get(assignment.typeDefinitionId) ?? [];
@@ -254,6 +275,7 @@ export class MySqlMetadataAdministrationReadRepository {
 
     const effectiveTypeAttributes: MetadataEffectiveAttributeView[] = [];
     for (const type of types) {
+      if (!isMetadataEffective(type, evaluatedAt)) continue;
       const lineage: MetadataTypeView[] = [];
       const visited = new Set<string>();
       let current: MetadataTypeView | undefined = type;
@@ -270,8 +292,14 @@ export class MySqlMetadataAdministrationReadRepository {
 
       const resolved = new Map<string, MetadataEffectiveAttributeView>();
       for (const source of lineage) {
+        if (!isMetadataEffective(source, evaluatedAt)) continue;
         for (const assignment of directByType.get(source.id as string) ?? []) {
-          if (assignment.status !== 'ACTIVE') continue;
+          const attribute = attributeById.get(assignment.attributeDefinitionId);
+          if (
+            assignment.status !== 'ACTIVE' ||
+            !attribute ||
+            !isMetadataEffective(attribute, evaluatedAt)
+          ) continue;
           resolved.set(assignment.attributeCode, {
             ...assignment,
             requestedTypeDefinitionId: type.id as string,
@@ -289,23 +317,7 @@ export class MySqlMetadataAdministrationReadRepository {
 
     return {
       types,
-      attributes: attributeResult[0].map((row) => ({
-        id: row.id as AttributeDefinition['id'],
-        code: row.code,
-        name: row.name,
-        ...(row.description ? { description: row.description } : {}),
-        dataType: row.data_type,
-        version: Number(row.version),
-        ...(row.unit_code ? { unitCode: row.unit_code } : {}),
-        ...(row.enumeration_definition_id
-          ? { enumerationDefinitionId: row.enumeration_definition_id as NonNullable<AttributeDefinition['enumerationDefinitionId']> }
-          : {}),
-        ...(row.enumeration_code ? { enumerationCode: row.enumeration_code } : {}),
-        ...(row.reference_object_family ? { referenceObjectFamily: row.reference_object_family } : {}),
-        ...(row.effective_from ? { effectiveFrom: row.effective_from.toISOString() } : {}),
-        ...(row.effective_to ? { effectiveTo: row.effective_to.toISOString() } : {}),
-        status: row.status
-      })),
+      attributes,
       typeAttributes,
       effectiveTypeAttributes,
       constraints: constraintResult[0].map((row) => ({

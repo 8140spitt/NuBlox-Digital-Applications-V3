@@ -28,6 +28,8 @@ export * from './portability-repository.js';
 export * from './publication-repository.js';
 export * from './publication-command-service.js';
 export * from './publication-read-repository.js';
+export * from './migration-repository.js';
+export * from './migration-command-service.js';
 export * from './platform-writes.js';
 export * from './change-repository.js';
 export * from './information-repository.js';

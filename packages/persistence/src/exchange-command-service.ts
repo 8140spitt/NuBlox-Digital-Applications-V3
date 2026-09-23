@@ -192,6 +192,7 @@ export class MySqlExchangeCommandService {
   ): Promise<ExchangeDelivery> {
     await this.requireManage(tenantId, actorPersonId);
     const transmittalId = optional(input.transmittalId);
+    const packageItemId = optional(input.packageItemId);
     const priorDeliveryId = optional(input.priorDeliveryId);
     const transportReference = optional(input.transportReference);
     const deliveryChecksum = optional(input.deliveryChecksum);
@@ -258,7 +259,8 @@ export class MySqlExchangeCommandService {
     actorPersonId: string,
     input: {
       deliveryId: string;
-      packageItemId: string;
+      subjectObjectId: string;
+      packageItemId?: string;
       deltaType: ExchangeDeltaType;
       priorDeliveryId?: string;
       priorSubjectVersion?: string;
@@ -280,7 +282,10 @@ export class MySqlExchangeCommandService {
       id: asId<'ExchangeDeltaItemId'>(`EXDELTA-${randomUUID()}`, 'Exchange Delta Item'),
       tenantId,
       exchangeDeliveryId: asId<'ExchangeDeliveryId'>(required(input.deliveryId, 'Exchange Delivery'), 'Exchange Delivery'),
-      exchangePackageItemId: asId<'ExchangePackageItemId'>(required(input.packageItemId, 'Exchange Package Item'), 'Exchange Package Item'),
+      subjectObjectId: asId<'CanonicalObjectId'>(required(input.subjectObjectId, 'Delta Subject'), 'Delta Subject'),
+      ...(packageItemId
+        ? { exchangePackageItemId: asId<'ExchangePackageItemId'>(packageItemId, 'Exchange Package Item') }
+        : {}),
       deltaType: input.deltaType,
       ...(priorDeliveryId ? { priorDeliveryId: asId<'ExchangeDeliveryId'>(priorDeliveryId, 'Prior Delivery') } : {}),
       ...(priorSubjectVersion ? { priorSubjectVersion } : {}),

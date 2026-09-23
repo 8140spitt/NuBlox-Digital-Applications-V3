@@ -132,7 +132,7 @@ function mapAttribute(row: AttributeRow): AttributeDefinition {
     version: Number(row.version),
     ...(row.unit_code ? { unitCode: row.unit_code } : {}),
     ...(row.enumeration_definition_id
-      ? { enumerationDefinitionId: row.enumeration_definition_id as AttributeDefinition['enumerationDefinitionId'] }
+      ? { enumerationDefinitionId: row.enumeration_definition_id as NonNullable<AttributeDefinition['enumerationDefinitionId']> }
       : {}),
     ...(row.reference_object_family ? { referenceObjectFamily: row.reference_object_family } : {}),
     ...(row.effective_from ? { effectiveFrom: row.effective_from.toISOString() } : {}),

@@ -113,6 +113,27 @@ The objective is not one giant table or one universal object type. The objective
 - Received Delivery;
 - Authority Adoption.
 
+### Validation policy and rule evidence
+
+- Validation Rule Definition;
+- Validation Rule Set;
+- Validation Rule Evaluation Run;
+- Validation Conflict;
+- Relationship Constraint Policy;
+- Mapping Policy;
+- Validation Rule Set Member;
+- Validation Rule Result.
+
+### Collaboration and contextual reference
+
+- Collaboration Session;
+- Meeting;
+- Discussion Thread;
+- Discussion Contribution;
+- Subscription;
+- Reference Collection;
+- Cross-Context Reference.
+
 ### Work and control
 
 - Workflow Definition;

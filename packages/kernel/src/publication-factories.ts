@@ -411,7 +411,8 @@ export function applyPublicationAcknowledgementToActivity(
 export function createPublicationResult(
   input: PublicationResult,
   activity: PublicationActivity,
-  acknowledgement: PublicationAcknowledgement
+  acknowledgement: PublicationAcknowledgement,
+  acknowledgementAttempt: PublicationAttempt
 ): PublicationResult {
   sameTenant(input, activity, 'Publication Result Activity');
   invariant(input.publicationActivityId === activity.id, 'Publication Result must reference the supplied Activity.');
@@ -422,13 +423,30 @@ export function createPublicationResult(
   date(input.completedAt, 'Publication Result completedAt');
 
   sameTenant(input, acknowledgement, 'Publication Result Acknowledgement');
+  sameTenant(input, acknowledgementAttempt, 'Publication Result Acknowledgement Attempt');
   invariant(
     input.acknowledgementId === acknowledgement.id,
     'Publication Result Acknowledgement reference does not match.'
   );
   invariant(
+    acknowledgement.publicationAttemptId === acknowledgementAttempt.id,
+    'Publication Result Acknowledgement must reference the supplied Attempt.'
+  );
+  invariant(
+    acknowledgementAttempt.publicationActivityId === activity.id,
+    'Publication Result Acknowledgement Attempt must belong to the Result Activity.'
+  );
+  invariant(
+    acknowledgementAttempt.status === 'DELIVERED',
+    'Publication Result requires a delivered acknowledged Attempt.'
+  );
+  invariant(
     acknowledgement.outcome === 'ACKNOWLEDGED',
     'Publication Result cannot rely on a negative Acknowledgement.'
+  );
+  invariant(
+    Date.parse(input.completedAt) >= Date.parse(acknowledgement.receivedAt),
+    'Publication Result cannot complete before its Acknowledgement.'
   );
 
   if (input.externalObjectId) text(input.externalObjectId, 'Publication Result externalObjectId');

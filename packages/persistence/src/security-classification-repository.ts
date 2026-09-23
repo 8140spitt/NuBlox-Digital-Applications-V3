@@ -7,7 +7,6 @@ import {
   evaluateSecurityClassificationAccess,
   type CanonicalObjectId,
   type ClearanceGrant,
-  type PolicyScopeId,
   type SecurityAccessException,
   type SecurityClassificationAssignment,
   type SecurityClassificationLevel,

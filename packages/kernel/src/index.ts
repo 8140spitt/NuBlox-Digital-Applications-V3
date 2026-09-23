@@ -21,6 +21,8 @@ export * from './access.js';
 export * from './access-factories.js';
 export * from './policy.js';
 export * from './policy-factories.js';
+export * from './security-classification.js';
+export * from './security-classification-factories.js';
 export * from './control.js';
 export * from './control-factories.js';
 export * from './errors.js';

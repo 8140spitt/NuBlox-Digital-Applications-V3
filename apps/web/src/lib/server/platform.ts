@@ -33,7 +33,9 @@ import {
   MySqlMetadataAdministrationCommandService,
   MySqlMetadataAdministrationReadRepository,
   MySqlConfigurationResolutionCommandService,
-  MySqlConfigurationResolutionReadRepository
+  MySqlConfigurationResolutionReadRepository,
+  MySqlExchangeCommandService,
+  MySqlExchangeReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -71,6 +73,8 @@ let metadataAdministrationCommandServiceInstance: MySqlMetadataAdministrationCom
 let metadataAdministrationReadRepositoryInstance: MySqlMetadataAdministrationReadRepository | undefined;
 let configurationResolutionCommandServiceInstance: MySqlConfigurationResolutionCommandService | undefined;
 let configurationResolutionReadRepositoryInstance: MySqlConfigurationResolutionReadRepository | undefined;
+let exchangeCommandServiceInstance: MySqlExchangeCommandService | undefined;
+let exchangeReadRepositoryInstance: MySqlExchangeReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -355,4 +359,19 @@ export function getConfigurationResolutionReadRepository(): MySqlConfigurationRe
       new MySqlConfigurationResolutionReadRepository(getDatabasePool());
   }
   return configurationResolutionReadRepositoryInstance;
+}
+
+
+export function getExchangeCommandService(): MySqlExchangeCommandService {
+  if (!exchangeCommandServiceInstance) {
+    exchangeCommandServiceInstance = new MySqlExchangeCommandService(getDatabasePool());
+  }
+  return exchangeCommandServiceInstance;
+}
+
+export function getExchangeReadRepository(): MySqlExchangeReadRepository {
+  if (!exchangeReadRepositoryInstance) {
+    exchangeReadRepositoryInstance = new MySqlExchangeReadRepository(getDatabasePool());
+  }
+  return exchangeReadRepositoryInstance;
 }

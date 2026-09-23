@@ -284,8 +284,7 @@ suite('exchange package, received delivery and authority adoption', () => {
     expect(incrementView?.deliveries[0]?.deltas).toEqual(expect.arrayContaining([
       expect.objectContaining({
         subjectObjectId: sourceSubject.id,
-        deltaType: 'DELETED',
-        packageItemId: undefined
+        deltaType: 'DELETED'
       }),
       expect.objectContaining({
         subjectObjectId: currentSubject.id,
@@ -293,6 +292,9 @@ suite('exchange package, received delivery and authority adoption', () => {
         deltaType: 'NEW'
       })
     ]));
+    const deletedDelta = incrementView?.deliveries[0]?.deltas
+      .find((item) => item.deltaType === 'DELETED');
+    expect(deletedDelta).not.toHaveProperty('packageItemId');
 
     await expect(reads.getProjection(tenantId, worker.id)).rejects.toMatchObject({
       name: 'ExchangeReadError',

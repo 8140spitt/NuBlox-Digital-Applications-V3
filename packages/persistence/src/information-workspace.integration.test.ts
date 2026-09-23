@@ -10,7 +10,10 @@ import {
   type Decision,
   type Party,
   type Person,
-  type Tenant
+  type Tenant,
+  type ValidationRuleDefinition,
+  type ValidationRuleSet,
+  type ValidationRuleSetMember
 } from '@nublox/kernel';
 import { MySqlAccessRepository } from './access-repository.js';
 import { MySqlKernelControlRepository } from './control-repository.js';
@@ -19,6 +22,7 @@ import { InformationCommandError, MySqlInformationCommandService } from './infor
 import { MySqlInformationReadRepository } from './information-read-repository.js';
 import { migrate } from './migrations.js';
 import { MySqlKernelRepository } from './repository.js';
+import { MySqlValidationPolicyRepository } from './validation-policy-repository.js';
 
 const enabled = Boolean(process.env.NUBLOX_DATABASE_URL);
 const suite = enabled ? describe : describe.skip;
@@ -41,6 +45,7 @@ suite('information workspace', () => {
     const control = new MySqlKernelControlRepository(pool);
     const information = new MySqlInformationCommandService(pool);
     const reads = new MySqlInformationReadRepository(pool);
+    const validationPolicies = new MySqlValidationPolicyRepository(pool);
 
     const tenant: Tenant = { id: tenantId, name: 'Information Workspace Test', status: 'ACTIVE' };
     await kernel.createTenant(tenant);
@@ -186,12 +191,66 @@ suite('information workspace', () => {
       code: 'INVALID_INPUT'
     } satisfies Partial<InformationCommandError>);
 
+    const releaseRule: ValidationRuleDefinition = {
+      id: asId<'ValidationRuleDefinitionId'>('VRD-INFO-RELEASE-' + suffix, 'Validation Rule Definition'),
+      tenantId,
+      code: 'INFORMATION-RELEASE-GATE-' + suffix,
+      name: 'Information release authority gate',
+      ruleType: 'CONSISTENCY',
+      version: 1,
+      severity: 'BLOCKING',
+      handlerKey: 'subject.field_equals',
+      configuration: { field: 'authorityBacked', expected: true },
+      status: 'ACTIVE'
+    };
+    await validationPolicies.createRuleDefinition(releaseRule, {
+      actorPersonId: admin.id,
+      correlationId: 'INFORMATION-TEST'
+    });
+
+    const releaseRuleSet: ValidationRuleSet = {
+      id: asId<'ValidationRuleSetId'>('VRS-INFO-RELEASE-' + suffix, 'Validation Rule Set'),
+      tenantId,
+      code: 'INFORMATION_RELEASE',
+      name: 'Information Release Gate',
+      version: 1,
+      status: 'ACTIVE'
+    };
+    await validationPolicies.createRuleSet(releaseRuleSet, {
+      actorPersonId: admin.id,
+      correlationId: 'INFORMATION-TEST'
+    });
+
+    const releaseMember: ValidationRuleSetMember = {
+      id: asId<'ValidationRuleSetMemberId'>('VRM-INFO-RELEASE-' + suffix, 'Validation Rule Set Member'),
+      tenantId,
+      ruleSetId: releaseRuleSet.id,
+      ruleDefinitionId: releaseRule.id,
+      sequence: 10,
+      mandatory: true,
+      status: 'ACTIVE'
+    };
+    await validationPolicies.addRuleSetMember(releaseMember, {
+      actorPersonId: admin.id,
+      correlationId: 'INFORMATION-TEST'
+    });
+
     const released = await information.releaseRevision(tenantId, admin.id, {
       informationRevisionId: revision.id,
       releasedIterationId: frozen.id,
       decisionId: decision.id
     });
     expect(released.status).toBe('RELEASED');
+
+    const [validationRows] = await pool.query<Array<RowDataPacket & { evaluation_status: string }>>(
+      `SELECT evaluation_status
+         FROM validation_rule_evaluation_runs
+        WHERE tenant_id = ? AND rule_set_id = ? AND subject_object_id = ?
+        ORDER BY evaluated_at DESC
+        LIMIT 1`,
+      [tenantId, releaseRuleSet.id, container.canonicalObjectId]
+    );
+    expect(validationRows[0]?.evaluation_status).toBe('PASSED');
 
     const issue = await information.issueInformation(tenantId, admin.id, {
       informationContainerId: container.id,

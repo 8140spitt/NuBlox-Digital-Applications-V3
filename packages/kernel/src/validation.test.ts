@@ -7,6 +7,12 @@ import {
   createValidationRuleDefinition,
   createValidationRuleSet,
   createValidationRuleSetMember,
+  createDefaultValidationHandlerRegistry,
+  executeValidationHandler,
+  createValidationRuleEvaluationRun,
+  createValidationRuleResult,
+  createValidationConflict,
+  dispositionValidationConflict,
   type ValidationRuleDefinition,
   type ValidationRuleSet
 } from './index.js';
@@ -127,5 +133,63 @@ describe('kernel validation policy invariants', () => {
       effectiveFrom: '2026-09-24T00:00:00.000Z',
       effectiveTo: '2026-09-23T00:00:00.000Z'
     })).toThrow(KernelInvariantError);
+  });
+  it('executes deterministic validation handlers and rejects unknown handlers', async () => {
+    const registry = createDefaultValidationHandlerRegistry();
+    const passed = await executeValidationHandler(registry, rule, {
+      subject: { lifecycleState: 'RELEASED' }
+    });
+    expect(passed.status).toBe('PASSED');
+
+    const failed = await executeValidationHandler(registry, rule, {
+      subject: { lifecycleState: 'DRAFT' }
+    });
+    expect(failed.status).toBe('FAILED');
+
+    const unknown = await executeValidationHandler(registry, {
+      ...rule,
+      id: asId<'ValidationRuleDefinitionId'>('VRD-UNKNOWN', 'Validation Rule Definition'),
+      handlerKey: 'unknown.handler'
+    }, { subject: {} });
+    expect(unknown.status).toBe('ERROR');
+  });
+
+  it('governs evaluation evidence and conflict disposition', () => {
+    const run = createValidationRuleEvaluationRun({
+      id: asId<'ValidationRuleEvaluationRunId'>('VRE-1', 'Validation Rule Evaluation Run'),
+      tenantId,
+      ruleSetId: ruleSet.id,
+      subjectObjectId: asId<'CanonicalObjectId'>('OBJ-1', 'Canonical Object'),
+      evaluatedAt: '2026-09-23T12:00:00.000Z',
+      status: 'RUNNING'
+    });
+    const result = createValidationRuleResult({
+      id: asId<'ValidationRuleResultId'>('VRR-1', 'Validation Rule Result'),
+      tenantId,
+      evaluationRunId: run.id,
+      ruleDefinitionId: rule.id,
+      status: 'FAILED',
+      message: 'State is not releasable.'
+    });
+    const conflict = createValidationConflict({
+      id: asId<'ValidationConflictId'>('VRC-1', 'Validation Conflict'),
+      tenantId,
+      evaluationRunId: run.id,
+      ruleResultId: result.id,
+      subjectObjectId: run.subjectObjectId,
+      summary: 'Release state conflict.',
+      status: 'OPEN'
+    });
+    const waived = dispositionValidationConflict(
+      conflict,
+      'WAIVED',
+      'Approved exception with evidence.'
+    );
+    expect(waived.status).toBe('WAIVED');
+    expect(() => dispositionValidationConflict(
+      waived,
+      'RESOLVED',
+      'Cannot disposition twice.'
+    )).toThrow(KernelInvariantError);
   });
 });

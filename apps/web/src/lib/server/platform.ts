@@ -22,7 +22,9 @@ import {
   MySqlFunctionalDeploymentReadRepository,
   MySqlMyWorkRepository,
   MySqlOrganisationCommandService,
-  MySqlOrganisationReadRepository
+  MySqlOrganisationReadRepository,
+  MySqlPolicyAdministrationCommandService,
+  MySqlPolicyAdministrationReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -49,6 +51,8 @@ let functionalDeploymentReadRepositoryInstance: MySqlFunctionalDeploymentReadRep
 let myWorkRepositoryInstance: MySqlMyWorkRepository | undefined;
 let organisationCommandServiceInstance: MySqlOrganisationCommandService | undefined;
 let organisationReadRepositoryInstance: MySqlOrganisationReadRepository | undefined;
+let policyAdministrationCommandServiceInstance: MySqlPolicyAdministrationCommandService | undefined;
+let policyAdministrationReadRepositoryInstance: MySqlPolicyAdministrationReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -236,4 +240,23 @@ export function getOrganisationReadRepository(): MySqlOrganisationReadRepository
   }
 
   return organisationReadRepositoryInstance;
+}
+
+
+export function getPolicyAdministrationCommandService(): MySqlPolicyAdministrationCommandService {
+  if (!policyAdministrationCommandServiceInstance) {
+    policyAdministrationCommandServiceInstance =
+      new MySqlPolicyAdministrationCommandService(getDatabasePool());
+  }
+
+  return policyAdministrationCommandServiceInstance;
+}
+
+export function getPolicyAdministrationReadRepository(): MySqlPolicyAdministrationReadRepository {
+  if (!policyAdministrationReadRepositoryInstance) {
+    policyAdministrationReadRepositoryInstance =
+      new MySqlPolicyAdministrationReadRepository(getDatabasePool());
+  }
+
+  return policyAdministrationReadRepositoryInstance;
 }

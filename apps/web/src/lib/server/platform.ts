@@ -24,7 +24,9 @@ import {
   MySqlOrganisationCommandService,
   MySqlOrganisationReadRepository,
   MySqlPolicyAdministrationCommandService,
-  MySqlPolicyAdministrationReadRepository
+  MySqlPolicyAdministrationReadRepository,
+  MySqlSecurityClassificationAdministrationCommandService,
+  MySqlSecurityClassificationAdministrationReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -53,6 +55,8 @@ let organisationCommandServiceInstance: MySqlOrganisationCommandService | undefi
 let organisationReadRepositoryInstance: MySqlOrganisationReadRepository | undefined;
 let policyAdministrationCommandServiceInstance: MySqlPolicyAdministrationCommandService | undefined;
 let policyAdministrationReadRepositoryInstance: MySqlPolicyAdministrationReadRepository | undefined;
+let securityClassificationAdministrationCommandServiceInstance: MySqlSecurityClassificationAdministrationCommandService | undefined;
+let securityClassificationAdministrationReadRepositoryInstance: MySqlSecurityClassificationAdministrationReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -259,4 +263,23 @@ export function getPolicyAdministrationReadRepository(): MySqlPolicyAdministrati
   }
 
   return policyAdministrationReadRepositoryInstance;
+}
+
+
+export function getSecurityClassificationAdministrationCommandService(): MySqlSecurityClassificationAdministrationCommandService {
+  if (!securityClassificationAdministrationCommandServiceInstance) {
+    securityClassificationAdministrationCommandServiceInstance =
+      new MySqlSecurityClassificationAdministrationCommandService(getDatabasePool());
+  }
+
+  return securityClassificationAdministrationCommandServiceInstance;
+}
+
+export function getSecurityClassificationAdministrationReadRepository(): MySqlSecurityClassificationAdministrationReadRepository {
+  if (!securityClassificationAdministrationReadRepositoryInstance) {
+    securityClassificationAdministrationReadRepositoryInstance =
+      new MySqlSecurityClassificationAdministrationReadRepository(getDatabasePool());
+  }
+
+  return securityClassificationAdministrationReadRepositoryInstance;
 }

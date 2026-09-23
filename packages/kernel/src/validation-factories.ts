@@ -4,7 +4,11 @@ import type {
   RelationshipConstraintPolicy,
   ValidationRuleDefinition,
   ValidationRuleSet,
-  ValidationRuleSetMember
+  ValidationRuleSetMember,
+  ValidationRuleEvaluationRun,
+  ValidationRuleResult,
+  ValidationConflict,
+  ValidationConflictStatus
 } from './validation.js';
 
 function nonEmpty(value: string, label: string): void {
@@ -79,4 +83,41 @@ export function createMappingPolicy(input: MappingPolicy): MappingPolicy {
   invariant(Number.isInteger(input.precedence) && input.precedence >= 0, 'Mapping Policy precedence must be a non-negative integer.');
   dateRange(input.effectiveFrom, input.effectiveTo, 'Mapping Policy');
   return Object.freeze({ ...input, mapping: Object.freeze({ ...input.mapping }) });
+}
+
+
+export function createValidationRuleEvaluationRun(
+  input: ValidationRuleEvaluationRun
+): ValidationRuleEvaluationRun {
+  nonEmpty(input.subjectObjectId, 'Validation Evaluation subjectObjectId');
+  validDate(input.evaluatedAt, 'Validation Evaluation evaluatedAt');
+  return Object.freeze({ ...input });
+}
+
+export function createValidationRuleResult(
+  input: ValidationRuleResult
+): ValidationRuleResult {
+  if (input.message !== undefined) nonEmpty(input.message, 'Validation Rule Result message');
+  return Object.freeze({
+    ...input,
+    ...(input.evidence ? { evidence: Object.freeze({ ...input.evidence }) } : {})
+  });
+}
+
+export function createValidationConflict(
+  input: ValidationConflict
+): ValidationConflict {
+  nonEmpty(input.summary, 'Validation Conflict summary');
+  invariant(input.status === 'OPEN', 'New Validation Conflict must start OPEN.');
+  return Object.freeze({ ...input });
+}
+
+export function dispositionValidationConflict(
+  conflict: ValidationConflict,
+  status: Exclude<ValidationConflictStatus, 'OPEN'>,
+  resolutionReason: string
+): ValidationConflict {
+  invariant(conflict.status === 'OPEN', 'Only OPEN Validation Conflicts can be dispositioned.');
+  nonEmpty(resolutionReason, 'Validation Conflict resolution reason');
+  return Object.freeze({ ...conflict, status, resolutionReason });
 }

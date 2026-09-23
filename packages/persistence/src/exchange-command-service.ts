@@ -192,7 +192,6 @@ export class MySqlExchangeCommandService {
   ): Promise<ExchangeDelivery> {
     await this.requireManage(tenantId, actorPersonId);
     const transmittalId = optional(input.transmittalId);
-    const packageItemId = optional(input.packageItemId);
     const priorDeliveryId = optional(input.priorDeliveryId);
     const transportReference = optional(input.transportReference);
     const deliveryChecksum = optional(input.deliveryChecksum);
@@ -273,6 +272,7 @@ export class MySqlExchangeCommandService {
     if (!DELTA_TYPES.has(input.deltaType)) {
       throw new ExchangeCommandError('Exchange Delta type is not supported.', 'INVALID_INPUT');
     }
+    const packageItemId = optional(input.packageItemId);
     const priorDeliveryId = optional(input.priorDeliveryId);
     const priorSubjectVersion = optional(input.priorSubjectVersion);
     const priorLocationReference = optional(input.priorLocationReference);

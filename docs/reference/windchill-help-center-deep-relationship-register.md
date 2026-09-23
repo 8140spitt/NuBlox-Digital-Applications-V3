@@ -1529,3 +1529,40 @@ WHC-044 through WHC-046 remain deliberate **GAP** records because Windchill does
 3. construction site production/field execution.
 
 Those three gaps must be closed through CBE standards and specialist-market benchmarking rather than by stretching Windchill concepts beyond their evidence.
+
+
+## 23 September 2026 — collaboration, business-rule and PTC scope-closure checkpoint
+
+### Additional Help Center families closed
+
+- Meetings are contextual collaboration/event records and are not workflow tasks.
+- Discussions separate Topic, Comment, participant, subscription, attachment/link and draft semantics.
+- Notebook content organises references/files for a user or context and does not redefine authority or business-object containment.
+- Context Networks organise references to contexts; moving a context reference changes the network structure, not the administrative context hierarchy.
+- Business Rules are reusable validation definitions grouped into administered Rule Sets and can return explicit conflicts/results.
+- Checkout, Attribute, Release Target and BOM Release rules demonstrate that readiness/release validation is a separate control from workflow routing.
+- Change Association Rules constrain valid object-to-object change relationships.
+- Mapping Rules govern mappings such as change intent to release target/state and can have Site/Organisation scope/precedence.
+
+### PTC scope status
+
+The Windchill Help Center top-level reconciliation now has explicit representation for the material business-object, administration, integration, operations, collaboration and rule-engine families identified in this study.
+
+The remaining coverage IDs WHC-044, WHC-045 and WHC-046 are not untraversed Windchill branches. They are explicit Construction & Built Environment gaps:
+
+1. commissioning / test packs / system completion / turnover / handover;
+2. construction commercial / contract administration;
+3. site production / field execution.
+
+These therefore require external CBE product/standards research rather than further inference from Windchill.
+
+### Translation gate
+
+The Windchill evidence can now be translated into a NuBlox candidate canonical-object/control map, provided every item remains labelled as one of:
+
+- retained semantic pattern;
+- generalised semantic pattern;
+- Windchill-specific implementation detail not adopted;
+- CBE/enterprise gap requiring another benchmark.
+
+No Windchill container, module, class or API domain should become a NuBlox product boundary merely because it exists in Windchill.

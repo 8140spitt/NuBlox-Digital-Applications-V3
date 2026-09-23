@@ -28,7 +28,8 @@ import {
   MySqlSecurityClassificationAdministrationCommandService,
   MySqlSecurityClassificationAdministrationReadRepository,
   MySqlValidationPolicyAdministrationCommandService,
-  MySqlValidationPolicyAdministrationReadRepository
+  MySqlValidationPolicyAdministrationReadRepository,
+  MySqlValidationExecutionService
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -61,6 +62,7 @@ let securityClassificationAdministrationCommandServiceInstance: MySqlSecurityCla
 let securityClassificationAdministrationReadRepositoryInstance: MySqlSecurityClassificationAdministrationReadRepository | undefined;
 let validationPolicyAdministrationCommandServiceInstance: MySqlValidationPolicyAdministrationCommandService | undefined;
 let validationPolicyAdministrationReadRepositoryInstance: MySqlValidationPolicyAdministrationReadRepository | undefined;
+let validationExecutionServiceInstance: MySqlValidationExecutionService | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -303,4 +305,12 @@ export function getValidationPolicyAdministrationReadRepository(): MySqlValidati
       new MySqlValidationPolicyAdministrationReadRepository(getDatabasePool());
   }
   return validationPolicyAdministrationReadRepositoryInstance;
+}
+
+
+export function getValidationExecutionService(): MySqlValidationExecutionService {
+  if (!validationExecutionServiceInstance) {
+    validationExecutionServiceInstance = new MySqlValidationExecutionService(getDatabasePool());
+  }
+  return validationExecutionServiceInstance;
 }

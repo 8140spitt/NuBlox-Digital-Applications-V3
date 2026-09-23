@@ -154,8 +154,9 @@ ADR-0006 reopens a controlled part of Phase 1 because the completed Windchill ev
 Implement in dependency order:
 
 - Policy Scope / Policy Definition / Policy Assignment — **USER-EXECUTABLE FOUNDATION IMPLEMENTED**: kernel identities/invariants, deterministic inherited-policy resolution, migration 0027, tenant-bound persistence, audit/outbox, permission-gated command/read services, MySQL integration test and `/app/policy` administration workspace; integration into security/access policy evaluation continues;
-- Security Classification / Clearance / Security Access Exception;
+- Security Classification / Clearance / Security Access Exception — **USER-EXECUTABLE FOUNDATION IMPLEMENTED**: kernel identities/factories, migration 0028, tenant-bound persistence, permission-gated command/read services, integration tests, registry entries and `/app/security-classification` administration workspace; enforcement is being propagated through all governed information/exchange paths;
 - Type / Attribute / Constraint / Enumeration definitions;
+- Validation Rule Definition / Rule Set / Evaluation Run / Conflict / Relationship Constraint Policy / Mapping Policy;
 - Configuration Resolution Definition / Criterion / Run / Result;
 - Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption;
 - Integration Endpoint / Publication Transaction / Acknowledgement / Source Authority;

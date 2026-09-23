@@ -6,8 +6,10 @@ import {
   createPolicyDefinition,
   createPolicyScope,
   isPolicyAssignmentEffective,
+  resolveEffectivePolicySet,
   type PolicyAssignment,
   type PolicyDefinition,
+  type PolicyResolutionCandidate,
   type PolicyScope
 } from './index.js';
 
@@ -20,6 +22,130 @@ const tenantScope: PolicyScope = createPolicyScope({
   code: 'TENANT',
   name: 'Tenant policy scope',
   status: 'ACTIVE'
+
+  it('resolves inherited supplement, override and block semantics deterministically', () => {
+    const projectScopeId = asId<'PolicyScopeId'>('POL-SCOPE-PROJECT', 'Policy Scope');
+    const accessV2 = createPolicyDefinition({
+      ...policy,
+      id: asId<'PolicyDefinitionId'>('POL-DEF-ACCESS-V2', 'Policy Definition'),
+      version: 2
+    });
+    const securityPolicy = createPolicyDefinition({
+      id: asId<'PolicyDefinitionId'>('POL-DEF-SECURITY', 'Policy Definition'),
+      tenantId,
+      code: 'SECURITY-BASELINE',
+      name: 'Security baseline',
+      policyType: 'SECURITY',
+      version: 1,
+      status: 'ACTIVE'
+    });
+
+    const candidates: PolicyResolutionCandidate[] = [
+      {
+        assignment: {
+          id: asId<'PolicyAssignmentId'>('POL-ASG-ROOT-ACCESS', 'Policy Assignment'),
+          tenantId,
+          policyScopeId: tenantScope.id,
+          policyDefinitionId: policy.id,
+          assignmentMode: 'SUPPLEMENT',
+          precedence: 10,
+          effectiveFrom: '2026-09-23T00:00:00.000Z',
+          status: 'ACTIVE'
+        },
+        definition: policy,
+        scopeDepth: 2
+      },
+      {
+        assignment: {
+          id: asId<'PolicyAssignmentId'>('POL-ASG-ROOT-SEC', 'Policy Assignment'),
+          tenantId,
+          policyScopeId: tenantScope.id,
+          policyDefinitionId: securityPolicy.id,
+          assignmentMode: 'SUPPLEMENT',
+          precedence: 10,
+          effectiveFrom: '2026-09-23T00:00:00.000Z',
+          status: 'ACTIVE'
+        },
+        definition: securityPolicy,
+        scopeDepth: 2
+      },
+      {
+        assignment: {
+          id: asId<'PolicyAssignmentId'>('POL-ASG-PROJECT-ACCESS', 'Policy Assignment'),
+          tenantId,
+          policyScopeId: projectScopeId,
+          policyDefinitionId: accessV2.id,
+          assignmentMode: 'OVERRIDE',
+          precedence: 20,
+          effectiveFrom: '2026-09-23T00:00:00.000Z',
+          status: 'ACTIVE'
+        },
+        definition: accessV2,
+        scopeDepth: 0
+      },
+      {
+        assignment: {
+          id: asId<'PolicyAssignmentId'>('POL-ASG-PROJECT-SEC-BLOCK', 'Policy Assignment'),
+          tenantId,
+          policyScopeId: projectScopeId,
+          policyDefinitionId: securityPolicy.id,
+          assignmentMode: 'BLOCK',
+          precedence: 30,
+          effectiveFrom: '2026-09-23T00:00:00.000Z',
+          status: 'ACTIVE'
+        },
+        definition: securityPolicy,
+        scopeDepth: 0
+      }
+    ];
+
+    const resolved = resolveEffectivePolicySet(candidates);
+
+    expect(resolved.active).toHaveLength(1);
+    expect(resolved.active[0]?.definition.id).toBe(accessV2.id);
+    expect(resolved.blocked).toHaveLength(1);
+    expect(resolved.blocked[0]?.definition.id).toBe(securityPolicy.id);
+  });
+
+  it('requires explicit OVERRIDE to re-enable a blocked inherited policy', () => {
+    const scopeId = asId<'PolicyScopeId'>('POL-SCOPE-LOCAL', 'Policy Scope');
+    const blockedAssignment: PolicyAssignment = {
+      id: asId<'PolicyAssignmentId'>('POL-ASG-BLOCK', 'Policy Assignment'),
+      tenantId,
+      policyScopeId: tenantScope.id,
+      policyDefinitionId: policy.id,
+      assignmentMode: 'BLOCK',
+      precedence: 10,
+      effectiveFrom: '2026-09-23T00:00:00.000Z',
+      status: 'ACTIVE'
+    };
+    const supplementAssignment: PolicyAssignment = {
+      ...blockedAssignment,
+      id: asId<'PolicyAssignmentId'>('POL-ASG-SUPPLEMENT', 'Policy Assignment'),
+      policyScopeId: scopeId,
+      assignmentMode: 'SUPPLEMENT'
+    };
+    const overrideAssignment: PolicyAssignment = {
+      ...supplementAssignment,
+      id: asId<'PolicyAssignmentId'>('POL-ASG-OVERRIDE', 'Policy Assignment'),
+      assignmentMode: 'OVERRIDE',
+      precedence: 20
+    };
+
+    const blocked = resolveEffectivePolicySet([
+      { assignment: blockedAssignment, definition: policy, scopeDepth: 1 },
+      { assignment: supplementAssignment, definition: policy, scopeDepth: 0 }
+    ]);
+    expect(blocked.active).toHaveLength(0);
+    expect(blocked.blocked).toHaveLength(1);
+
+    const restored = resolveEffectivePolicySet([
+      { assignment: blockedAssignment, definition: policy, scopeDepth: 1 },
+      { assignment: overrideAssignment, definition: policy, scopeDepth: 0 }
+    ]);
+    expect(restored.active).toHaveLength(1);
+    expect(restored.blocked).toHaveLength(0);
+  });
 });
 
 const policy: PolicyDefinition = createPolicyDefinition({

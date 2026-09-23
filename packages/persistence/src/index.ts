@@ -30,6 +30,7 @@ export * from './publication-command-service.js';
 export * from './publication-read-repository.js';
 export * from './migration-repository.js';
 export * from './migration-command-service.js';
+export * from './migration-read-repository.js';
 export * from './platform-writes.js';
 export * from './change-repository.js';
 export * from './information-repository.js';

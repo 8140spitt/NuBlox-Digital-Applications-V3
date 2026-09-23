@@ -177,43 +177,68 @@ export function createPublicationTransaction(
 export function createPublicationActivity(
   input: PublicationActivity,
   transaction: PublicationTransaction,
+  endpoint: IntegrationEndpoint,
   subject: CanonicalObjectIdentity,
-  dataEnvelope?: CanonicalDataEnvelope,
-  externalIdentity?: ExternalIdentity,
-  authorityRule?: SourceAuthorityRule
+  dataEnvelope: CanonicalDataEnvelope,
+  authorityRule: SourceAuthorityRule,
+  externalIdentity?: ExternalIdentity
 ): PublicationActivity {
   sameTenant(input, transaction, 'Publication Activity Transaction');
+  sameTenant(input, endpoint, 'Publication Activity Endpoint');
   sameTenant(input, subject, 'Publication Activity subject');
+  sameTenant(input, dataEnvelope, 'Publication Activity Data Envelope');
+  sameTenant(input, authorityRule, 'Publication Activity Source Authority Rule');
   invariant(input.publicationTransactionId === transaction.id, 'Publication Activity must reference the supplied Transaction.');
+  invariant(transaction.endpointId === endpoint.id, 'Publication Activity Endpoint must match the Transaction Endpoint.');
   invariant(transaction.status === 'QUEUED', 'Publication Activities can only be added while Transaction is QUEUED.');
   invariant(input.subjectObjectId === subject.id, 'Publication Activity must reference the supplied subject.');
   invariant(Number.isInteger(input.sequence) && input.sequence > 0, 'Publication Activity sequence must be a positive integer.');
   invariant(input.status === 'PENDING', 'New Publication Activity must start PENDING.');
   if (input.subjectVersion !== undefined) text(input.subjectVersion, 'Publication Activity subjectVersion');
 
-  if (dataEnvelope) {
-    sameTenant(input, dataEnvelope, 'Publication Activity Data Envelope');
-    invariant(input.dataEnvelopeId === dataEnvelope.id, 'Publication Activity Data Envelope reference does not match.');
-    invariant(dataEnvelope.direction === 'EXPORT', 'Publication Activity requires an EXPORT Data Envelope.');
-  } else {
-    invariant(!input.dataEnvelopeId, 'Publication Activity cannot reference an unsupplied Data Envelope.');
+  invariant(input.dataEnvelopeId === dataEnvelope.id, 'Publication Activity Data Envelope reference does not match.');
+  invariant(dataEnvelope.direction === 'EXPORT', 'Publication Activity requires an EXPORT Data Envelope.');
+  invariant(
+    !dataEnvelope.externalSystem || dataEnvelope.externalSystem === endpoint.systemName,
+    'Publication Activity Data Envelope external system must match the Endpoint system.'
+  );
+
+  invariant(
+    input.sourceAuthorityRuleId === authorityRule.id,
+    'Publication Activity Source Authority Rule reference does not match.'
+  );
+  invariant(authorityRule.status === 'ACTIVE', 'Publication Activity requires an ACTIVE Source Authority Rule.');
+  invariant(
+    authorityRule.subjectObjectType === subject.objectType,
+    'Source Authority Rule object type must match the published subject.'
+  );
+  invariant(
+    Date.parse(authorityRule.effectiveFrom) <= Date.parse(transaction.requestedAt) &&
+      (!authorityRule.effectiveTo || Date.parse(authorityRule.effectiveTo) >= Date.parse(transaction.requestedAt)),
+    'Source Authority Rule must be effective when the Publication Transaction is requested.'
+  );
+  if (authorityRule.authorityOwner === 'ENDPOINT') {
+    invariant(
+      authorityRule.endpointId === endpoint.id,
+      'Endpoint-owned Source Authority Rule must reference the Publication Endpoint.'
+    );
   }
 
   if (externalIdentity) {
     sameTenant(input, externalIdentity, 'Publication Activity External Identity');
-    invariant(input.externalIdentityId === externalIdentity.id, 'Publication Activity External Identity reference does not match.');
-    invariant(externalIdentity.canonicalObjectId === subject.id, 'Publication Activity External Identity must belong to the subject.');
+    invariant(
+      input.externalIdentityId === externalIdentity.id,
+      'Publication Activity External Identity reference does not match.'
+    );
+    invariant(
+      externalIdentity.canonicalObjectId === subject.id,
+      'Publication Activity External Identity must belong to the subject.'
+    );
   } else {
-    invariant(!input.externalIdentityId, 'Publication Activity cannot reference an unsupplied External Identity.');
-  }
-
-  if (authorityRule) {
-    sameTenant(input, authorityRule, 'Publication Activity Source Authority Rule');
-    invariant(input.sourceAuthorityRuleId === authorityRule.id, 'Publication Activity Source Authority Rule reference does not match.');
-    invariant(authorityRule.status === 'ACTIVE', 'Publication Activity requires an ACTIVE Source Authority Rule.');
-    invariant(authorityRule.subjectObjectType === subject.objectType, 'Source Authority Rule object type must match the published subject.');
-  } else {
-    invariant(!input.sourceAuthorityRuleId, 'Publication Activity cannot reference an unsupplied Source Authority Rule.');
+    invariant(
+      !input.externalIdentityId,
+      'Publication Activity cannot reference an unsupplied External Identity.'
+    );
   }
 
   return Object.freeze({ ...input });
@@ -257,6 +282,10 @@ export function createPublicationAttempt(
   );
   invariant(input.publicationActivityId === activity.id, 'Publication Attempt must reference the supplied Activity.');
   invariant(input.dataEnvelopeId === envelope.id, 'Publication Attempt must reference the supplied Data Envelope.');
+  invariant(
+    activity.dataEnvelopeId === envelope.id,
+    'Publication Attempt must use the exact Data Envelope frozen on the Activity.'
+  );
   invariant(envelope.direction === 'EXPORT', 'Publication Attempt requires an EXPORT Data Envelope.');
   invariant(input.status === 'STARTED', 'New Publication Attempt must start STARTED.');
   invariant(

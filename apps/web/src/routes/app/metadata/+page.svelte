@@ -453,7 +453,7 @@
                     {/each}
                   </select>
                 {:else if definition.dataType === 'JSON'}
-                  <textarea name={`field:${field.id}:${definition.dataType}:0`} rows="3" required={field.required} placeholder="{}"></textarea>
+                  <textarea name={`field:${field.id}:${definition.dataType}:0`} rows="3" required={field.required} placeholder="JSON value"></textarea>
                 {:else}
                   <input
                     name={`field:${field.id}:${definition.dataType}:0`}
@@ -528,7 +528,7 @@
                     {/each}
                   </select>
                 {:else if field.dataType === 'JSON'}
-                  <textarea name={`relationshipField:${field.assignmentId}:${field.dataType}:0`} rows="3" required={field.required} placeholder="{}"></textarea>
+                  <textarea name={`relationshipField:${field.assignmentId}:${field.dataType}:0`} rows="3" required={field.required} placeholder="JSON value"></textarea>
                 {:else}
                   <input
                     name={`relationshipField:${field.assignmentId}:${field.dataType}:0`}

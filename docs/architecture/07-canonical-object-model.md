@@ -162,6 +162,11 @@ The objective is not one giant table or one universal object type. The objective
 - Migration Conflict;
 - Migration Reconciliation Run;
 - Cutover Decision;
+- Extension Definition;
+- Extension Package Version;
+- Extension Component;
+- Extension Compatibility Assessment;
+- Extension Reconciliation Run;
 - Retention Policy;
 - Hold;
 - Disposition Rule;

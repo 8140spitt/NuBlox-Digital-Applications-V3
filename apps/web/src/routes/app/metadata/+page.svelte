@@ -325,6 +325,16 @@
       the legal graph between Things. Required fields and relationship cardinality are enforced by the
       same runtime used by the application.
     </p>
+    <p>
+      The enterprise vocabulary binds native authoritative records into this same graph. Organisation,
+      Person, Position, Project, Contract, Asset and the other shared identities remain single masters;
+      business roles such as customer or supplier do not create duplicate organisations.
+    </p>
+    {#if data.canManage}
+      <form method="POST" action="?/provisionEnterpriseVocabulary" class="inline-status-form">
+        <button type="submit">Install / reconcile enterprise vocabulary <span>→</span></button>
+      </form>
+    {/if}
   </section>
 
   {#if data.canManage}

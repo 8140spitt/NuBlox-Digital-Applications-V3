@@ -5,6 +5,7 @@ import type {
   EnumerationDefinitionId,
   EnumerationValueId,
   RelationshipAttributeAssignmentId,
+  RelationshipAttributeConstraintAssignmentId,
   RelationshipTypeDefinitionId,
   TenantId,
   TypeAttributeAssignmentId,
@@ -158,5 +159,15 @@ export interface RelationshipAttributeAssignment {
   cardinality: MetadataCardinality;
   localLabel?: string;
   defaultValue?: unknown;
+  status: RecordStatus;
+}
+
+export interface RelationshipAttributeConstraintAssignment {
+  id: RelationshipAttributeConstraintAssignmentId;
+  tenantId: TenantId;
+  relationshipAttributeAssignmentId: RelationshipAttributeAssignmentId;
+  constraintDefinitionId: ConstraintDefinitionId;
+  sequence: number;
+  mandatory: boolean;
   status: RecordStatus;
 }

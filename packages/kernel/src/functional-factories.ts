@@ -54,9 +54,10 @@ function assertStringArray(values: ReadonlyArray<string>, label: string) {
 export function createFunctionDefinition(
   input: FunctionDefinition
 ): FunctionDefinition {
-  if (input.functionFamily === 'CORE_BUSINESS') {
+  const functionFamily = input.functionFamily ?? 'CORE_BUSINESS';
+  if (functionFamily === 'CORE_BUSINESS') {
     invariant(/^F\d{2}$/.test(input.code), 'Core Business Function code must use F01-F99 format.');
-  } else if (input.functionFamily === 'CBE') {
+  } else if (functionFamily === 'CBE') {
     invariant(/^D\d{2}$/.test(input.code), 'CBE Function code must use D01-D99 format.');
     assertNonEmpty(input.industrySolutionId ?? '', 'CBE Function industry solution');
   } else {

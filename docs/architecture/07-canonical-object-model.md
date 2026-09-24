@@ -60,6 +60,9 @@ The objective is not one giant table or one universal object type. The objective
 
 - Customer;
 - Supplier;
+- Sourcing Context;
+- Source Approval;
+- Sourcing Rule;
 - Contract;
 - Agreement;
 - Appointment;

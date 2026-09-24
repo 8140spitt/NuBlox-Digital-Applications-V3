@@ -17,6 +17,8 @@
   }
 
   function currentArea(pathname: string) {
+    if (pathname.startsWith('/app/function')) return 'My Function';
+    if (pathname.startsWith('/app/my-team')) return 'My Team';
     if (pathname.startsWith('/app/my-work')) return 'My Work';
     if (pathname.startsWith('/app/contexts')) return 'Contexts';
     if (pathname.startsWith('/app/teams')) return 'Teams';
@@ -37,7 +39,7 @@
     if (pathname.startsWith('/app/site-production')) return 'Site Production';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
-    if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
+    if (pathname.startsWith('/app/hcm')) return 'Human Capital Management';
     if (pathname.startsWith('/app/resource-planning')) return 'Resource Planning';
     if (pathname.startsWith('/app/organisation')) return 'HCM Position Management';
     if (pathname.startsWith('/app/deployments')) return 'HCM Position Management';
@@ -67,21 +69,21 @@
             <span class="nav-symbol">HM</span>
             <span>Home</span>
           </a>
+          <a class:active={isActive('/app/function')} href="/app/function" onclick={closeNavigation}>
+            <span class="nav-symbol">FN</span>
+            <span>My Function</span>
+          </a>
           <a class:active={isActive('/app/my-work')} href="/app/my-work" onclick={closeNavigation}>
             <span class="nav-symbol">MW</span>
             <span>My Work</span>
           </a>
-          <a class:active={isActive('/app/site-production')} href="/app/site-production" onclick={closeNavigation}>
-            <span class="nav-symbol">SP</span>
-            <span>Site production</span>
+          <a class:active={isActive('/app/my-team')} href="/app/my-team" onclick={closeNavigation}>
+            <span class="nav-symbol">MT</span>
+            <span>My Team</span>
           </a>
           <a class:active={isActive('/app/contexts')} href="/app/contexts" onclick={closeNavigation}>
             <span class="nav-symbol">CX</span>
-            <span>Contexts</span>
-          </a>
-          <a class:active={isActive('/app/teams')} href="/app/teams" onclick={closeNavigation}>
-            <span class="nav-symbol">TM</span>
-            <span>Teams</span>
+            <span>My Contexts</span>
           </a>
         </section>
 
@@ -125,11 +127,7 @@
           <h2>Governance</h2>
           <a class:active={isActive('/app/hcm')} href="/app/hcm" onclick={closeNavigation}>
             <span class="nav-symbol">HC</span>
-            <span>HCM &amp; positions</span>
-          </a>
-          <a class:active={isActive('/app/resource-planning')} href="/app/resource-planning" onclick={closeNavigation}>
-            <span class="nav-symbol">RP</span>
-            <span>Resource planning</span>
+            <span>Human Capital</span>
           </a>
           <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
             <span class="nav-symbol">CP</span>

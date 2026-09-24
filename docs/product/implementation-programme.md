@@ -213,7 +213,7 @@ Implement:
 - design and technical authoring;
 - commercial/cost work;
 - planning;
-- procurement;
+- procurement — **CONTEXTUAL SOURCING FOUNDATION USER-EXECUTABLE**: contextual Supplier Relationship / Sourcing Context / Source Approval / Sourcing Rule controls are implemented with Decision-backed supplier release and exact effective-dated item-source approval, deterministic authority fingerprints, historical supersession, migrations 0039-0042, dedicated permissions, audit/outbox, MySQL journey proof and `/app/supplier-sourcing`; broader supplier qualification/assessment/performance, category/spend, sourcing events/RFx, evaluation/negotiation, requisition and Purchase Order remain to build;
 - production/fabrication;
 - field/site execution;
 - quality/HSE;

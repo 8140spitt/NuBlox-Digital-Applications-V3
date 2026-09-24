@@ -1,4 +1,8 @@
 ALTER TABLE source_approvals
+  ADD INDEX ix_source_approvals_context (tenant_id, sourcing_context_id),
+  ADD INDEX ix_source_approvals_supplier_relationship (tenant_id, supplier_relationship_id);
+
+ALTER TABLE source_approvals
   DROP CHECK chk_source_approvals_current,
   DROP INDEX uq_source_approvals_current_tuple,
   DROP COLUMN current_guard;

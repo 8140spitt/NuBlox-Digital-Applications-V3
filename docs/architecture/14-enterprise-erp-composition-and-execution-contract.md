@@ -7,7 +7,7 @@
 
 NuBlox is intended to be an end-to-end enterprise-grade ERP and operating environment in which people can carry out the work they are employed, engaged, positioned and deployed to perform.
 
-The 29 Core Business Functions, 353 L2 Sub-functions, 1,510 Activities, 58 Native Tool Engines, 16 Construction & Built Environment Delivery Domains and 84 CBE Job Profiles therefore must not be implemented as separate catalogues or disconnected modules.
+The 29 Core Business Functions, 353 L2 Sub-functions, 1,510 Activities, 58 Native Tool Engines, 16 CBE-classified Functions and 84 CBE Job Profiles therefore must not be implemented as separate catalogues or disconnected modules.
 
 This architecture defines the composition layer that turns those catalogues into one executable ERP.
 
@@ -24,7 +24,7 @@ NuBlox ERP is the composition of:
 1. **Enterprise Kernel** — shared authoritative identities, contexts and controls;
 2. **Native Tool Engines** — reusable transaction, planning, professional-authoring, field and assurance capabilities;
 3. **Native Work-Delivery Runtime** — deployment, responsibility, assignment, Work, Deliverable, Decision, Evidence and controlled history;
-4. **Functional Operating Model** — 29 governed Functions with Functional Governance and Functional Delivery;
+4. **Functional Operating Model** — one universal Function model: F01–F29 Core Business Functions plus Industry Solution Functions such as CBE D01–D16, each with Functional Governance and Functional Delivery;
 5. **Industry Solutions** — sector-specific capability composition, beginning with CBE;
 6. **User Experience Composition** — role/job/context-specific access to the work, tools, objects, queues and Decisions required by the signed-in Person;
 7. **End-to-End Process Spine** — cross-functional business processes that carry one authoritative object graph across functional boundaries.
@@ -37,14 +37,15 @@ No layer may create a competing master identity, workflow framework, approval me
 Tenant
 -> Organisation / Organisation Unit
 -> Person
+-> Employment / Position Occupancy
 -> Position
 -> Job Profile
--> Employment / Position Occupancy
--> Function or CBE Delivery Domain
--> Functional Deployment
+-> Position-to-Function assignment
    -> FUNCTIONAL_GOVERNANCE
    or
    -> FUNCTIONAL_DELIVERY
+-> Position hierarchy / management scope
+-> optional contextual responsibility / assignment
 -> Responsibility / scope / competence / Permission / Authority
 -> L2 Sub-function / Activity / Process
 -> Native Tool Engine capability
@@ -57,7 +58,7 @@ Tenant
 -> KPI / performance / improvement
 ~~~
 
-The chain is compositional. A Person, Position, Job Profile, Deployment, Permission, Authority and Work Item remain distinct objects.
+The chain is compositional. A Person, Position, Job Profile, Function assignment, optional contextual assignment, Permission, Authority and Work Item remain distinct objects.
 
 ## Three machine-readable ERP baselines
 
@@ -185,6 +186,21 @@ This can include:
 
 Governance and Delivery are runtime Deployment purposes, not permanent classifications of a Person or Job Profile.
 
+## Management hierarchy execution contract
+
+Position reporting lines are part of ERP composition, not merely HCM reference data.
+
+For a manager, authorised Function dashboards resolve:
+
+~~~text
+manager Position
+-> own scope
++ subordinate Position scope recursively
+-> work / objects / transactions / performance
+~~~
+
+The reporting hierarchy extends visibility and management scope subject to Permission, information governance and object scope. It does not transfer ownership of subordinate records to the manager.
+
 ## Job and Position execution contract
 
 NuBlox must primarily present work in terms meaningful to the Person doing it.
@@ -199,13 +215,13 @@ signed-in Person
 -> active Position Occupancy
 -> Position
 -> Job Profile
--> active Function/CBE Deployments
--> Deployment purpose
--> responsibility scope
+-> active Position-to-Function assignment
+-> Governance or Delivery purpose
+-> Position reporting hierarchy / management scope
+-> contextual responsibility where applicable
 -> competence
 -> Permission
 -> Authority
--> operating context
 -> assigned and actionable Work
 ~~~
 
@@ -229,7 +245,7 @@ CBE configures the common ERP for professional and physical built-environment wo
 
 It provides:
 
-- 16 Delivery Domains;
+- 16 CBE Function definitions (D01–D16), classified as `CBE` in the universal Function model;
 - 84 Job Profiles;
 - sector-specific object types and relationships;
 - professional work-product requirements;
@@ -321,8 +337,8 @@ Both are required.
 For a material supported Activity or Job capability the executable contract ultimately consists of:
 
 1. **Who** — participating Job Profile / Position / Person;
-2. **Why** — Function / Domain / Process / obligation;
-3. **Purpose** — Functional Governance or Functional Delivery;
+2. **Why** — Function / Process / obligation;
+3. **Purpose** — Functional Governance or Functional Delivery from the Position-to-Function assignment;
 4. **Where** — tenant and operating context;
 5. **Responsibility** — accountable/responsible/reviewer/approver/etc.;
 6. **Competence** — required capability / qualification / validity;
@@ -362,7 +378,7 @@ The implementation sequence is:
 
 The product must progressively demonstrate complete scenarios such as:
 
-- recruit a Person, occupy a Position, prove competence, deploy them and deliver actionable My Work;
+- recruit a Person, occupy a Position, assign that Position to its Function and Governance/Delivery side, prove competence and deliver actionable My Work;
 - create Customer demand, quote/bid, contract, fulfil, accept, invoice, account and receive payment;
 - create procurement demand, source, place Purchase Order, receive, match invoice, account and pay;
 - establish a Project, baseline it, author/release design information, procure, perform site work, inspect/test, value/pay, commission and hand over Assets/information;

@@ -190,3 +190,10 @@ export function asId<T extends string>(value: string, label: string): Brand<stri
 
   return trimmed as Brand<string, T>;
 }
+
+export type ManufacturingProcessPlanId = Brand<string, 'ManufacturingProcessPlanId'>;
+export type ManufacturingOperationId = Brand<string, 'ManufacturingOperationId'>;
+export type ManufacturingSequenceLinkId = Brand<string, 'ManufacturingSequenceLinkId'>;
+export type ManufacturingResourceId = Brand<string, 'ManufacturingResourceId'>;
+export type ManufacturingResourceAllocationId = Brand<string, 'ManufacturingResourceAllocationId'>;
+export type ControlCharacteristicId = Brand<string, 'ControlCharacteristicId'>;

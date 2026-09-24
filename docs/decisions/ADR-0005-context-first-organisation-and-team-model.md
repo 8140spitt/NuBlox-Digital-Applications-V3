@@ -1,7 +1,9 @@
 # ADR-0005 — Context-first organisation and Team model
 
-**Status:** Accepted, partially superseded by ADR-0006  
+**Status:** Superseded by ADR-0006 for capability identity and primary navigation; Context semantics retained  
 **Date:** 2026-09-22
+
+> **Current authority (25 September 2026):** retain the recursive Context hierarchy and inheritance ideas in this ADR. Do **not** use its Core Function Team / Professional Domain Team split, its Team-as-primary-capability model, or its Contexts/Teams-first navigation as the governing product model. ADR-0006 and the current HCM authority spine resolve the user through Person → Employment → Position → Function → Governance/Delivery. Context qualifies where work happens.
 
 ## Decision
 

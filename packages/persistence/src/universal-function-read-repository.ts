@@ -1,4 +1,4 @@
-import type { FunctionFamily, TenantId } from '@nublox/kernel';
+import type { FunctionFamily } from '@nublox/kernel';
 import type { Pool, RowDataPacket } from 'mysql2/promise';
 
 interface FunctionRow extends RowDataPacket {

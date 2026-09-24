@@ -87,3 +87,6 @@ export * from './service-delivery-read-repository.js';
 export * from './construction-site-production-repository.js';
 export * from './construction-site-production-command-service.js';
 export * from './construction-site-production-read-repository.js';
+
+export * from './organisational-resource-planning-command-service.js';
+export * from './organisational-resource-planning-read-repository.js';

@@ -266,7 +266,7 @@ export class MySqlConfigurationPromotionRepository {
       const checksum=hash({sourceEnvironmentId:current.sourceEnvironmentId,baseBaselineId:current.baseBaselineId,scopeObjectId:current.scopeObjectId,code:current.code,version:current.version,items:items.map(i=>({sequence:i.sequence,operation:i.operation,objectFamily:i.objectFamily,objectReference:i.objectReference,beforeHash:i.beforeHash,afterHash:i.afterHash,definition:i.definition,dependencies:i.dependencies}))});
       const next=freezeConfigurationChangeSet(current,items,checksum,mapPerson(personRows[0][0]),frozenAt);
       const [u]=await c.execute<ResultSetHeader>('UPDATE configuration_change_sets SET status=?,checksum=?,frozen_by_person_id=?,frozen_at=?,updated_by_person_id=?,row_version=row_version+1 WHERE tenant_id=? AND id=? AND row_version=?',
-        [next.status,next.checksum,next.frozenByPersonId,new Date(frozenAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
+        [next.status,next.checksum!,next.frozenByPersonId!,new Date(frozenAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
       if(u.affectedRows!==1)throw new Error('Concurrent Configuration Change Set freeze detected.');
       await evidence(c,t,'CONFIGURATION_CHANGE_SET',id,'FROZEN',audit,next);return next;
     });

@@ -1646,7 +1646,7 @@ export const functions: FunctionSummary[] = [
       {
         "id": "NTE-020",
         "name": "Supplier, Sourcing & Procurement",
-        "state": "TO_BUILD"
+        "state": "PARTIAL"
       }
     ],
     "subfunctions": [
@@ -2149,7 +2149,7 @@ export const functions: FunctionSummary[] = [
       {
         "id": "NTE-023",
         "name": "Manufacturing & Production Execution",
-        "state": "TO_BUILD"
+        "state": "PARTIAL"
       },
       {
         "id": "NTE-055",
@@ -2351,7 +2351,7 @@ export const functions: FunctionSummary[] = [
       {
         "id": "NTE-024",
         "name": "Service Planning, Dispatch & Field Execution",
-        "state": "TO_BUILD"
+        "state": "PARTIAL"
       },
       {
         "id": "NTE-054",
@@ -6217,7 +6217,7 @@ export const functions: FunctionSummary[] = [
       {
         "id": "NTE-043",
         "name": "Knowledge, Document, Records & CDE",
-        "state": "TO_BUILD"
+        "state": "PARTIAL"
       },
       {
         "id": "NTE-049",

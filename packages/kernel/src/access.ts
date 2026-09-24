@@ -17,6 +17,8 @@ export const PLATFORM_PERMISSION_KEYS = {
   ORGANISATION_MANAGE: 'platform.organisation.manage',
   PEOPLE_READ: 'platform.people.read',
   PEOPLE_MANAGE: 'platform.people.manage',
+  HCM_READ: 'domain.hcm.read',
+  HCM_MANAGE: 'domain.hcm.manage',
   ACCESS_MANAGE: 'platform.access.manage',
   POLICY_READ: 'platform.policy.read',
   POLICY_MANAGE: 'platform.policy.manage',

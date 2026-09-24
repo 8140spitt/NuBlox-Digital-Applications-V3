@@ -173,7 +173,7 @@ export class MySqlSalesReadRepository {
     }
 
     const managementDepthByPosition=new Map<string,number>(
-      (read.experience?.managementScope??[]).map(item=>[item.positionId,item.depth])
+      (read.experience?.managementScope??[]).map(item=>[item.positionId,item.depth] as const)
     );
     const currentPositionId=read.experience?.positionId;
     const positionRollup:SalesPositionRollup[]=ownerPositions

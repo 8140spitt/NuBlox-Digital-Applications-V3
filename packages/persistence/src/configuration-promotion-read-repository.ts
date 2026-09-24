@@ -1,7 +1,15 @@
 import { PLATFORM_PERMISSION_KEYS, type TenantId } from '@nublox/kernel';
-import type { Pool } from 'mysql2/promise';
+import type { Pool, RowDataPacket } from 'mysql2/promise';
 import { MySqlAccessRepository } from './access-repository.js';
 import { MySqlConfigurationPromotionRepository } from './configuration-promotion-repository.js';
+
+interface ScopeRow extends RowDataPacket {
+  id:string; object_type:string; stable_key:string;
+}
+interface DecisionRow extends RowDataPacket {
+  id:string; decision_type:string; subject_object_id:string; subject_version:string|null;
+  outcome:string; reason:string; decided_at:Date;
+}
 
 export class ConfigurationPromotionReadError extends Error {
   constructor(message:string,readonly code:'PERMISSION_DENIED'){super(message);this.name='ConfigurationPromotionReadError';}
@@ -21,7 +29,7 @@ export class MySqlConfigurationPromotionReadRepository {
     );
     if(!e.allowed)throw new ConfigurationPromotionReadError(e.reason,'PERMISSION_DENIED');
 
-    const [environments,baselines,baselineItems,changeSets,changeItems,runs,results,conflicts]=await Promise.all([
+    const [environments,baselines,baselineItems,changeSets,changeItems,runs,results,conflicts,scopeResult,decisionResult]=await Promise.all([
       this.repo.listEnvironments(t),
       this.repo.listBaselines(t),
       this.repo.listBaselineItems(t),
@@ -29,7 +37,15 @@ export class MySqlConfigurationPromotionReadRepository {
       this.repo.listChangeItems(t),
       this.repo.listRuns(t),
       this.repo.listResults(t),
-      this.repo.listConflicts(t)
+      this.repo.listConflicts(t),
+      this.pool.execute<ScopeRow[]>(
+        'SELECT id,object_type,stable_key FROM canonical_objects WHERE tenant_id=? ORDER BY object_type,stable_key,id',
+        [t]
+      ),
+      this.pool.execute<DecisionRow[]>(
+        'SELECT id,decision_type,subject_object_id,subject_version,outcome,reason,decided_at FROM decisions WHERE tenant_id=? AND outcome=\'APPROVED\' ORDER BY decided_at DESC,id',
+        [t]
+      )
     ]);
 
     const environmentById=new Map(environments.map(x=>[x.id,x]));
@@ -61,6 +77,14 @@ export class MySqlConfigurationPromotionReadRepository {
           : undefined,
         results:results.filter(r=>r.promotionRunId===run.id),
         conflicts:conflicts.filter(c=>c.promotionRunId===run.id)
+      })),
+      scopeObjects:scopeResult[0].map(row=>({
+        id:row.id,objectType:row.object_type,stableKey:row.stable_key
+      })),
+      decisions:decisionResult[0].map(row=>({
+        id:row.id,decisionType:row.decision_type,subjectObjectId:row.subject_object_id,
+        ...(row.subject_version?{subjectVersion:row.subject_version}:{}),
+        outcome:row.outcome,reason:row.reason,decidedAt:row.decided_at.toISOString()
       })),
       totals:{
         environments:environments.length,

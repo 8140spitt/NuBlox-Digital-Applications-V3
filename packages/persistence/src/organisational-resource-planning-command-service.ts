@@ -202,7 +202,7 @@ export class MySqlOrganisationalResourcePlanningCommandService {
              canonical_object_id,parent_context_id,effective_from,effective_to,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,?,?,?,?,?,?,NULL,NULL,?,NULL,?,?,?)`,
           [context.id,tenantId,context.contextType,context.lifecycle,context.code,context.name,context.organisationId,
-           context.organisationUnitId,context.functionId,new Date(context.effectiveFrom),context.status,actorPersonId,actorPersonId]
+           organisationUnitId,functionId,new Date(context.effectiveFrom),context.status,actorPersonId,actorPersonId]
         );
         await writeAudit(connection,tenantId,'ORGANISATIONAL_CONTEXT',context.id,'CREATED',actorPersonId,context);
         return context;
@@ -249,7 +249,7 @@ export class MySqlOrganisationalResourcePlanningCommandService {
              canonical_object_id,parent_context_id,effective_from,effective_to,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,?,?,?,?,NULL,NULL,?,?,?,?,?,?,?)`,
           [context.id,tenantId,context.contextType,context.lifecycle,context.code,context.name,context.organisationId,
-           context.canonicalObjectId,context.parentContextId??null,new Date(context.effectiveFrom),dbDate(context.effectiveTo),
+           projectObjectId,context.parentContextId??null,new Date(context.effectiveFrom),dbDate(context.effectiveTo),
            context.status,actorPersonId,actorPersonId]
         );
         await writeAudit(connection,tenantId,'ORGANISATIONAL_CONTEXT',context.id,'CREATED',actorPersonId,context);
@@ -428,7 +428,7 @@ export class MySqlOrganisationalResourcePlanningCommandService {
              context_type,context_object_id,scope_description,effective_from,effective_to,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,NULL,?,?,?,?,?,?,?,?,?,?,?)`,
           [deployment.id,tenantId,deployment.functionId,deployment.deploymentPurpose,deployment.organisationId,
-           deployment.organisationUnitId,deployment.contextType,deployment.contextObjectId,deployment.scopeDescription,
+           supplying.organisationUnitId,deployment.contextType,requesting.canonicalObjectId,deployment.scopeDescription,
            new Date(deployment.effectiveFrom),dbDate(deployment.effectiveTo),deployment.status,actorPersonId,actorPersonId]
         );
         await connection.execute(
@@ -437,7 +437,7 @@ export class MySqlOrganisationalResourcePlanningCommandService {
              effective_from,effective_to,status,created_by_person_id,updated_by_person_id)
            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
           [assignment.id,tenantId,assignment.functionalDeploymentId,assignment.assigneeType,assignment.assigneeId,
-           assignment.jobProfileId,assignment.responsibilityRole,new Date(assignment.effectiveFrom),dbDate(assignment.effectiveTo),
+           requirement.jobProfileId,assignment.responsibilityRole,new Date(assignment.effectiveFrom),dbDate(assignment.effectiveTo),
            assignment.status,actorPersonId,actorPersonId]
         );
         await connection.execute(

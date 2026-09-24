@@ -34,6 +34,7 @@
     if (pathname.startsWith('/app/supplier-sourcing')) return 'Supplier Sourcing';
     if (pathname.startsWith('/app/manufacturing')) return 'Manufacturing';
     if (pathname.startsWith('/app/service-delivery')) return 'Service Delivery';
+    if (pathname.startsWith('/app/site-production')) return 'Site Production';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
@@ -68,6 +69,10 @@
           <a class:active={isActive('/app/my-work')} href="/app/my-work" onclick={closeNavigation}>
             <span class="nav-symbol">MW</span>
             <span>My Work</span>
+          </a>
+          <a class:active={isActive('/app/site-production')} href="/app/site-production" onclick={closeNavigation}>
+            <span class="nav-symbol">SP</span>
+            <span>Site production</span>
           </a>
           <a class:active={isActive('/app/contexts')} href="/app/contexts" onclick={closeNavigation}>
             <span class="nav-symbol">CX</span>

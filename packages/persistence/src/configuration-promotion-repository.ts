@@ -116,7 +116,7 @@ const mapBaseline=(r:BaselineRow):ConfigurationBaseline=>({
   id:r.id as ConfigurationBaseline['id'],tenantId:r.tenant_id as TenantId,environmentId:r.environment_id as ConfigurationBaseline['environmentId'],
   baselineReference:r.baseline_reference,platformVersion:r.platform_version,status:r.status,...(r.checksum?{checksum:r.checksum}:{}),
   createdByPersonId:r.created_by_person_id as ConfigurationBaseline['createdByPersonId'],createdAt:r.baseline_created_at.toISOString(),
-  ...(r.frozen_by_person_id?{frozenByPersonId:r.frozen_by_person_id as ConfigurationBaseline['frozenByPersonId']}:{}),
+  ...(r.frozen_by_person_id?{frozenByPersonId:r.frozen_by_person_id as NonNullable<ConfigurationBaseline['frozenByPersonId']>}:{}),
   ...(r.frozen_at?{frozenAt:r.frozen_at.toISOString()}:{})
 });
 const mapBaselineItem=(r:BaselineItemRow):ConfigurationBaselineItem=>({
@@ -129,9 +129,9 @@ const mapChangeSet=(r:ChangeSetRow):ConfigurationChangeSet=>({
   baseBaselineId:r.base_baseline_id as ConfigurationChangeSet['baseBaselineId'],scopeObjectId:r.scope_object_id,code:r.code,name:r.name,
   ...(r.description?{description:r.description}:{}),version:r.version,status:r.status,...(r.checksum?{checksum:r.checksum}:{}),
   createdByPersonId:r.created_by_person_id as ConfigurationChangeSet['createdByPersonId'],createdAt:r.change_set_created_at.toISOString(),
-  ...(r.frozen_by_person_id?{frozenByPersonId:r.frozen_by_person_id as ConfigurationChangeSet['frozenByPersonId']}:{}),
+  ...(r.frozen_by_person_id?{frozenByPersonId:r.frozen_by_person_id as NonNullable<ConfigurationChangeSet['frozenByPersonId']>}:{}),
   ...(r.frozen_at?{frozenAt:r.frozen_at.toISOString()}:{}),
-  ...(r.approved_decision_id?{approvedDecisionId:r.approved_decision_id as ConfigurationChangeSet['approvedDecisionId']}:{}),
+  ...(r.approved_decision_id?{approvedDecisionId:r.approved_decision_id as NonNullable<ConfigurationChangeSet['approvedDecisionId']>}:{}),
   ...(r.approved_at?{approvedAt:r.approved_at.toISOString()}:{})
 });
 const mapChangeItem=(r:ChangeItemRow):ConfigurationChangeItem=>({
@@ -144,7 +144,7 @@ const mapRun=(r:RunRow):ConfigurationPromotionRun=>({
   id:r.id as ConfigurationPromotionRun['id'],tenantId:r.tenant_id as TenantId,changeSetId:r.change_set_id as ConfigurationPromotionRun['changeSetId'],
   sourceEnvironmentId:r.source_environment_id as ConfigurationPromotionRun['sourceEnvironmentId'],targetEnvironmentId:r.target_environment_id as ConfigurationPromotionRun['targetEnvironmentId'],
   sourceBaselineId:r.source_baseline_id as ConfigurationPromotionRun['sourceBaselineId'],expectedTargetBaselineId:r.expected_target_baseline_id as ConfigurationPromotionRun['expectedTargetBaselineId'],
-  ...(r.resulting_target_baseline_id?{resultingTargetBaselineId:r.resulting_target_baseline_id as ConfigurationPromotionRun['resultingTargetBaselineId']}:{}),
+  ...(r.resulting_target_baseline_id?{resultingTargetBaselineId:r.resulting_target_baseline_id as NonNullable<ConfigurationPromotionRun['resultingTargetBaselineId']>}:{}),
   runReference:r.run_reference,mappingDefinition:objectJson(r.mapping_definition),mappingChecksum:r.mapping_checksum,
   rollbackDefinition:objectJson(r.rollback_definition),rollbackChecksum:r.rollback_checksum,
   requestedByPersonId:r.requested_by_person_id as ConfigurationPromotionRun['requestedByPersonId'],requestedAt:r.requested_at.toISOString(),status:r.status,
@@ -157,13 +157,13 @@ const mapResult=(r:ResultRow):ConfigurationPromotionItemResult=>({
 });
 const mapConflict=(r:ConflictRow):ConfigurationPromotionConflict=>({
   id:r.id as ConfigurationPromotionConflict['id'],tenantId:r.tenant_id as TenantId,promotionRunId:r.promotion_run_id as ConfigurationPromotionConflict['promotionRunId'],
-  ...(r.item_result_id?{itemResultId:r.item_result_id as ConfigurationPromotionConflict['itemResultId']}:{}),conflictType:r.conflict_type,
+  ...(r.item_result_id?{itemResultId:r.item_result_id as NonNullable<ConfigurationPromotionConflict['itemResultId']>}:{}),conflictType:r.conflict_type,
   severity:r.severity,code:r.code,description:r.description,status:r.status,detectedAt:r.detected_at.toISOString(),...(r.resolved_at?{resolvedAt:r.resolved_at.toISOString()}:{})
 });
 const mapDecision=(r:DecisionRow):Decision=>({
   id:r.id as Decision['id'],tenantId:r.tenant_id as TenantId,decisionType:r.decision_type,subjectObjectId:r.subject_object_id as Decision['subjectObjectId'],
   ...(r.subject_version?{subjectVersion:r.subject_version}:{}),outcome:r.outcome,reason:r.reason,deciderPersonId:r.decider_person_id as Decision['deciderPersonId'],
-  ...(r.authority_grant_id?{authorityGrantId:r.authority_grant_id as Decision['authorityGrantId']}:{}),decidedAt:r.decided_at.toISOString()
+  ...(r.authority_grant_id?{authorityGrantId:r.authority_grant_id as NonNullable<Decision['authorityGrantId']>}:{}),decidedAt:r.decided_at.toISOString()
 });
 const mapPerson=(r:PersonRow):Person=>({
   id:r.id as Person['id'],tenantId:r.tenant_id as TenantId,partyId:r.party_id as Person['partyId'],legalName:r.legal_name,
@@ -224,7 +224,7 @@ export class MySqlConfigurationPromotionRepository {
       const checksum=hash({environmentId:current.environmentId,platformVersion:current.platformVersion,items:items.map(i=>({sequence:i.sequence,objectFamily:i.objectFamily,objectReference:i.objectReference,objectVersion:i.objectVersion,contentHash:i.contentHash,snapshot:i.snapshot}))});
       const next=freezeConfigurationBaseline(current,items,checksum,mapPerson(personRows[0][0]),frozenAt);
       const [u]=await c.execute<ResultSetHeader>('UPDATE configuration_baselines SET status=?,checksum=?,frozen_by_person_id=?,frozen_at=?,updated_by_person_id=?,row_version=row_version+1 WHERE tenant_id=? AND id=? AND row_version=?',
-        [next.status,next.checksum,next.frozenByPersonId,new Date(frozenAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
+        [next.status,next.checksum!,next.frozenByPersonId!,new Date(frozenAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
       if(u.affectedRows!==1)throw new Error('Concurrent Configuration Baseline freeze detected.');
       await evidence(c,t,'CONFIGURATION_BASELINE',id,'FROZEN',audit,next);return next;
     });
@@ -279,7 +279,7 @@ export class MySqlConfigurationPromotionRepository {
       const decision=await this.requireDecision(t,decisionId,c);
       const next=approveConfigurationChangeSet(mapChangeSet(rows[0]),decision,approvedAt);
       const [u]=await c.execute<ResultSetHeader>('UPDATE configuration_change_sets SET status=?,approved_decision_id=?,approved_at=?,updated_by_person_id=?,row_version=row_version+1 WHERE tenant_id=? AND id=? AND row_version=?',
-        [next.status,next.approvedDecisionId,new Date(approvedAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
+        [next.status,next.approvedDecisionId!,new Date(approvedAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
       if(u.affectedRows!==1)throw new Error('Concurrent Configuration Change Set approval detected.');
       await evidence(c,t,'CONFIGURATION_CHANGE_SET',id,'APPROVED',audit,next);return next;
     });

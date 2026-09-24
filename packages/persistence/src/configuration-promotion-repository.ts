@@ -349,8 +349,14 @@ export class MySqlConfigurationPromotionRepository {
     return withTransaction(this.pool,async c=>{
       const [rows]=await c.execute<ConflictRow[]>('SELECT * FROM configuration_promotion_conflicts WHERE tenant_id=? AND id=? FOR UPDATE',[input.tenantId,input.conflictId]);
       if(!rows[0])throw new Error('Configuration Promotion Conflict not found in tenant.');
+      const conflict=mapConflict(rows[0]);
+      const run=await this.requireRun(input.tenantId,conflict.promotionRunId,c);
+      const changeSet=await this.requireChangeSet(input.tenantId,run.changeSetId,c);
       const [decision,disposer]=await Promise.all([this.requireDecision(input.tenantId,input.decisionId,c),this.requirePerson(input.tenantId,input.disposedByPersonId,c)]);
-      const conflict=mapConflict(rows[0]);createConfigurationPromotionConflictDisposition(input,conflict,decision,disposer);
+      if (decision.subjectObjectId !== changeSet.scopeObjectId || decision.subjectVersion !== changeSet.checksum) {
+        throw new Error('Promotion Conflict Decision must govern the exact approved Change Set scope and checksum.');
+      }
+      createConfigurationPromotionConflictDisposition(input,conflict,decision,disposer);
       const next=applyConfigurationPromotionConflictDisposition(conflict,input);
       await c.execute('INSERT INTO configuration_promotion_conflict_dispositions (id,tenant_id,conflict_id,disposition,rationale,decision_id,disposed_by_person_id,disposed_at) VALUES (?,?,?,?,?,?,?,?)',
         [input.id,input.tenantId,input.conflictId,input.disposition,input.rationale,input.decisionId,input.disposedByPersonId,new Date(input.disposedAt)]);

@@ -16,6 +16,7 @@ export type SupplierRelationshipStatus = 'IN_WORK' | 'RELEASED' | 'CANCELLED';
 export interface SupplierRelationship {
   id: SupplierRelationshipId;
   tenantId: TenantId;
+  canonicalObjectId: CanonicalObjectId;
   supplierOrganisationId: OrganisationId;
   relationshipType: SupplierRelationshipType;
   code: string;

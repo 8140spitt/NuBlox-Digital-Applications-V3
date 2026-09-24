@@ -119,7 +119,7 @@
       <label><span>Scope type</span><input name="scopeType" required placeholder="PROJECT, REGION, PRODUCT_LINE…" /></label>
       <label><span>Scope object</span><select name="scopeObjectId"><option value="">No canonical scope object</option>{#each data.projection.canonicalObjects as o}<option value={o.id}>{o.objectType} · {o.stableKey}</option>{/each}</select></label>
       <label class="wide-field"><span>Description</span><input name="description" /></label>
-      <label class="wide-field"><span>Criteria JSON</span><textarea name="criteria" rows="5" required placeholder='{"region":"GB","productLine":"Structures"}'></textarea></label>
+      <label class="wide-field"><span>Criteria JSON</span><textarea name="criteria" rows="5" required placeholder="Region and product-line selection criteria JSON"></textarea></label>
       <button type="submit">Create Context →</button>
     </form>
   </details>
@@ -200,7 +200,7 @@
       <label><span>Assigned status</span><select name="assignedStatus"><option>PREFERRED</option><option>APPROVED</option><option>DO_NOT_USE</option></select></label>
       <label><span>Priority</span><input name="priority" type="number" min="1" value="10" required /></label>
       <label><span>Status</span><select name="status"><option>ACTIVE</option><option>DISABLED</option></select></label>
-      <label class="wide-field"><span>Criteria JSON</span><textarea name="criteria" rows="5" required placeholder='{"classification":"STRUCTURAL_COMPONENT"}'></textarea></label>
+      <label class="wide-field"><span>Criteria JSON</span><textarea name="criteria" rows="5" required placeholder="Classification or supplier rule criteria JSON"></textarea></label>
       <button type="submit">Create Rule →</button>
     </form>
   </details>

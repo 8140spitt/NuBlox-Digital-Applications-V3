@@ -64,3 +64,5 @@ export * from './ids.js';
 export * from './model.js';
 export * from './registry.js';
 export * from './strategy.js';
+
+export * from './enterprise-vocabulary.js';

@@ -122,6 +122,11 @@ Policy scope, Organisation hierarchy, context hierarchy and object-type hierarch
 - Extension Component;
 - Extension Compatibility Assessment;
 - Extension Reconciliation Run;
+- Configuration Environment;
+- Configuration Baseline;
+- Configuration Change Set;
+- Configuration Promotion Run;
+- Configuration Promotion Conflict;
 - Retention Policy;
 - Hold;
 - Disposition Rule / Schedule / Run;

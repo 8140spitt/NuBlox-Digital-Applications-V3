@@ -53,7 +53,9 @@ import {
   MySqlConstructionSiteProductionCommandService,
   MySqlConstructionSiteProductionReadRepository,
   MySqlSupplierSourcingCommandService,
-  MySqlSupplierSourcingReadRepository
+  MySqlSupplierSourcingReadRepository,
+  MySqlOrganisationalResourcePlanningCommandService,
+  MySqlOrganisationalResourcePlanningReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -111,6 +113,8 @@ let constructionSiteProductionCommandServiceInstance: MySqlConstructionSiteProdu
 let constructionSiteProductionReadRepositoryInstance: MySqlConstructionSiteProductionReadRepository | undefined;
 let supplierSourcingCommandServiceInstance: MySqlSupplierSourcingCommandService | undefined;
 let supplierSourcingReadRepositoryInstance: MySqlSupplierSourcingReadRepository | undefined;
+let organisationalResourcePlanningCommandServiceInstance: MySqlOrganisationalResourcePlanningCommandService | undefined;
+let organisationalResourcePlanningReadRepositoryInstance: MySqlOrganisationalResourcePlanningReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -556,4 +560,20 @@ export function getConstructionSiteProductionReadRepository(): MySqlConstruction
     constructionSiteProductionReadRepositoryInstance = new MySqlConstructionSiteProductionReadRepository(getDatabasePool());
   }
   return constructionSiteProductionReadRepositoryInstance;
+}
+
+export function getOrganisationalResourcePlanningCommandService(): MySqlOrganisationalResourcePlanningCommandService {
+  if (!organisationalResourcePlanningCommandServiceInstance) {
+    organisationalResourcePlanningCommandServiceInstance =
+      new MySqlOrganisationalResourcePlanningCommandService(getDatabasePool());
+  }
+  return organisationalResourcePlanningCommandServiceInstance;
+}
+
+export function getOrganisationalResourcePlanningReadRepository(): MySqlOrganisationalResourcePlanningReadRepository {
+  if (!organisationalResourcePlanningReadRepositoryInstance) {
+    organisationalResourcePlanningReadRepositoryInstance =
+      new MySqlOrganisationalResourcePlanningReadRepository(getDatabasePool());
+  }
+  return organisationalResourcePlanningReadRepositoryInstance;
 }

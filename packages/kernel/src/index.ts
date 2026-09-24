@@ -29,6 +29,8 @@ export * from './manufacturing.js';
 export * from './manufacturing-factories.js';
 export * from './service-delivery.js';
 export * from './service-delivery-factories.js';
+export * from './construction-site-production.js';
+export * from './construction-site-production-factories.js';
 export * from './change.js';
 export * from './change-factories.js';
 export * from './information.js';

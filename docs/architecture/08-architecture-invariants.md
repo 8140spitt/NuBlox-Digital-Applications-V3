@@ -10,7 +10,7 @@ These rules are architectural constraints, not implementation preferences.
 3. **One canonical enterprise object graph.** Functional Domains and Industry Solutions do not create competing masters.
 4. **Function != department != application silo.**
 5. **The 29 Functions are stable workspaces, not 29 independent products/databases.**
-6. **Delivery Domain != Function.**
+6. **Function is universal. Core Business and CBE are Function families, not competing capability entity types.**
 7. **Job Profile != Person != Position != Project Role != access role != Permission != Authority.**
 8. **Responsibility != Permission.**
 9. **Assignment != Authority.**
@@ -46,7 +46,7 @@ These rules are architectural constraints, not implementation preferences.
 39. **After governed cutover of a supported capability, NuBlox is the authoritative operational system for that capability.**
 40. **Industry Solutions configure and extend the platform; they do not fork the Enterprise Kernel.**
 41. **Reference architectures inform what NuBlox builds natively; they do not become NuBlox.**
-42. **The 29 Functions and 84 Construction Job Profiles resolve through shared native runtimes rather than isolated or externally hosted applications.**
+42. **Core Business Functions, CBE Functions and their Job Profiles resolve through shared native runtimes rather than isolated or externally hosted applications.**
 43. **Native authoring is part of the unified platform obligation wherever authoring is required to perform a supported job.**
 44. **Validation Rule != Workflow.**
 45. **Validation Rule != Lifecycle transition.**

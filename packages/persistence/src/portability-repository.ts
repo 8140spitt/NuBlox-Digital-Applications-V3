@@ -292,7 +292,8 @@ export class MySqlPortabilityRepository {
   async claimOutboxBatch(
     limit: number,
     now: string,
-    leaseUntil: string
+    leaseUntil: string,
+    tenantId?: TenantId
   ): Promise<OutboxMessage[]> {
     if (!Number.isInteger(limit) || limit < 1 || limit > 1000) {
       throw new Error('Outbox claim limit must be an integer between 1 and 1000.');
@@ -304,6 +305,8 @@ export class MySqlPortabilityRepository {
     }
 
     return withTransaction(this.pool, async (connection) => {
+      const tenantFilter = tenantId ? ' AND tenant_id = ?' : '';
+      const parameters = tenantId ? [nowDate, tenantId] : [nowDate];
       const [rows] = await connection.query<OutboxRow[]>(
         `SELECT id, tenant_id, aggregate_type, aggregate_id, event_type, payload,
                 occurred_at, status, attempts, next_attempt_at, published_at,
@@ -311,11 +314,11 @@ export class MySqlPortabilityRepository {
            FROM outbox_messages
           WHERE status IN ('PENDING', 'FAILED')
             AND published_at IS NULL
-            AND (next_attempt_at IS NULL OR next_attempt_at <= ?)
+            AND (next_attempt_at IS NULL OR next_attempt_at <= ?)${tenantFilter}
           ORDER BY occurred_at, id
           LIMIT ${limit}
           FOR UPDATE SKIP LOCKED`,
-        [nowDate]
+        parameters
       );
 
       if (rows.length === 0) return [];

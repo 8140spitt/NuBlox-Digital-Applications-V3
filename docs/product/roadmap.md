@@ -25,19 +25,20 @@ Implement the common identity and control spine first:
 - baseline/configuration/effectivity;
 - integration/outbox.
 
-## Phase 2 — Functional framework and deployment
+## Phase 2 — Functional framework and HCM authority
 
-- 29 function definitions;
+- 29 Core Business Function definitions plus universal Function family/classification support;
 - processes, activities and task definitions;
-- job profiles and competence;
-- functional deployment;
-- assignments;
-- native work-delivery runtime;
-- deliverable requirements and items.
+- Job Profiles and competence;
+- Position-to-Function assignment with Governance/Delivery purpose;
+- Position reporting hierarchy and management scope;
+- optional contextual assignments where Project/Contract/Site/etc. responsibility requires them;
+- native Work Assignment and work-delivery runtime;
+- Deliverable Requirements and Items.
 
 ## Phase 3 — Construction & Built Environment
 
-- 16 delivery domains;
+- 16 CBE-classified Functions / professional domains;
 - 84 job profiles;
 - sector object types and relationships;
 - design/construction/commissioning/handover work products;

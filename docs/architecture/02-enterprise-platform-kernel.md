@@ -197,7 +197,7 @@ Project
   -> decomposed into -> Work Package
   -> located at -> Site
   -> requires -> Deliverable Item
-  -> deploys -> Functional Deployment
+  -> may scope work through -> Contextual Assignment
 
 Deliverable Item
   -> satisfies -> Requirement

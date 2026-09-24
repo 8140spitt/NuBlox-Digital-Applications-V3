@@ -416,7 +416,42 @@
       </article>
 
       <article>
-        <header><span>10</span><div><h2>Create Thing</h2><p>Instantiate a governed business object from its Type.</p></div></header>
+        <header><span>10</span><div><h2>Add relationship constraint</h2><p>Apply executable validation to a relationship field.</p></div></header>
+        <form method="POST" action="?/assignRelationshipConstraint" class="admin-form access-form">
+          <label>
+            <span>Relationship field</span>
+            <select name="relationshipAttributeAssignmentId" required>
+              <option value="">Select field</option>
+              {#each relationshipTypes.filter((item) => item.status === 'ACTIVE') as relationship}
+                {#each relationship.fields.filter((field) => field.status === 'ACTIVE') as field}
+                  <option value={field.assignmentId}>{relationship.code} · {field.name}</option>
+                {/each}
+              {/each}
+            </select>
+          </label>
+          <label>
+            <span>Constraint</span>
+            <select name="constraintDefinitionId" required>
+              <option value="">Select constraint</option>
+              {#each data.projection.constraints.filter((item) => item.status === 'ACTIVE') as item}
+                <option value={item.id}>{item.code} — {label(item.constraintType)}</option>
+              {/each}
+            </select>
+          </label>
+          <label><span>Sequence</span><input name="sequence" type="number" min="0" value="10" required /></label>
+          <label>
+            <span>Mode</span>
+            <select name="mandatory">
+              <option value="true">Mandatory — block invalid writes</option>
+              <option value="false">Advisory — do not block writes</option>
+            </select>
+          </label>
+          <button type="submit">Assign Relationship Constraint <span>→</span></button>
+        </form>
+      </article>
+
+      <article>
+        <header><span>11</span><div><h2>Create Thing</h2><p>Instantiate a governed business object from its Type.</p></div></header>
         <form method="POST" action="?/createThing" class="admin-form access-form">
           <label>
             <span>Type</span>
@@ -470,7 +505,7 @@
       </article>
 
       <article>
-        <header><span>11</span><div><h2>Relate Things</h2><p>Create a typed, effective relationship in the canonical graph.</p></div></header>
+        <header><span>12</span><div><h2>Relate Things</h2><p>Create a typed, effective relationship in the canonical graph.</p></div></header>
         <form method="POST" action="?/relateThings" class="admin-form access-form">
           <label>
             <span>Relationship type</span>
@@ -560,6 +595,11 @@
             <header><span>{thing.typeCode}</span><strong>{thing.status}</strong></header>
             <h3>{thing.displayName}</h3>
             <p>{thing.stableKey}{thing.objectFamily ? ` · ${thing.objectFamily}` : ''}</p>
+            {#if thing.lifecycle}
+              <div class="function-record-meta">
+                Lifecycle · {thing.lifecycle.definitionName} · {thing.lifecycle.stateName} · sequence {thing.lifecycle.sequence}
+              </div>
+            {/if}
             {#if thing.fields.length > 0}
               <div class="governance-capability-grid">
                 {#each thing.fields as field}

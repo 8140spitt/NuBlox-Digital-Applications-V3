@@ -27,10 +27,11 @@ NuBlox Enterprise Operating Platform
 |   +-- information, records and representations
 |   +-- Decisions, events, evidence and audit
 |
-+-- Functional Domains
-|   +-- 29 governed enterprise functions
-|   +-- native domain tools and workspaces
-|   +-- shared cross-domain processes
++-- Functions
+|   +-- F01-F29 Core Business Functions
+|   +-- Industry Functions such as CBE D01-D16
+|   +-- native tools and workspaces
+|   +-- shared cross-Function processes
 |
 +-- Native Work-Delivery Runtime
 |   +-- deployments and assignments
@@ -41,7 +42,7 @@ NuBlox Enterprise Operating Platform
 |
 +-- Industry Solutions
     +-- Construction & Built Environment
-        +-- 16 delivery domains
+        +-- 16 CBE Functions / professional domains
         +-- 84 Job Profiles
         +-- projects, contracts, packages, sites, systems and assets
 ~~~
@@ -54,15 +55,32 @@ The kernel prevents each function from reinventing Person, Organisation, Project
 
 See [02 — Enterprise Platform Kernel](02-enterprise-platform-kernel.md).
 
-## Functional Domains
+## Functions
 
-The 29 enterprise functions are complete governed capability definitions.
+NuBlox has one canonical Function concept. The 29 enterprise Functions are the `CORE_BUSINESS` family; the CBE Industry Solution adds D01–D16 as the `CBE` family. They differ by classification and configured capability, not by object model.
 
-Each function contains purpose, scope, ownership, policy, process, native tools, controlled objects, Deliverable types, lifecycle/workflow/change rules, Job Profile participation, competence, authority, assurance, evidence, KPIs, audit and deployment rules.
+Each Function contains purpose, scope, ownership, policy, process, native tools, controlled objects, work-product types, lifecycle/workflow/change rules, Job Profile participation, competence, authority, assurance, evidence, KPIs and audit rules.
 
-The 29 functions are stable user-facing workspaces, but they are not 29 independent applications or data models.
+A signed-in user's primary Function workspace is resolved from their occupied Position and active Position-to-Function assignment. Functions are stable working worlds, but they are not independent applications or data models.
 
 See [03 — Functional Domain Framework](03-functional-domain-framework.md).
+
+## Primary user resolution
+
+Human Capital establishes the ordinary user's operating world:
+
+~~~text
+Person
+-> Employment
+-> occupied Position
+-> Function
+-> Governance or Delivery
+-> reporting hierarchy / management scope
+~~~
+
+The Function workspace then composes only the native tools, business objects, queues, work products, Decisions and cross-Function interactions relevant to that Position and scope. Managers inherit visibility over subordinate Position work through the reporting hierarchy, subject to Permission, information governance and object scope.
+
+Project, Contract, Site, Asset and other Contexts refine the subject and location of work. They do not replace the Function/Position authority chain.
 
 ## Native Work-Delivery Runtime
 
@@ -71,9 +89,10 @@ The work runtime converts governed capability into actual executable work.
 ~~~text
 Function / Domain
 -> Process / Activity
--> Functional Deployment
--> Job Profile / Position / Person
--> Assignment
+-> Position / Job Profile
+-> Position-to-Function assignment
+-> Person occupancy
+-> contextual Work / Assignment
 -> Work
 -> Deliverable / Transaction / Decision
 -> Review / Approval

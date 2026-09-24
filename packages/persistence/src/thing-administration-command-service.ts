@@ -155,16 +155,18 @@ export class MySqlThingAdministrationCommandService {
           this.requireType(connection,tenantId,required(input.fromTypeDefinitionId,'From Type')),
           this.requireType(connection,tenantId,required(input.toTypeDefinitionId,'To Type'))
         ]);
+        const description=optional(input.description);
+        const inverseName=optional(input.inverseName);
         const item:RelationshipTypeDefinition={
           id:asId<'RelationshipTypeDefinitionId'>(`RELTYPE-${randomUUID()}`,'Relationship Type Definition'),
           tenantId,
           code:required(input.code,'Relationship type code').toUpperCase(),
           name:required(input.name,'Relationship type name'),
-          ...(optional(input.description)?{description:optional(input.description)}:{}),
+          ...(description?{description}:{}),
           fromTypeDefinitionId:fromType.id as RelationshipTypeDefinition['fromTypeDefinitionId'],
           toTypeDefinitionId:toType.id as RelationshipTypeDefinition['toTypeDefinitionId'],
           fromCardinality,toCardinality,
-          ...(optional(input.inverseName)?{inverseName:optional(input.inverseName)}:{}),
+          ...(inverseName?{inverseName}:{}),
           version:integer(input.version??1,'Version',1),
           ...(effectiveFrom?{effectiveFrom}:{}),
           ...(effectiveTo?{effectiveTo}:{}),
@@ -209,6 +211,7 @@ export class MySqlThingAdministrationCommandService {
           [tenantId,required(input.attributeDefinitionId,'Attribute Definition')]
         );
         if(!attrs[0]) throw new ThingAdministrationCommandError('Attribute Definition was not found or inactive.','NOT_FOUND');
+        const localLabel=optional(input.localLabel);
         const item:RelationshipAttributeAssignment={
           id:asId<'RelationshipAttributeAssignmentId'>(`RELATTR-${randomUUID()}`,'Relationship Attribute Assignment'),
           tenantId,
@@ -217,7 +220,7 @@ export class MySqlThingAdministrationCommandService {
           sequence:integer(input.sequence??0,'Sequence'),
           required:input.required??false,
           cardinality,
-          ...(optional(input.localLabel)?{localLabel:optional(input.localLabel)}:{}),
+          ...(localLabel?{localLabel}:{}),
           ...(input.defaultValue!==undefined?{defaultValue:input.defaultValue}:{}),
           status:'ACTIVE'
         };
@@ -260,13 +263,14 @@ export class MySqlThingAdministrationCommandService {
           }
         }
         const now=new Date();
+        const displayName=optional(input.displayName);
         const thing:Thing={
           id:asId<'CanonicalObjectId'>(`THING-${randomUUID()}`,'Thing'),
           tenantId,
           typeDefinitionId:asId<'TypeDefinitionId'>(type.id,'Type Definition'),
           typeCode:type.code,
           stableKey:required(input.stableKey,'Stable key'),
-          ...(optional(input.displayName)?{displayName:optional(input.displayName)}:{}),
+          ...(displayName?{displayName}:{}),
           status:'ACTIVE',
           createdAt:now.toISOString()
         };

@@ -1,0 +1,138 @@
+import { randomUUID } from 'node:crypto';
+import { afterAll,beforeAll,describe,expect,it } from 'vitest';
+import {
+  PLATFORM_ADMINISTRATOR_ROLE_ID,
+  asId,
+  type AccessRoleAssignment,
+  type Party,
+  type Person,
+  type Tenant
+} from '@nublox/kernel';
+import { MySqlAccessRepository } from './access-repository.js';
+import { createDatabasePool } from './database.js';
+import { HcmCommandError,MySqlHcmCommandService } from './hcm-command-service.js';
+import { MySqlHcmReadRepository } from './hcm-read-repository.js';
+import { migrate } from './migrations.js';
+import { MySqlOrganisationCommandService } from './organisation-command-service.js';
+import { MySqlKernelRepository } from './repository.js';
+
+const enabled=Boolean(process.env.NUBLOX_DATABASE_URL);
+const suite=enabled?describe:describe.skip;
+const pool=enabled?createDatabasePool():undefined;
+
+suite('HCM authority drives Function world and management hierarchy',()=>{
+  beforeAll(async()=>{await migrate();});
+  afterAll(async()=>{await pool?.end();});
+
+  it('resolves a Sales Executive into Sales Delivery and rolls the Position into the Sales Manager scope',async()=>{
+    if(!pool) throw new Error('Database pool missing.');
+    const suffix=randomUUID().replaceAll('-','').slice(0,12);
+    const tenantId=asId<'TenantId'>(`TENANT-HCM-${suffix}`,'Tenant');
+    const kernel=new MySqlKernelRepository(pool);
+    const access=new MySqlAccessRepository(pool);
+    const organisation=new MySqlOrganisationCommandService(pool);
+    const hcm=new MySqlHcmCommandService(pool);
+    const reads=new MySqlHcmReadRepository(pool);
+
+    const tenant:Tenant={id:tenantId,name:'HCM Authority Test',status:'ACTIVE'};
+    await kernel.createTenant(tenant);
+    const adminParty:Party={
+      id:asId<'PartyId'>(`PARTY-ADMIN-${suffix}`,'Party'),tenantId,kind:'PERSON',displayName:'HCM Admin',status:'ACTIVE'
+    };
+    await kernel.createParty(tenantId,adminParty);
+    const admin:Person={
+      id:asId<'PersonId'>(`PERSON-ADMIN-${suffix}`,'Person'),tenantId,partyId:adminParty.id,legalName:'HCM Admin',status:'ACTIVE'
+    };
+    await kernel.createPerson(tenantId,admin);
+    const role:AccessRoleAssignment={
+      id:asId<'AccessRoleAssignmentId'>(`ARA-HCM-${suffix}`,'Access Role Assignment'),
+      tenantId,accessRoleId:PLATFORM_ADMINISTRATOR_ROLE_ID,principalType:'PERSON',principalId:admin.id,
+      scopeType:'TENANT',effectiveFrom:'2026-09-24T00:00:00.000Z',status:'ACTIVE'
+    };
+    await access.assignAccessRole(tenantId,role,{actorPersonId:admin.id,correlationId:suffix});
+
+    const company=await organisation.createOrganisation(tenantId,admin.id,{
+      legalName:'Market Leading Construction plc',tradingName:'Market Leading'
+    });
+    const salesUnit=await organisation.createOrganisationUnit(tenantId,admin.id,{
+      organisationId:company.id,code:'SALES',name:'Sales & Commercial Management'
+    });
+
+    const managerJob=await hcm.createJobProfile(tenantId,admin.id,{code:`SALES-MGR-${suffix}`,name:'Sales Manager'});
+    const executiveJob=await hcm.createJobProfile(tenantId,admin.id,{code:`SALES-EXEC-${suffix}`,name:'Sales Executive'});
+    const managerPosition=await organisation.createPosition(tenantId,admin.id,{
+      organisationUnitId:salesUnit.id,jobProfileId:managerJob.id,code:'SALES-MGR-001',title:'Sales Manager'
+    });
+    const executivePosition=await organisation.createPosition(tenantId,admin.id,{
+      organisationUnitId:salesUnit.id,jobProfileId:executiveJob.id,code:'SALES-EXEC-001',title:'Sales Executive'
+    });
+
+    const manager=await organisation.createPerson(tenantId,admin.id,{legalName:'Jane Manager'});
+    const executive=await organisation.createPerson(tenantId,admin.id,{legalName:'Stephen Sales'});
+
+    const managerEmployment=await hcm.createEmployment(tenantId,admin.id,{
+      personId:manager.id,organisationId:company.id,employeeNumber:`MGR-${suffix}`,
+      workerType:'EMPLOYEE',employmentType:'PERMANENT',startDate:'2026-01-01T00:00:00.000Z'
+    });
+    const executiveEmployment=await hcm.createEmployment(tenantId,admin.id,{
+      personId:executive.id,organisationId:company.id,employeeNumber:`EXEC-${suffix}`,
+      workerType:'EMPLOYEE',employmentType:'PERMANENT',startDate:'2026-01-01T00:00:00.000Z'
+    });
+
+    await hcm.assignPositionToFunction(tenantId,admin.id,{
+      positionId:managerPosition.id,functionId:'F07',deploymentPurpose:'FUNCTIONAL_DELIVERY',
+      effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+    await hcm.assignPositionToFunction(tenantId,admin.id,{
+      positionId:executivePosition.id,functionId:'F07',deploymentPurpose:'FUNCTIONAL_DELIVERY',
+      effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+
+    await hcm.assignEmploymentToPosition(tenantId,admin.id,{
+      employmentId:managerEmployment.id,positionId:managerPosition.id,isPrimary:true,
+      effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+    await hcm.assignEmploymentToPosition(tenantId,admin.id,{
+      employmentId:executiveEmployment.id,positionId:executivePosition.id,isPrimary:true,
+      effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+
+    await hcm.setReportingLine(tenantId,admin.id,{
+      subordinatePositionId:executivePosition.id,managerPositionId:managerPosition.id,
+      relationshipType:'LINE_MANAGER',effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+
+    const executiveWorld=await reads.getUserExperience(tenantId,executive.id,'2026-09-24T12:00:00.000Z');
+    expect(executiveWorld).toMatchObject({
+      personName:'Stephen Sales',positionTitle:'Sales Executive',
+      functionCode:'F07',functionName:'Sales & Commercial Management',
+      deploymentPurpose:'FUNCTIONAL_DELIVERY',
+      managerPositionId:managerPosition.id,managerPersonId:manager.id,managerPersonName:'Jane Manager'
+    });
+
+    const managerWorld=await reads.getUserExperience(tenantId,manager.id,'2026-09-24T12:00:00.000Z');
+    expect(managerWorld).toMatchObject({
+      positionTitle:'Sales Manager',functionCode:'F07',deploymentPurpose:'FUNCTIONAL_DELIVERY'
+    });
+    expect(managerWorld?.managementScope).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        positionId:executivePosition.id,positionTitle:'Sales Executive',
+        personId:executive.id,personName:'Stephen Sales',depth:1
+      })
+    ]));
+
+    await expect(hcm.assignPositionToFunction(tenantId,admin.id,{
+      positionId:executivePosition.id,functionId:'F15',deploymentPurpose:'FUNCTIONAL_DELIVERY',
+      effectiveFrom:'2026-06-01T00:00:00.000Z'
+    })).rejects.toMatchObject({
+      name:'HcmCommandError',code:'CONFLICT'
+    } satisfies Partial<HcmCommandError>);
+
+    await expect(hcm.setReportingLine(tenantId,admin.id,{
+      subordinatePositionId:managerPosition.id,managerPositionId:executivePosition.id,
+      relationshipType:'LINE_MANAGER',effectiveFrom:'2026-01-01T00:00:00.000Z'
+    })).rejects.toMatchObject({
+      name:'HcmCommandError',code:'CONFLICT'
+    } satisfies Partial<HcmCommandError>);
+  });
+});

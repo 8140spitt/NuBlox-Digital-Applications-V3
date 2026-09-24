@@ -8,7 +8,7 @@ import { MySqlAccessRepository } from './access-repository.js';
 
 interface ThingRow extends RowDataPacket {
   id:string; object_type:string; type_definition_id:string|null; type_code:string|null; type_name:string|null;
-  stable_key:string; display_name:string|null; status:'ACTIVE'|'INACTIVE'; created_at:Date;
+  object_family:string|null; stable_key:string; display_name:string|null; status:'ACTIVE'|'INACTIVE'; created_at:Date;
 }
 interface FieldRow extends RowDataPacket {
   id:string; canonical_object_id:string; type_attribute_assignment_id:string; sequence_no:number;
@@ -40,8 +40,35 @@ export interface ThingRelationshipView {
   effectiveFrom:string;effectiveTo?:string;status:'ACTIVE'|'INACTIVE';fields:ThingRelationshipFieldView[];
 }
 export interface ThingView {
-  id:string;typeDefinitionId?:string;typeCode:string;typeName?:string;stableKey:string;displayName:string;
+  id:string;typeDefinitionId?:string;typeCode:string;typeName?:string;objectFamily?:string;stableKey:string;displayName:string;
   status:'ACTIVE'|'INACTIVE';createdAt:string;fields:ThingFieldView[];relationships:ThingRelationshipView[];
+}
+
+interface RelationshipTypeDefinitionRow extends RowDataPacket {
+  id:string;code:string;name:string;description:string|null;
+  from_type_definition_id:string;from_type_code:string;from_type_name:string;
+  to_type_definition_id:string;to_type_code:string;to_type_name:string;
+  from_cardinality:'ONE'|'MANY';to_cardinality:'ONE'|'MANY';inverse_name:string|null;
+  version:number;effective_from:Date|null;effective_to:Date|null;status:'ACTIVE'|'INACTIVE';
+}
+interface RelationshipTypeFieldRow extends RowDataPacket {
+  relationship_type_definition_id:string;assignment_id:string;attribute_definition_id:string;
+  attribute_code:string;attribute_name:string;data_type:MetadataDataType;sequence_no:number;
+  required:number;cardinality:'SINGLE'|'MULTIPLE';local_label:string|null;
+  enumeration_definition_id:string|null;reference_object_family:string|null;status:'ACTIVE'|'INACTIVE';
+}
+export interface RelationshipTypeFieldView {
+  assignmentId:string;attributeDefinitionId:string;code:string;name:string;dataType:MetadataDataType;
+  sequence:number;required:boolean;cardinality:'SINGLE'|'MULTIPLE';
+  enumerationDefinitionId?:string;referenceObjectFamily?:string;status:'ACTIVE'|'INACTIVE';
+}
+export interface RelationshipTypeView {
+  id:string;code:string;name:string;description?:string;
+  fromTypeDefinitionId:string;fromTypeCode:string;fromTypeName:string;
+  toTypeDefinitionId:string;toTypeCode:string;toTypeName:string;
+  fromCardinality:'ONE'|'MANY';toCardinality:'ONE'|'MANY';inverseName?:string;
+  version:number;effectiveFrom?:string;effectiveTo?:string;status:'ACTIVE'|'INACTIVE';
+  fields:RelationshipTypeFieldView[];
 }
 
 function json(value:unknown):unknown{
@@ -77,7 +104,7 @@ export class MySqlThingAdministrationReadRepository {
     await this.requireRead(tenantId,actorPersonId);
     const [rows]=await this.pool.execute<ThingRow[]>(
       `SELECT co.id,co.object_type,co.type_definition_id,mt.code AS type_code,mt.name AS type_name,
-              co.stable_key,co.display_name,co.status,co.created_at
+              mt.object_family,co.stable_key,co.display_name,co.status,co.created_at
          FROM canonical_objects co
          LEFT JOIN metadata_type_definitions mt
            ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
@@ -89,11 +116,76 @@ export class MySqlThingAdministrationReadRepository {
     return result;
   }
 
+  async listRelationshipTypes(
+    tenantId:TenantId,
+    actorPersonId:string
+  ):Promise<RelationshipTypeView[]>{
+    await this.requireRead(tenantId,actorPersonId);
+    const [types,fields]=await Promise.all([
+      this.pool.execute<RelationshipTypeDefinitionRow[]>(
+        `SELECT rt.id,rt.code,rt.name,rt.description,
+                rt.from_type_definition_id,ft.code AS from_type_code,ft.name AS from_type_name,
+                rt.to_type_definition_id,tt.code AS to_type_code,tt.name AS to_type_name,
+                rt.from_cardinality,rt.to_cardinality,rt.inverse_name,rt.version,
+                rt.effective_from,rt.effective_to,rt.status
+           FROM metadata_relationship_type_definitions rt
+           JOIN metadata_type_definitions ft
+             ON ft.tenant_id=rt.tenant_id AND ft.id=rt.from_type_definition_id
+           JOIN metadata_type_definitions tt
+             ON tt.tenant_id=rt.tenant_id AND tt.id=rt.to_type_definition_id
+          WHERE rt.tenant_id=?
+          ORDER BY rt.code,rt.version DESC`,[tenantId]
+      ),
+      this.pool.execute<RelationshipTypeFieldRow[]>(
+        `SELECT ra.relationship_type_definition_id,ra.id AS assignment_id,
+                ra.attribute_definition_id,ad.code AS attribute_code,ad.name AS attribute_name,
+                ad.data_type,ra.sequence_no,ra.required,ra.cardinality,ra.local_label,
+                ad.enumeration_definition_id,ad.reference_object_family,ra.status
+           FROM metadata_relationship_attribute_assignments ra
+           JOIN metadata_attribute_definitions ad
+             ON ad.tenant_id=ra.tenant_id AND ad.id=ra.attribute_definition_id
+          WHERE ra.tenant_id=?
+          ORDER BY ra.relationship_type_definition_id,ra.sequence_no,ad.code`,[tenantId]
+      )
+    ]);
+    const fieldsByType=new Map<string,RelationshipTypeFieldView[]>();
+    for(const row of fields[0]){
+      const list=fieldsByType.get(row.relationship_type_definition_id)??[];
+      list.push({
+        assignmentId:row.assignment_id,
+        attributeDefinitionId:row.attribute_definition_id,
+        code:row.attribute_code,
+        name:row.local_label??row.attribute_name,
+        dataType:row.data_type,
+        sequence:Number(row.sequence_no),
+        required:Boolean(row.required),
+        cardinality:row.cardinality,
+        ...(row.enumeration_definition_id?{enumerationDefinitionId:row.enumeration_definition_id}:{}),
+        ...(row.reference_object_family?{referenceObjectFamily:row.reference_object_family}:{}),
+        status:row.status
+      });
+      fieldsByType.set(row.relationship_type_definition_id,list);
+    }
+    return types[0].map(row=>({
+      id:row.id,code:row.code,name:row.name,
+      ...(row.description?{description:row.description}:{}),
+      fromTypeDefinitionId:row.from_type_definition_id,fromTypeCode:row.from_type_code,fromTypeName:row.from_type_name,
+      toTypeDefinitionId:row.to_type_definition_id,toTypeCode:row.to_type_code,toTypeName:row.to_type_name,
+      fromCardinality:row.from_cardinality,toCardinality:row.to_cardinality,
+      ...(row.inverse_name?{inverseName:row.inverse_name}:{}),
+      version:Number(row.version),
+      ...(row.effective_from?{effectiveFrom:row.effective_from.toISOString()}:{}),
+      ...(row.effective_to?{effectiveTo:row.effective_to.toISOString()}:{}),
+      status:row.status,
+      fields:fieldsByType.get(row.id)??[]
+    }));
+  }
+
   async getThing(tenantId:TenantId,actorPersonId:string,thingId:string):Promise<ThingView|null>{
     await this.requireRead(tenantId,actorPersonId);
     const [rows]=await this.pool.execute<ThingRow[]>(
       `SELECT co.id,co.object_type,co.type_definition_id,mt.code AS type_code,mt.name AS type_name,
-              co.stable_key,co.display_name,co.status,co.created_at
+              mt.object_family,co.stable_key,co.display_name,co.status,co.created_at
          FROM canonical_objects co
          LEFT JOIN metadata_type_definitions mt
            ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
@@ -178,7 +270,7 @@ export class MySqlThingAdministrationReadRepository {
     return {
       id:row.id,...(row.type_definition_id?{typeDefinitionId:row.type_definition_id}:{}),
       typeCode:row.type_code??row.object_type,...(row.type_name?{typeName:row.type_name}:{}),
-      stableKey:row.stable_key,displayName:row.display_name??row.stable_key,status:row.status,
+      ...(row.object_family?{objectFamily:row.object_family}:{}),stableKey:row.stable_key,displayName:row.display_name??row.stable_key,status:row.status,
       createdAt:row.created_at.toISOString(),
       fields:fieldResult[0].map(value=>({
         id:value.id,assignmentId:value.type_attribute_assignment_id,code:value.attribute_code,

@@ -108,7 +108,8 @@ export function createSourceApproval(
   invariant(input.approvedByPersonId===approver.id,'Source Approval approver reference does not match.');
   invariant(decision.outcome==='APPROVED','Source Approval requires an APPROVED Decision.');
   invariant(decision.subjectObjectId===input.internalItemObjectId,'Source Approval Decision must govern the internal item.');
-  invariant(decision.subjectVersion===sourceApprovalDecisionVersion(input),'Source Approval Decision must cite the exact supplier-item/context/status/effectivity tuple.');
+  required(input.decisionFingerprint,'Source Approval decision fingerprint');
+  invariant(decision.subjectVersion===input.decisionFingerprint,'Source Approval Decision must cite the exact supplier-item/context/status/effectivity fingerprint.');
   invariant(Boolean(supplier.releasedAt),'Released Supplier Relationship requires release evidence.');
   invariant(Date.parse(decision.decidedAt)>=Date.parse(supplier.releasedAt!),'Source Approval Decision cannot predate Supplier Relationship release.');
   invariant(Date.parse(decision.decidedAt)>=Date.parse(context.createdAt),'Source Approval Decision cannot predate Sourcing Context creation.');
@@ -148,19 +149,6 @@ export function createSourcingRule(
   invariant(Number.isInteger(input.priority)&&input.priority>0,'Sourcing Rule priority must be positive.');
   validDate(input.createdAt,'Sourcing Rule createdAt');
   return Object.freeze({...input,criteria:Object.freeze({...input.criteria})});
-}
-
-export function sourceApprovalDecisionVersion(input:Pick<SourceApproval,
-  'sourcingContextId'|'supplierRelationshipId'|'supplierItemObjectId'|'sourceStatus'|'effectiveFrom'|'effectiveTo'
->):string{
-  return [
-    input.sourcingContextId,
-    input.supplierRelationshipId,
-    input.supplierItemObjectId,
-    input.sourceStatus,
-    input.effectiveFrom,
-    input.effectiveTo??''
-  ].join('|');
 }
 
 export function isSourceApprovalEffective(

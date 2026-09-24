@@ -114,7 +114,7 @@ function mapIssue(row:IssueRow):SiteIssue {
     workPackageId:row.work_package_id as SiteIssue['workPackageId'],issueType:row.issue_type,
     title:row.title,description:row.description,priority:row.priority,status:row.status,
     raisedByPersonId:row.raised_by_person_id as SiteIssue['raisedByPersonId'],
-    ...(row.assigned_to_person_id?{assignedToPersonId:row.assigned_to_person_id as SiteIssue['assignedToPersonId']}:{}),
+    ...(row.assigned_to_person_id?{assignedToPersonId:row.assigned_to_person_id as NonNullable<SiteIssue['assignedToPersonId']>}:{}),
     ...(row.due_at?{dueAt:row.due_at.toISOString()}:{}),raisedAt:row.raised_at.toISOString(),
     ...(row.resolved_at?{resolvedAt:row.resolved_at.toISOString()}:{})
   };

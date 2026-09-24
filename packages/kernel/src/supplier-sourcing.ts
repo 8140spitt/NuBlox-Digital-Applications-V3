@@ -60,6 +60,7 @@ export interface SourceApproval {
   effectiveFrom: string;
   effectiveTo?: string;
   approvalDecisionId: DecisionId;
+  decisionFingerprint: string;
   approvedByPersonId: PersonId;
   approvedAt: string;
   supersededBySourceApprovalId?: SourceApprovalId;

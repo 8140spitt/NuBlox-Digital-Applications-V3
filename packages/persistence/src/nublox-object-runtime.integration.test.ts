@@ -71,7 +71,7 @@ suite('metadata-driven NuBlox ObjectFactory runtime',()=>{
     const submitted:LifecycleStateDefinition={
       id:asId<'LifecycleStateDefinitionId'>(`STATE-SUBMITTED-${suffix}`,'Lifecycle State'),
       tenantId,lifecycleDefinitionId:lifecycle.id,code:'SUBMITTED',name:'Submitted',
-      category:'REVIEW',initial:false,terminal:false,status:'ACTIVE'
+      category:'ACTIVE',initial:false,terminal:false,status:'ACTIVE'
     };
     const approved:LifecycleStateDefinition={
       id:asId<'LifecycleStateDefinitionId'>(`STATE-APPROVED-${suffix}`,'Lifecycle State'),

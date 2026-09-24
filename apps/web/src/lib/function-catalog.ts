@@ -2356,7 +2356,7 @@ export const functions: FunctionSummary[] = [
       {
         "id": "NTE-054",
         "name": "Construction Site Production & Field Evidence",
-        "state": "TO_BUILD"
+        "state": "PARTIAL"
       }
     ],
     "subfunctions": [

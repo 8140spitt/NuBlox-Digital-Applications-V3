@@ -82,7 +82,8 @@ suite('MySQL platform events and portability runtime', () => {
     const claimed = await portability.claimOutboxBatch(
       1000,
       '2026-09-20T12:00:00.000Z',
-      '2026-09-20T12:05:00.000Z'
+      '2026-09-20T12:05:00.000Z',
+      tenantId
     );
     const tenantMessage = claimed.find(
       (message) =>
@@ -103,7 +104,8 @@ suite('MySQL platform events and portability runtime', () => {
     const notYetRetryable = await portability.claimOutboxBatch(
       1000,
       '2026-09-20T12:05:30.000Z',
-      '2026-09-20T12:10:00.000Z'
+      '2026-09-20T12:10:00.000Z',
+      tenantId
     );
     expect(
       notYetRetryable.some((message) => message.id === tenantMessage!.id)
@@ -112,7 +114,8 @@ suite('MySQL platform events and portability runtime', () => {
     const retryable = await portability.claimOutboxBatch(
       1000,
       '2026-09-20T12:06:01.000Z',
-      '2026-09-20T12:11:00.000Z'
+      '2026-09-20T12:11:00.000Z',
+      tenantId
     );
     expect(
       retryable.some((message) => message.id === tenantMessage!.id)

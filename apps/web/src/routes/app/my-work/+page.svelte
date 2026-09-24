@@ -153,7 +153,7 @@
               </a>
             {:else if item.href}
               <a class="my-work-action-link" href={item.href}>
-                Open Function work →
+                Open work →
               </a>
             {/if}
           </div>

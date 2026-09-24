@@ -128,7 +128,7 @@ These engines must comply with the native-execution invariants. External CAD/BIM
 
 Deliver:
 
-- supplier/sourcing/procurement;
+- supplier/sourcing/procurement — contextual Supplier Relationship / Sourcing Context / Source Approval / Sourcing Rule foundation is user-executable; qualification, RFx, evaluation, negotiation, requisition and Purchase Order remain;
 - demand/supply/MRP planning;
 - inventory/warehouse/logistics;
 - manufacturing/production execution;
@@ -243,11 +243,12 @@ As of 24 September 2026:
 - 5 shared engines retain aligned backend foundations but still require full product UI exposure;
 - 4 shared engines (NTE-002, NTE-006, NTE-007, NTE-008) are now correctly classified as partial because ADR-0006 adds evidence-backed canonical control semantics not yet implemented;
 - 3 domain engines have partial implementation and require completion;
-- 46 engines remain `TO_BUILD`; NTE-043 has advanced to `PARTIAL` because its records-retention control slice is now user-executable, while broader knowledge/search/CDE composition remains incomplete;
+- 45 engines remain `TO_BUILD`; NTE-020 and NTE-043 have advanced to `PARTIAL` because contextual supplier sourcing and records-retention control slices are now user-executable, while their broader procurement and knowledge/CDE capabilities remain incomplete;
 - Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
 - Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;
 - Records retention/disposition is now user-executable through versioned Retention Policy/Rule, Hold, Schedule, Run/Item Result, Archive Record, Restore Run and Destruction Evidence with Decision-backed irreversible actions; automated candidate evaluation, schedulers and physical archive/delete/restore adapters remain hardening work;
+- Contextual supplier sourcing is now user-executable through canonical Supplier Relationship, Sourcing Context, Decision-backed effective-dated Source Approval and governed Sourcing Rule; broader supplier qualification, sourcing-event/RFx, requisition and Purchase Order execution remains Wave 3 work;
 - Change/Configuration/Baseline is now exposed through a tenant-scoped read projection and lifecycle-aware command surface covering Change assessment, affected objects, impact, Decision application, implementation, verification, discrepancy, closure, Configuration Items, Baselines and Effectivity; commitment Decisions are permission-gated and require an effective Authority Grant;
 - control mutation workflows, Deliverable/Issue/Acceptance, deeper Change/Control composition and remaining audit/history composition are still incomplete.
 

@@ -1,8 +1,7 @@
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import {
   PLATFORM_PERMISSION_KEYS,
   asId,
-  sourceApprovalDecisionVersion,
   type SourceApprovalStatus,
   type SourcingRuleStatus,
   type SupplierRelationshipType,
@@ -42,6 +41,26 @@ function positiveInt(value:number,label:string){
   }
   return value;
 }
+
+function sourceApprovalFingerprint(input:{
+  sourcingContextId:string;
+  supplierRelationshipId:string;
+  supplierItemObjectId:string;
+  sourceStatus:string;
+  effectiveFrom:string;
+  effectiveTo?:string;
+}){
+  const canonical=JSON.stringify({
+    sourcingContextId:input.sourcingContextId,
+    supplierRelationshipId:input.supplierRelationshipId,
+    supplierItemObjectId:input.supplierItemObjectId,
+    sourceStatus:input.sourceStatus,
+    effectiveFrom:input.effectiveFrom,
+    effectiveTo:input.effectiveTo??null
+  });
+  return 'sha256:'+createHash('sha256').update(canonical).digest('hex');
+}
+
 function mapError(error:unknown):never{
   if(error instanceof SupplierSourcingCommandError)throw error;
   if(typeof error==='object'&&error!==null&&'code' in error&&(error as {code?:string}).code==='ER_DUP_ENTRY'){
@@ -200,6 +219,14 @@ export class MySqlSupplierSourcingCommandService {
     await this.require(tenantId,actor,PLATFORM_PERMISSION_KEYS.SUPPLIER_SOURCING_APPROVE);
     const effectiveFrom=at(input.effectiveFrom);
     const effectiveTo=optional(input.effectiveTo);
+    const decisionFingerprint=sourceApprovalFingerprint({
+      sourcingContextId:required(input.sourcingContextId,'Sourcing Context'),
+      supplierRelationshipId:required(input.supplierRelationshipId,'Supplier Relationship'),
+      supplierItemObjectId:required(input.supplierItemObjectId,'Supplier item'),
+      sourceStatus:input.sourceStatus,
+      effectiveFrom,
+      ...(effectiveTo?{effectiveTo:at(effectiveTo)}:{})
+    });
     const approval={
       id:asId<'SourceApprovalId'>('SOURCE-APP-'+randomUUID(),'Source Approval'),
       tenantId,
@@ -212,6 +239,7 @@ export class MySqlSupplierSourcingCommandService {
       effectiveFrom,
       ...(effectiveTo?{effectiveTo:at(effectiveTo)}:{}),
       approvalDecisionId:asId<'DecisionId'>(required(input.decisionId,'Decision'),'Decision'),
+      decisionFingerprint,
       approvedByPersonId:asId<'PersonId'>(actor,'Approver'),
       approvedAt:at(input.approvedAt)
     };
@@ -219,7 +247,7 @@ export class MySqlSupplierSourcingCommandService {
       await this.repo.createSourceApproval(approval,this.audit(actor));
       return{
         ...approval,
-        decisionSubjectVersion:sourceApprovalDecisionVersion(approval)
+        decisionSubjectVersion:decisionFingerprint
       };
     }catch(error){
       return mapError(error);
@@ -234,13 +262,14 @@ export class MySqlSupplierSourcingCommandService {
     effectiveFrom:string;
     effectiveTo?:string;
   }){
-    return sourceApprovalDecisionVersion({
-      sourcingContextId:asId<'SourcingContextId'>(required(input.sourcingContextId,'Sourcing Context'),'Sourcing Context'),
-      supplierRelationshipId:asId<'SupplierRelationshipId'>(required(input.supplierRelationshipId,'Supplier Relationship'),'Supplier Relationship'),
-      supplierItemObjectId:asId<'CanonicalObjectId'>(required(input.supplierItemObjectId,'Supplier item'),'Supplier item'),
+    const effectiveTo=optional(input.effectiveTo);
+    return sourceApprovalFingerprint({
+      sourcingContextId:required(input.sourcingContextId,'Sourcing Context'),
+      supplierRelationshipId:required(input.supplierRelationshipId,'Supplier Relationship'),
+      supplierItemObjectId:required(input.supplierItemObjectId,'Supplier item'),
       sourceStatus:input.sourceStatus,
       effectiveFrom:at(input.effectiveFrom),
-      ...(optional(input.effectiveTo)?{effectiveTo:at(input.effectiveTo)}:{})
+      ...(effectiveTo?{effectiveTo:at(effectiveTo)}:{})
     });
   }
 

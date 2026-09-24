@@ -15,7 +15,7 @@ It applies the shared Enterprise Kernel, 29 governed Functions and Native Work-D
 
 The solution introduces:
 
-- 16 Construction & Built Environment Delivery Domains;
+- 16 Construction & Built Environment professional Functions (D01–D16);
 - 84 governed Job Profiles;
 - construction-specific Project, Contract and Package structures;
 - Sites, Facilities, Systems, Spaces and Assets;
@@ -29,9 +29,9 @@ The solution introduces:
 - competence and qualification rules;
 - regulatory and assurance Evidence.
 
-## 16 Delivery Domains
+## 16 CBE Functions / professional domains
 
-The 16 Delivery Domains group the 84 Job Profiles into recognisable sector capability areas.
+ADR-0006 makes Function the universal organisational capability concept. The 16 CBE professional domains are therefore CBE-classified Function definitions (D01–D16) that group the 84 Job Profiles into recognisable sector capability areas. The legacy `delivery_domains` representation is a compatibility/industry-composition projection, not a second capability master.
 
 They are composition structures used for:
 
@@ -48,7 +48,7 @@ They are not:
 - 16 applications;
 - 16 databases;
 - access-control boundaries;
-- substitutes for the 29 enterprise Functions.
+- a second capability type competing with the Function model.
 
 ## 84 Job Profiles
 
@@ -75,9 +75,9 @@ A Person may occupy a Position.
 
 That Person may be deployed differently across Projects, Contracts, Packages, Sites, Systems or Assets.
 
-## Function / Delivery Domain intersection
+## Core Business / CBE Function intersection
 
-Functions and Construction Delivery Domains are complementary.
+Core Business Functions and CBE Functions are complementary families in the same universal Function model.
 
 Examples:
 
@@ -86,7 +86,7 @@ Examples:
 - Building Trades intersect Project Management, HSE, Quality, Materials/Procurement, resource management and Commercial controls.
 - Asset Operations intersect Asset/Facilities Management, Finance, Procurement, HSE, Quality and Service Management.
 
-No Job Profile is forced into one enterprise Function merely to simplify navigation.
+A Job Profile can have a primary CBE Function while participating in multiple Core Business Functions and cross-Function processes.
 
 ## Construction operating contexts
 
@@ -233,9 +233,9 @@ The objects are related, not conflated.
 ~~~text
 Architect Job Profile
 -> Position
--> Person
--> Functional Deployment
--> Project Alpha
+-> Person occupancy
+-> CBE Function assignment (Governance or Delivery)
+-> Project Alpha contextual assignment
 -> Design Package A
 -> defined stages/scope
 -> competence / Authority
@@ -251,9 +251,9 @@ The same pattern applies across all 84 Job Profiles.
 For each Job Profile NuBlox must answer:
 
 - What is the job expected to do?
-- Which Functions and Delivery Domains does it participate in?
+- Which Core Business and CBE Functions does it participate in?
 - What competence is required?
-- Into which construction contexts can it be deployed?
+- In which Project, Contract, Package, Site, System or Asset contexts can its work be assigned?
 - What native NuBlox tools are needed?
 - What Work is assigned?
 - What outputs does it produce?
@@ -261,4 +261,4 @@ For each Job Profile NuBlox must answer:
 - How does the work affect Project, Contract, cost, programme, quality, safety, Configuration and Asset truth?
 - What Evidence proves the work was completed correctly?
 
-The Industry Solution is complete only when real people can perform the jobs they are employed and deployed to do through the NuBlox operating model.
+The Industry Solution is complete only when real people can perform the jobs represented by their Position and Job Profile, in the required Function and work context, through the NuBlox operating model.

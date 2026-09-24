@@ -47,6 +47,31 @@ Type Definition
 
 `canonical_objects` and `canonical_relationships` remain the stable runtime identity graph. Metadata adds type, field, constraint and relationship semantics. Domain-specific relational tables may remain where transactional integrity, calculation, scale or performance requires them, but they participate in the same canonical Thing graph.
 
+
+## Native authority binding
+
+A native authoritative aggregate and a Thing are not two business identities.
+
+Where a domain requires dedicated relational persistence, NuBlox binds the native canonical `object_type` to a governed metadata Type. The native table remains authoritative for its structured transaction semantics while `canonical_objects` remains the shared identity and Metadata supplies extensible type, field, constraint and relationship semantics.
+
+~~~text
+Native authoritative record
+-> canonical object identity
+-> native object-type binding
+-> governed Type Definition
+-> Thing runtime
+~~~
+
+The same applies to native canonical relationship codes, which may be bound to governed Relationship Type Definitions. Legacy aliases may map to one governed relationship code.
+
+This means:
+
+- Organisation is one identity, regardless of which Functions use it.
+- Customer and Supplier are roles/relationships/classifications of an Organisation where appropriate; they are not separate Organisation masters.
+- Person, Organisation Unit and Position remain authoritative HCM/organisation records while participating in the same Thing graph.
+- Project, Contract, Asset, Location and other shared enterprise anchors must likewise be reused cross-Function rather than copied into Function-specific masters.
+- Metadata extension must never silently create a second source of truth for a native authoritative aggregate.
+
 ## Consequences
 
 1. CBE D01–D16 are seeded into `function_definitions` and classified as `CBE`.
@@ -55,7 +80,9 @@ Type Definition
 4. User-facing Function resolution must come from the database, not the hard-coded 29-function UI catalogue.
 5. New configurable object types, fields and relationships should be metadata-defined rather than requiring a bespoke table/page unless strong domain semantics justify dedicated relational persistence.
 6. Relationship records may own their own field values and effectivity.
-7. Existing ADR-0003 statements that the 16 CBE domains are not Functions, and ADR-0005's separate Core Function Team / Professional Domain Team distinction, are superseded by this decision.
+7. Native authoritative aggregates participate in the Thing runtime through governed native-type bindings; they are not duplicated as parallel metadata-only identities.
+8. Customer/Supplier and similar business roles must reuse the authoritative Party/Organisation identity rather than create duplicate masters.
+9. Existing ADR-0003 statements that the 16 CBE domains are not Functions, and ADR-0005's separate Core Function Team / Professional Domain Team distinction, are superseded by this decision.
 
 ## Superseded rule
 

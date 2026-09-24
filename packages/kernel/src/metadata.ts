@@ -4,6 +4,8 @@ import type {
   ConstraintDefinitionId,
   EnumerationDefinitionId,
   EnumerationValueId,
+  RelationshipAttributeAssignmentId,
+  RelationshipTypeDefinitionId,
   TenantId,
   TypeAttributeAssignmentId,
   TypeDefinitionId
@@ -124,5 +126,37 @@ export interface AttributeConstraintAssignment {
   constraintDefinitionId: ConstraintDefinitionId;
   sequence: number;
   mandatory: boolean;
+  status: RecordStatus;
+}
+
+export type MetadataRelationshipCardinality = 'ONE' | 'MANY';
+
+export interface RelationshipTypeDefinition {
+  id: RelationshipTypeDefinitionId;
+  tenantId: TenantId;
+  code: string;
+  name: string;
+  description?: string;
+  fromTypeDefinitionId: TypeDefinitionId;
+  toTypeDefinitionId: TypeDefinitionId;
+  fromCardinality: MetadataRelationshipCardinality;
+  toCardinality: MetadataRelationshipCardinality;
+  inverseName?: string;
+  version: number;
+  effectiveFrom?: string;
+  effectiveTo?: string;
+  status: RecordStatus;
+}
+
+export interface RelationshipAttributeAssignment {
+  id: RelationshipAttributeAssignmentId;
+  tenantId: TenantId;
+  relationshipTypeDefinitionId: RelationshipTypeDefinitionId;
+  attributeDefinitionId: AttributeDefinitionId;
+  sequence: number;
+  required: boolean;
+  cardinality: MetadataCardinality;
+  localLabel?: string;
+  defaultValue?: unknown;
   status: RecordStatus;
 }

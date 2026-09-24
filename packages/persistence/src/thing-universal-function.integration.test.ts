@@ -152,7 +152,13 @@ suite('universal Function and metadata-driven Thing runtime',()=>{
     });
     const relationshipRolePattern=await metadata.createConstraintDefinition(tenantId,admin.id,{
       code:`REL_ROLE_PATTERN_${suffix}`,name:'Relationship role pattern',
-      constraintType:'PATTERN',configuration:{pattern:'^(CLIENT|PARTNER)
+      constraintType:'PATTERN',configuration:{pattern:'^(CLIENT|PARTNER)$'}
+    });
+    await things.assignConstraintToRelationshipAttribute(tenantId,admin.id,{
+      relationshipAttributeAssignmentId:relationshipRoleAssignment.id,
+      constraintDefinitionId:relationshipRolePattern.id,sequence:1,mandatory:true
+    });
+
     const customer=await things.createThing(tenantId,admin.id,{
       typeDefinitionId:customerType.id,stableKey:'CUST-001',displayName:'Acme Developments',
       fieldValues:[{typeAttributeAssignmentId:customerNameAssignment.id,value:'Acme Developments'}]

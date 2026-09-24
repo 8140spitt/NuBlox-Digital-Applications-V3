@@ -41,7 +41,9 @@ import {
   MySqlMigrationCommandService,
   MySqlMigrationReadRepository,
   MySqlExtensionCommandService,
-  MySqlExtensionReadRepository
+  MySqlExtensionReadRepository,
+  MySqlConfigurationPromotionCommandService,
+  MySqlConfigurationPromotionReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -87,6 +89,8 @@ let migrationCommandServiceInstance: MySqlMigrationCommandService | undefined;
 let migrationReadRepositoryInstance: MySqlMigrationReadRepository | undefined;
 let extensionCommandServiceInstance: MySqlExtensionCommandService | undefined;
 let extensionReadRepositoryInstance: MySqlExtensionReadRepository | undefined;
+let configurationPromotionCommandServiceInstance: MySqlConfigurationPromotionCommandService | undefined;
+let configurationPromotionReadRepositoryInstance: MySqlConfigurationPromotionReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -437,4 +441,21 @@ export function getExtensionReadRepository(): MySqlExtensionReadRepository {
       new MySqlExtensionReadRepository(getDatabasePool());
   }
   return extensionReadRepositoryInstance;
+}
+
+
+export function getConfigurationPromotionCommandService(): MySqlConfigurationPromotionCommandService {
+  if (!configurationPromotionCommandServiceInstance) {
+    configurationPromotionCommandServiceInstance =
+      new MySqlConfigurationPromotionCommandService(getDatabasePool());
+  }
+  return configurationPromotionCommandServiceInstance;
+}
+
+export function getConfigurationPromotionReadRepository(): MySqlConfigurationPromotionReadRepository {
+  if (!configurationPromotionReadRepositoryInstance) {
+    configurationPromotionReadRepositoryInstance =
+      new MySqlConfigurationPromotionReadRepository(getDatabasePool());
+  }
+  return configurationPromotionReadRepositoryInstance;
 }

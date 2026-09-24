@@ -63,3 +63,7 @@ export * from './repository.js';
 export * from './extension-repository.js';
 export * from './extension-command-service.js';
 export * from './extension-read-repository.js';
+
+export * from './configuration-promotion-repository.js';
+export * from './configuration-promotion-command-service.js';
+export * from './configuration-promotion-read-repository.js';

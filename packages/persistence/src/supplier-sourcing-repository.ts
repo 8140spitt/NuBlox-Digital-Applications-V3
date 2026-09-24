@@ -34,7 +34,7 @@ interface SourcingContextRow extends RowDataPacket {
 interface SourceApprovalRow extends RowDataPacket {
   id:string;tenant_id:string;sourcing_context_id:string;supplier_relationship_id:string;
   internal_item_object_id:string;supplier_item_object_id:string;source_status:SourceApproval['sourceStatus'];
-  rationale:string;effective_from:Date;effective_to:Date|null;approval_decision_id:string;
+  rationale:string;effective_from:Date;effective_to:Date|null;approval_decision_id:string;decision_fingerprint:string;
   approved_by_person_id:string;approved_at:Date;superseded_by_source_approval_id:string|null;
 }
 interface SourcingRuleRow extends RowDataPacket {
@@ -93,7 +93,7 @@ const mapApproval=(r:SourceApprovalRow):SourceApproval=>({
   supplierItemObjectId:r.supplier_item_object_id as SourceApproval['supplierItemObjectId'],
   sourceStatus:r.source_status,rationale:r.rationale,effectiveFrom:r.effective_from.toISOString(),
   ...(r.effective_to?{effectiveTo:r.effective_to.toISOString()}:{}),
-  approvalDecisionId:r.approval_decision_id as SourceApproval['approvalDecisionId'],
+  approvalDecisionId:r.approval_decision_id as SourceApproval['approvalDecisionId'],decisionFingerprint:r.decision_fingerprint,
   approvedByPersonId:r.approved_by_person_id as SourceApproval['approvedByPersonId'],
   approvedAt:r.approved_at.toISOString(),
   ...(r.superseded_by_source_approval_id?{
@@ -246,8 +246,8 @@ export class MySqlSupplierSourcingRepository {
       }
 
       await c.execute(
-        'INSERT INTO source_approvals (id,tenant_id,sourcing_context_id,supplier_relationship_id,internal_item_object_id,supplier_item_object_id,source_status,rationale,effective_from,effective_to,approval_decision_id,approved_by_person_id,approved_at,superseded_by_source_approval_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [input.id,input.tenantId,input.sourcingContextId,input.supplierRelationshipId,input.internalItemObjectId,input.supplierItemObjectId,input.sourceStatus,input.rationale,new Date(input.effectiveFrom),input.effectiveTo?new Date(input.effectiveTo):null,input.approvalDecisionId,input.approvedByPersonId,new Date(input.approvedAt),null]
+        'INSERT INTO source_approvals (id,tenant_id,sourcing_context_id,supplier_relationship_id,internal_item_object_id,supplier_item_object_id,source_status,rationale,effective_from,effective_to,approval_decision_id,decision_fingerprint,approved_by_person_id,approved_at,superseded_by_source_approval_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [input.id,input.tenantId,input.sourcingContextId,input.supplierRelationshipId,input.internalItemObjectId,input.supplierItemObjectId,input.sourceStatus,input.rationale,new Date(input.effectiveFrom),input.effectiveTo?new Date(input.effectiveTo):null,input.approvalDecisionId,input.decisionFingerprint,input.approvedByPersonId,new Date(input.approvedAt),null]
       );
 
       if(current){

@@ -75,6 +75,9 @@ export function activateRetentionPolicy(current:RetentionPolicy,decision:Decisio
   invariant(decision.subjectVersion===current.checksum,'Retention Policy Decision must cite the exact frozen Policy checksum.');
   invariant(decision.outcome==='APPROVED','Retention Policy activation requires an APPROVED Decision.');
   date(activatedAt,'Retention Policy activatedAt');
+  invariant(Boolean(current.frozenAt),'Frozen Retention Policy requires frozenAt evidence.');
+  invariant(Date.parse(decision.decidedAt)>=Date.parse(current.frozenAt!),'Retention Policy approval Decision cannot predate the frozen Policy version.');
+  invariant(Date.parse(activatedAt)>=Date.parse(decision.decidedAt),'Retention Policy activation cannot predate its approval Decision.');
   return Object.freeze({...current,status:'ACTIVE',approvalDecisionId:decision.id,activatedAt});
 }
 
@@ -98,7 +101,9 @@ export function releaseHold(current:Hold,decision:Decision,releaser:Person,relea
     invariant(decision.subjectVersion===current.subjectVersion,'Hold release Decision must cite the held subject version.');
   }
   invariant(decision.outcome==='APPROVED','Hold release requires an APPROVED Decision.');
-  date(releasedAt,'Hold releasedAt');invariant(Date.parse(releasedAt)>=Date.parse(current.imposedAt),'Hold cannot release before it was imposed.');
+  date(releasedAt,'Hold releasedAt');
+  invariant(Date.parse(decision.decidedAt)>=Date.parse(current.imposedAt),'Hold release Decision cannot predate the Hold.');
+  invariant(Date.parse(releasedAt)>=Date.parse(decision.decidedAt),'Hold release cannot predate its approval Decision.');
   return Object.freeze({...current,status:'RELEASED',releaseDecisionId:decision.id,releasedByPersonId:releaser.id,releasedAt});
 }
 
@@ -152,6 +157,7 @@ export function createArchiveRecord(
   const blocking=activeHolds.find(hold=>hold.status==='ACTIVE'&&hold.blocksArchive&&hold.subjectObjectId===input.subjectObjectId&&(hold.subjectVersion===undefined||hold.subjectVersion===input.subjectVersion));
   invariant(!blocking,'Active Hold blocks archive of this subject.');
   required(input.archiveReference,'Archive reference');required(input.integrityHash,'Archive integrity hash');date(input.archivedAt,'Archive archivedAt');
+  invariant(Boolean(run.startedAt)&&Date.parse(input.archivedAt)>=Date.parse(run.startedAt!),'Archive evidence cannot predate Disposition Run start.');
   invariant(input.status==='AVAILABLE','New Archive Record must start AVAILABLE.');
   return Object.freeze({...input,archiveManifest:Object.freeze({...input.archiveManifest})});
 }
@@ -176,6 +182,8 @@ export function createDestructionEvidence(
   const blocking=activeHolds.find(hold=>hold.status==='ACTIVE'&&hold.blocksDestruction&&hold.subjectObjectId===input.subjectObjectId&&(hold.subjectVersion===undefined||hold.subjectVersion===input.subjectVersion));
   invariant(!blocking,'Active Hold blocks destruction of this subject.');
   required(input.method,'Destruction method');required(input.integrityHash,'Destruction evidence integrity hash');date(input.destroyedAt,'Destroyed at');
+  invariant(Boolean(run.startedAt)&&Date.parse(input.destroyedAt)>=Date.parse(run.startedAt!),'Destruction evidence cannot predate Disposition Run start.');
+  invariant(Date.parse(input.destroyedAt)>=Date.parse(decision.decidedAt),'Destruction execution cannot predate its approval Decision.');
   return Object.freeze({...input,evidence:Object.freeze({...input.evidence})});
 }
 
@@ -193,6 +201,7 @@ export function createDispositionItemResult(
   invariant(input.dispositionRunId===run.id&&run.retentionRuleId===rule.id,'Disposition Item Result execution references do not match.');
   invariant(input.recordedByPersonId===recorder.id,'Disposition Item Result recorder reference does not match.');
   required(input.reason,'Disposition Item Result reason');date(input.recordedAt,'Disposition Item Result recordedAt');
+  invariant(Boolean(run.startedAt)&&Date.parse(input.recordedAt)>=Date.parse(run.startedAt!),'Disposition Item Result cannot predate Run start.');
   const blockingHold=activeHolds.find(hold=>hold.status==='ACTIVE'&&hold.subjectObjectId===input.subjectObjectId&&(hold.subjectVersion===undefined||hold.subjectVersion===input.subjectVersion)&&(
     rule.dispositionAction==='DESTROY'?hold.blocksDestruction:rule.dispositionAction==='ARCHIVE'?hold.blocksArchive:false
   ));
@@ -219,6 +228,7 @@ export function completeDispositionRun(current:DispositionRun,results:readonly D
   invariant(results.length>0,'Disposition Run requires at least one Item Result.');
   invariant(results.every(result=>result.dispositionRunId===current.id),'All Item Results must belong to the Disposition Run.');
   date(completedAt,'Disposition Run completedAt');
+  invariant(Boolean(current.startedAt)&&Date.parse(completedAt)>=Date.parse(current.startedAt!),'Disposition Run cannot complete before it started.');
   const exceptions=results.some(result=>['HELD','REVIEW_REQUIRED','SKIPPED','FAILED'].includes(result.outcome));
   const allFailed=results.every(result=>result.outcome==='FAILED');
   return Object.freeze({...current,status:allFailed?'FAILED':exceptions?'COMPLETED_WITH_EXCEPTIONS':'COMPLETED',completedAt});
@@ -234,6 +244,8 @@ export function createRestoreRun(input:RestoreRun,archive:ArchiveRecord,decision
   invariant(decision.outcome==='APPROVED','Restore requires an APPROVED Decision.');
   invariant(input.restoredByPersonId===restorer.id,'Restore executor reference does not match.');
   required(input.restoreReference,'Restore reference');required(input.restoredContentReference,'Restored content reference');required(input.integrityHash,'Restore integrity hash');date(input.restoredAt,'Restored at');
+  invariant(Date.parse(decision.decidedAt)>=Date.parse(archive.archivedAt),'Restore approval Decision cannot predate the Archive Record.');
+  invariant(Date.parse(input.restoredAt)>=Date.parse(decision.decidedAt),'Restore execution cannot predate its approval Decision.');
   if(input.status==='FAILED')required(input.message??'','Failed Restore message');
   return Object.freeze({...input});
 }

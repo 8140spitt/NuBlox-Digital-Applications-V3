@@ -11,8 +11,7 @@ import {
   type RelationshipTypeDefinition,
   type TenantId,
   type Thing,
-  type ThingRelationship,
-  type TypeDefinition
+  type ThingRelationship
 } from '@nublox/kernel';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { MySqlAccessRepository } from './access-repository.js';

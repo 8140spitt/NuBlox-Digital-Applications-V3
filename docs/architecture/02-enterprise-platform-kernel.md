@@ -372,3 +372,17 @@ The manufacturing domain specialises shared identity, Decision and Evidence cont
 - Control Characteristic.
 
 Process Plan release binds an exact frozen definition checksum to an approved Decision. Production execution must consume released definitions rather than silently mutating them.
+
+
+### Service delivery domain control
+
+The service delivery domain specialises shared identity, Access, Evidence and lifecycle controls with:
+
+- Service Order;
+- Service Assignment;
+- dispatch state;
+- Service Execution Record;
+- completion evidence;
+- acceptance state.
+
+A Service Order is the governed commitment and scope of work. Assignment and dispatch determine accountable field resources without changing the order identity. Execution Records preserve the observed work, inspection/test results and field evidence. Completion requires execution evidence, and acceptance is a separate explicit lifecycle event so that delivery, completion and acceptance cannot collapse into one mutable status flag.

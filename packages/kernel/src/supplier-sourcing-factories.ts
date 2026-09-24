@@ -20,11 +20,15 @@ function validDate(value:string,label:string){
 
 export function createSupplierRelationship(
   input:SupplierRelationship,
+  object:CanonicalObjectIdentity,
   organisation:Organisation,
   creator:Person
 ):SupplierRelationship{
+  sameTenant(input,object,'Supplier Relationship canonical object');
   sameTenant(input,organisation,'Supplier Relationship Organisation');
   sameTenant(input,creator,'Supplier Relationship creator');
+  invariant(input.canonicalObjectId===object.id,'Supplier Relationship canonical object reference does not match.');
+  invariant(object.objectType==='SUPPLIER_RELATIONSHIP','Supplier Relationship canonical object type is invalid.');
   invariant(input.supplierOrganisationId===organisation.id,'Supplier Relationship Organisation reference does not match.');
   invariant(input.createdByPersonId===creator.id,'Supplier Relationship creator reference does not match.');
   required(input.code,'Supplier Relationship code');
@@ -43,7 +47,7 @@ export function releaseSupplierRelationship(
   sameTenant(current,decision,'Supplier Relationship release Decision');
   invariant(current.status==='IN_WORK','Only an IN_WORK Supplier Relationship can be released.');
   invariant(decision.outcome==='APPROVED','Supplier Relationship release requires an APPROVED Decision.');
-  invariant(decision.subjectObjectId===current.supplierOrganisationId,'Supplier Relationship release Decision must govern the supplier Organisation.');
+  invariant(decision.subjectObjectId===current.canonicalObjectId,'Supplier Relationship release Decision must govern the supplier Organisation.');
   validDate(releasedAt,'Supplier Relationship releasedAt');
   invariant(Date.parse(decision.decidedAt)>=Date.parse(current.createdAt),'Supplier Relationship release Decision cannot predate relationship creation.');
   invariant(Date.parse(releasedAt)>=Date.parse(decision.decidedAt),'Supplier Relationship release cannot predate Decision.');
@@ -58,7 +62,7 @@ export function cancelSupplierRelationship(
   sameTenant(current,decision,'Supplier Relationship cancellation Decision');
   invariant(current.status!=='CANCELLED','Supplier Relationship is already cancelled.');
   invariant(decision.outcome==='APPROVED','Supplier Relationship cancellation requires an APPROVED Decision.');
-  invariant(decision.subjectObjectId===current.supplierOrganisationId,'Supplier Relationship cancellation Decision must govern the supplier Organisation.');
+  invariant(decision.subjectObjectId===current.canonicalObjectId,'Supplier Relationship cancellation Decision must govern the supplier Organisation.');
   validDate(cancelledAt,'Supplier Relationship cancelledAt');
   invariant(Date.parse(cancelledAt)>=Date.parse(decision.decidedAt),'Supplier Relationship cancellation cannot predate Decision.');
   return Object.freeze({...current,status:'CANCELLED',cancelledDecisionId:decision.id,cancelledAt});

@@ -487,7 +487,7 @@ export class MySqlFunctionalRepository {
     activities: number;
   }> {
     const [[f], [s], [a]] = await Promise.all([
-      this.pool.execute<CountRow[]>('SELECT COUNT(*) AS count FROM function_definitions'),
+      this.pool.execute<CountRow[]>("SELECT COUNT(*) AS count FROM function_definitions WHERE function_family='CORE_BUSINESS'"),
       this.pool.execute<CountRow[]>('SELECT COUNT(*) AS count FROM sub_function_definitions'),
       this.pool.execute<CountRow[]>('SELECT COUNT(*) AS count FROM functional_activity_definitions')
     ]);
@@ -502,6 +502,7 @@ export class MySqlFunctionalRepository {
     const [rows] = await this.pool.execute<FunctionRow[]>(
       `SELECT id, code, name, status
          FROM function_definitions
+        WHERE function_family='CORE_BUSINESS'
         ORDER BY code`
     );
     return rows.map(mapFunction);

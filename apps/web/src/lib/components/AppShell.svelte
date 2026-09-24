@@ -38,6 +38,7 @@
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
+    if (pathname.startsWith('/app/resource-planning')) return 'Resource Planning';
     if (pathname.startsWith('/app/organisation')) return 'HCM Position Management';
     if (pathname.startsWith('/app/deployments')) return 'HCM Position Management';
     if (pathname.startsWith('/app/competence')) return 'Competence';
@@ -125,6 +126,10 @@
           <a class:active={isActive('/app/hcm')} href="/app/hcm" onclick={closeNavigation}>
             <span class="nav-symbol">HC</span>
             <span>HCM &amp; positions</span>
+          </a>
+          <a class:active={isActive('/app/resource-planning')} href="/app/resource-planning" onclick={closeNavigation}>
+            <span class="nav-symbol">RP</span>
+            <span>Resource planning</span>
           </a>
           <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
             <span class="nav-symbol">CP</span>

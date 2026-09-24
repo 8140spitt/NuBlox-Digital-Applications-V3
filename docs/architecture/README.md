@@ -16,6 +16,7 @@ NuBlox is the product. Industry solutions configure it. External products inform
 8. [Architecture Invariants](08-architecture-invariants.md)
 9. [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md)
 10. [Functional Governance and Functional Delivery](13-functional-governance-and-functional-delivery.md)
+11. [Enterprise ERP Composition & Execution Contract](14-enterprise-erp-composition-and-execution-contract.md)
 
 ## Governing proposition
 
@@ -44,6 +45,9 @@ The market benchmark is translated into NuBlox-native architecture through:
 - [353-L2 Native Engine Map](canonical-l2-native-engine-map.csv);
 - [1,510-Activity Canonical Capability Map](canonical-activity-capability-map.csv);
 - [Native Tool Implementation Gap Register](canonical-native-tool-implementation-gap-register.csv);
+- [1,510-Activity ERP Execution Contract](canonical-activity-erp-execution-contract.csv);
+- [84-Job CBE ERP Execution Requirement Register](cbe-job-erp-execution-requirement-register.csv);
+- [End-to-End ERP Process Spine](enterprise-end-to-end-erp-process-spine.csv);
 - [Implementation Waves](../product/canonical-native-tool-implementation-waves.md).
 
 These are the governing bridge between market evidence, the 29 Function/L2/Activity taxonomy, the 84 Construction & Built Environment Job Profiles and implementation-gap planning.

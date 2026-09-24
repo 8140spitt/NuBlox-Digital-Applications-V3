@@ -66,7 +66,7 @@ An engine is not a workspace. The same engine may be composed into many Function
 
 A Function workspace is a governed composition of engines, records, queues, dashboards, Work and Decisions relevant to that Function.
 
-A Job Profile experience is a contextual composition of the same platform engines according to HCM-managed Position/Deployment state, operating context, responsibility, competence and Authority.
+A Job Profile experience is a contextual composition of the same platform engines according to HCM-managed Position, Position-to-Function assignment, reporting scope, operating context, responsibility, competence and Authority.
 
 ## Native execution requirement
 
@@ -90,7 +90,7 @@ Shared engines used by every Function and Industry Solution:
 
 - tenant, Party, Organisation, Position and identity;
 - permissions, scope, Responsibility and Authority;
-- Functional Deployment and Assignment;
+- Position-to-Function assignment, optional contextual assignment and Work Assignment;
 - Workflow, Work Item and My Work;
 - Lifecycle, Decision, approval and Evidence;
 - Information, Revision, Representation and records;

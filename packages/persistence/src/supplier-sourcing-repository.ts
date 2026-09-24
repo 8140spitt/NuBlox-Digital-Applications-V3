@@ -226,9 +226,9 @@ export class MySqlSupplierSourcingRepository {
 
   async createSourceApproval(input:SourceApproval,audit:AuditContext={}):Promise<void>{
     await withTransaction(this.pool,async c=>{
-      const [context,supplier,internalItem,supplierItem,decision,approver]=await Promise.all([
+      const supplier=await this.requireSupplierForUpdate(input.tenantId,input.supplierRelationshipId,c);
+      const [context,internalItem,supplierItem,decision,approver]=await Promise.all([
         this.requireContext(input.tenantId,input.sourcingContextId,c),
-        this.requireSupplier(input.tenantId,input.supplierRelationshipId,c),
         this.requireObject(input.tenantId,input.internalItemObjectId,c),
         this.requireObject(input.tenantId,input.supplierItemObjectId,c),
         this.requireDecision(input.tenantId,input.approvalDecisionId,c),
@@ -237,7 +237,7 @@ export class MySqlSupplierSourcingRepository {
       createSourceApproval(input,context,supplier,internalItem,supplierItem,decision,approver);
 
       const [currentRows]=await c.execute<SourceApprovalRow[]>(
-        'SELECT * FROM source_approvals WHERE tenant_id=? AND sourcing_context_id=? AND supplier_relationship_id=? AND internal_item_object_id=? AND supplier_item_object_id=? AND current_guard=1 FOR UPDATE',
+        'SELECT * FROM source_approvals WHERE tenant_id=? AND sourcing_context_id=? AND supplier_relationship_id=? AND internal_item_object_id=? AND supplier_item_object_id=? AND superseded_by_source_approval_id IS NULL FOR UPDATE',
         [input.tenantId,input.sourcingContextId,input.supplierRelationshipId,input.internalItemObjectId,input.supplierItemObjectId]
       );
       const current=currentRows[0]?mapApproval(currentRows[0]):undefined;
@@ -246,13 +246,13 @@ export class MySqlSupplierSourcingRepository {
       }
 
       await c.execute(
-        'INSERT INTO source_approvals (id,tenant_id,sourcing_context_id,supplier_relationship_id,internal_item_object_id,supplier_item_object_id,source_status,rationale,effective_from,effective_to,approval_decision_id,approved_by_person_id,approved_at,superseded_by_source_approval_id,current_guard) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [input.id,input.tenantId,input.sourcingContextId,input.supplierRelationshipId,input.internalItemObjectId,input.supplierItemObjectId,input.sourceStatus,input.rationale,new Date(input.effectiveFrom),input.effectiveTo?new Date(input.effectiveTo):null,input.approvalDecisionId,input.approvedByPersonId,new Date(input.approvedAt),null,1]
+        'INSERT INTO source_approvals (id,tenant_id,sourcing_context_id,supplier_relationship_id,internal_item_object_id,supplier_item_object_id,source_status,rationale,effective_from,effective_to,approval_decision_id,approved_by_person_id,approved_at,superseded_by_source_approval_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [input.id,input.tenantId,input.sourcingContextId,input.supplierRelationshipId,input.internalItemObjectId,input.supplierItemObjectId,input.sourceStatus,input.rationale,new Date(input.effectiveFrom),input.effectiveTo?new Date(input.effectiveTo):null,input.approvalDecisionId,input.approvedByPersonId,new Date(input.approvedAt),null]
       );
 
       if(current){
         await c.execute(
-          'UPDATE source_approvals SET superseded_by_source_approval_id=?,current_guard=NULL WHERE tenant_id=? AND id=? AND current_guard=1',
+          'UPDATE source_approvals SET superseded_by_source_approval_id=? WHERE tenant_id=? AND id=? AND superseded_by_source_approval_id IS NULL',
           [input.id,input.tenantId,current.id]
         );
       }
@@ -303,6 +303,7 @@ export class MySqlSupplierSourcingRepository {
   async listSourcingRules(t:TenantId){const [r]=await this.pool.execute<SourcingRuleRow[]>('SELECT * FROM sourcing_rules WHERE tenant_id=? ORDER BY priority,code,id',[t]);return r.map(mapRule);}
 
   private async requireSupplier(t:TenantId,id:SupplierRelationship['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<SupplierRelationshipRow[]>('SELECT * FROM supplier_relationships WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Supplier Relationship not found in tenant.');return mapSupplier(r[0]);}
+  private async requireSupplierForUpdate(t:TenantId,id:SupplierRelationship['id'],c:PoolConnection){const [r]=await c.execute<SupplierRelationshipRow[]>('SELECT * FROM supplier_relationships WHERE tenant_id=? AND id=? FOR UPDATE',[t,id]);if(!r[0])throw new Error('Supplier Relationship not found in tenant.');return mapSupplier(r[0]);}
   private async requireContext(t:TenantId,id:SourcingContext['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<SourcingContextRow[]>('SELECT * FROM sourcing_contexts WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Sourcing Context not found in tenant.');return mapContext(r[0]);}
   private async requirePerson(t:TenantId,id:Person['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<PersonRow[]>('SELECT id,tenant_id,party_id,legal_name,preferred_name,status FROM persons WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Person not found in tenant.');return mapPerson(r[0]);}
   private async requireOrganisation(t:TenantId,id:Organisation['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<OrganisationRow[]>('SELECT id,tenant_id,party_id,legal_name,trading_name,status FROM organisations WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Organisation not found in tenant.');return mapOrganisation(r[0]);}

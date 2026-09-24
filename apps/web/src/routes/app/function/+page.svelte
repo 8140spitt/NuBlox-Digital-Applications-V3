@@ -25,7 +25,7 @@
     <div>
       <p class="app-eyebrow">Function assignment required</p>
       <h1>{data.experience.positionTitle} does not yet have a primary Function world.</h1>
-      <p>Human Capital must assign the Position to a Core Function and mark it as Governance or Delivery.</p>
+      <p>Human Capital must assign the Position to a Function and mark it as Governance or Delivery.</p>
       <div class="permission-actions">
         <a class="primary-action permission-back" href="/app/hcm">Open HCM <span>→</span></a>
         <a class="quiet-link" href="/app">Back Home</a>
@@ -59,8 +59,8 @@
   <div class="function-workspace-grid">
     <section class="workspace-panel">
       <div class="panel-heading">
-        <div><p class="app-eyebrow">{side} capability</p><h2>{data.workspace.name}</h2></div>
-        <span>{data.workspace.subfunctions.length}</span>
+        <div><p class="app-eyebrow">{data.workspace.functionFamily === 'CBE' ? 'CBE Function' : 'Core Business Function'} · {side}</p><h2>{data.workspace.name}</h2></div>
+        <span>{data.workspace.subfunctions.length + data.workspace.jobs.length}</span>
       </div>
       <div class="subfunction-list">
         {#each data.workspace.subfunctions as subfunction}
@@ -70,11 +70,25 @@
               <span class="subfunction-count">{subfunction.activities.length} activities</span>
             </summary>
             <div class="subfunction-detail redesigned">
-              <div><h3>Work scope</h3><ol class="activity-list">{#each subfunction.activities as activity,index}<li><span>{String(index+1).padStart(2,'0')}</span><strong>{activity}</strong></li>{/each}</ol></div>
+              <div><h3>Work scope</h3><ol class="activity-list">{#each subfunction.activities as activity,index}<li><span>{String(index+1).padStart(2,'0')}</span><strong>{activity.name}</strong></li>{/each}</ol></div>
             </div>
           </details>
         {/each}
       </div>
+
+      {#if data.workspace.jobs.length>0}
+        <div class="panel-heading">
+          <div><p class="app-eyebrow">Jobs in this Function</p><h2>Professional work</h2></div>
+          <span>{data.workspace.jobs.length}</span>
+        </div>
+        <div class="workspace-register-list">
+          {#each data.workspace.jobs as job}
+            <article>
+              <div><strong>{job.canonicalName}</strong><span>{job.jobCode}</span></div>
+            </article>
+          {/each}
+        </div>
+      {/if}
     </section>
 
     <aside class="workspace-panel">

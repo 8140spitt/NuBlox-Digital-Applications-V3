@@ -55,7 +55,9 @@ import {
   MySqlSupplierSourcingCommandService,
   MySqlSupplierSourcingReadRepository,
   MySqlOrganisationalResourcePlanningCommandService,
-  MySqlOrganisationalResourcePlanningReadRepository
+  MySqlOrganisationalResourcePlanningReadRepository,
+  MySqlHcmCommandService,
+  MySqlHcmReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -115,6 +117,8 @@ let supplierSourcingCommandServiceInstance: MySqlSupplierSourcingCommandService 
 let supplierSourcingReadRepositoryInstance: MySqlSupplierSourcingReadRepository | undefined;
 let organisationalResourcePlanningCommandServiceInstance: MySqlOrganisationalResourcePlanningCommandService | undefined;
 let organisationalResourcePlanningReadRepositoryInstance: MySqlOrganisationalResourcePlanningReadRepository | undefined;
+let hcmCommandServiceInstance: MySqlHcmCommandService | undefined;
+let hcmReadRepositoryInstance: MySqlHcmReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -576,4 +580,18 @@ export function getOrganisationalResourcePlanningReadRepository(): MySqlOrganisa
       new MySqlOrganisationalResourcePlanningReadRepository(getDatabasePool());
   }
   return organisationalResourcePlanningReadRepositoryInstance;
+}
+
+export function getHcmCommandService(): MySqlHcmCommandService {
+  if (!hcmCommandServiceInstance) {
+    hcmCommandServiceInstance = new MySqlHcmCommandService(getDatabasePool());
+  }
+  return hcmCommandServiceInstance;
+}
+
+export function getHcmReadRepository(): MySqlHcmReadRepository {
+  if (!hcmReadRepositoryInstance) {
+    hcmReadRepositoryInstance = new MySqlHcmReadRepository(getDatabasePool());
+  }
+  return hcmReadRepositoryInstance;
 }

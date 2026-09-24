@@ -163,7 +163,7 @@ Deliver:
 
 - product/service/innovation lifecycle;
 - marketing/campaign/brand;
-- CRM/account/opportunity;
+- CRM/account/opportunity — **POSITION-SCOPED USER-EXECUTABLE FOUNDATION IMPLEMENTED**: canonical Sales Account and Opportunity identities, Organisation-backed customer ownership, HCM F07 Functional Delivery Position authority, recursive manager scope, pipeline/weighted forecast, stage/forecast control, optimistic Opportunity updates, audit/outbox evidence, migration 0051, MySQL journey proof and the F07 `/app/function` workspace are implemented; contacts, sales activities, lead conversion, account/relationship plans, territory/quota management and broader forecasting remain to build;
 - pricing/CPQ/bid/sales order;
 - customer service/case/success.
 

@@ -21,7 +21,7 @@ import { writeOutboxEvent } from './platform-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface SupplierRelationshipRow extends RowDataPacket {
-  id:string;tenant_id:string;supplier_organisation_id:string;relationship_type:SupplierRelationship['relationshipType'];
+  id:string;tenant_id:string;canonical_object_id:string;supplier_organisation_id:string;relationship_type:SupplierRelationship['relationshipType'];
   code:string;name:string;status:SupplierRelationship['status'];created_by_person_id:string;
   relationship_created_at:Date;released_decision_id:string|null;released_at:Date|null;
   cancelled_decision_id:string|null;cancelled_at:Date|null;row_version:number;
@@ -66,6 +66,7 @@ function objectJson(value:unknown):Readonly<Record<string,unknown>>{
 
 const mapSupplier=(r:SupplierRelationshipRow):SupplierRelationship=>({
   id:r.id as SupplierRelationship['id'],tenantId:r.tenant_id as TenantId,
+  canonicalObjectId:r.canonical_object_id as SupplierRelationship['canonicalObjectId'],
   supplierOrganisationId:r.supplier_organisation_id as SupplierRelationship['supplierOrganisationId'],
   relationshipType:r.relationship_type,code:r.code,name:r.name,status:r.status,
   createdByPersonId:r.created_by_person_id as SupplierRelationship['createdByPersonId'],
@@ -144,16 +145,25 @@ async function evidence(
 export class MySqlSupplierSourcingRepository {
   constructor(private readonly pool:Pool){}
 
-  async createSupplierRelationship(input:SupplierRelationship,audit:AuditContext={}):Promise<void>{
+  async createSupplierRelationship(
+    object:CanonicalObjectIdentity,
+    input:SupplierRelationship,
+    audit:AuditContext={}
+  ):Promise<void>{
     const [organisation,creator]=await Promise.all([
       this.requireOrganisation(input.tenantId,input.supplierOrganisationId),
       this.requirePerson(input.tenantId,input.createdByPersonId)
     ]);
-    createSupplierRelationship(input,organisation,creator);
+    createSupplierRelationship(input,object,organisation,creator);
     await withTransaction(this.pool,async c=>{
       await c.execute(
-        'INSERT INTO supplier_relationships (id,tenant_id,supplier_organisation_id,relationship_type,code,name,status,created_by_person_id,relationship_created_at,released_decision_id,released_at,cancelled_decision_id,cancelled_at,updated_by_person_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [input.id,input.tenantId,input.supplierOrganisationId,input.relationshipType,input.code,input.name,input.status,input.createdByPersonId,new Date(input.createdAt),null,null,null,null,audit.actorPersonId??null]
+        'INSERT INTO canonical_objects (id,tenant_id,object_type,stable_key,created_at) VALUES (?,?,?,?,?)',
+        [object.id,object.tenantId,object.objectType,object.stableKey,new Date(object.createdAt)]
+      );
+      await evidence(c,input.tenantId,'CANONICAL_OBJECT',object.id,'CREATED',audit,object);
+      await c.execute(
+        'INSERT INTO supplier_relationships (id,tenant_id,canonical_object_id,supplier_organisation_id,relationship_type,code,name,status,created_by_person_id,relationship_created_at,released_decision_id,released_at,cancelled_decision_id,cancelled_at,updated_by_person_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        [input.id,input.tenantId,input.canonicalObjectId,input.supplierOrganisationId,input.relationshipType,input.code,input.name,input.status,input.createdByPersonId,new Date(input.createdAt),null,null,null,null,audit.actorPersonId??null]
       );
       await evidence(c,input.tenantId,'SUPPLIER_RELATIONSHIP',input.id,'CREATED',audit,input);
     });

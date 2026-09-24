@@ -43,7 +43,9 @@ import {
   MySqlExtensionCommandService,
   MySqlExtensionReadRepository,
   MySqlConfigurationPromotionCommandService,
-  MySqlConfigurationPromotionReadRepository
+  MySqlConfigurationPromotionReadRepository,
+  MySqlRecordsRetentionCommandService,
+  MySqlRecordsRetentionReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -91,6 +93,8 @@ let extensionCommandServiceInstance: MySqlExtensionCommandService | undefined;
 let extensionReadRepositoryInstance: MySqlExtensionReadRepository | undefined;
 let configurationPromotionCommandServiceInstance: MySqlConfigurationPromotionCommandService | undefined;
 let configurationPromotionReadRepositoryInstance: MySqlConfigurationPromotionReadRepository | undefined;
+let recordsRetentionCommandServiceInstance: MySqlRecordsRetentionCommandService | undefined;
+let recordsRetentionReadRepositoryInstance: MySqlRecordsRetentionReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -458,4 +462,21 @@ export function getConfigurationPromotionReadRepository(): MySqlConfigurationPro
       new MySqlConfigurationPromotionReadRepository(getDatabasePool());
   }
   return configurationPromotionReadRepositoryInstance;
+}
+
+
+export function getRecordsRetentionCommandService(): MySqlRecordsRetentionCommandService {
+  if (!recordsRetentionCommandServiceInstance) {
+    recordsRetentionCommandServiceInstance =
+      new MySqlRecordsRetentionCommandService(getDatabasePool());
+  }
+  return recordsRetentionCommandServiceInstance;
+}
+
+export function getRecordsRetentionReadRepository(): MySqlRecordsRetentionReadRepository {
+  if (!recordsRetentionReadRepositoryInstance) {
+    recordsRetentionReadRepositoryInstance =
+      new MySqlRecordsRetentionReadRepository(getDatabasePool());
+  }
+  return recordsRetentionReadRepositoryInstance;
 }

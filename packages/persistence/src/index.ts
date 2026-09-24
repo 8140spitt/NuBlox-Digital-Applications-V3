@@ -67,3 +67,7 @@ export * from './extension-read-repository.js';
 export * from './configuration-promotion-repository.js';
 export * from './configuration-promotion-command-service.js';
 export * from './configuration-promotion-read-repository.js';
+
+export * from './records-retention-repository.js';
+export * from './records-retention-command-service.js';
+export * from './records-retention-read-repository.js';

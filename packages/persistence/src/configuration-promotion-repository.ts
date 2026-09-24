@@ -286,11 +286,15 @@ export class MySqlConfigurationPromotionRepository {
   }
 
   async createPromotionRun(input:ConfigurationPromotionRun,audit:AuditContext={}){
-    const [set,source,target,sourceBaseline,targetBaseline,requester]=await Promise.all([
+    const [set,source,target,sourceBaseline,targetBaseline,requester,latestTargetBaseline]=await Promise.all([
       this.requireChangeSet(input.tenantId,input.changeSetId),this.requireEnvironment(input.tenantId,input.sourceEnvironmentId),
       this.requireEnvironment(input.tenantId,input.targetEnvironmentId),this.requireBaseline(input.tenantId,input.sourceBaselineId),
-      this.requireBaseline(input.tenantId,input.expectedTargetBaselineId),this.requirePerson(input.tenantId,input.requestedByPersonId)
+      this.requireBaseline(input.tenantId,input.expectedTargetBaselineId),this.requirePerson(input.tenantId,input.requestedByPersonId),
+      this.requireLatestFrozenBaseline(input.tenantId,input.targetEnvironmentId)
     ]);
+    if (targetBaseline.id !== latestTargetBaseline.id) {
+      throw new Error('Expected target Baseline is stale; refresh target configuration before promotion.');
+    }
     createConfigurationPromotionRun(input,set,source,target,sourceBaseline,targetBaseline,requester);
     await withTransaction(this.pool,async c=>{
       await c.execute('INSERT INTO configuration_promotion_runs (id,tenant_id,change_set_id,source_environment_id,target_environment_id,source_baseline_id,expected_target_baseline_id,resulting_target_baseline_id,run_reference,mapping_definition,mapping_checksum,rollback_definition,rollback_checksum,requested_by_person_id,requested_at,status,started_at,completed_at,active_target_guard_key,updated_by_person_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -303,7 +307,12 @@ export class MySqlConfigurationPromotionRepository {
     return withTransaction(this.pool,async c=>{
       const [rows]=await c.execute<RunRow[]>('SELECT * FROM configuration_promotion_runs WHERE tenant_id=? AND id=? FOR UPDATE',[t,id]);
       if(!rows[0])throw new Error('Configuration Promotion Run not found in tenant.');
-      const next=startConfigurationPromotionRun(mapRun(rows[0]),startedAt);
+      const current=mapRun(rows[0]);
+      const latestTargetBaseline=await this.requireLatestFrozenBaseline(t,current.targetEnvironmentId,c);
+      if (latestTargetBaseline.id !== current.expectedTargetBaselineId) {
+        throw new Error('Target configuration drift detected before promotion start.');
+      }
+      const next=startConfigurationPromotionRun(current,startedAt);
       const [u]=await c.execute<ResultSetHeader>('UPDATE configuration_promotion_runs SET status=?,started_at=?,updated_by_person_id=?,row_version=row_version+1 WHERE tenant_id=? AND id=? AND row_version=?',
         [next.status,new Date(startedAt),audit.actorPersonId??null,t,id,rows[0].row_version]);
       if(u.affectedRows!==1)throw new Error('Concurrent Configuration Promotion start detected.');
@@ -364,6 +373,15 @@ export class MySqlConfigurationPromotionRepository {
         c.execute<ConflictRow[]>('SELECT * FROM configuration_promotion_conflicts WHERE tenant_id=? AND promotion_run_id=? ORDER BY detected_at,id',[t,id]),
         resultingBaselineId?this.requireBaseline(t,resultingBaselineId,c):Promise.resolve(undefined)
       ]);
+      if (resultingBaseline && current.startedAt) {
+        const [driftRows]=await c.execute<RowDataPacket[]>(
+          'SELECT id FROM configuration_baselines WHERE tenant_id=? AND environment_id=? AND status IN (\'FROZEN\',\'SUPERSEDED\') AND frozen_at>? AND id<>? LIMIT 1',
+          [t,current.targetEnvironmentId,new Date(current.startedAt),resultingBaseline.id]
+        );
+        if (driftRows.length>0) {
+          throw new Error('Target configuration drift detected during promotion execution.');
+        }
+      }
       const next=completeConfigurationPromotionRun(current,itemRows[0].map(mapChangeItem),resultRows[0].map(mapResult),conflictRows[0].map(mapConflict),resultingBaseline,completedAt);
       const [u]=await c.execute<ResultSetHeader>('UPDATE configuration_promotion_runs SET status=?,resulting_target_baseline_id=?,completed_at=?,active_target_guard_key=NULL,updated_by_person_id=?,row_version=row_version+1 WHERE tenant_id=? AND id=? AND row_version=?',
         [next.status,next.resultingTargetBaselineId??null,new Date(completedAt),audit.actorPersonId??null,t,id,runRows[0].row_version]);
@@ -383,6 +401,15 @@ export class MySqlConfigurationPromotionRepository {
   async getBaseline(t:TenantId,id:ConfigurationBaseline['id']){return this.requireBaseline(t,id).catch(()=>undefined);}
   async getChangeSet(t:TenantId,id:ConfigurationChangeSet['id']){return this.requireChangeSet(t,id).catch(()=>undefined);}
 
+  private async requireLatestFrozenBaseline(t:TenantId,environmentId:ConfigurationEnvironment['id'],c?:PoolConnection){
+    const q=c??this.pool;
+    const [r]=await q.execute<BaselineRow[]>(
+      'SELECT * FROM configuration_baselines WHERE tenant_id=? AND environment_id=? AND status IN (\'FROZEN\',\'SUPERSEDED\') ORDER BY frozen_at DESC,id DESC LIMIT 1',
+      [t,environmentId]
+    );
+    if(!r[0])throw new Error('Target Environment has no frozen Configuration Baseline.');
+    return mapBaseline(r[0]);
+  }
   private async requireEnvironment(t:TenantId,id:ConfigurationEnvironment['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<EnvironmentRow[]>('SELECT * FROM configuration_environments WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Configuration Environment not found in tenant.');return mapEnvironment(r[0]);}
   private async requireBaseline(t:TenantId,id:ConfigurationBaseline['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<BaselineRow[]>('SELECT * FROM configuration_baselines WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Configuration Baseline not found in tenant.');return mapBaseline(r[0]);}
   private async requireChangeSet(t:TenantId,id:ConfigurationChangeSet['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<ChangeSetRow[]>('SELECT * FROM configuration_change_sets WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Configuration Change Set not found in tenant.');return mapChangeSet(r[0]);}

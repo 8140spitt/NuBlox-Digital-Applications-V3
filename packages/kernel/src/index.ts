@@ -19,6 +19,8 @@ export * from './migration.js';
 export * from './migration-factories.js';
 export * from './extension.js';
 export * from './extension-factories.js';
+export * from './configuration-promotion.js';
+export * from './configuration-promotion-factories.js';
 export * from './change.js';
 export * from './change-factories.js';
 export * from './information.js';

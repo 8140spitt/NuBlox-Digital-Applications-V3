@@ -33,6 +33,7 @@
     if (pathname.startsWith('/app/records-retention')) return 'Records Retention';
     if (pathname.startsWith('/app/supplier-sourcing')) return 'Supplier Sourcing';
     if (pathname.startsWith('/app/manufacturing')) return 'Manufacturing';
+    if (pathname.startsWith('/app/service-delivery')) return 'Service Delivery';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
@@ -179,6 +180,10 @@
           <a class:active={isActive('/app/manufacturing')} href="/app/manufacturing" onclick={closeNavigation}>
             <span class="nav-symbol">MF</span>
             <span>Manufacturing</span>
+          </a>
+          <a class:active={isActive('/app/service-delivery')} href="/app/service-delivery" onclick={closeNavigation}>
+            <span class="nav-symbol">SD</span>
+            <span>Service delivery</span>
           </a>
         </section>
       </nav>

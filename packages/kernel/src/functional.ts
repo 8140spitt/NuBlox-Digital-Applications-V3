@@ -30,7 +30,7 @@ export interface FunctionDefinition {
   id: FunctionId;
   code: string;
   name: string;
-  functionFamily: FunctionFamily;
+  functionFamily?: FunctionFamily;
   industrySolutionId?: string;
   parentFunctionId?: FunctionId;
   description?: string;

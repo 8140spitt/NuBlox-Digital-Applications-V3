@@ -425,7 +425,7 @@ export class MySqlThingAdministrationCommandService {
       await withTransaction(this.pool,async connection=>{
         const thing=await this.requireThing(connection,tenantId,required(input.thingId,'Thing'));
         if(!thing.type_definition_id){
-          throw new ThingAdministrationCommandError('Legacy canonical object has no metadata Type Definition.','INVALID_INPUT');
+          throw new ThingAdministrationCommandError('Canonical object has no governed Type binding.','INVALID_INPUT');
         }
         await this.writeThingFieldValue(
           connection,tenantId,actorPersonId,thing.id,thing.type_definition_id,
@@ -567,14 +567,21 @@ export class MySqlThingAdministrationCommandService {
     try{
       await withTransaction(this.pool,async connection=>{
         const [rows]=await connection.execute<(RowDataPacket&{id:string;relationship_type_definition_id:string|null})[]>(
-          `SELECT id,relationship_type_definition_id FROM canonical_relationships
-            WHERE tenant_id=? AND id=? AND status='ACTIVE'`,
+          `SELECT cr.id,
+                  COALESCE(cr.relationship_type_definition_id,nrb.relationship_type_definition_id)
+                    AS relationship_type_definition_id
+             FROM canonical_relationships cr
+             LEFT JOIN metadata_native_relationship_bindings nrb
+               ON nrb.tenant_id=cr.tenant_id
+              AND nrb.native_relationship_type=cr.relationship_type
+              AND nrb.status='ACTIVE'
+            WHERE cr.tenant_id=? AND cr.id=? AND cr.status='ACTIVE'`,
           [tenantId,required(input.relationshipId,'Relationship')]
         );
         const relationship=rows[0];
         if(!relationship) throw new ThingAdministrationCommandError('Relationship was not found.','NOT_FOUND');
         if(!relationship.relationship_type_definition_id){
-          throw new ThingAdministrationCommandError('Legacy relationship has no metadata Relationship Type.','INVALID_INPUT');
+          throw new ThingAdministrationCommandError('Canonical relationship has no governed Relationship Type binding.','INVALID_INPUT');
         }
         await this.writeRelationshipFieldValue(
           connection,tenantId,actorPersonId,relationship.id,relationship.relationship_type_definition_id,
@@ -716,10 +723,17 @@ export class MySqlThingAdministrationCommandService {
       case 'REFERENCE': {
         const id=required(String(value),'Reference Thing');
         const [rows]=await connection.execute<ReferenceRow[]>(
-          `SELECT co.id,co.type_definition_id,mt.object_family,co.status
+          `SELECT co.id,
+                  COALESCE(co.type_definition_id,ntb.type_definition_id) AS type_definition_id,
+                  mt.object_family,co.status
              FROM canonical_objects co
+             LEFT JOIN metadata_native_type_bindings ntb
+               ON ntb.tenant_id=co.tenant_id
+              AND ntb.native_object_type=co.object_type
+              AND ntb.status='ACTIVE'
              LEFT JOIN metadata_type_definitions mt
-               ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
+               ON mt.tenant_id=co.tenant_id
+              AND mt.id=COALESCE(co.type_definition_id,ntb.type_definition_id)
             WHERE co.tenant_id=? AND co.id=?`,[tenantId,id]
         );
         const reference=rows[0];
@@ -758,8 +772,15 @@ export class MySqlThingAdministrationCommandService {
     connection:PoolConnection,tenantId:TenantId,id:string
   ):Promise<ThingRow>{
     const [rows]=await connection.execute<ThingRow[]>(
-      `SELECT id,tenant_id,object_type,type_definition_id,stable_key,display_name,status,created_at
-         FROM canonical_objects WHERE tenant_id=? AND id=?`,[tenantId,id]
+      `SELECT co.id,co.tenant_id,co.object_type,
+              COALESCE(co.type_definition_id,ntb.type_definition_id) AS type_definition_id,
+              co.stable_key,co.display_name,co.status,co.created_at
+         FROM canonical_objects co
+         LEFT JOIN metadata_native_type_bindings ntb
+           ON ntb.tenant_id=co.tenant_id
+          AND ntb.native_object_type=co.object_type
+          AND ntb.status='ACTIVE'
+        WHERE co.tenant_id=? AND co.id=?`,[tenantId,id]
     );
     if(!rows[0]) throw new ThingAdministrationCommandError('Thing was not found.','NOT_FOUND');
     return rows[0];

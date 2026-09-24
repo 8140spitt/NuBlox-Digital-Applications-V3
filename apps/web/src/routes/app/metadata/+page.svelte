@@ -3,8 +3,40 @@
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
+  let selectedThingTypeId = $state('');
+  let selectedRelationshipTypeId = $state('');
+
+  const things = $derived(data.things ?? []);
+  const relationshipTypes = $derived(data.relationshipTypes ?? []);
+  const activeTypes = $derived(data.projection?.types.filter((item) => item.status === 'ACTIVE') ?? []);
+  const selectedThingFields = $derived(
+    data.projection?.effectiveTypeAttributes.filter(
+      (item) => item.requestedTypeDefinitionId === selectedThingTypeId && item.status === 'ACTIVE'
+    ) ?? []
+  );
+  const selectedRelationshipType = $derived(
+    relationshipTypes.find((item) => item.id === selectedRelationshipTypeId)
+  );
+
   function label(value: string) {
     return value.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  function attribute(attributeDefinitionId: string) {
+    return data.projection?.attributes.find((item) => item.id === attributeDefinitionId);
+  }
+  function enumeration(enumerationDefinitionId: string | undefined) {
+    return enumerationDefinitionId
+      ? data.projection?.enumerations.find((item) => item.id === enumerationDefinitionId)
+      : undefined;
+  }
+  function renderValue(value: unknown): string {
+    if (value === null || value === undefined) return '—';
+    if (typeof value === 'object') {
+      const maybe = value as { label?: string; id?: string };
+      if (maybe.label) return maybe.label;
+      return JSON.stringify(value);
+    }
+    return String(value);
   }
 </script>
 
@@ -34,9 +66,9 @@
       <p class="app-eyebrow">Shared control plane</p>
       <h1>Metadata Governance</h1>
       <p class="workspace-lede">
-        Define governed business types, reusable attributes, controlled enumerations and constraints
-        without fragmenting the native NuBlox schema. Type inheritance resolves effective attributes
-        while strongly typed native aggregates remain authoritative.
+        Define business types once, compose their fields and relationships, then create real governed
+        Things from those definitions. Type inheritance, typed values and relationship rules execute
+        against the shared canonical object graph rather than spawning another application silo.
       </p>
     </div>
   </section>
@@ -66,10 +98,10 @@
   {/if}
 
   <section class="architecture-metrics" aria-label="Metadata governance totals">
-    <article><span>Types</span><strong>{data.projection.types.length}</strong><p>Versioned governed business/domain types</p></article>
-    <article><span>Attributes</span><strong>{data.projection.attributes.length}</strong><p>Reusable controlled attribute definitions</p></article>
-    <article><span>Constraints</span><strong>{data.projection.constraints.length}</strong><p>Reusable validation constraints</p></article>
-    <article><span>Enumerations</span><strong>{data.projection.enumerations.length}</strong><p>Controlled value sets</p></article>
+    <article><span>Types</span><strong>{data.projection.types.length}</strong><p>Governed Thing definitions</p></article>
+    <article><span>Attributes</span><strong>{data.projection.attributes.length}</strong><p>Reusable typed field definitions</p></article>
+    <article><span>Relationship types</span><strong>{relationshipTypes.length}</strong><p>Typed graph connections</p></article>
+    <article><span>Things</span><strong>{things.length}</strong><p>Runtime business objects</p></article>
   </section>
 
   {#if data.canManage}
@@ -279,6 +311,296 @@
       </article>
     </section>
   {/if}
+
+  <section class="workspace-panel">
+    <div class="panel-heading">
+      <div>
+        <p class="app-eyebrow">Runtime object platform</p>
+        <h2>Definition → Thing → Relationship</h2>
+      </div>
+      <span>{things.length} Things</span>
+    </div>
+    <p>
+      Metadata is executable here. A Type defines the legal shape of a Thing; Relationship Types define
+      the legal graph between Things. Required fields and relationship cardinality are enforced by the
+      same runtime used by the application.
+    </p>
+  </section>
+
+  {#if data.canManage}
+    <section class="access-command-grid">
+      <article>
+        <header><span>08</span><div><h2>Create relationship type</h2><p>Define a governed connection between two Thing types.</p></div></header>
+        <form method="POST" action="?/createRelationshipType" class="admin-form access-form">
+          <label><span>Code</span><input name="code" required maxlength="120" placeholder="CUSTOMER_HAS_OPPORTUNITY" /></label>
+          <label><span>Name</span><input name="name" required maxlength="255" placeholder="Customer has Opportunity" /></label>
+          <label>
+            <span>From type</span>
+            <select name="fromTypeDefinitionId" required>
+              <option value="">Select type</option>
+              {#each activeTypes as item}<option value={item.id}>{item.code} — {item.name}</option>{/each}
+            </select>
+          </label>
+          <label>
+            <span>To type</span>
+            <select name="toTypeDefinitionId" required>
+              <option value="">Select type</option>
+              {#each activeTypes as item}<option value={item.id}>{item.code} — {item.name}</option>{/each}
+            </select>
+          </label>
+          <label>
+            <span>From cardinality</span>
+            <select name="fromCardinality" required>
+              <option value="MANY">Many source Things allowed</option>
+              <option value="ONE">One source Thing per target</option>
+            </select>
+          </label>
+          <label>
+            <span>To cardinality</span>
+            <select name="toCardinality" required>
+              <option value="MANY">Many target Things allowed</option>
+              <option value="ONE">One target Thing per source</option>
+            </select>
+          </label>
+          <label><span>Inverse name</span><input name="inverseName" placeholder="Opportunity belongs to Customer" /></label>
+          <label><span>Version</span><input name="version" type="number" min="1" value="1" required /></label>
+          <label class="wide-field"><span>Description</span><textarea name="description" rows="3"></textarea></label>
+          <div class="admin-form-split">
+            <label><span>Effective from</span><input name="effectiveFrom" type="datetime-local" /></label>
+            <label><span>Effective to</span><input name="effectiveTo" type="datetime-local" /></label>
+          </div>
+          <button type="submit">Create Relationship Type <span>→</span></button>
+        </form>
+      </article>
+
+      <article>
+        <header><span>09</span><div><h2>Add relationship field</h2><p>Give the relationship itself governed business data.</p></div></header>
+        <form method="POST" action="?/assignRelationshipAttribute" class="admin-form access-form">
+          <label>
+            <span>Relationship type</span>
+            <select name="relationshipTypeDefinitionId" required>
+              <option value="">Select relationship</option>
+              {#each relationshipTypes.filter((item) => item.status === 'ACTIVE') as item}
+                <option value={item.id}>{item.code}</option>
+              {/each}
+            </select>
+          </label>
+          <label>
+            <span>Attribute</span>
+            <select name="attributeDefinitionId" required>
+              <option value="">Select attribute</option>
+              {#each data.projection.attributes.filter((item) => item.status === 'ACTIVE') as item}
+                <option value={item.id}>{item.code} — {item.name}</option>
+              {/each}
+            </select>
+          </label>
+          <label><span>Sequence</span><input name="sequence" type="number" min="0" value="10" required /></label>
+          <label>
+            <span>Cardinality</span>
+            <select name="cardinality" required>
+              <option value="SINGLE">Single</option>
+              <option value="MULTIPLE">Multiple</option>
+            </select>
+          </label>
+          <label>
+            <span>Required</span>
+            <select name="required">
+              <option value="false">Optional</option>
+              <option value="true">Required</option>
+            </select>
+          </label>
+          <label><span>Local label</span><input name="localLabel" /></label>
+          <label class="wide-field"><span>Default value (JSON)</span><textarea name="defaultValue" rows="2"></textarea></label>
+          <button type="submit">Assign Relationship Field <span>→</span></button>
+        </form>
+      </article>
+
+      <article>
+        <header><span>10</span><div><h2>Create Thing</h2><p>Instantiate a governed business object from its Type.</p></div></header>
+        <form method="POST" action="?/createThing" class="admin-form access-form">
+          <label>
+            <span>Type</span>
+            <select name="typeDefinitionId" bind:value={selectedThingTypeId} required>
+              <option value="">Select type</option>
+              {#each activeTypes as item}<option value={item.id}>{item.code} — {item.name}</option>{/each}
+            </select>
+          </label>
+          <label><span>Stable key</span><input name="stableKey" required placeholder="CUST-001" /></label>
+          <label><span>Display name</span><input name="displayName" placeholder="Acme Developments" /></label>
+
+          {#each selectedThingFields as field}
+            {@const definition = attribute(field.attributeDefinitionId)}
+            {#if definition}
+              <label class:wide-field={definition.dataType === 'JSON'}>
+                <span>{field.localLabel ?? field.attributeName}{field.required ? ' *' : ''}</span>
+                {#if definition.dataType === 'BOOLEAN'}
+                  <select name={`field:${field.id}:${definition.dataType}:0`} required={field.required}>
+                    <option value="">Select</option><option value="true">True</option><option value="false">False</option>
+                  </select>
+                {:else if definition.dataType === 'ENUMERATION'}
+                  {@const values = enumeration(definition.enumerationDefinitionId)?.values ?? []}
+                  <select name={`field:${field.id}:${definition.dataType}:0`} required={field.required}>
+                    <option value="">Select</option>
+                    {#each values.filter((item) => item.status === 'ACTIVE') as option}
+                      <option value={option.id}>{option.label}</option>
+                    {/each}
+                  </select>
+                {:else if definition.dataType === 'REFERENCE'}
+                  <select name={`field:${field.id}:${definition.dataType}:0`} required={field.required}>
+                    <option value="">Select Thing</option>
+                    {#each things.filter((item) => !definition.referenceObjectFamily || item.objectFamily === definition.referenceObjectFamily) as item}
+                      <option value={item.id}>{item.typeCode} · {item.displayName}</option>
+                    {/each}
+                  </select>
+                {:else if definition.dataType === 'JSON'}
+                  <textarea name={`field:${field.id}:${definition.dataType}:0`} rows="3" required={field.required} placeholder="{}"></textarea>
+                {:else}
+                  <input
+                    name={`field:${field.id}:${definition.dataType}:0`}
+                    type={definition.dataType === 'INTEGER' || definition.dataType === 'DECIMAL' ? 'number' : definition.dataType === 'DATE' ? 'date' : definition.dataType === 'DATETIME' ? 'datetime-local' : 'text'}
+                    step={definition.dataType === 'DECIMAL' ? 'any' : undefined}
+                    required={field.required}
+                  />
+                {/if}
+              </label>
+            {/if}
+          {/each}
+          <button type="submit">Create Thing <span>→</span></button>
+        </form>
+      </article>
+
+      <article>
+        <header><span>11</span><div><h2>Relate Things</h2><p>Create a typed, effective relationship in the canonical graph.</p></div></header>
+        <form method="POST" action="?/relateThings" class="admin-form access-form">
+          <label>
+            <span>Relationship type</span>
+            <select name="relationshipTypeDefinitionId" bind:value={selectedRelationshipTypeId} required>
+              <option value="">Select relationship</option>
+              {#each relationshipTypes.filter((item) => item.status === 'ACTIVE') as item}
+                <option value={item.id}>{item.code} — {item.name}</option>
+              {/each}
+            </select>
+          </label>
+          <label>
+            <span>From Thing</span>
+            <select name="fromThingId" required>
+              <option value="">Select Thing</option>
+              {#each things as item}
+                <option value={item.id}>{item.typeCode} · {item.displayName}</option>
+              {/each}
+            </select>
+          </label>
+          <label>
+            <span>To Thing</span>
+            <select name="toThingId" required>
+              <option value="">Select Thing</option>
+              {#each things as item}
+                <option value={item.id}>{item.typeCode} · {item.displayName}</option>
+              {/each}
+            </select>
+          </label>
+          <div class="admin-form-split">
+            <label><span>Effective from</span><input name="effectiveFrom" type="datetime-local" /></label>
+            <label><span>Effective to</span><input name="effectiveTo" type="datetime-local" /></label>
+          </div>
+
+          {#if selectedRelationshipType}
+            {#each selectedRelationshipType.fields.filter((item) => item.status === 'ACTIVE') as field}
+              <label class:wide-field={field.dataType === 'JSON'}>
+                <span>{field.name}{field.required ? ' *' : ''}</span>
+                {#if field.dataType === 'BOOLEAN'}
+                  <select name={`relationshipField:${field.assignmentId}:${field.dataType}:0`} required={field.required}>
+                    <option value="">Select</option><option value="true">True</option><option value="false">False</option>
+                  </select>
+                {:else if field.dataType === 'ENUMERATION'}
+                  {@const values = enumeration(field.enumerationDefinitionId)?.values ?? []}
+                  <select name={`relationshipField:${field.assignmentId}:${field.dataType}:0`} required={field.required}>
+                    <option value="">Select</option>
+                    {#each values.filter((item) => item.status === 'ACTIVE') as option}
+                      <option value={option.id}>{option.label}</option>
+                    {/each}
+                  </select>
+                {:else if field.dataType === 'REFERENCE'}
+                  <select name={`relationshipField:${field.assignmentId}:${field.dataType}:0`} required={field.required}>
+                    <option value="">Select Thing</option>
+                    {#each things.filter((item) => !field.referenceObjectFamily || item.objectFamily === field.referenceObjectFamily) as item}
+                      <option value={item.id}>{item.typeCode} · {item.displayName}</option>
+                    {/each}
+                  </select>
+                {:else if field.dataType === 'JSON'}
+                  <textarea name={`relationshipField:${field.assignmentId}:${field.dataType}:0`} rows="3" required={field.required} placeholder="{}"></textarea>
+                {:else}
+                  <input
+                    name={`relationshipField:${field.assignmentId}:${field.dataType}:0`}
+                    type={field.dataType === 'INTEGER' || field.dataType === 'DECIMAL' ? 'number' : field.dataType === 'DATE' ? 'date' : field.dataType === 'DATETIME' ? 'datetime-local' : 'text'}
+                    step={field.dataType === 'DECIMAL' ? 'any' : undefined}
+                    required={field.required}
+                  />
+                {/if}
+              </label>
+            {/each}
+          {/if}
+          <button type="submit">Create Relationship <span>→</span></button>
+        </form>
+      </article>
+    </section>
+  {/if}
+
+  <section class="workspace-panel">
+    <div class="panel-heading">
+      <div><p class="app-eyebrow">Runtime graph</p><h2>Governed Things</h2></div>
+      <span>{things.length}</span>
+    </div>
+    {#if things.length === 0}
+      <p class="control-empty">No metadata-defined Things exist yet. Create a Type, assign its fields, then instantiate the first Thing.</p>
+    {:else}
+      <div class="control-record-list">
+        {#each things as thing}
+          <article>
+            <header><span>{thing.typeCode}</span><strong>{thing.status}</strong></header>
+            <h3>{thing.displayName}</h3>
+            <p>{thing.stableKey}{thing.objectFamily ? ` · ${thing.objectFamily}` : ''}</p>
+            {#if thing.fields.length > 0}
+              <div class="governance-capability-grid">
+                {#each thing.fields as field}
+                  <div><strong>{field.name}</strong><p>{renderValue(field.value)}</p></div>
+                {/each}
+              </div>
+            {/if}
+            {#if thing.relationships.length > 0}
+              <footer>
+                <span>{thing.relationships.length} relationships</span>
+                <span>{thing.relationships.map((item) => `${item.name}: ${item.otherThingLabel}`).join(' · ')}</span>
+              </footer>
+            {:else}
+              <footer><span>No relationships yet</span></footer>
+            {/if}
+          </article>
+        {/each}
+      </div>
+    {/if}
+  </section>
+
+  <section class="workspace-panel">
+    <div class="panel-heading">
+      <div><p class="app-eyebrow">Relationship catalogue</p><h2>Typed relationship definitions</h2></div>
+      <span>{relationshipTypes.length}</span>
+    </div>
+    {#if relationshipTypes.length === 0}
+      <p class="control-empty">No relationship types have been defined.</p>
+    {:else}
+      <div class="access-assignment-list">
+        {#each relationshipTypes as item}
+          <article>
+            <div><span>Relationship</span><strong>{item.code}</strong></div>
+            <div><span>From</span><strong>{item.fromTypeCode} · {item.fromCardinality}</strong></div>
+            <div><span>To</span><strong>{item.toTypeCode} · {item.toCardinality}</strong></div>
+            <div><span>Relationship fields</span><strong>{item.fields.length}</strong></div>
+          </article>
+        {/each}
+      </div>
+    {/if}
+  </section>
 
   <div class="control-workspace-grid">
     <section class="workspace-panel">

@@ -467,7 +467,7 @@ export class MySqlThingAdministrationCommandService {
        typed.booleanValue,typed.dateValue,typed.datetimeValue,typed.enumerationValueId,
        typed.referenceObjectId,typed.jsonValue,actorPersonId,actorPersonId]
     );
-    await this.audit(connection,tenantId,'THING_FIELD_VALUE',`${thingId}:${assignmentId}:${slot}`,'SET',actorPersonId,{
+    await this.audit(connection,tenantId,'THING_FIELD_VALUE',thingId,'SET',actorPersonId,{
       thingId,assignmentId,sequence:slot,dataType:assignment.data_type
     });
   }
@@ -502,7 +502,7 @@ export class MySqlThingAdministrationCommandService {
        typed.booleanValue,typed.dateValue,typed.datetimeValue,typed.enumerationValueId,
        typed.referenceObjectId,typed.jsonValue,actorPersonId,actorPersonId]
     );
-    await this.audit(connection,tenantId,'RELATIONSHIP_FIELD_VALUE',`${relationshipId}:${assignmentId}:${slot}`,'SET',actorPersonId,{
+    await this.audit(connection,tenantId,'RELATIONSHIP_FIELD_VALUE',relationshipId,'SET',actorPersonId,{
       relationshipId,assignmentId,sequence:slot,dataType:assignment.data_type
     });
   }

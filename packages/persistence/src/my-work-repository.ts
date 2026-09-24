@@ -53,6 +53,16 @@ interface StrategyMyWorkRow extends RowDataPacket {
   status: string;
 }
 
+interface SiteProductionMyWorkRow extends RowDataPacket {
+  source_id: string;
+  title: string;
+  work_type: 'WORK_PACKAGE' | 'SITE_ISSUE';
+  subject_object_id: string;
+  due_at: Date | null;
+  status: string;
+  priority: 'LOW' | 'NORMAL' | 'HIGH' | 'CRITICAL';
+}
+
 interface AccessRequestMyWorkRow extends RowDataPacket {
   request_id: string;
   requestor_name: string;
@@ -121,7 +131,8 @@ export class MySqlMyWorkRepository {
       recipientActions,
       competenceExpiries,
       accessManageEvaluation,
-      f01ReadEvaluation
+      f01ReadEvaluation,
+      siteProductionReadEvaluation
     ] = await Promise.all([
       this.work.listMyWork(tenantId, personId, evaluatedAt),
       this.listDeliverableActions(tenantId, personId, at),
@@ -140,6 +151,13 @@ export class MySqlMyWorkRepository {
         PLATFORM_PERMISSION_KEYS.F01_READ,
         { scopeType: 'TENANT' },
         evaluatedAt
+      ),
+      this.access.evaluatePermission(
+        tenantId,
+        personId,
+        PLATFORM_PERMISSION_KEYS.SITE_PRODUCTION_READ,
+        { scopeType: 'TENANT' },
+        evaluatedAt
       )
     ]);
 
@@ -148,6 +166,9 @@ export class MySqlMyWorkRepository {
       : [];
     const strategyWork = f01ReadEvaluation.allowed
       ? await this.listStrategyOwnedWork(tenantId, personId)
+      : [];
+    const siteProductionWork = siteProductionReadEvaluation.allowed
+      ? await this.listSiteProductionWork(tenantId, personId)
       : [];
 
     const result = new Map<string, NativeMyWorkProjectionItem>();
@@ -270,6 +291,32 @@ export class MySqlMyWorkRepository {
         isOverdue: Boolean(dueAt && Date.parse(dueAt) < at.getTime() && row.status !== 'COMPLETE'),
         reason: `F01 ${row.work_type.replaceAll('_', ' ').toLowerCase()} owned by you · ${row.status}.`,
         href: '/app/functions/F01'
+      });
+    }
+
+    for (const row of siteProductionWork) {
+      const dueAt = row.due_at?.toISOString();
+      const key = `FUNCTION_WORK:SITE:${row.work_type}:${row.source_id}`;
+      result.set(key, {
+        key,
+        tenantId,
+        personId,
+        kind: 'FUNCTION_WORK',
+        title: row.title,
+        sourceId: row.source_id,
+        subjectObjectId: row.subject_object_id as NonNullable<NativeMyWorkProjectionItem['subjectObjectId']>,
+        responsibilityRole: row.work_type === 'WORK_PACKAGE' ? 'ACCOUNTABLE' : 'RESPONSIBLE',
+        priority:
+          row.priority === 'CRITICAL'
+            ? 'URGENT'
+            : row.priority,
+        ...(dueAt ? { dueAt } : {}),
+        isOverdue: Boolean(dueAt && Date.parse(dueAt) < at.getTime()),
+        reason:
+          row.work_type === 'WORK_PACKAGE'
+            ? `Construction Work Package managed by you · ${row.status}.`
+            : `Site issue assigned to you · ${row.status}.`,
+        href: '/app/site-production'
       });
     }
 
@@ -502,6 +549,43 @@ export class MySqlMyWorkRepository {
         tenantId, personId,
         tenantId, personId
       ]
+    );
+    return rows;
+  }
+
+  private async listSiteProductionWork(
+    tenantId: TenantId,
+    personId: PersonId
+  ): Promise<SiteProductionMyWorkRow[]> {
+    const [rows] = await this.pool.execute<SiteProductionMyWorkRow[]>(
+      `SELECT swp.id AS source_id,
+              CONCAT(swp.code, ' · ', swp.title) AS title,
+              'WORK_PACKAGE' AS work_type,
+              swp.canonical_object_id AS subject_object_id,
+              swp.planned_end AS due_at,
+              swp.status,
+              'NORMAL' AS priority
+         FROM site_work_packages swp
+        WHERE swp.tenant_id = ?
+          AND swp.manager_person_id = ?
+          AND swp.status NOT IN ('COMPLETE','CANCELLED')
+       UNION ALL
+       SELECT si.id,
+              CONCAT(si.issue_type, ' · ', si.title),
+              'SITE_ISSUE',
+              swp.canonical_object_id,
+              si.due_at,
+              si.status,
+              si.priority
+         FROM site_issues si
+         JOIN site_work_packages swp
+           ON swp.tenant_id = si.tenant_id
+          AND swp.id = si.work_package_id
+        WHERE si.tenant_id = ?
+          AND si.assigned_to_person_id = ?
+          AND si.status IN ('OPEN','IN_PROGRESS')
+       ORDER BY due_at IS NULL, due_at, title`,
+      [tenantId, personId, tenantId, personId]
     );
     return rows;
   }

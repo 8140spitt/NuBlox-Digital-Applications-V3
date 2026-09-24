@@ -50,6 +50,8 @@ import {
   MySqlManufacturingReadRepository,
   MySqlServiceDeliveryCommandService,
   MySqlServiceDeliveryReadRepository,
+  MySqlConstructionSiteProductionCommandService,
+  MySqlConstructionSiteProductionReadRepository,
   MySqlSupplierSourcingCommandService,
   MySqlSupplierSourcingReadRepository
 } from '@nublox/persistence';
@@ -105,6 +107,8 @@ let manufacturingCommandServiceInstance: MySqlManufacturingCommandService | unde
 let manufacturingReadRepositoryInstance: MySqlManufacturingReadRepository | undefined;
 let serviceDeliveryCommandServiceInstance: MySqlServiceDeliveryCommandService | undefined;
 let serviceDeliveryReadRepositoryInstance: MySqlServiceDeliveryReadRepository | undefined;
+let constructionSiteProductionCommandServiceInstance: MySqlConstructionSiteProductionCommandService | undefined;
+let constructionSiteProductionReadRepositoryInstance: MySqlConstructionSiteProductionReadRepository | undefined;
 let supplierSourcingCommandServiceInstance: MySqlSupplierSourcingCommandService | undefined;
 let supplierSourcingReadRepositoryInstance: MySqlSupplierSourcingReadRepository | undefined;
 
@@ -538,4 +542,18 @@ export function getServiceDeliveryReadRepository(): MySqlServiceDeliveryReadRepo
     serviceDeliveryReadRepositoryInstance = new MySqlServiceDeliveryReadRepository(getDatabasePool());
   }
   return serviceDeliveryReadRepositoryInstance;
+}
+
+export function getConstructionSiteProductionCommandService(): MySqlConstructionSiteProductionCommandService {
+  if (!constructionSiteProductionCommandServiceInstance) {
+    constructionSiteProductionCommandServiceInstance = new MySqlConstructionSiteProductionCommandService(getDatabasePool());
+  }
+  return constructionSiteProductionCommandServiceInstance;
+}
+
+export function getConstructionSiteProductionReadRepository(): MySqlConstructionSiteProductionReadRepository {
+  if (!constructionSiteProductionReadRepositoryInstance) {
+    constructionSiteProductionReadRepositoryInstance = new MySqlConstructionSiteProductionReadRepository(getDatabasePool());
+  }
+  return constructionSiteProductionReadRepositoryInstance;
 }

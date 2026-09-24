@@ -24,10 +24,16 @@ import type {
 import type { RecordStatus } from './model.js';
 import type { WorkResponsibilityRole } from './work.js';
 
+export type FunctionFamily = 'CORE_BUSINESS' | 'CBE' | 'CUSTOM';
+
 export interface FunctionDefinition {
   id: FunctionId;
   code: string;
   name: string;
+  functionFamily: FunctionFamily;
+  industrySolutionId?: string;
+  parentFunctionId?: FunctionId;
+  description?: string;
   status: RecordStatus;
 }
 

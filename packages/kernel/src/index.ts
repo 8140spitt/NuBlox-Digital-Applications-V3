@@ -25,6 +25,8 @@ export * from './records-retention.js';
 export * from './records-retention-factories.js';
 export * from './supplier-sourcing.js';
 export * from './supplier-sourcing-factories.js';
+export * from './manufacturing.js';
+export * from './manufacturing-factories.js';
 export * from './change.js';
 export * from './change-factories.js';
 export * from './information.js';

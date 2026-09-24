@@ -60,6 +60,7 @@ import {
   MySqlHcmReadRepository,
   MySqlThingAdministrationCommandService,
   MySqlThingAdministrationReadRepository,
+  MySqlEnterpriseVocabularyProvisioningService,
   MySqlUniversalFunctionReadRepository
 } from '@nublox/persistence';
 
@@ -124,6 +125,7 @@ let hcmCommandServiceInstance: MySqlHcmCommandService | undefined;
 let hcmReadRepositoryInstance: MySqlHcmReadRepository | undefined;
 let thingAdministrationCommandServiceInstance: MySqlThingAdministrationCommandService | undefined;
 let thingAdministrationReadRepositoryInstance: MySqlThingAdministrationReadRepository | undefined;
+let enterpriseVocabularyProvisioningServiceInstance: MySqlEnterpriseVocabularyProvisioningService | undefined;
 let universalFunctionReadRepositoryInstance: MySqlUniversalFunctionReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
@@ -621,4 +623,12 @@ export function getUniversalFunctionReadRepository(): MySqlUniversalFunctionRead
     universalFunctionReadRepositoryInstance = new MySqlUniversalFunctionReadRepository(getDatabasePool());
   }
   return universalFunctionReadRepositoryInstance;
+}
+
+export function getEnterpriseVocabularyProvisioningService(): MySqlEnterpriseVocabularyProvisioningService {
+  if (!enterpriseVocabularyProvisioningServiceInstance) {
+    enterpriseVocabularyProvisioningServiceInstance =
+      new MySqlEnterpriseVocabularyProvisioningService(getDatabasePool());
+  }
+  return enterpriseVocabularyProvisioningServiceInstance;
 }

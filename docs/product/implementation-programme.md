@@ -28,7 +28,7 @@ User-executable truth is governed by:
 - [Canonical Native Tool Implementation Gap Register](../architecture/canonical-native-tool-implementation-gap-register.csv); and
 - [Canonical Native Tool Implementation Waves](canonical-native-tool-implementation-waves.md).
 
-Wave 0 product-UI activation is active. The tenant shell, secure application session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration, competence administration, a permission-gated Lifecycle/Decision/Evidence read workspace, and a governed Information/Revision/Representation workspace are implemented. Information release is bound to the exact canonical object/revision and requires an effective Authority-backed Decision. Managed content storage, control mutation workflows and Deliverable/Issue/Acceptance are still required before the shared platform is end-to-end user-operable. Change/Configuration/Baseline now has a governed tenant workspace with lifecycle-aware commands from Change assessment through implementation/verification/closure, plus Configuration Item, Baseline and Effectivity control; Change approval and Baseline establishment require effective Authority-backed Decisions. The completed PTC evidence pass has since exposed additional shared-control gaps accepted by ADR-0006, so the relevant shared engines are now correctly treated as partial until P1.8 is implemented.
+Wave 0 product-UI activation is active. The tenant shell, secure application session boundary, HCM-resolved My Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Function-assignment/reporting administration, competence administration, a permission-gated Lifecycle/Decision/Evidence read workspace, and a governed Information/Revision/Representation workspace are implemented. Information release is bound to the exact canonical object/revision and requires an effective Authority-backed Decision. Managed content storage, control mutation workflows and Deliverable/Issue/Acceptance are still required before the shared platform is end-to-end user-operable. Change/Configuration/Baseline now has a governed tenant workspace with lifecycle-aware commands from Change assessment through implementation/verification/closure, plus Configuration Item, Baseline and Effectivity control; Change approval and Baseline establishment require effective Authority-backed Decisions. The completed PTC evidence pass has since exposed additional shared-control gaps accepted by ADR-0006, so the relevant shared engines are now correctly treated as partial until P1.8 is implemented.
 
 ## Phase 1 — Enterprise Kernel
 
@@ -167,21 +167,22 @@ Implement in dependency order:
 
 This work extends NTE-002, NTE-006, NTE-007, NTE-008 and shared portions of NTE-032/NTE-043. It must not introduce parallel domain-specific policy, exchange, migration or retention frameworks.
 
-## Phase 2 — Functional Framework & Deployment — IMPLEMENTED
+## Phase 2 — Functional Framework & HCM Authority — IMPLEMENTED
 
 Implement:
 
-- all 29 Function definitions;
+- all 29 Core Business Function definitions plus universal Function family support;
 - L2 sub-functions;
 - process/activity/task definitions;
 - Function governance versions;
 - Function-to-Job Profile relationships;
 - competence requirements/evidence;
-- Functional Deployment;
-- Deployment Assignment;
+- Position-to-Function assignment with Governance/Delivery purpose;
+- Position Reporting Lines and recursive management scope;
+- contextual assignment where Project/Contract/Site/etc. responsibility requires it;
 - Responsibility Scope;
 - capacity/availability;
-- deployment gates;
+- assignment/competence gates;
 - authority/competence evaluation.
 
 ## Phase 3 — Native Work-Delivery Runtime — IMPLEMENTED
@@ -205,7 +206,7 @@ Implement:
 
 Implement:
 
-- 16 Delivery Domains;
+- 16 CBE-classified Functions / professional domains;
 - 84 Job Profiles;
 - sector classifications;
 - Project/Contract/Package/Site/System/Asset semantics;
@@ -262,7 +263,7 @@ NuBlox is complete when the supported enterprise can:
 
 - govern all required capability;
 - operate all 29 Functions;
-- deploy people/organisations into real contexts;
+- assign occupied Positions to Functions and govern contextual responsibility where real work requires it;
 - allow each supported Job Profile to perform its work natively;
 - create/control all required business objects and work products;
 - preserve exact-version review/Decision/approval/issue/Acceptance;

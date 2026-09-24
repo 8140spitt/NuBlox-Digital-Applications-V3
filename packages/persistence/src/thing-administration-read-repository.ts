@@ -111,14 +111,21 @@ export class MySqlThingAdministrationReadRepository {
   async listThings(tenantId:TenantId,actorPersonId:string):Promise<ThingView[]>{
     await this.requireRead(tenantId,actorPersonId);
     const [rows]=await this.pool.execute<ThingRow[]>(
-      `SELECT co.id,co.object_type,co.type_definition_id,mt.code AS type_code,mt.name AS type_name,
+      `SELECT co.id,co.object_type,
+              COALESCE(co.type_definition_id,ntb.type_definition_id) AS type_definition_id,
+              mt.code AS type_code,mt.name AS type_name,
               mt.object_family,co.stable_key,co.display_name,co.status,co.created_at,
               ols.lifecycle_definition_id,ld.name AS lifecycle_definition_name,
               ols.lifecycle_state_id,ls.code AS lifecycle_state_code,ls.name AS lifecycle_state_name,
               ls.category AS lifecycle_state_category,ols.sequence AS lifecycle_sequence
          FROM canonical_objects co
+         LEFT JOIN metadata_native_type_bindings ntb
+           ON ntb.tenant_id=co.tenant_id
+          AND ntb.native_object_type=co.object_type
+          AND ntb.status='ACTIVE'
          LEFT JOIN metadata_type_definitions mt
-           ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
+           ON mt.tenant_id=co.tenant_id
+          AND mt.id=COALESCE(co.type_definition_id,ntb.type_definition_id)
          LEFT JOIN object_lifecycle_states ols
            ON ols.tenant_id=co.tenant_id AND ols.canonical_object_id=co.id
          LEFT JOIN lifecycle_definitions ld
@@ -127,7 +134,7 @@ export class MySqlThingAdministrationReadRepository {
            ON ls.tenant_id=ols.tenant_id
           AND ls.lifecycle_definition_id=ols.lifecycle_definition_id
           AND ls.id=ols.lifecycle_state_id
-        WHERE co.tenant_id=? AND co.type_definition_id IS NOT NULL
+        WHERE co.tenant_id=? AND COALESCE(co.type_definition_id,ntb.type_definition_id) IS NOT NULL
         ORDER BY mt.code,co.stable_key`,[tenantId]
     );
     const result:ThingView[]=[];
@@ -203,14 +210,21 @@ export class MySqlThingAdministrationReadRepository {
   async getThing(tenantId:TenantId,actorPersonId:string,thingId:string):Promise<ThingView|null>{
     await this.requireRead(tenantId,actorPersonId);
     const [rows]=await this.pool.execute<ThingRow[]>(
-      `SELECT co.id,co.object_type,co.type_definition_id,mt.code AS type_code,mt.name AS type_name,
+      `SELECT co.id,co.object_type,
+              COALESCE(co.type_definition_id,ntb.type_definition_id) AS type_definition_id,
+              mt.code AS type_code,mt.name AS type_name,
               mt.object_family,co.stable_key,co.display_name,co.status,co.created_at,
               ols.lifecycle_definition_id,ld.name AS lifecycle_definition_name,
               ols.lifecycle_state_id,ls.code AS lifecycle_state_code,ls.name AS lifecycle_state_name,
               ls.category AS lifecycle_state_category,ols.sequence AS lifecycle_sequence
          FROM canonical_objects co
+         LEFT JOIN metadata_native_type_bindings ntb
+           ON ntb.tenant_id=co.tenant_id
+          AND ntb.native_object_type=co.object_type
+          AND ntb.status='ACTIVE'
          LEFT JOIN metadata_type_definitions mt
-           ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
+           ON mt.tenant_id=co.tenant_id
+          AND mt.id=COALESCE(co.type_definition_id,ntb.type_definition_id)
          LEFT JOIN object_lifecycle_states ols
            ON ols.tenant_id=co.tenant_id AND ols.canonical_object_id=co.id
          LEFT JOIN lifecycle_definitions ld
@@ -245,15 +259,22 @@ export class MySqlThingAdministrationReadRepository {
           ORDER BY ta.sequence_no,v.sequence_no`,[tenantId,row.id]
       ),
       this.pool.execute<RelationshipRow[]>(
-        `SELECT cr.id,cr.relationship_type,cr.relationship_type_definition_id,
+        `SELECT cr.id,cr.relationship_type,
+                COALESCE(cr.relationship_type_definition_id,nrb.relationship_type_definition_id)
+                  AS relationship_type_definition_id,
                 rt.name AS relationship_name,rt.inverse_name,
                 cr.from_object_id,cr.to_object_id,
                 COALESCE(fr.display_name,fr.stable_key) AS from_label,
                 COALESCE(tr.display_name,tr.stable_key) AS to_label,
                 cr.effective_from,cr.effective_to,cr.status
            FROM canonical_relationships cr
+           LEFT JOIN metadata_native_relationship_bindings nrb
+             ON nrb.tenant_id=cr.tenant_id
+            AND nrb.native_relationship_type=cr.relationship_type
+            AND nrb.status='ACTIVE'
            LEFT JOIN metadata_relationship_type_definitions rt
-             ON rt.tenant_id=cr.tenant_id AND rt.id=cr.relationship_type_definition_id
+             ON rt.tenant_id=cr.tenant_id
+            AND rt.id=COALESCE(cr.relationship_type_definition_id,nrb.relationship_type_definition_id)
            JOIN canonical_objects fr ON fr.tenant_id=cr.tenant_id AND fr.id=cr.from_object_id
            JOIN canonical_objects tr ON tr.tenant_id=cr.tenant_id AND tr.id=cr.to_object_id
           WHERE cr.tenant_id=? AND (cr.from_object_id=? OR cr.to_object_id=?)

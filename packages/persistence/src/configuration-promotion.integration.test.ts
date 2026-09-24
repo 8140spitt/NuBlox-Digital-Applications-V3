@@ -135,7 +135,7 @@ suite('governed administrative configuration promotion',()=>{
     const approval:Decision={
       id:asId<'DecisionId'>('DEC-CFGP-'+suffix,'Decision'),
       tenantId,decisionType:'CONFIGURATION_CHANGE_SET_APPROVAL',
-      subjectObjectId:scope.id,subjectVersion:frozenChangeSet.checksum,
+      subjectObjectId:scope.id,subjectVersion:frozenChangeSet.checksum!,
       outcome:'APPROVED',reason:'Approved exact frozen administrative delta.',
       deciderPersonId:admin.id,decidedAt:'2026-09-24T09:40:00.000Z'
     };
@@ -222,7 +222,7 @@ suite('governed administrative configuration promotion',()=>{
     const dispositionDecision:Decision={
       id:asId<'DecisionId'>('DEC-CFGP-DISP-'+suffix,'Decision'),
       tenantId,decisionType:'CONFIGURATION_PROMOTION_CONFLICT_DISPOSITION',
-      subjectObjectId:scope.id,subjectVersion:frozenChangeSet.checksum,
+      subjectObjectId:scope.id,subjectVersion:frozenChangeSet.checksum!,
       outcome:'APPROVED',reason:'Approve explicit waiver evidence for blocked promotion.',
       deciderPersonId:admin.id,decidedAt:'2026-09-24T10:25:00.000Z'
     };

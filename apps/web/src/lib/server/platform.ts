@@ -46,6 +46,8 @@ import {
   MySqlConfigurationPromotionReadRepository,
   MySqlRecordsRetentionCommandService,
   MySqlRecordsRetentionReadRepository,
+  MySqlManufacturingCommandService,
+  MySqlManufacturingReadRepository,
   MySqlSupplierSourcingCommandService,
   MySqlSupplierSourcingReadRepository
 } from '@nublox/persistence';
@@ -97,6 +99,8 @@ let configurationPromotionCommandServiceInstance: MySqlConfigurationPromotionCom
 let configurationPromotionReadRepositoryInstance: MySqlConfigurationPromotionReadRepository | undefined;
 let recordsRetentionCommandServiceInstance: MySqlRecordsRetentionCommandService | undefined;
 let recordsRetentionReadRepositoryInstance: MySqlRecordsRetentionReadRepository | undefined;
+let manufacturingCommandServiceInstance: MySqlManufacturingCommandService | undefined;
+let manufacturingReadRepositoryInstance: MySqlManufacturingReadRepository | undefined;
 let supplierSourcingCommandServiceInstance: MySqlSupplierSourcingCommandService | undefined;
 let supplierSourcingReadRepositoryInstance: MySqlSupplierSourcingReadRepository | undefined;
 
@@ -500,4 +504,19 @@ export function getSupplierSourcingReadRepository(): MySqlSupplierSourcingReadRe
       new MySqlSupplierSourcingReadRepository(getDatabasePool());
   }
   return supplierSourcingReadRepositoryInstance;
+}
+
+
+export function getManufacturingCommandService(): MySqlManufacturingCommandService {
+  if (!manufacturingCommandServiceInstance) {
+    manufacturingCommandServiceInstance = new MySqlManufacturingCommandService(getDatabasePool());
+  }
+  return manufacturingCommandServiceInstance;
+}
+
+export function getManufacturingReadRepository(): MySqlManufacturingReadRepository {
+  if (!manufacturingReadRepositoryInstance) {
+    manufacturingReadRepositoryInstance = new MySqlManufacturingReadRepository(getDatabasePool());
+  }
+  return manufacturingReadRepositoryInstance;
 }

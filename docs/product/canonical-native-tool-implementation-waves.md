@@ -132,6 +132,7 @@ Deliver:
 - demand/supply/MRP planning;
 - inventory/warehouse/logistics;
 - manufacturing/production execution — Process Plan / Operation / Sequence / Resource / Control Characteristic foundation user-executable; Production Order/WIP/execution depth remains;
+- service delivery/field operations — Service Order / Assignment / Dispatch / Execution Record / Completion / Acceptance foundation user-executable; route optimisation, mobile/offline execution, SLA automation and billing handoff depth remains;
 - service planning/dispatch/field execution;
 - quality/inspection/test/CAPA;
 - asset/property/facilities/maintenance;
@@ -243,7 +244,7 @@ As of 24 September 2026:
 - 5 shared engines retain aligned backend foundations but still require full product UI exposure;
 - 4 shared engines (NTE-002, NTE-006, NTE-007, NTE-008) are now correctly classified as partial because ADR-0006 adds evidence-backed canonical control semantics not yet implemented;
 - 3 domain engines have partial implementation and require completion;
-- 44 engines remain `TO_BUILD`; NTE-020, NTE-023 and NTE-043 have advanced to `PARTIAL` because contextual supplier sourcing, manufacturing process definition and records-retention slices are now user-executable, while broader procurement, production execution and knowledge/CDE capabilities remain incomplete;
+- 43 engines remain `TO_BUILD`; NTE-020, NTE-023, NTE-024 and NTE-043 have advanced to `PARTIAL` because contextual supplier sourcing, manufacturing process definition, service delivery/field execution and records-retention slices are now user-executable, while broader procurement, production execution, field-service optimisation and knowledge/CDE capabilities remain incomplete;
 - Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
 - Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;

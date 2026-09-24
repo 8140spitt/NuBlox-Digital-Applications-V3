@@ -54,8 +54,16 @@ function assertStringArray(values: ReadonlyArray<string>, label: string) {
 export function createFunctionDefinition(
   input: FunctionDefinition
 ): FunctionDefinition {
-  invariant(/^F\d{2}$/.test(input.code), 'Function code must use F01-F99 format.');
+  if (input.functionFamily === 'CORE_BUSINESS') {
+    invariant(/^F\d{2}$/.test(input.code), 'Core Business Function code must use F01-F99 format.');
+  } else if (input.functionFamily === 'CBE') {
+    invariant(/^D\d{2}$/.test(input.code), 'CBE Function code must use D01-D99 format.');
+    assertNonEmpty(input.industrySolutionId ?? '', 'CBE Function industry solution');
+  } else {
+    assertNonEmpty(input.code, 'Custom Function code');
+  }
   invariant(input.id === input.code, 'Function id must equal its stable Function code.');
+  invariant(input.parentFunctionId !== input.id, 'Function cannot parent itself.');
   assertNonEmpty(input.name, 'Function name');
   return Object.freeze({ ...input });
 }

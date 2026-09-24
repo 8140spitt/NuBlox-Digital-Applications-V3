@@ -34,7 +34,7 @@ function mapError(e:unknown):never{
   }
   if(e instanceof Error){
     if(/not found/i.test(e.message))throw new ConfigurationPromotionCommandError(e.message,'NOT_FOUND');
-    if(/must|required|invalid|only|requires|belong|differ|exactly one|cannot/i.test(e.message)){
+    if(/must|required|invalid|only|requires|belong|differ|exactly one|cannot|stale|drift/i.test(e.message)){
       throw new ConfigurationPromotionCommandError(e.message,'INVALID_INPUT');
     }
   }

@@ -28,16 +28,18 @@ The objective is not one giant table or one universal object type. The objective
 ### Capability and people
 
 - Function;
-- Delivery Domain;
+- Function family / classification;
 - Process;
 - Activity;
 - Task Definition;
 - Job Profile;
+- Position Function Assignment;
+- Position Reporting Line;
 - Competence Requirement;
 - Competence Evidence;
 - Responsibility;
-- Functional Deployment;
-- Deployment Assignment;
+- Contextual Assignment / Functional Deployment where required;
+- Work Assignment;
 - Authority Assignment.
 
 ### Policy, metadata and information security
@@ -234,7 +236,8 @@ Examples:
 - Organisation supplies Organisation;
 - Person occupies Position;
 - Job Profile participates in Function;
-- Functional Deployment binds Person/Position to Project/Package scope;
+- Position Function Assignment establishes the Position's primary Function and Governance/Delivery purpose;
+- Contextual Assignment binds Person/Position responsibility to Project/Package/Site/Asset/etc. scope where required;
 - Requirement requires Deliverable Item;
 - Deliverable Item represented by Information Container;
 - Deliverable Item affects Asset;

@@ -52,6 +52,7 @@ export type EnumerationDefinitionId = Brand<string, 'EnumerationDefinitionId'>;
 export type EnumerationValueId = Brand<string, 'EnumerationValueId'>;
 export type RelationshipTypeDefinitionId = Brand<string, 'RelationshipTypeDefinitionId'>;
 export type RelationshipAttributeAssignmentId = Brand<string, 'RelationshipAttributeAssignmentId'>;
+export type RelationshipAttributeConstraintAssignmentId = Brand<string, 'RelationshipAttributeConstraintAssignmentId'>;
 export type ThingAttributeValueId = Brand<string, 'ThingAttributeValueId'>;
 export type RelationshipAttributeValueId = Brand<string, 'RelationshipAttributeValueId'>;
 export type WorkflowDefinitionId = Brand<string, 'WorkflowDefinitionId'>;

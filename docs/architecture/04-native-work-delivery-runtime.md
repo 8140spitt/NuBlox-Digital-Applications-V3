@@ -9,13 +9,14 @@ The Native Work-Delivery Runtime turns governed capability into performed work.
 
 It bridges:
 
-- Function / Delivery Domain;
+- Function;
 - Process / Activity;
 - Job Profile and competence;
 - Organisation / Organisation Unit;
 - Position / Person;
+- Position-to-Function assignment;
 - operating context;
-- Functional Deployment;
+- optional contextual assignment;
 - Assignment;
 - Work;
 - Deliverable / Transaction / Decision;
@@ -27,9 +28,9 @@ It bridges:
 
 ~~~text
 Governed capability
+-> Position-to-Function assignment
 -> Process / Activity
--> Functional Deployment
--> Responsibility
+-> contextual responsibility where required
 -> Assignment
 -> Work
 -> Deliverable / Transaction / Decision
@@ -54,20 +55,18 @@ NuBlox must not reduce enterprise work to:
 
 The runtime must preserve why the work exists, who is accountable, what must be produced, which rules apply, which exact state/version was decided upon and what evidence proves completion.
 
-## Functional Deployment
+## Function assignment and contextual assignment
 
-A Functional Deployment binds governed capability to an operating context.
+The primary HCM operating relationship is the effective Position-to-Function assignment with an explicit Governance or Delivery purpose. It establishes the user's primary Function world.
 
-It can constrain:
+A separate contextual assignment is used only when responsibility must be governed for a specific operating context such as a Project, Programme, Contract, Package, Site, Asset or Service.
 
-- Function or Delivery Domain;
+A contextual assignment can constrain:
+
+- Function;
 - Job Profile / required capability;
-- Organisation / Organisation Unit;
 - Position and/or Person;
-- Portfolio / Programme / Project;
-- Contract / Package;
-- Site / Facility / Location;
-- System / Asset / Service;
+- operating context;
 - responsibility scope;
 - competence requirements;
 - delegated Authority;
@@ -75,9 +74,9 @@ It can constrain:
 - capacity / availability;
 - assurance requirements.
 
-Deployment is a controlled runtime object with its own lifecycle/history.
+Where represented as a governed runtime object, contextual assignment has its own lifecycle/history. It does not replace the HCM Position-to-Function assignment.
 
-## Deployment gates
+## Assignment gates
 
 Before protected work is assigned or executed, NuBlox must be capable of evaluating applicable gates such as:
 
@@ -102,7 +101,7 @@ Examples:
 - not authorised;
 - competence missing;
 - competence expired;
-- deployment inactive;
+- contextual assignment inactive where one is required;
 - approval required;
 - Segregation-of-Duties conflict.
 
@@ -339,7 +338,7 @@ For any material work NuBlox must answer:
 - Which Function/process requires it?
 - Which operating context does it belong to?
 - Who is responsible?
-- Is the Person/Organisation deployed and competent?
+- Is the Position assigned to the Function, and where required is the contextual responsibility active and competent?
 - What Authority is required?
 - What output is required?
 - What is the current state/version?

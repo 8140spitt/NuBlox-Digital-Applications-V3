@@ -57,7 +57,10 @@ import {
   MySqlOrganisationalResourcePlanningCommandService,
   MySqlOrganisationalResourcePlanningReadRepository,
   MySqlHcmCommandService,
-  MySqlHcmReadRepository
+  MySqlHcmReadRepository,
+  MySqlThingAdministrationCommandService,
+  MySqlThingAdministrationReadRepository,
+  MySqlUniversalFunctionReadRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -119,6 +122,9 @@ let organisationalResourcePlanningCommandServiceInstance: MySqlOrganisationalRes
 let organisationalResourcePlanningReadRepositoryInstance: MySqlOrganisationalResourcePlanningReadRepository | undefined;
 let hcmCommandServiceInstance: MySqlHcmCommandService | undefined;
 let hcmReadRepositoryInstance: MySqlHcmReadRepository | undefined;
+let thingAdministrationCommandServiceInstance: MySqlThingAdministrationCommandService | undefined;
+let thingAdministrationReadRepositoryInstance: MySqlThingAdministrationReadRepository | undefined;
+let universalFunctionReadRepositoryInstance: MySqlUniversalFunctionReadRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -594,4 +600,25 @@ export function getHcmReadRepository(): MySqlHcmReadRepository {
     hcmReadRepositoryInstance = new MySqlHcmReadRepository(getDatabasePool());
   }
   return hcmReadRepositoryInstance;
+}
+
+export function getThingAdministrationCommandService(): MySqlThingAdministrationCommandService {
+  if (!thingAdministrationCommandServiceInstance) {
+    thingAdministrationCommandServiceInstance = new MySqlThingAdministrationCommandService(getDatabasePool());
+  }
+  return thingAdministrationCommandServiceInstance;
+}
+
+export function getThingAdministrationReadRepository(): MySqlThingAdministrationReadRepository {
+  if (!thingAdministrationReadRepositoryInstance) {
+    thingAdministrationReadRepositoryInstance = new MySqlThingAdministrationReadRepository(getDatabasePool());
+  }
+  return thingAdministrationReadRepositoryInstance;
+}
+
+export function getUniversalFunctionReadRepository(): MySqlUniversalFunctionReadRepository {
+  if (!universalFunctionReadRepositoryInstance) {
+    universalFunctionReadRepositoryInstance = new MySqlUniversalFunctionReadRepository(getDatabasePool());
+  }
+  return universalFunctionReadRepositoryInstance;
 }

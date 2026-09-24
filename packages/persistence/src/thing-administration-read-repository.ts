@@ -22,7 +22,7 @@ interface FieldRow extends RowDataPacket {
 }
 interface RelationshipRow extends RowDataPacket {
   id:string; relationship_type:string; relationship_type_definition_id:string|null;
-  relationship_name:string|null; inverse_name:string|null; from_object_id:string; to_object_id:string;
+  relationship_code:string|null; relationship_name:string|null; inverse_name:string|null; from_object_id:string; to_object_id:string;
   from_label:string|null; to_label:string|null; effective_from:Date; effective_to:Date|null; status:'ACTIVE'|'INACTIVE';
 }
 interface RelationshipFieldRow extends RowDataPacket {
@@ -262,7 +262,7 @@ export class MySqlThingAdministrationReadRepository {
         `SELECT cr.id,cr.relationship_type,
                 COALESCE(cr.relationship_type_definition_id,nrb.relationship_type_definition_id)
                   AS relationship_type_definition_id,
-                rt.name AS relationship_name,rt.inverse_name,
+                rt.code AS relationship_code,rt.name AS relationship_name,rt.inverse_name,
                 cr.from_object_id,cr.to_object_id,
                 COALESCE(fr.display_name,fr.stable_key) AS from_label,
                 COALESCE(tr.display_name,tr.stable_key) AS to_label,
@@ -303,7 +303,7 @@ export class MySqlThingAdministrationReadRepository {
       );
       const outgoing=rel.from_object_id===row.id;
       relationships.push({
-        id:rel.id,code:rel.relationship_type,
+        id:rel.id,code:rel.relationship_code??rel.relationship_type,
         name:(outgoing?rel.relationship_name:rel.inverse_name)??rel.relationship_type,
         direction:outgoing?'OUTGOING':'INCOMING',
         fromThingId:rel.from_object_id,toThingId:rel.to_object_id,

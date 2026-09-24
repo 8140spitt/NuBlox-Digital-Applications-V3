@@ -1,8 +1,6 @@
 ALTER TABLE supplier_relationships
   ADD COLUMN canonical_object_id VARCHAR(64) NULL AFTER tenant_id,
-  ADD UNIQUE KEY uq_supplier_relationships_canonical_object (tenant_id, canonical_object_id),
-  ADD CONSTRAINT fk_supplier_relationships_canonical_object
-    FOREIGN KEY (tenant_id, canonical_object_id) REFERENCES canonical_objects(tenant_id, id);
+  ADD UNIQUE KEY uq_supplier_relationships_canonical_object (tenant_id, canonical_object_id);
 
 UPDATE supplier_relationships sr
 JOIN canonical_objects co
@@ -14,3 +12,7 @@ WHERE sr.canonical_object_id IS NULL;
 
 ALTER TABLE supplier_relationships
   MODIFY canonical_object_id VARCHAR(64) NOT NULL;
+
+ALTER TABLE supplier_relationships
+  ADD CONSTRAINT fk_supplier_relationships_canonical_object
+    FOREIGN KEY (tenant_id, canonical_object_id) REFERENCES canonical_objects(tenant_id, id);

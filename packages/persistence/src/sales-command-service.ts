@@ -143,6 +143,7 @@ export class MySqlSalesCommandService {
           connection,tenantId,'SALES_ACCOUNT',`SALES_ACCOUNT:${code}`,
           organisation.tradingName??organisation.legalName,actorPersonId
         );
+        const segment=optional(input.segment);
         const account:SalesAccount={
           id:asId<'SalesAccountId'>(`SACC-${randomUUID()}`,'Sales Account'),
           tenantId,
@@ -150,7 +151,7 @@ export class MySqlSalesCommandService {
           organisationId:organisation.id,
           code,
           ownerPositionId:ownerPosition.id,
-          ...(optional(input.segment)?{segment:optional(input.segment)}:{}),
+          ...(segment?{segment}:{}),
           status:'ACTIVE',
           createdAt:new Date().toISOString(),
           rowVersion:1

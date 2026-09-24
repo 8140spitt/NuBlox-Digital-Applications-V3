@@ -130,7 +130,7 @@ export class MySqlFunctionWorkAuthorizationService {
       personId,
       'F07',
       PLATFORM_PERMISSION_KEYS.F07_READ,
-      {evaluatedAt}
+      evaluatedAt?{evaluatedAt}:{}
     );
   }
 
@@ -144,7 +144,7 @@ export class MySqlFunctionWorkAuthorizationService {
       personId,
       'F07',
       PLATFORM_PERMISSION_KEYS.F07_WORK,
-      {requireDelivery:true,evaluatedAt}
+      evaluatedAt?{requireDelivery:true,evaluatedAt}:{requireDelivery:true}
     );
   }
 }

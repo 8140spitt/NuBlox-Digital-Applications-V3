@@ -416,7 +416,7 @@ export class MySqlRecordsRetentionRepository {
       this.requireCanonicalObject(input.tenantId,input.subjectObjectId),
       this.requireDecision(input.tenantId,input.destructionDecisionId),
       this.requirePerson(input.tenantId,input.destroyedByPersonId),
-      this.listActiveHoldsForSubject(input.tenantId,input.subjectObjectId,input.subjectVersion),
+      this.listHoldsForSubject(input.tenantId,input.subjectObjectId,input.subjectVersion),
       input.archiveRecordId?this.requireArchive(input.tenantId,input.archiveRecordId):Promise.resolve(undefined)
     ]);
     if(archive){
@@ -424,7 +424,15 @@ export class MySqlRecordsRetentionRepository {
         throw new Error('Destruction archive reference does not match subject.');
       }
     }
-    createDestructionEvidence(input,run,rule,subject,decision,destroyer,holds);
+    const activeHolds=holds.filter(hold=>hold.status==='ACTIVE');
+    const latestBlockingRelease=holds
+      .filter(hold=>hold.status==='RELEASED'&&hold.blocksDestruction&&hold.releasedAt)
+      .map(hold=>Date.parse(hold.releasedAt!))
+      .reduce((latest,value)=>Math.max(latest,value),Number.NEGATIVE_INFINITY);
+    if(Number.isFinite(latestBlockingRelease)&&Date.parse(decision.decidedAt)<latestBlockingRelease){
+      throw new Error('Destruction approval Decision must postdate the latest released blocking Hold.');
+    }
+    createDestructionEvidence(input,run,rule,subject,decision,destroyer,activeHolds);
     await withTransaction(this.pool,async c=>{
       await c.execute(
         'INSERT INTO destruction_evidence (id,tenant_id,disposition_run_id,subject_object_id,subject_version,archive_record_id,destruction_decision_id,method,metadata_outcome,content_outcome,integrity_hash,destroyed_by_person_id,destroyed_at,evidence) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -512,13 +520,18 @@ export class MySqlRecordsRetentionRepository {
   async listDestructionEvidence(t:TenantId){const [r]=await this.pool.execute<DestructionRow[]>('SELECT * FROM destruction_evidence WHERE tenant_id=? ORDER BY destroyed_at DESC,id',[t]);return r.map(mapDestruction);}
   async listResults(t:TenantId){const [r]=await this.pool.execute<ResultRow[]>('SELECT * FROM disposition_item_results WHERE tenant_id=? ORDER BY recorded_at DESC,id',[t]);return r.map(mapResult);}
 
-  async listActiveHoldsForSubject(t:TenantId,subjectId:string,subjectVersion?:string,c?:PoolConnection){
+  async listHoldsForSubject(t:TenantId,subjectId:string,subjectVersion?:string,c?:PoolConnection){
     const q=c??this.pool;
     const [r]=await q.execute<HoldRow[]>(
-      'SELECT * FROM retention_holds WHERE tenant_id=? AND subject_object_id=? AND status=\'ACTIVE\' AND (subject_version IS NULL OR subject_version=?) ORDER BY imposed_at,id',
+      'SELECT * FROM retention_holds WHERE tenant_id=? AND subject_object_id=? AND (subject_version IS NULL OR subject_version=?) ORDER BY imposed_at,id',
       [t,subjectId,subjectVersion??null]
     );
     return r.map(mapHold);
+  }
+
+  async listActiveHoldsForSubject(t:TenantId,subjectId:string,subjectVersion?:string,c?:PoolConnection){
+    const holds=await this.listHoldsForSubject(t,subjectId,subjectVersion,c);
+    return holds.filter(hold=>hold.status==='ACTIVE');
   }
 
   private async requirePolicy(t:TenantId,id:RetentionPolicy['id'],c?:PoolConnection){const q=c??this.pool;const [r]=await q.execute<PolicyRow[]>('SELECT * FROM retention_policies WHERE tenant_id=? AND id=?',[t,id]);if(!r[0])throw new Error('Retention Policy not found in tenant.');return mapPolicy(r[0]);}

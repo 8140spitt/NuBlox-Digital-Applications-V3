@@ -233,11 +233,11 @@ function deriveDisplayName(
 }
 
 export class NuBloxObject {
-  id?:string;
-  stableKey?:string;
-  displayName?:string;
-  status?:'ACTIVE'|'INACTIVE';
-  lifecycle?:ThingView['lifecycle'];
+  id:string|undefined;
+  stableKey:string|undefined;
+  displayName:string|undefined;
+  status:'ACTIVE'|'INACTIVE'|undefined;
+  lifecycle:ThingView['lifecycle']|undefined;
 
   readonly #runtime:MySqlNuBloxObjectFactory;
   readonly #definition:NuBloxObjectDefinition;
@@ -315,9 +315,10 @@ export class NuBloxObject {
           'INVALID_INPUT'
         );
       }
+      const displayName=deriveDisplayName(this.#definition,this.#values,this.displayName);
       const created=await this.#runtime.createThing(this.#definition,{
         stableKey,
-        displayName:deriveDisplayName(this.#definition,this.#values,this.displayName),
+        ...(displayName?{displayName}:{}),
         fieldValues:this.#writeValues()
       });
       this.id=created.id;

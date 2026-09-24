@@ -97,3 +97,5 @@ export * from './hcm-read-repository.js';
 export * from './thing-administration-command-service.js';
 export * from './thing-administration-read-repository.js';
 export * from './universal-function-read-repository.js';
+
+export * from './enterprise-vocabulary-provisioning-service.js';

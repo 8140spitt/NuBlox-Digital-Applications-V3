@@ -214,7 +214,7 @@ Implement:
 - commercial/cost work;
 - planning;
 - procurement — **CONTEXTUAL SOURCING FOUNDATION USER-EXECUTABLE**: contextual Supplier Relationship / Sourcing Context / Source Approval / Sourcing Rule controls are implemented with Decision-backed supplier release and exact effective-dated item-source approval, deterministic authority fingerprints, historical supersession, migrations 0039-0042, dedicated permissions, audit/outbox, MySQL journey proof and `/app/supplier-sourcing`; broader supplier qualification/assessment/performance, category/spend, sourcing events/RFx, evaluation/negotiation, requisition and Purchase Order remain to build;
-- production/fabrication;
+- production/fabrication — **MANUFACTURING PROCESS DEFINITION FOUNDATION USER-EXECUTABLE**: versioned Process Plan / Operation / Sequence Link / Manufacturing Resource / Resource Allocation / Control Characteristic model implemented with deterministic frozen-definition checksum, Decision-backed release, prior-version supersession, migration 0043, dedicated manufacturing permissions, audit/outbox, MySQL journey proof and `/app/manufacturing`; Production Plan/Schedule/Order, material staging/issues, WIP, execution/result and packaging/reporting remain to build;
 - field/site execution;
 - quality/HSE;
 - commissioning/handover;

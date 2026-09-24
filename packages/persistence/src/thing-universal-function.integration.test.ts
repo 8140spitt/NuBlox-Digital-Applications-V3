@@ -122,9 +122,33 @@ suite('universal Function and metadata-driven Thing runtime',()=>{
 
     const customerView=await thingReads.getThing(tenantId,admin.id,customer.id);
     expect(customerView).toMatchObject({
-      id:customer.id,typeCode:customerType.code,displayName:'Acme Developments',
+      id:customer.id,typeCode:customerType.code,objectFamily:'PARTY',displayName:'Acme Developments',
       fields:[expect.objectContaining({code:customerName.code,value:'Acme Developments'})]
     });
+
+    const relationshipCatalogue=await thingReads.listRelationshipTypes(tenantId,admin.id);
+    expect(relationshipCatalogue).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id:relationshipType.id,
+        code:relationshipType.code,
+        fromTypeDefinitionId:customerType.id,
+        toTypeDefinitionId:opportunityType.id,
+        fromCardinality:'ONE',
+        toCardinality:'MANY',
+        fields:[expect.objectContaining({
+          assignmentId:relationshipRoleAssignment.id,
+          code:relationshipRole.code,
+          dataType:'STRING',
+          required:true
+        })]
+      })
+    ]));
+
+    const runtimeThings=await thingReads.listThings(tenantId,admin.id);
+    expect(runtimeThings).toEqual(expect.arrayContaining([
+      expect.objectContaining({id:customer.id,typeCode:customerType.code,objectFamily:'PARTY'}),
+      expect.objectContaining({id:opportunity.id,typeCode:opportunityType.code,objectFamily:'COMMERCIAL'})
+    ]));
     expect(customerView?.relationships).toEqual(expect.arrayContaining([
       expect.objectContaining({
         id:relationship.id,direction:'OUTGOING',otherThingId:opportunity.id,

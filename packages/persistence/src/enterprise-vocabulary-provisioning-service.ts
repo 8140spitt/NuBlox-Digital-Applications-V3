@@ -171,7 +171,7 @@ export class MySqlEnterpriseVocabularyProvisioningService {
         if(Number(before[0]?.count??0)===0) nativeTypeBindings+=1;
         const [updateResult]=await connection.execute<import('mysql2/promise').ResultSetHeader>(
           `UPDATE canonical_objects
-              SET type_definition_id=?, row_version=row_version+1
+              SET type_definition_id=?
             WHERE tenant_id=? AND object_type=? AND type_definition_id IS NULL`,
           [typeDefinitionId,tenantId,entry.nativeObjectType]
         );
@@ -204,7 +204,7 @@ export class MySqlEnterpriseVocabularyProvisioningService {
           if(Number(before[0]?.count??0)===0) nativeRelationshipBindings+=1;
           const [updateResult]=await connection.execute<import('mysql2/promise').ResultSetHeader>(
             `UPDATE canonical_relationships
-                SET relationship_type_definition_id=?, row_version=row_version+1
+                SET relationship_type_definition_id=?
               WHERE tenant_id=? AND relationship_type=?
                 AND relationship_type_definition_id IS NULL`,
             [relationshipTypeDefinitionId,tenantId,nativeRelationshipType]

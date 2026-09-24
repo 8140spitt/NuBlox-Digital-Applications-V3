@@ -75,3 +75,7 @@ export * from './records-retention-read-repository.js';
 export * from './supplier-sourcing-repository.js';
 export * from './supplier-sourcing-command-service.js';
 export * from './supplier-sourcing-read-repository.js';
+
+export * from './manufacturing-repository.js';
+export * from './manufacturing-command-service.js';
+export * from './manufacturing-read-repository.js';

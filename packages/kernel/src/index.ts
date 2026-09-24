@@ -11,6 +11,8 @@ export * from './exchange.js';
 export * from './exchange-factories.js';
 export * from './functional.js';
 export * from './functional-factories.js';
+export * from './hcm.js';
+export * from './hcm-factories.js';
 export * from './organisational-context.js';
 export * from './organisational-context-factories.js';
 export * from './portability.js';

@@ -1,6 +1,6 @@
 # ADR-0003 — NuBlox Is the Enterprise Platform; Construction Is an Industry Solution
 
-**Status:** Accepted  
+**Status:** Accepted, partially superseded by ADR-0006  
 **Date:** 20 September 2026
 
 ## Context

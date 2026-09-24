@@ -13,18 +13,13 @@ This document is normative for the tenant application.
 The application has six stable user-facing layers:
 
 1. **Home** — attention and launch point.
-2. **My Work** — work assigned to the signed-in person through responsibility, review, approval,
-   acceptance, competence or workflow.
-3. **Functions** — the 29 enterprise Functions and their governed sub-functions/activities.
-4. **CBE Domains** — the 16 professional Domains and 84 governed CBE Job Profiles.
-5. **Work products** — shared execution surfaces such as Information, Deliverables and
-   Change & Configuration.
-6. **Governance administration** — HCM Position Management (Organisation, Positions, occupants and
-   Function/CBE Domain deployment), Competence, Control and Access administration.
+2. **My Function** — the signed-in Person's primary working world, resolved from their occupied Position and active Function assignment.
+3. **My Work** — cross-Function work assigned through responsibility, review, approval, acceptance or workflow.
+4. **My Team** — shown when the Position has subordinate Positions; rolls authorised work and performance down the reporting hierarchy.
+5. **Shared work surfaces** — governed objects and cross-Function execution such as Information, Deliverables, Change & Configuration, Projects, Contracts, Assets and other enterprise contexts.
+6. **Administration** — HCM Position Management, Function governance, Competence, Control, Access and platform administration for authorised users.
 
-The permanent navigation rail contains only these high-level destinations. The 29 Functions must
-not be repeated as a permanent navigation tree. Deeper hierarchy belongs inside the Functions
-directory and Function context.
+The permanent navigation must not force ordinary users to browse all 29 Core Business Functions or all 16 CBE Functions. Their primary world is resolved by HCM. Function directories may exist for authorised discovery, governance or administration, but they are not the ordinary employee's starting mental model.
 
 ## Page anatomy
 
@@ -50,36 +45,42 @@ Do not place a large bank of creation/administration forms before the primary wo
 
 ## Function workspace rules
 
-A Function page is a working context, not an architecture report.
+A Function page is the user's working world, not an architecture report.
 
-Every Function page exposes five real views of the same capability context:
+Human Capital resolves:
 
-- **Overview** — Function identity, L2 scope, activities and composed native capability;
-- **Governance** — mandate, policies, standards, competence, Authority, controls, assurance and deployment;
-- **Delivery** — operational work, activities, tasks, outputs, handoffs and outcomes;
-- **Performance** — work, control, output and improvement measures;
-- **Records** — governed Information, Deliverables, Change/Configuration, Decisions and Evidence.
+```text
+Person
+→ Employment
+→ occupied Position
+→ Function
+→ Functional Governance | Functional Delivery
+→ reporting hierarchy / management scope
+```
 
-The same five-view interaction grammar applies to every CBE Domain. A Domain Overview is organised
-around professional scope and Job Profiles; Governance controls how the professional capability
-operates; Delivery is where professional work and outputs are performed.
+The workspace composes the operational tools, business objects, work products, queues, Decisions, performance and records required by that Function and Position scope. A Sales Delivery Position therefore sees Sales Delivery work; a CBE Architecture Delivery Position sees Architecture work. Managers see their own authorised scope plus subordinate Position scope.
 
-It must not expose implementation-wave language, internal development status, benchmark language,
-or other programme-management metadata to ordinary users.
+Where useful, the workspace may expose **Overview**, **Governance**, **Delivery**, **Performance** and **Records** views, but these views are secondary to the actual work. CBE D01–D16 use the same Function interaction model because they are CBE-classified Functions under ADR-0006.
+
+Cross-Function interaction appears when the current work, object or end-to-end process requires it; it must not turn the user's workspace into an unrestricted catalogue of unrelated Functions.
+
+Ordinary users must not see implementation-wave language, Native Engine IDs, internal development status or benchmark terminology.
 
 ## HCM Position Management rules
 
-HCM Position Management is the workforce deployment administration surface.
+HCM Position Management is authoritative for the workforce chain that determines the user's primary NuBlox experience.
 
 It must make this distinction visible:
 
-- Person occupancy answers **who holds the employment Position**;
+- Person occupancy answers **who holds the Position**;
 - Position/Job Profile answers **what organisational/professional capability the seat represents**;
-- Deployment answers **where that Person/Position is being used**;
-- deployment purpose answers **Governance or Delivery**;
-- responsibility/context/capacity/effectivity answer **how the deployment operates**.
+- Position-to-Function assignment answers **which Function is the Position operating in**;
+- assignment purpose answers **Functional Governance or Functional Delivery**;
+- reporting lines answer **whose work rolls up to which manager Position**;
+- contextual responsibility answers **which Project, Contract, Site, Asset, Service or other scope the work concerns**;
+- Permission and Authority remain separate controls over access and commitment.
 
-Function and CBE Domain workspaces display the relevant deployed roles but do not create a second, competing personnel administration model.
+A separate contextual assignment may be used when the same Position performs work in a specific Project/Contract/etc., but it is not required merely to establish the user's primary Function world.
 
 ## Governed object workspace rules
 
@@ -165,11 +166,11 @@ On narrower screens:
 
 1. No fake navigation.
 2. No developer/programme metadata in ordinary user workspaces.
-3. No permanent 29-Function or 16-Domain tree in global navigation.
+3. No permanent all-Functions tree in ordinary-user global navigation; the user's primary Function comes from HCM.
 4. No workspace-specific design system.
 5. No uncontrolled 500 for permission denial.
 6. No management-form wall before the user's working content.
 7. No generic mutation that bypasses lifecycle, permission or Authority.
 8. No work-product action without exact governed object/version context where the domain requires it.
-9. My Work remains the cross-Function and cross-Domain attention surface.
+9. My Work remains the cross-Function attention surface; My Function remains the primary operating world.
 10. New native engines adopt this interaction grammar rather than inventing another page pattern.

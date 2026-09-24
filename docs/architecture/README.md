@@ -20,7 +20,7 @@ NuBlox is the product. Industry solutions configure it. External products inform
 
 ## Governing proposition
 
-NuBlox governs organisational capability, deploys that capability through people and operating contexts, enables work through native/connected domain tools, controls resulting enterprise objects and Deliverable Items throughout their Lifecycle, and preserves the Authority, Configuration, Decisions, Evidence and Records required to operate and assure the enterprise.
+NuBlox governs organisational capability as Functions, assigns that capability to Positions through Human Capital, resolves each signed-in Person's Governance or Delivery working world from their occupied Position, enables work through native NuBlox tools, and controls the resulting enterprise objects, transactions, work products, Decisions, Evidence and Records across functional boundaries.
 
 ## Product hierarchy
 
@@ -28,13 +28,29 @@ NuBlox governs organisational capability, deploys that capability through people
 NuBlox Enterprise Operating Platform
 |
 +-- Enterprise Kernel
-+-- Functional Domains (29 governed functions/workspaces)
++-- Universal Function Model
+|   +-- F01-F29 Core Business Functions
+|   +-- Industry Functions (CBE D01-D16)
 +-- Native Work-Delivery Runtime
 +-- Industry Solutions
     +-- Construction & Built Environment
-        +-- 16 Delivery Domains
+        +-- 16 CBE professional Functions
         +-- 84 Job Profiles
 ~~~
+
+## Governing user resolution
+
+~~~text
+Person
+-> Employment
+-> occupied Position
+-> Function assignment
+-> FUNCTIONAL_GOVERNANCE | FUNCTIONAL_DELIVERY
+-> Position hierarchy / management scope
+-> Work / tools / objects / Decisions / cross-Function interaction
+~~~
+
+Contexts such as Project, Contract, Site, Asset, Product and Service are governed work contexts beneath this operating model. They do not create a competing Team or capability taxonomy.
 
 ## Canonical capability/tool baseline
 

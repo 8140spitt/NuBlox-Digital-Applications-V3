@@ -167,6 +167,11 @@ The objective is not one giant table or one universal object type. The objective
 - Extension Component;
 - Extension Compatibility Assessment;
 - Extension Reconciliation Run;
+- Configuration Environment;
+- Configuration Baseline;
+- Configuration Change Set;
+- Configuration Promotion Run;
+- Configuration Promotion Conflict;
 - Retention Policy;
 - Hold;
 - Disposition Rule;

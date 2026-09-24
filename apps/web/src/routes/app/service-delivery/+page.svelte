@@ -113,7 +113,7 @@
     <label><span>Occurred at</span><input name="occurredAt" type="datetime-local" /></label>
     <label><span>Duration minutes</span><input name="durationMinutes" type="number" min="0" step="0.001" /></label>
     <label class="wide-field"><span>Notes</span><input name="notes" /></label>
-    <label class="wide-field"><span>Evidence JSON</span><textarea name="evidence" rows="4" placeholder='{"photoRef":"...","testResult":"PASS"}'></textarea></label>
+    <label class="wide-field"><span>Evidence JSON</span><textarea name="evidence" rows="4" placeholder="JSON object with photo references, test results and other field evidence"></textarea></label>
     <button type="submit">Record Evidence →</button>
   </form>
   {/if}

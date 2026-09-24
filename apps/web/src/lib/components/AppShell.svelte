@@ -29,6 +29,7 @@
     if (pathname.startsWith('/app/integration')) return 'Integration & Publication';
     if (pathname.startsWith('/app/migration')) return 'Migration Control';
     if (pathname.startsWith('/app/extensions')) return 'Extension Governance';
+    if (pathname.startsWith('/app/configuration-promotion')) return 'Configuration Promotion';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
@@ -159,6 +160,10 @@
           <a class:active={isActive('/app/extensions')} href="/app/extensions" onclick={closeNavigation}>
             <span class="nav-symbol">EG</span>
             <span>Extension governance</span>
+          </a>
+          <a class:active={isActive('/app/configuration-promotion')} href="/app/configuration-promotion" onclick={closeNavigation}>
+            <span class="nav-symbol">PG</span>
+            <span>Configuration promotion</span>
           </a>
         </section>
       </nav>

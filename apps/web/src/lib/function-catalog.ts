@@ -1143,7 +1143,7 @@ export const functions: FunctionSummary[] = [
       {
         "id": "NTE-017",
         "name": "CRM, Opportunity & Account",
-        "state": "TO_BUILD"
+        "state": "PARTIAL"
       },
       {
         "id": "NTE-018",

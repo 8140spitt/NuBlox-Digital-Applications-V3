@@ -1,19 +1,23 @@
 import {
   MetadataAdministrationCommandError,
+  ThingAdministrationCommandError,
   type MySqlAccessRepository
 } from '@nublox/persistence';
 import {
   PLATFORM_PERMISSION_KEYS,
   type MetadataCardinality,
   type MetadataConstraintType,
-  type MetadataDataType
+  type MetadataDataType,
+  type MetadataRelationshipCardinality
 } from '@nublox/kernel';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import {
   getAccessRepository,
   getMetadataAdministrationCommandService,
-  getMetadataAdministrationReadRepository
+  getMetadataAdministrationReadRepository,
+  getThingAdministrationCommandService,
+  getThingAdministrationReadRepository
 } from '$lib/server/platform';
 
 type TenantId = Parameters<MySqlAccessRepository['evaluatePermission']>[0];
@@ -23,6 +27,8 @@ const DATA_TYPES = [
 ] as const satisfies readonly MetadataDataType[];
 
 const CARDINALITIES = ['SINGLE','MULTIPLE'] as const satisfies readonly MetadataCardinality[];
+
+const RELATIONSHIP_CARDINALITIES = ['ONE','MANY'] as const satisfies readonly MetadataRelationshipCardinality[];
 
 const CONSTRAINT_TYPES = [
   'REQUIRED','MIN_MAX','LENGTH','PATTERN','ENUMERATION','REFERENCE','CUSTOM'
@@ -67,8 +73,54 @@ function jsonAny(raw: string, label: string): unknown {
     throw new MetadataAdministrationCommandError(`${label} must be valid JSON.`, 'INVALID_INPUT');
   }
 }
+function metadataValue(raw: string, dataType: MetadataDataType): unknown {
+  switch (dataType) {
+    case 'STRING':
+    case 'DECIMAL':
+    case 'DATE':
+    case 'DATETIME':
+    case 'ENUMERATION':
+    case 'REFERENCE':
+      return raw;
+    case 'INTEGER': {
+      const parsed = Number(raw);
+      if (!Number.isSafeInteger(parsed)) {
+        throw new ThingAdministrationCommandError('Integer field value is invalid.', 'INVALID_INPUT');
+      }
+      return parsed;
+    }
+    case 'BOOLEAN':
+      if (raw === 'true') return true;
+      if (raw === 'false') return false;
+      throw new ThingAdministrationCommandError('Boolean field value must be true or false.', 'INVALID_INPUT');
+    case 'JSON':
+      try { return JSON.parse(raw); }
+      catch { throw new ThingAdministrationCommandError('JSON field value is invalid.', 'INVALID_INPUT'); }
+  }
+}
+function submittedFieldValues(
+  formData: FormData,
+  prefix: 'field' | 'relationshipField'
+): Array<{ assignmentId: string; sequence: number; value: unknown }> {
+  const result: Array<{ assignmentId: string; sequence: number; value: unknown }> = [];
+  for (const [name, entry] of formData.entries()) {
+    if (!name.startsWith(`${prefix}:`) || typeof entry !== 'string' || entry.trim() === '') continue;
+    const [, assignmentId, dataType, sequenceRaw] = name.split(':');
+    if (!assignmentId || !dataType || !DATA_TYPES.includes(dataType as MetadataDataType)) continue;
+    const sequence = sequenceRaw ? Number(sequenceRaw) : 0;
+    if (!Number.isInteger(sequence) || sequence < 0) {
+      throw new ThingAdministrationCommandError('Field value sequence is invalid.', 'INVALID_INPUT');
+    }
+    result.push({
+      assignmentId,
+      sequence,
+      value: metadataValue(entry.trim(), dataType as MetadataDataType)
+    });
+  }
+  return result;
+}
 function failure(error: unknown, action: string) {
-  if (error instanceof MetadataAdministrationCommandError) {
+  if (error instanceof MetadataAdministrationCommandError || error instanceof ThingAdministrationCommandError) {
     const status = error.code === 'PERMISSION_DENIED' ? 403
       : error.code === 'NOT_FOUND' ? 404
       : error.code === 'CONFLICT' ? 409 : 400;
@@ -84,7 +136,9 @@ export const load: PageServerLoad = async ({ locals }) => {
       allowed: false,
       canManage: false,
       reason: 'No authenticated tenant context is available.',
-      projection: null
+      projection: null,
+      things: null,
+      relationshipTypes: null
     };
   }
 
@@ -110,18 +164,25 @@ export const load: PageServerLoad = async ({ locals }) => {
       allowed: false,
       canManage: false,
       reason: readEvaluation.reason,
-      projection: null
+      projection: null,
+      things: null,
+      relationshipTypes: null
     };
   }
 
-  const projection = await getMetadataAdministrationReadRepository()
-    .getProjection(tenantId, session.personId);
+  const [projection, things, relationshipTypes] = await Promise.all([
+    getMetadataAdministrationReadRepository().getProjection(tenantId, session.personId),
+    getThingAdministrationReadRepository().listThings(tenantId, session.personId),
+    getThingAdministrationReadRepository().listRelationshipTypes(tenantId, session.personId)
+  ]);
 
   return {
     allowed: true,
     canManage: manageEvaluation.allowed,
     reason: readEvaluation.reason,
-    projection
+    projection,
+    things,
+    relationshipTypes
   };
 };
 
@@ -270,6 +331,112 @@ export const actions: Actions = {
       );
       return { action: 'createConstraint', ok: true, message: `Constraint ${item.code} v${item.version} created.` };
     } catch (error) { return failure(error, 'createConstraint'); }
+  },
+
+  createRelationshipType: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { action: 'createRelationshipType', ok: false, error: 'Sign in required.' });
+    const formData = await request.formData();
+    try {
+      const item = await getThingAdministrationCommandService().createRelationshipTypeDefinition(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          code: value(formData, 'code'),
+          name: value(formData, 'name'),
+          description: optionalValue(formData, 'description'),
+          fromTypeDefinitionId: value(formData, 'fromTypeDefinitionId'),
+          toTypeDefinitionId: value(formData, 'toTypeDefinitionId'),
+          fromCardinality: enumValue(
+            value(formData, 'fromCardinality'),
+            RELATIONSHIP_CARDINALITIES,
+            'From cardinality'
+          ),
+          toCardinality: enumValue(
+            value(formData, 'toCardinality'),
+            RELATIONSHIP_CARDINALITIES,
+            'To cardinality'
+          ),
+          inverseName: optionalValue(formData, 'inverseName'),
+          version: integerValue(value(formData, 'version'), 'Version'),
+          effectiveFrom: optionalValue(formData, 'effectiveFrom'),
+          effectiveTo: optionalValue(formData, 'effectiveTo')
+        }
+      );
+      return { action: 'createRelationshipType', ok: true, message: `Relationship type ${item.code} created.` };
+    } catch (error) { return failure(error, 'createRelationshipType'); }
+  },
+
+  assignRelationshipAttribute: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { action: 'assignRelationshipAttribute', ok: false, error: 'Sign in required.' });
+    const formData = await request.formData();
+    try {
+      const item = await getThingAdministrationCommandService().assignAttributeToRelationshipType(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          relationshipTypeDefinitionId: value(formData, 'relationshipTypeDefinitionId'),
+          attributeDefinitionId: value(formData, 'attributeDefinitionId'),
+          sequence: integerValue(value(formData, 'sequence'), 'Sequence'),
+          required: value(formData, 'required') === 'true',
+          cardinality: enumValue(value(formData, 'cardinality'), CARDINALITIES, 'Cardinality'),
+          localLabel: optionalValue(formData, 'localLabel'),
+          defaultValue: jsonAny(value(formData, 'defaultValue'), 'Default value')
+        }
+      );
+      return { action: 'assignRelationshipAttribute', ok: true, message: `Relationship attribute ${item.id} assigned.` };
+    } catch (error) { return failure(error, 'assignRelationshipAttribute'); }
+  },
+
+  createThing: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { action: 'createThing', ok: false, error: 'Sign in required.' });
+    const formData = await request.formData();
+    try {
+      const fieldValues = submittedFieldValues(formData, 'field').map((item) => ({
+        typeAttributeAssignmentId: item.assignmentId,
+        sequence: item.sequence,
+        value: item.value
+      }));
+      const item = await getThingAdministrationCommandService().createThing(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          typeDefinitionId: value(formData, 'typeDefinitionId'),
+          stableKey: value(formData, 'stableKey'),
+          displayName: optionalValue(formData, 'displayName'),
+          fieldValues
+        }
+      );
+      return { action: 'createThing', ok: true, message: `${item.typeCode} ${item.stableKey} created.` };
+    } catch (error) { return failure(error, 'createThing'); }
+  },
+
+  relateThings: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { action: 'relateThings', ok: false, error: 'Sign in required.' });
+    const formData = await request.formData();
+    try {
+      const fieldValues = submittedFieldValues(formData, 'relationshipField').map((item) => ({
+        relationshipAttributeAssignmentId: item.assignmentId,
+        sequence: item.sequence,
+        value: item.value
+      }));
+      const item = await getThingAdministrationCommandService().relateThings(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          relationshipTypeDefinitionId: value(formData, 'relationshipTypeDefinitionId'),
+          fromThingId: value(formData, 'fromThingId'),
+          toThingId: value(formData, 'toThingId'),
+          effectiveFrom: optionalValue(formData, 'effectiveFrom'),
+          effectiveTo: optionalValue(formData, 'effectiveTo'),
+          fieldValues
+        }
+      );
+      return { action: 'relateThings', ok: true, message: `Relationship ${item.relationshipCode} created.` };
+    } catch (error) { return failure(error, 'relateThings'); }
   },
 
   assignConstraint: async ({ request, locals }) => {

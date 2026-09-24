@@ -5,11 +5,11 @@
 
 ## Purpose
 
-NuBlox defines **29 governed enterprise functions**.
+NuBlox has one canonical **Function** concept.
 
-A function is not merely a screen, department or mini-application.
+The baseline includes **29 Core Business Functions (F01–F29)**. Industry Solutions may add classified Functions; Construction & Built Environment adds **16 CBE Functions (D01–D16)**.
 
-It is a complete governed organisational capability operating on the common Enterprise Kernel and Native Work-Delivery Runtime.
+A Function is not merely a screen, department or mini-application. It is a governed organisational capability operating on the common Enterprise Kernel and Native Work-Delivery Runtime.
 
 ## Each function contains
 
@@ -107,32 +107,27 @@ Function
 -> Outcome
 ~~~
 
-## Functional Deployment
+## Position-to-Function assignment and work context
 
-Functional Deployment answers:
+The primary organisational assignment answers:
 
-> Which real Organisation, Position and Person is applying this capability in which context, for what scope, with what competence and Authority?
+> Which Function does this occupied Position operate in, and is its purpose Functional Governance or Functional Delivery?
 
 ~~~text
-Function / Delivery Domain
--> Job Profile / required capability
--> Organisation / Organisation Unit
--> Position
--> Person
--> Project / Contract / Package / Site / Asset / Service
--> responsibility scope
--> competence
--> Authority
--> effective dates
--> capacity / availability
--> Work / Deliverable assignments
+Person
+-> Employment
+-> occupied Position
+-> Function assignment
+   -> FUNCTIONAL_GOVERNANCE
+   or
+   -> FUNCTIONAL_DELIVERY
+-> reporting hierarchy / management scope
+-> authorised work and tools
 ~~~
 
-Deployment is not employment.
+This assignment establishes the user's primary Function world. It is not a Permission grant and it is not business Authority.
 
-Employment/engagement describes the relationship between Person and Organisation.
-
-Deployment describes where and how capability is being applied.
+Projects, Contracts, Packages, Sites, Assets, Services and other Contexts then qualify **where or for what subject** the Position performs particular work. A separate contextual assignment may exist where responsibility, capacity or effectivity must be governed for that context; it is not required merely to make the Person a member of their primary Function.
 
 ## Separation of concepts
 
@@ -146,7 +141,7 @@ A **Position** is an organisational seat.
 
 A **Person** is a Party.
 
-A **Functional Deployment** binds capability into a real operating context.
+A **Position-to-Function assignment** binds the Position to its primary Function and Governance/Delivery purpose. A **contextual work assignment** may additionally bind responsibility to a Project, Contract, Site, Asset, Service or other Context.
 
 A **Permission** controls access/action.
 
@@ -168,9 +163,9 @@ Relationship modes may include:
 
 A Job Profile is not forced into one function merely to simplify navigation.
 
-## 29 function workspaces
+## Function workspaces
 
-The 29 functions are stable first-class tenant workspaces.
+Core Business and CBE Functions use the same workspace model. F01–F29 are the baseline Core Business set; D01–D16 are CBE-classified Functions supplied by the Industry Solution.
 
 A function workspace:
 
@@ -225,7 +220,7 @@ For every function NuBlox must be able to answer:
 - Which outputs/Deliverables does it produce?
 - Which Job Profiles participate?
 - What competence and Authority are required?
-- How is the function deployed?
+- Which Positions are assigned to the Function for Governance and Delivery, and which work contexts refine their responsibility?
 - Which Decisions/approvals control it?
 - What evidence is required?
 - How is performance measured?

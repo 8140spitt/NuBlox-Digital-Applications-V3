@@ -1,6 +1,6 @@
 # ADR-0005 — Context-first organisation and Team model
 
-**Status:** Accepted  
+**Status:** Accepted, partially superseded by ADR-0006  
 **Date:** 2026-09-22
 
 ## Decision

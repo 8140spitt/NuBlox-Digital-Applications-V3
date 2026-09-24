@@ -358,3 +358,17 @@ For governed exchange, Package, Delivery, Receipt, Acceptance, Import and Author
 A functional domain or Industry Solution may extend a kernel concept through governed types, attributes, policies, relationships and behaviour.
 
 It must not create a competing enterprise identity or a parallel workflow/approval/audit framework for a concept already owned by the kernel.
+
+
+### Manufacturing domain control
+
+The manufacturing domain specialises shared identity, Decision and Evidence controls with:
+
+- Manufacturing Process Plan;
+- Manufacturing Operation;
+- Manufacturing Sequence Link;
+- Manufacturing Resource;
+- Manufacturing Resource Allocation;
+- Control Characteristic.
+
+Process Plan release binds an exact frozen definition checksum to an approved Decision. Production execution must consume released definitions rather than silently mutating them.

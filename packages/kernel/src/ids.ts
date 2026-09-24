@@ -197,3 +197,6 @@ export type ManufacturingSequenceLinkId = Brand<string, 'ManufacturingSequenceLi
 export type ManufacturingResourceId = Brand<string, 'ManufacturingResourceId'>;
 export type ManufacturingResourceAllocationId = Brand<string, 'ManufacturingResourceAllocationId'>;
 export type ControlCharacteristicId = Brand<string, 'ControlCharacteristicId'>;
+export type ServiceOrderId = Brand<string, 'ServiceOrderId'>;
+export type ServiceAssignmentId = Brand<string, 'ServiceAssignmentId'>;
+export type ServiceExecutionRecordId = Brand<string, 'ServiceExecutionRecordId'>;

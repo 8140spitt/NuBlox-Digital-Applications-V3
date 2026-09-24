@@ -70,6 +70,24 @@ export interface SalesOpportunityView {
   rowVersion:number;
 }
 
+export interface SalesPositionRollup {
+  positionId:string;
+  positionCode:string;
+  positionTitle:string;
+  personId?:string;
+  personName?:string;
+  relation:'SELF'|'DIRECT_REPORT'|'INDIRECT_REPORT'|'AUTHORIZED';
+  managementDepth?:number;
+  accounts:number;
+  openOpportunities:number;
+  currencyTotals:Array<{
+    currency:string;
+    pipelineValue:number;
+    weightedPipeline:number;
+    wonValue:number;
+  }>;
+}
+
 export interface SalesWorkbench {
   scope:{
     unrestricted:boolean;
@@ -84,6 +102,7 @@ export interface SalesWorkbench {
   organisations:Array<{id:string;name:string}>;
   accounts:SalesAccountView[];
   opportunities:SalesOpportunityView[];
+  positionRollup:SalesPositionRollup[];
   totals:{
     accounts:number;
     openOpportunities:number;
@@ -153,6 +172,53 @@ export class MySqlSalesReadRepository {
       currencyMap.set(opportunity.currency,currency);
     }
 
+    const managementDepthByPosition=new Map<string,number>(
+      (read.experience?.managementScope??[]).map(item=>[item.positionId,item.depth])
+    );
+    const currentPositionId=read.experience?.positionId;
+    const positionRollup:SalesPositionRollup[]=ownerPositions
+      .map(position=>{
+        const ownedAccounts=accounts.filter(item=>item.ownerPositionId===position.id);
+        const ownedOpportunities=opportunities.filter(item=>item.ownerPositionId===position.id);
+        const ownedCurrencyMap=new Map<string,{pipelineValue:number;weightedPipeline:number;wonValue:number}>();
+        for(const opportunity of ownedOpportunities) {
+          const totals=ownedCurrencyMap.get(opportunity.currency)??{
+            pipelineValue:0,weightedPipeline:0,wonValue:0
+          };
+          if(opportunity.status==='OPEN') {
+            totals.pipelineValue+=opportunity.estimatedValue;
+            totals.weightedPipeline+=opportunity.estimatedValue*opportunity.probabilityPercent/100;
+          } else if(opportunity.status==='WON') {
+            totals.wonValue+=opportunity.estimatedValue;
+          }
+          ownedCurrencyMap.set(opportunity.currency,totals);
+        }
+        const depth=position.id===currentPositionId?0:managementDepthByPosition.get(position.id);
+        const relation:SalesPositionRollup['relation']=position.id===currentPositionId
+          ?'SELF'
+          :depth===1
+            ?'DIRECT_REPORT'
+            :typeof depth==='number'
+              ?'INDIRECT_REPORT'
+              :'AUTHORIZED';
+        return {
+          positionId:position.id,
+          positionCode:position.code,
+          positionTitle:position.title,
+          ...(position.personId?{personId:position.personId}:{}),
+          ...(position.personName?{personName:position.personName}:{}),
+          relation,
+          ...(depth!==undefined?{managementDepth:depth}:{}),
+          accounts:ownedAccounts.length,
+          openOpportunities:ownedOpportunities.filter(item=>item.status==='OPEN').length,
+          currencyTotals:Array.from(ownedCurrencyMap.entries())
+            .sort(([a],[b])=>a.localeCompare(b))
+            .map(([currency,value])=>({currency,...value}))
+        };
+      })
+      .sort((a,b)=>(a.managementDepth??Number.MAX_SAFE_INTEGER)-(b.managementDepth??Number.MAX_SAFE_INTEGER)
+        ||a.positionTitle.localeCompare(b.positionTitle)||a.positionCode.localeCompare(b.positionCode));
+
     return {
       scope:{
         unrestricted:read.unrestricted,
@@ -167,6 +233,7 @@ export class MySqlSalesReadRepository {
       organisations,
       accounts,
       opportunities,
+      positionRollup,
       totals:{
         accounts:accounts.length,
         openOpportunities:open.length

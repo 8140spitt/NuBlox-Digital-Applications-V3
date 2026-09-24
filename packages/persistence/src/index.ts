@@ -71,3 +71,7 @@ export * from './configuration-promotion-read-repository.js';
 export * from './records-retention-repository.js';
 export * from './records-retention-command-service.js';
 export * from './records-retention-read-repository.js';
+
+export * from './supplier-sourcing-repository.js';
+export * from './supplier-sourcing-command-service.js';
+export * from './supplier-sourcing-read-repository.js';

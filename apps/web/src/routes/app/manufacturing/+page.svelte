@@ -74,7 +74,7 @@
       <label><span>Run minutes</span><input name="runMinutes" type="number" step="0.001" min="0" value="0" required /></label>
       <label><span>Yield %</span><input name="yieldPercent" type="number" step="0.0001" min="0.0001" max="100" value="100" required /></label>
       <label class="wide-field"><span>Description</span><input name="description" /></label>
-      <label class="wide-field"><span>Work instructions JSON</span><textarea name="workInstructions" rows="4" placeholder='{"instruction":"..."}'></textarea></label>
+      <label class="wide-field"><span>Work instructions JSON</span><textarea name="workInstructions" rows="4" placeholder="JSON object with manufacturing work instructions"></textarea></label>
       <button type="submit">Add Operation →</button>
     </form>
   </details>
@@ -176,7 +176,7 @@
     <label><span>Upper limit</span><input name="upperLimit" type="number" step="any" /></label>
     <label><span>Status</span><select name="status"><option>ACTIVE</option><option>INACTIVE</option></select></label>
     <label class="wide-field"><span>Specification</span><input name="specification" /></label>
-    <label class="wide-field"><span>Sampling plan JSON</span><textarea name="samplingPlan" rows="4" placeholder='{"method":"100_PERCENT"}'></textarea></label>
+    <label class="wide-field"><span>Sampling plan JSON</span><textarea name="samplingPlan" rows="4" placeholder="JSON object with sampling method and criteria"></textarea></label>
     <button type="submit">Create Control Characteristic →</button>
   </form>
   {/if}

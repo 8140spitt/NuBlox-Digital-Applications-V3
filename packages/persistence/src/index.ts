@@ -79,3 +79,7 @@ export * from './supplier-sourcing-read-repository.js';
 export * from './manufacturing-repository.js';
 export * from './manufacturing-command-service.js';
 export * from './manufacturing-read-repository.js';
+
+export * from './service-delivery-repository.js';
+export * from './service-delivery-command-service.js';
+export * from './service-delivery-read-repository.js';

@@ -174,6 +174,14 @@ suite('F07 Sales CRM follows Human Capital Position hierarchy',()=>{
       expect.objectContaining({currency:'GBP',pipelineValue:500000,weightedPipeline:175000})
     ]);
 
+    expect(sellerView.positionRollup).toEqual([
+      expect.objectContaining({
+        positionId:executiveAPosition.id,relation:'SELF',managementDepth:0,
+        accounts:1,openOpportunities:1,
+        currencyTotals:[expect.objectContaining({currency:'GBP',pipelineValue:500000,weightedPipeline:175000})]
+      })
+    ]);
+
     const managerView=await reads.getWorkbench(tenantId,manager.id,'2026-09-24T12:00:00.000Z');
     expect(managerView.scope.managementSpan).toBe(1);
     expect(managerView.opportunities).toEqual(expect.arrayContaining([
@@ -181,6 +189,15 @@ suite('F07 Sales CRM follows Human Capital Position hierarchy',()=>{
     ]));
     expect(managerView.opportunities.some(item=>item.id===opportunityB.id)).toBe(false);
     expect(managerView.accounts.some(item=>item.id===accountB.id)).toBe(false);
+
+    expect(managerView.positionRollup.find(item=>item.positionId===managerPosition.id)).toMatchObject({
+      relation:'SELF',managementDepth:0,accounts:0,openOpportunities:0
+    });
+    expect(managerView.positionRollup.find(item=>item.positionId===executiveAPosition.id)).toMatchObject({
+      relation:'DIRECT_REPORT',managementDepth:1,accounts:1,openOpportunities:1,
+      currencyTotals:[expect.objectContaining({currency:'GBP',pipelineValue:500000,weightedPipeline:175000})]
+    });
+    expect(managerView.positionRollup.some(item=>item.positionId===executiveBPosition.id)).toBe(false);
 
     const updated=await sales.updateOpportunity(tenantId,manager.id,{
       opportunityId:opportunityA.id,rowVersion:opportunityA.rowVersion,

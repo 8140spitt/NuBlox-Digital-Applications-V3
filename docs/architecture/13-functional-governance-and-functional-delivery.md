@@ -1,217 +1,263 @@
 # Functional Governance and Functional Delivery
 
+**Status:** Governing operating model  
+**Effective:** 25 September 2026  
+**Supersedes:** deployment-first wording in earlier architecture where it conflicts with ADR-0006 and the HCM Position authority spine.
+
 ## Purpose
 
-NuBlox enables people employed by a tenant to perform work through governed deployments.
+Every NuBlox Function has two operating sides:
 
-Every deployed role has one explicit purpose:
+- **FUNCTIONAL_GOVERNANCE** — how the Function is defined, controlled, assured, resourced and improved.
+- **FUNCTIONAL_DELIVERY** — the work the Function performs and the business or professional outcomes it produces.
 
-- **FUNCTIONAL_GOVERNANCE** — work that governs, defines, controls, assures, resources or improves a Function or professional domain.
-- **FUNCTIONAL_DELIVERY** — work that performs the capability for which the Function or professional domain exists.
+Function is universal. This applies to F01–F29 Core Business Functions and to D01–D16 CBE Functions.
 
-This rule applies consistently to both the 29 Core Business Functions and Construction & Built Environment professional disciplines.
+## Primary Human Capital authority chain
 
-## The deployment carries the purpose
+The ordinary user's NuBlox working world is resolved through Human Capital:
 
-Functional Governance and Functional Delivery are not permanent classifications of a Person, Position or Job Profile.
-
-Employment describes who the person is in the organisation. A deployment describes the role the person or Position is performing in a particular capability and context.
-
-```text
+~~~text
 Person
-→ Employment / Position
-→ Job Profile
-→ Capability
-→ Deployed Role
-   ├── FUNCTIONAL_GOVERNANCE
-   └── FUNCTIONAL_DELIVERY
-→ Responsibility
-→ Context
-→ Work
-```
+-> Employment
+-> occupied Position
+-> Position-to-Function assignment
+   -> FUNCTIONAL_GOVERNANCE
+   or
+   -> FUNCTIONAL_DELIVERY
+-> Position reporting hierarchy / management scope
+~~~
 
-The same employee may hold multiple concurrent deployments with different purposes.
+This is the primary organisational operating model.
 
-Example:
+A separate deployment object is **not required merely to establish the user's Function world**.
 
-```text
+The Position-to-Function assignment is effective-dated and may identify a primary Function. HCM remains authoritative for Organisation, Organisation Unit, Position, Job Profile, occupancy and reporting relationships.
+
+## What the Function assignment means
+
+The assignment answers:
+
+- which Function the Position operates in;
+- whether the Position performs Governance or Delivery;
+- when the assignment is effective;
+- whether it is primary for the Position.
+
+It does **not** by itself grant:
+
+- Permission;
+- responsibility for every object in the Function;
+- approval or commercial Authority;
+- competence;
+- unrestricted tenant visibility.
+
+Those remain separate governed concepts.
+
+## Functional Governance
+
+Functional Governance controls the capability itself.
+
+Typical work includes:
+
+- mandate and ownership;
+- policy and standards;
+- process architecture;
+- methods and templates;
+- controlled classifications and metadata;
+- competence standards;
+- authority thresholds;
+- segregation of duties;
+- lifecycle/workflow rules;
+- assurance and audit;
+- KPIs/KRIs;
+- retention;
+- improvement and governed change.
+
+Governance produces real governed work products and Decisions. It is not merely configuration text.
+
+## Functional Delivery
+
+Functional Delivery performs the capability.
+
+Depending on the Function this may include:
+
+- transactions;
+- planning;
+- calculation and analysis;
+- professional authoring;
+- sales and commercial work;
+- procurement;
+- accounting;
+- design;
+- field/site work;
+- inspection and test;
+- service delivery;
+- review and Decision;
+- physical execution;
+- work products and Deliverables;
+- cross-Function handoffs.
+
+Examples:
+
+- F07 Sales Delivery owns customer relationship, opportunity, pipeline, bid/proposal and sales execution capability.
+- F14 Finance Delivery performs journals, billing, payments, reconciliation, close and reporting.
+- D01 Architecture Delivery performs briefing, design, drawings, models, schedules, specifications, coordination and technical review.
+
+## Position hierarchy and management waterfall
+
+Reporting lines are relationships between Positions.
+
+A manager's authorised operational view resolves from:
+
+~~~text
+manager Position
+-> own authorised scope
++ direct subordinate Positions
++ deeper subordinate Positions
+-> Function work / objects / performance
+~~~
+
+The hierarchy is recursive.
+
+The manager does not become the owner of subordinate records. Ownership remains with the relevant Position or Person; the hierarchy provides management scope subject to Permission, information classification, object scope and other controls.
+
+This is the governing rule behind dashboards such as Sales pipeline roll-up.
+
+## Contextual work
+
+Function establishes **what capability the Position performs**.
+
+Context establishes **where, for whom or against what subject particular work is performed**.
+
+Examples include:
+
+- Project;
+- Programme;
+- Contract;
+- Appointment;
+- Package;
+- Site;
+- Facility;
+- Asset;
+- Product;
+- Service;
+- Opportunity.
+
+A contextual assignment may be used where responsibility, capacity, dates or scope need explicit governance.
+
+For example:
+
+~~~text
 Person: Jane Smith
-Employment Position: Senior Architect
+Position: Senior Architect
+Primary Function: D01 Architecture
+Purpose: FUNCTIONAL_DELIVERY
 
-Deployment A
-  Capability: Architecture
-  Role: Architecture Standards Lead
-  Purpose: FUNCTIONAL_GOVERNANCE
-  Context: Organisation-wide
-  Capacity: 15%
+Contextual work:
+  Project Alpha
+  -> Design Package A
+  -> responsible architect
+  -> assigned drawings / models / specifications
+~~~
 
-Deployment B
-  Capability: Architecture
-  Role: Project Architect
-  Purpose: FUNCTIONAL_DELIVERY
-  Context: Project A
-  Capacity: 60%
-```
+The Project does not redefine Jane's Function.
 
-## Core Business Functions
+## Job Profile relationship
 
-Each of the 29 Core Business Functions can contain deployments for either purpose.
+A Job Profile describes reusable expectations for the work a Position may perform.
 
-For Finance:
+It may define:
 
-- Functional Governance may include accounting policy, financial controls, authority design, assurance, competence and Function improvement.
-- Functional Delivery may include journals, invoicing, payments, reconciliation, forecasting, close and reporting.
+- responsibilities;
+- competence;
+- qualifications;
+- typical activities;
+- work products;
+- assurance responsibilities;
+- native tool requirements.
 
-For Procurement:
+A Position may reference a Job Profile. A Person occupies the Position.
 
-- Functional Governance may include procurement policy, sourcing standards, delegations, supplier governance and assurance.
-- Functional Delivery may include sourcing events, RFQs, bid evaluation, purchase orders, supplier onboarding and contract execution.
+Job Profile is therefore distinct from Person, Position, Function, Permission and Authority.
 
-The same pattern applies across F01–F29.
+## CBE operating model
 
-## CBE professional disciplines
+ADR-0006 makes D01–D16 CBE-classified Functions rather than a competing canonical Domain type.
 
-The same two-purpose model applies to CBE professional capability.
+The same chain therefore applies to a Sales Executive and an Architect:
 
-For Architecture:
+~~~text
+Sales Executive
+Person -> Position -> F07 -> FUNCTIONAL_DELIVERY
 
-- Functional Governance may include design standards, BIM methods, technical procedures, templates, professional competence, technical assurance and lessons learned.
-- Functional Delivery may include briefing, design, modelling, drawings, schedules, specifications, coordination, reviews and site work.
+Architect
+Person -> Position -> D01 -> FUNCTIONAL_DELIVERY
+~~~
 
-For Quantity Surveying:
+The CBE Industry Solution supplies the D01–D16 Function definitions, 84 Job Profiles, specialist work-product types, tools, controls and configuration.
 
-- Functional Governance may include measurement rules, cost-management procedures, commercial standards, assurance methods and professional competence.
-- Functional Delivery may include estimating, cost planning, measurement, valuations, change control, forecasts and final accounts.
+Legacy Delivery Domain records may remain as compatibility/industry-composition projections but do not define a second user authority model.
 
-The 84 CBE Job Profiles identify professional capability. They do not determine deployment purpose.
+## Cross-Function interaction
 
-## Functional Deployment
+The user's primary Function world does not isolate them from the rest of the enterprise.
 
-A Core Business Function deployment binds:
+Cross-Function interaction occurs through:
 
-- Function / optional L2 sub-function;
-- deployment purpose;
-- Organisation / optional Organisation Unit;
-- operating or delivery context;
-- assigned Person, Position or Organisation Unit;
-- responsibility;
-- optional Job Profile;
-- responsibility scope;
-- capacity;
-- effectivity.
+- shared authoritative business objects;
+- Work and assignments;
+- reviews and Decisions;
+- process handoffs;
+- Projects / Contracts / Assets / other Contexts;
+- My Work;
+- explicit permissions and responsibilities.
 
-Functional Deployment remains separate from employment, Permission and business Authority.
+A Sales user should not see every Finance or Procurement screen by default. They see the Finance or Procurement interaction required by the business object or process they are participating in.
 
-### HCM Position Management
+## Relationship to Permission, Responsibility, Authority and Competence
 
-F15 Human Resources / Human Capital is the administration owner for workforce Position Management.
+These concepts are deliberately separate:
 
-The HCM Position Management experience orchestrates the relationship between:
+- **Function assignment** — what organisational capability the Position operates in and on which side.
+- **Responsibility** — what the Person/Position is accountable or responsible for.
+- **Permission** — what actions/data the principal may access.
+- **Authority** — what the principal may approve, decide or commit.
+- **Competence** — whether the principal is qualified/capable for governed work.
+- **Contextual assignment** — where or against what subject responsibility is being exercised.
 
-1. **Person** — the employed individual;
-2. **Position** — the organisational seat;
-3. **Position occupancy** — the effective employment assignment of the Person to the Position;
-4. **Job Profile** — the reusable expectation/capability associated with the Position;
-5. **Deployment** — the governed assignment of that Person/Position into a Function or CBE Domain;
-6. **Deployment purpose** — Governance or Delivery;
-7. **Responsibility, context, capacity and effectivity** — how that deployment operates.
+No one concept silently grants the others.
 
-This is a user-experience ownership decision, not a collapse of canonical entities. Person, Position, Occupancy, Job Profile and Deployment remain distinct records.
+## User experience rule
 
-## CBE Discipline Deployment
+After login, NuBlox resolves the occupied Position and primary Function assignment.
 
-A CBE Discipline Deployment binds:
+The ordinary user's primary destination is **My Function**.
 
-- CBE Industry Job Profile;
-- deployment purpose;
-- employed Person or Position;
-- Organisation / Organisation Unit derived from employment;
-- deployed role title;
-- responsibility;
-- context;
-- scope;
-- capacity;
-- effectivity.
+That workspace composes:
 
-An internal CBE Discipline Deployment is valid only when:
+- relevant Function tools;
+- current work;
+- business objects and transactions;
+- work products / Deliverables;
+- reviews and Decisions;
+- exceptions;
+- performance;
+- records and evidence;
+- only the cross-Function interactions required by their work.
 
-1. the tenant has declared that profession as an internal capability;
-2. the Person currently occupies a Position matching the required CBE Job Profile, or the selected Position itself matches it;
-3. the deployment has a valid Governance or Delivery purpose;
-4. the context is valid for the deployment.
+If the Position manages other Positions, **My Team** adds subordinate work/performance roll-up.
 
-## External providers
-
-External supplier or consultant fulfilment is not an employee discipline deployment.
-
-A Project may require a profession that the tenant cannot or does not fully supply internally. That demand may be fulfilled by an external Organisation through the supply chain.
-
-```text
-Project capability demand
-├── Internal supply
-│   └── Employee / Position deployment
-└── External supply
-    └── Supplier / consultant Organisation
-```
-
-An external provider can later expose named external personnel and project roles through controlled collaboration, but those people must not be represented as tenant employees.
-
-## Relationship to Services and Projects
-
-Services, Projects, Contracts, Appointments, Work Packages, Sites and Assets provide contexts in which Functional Delivery may occur.
-
-They do not define the underlying professional capability and they do not replace Functional Governance.
-
-A CBE discipline can therefore exist and be governed tenant-wide even when no Project is active, while its employees can simultaneously be deployed into Project delivery roles.
-
-## Relationship to work and Deliverables
-
-Deployment establishes who is carrying which role and why.
-
-Work execution then follows:
-
-```text
-Capability
-→ Deployment
-→ Responsibility
-→ Activity / Task / Work Item
-→ Work Product / Deliverable
-→ Review / Decision / Evidence
-→ Issue / Acceptance / Outcome
-```
-
-Functional Governance work can also produce governed Deliverables, such as policies, standards, methods, templates, assurance reports and competence records.
-
-Functional Delivery work produces the operational or professional outputs for which the capability exists.
+**My Work** remains the cross-Function attention surface.
 
 ## Invariants
 
-1. Person != Position != Job Profile != Deployment.
-2. Deployment purpose belongs to the deployed role.
-3. Every governed deployment is either FUNCTIONAL_GOVERNANCE or FUNCTIONAL_DELIVERY.
-4. The same employee may hold concurrent Governance and Delivery deployments.
-5. The same rule applies to all 29 Core Business Functions and CBE disciplines.
-6. Employment does not grant Permission, Responsibility or Authority.
-7. Deployment does not itself grant business Authority.
-8. A CBE internal deployment must match the employee's active professional Job Profile.
-9. External supplier fulfilment is separate from internal employee deployment.
-10. Projects and Services are delivery contexts, not definitions of the underlying Function or discipline.
-
-
-## User-facing workspace model
-
-The Governance/Delivery distinction is visible in the tenant application for both enterprise Functions and CBE professional Domains.
-
-Each capability context exposes:
-
-- **Overview** — scope and capability composition;
-- **Governance** — how the Function or Domain is defined, controlled, assured and improved;
-- **Delivery** — the work people perform and the operational/professional outputs they produce;
-- **Performance** — measures of capability, work, control, outputs and improvement;
-- **Records** — governed Information, Deliverables, Change/Configuration, Decisions and Evidence.
-
-The same rule applies to `F01-F29` and `D01-D16`.
-
-Governance is not merely descriptive configuration. Where a governance rule is machine-actionable, Delivery must enforce it. Examples include required templates, classifications, lifecycle states, competence, segregation of duties, review steps, approval Authority and Evidence requirements.
-
-The CBE Domain workspace is the professional user's primary capability context. HCM Position Management is the workforce administration surface that deploys People/Positions into that Domain as Governance or Delivery. Service configuration, capability demand and sourcing are adjacent administrative mechanisms beneath the Domain context; they do not replace it.
+1. Function is the universal organisational capability concept.
+2. Core Business and CBE are Function families, not competing capability entity types.
+3. Person != Position != Job Profile != Function.
+4. Position-to-Function assignment establishes Governance or Delivery purpose.
+5. A separate Deployment is not mandatory for primary Function membership.
+6. Context qualifies work; it does not replace the Function/Position authority chain.
+7. Employment or Function assignment does not itself grant Permission or Authority.
+8. Reporting hierarchy provides recursive management scope without changing record ownership.
+9. Cross-Function work uses shared objects and explicit handoffs rather than duplicate masters.
+10. HCM is authoritative for the workforce chain that resolves the user's primary NuBlox world.

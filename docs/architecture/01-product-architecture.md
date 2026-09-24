@@ -140,6 +140,20 @@ Govern
 -> Improve
 ~~~
 
+## ERP composition layer
+
+The product architecture is made executable by the [Enterprise ERP Composition & Execution Contract](14-enterprise-erp-composition-and-execution-contract.md).
+
+That layer binds the 29 Functions, 353 L2 Sub-functions, 1,510 Activities, Native Tool Engines, CBE Domains and Job Profiles into one ERP execution model and defines the end-to-end process spine across functional boundaries.
+
+Its machine-readable baselines are:
+
+- [1,510-Activity ERP Execution Contract](canonical-activity-erp-execution-contract.csv);
+- [84-Job CBE ERP Execution Requirement Register](cbe-job-erp-execution-requirement-register.csv); and
+- [End-to-End ERP Process Spine](enterprise-end-to-end-erp-process-spine.csv).
+
+These artefacts are derived/validated with `pnpm architecture:generate` and `pnpm architecture:check`.
+
 ## Architectural objective
 
 A user should experience NuBlox as one enterprise system whose behaviour is shaped by their organisation, Position, Job Profile, Functional Deployment, authority, operating context and work obligations—not as a menu of unrelated modules.

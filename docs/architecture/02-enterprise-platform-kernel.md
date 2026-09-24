@@ -117,6 +117,11 @@ Policy scope, Organisation hierarchy, context hierarchy and object-type hierarch
 - Migration Conflict;
 - Migration Reconciliation Run;
 - Cutover Decision;
+- Extension Definition;
+- Extension Package Version;
+- Extension Component;
+- Extension Compatibility Assessment;
+- Extension Reconciliation Run;
 - Retention Policy;
 - Hold;
 - Disposition Rule / Schedule / Run;

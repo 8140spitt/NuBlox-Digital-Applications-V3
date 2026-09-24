@@ -1,8 +1,10 @@
 # ADR-0005 — Context and Team Operating Model
 
-- Status: Accepted
+- Status: Superseded by ADR-0006 for capability identity and primary navigation; Context hierarchy retained
 - Date: 2026-09-22
 - Supersedes: navigation and UX assumptions that expose Functions, CBE Domains and workforce deployment as separate peer concepts
+
+> **Current authority (25 September 2026):** this duplicate ADR-0005 is historical. Its recursive Context hierarchy remains useful, but ADR-0006 supersedes the Team-type split and Teams-first UX. Function is the universal capability concept, and HCM Position-to-Function assignment determines the user's Governance or Delivery working world.
 
 ## Decision
 

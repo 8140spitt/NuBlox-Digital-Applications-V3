@@ -21,6 +21,8 @@ export * from './extension.js';
 export * from './extension-factories.js';
 export * from './configuration-promotion.js';
 export * from './configuration-promotion-factories.js';
+export * from './records-retention.js';
+export * from './records-retention-factories.js';
 export * from './change.js';
 export * from './change-factories.js';
 export * from './information.js';

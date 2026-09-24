@@ -4,13 +4,12 @@
 
 This repository is the clean product foundation for NuBlox. It is intentionally not organised around any incumbent ERP, PLM, CDE or project-management product.
 
-NuBlox has three product layers:
+NuBlox has one enterprise platform model:
 
 1. **Enterprise Kernel** — canonical enterprise objects and shared control services.
-2. **Functional Domains** — 29 governed enterprise functions operating on the common kernel.
-3. **Industry Solutions** — industry-specific configurations, beginning with Construction & the Built Environment.
-
-A fourth architectural concern, the **Native Work-Delivery Runtime**, turns governed capability into executable work, deliverables, decisions, evidence and controlled records.
+2. **Functions** — one universal Function model. F01–F29 are Core Business Functions; Industry Solutions may add classified Functions such as CBE D01–D16.
+3. **Native Work-Delivery Runtime** — turns governed Function capability into executable work, transactions, work products, decisions, evidence and controlled records.
+4. **Industry Solutions** — industry-specific Function definitions, Job Profiles, object types, rules and native capability composition, beginning with Construction & the Built Environment.
 
 ## Product architecture
 
@@ -22,10 +21,11 @@ NuBlox Enterprise Operating Platform
 │   ├── Workflow, lifecycle and change
 │   ├── Information, records and baselines
 │   └── Events, decisions, evidence and audit
-├── Functional Domains
-│   ├── 29 governed functions
-│   ├── Native domain tools
-│   └── Shared cross-domain processes
+├── Functions
+│   ├── F01–F29 Core Business Functions
+│   ├── Industry Functions such as CBE D01–D16
+│   ├── Native tools
+│   └── Shared cross-Function processes
 ├── Native Work-Delivery Runtime
 │   ├── Deployments and assignments
 │   ├── Work and deliverables
@@ -33,10 +33,26 @@ NuBlox Enterprise Operating Platform
 │   └── Evidence and records
 └── Industry Solutions
     └── Construction & Built Environment
-        ├── 16 delivery domains
-        ├── 84 job profiles
+        ├── 16 CBE Functions / professional domains
+        ├── 84 Job Profiles
         └── Projects, contracts, packages, sites and assets
 ```
+
+## User operating model
+
+The signed-in user's primary working world is resolved from Human Capital authority:
+
+```text
+Person
+→ Employment
+→ occupied Position
+→ assigned Function
+→ Functional Governance | Functional Delivery
+→ Position reporting hierarchy / management scope
+→ authorised work, tools, objects, decisions and cross-Function handoffs
+```
+
+A manager sees their own authorised work plus the work and performance of subordinate Positions within the same governed scope. Contexts such as Project, Contract, Site and Asset refine where work is performed; they do not replace the Function/Position model.
 
 ## Repository map
 

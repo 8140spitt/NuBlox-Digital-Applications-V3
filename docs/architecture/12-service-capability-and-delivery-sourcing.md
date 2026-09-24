@@ -2,12 +2,9 @@
 
 ## Purpose
 
-This document governs CBE service capability demand and sourcing. It does **not** define the
-primary distinction between the 29 Core Business Functions and CBE professional disciplines.
+This document governs CBE service capability demand and sourcing. It does **not** define a second capability model beside Function.
 
-Both Core Business Functions and CBE disciplines support employee role deployments for
-**Functional Governance** and **Functional Delivery**, as defined by
-`13-functional-governance-and-functional-delivery.md`.
+Under ADR-0006, the 29 Core Business Functions and the 16 CBE professional capability areas are Function families. Positions are assigned to a Function for **Functional Governance** or **Functional Delivery**, as defined by `13-functional-governance-and-functional-delivery.md`.
 
 The sourcing model in this document applies when a delivery context creates professional capability
 demand that must be supplied internally, externally or through a hybrid arrangement.
@@ -16,13 +13,13 @@ demand that must be supplied internally, externally or through a hybrid arrangem
 
 ```text
 TENANT
-├── EMPLOYEE DEPLOYMENTS
-│   ├── Core Business Functions
-│   │   ├── Functional Governance
-│   │   └── Functional Delivery
-│   └── CBE Disciplines
+├── HCM POSITION AUTHORITY
+│   └── Position -> Function assignment
 │       ├── Functional Governance
 │       └── Functional Delivery
+│
+├── OPTIONAL CONTEXTUAL RESPONSIBILITY
+│   └── Project / Contract / Package / Site / Asset / Service
 │
 └── DELIVERY CAPABILITY DEMAND
     └── Project / Contract / Appointment / other delivery context
@@ -173,32 +170,30 @@ Active fulfilment share drives Requirement state:
 
 Active fulfilment may never exceed 100%.
 
-## Relationship to Functional Deployment
+## Relationship to HCM Function assignment and contextual responsibility
 
-`FunctionalDeployment` and delivery capability fulfilment are deliberately different concepts.
+Position-to-Function assignment and delivery capability fulfilment are deliberately different concepts.
 
-### Employee role deployments
+### HCM Function assignment
 
-A Core Business Function deployment or CBE Discipline Deployment assigns an employed Person,
-Position or organisational responsibility to a governed role with an explicit purpose:
+HCM assigns an occupied Position to a Core Business or CBE Function with an explicit purpose:
 `FUNCTIONAL_GOVERNANCE` or `FUNCTIONAL_DELIVERY`.
 
 It answers:
 
-> Which role is this employee or Position performing, in which capability and context, and for what
-> governance or delivery purpose?
+> Which organisational capability is this Position part of, and does it govern or deliver that capability?
+
+A contextual assignment may additionally record responsibility, capacity and effectivity for a Project, Contract, Package, Site, Asset or Service.
 
 ### Delivery Capability Fulfilment
 
-Delivery Capability Fulfilment satisfies Project or other delivery-context demand from internal
-capacity, an external Organisation, or both.
+Delivery Capability Fulfilment satisfies Project or other delivery-context demand from internal capacity, an external Organisation, or both.
 
 It answers:
 
 > How is this professional capability requirement being supplied?
 
-Internal fulfilment may be associated with an employee who also has a CBE Discipline Deployment.
-External fulfilment remains a supply-chain relationship and is not converted into tenant employment.
+Internal fulfilment may be associated with a Person/Position whose Function, Job Profile and competence match the demand. External fulfilment remains a supply-chain relationship and is not converted into tenant employment.
 
 ## Relationship to Deliverables
 
@@ -265,6 +260,6 @@ Subsequent implementation should connect this model to:
 6. Internal fulfilment must match the required CBE Job Profile.
 7. External fulfilment is an Organisation relationship, not employment.
 8. Requirement fulfilment cannot exceed 100%.
-9. Employee role deployment != Project capability fulfilment.
+9. Position-to-Function assignment != Project capability fulfilment.
 10. Capability fulfilment != Deliverable; it supplies the capability that performs work producing
     Deliverables.

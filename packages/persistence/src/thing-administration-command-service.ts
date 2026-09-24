@@ -28,8 +28,8 @@ import { writeOutboxEvent } from './platform-writes.js';
 
 interface TypeRow extends RowDataPacket {
   id:string; tenant_id:string; code:string; name:string; object_family:string;
-  parent_type_definition_id:string|null; lifecycle_definition_id:string|null; status:'ACTIVE'|'INACTIVE';
-  effective_from:Date|null; effective_to:Date|null;
+  parent_type_definition_id:string|null; lifecycle_definition_id:string|null; creation_policy_reference:string|null;
+  status:'ACTIVE'|'INACTIVE'; effective_from:Date|null; effective_to:Date|null;
 }
 interface AssignmentRow extends RowDataPacket {
   id:string; type_definition_id:string; attribute_definition_id:string; required:number;
@@ -415,6 +415,65 @@ export class MySqlThingAdministrationCommandService {
     }catch(error){return mapError(error);}
   }
 
+  async replaceThingFieldValues(
+    tenantId:TenantId,
+    actorPersonId:string,
+    input:{
+      thingId:string;
+      typeAttributeAssignmentId:string;
+      values:Array<{sequence?:number;value:unknown}>;
+    }
+  ):Promise<void>{
+    await this.requireManage(tenantId,actorPersonId);
+    try{
+      await withTransaction(this.pool,async connection=>{
+        const thing=await this.requireThing(connection,tenantId,required(input.thingId,'Thing'));
+        if(!thing.type_definition_id){
+          throw new ThingAdministrationCommandError('Canonical object has no governed Type binding.','INVALID_INPUT');
+        }
+        const assignment=await this.requireTypeAssignment(
+          connection,tenantId,thing.type_definition_id,
+          required(input.typeAttributeAssignmentId,'Type Attribute Assignment')
+        );
+        if(assignment.cardinality==='SINGLE'&&input.values.length>1){
+          throw new ThingAdministrationCommandError('SINGLE field accepts at most one value.','INVALID_INPUT');
+        }
+        const requiredByConstraint=await this.hasMandatoryRequiredConstraint(
+          connection,tenantId,assignment.id,'THING'
+        );
+        if((Boolean(assignment.required)||requiredByConstraint)&&input.values.length===0){
+          throw new ThingAdministrationCommandError('Required field cannot be cleared.','INVALID_INPUT');
+        }
+        const seen=new Set<number>();
+        for(const item of input.values){
+          const sequence=integer(item.sequence??0,'Field value sequence');
+          if(seen.has(sequence)){
+            throw new ThingAdministrationCommandError('Field value sequence must be unique.','INVALID_INPUT');
+          }
+          seen.add(sequence);
+          await this.validateAssignedConstraints(
+            connection,tenantId,assignment.id,assignment.data_type,item.value,'THING'
+          );
+          await this.typedColumns(connection,tenantId,assignment,item.value);
+        }
+        await connection.execute(
+          `DELETE FROM metadata_object_attribute_values
+            WHERE tenant_id=? AND canonical_object_id=? AND type_attribute_assignment_id=?`,
+          [tenantId,thing.id,assignment.id]
+        );
+        for(const item of input.values){
+          await this.writeThingFieldValue(
+            connection,tenantId,actorPersonId,thing.id,thing.type_definition_id,
+            assignment.id,item.sequence??0,item.value
+          );
+        }
+        await this.audit(connection,tenantId,'THING_FIELD_VALUE',thing.id,'REPLACED',actorPersonId,{
+          thingId:thing.id,assignmentId:assignment.id,count:input.values.length
+        });
+      });
+    }catch(error){mapError(error);}
+  }
+
   async setThingFieldValue(
     tenantId:TenantId,
     actorPersonId:string,
@@ -757,7 +816,7 @@ export class MySqlThingAdministrationCommandService {
     connection:PoolConnection,tenantId:TenantId,id:string
   ):Promise<TypeRow>{
     const [rows]=await connection.execute<TypeRow[]>(
-      `SELECT id,tenant_id,code,name,object_family,parent_type_definition_id,lifecycle_definition_id,status,effective_from,effective_to
+      `SELECT id,tenant_id,code,name,object_family,parent_type_definition_id,lifecycle_definition_id,creation_policy_reference,status,effective_from,effective_to
          FROM metadata_type_definitions
         WHERE tenant_id=? AND id=? AND status='ACTIVE'
           AND (effective_from IS NULL OR effective_from<=CURRENT_TIMESTAMP(6))

@@ -2,12 +2,20 @@ import { randomUUID } from 'node:crypto';
 import {
   PLATFORM_PERMISSION_KEYS,
   asId,
+  evaluateMetadataConstraint,
+  initialiseObjectLifecycle,
   type CanonicalObjectId,
+  type CanonicalObjectIdentity,
   type CanonicalRelationshipId,
+  type LifecycleDefinition,
+  type LifecycleStateDefinition,
   type MetadataCardinality,
+  type MetadataConstraintType,
   type MetadataDataType,
   type MetadataRelationshipCardinality,
+  type ObjectLifecycleState,
   type RelationshipAttributeAssignment,
+  type RelationshipAttributeConstraintAssignment,
   type RelationshipTypeDefinition,
   type TenantId,
   type Thing,
@@ -20,13 +28,13 @@ import { writeOutboxEvent } from './platform-writes.js';
 
 interface TypeRow extends RowDataPacket {
   id:string; tenant_id:string; code:string; name:string; object_family:string;
-  parent_type_definition_id:string|null; status:'ACTIVE'|'INACTIVE';
+  parent_type_definition_id:string|null; lifecycle_definition_id:string|null; status:'ACTIVE'|'INACTIVE';
   effective_from:Date|null; effective_to:Date|null;
 }
 interface AssignmentRow extends RowDataPacket {
   id:string; type_definition_id:string; attribute_definition_id:string; required:number;
   cardinality:MetadataCardinality; data_type:MetadataDataType;
-  enumeration_definition_id:string|null; reference_object_family:string|null; status:'ACTIVE'|'INACTIVE';
+  enumeration_definition_id:string|null; reference_object_family:string|null; default_value:unknown; status:'ACTIVE'|'INACTIVE';
 }
 interface RelationshipTypeRow extends RowDataPacket {
   id:string; tenant_id:string; code:string; name:string; description:string|null;
@@ -38,7 +46,7 @@ interface RelationshipTypeRow extends RowDataPacket {
 interface RelationshipAssignmentRow extends RowDataPacket {
   id:string; relationship_type_definition_id:string; attribute_definition_id:string;
   required:number; cardinality:MetadataCardinality; data_type:MetadataDataType;
-  enumeration_definition_id:string|null; reference_object_family:string|null; status:'ACTIVE'|'INACTIVE';
+  enumeration_definition_id:string|null; reference_object_family:string|null; default_value:unknown; status:'ACTIVE'|'INACTIVE';
 }
 interface ThingRow extends RowDataPacket {
   id:string; tenant_id:string; object_type:string; type_definition_id:string|null; stable_key:string;
@@ -48,6 +56,16 @@ interface CountRow extends RowDataPacket { count:number|string; }
 interface EnumRow extends RowDataPacket { id:string; enumeration_definition_id:string; status:'ACTIVE'|'INACTIVE'; }
 interface ReferenceRow extends RowDataPacket {
   id:string; type_definition_id:string|null; object_family:string|null; status:'ACTIVE'|'INACTIVE';
+}
+interface ConstraintRuntimeRow extends RowDataPacket {
+  code:string; constraint_type:MetadataConstraintType; configuration:unknown; mandatory:number;
+}
+interface LifecycleDefinitionRow extends RowDataPacket {
+  id:string;tenant_id:string;code:string;name:string;object_type:string;status:'ACTIVE'|'INACTIVE';
+}
+interface LifecycleStateRow extends RowDataPacket {
+  id:string;tenant_id:string;lifecycle_definition_id:string;code:string;name:string;
+  category:LifecycleStateDefinition['category'];is_initial:number;is_terminal:number;status:'ACTIVE'|'INACTIVE';
 }
 
 export class ThingAdministrationCommandError extends Error {
@@ -116,6 +134,11 @@ const emptyTyped=():TypedColumns=>({
   stringValue:null,integerValue:null,decimalValue:null,booleanValue:null,dateValue:null,
   datetimeValue:null,enumerationValueId:null,referenceObjectId:null,jsonValue:null
 });
+
+function parsedJson(value:unknown):unknown{
+  if(typeof value!=='string') return value;
+  try{return JSON.parse(value);}catch{return value;}
+}
 
 export class MySqlThingAdministrationCommandService {
   private readonly access:MySqlAccessRepository;
@@ -238,6 +261,79 @@ export class MySqlThingAdministrationCommandService {
     }catch(error){return mapError(error);}
   }
 
+  async assignConstraintToRelationshipAttribute(
+    tenantId:TenantId,
+    actorPersonId:string,
+    input:{
+      relationshipAttributeAssignmentId:string;
+      constraintDefinitionId:string;
+      sequence?:number;
+      mandatory?:boolean;
+    }
+  ):Promise<RelationshipAttributeConstraintAssignment>{
+    await this.requireManage(tenantId,actorPersonId);
+    try{
+      return await withTransaction(this.pool,async connection=>{
+        const relationshipAttributeAssignmentId=required(
+          input.relationshipAttributeAssignmentId,'Relationship Attribute Assignment'
+        );
+        const constraintDefinitionId=required(input.constraintDefinitionId,'Constraint Definition');
+        const [assignmentRows,constraintRows]=await Promise.all([
+          connection.execute<(RowDataPacket&{id:string})[]>(
+            `SELECT id FROM metadata_relationship_attribute_assignments
+              WHERE tenant_id=? AND id=? AND status='ACTIVE'`,
+            [tenantId,relationshipAttributeAssignmentId]
+          ),
+          connection.execute<(RowDataPacket&{id:string})[]>(
+            `SELECT id FROM metadata_constraint_definitions
+              WHERE tenant_id=? AND id=? AND status='ACTIVE'
+                AND (effective_from IS NULL OR effective_from<=CURRENT_TIMESTAMP(6))
+                AND (effective_to IS NULL OR effective_to>=CURRENT_TIMESTAMP(6))`,
+            [tenantId,constraintDefinitionId]
+          )
+        ]);
+        if(!assignmentRows[0][0]){
+          throw new ThingAdministrationCommandError(
+            'Relationship Attribute Assignment was not found or inactive.','NOT_FOUND'
+          );
+        }
+        if(!constraintRows[0][0]){
+          throw new ThingAdministrationCommandError(
+            'Constraint Definition was not found, inactive or ineffective.','NOT_FOUND'
+          );
+        }
+        const item:RelationshipAttributeConstraintAssignment={
+          id:asId<'RelationshipAttributeConstraintAssignmentId'>(
+            `RELATTRCON-${randomUUID()}`,'Relationship Attribute Constraint Assignment'
+          ),
+          tenantId,
+          relationshipAttributeAssignmentId:asId<'RelationshipAttributeAssignmentId'>(
+            relationshipAttributeAssignmentId,'Relationship Attribute Assignment'
+          ),
+          constraintDefinitionId:asId<'ConstraintDefinitionId'>(
+            constraintDefinitionId,'Constraint Definition'
+          ),
+          sequence:integer(input.sequence??0,'Sequence'),
+          mandatory:input.mandatory??true,
+          status:'ACTIVE'
+        };
+        await connection.execute(
+          `INSERT INTO metadata_relationship_attribute_constraint_assignments
+            (id,tenant_id,relationship_attribute_assignment_id,constraint_definition_id,
+             sequence_no,mandatory,status,created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?,?)`,
+          [item.id,tenantId,item.relationshipAttributeAssignmentId,item.constraintDefinitionId,
+           item.sequence,item.mandatory,item.status,actorPersonId,actorPersonId]
+        );
+        await this.audit(
+          connection,tenantId,'RELATIONSHIP_ATTRIBUTE_CONSTRAINT_ASSIGNMENT',
+          item.id,'ASSIGNED',actorPersonId,item
+        );
+        return item;
+      });
+    }catch(error){return mapError(error);}
+  }
+
   async createThing(
     tenantId:TenantId,
     actorPersonId:string,
@@ -251,12 +347,34 @@ export class MySqlThingAdministrationCommandService {
       return await withTransaction(this.pool,async connection=>{
         const type=await this.requireType(connection,tenantId,required(input.typeDefinitionId,'Type Definition'));
         const assignments=await this.effectiveTypeAssignments(connection,tenantId,type.id);
-        const supplied=input.fieldValues??[];
-        const suppliedIds=new Set(supplied.map(item=>item.typeAttributeAssignmentId));
-        for(const assignment of assignments){
-          if(Boolean(assignment.required)&&!suppliedIds.has(assignment.id)){
+        const supplied=[...(input.fieldValues??[])];
+        const assignmentById=new Map(assignments.map(item=>[item.id,item]));
+        for(const value of supplied){
+          if(!assignmentById.has(value.typeAttributeAssignmentId)){
             throw new ThingAdministrationCommandError(
-              `Required field assignment ${assignment.id} must be supplied when creating ${type.code}.`,
+              'A supplied field assignment is not valid for this Thing type.','INVALID_INPUT'
+            );
+          }
+        }
+        for(const assignment of assignments){
+          const existing=supplied.filter(item=>item.typeAttributeAssignmentId===assignment.id);
+          if(existing.length===0&&assignment.default_value!==null&&assignment.default_value!==undefined){
+            const defaultValue=parsedJson(assignment.default_value);
+            if(assignment.cardinality==='MULTIPLE'&&Array.isArray(defaultValue)){
+              defaultValue.forEach((value,sequence)=>supplied.push({
+                typeAttributeAssignmentId:assignment.id,sequence,value
+              }));
+            }else{
+              supplied.push({typeAttributeAssignmentId:assignment.id,sequence:0,value:defaultValue});
+            }
+          }
+          const resolved=supplied.filter(item=>item.typeAttributeAssignmentId===assignment.id);
+          const requiredByConstraint=await this.hasMandatoryRequiredConstraint(
+            connection,tenantId,assignment.id,'THING'
+          );
+          if((Boolean(assignment.required)||requiredByConstraint)&&resolved.length===0){
+            throw new ThingAdministrationCommandError(
+              `Required field assignment ${assignment.id} must be supplied or have a default when creating ${type.code}.`,
               'INVALID_INPUT'
             );
           }
@@ -284,6 +402,11 @@ export class MySqlThingAdministrationCommandService {
             connection,tenantId,actorPersonId,thing.id,type.id,
             required(value.typeAttributeAssignmentId,'Type Attribute Assignment'),
             value.sequence??0,value.value
+          );
+        }
+        if(type.lifecycle_definition_id){
+          await this.initialiseThingLifecycle(
+            connection,tenantId,actorPersonId,thing,type.lifecycle_definition_id
           );
         }
         await this.audit(connection,tenantId,'THING',thing.id,'CREATED',actorPersonId,thing);
@@ -371,12 +494,35 @@ export class MySqlThingAdministrationCommandService {
           }
         }
         const assignmentRows=await this.relationshipAssignments(connection,tenantId,definition.id);
-        const supplied=input.fieldValues??[];
-        const suppliedIds=new Set(supplied.map(item=>item.relationshipAttributeAssignmentId));
-        for(const assignment of assignmentRows){
-          if(Boolean(assignment.required)&&!suppliedIds.has(assignment.id)){
+        const supplied=[...(input.fieldValues??[])];
+        const assignmentById=new Map(assignmentRows.map(item=>[item.id,item]));
+        for(const value of supplied){
+          if(!assignmentById.has(value.relationshipAttributeAssignmentId)){
             throw new ThingAdministrationCommandError(
-              `Required relationship field assignment ${assignment.id} must be supplied.`,'INVALID_INPUT'
+              'A supplied relationship field assignment is not valid for this Relationship Type.','INVALID_INPUT'
+            );
+          }
+        }
+        for(const assignment of assignmentRows){
+          const existing=supplied.filter(item=>item.relationshipAttributeAssignmentId===assignment.id);
+          if(existing.length===0&&assignment.default_value!==null&&assignment.default_value!==undefined){
+            const defaultValue=parsedJson(assignment.default_value);
+            if(assignment.cardinality==='MULTIPLE'&&Array.isArray(defaultValue)){
+              defaultValue.forEach((value,sequence)=>supplied.push({
+                relationshipAttributeAssignmentId:assignment.id,sequence,value
+              }));
+            }else{
+              supplied.push({relationshipAttributeAssignmentId:assignment.id,sequence:0,value:defaultValue});
+            }
+          }
+          const resolved=supplied.filter(item=>item.relationshipAttributeAssignmentId===assignment.id);
+          const requiredByConstraint=await this.hasMandatoryRequiredConstraint(
+            connection,tenantId,assignment.id,'RELATIONSHIP'
+          );
+          if((Boolean(assignment.required)||requiredByConstraint)&&resolved.length===0){
+            throw new ThingAdministrationCommandError(
+              `Required relationship field assignment ${assignment.id} must be supplied or have a default.`,
+              'INVALID_INPUT'
             );
           }
         }
@@ -448,6 +594,9 @@ export class MySqlThingAdministrationCommandService {
     if(assignment.cardinality==='SINGLE'&&slot!==0){
       throw new ThingAdministrationCommandError('SINGLE field values must use sequence 0.','INVALID_INPUT');
     }
+    await this.validateAssignedConstraints(
+      connection,tenantId,assignment.id,assignment.data_type,value,'THING'
+    );
     const typed=await this.typedColumns(connection,tenantId,assignment,value);
     const id=`THINGVAL-${randomUUID()}`;
     await connection.execute(
@@ -483,6 +632,9 @@ export class MySqlThingAdministrationCommandService {
     if(assignment.cardinality==='SINGLE'&&slot!==0){
       throw new ThingAdministrationCommandError('SINGLE relationship field values must use sequence 0.','INVALID_INPUT');
     }
+    await this.validateAssignedConstraints(
+      connection,tenantId,assignment.id,assignment.data_type,value,'RELATIONSHIP'
+    );
     const typed=await this.typedColumns(connection,tenantId,assignment,value);
     const id=`RELVAL-${randomUUID()}`;
     await connection.execute(
@@ -591,7 +743,7 @@ export class MySqlThingAdministrationCommandService {
     connection:PoolConnection,tenantId:TenantId,id:string
   ):Promise<TypeRow>{
     const [rows]=await connection.execute<TypeRow[]>(
-      `SELECT id,tenant_id,code,name,object_family,parent_type_definition_id,status,effective_from,effective_to
+      `SELECT id,tenant_id,code,name,object_family,parent_type_definition_id,lifecycle_definition_id,status,effective_from,effective_to
          FROM metadata_type_definitions
         WHERE tenant_id=? AND id=? AND status='ACTIVE'
           AND (effective_from IS NULL OR effective_from<=CURRENT_TIMESTAMP(6))
@@ -627,7 +779,7 @@ export class MySqlThingAdministrationCommandService {
           WHERE p.tenant_id=? AND p.status='ACTIVE'
        )
        SELECT ta.id,ta.type_definition_id,ta.attribute_definition_id,ta.required,ta.cardinality,
-              ad.data_type,ad.enumeration_definition_id,ad.reference_object_family,ta.status
+              ad.data_type,ad.enumeration_definition_id,ad.reference_object_family,ta.default_value,ta.status
          FROM metadata_type_attribute_assignments ta
          JOIN metadata_attribute_definitions ad
            ON ad.tenant_id=ta.tenant_id AND ad.id=ta.attribute_definition_id
@@ -670,7 +822,7 @@ export class MySqlThingAdministrationCommandService {
     const [rows]=await connection.execute<RelationshipAssignmentRow[]>(
       `SELECT ra.id,ra.relationship_type_definition_id,ra.attribute_definition_id,
               ra.required,ra.cardinality,ad.data_type,ad.enumeration_definition_id,
-              ad.reference_object_family,ra.status
+              ad.reference_object_family,ra.default_value,ra.status
          FROM metadata_relationship_attribute_assignments ra
          JOIN metadata_attribute_definitions ad
            ON ad.tenant_id=ra.tenant_id AND ad.id=ra.attribute_definition_id
@@ -689,6 +841,186 @@ export class MySqlThingAdministrationCommandService {
     const assignment=rows.find(item=>item.id===assignmentId);
     if(!assignment) throw new ThingAdministrationCommandError('Field assignment is not valid for this Relationship Type.','INVALID_INPUT');
     return assignment;
+  }
+
+  private async hasMandatoryRequiredConstraint(
+    connection:PoolConnection,
+    tenantId:TenantId,
+    assignmentId:string,
+    target:'THING'|'RELATIONSHIP'
+  ):Promise<boolean>{
+    const table=target==='THING'
+      ?'metadata_attribute_constraint_assignments'
+      :'metadata_relationship_attribute_constraint_assignments';
+    const assignmentColumn=target==='THING'
+      ?'type_attribute_assignment_id'
+      :'relationship_attribute_assignment_id';
+    const [rows]=await connection.query<CountRow[]>(
+      `SELECT COUNT(*) AS count
+         FROM ${table} ca
+         JOIN metadata_constraint_definitions c
+           ON c.tenant_id=ca.tenant_id AND c.id=ca.constraint_definition_id
+        WHERE ca.tenant_id=? AND ca.${assignmentColumn}=?
+          AND ca.status='ACTIVE' AND ca.mandatory=TRUE
+          AND c.status='ACTIVE' AND c.constraint_type='REQUIRED'
+          AND (c.effective_from IS NULL OR c.effective_from<=CURRENT_TIMESTAMP(6))
+          AND (c.effective_to IS NULL OR c.effective_to>=CURRENT_TIMESTAMP(6))`,
+      [tenantId,assignmentId]
+    );
+    return Number(rows[0]?.count??0)>0;
+  }
+
+  private async validateAssignedConstraints(
+    connection:PoolConnection,
+    tenantId:TenantId,
+    assignmentId:string,
+    dataType:MetadataDataType,
+    value:unknown,
+    target:'THING'|'RELATIONSHIP'
+  ):Promise<void>{
+    const table=target==='THING'
+      ?'metadata_attribute_constraint_assignments'
+      :'metadata_relationship_attribute_constraint_assignments';
+    const assignmentColumn=target==='THING'
+      ?'type_attribute_assignment_id'
+      :'relationship_attribute_assignment_id';
+    const [rows]=await connection.query<ConstraintRuntimeRow[]>(
+      `SELECT c.code,c.constraint_type,c.configuration,ca.mandatory
+         FROM ${table} ca
+         JOIN metadata_constraint_definitions c
+           ON c.tenant_id=ca.tenant_id AND c.id=ca.constraint_definition_id
+        WHERE ca.tenant_id=? AND ca.${assignmentColumn}=?
+          AND ca.status='ACTIVE' AND c.status='ACTIVE'
+          AND (c.effective_from IS NULL OR c.effective_from<=CURRENT_TIMESTAMP(6))
+          AND (c.effective_to IS NULL OR c.effective_to>=CURRENT_TIMESTAMP(6))
+        ORDER BY ca.sequence_no,c.code`,
+      [tenantId,assignmentId]
+    );
+    let referenceObjectFamily:string|undefined;
+    let referenceTypeDefinitionId:string|undefined;
+    if(dataType==='REFERENCE'){
+      const id=required(String(value),'Reference Thing');
+      const [references]=await connection.execute<ReferenceRow[]>(
+        `SELECT co.id,co.type_definition_id,mt.object_family,co.status
+           FROM canonical_objects co
+           LEFT JOIN metadata_type_definitions mt
+             ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
+          WHERE co.tenant_id=? AND co.id=?`,[tenantId,id]
+      );
+      const reference=references[0];
+      if(reference){
+        referenceObjectFamily=reference.object_family??undefined;
+        referenceTypeDefinitionId=reference.type_definition_id??undefined;
+      }
+    }
+    for(const row of rows){
+      const result=evaluateMetadataConstraint({
+        code:row.code,
+        constraintType:row.constraint_type,
+        configuration:(parsedJson(row.configuration)??{}) as Readonly<Record<string,unknown>>,
+        dataType,
+        value,
+        ...(referenceObjectFamily?{referenceObjectFamily}:{}),
+        ...(referenceTypeDefinitionId?{referenceTypeDefinitionId}:{})
+      });
+      if(Boolean(row.mandatory)&&(!result.supported||!result.passed)){
+        throw new ThingAdministrationCommandError(
+          result.message??`${row.code}: mandatory metadata constraint failed.`,'INVALID_INPUT'
+        );
+      }
+    }
+  }
+
+  private async initialiseThingLifecycle(
+    connection:PoolConnection,
+    tenantId:TenantId,
+    actorPersonId:string,
+    thing:Thing,
+    lifecycleDefinitionId:string
+  ):Promise<void>{
+    const [definitionRows,stateRows]=await Promise.all([
+      connection.execute<LifecycleDefinitionRow[]>(
+        `SELECT id,tenant_id,code,name,object_type,status
+           FROM lifecycle_definitions
+          WHERE tenant_id=? AND id=? AND status='ACTIVE'`,
+        [tenantId,lifecycleDefinitionId]
+      ),
+      connection.execute<LifecycleStateRow[]>(
+        `SELECT id,tenant_id,lifecycle_definition_id,code,name,category,
+                is_initial,is_terminal,status
+           FROM lifecycle_state_definitions
+          WHERE tenant_id=? AND lifecycle_definition_id=?
+            AND is_initial=TRUE AND status='ACTIVE'
+          ORDER BY id`,
+        [tenantId,lifecycleDefinitionId]
+      )
+    ]);
+    const definitionRow=definitionRows[0][0];
+    const states=stateRows[0];
+    if(!definitionRow){
+      throw new ThingAdministrationCommandError(
+        'Thing Type lifecycle definition was not found or inactive.','INVALID_INPUT'
+      );
+    }
+    if(states.length!==1){
+      throw new ThingAdministrationCommandError(
+        'Thing Type lifecycle must have exactly one active initial state.','INVALID_INPUT'
+      );
+    }
+    const stateRow=states[0]!;
+    const definition:LifecycleDefinition={
+      id:asId<'LifecycleDefinitionId'>(definitionRow.id,'Lifecycle Definition'),
+      tenantId,
+      code:definitionRow.code,
+      name:definitionRow.name,
+      objectType:definitionRow.object_type,
+      status:definitionRow.status
+    };
+    const state:LifecycleStateDefinition={
+      id:asId<'LifecycleStateDefinitionId'>(stateRow.id,'Lifecycle State Definition'),
+      tenantId,
+      lifecycleDefinitionId:definition.id,
+      code:stateRow.code,
+      name:stateRow.name,
+      category:stateRow.category,
+      initial:Boolean(stateRow.is_initial),
+      terminal:Boolean(stateRow.is_terminal),
+      status:stateRow.status
+    };
+    const object:CanonicalObjectIdentity={
+      id:thing.id,
+      tenantId,
+      objectType:thing.typeCode,
+      stableKey:thing.stableKey,
+      createdAt:thing.createdAt
+    };
+    const lifecycle:ObjectLifecycleState={
+      id:asId<'ObjectLifecycleStateId'>(`OLS-${randomUUID()}`,'Object Lifecycle State'),
+      tenantId,
+      canonicalObjectId:thing.id,
+      lifecycleDefinitionId:definition.id,
+      lifecycleStateId:state.id,
+      sequence:1,
+      effectiveAt:thing.createdAt
+    };
+    initialiseObjectLifecycle(lifecycle,object,definition,state);
+    await connection.execute(
+      `INSERT INTO object_lifecycle_states
+        (id,tenant_id,canonical_object_id,lifecycle_definition_id,lifecycle_state_id,
+         subject_version,sequence,effective_at,transition_id,decision_id)
+       VALUES (?,?,?,?,?,NULL,?,?,NULL,NULL)`,
+      [lifecycle.id,tenantId,thing.id,definition.id,state.id,lifecycle.sequence,new Date(lifecycle.effectiveAt)]
+    );
+    await connection.execute(
+      `INSERT INTO object_lifecycle_history
+        (tenant_id,object_lifecycle_state_id,canonical_object_id,lifecycle_definition_id,
+         lifecycle_state_id,subject_version,sequence,transition_id,decision_id,effective_at)
+       VALUES (?,?,?,?,?,NULL,?,NULL,NULL,?)`,
+      [tenantId,lifecycle.id,thing.id,definition.id,state.id,lifecycle.sequence,new Date(lifecycle.effectiveAt)]
+    );
+    await this.audit(
+      connection,tenantId,'OBJECT_LIFECYCLE_STATE',lifecycle.id,'INITIALISED',actorPersonId,lifecycle
+    );
   }
 
   private async typeMatches(

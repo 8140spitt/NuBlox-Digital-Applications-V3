@@ -97,7 +97,9 @@ export const PLATFORM_PERMISSION_KEYS = {
   CONFIGURATION_RESOLUTION_MANAGE: 'platform.configuration_resolution.manage',
   CONFIGURATION_RESOLUTION_EXECUTE: 'platform.configuration_resolution.execute',
   F01_READ: 'function.f01.read',
-  F01_WORK: 'function.f01.work'
+  F01_WORK: 'function.f01.work',
+  F07_READ: 'function.f07.read',
+  F07_WORK: 'function.f07.work'
 } as const;
 
 export type PlatformPermissionKey =

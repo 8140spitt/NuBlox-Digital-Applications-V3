@@ -93,6 +93,9 @@ export * from './organisational-resource-planning-read-repository.js';
 
 export * from './hcm-command-service.js';
 export * from './hcm-read-repository.js';
+export * from './function-work-authorization.js';
+export * from './sales-command-service.js';
+export * from './sales-read-repository.js';
 
 export * from './thing-administration-command-service.js';
 export * from './thing-administration-read-repository.js';

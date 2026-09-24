@@ -58,6 +58,8 @@ import {
   MySqlOrganisationalResourcePlanningReadRepository,
   MySqlHcmCommandService,
   MySqlHcmReadRepository,
+  MySqlSalesCommandService,
+  MySqlSalesReadRepository,
   MySqlThingAdministrationCommandService,
   MySqlThingAdministrationReadRepository,
   MySqlEnterpriseVocabularyProvisioningService,
@@ -123,6 +125,8 @@ let organisationalResourcePlanningCommandServiceInstance: MySqlOrganisationalRes
 let organisationalResourcePlanningReadRepositoryInstance: MySqlOrganisationalResourcePlanningReadRepository | undefined;
 let hcmCommandServiceInstance: MySqlHcmCommandService | undefined;
 let hcmReadRepositoryInstance: MySqlHcmReadRepository | undefined;
+let salesCommandServiceInstance: MySqlSalesCommandService | undefined;
+let salesReadRepositoryInstance: MySqlSalesReadRepository | undefined;
 let thingAdministrationCommandServiceInstance: MySqlThingAdministrationCommandService | undefined;
 let thingAdministrationReadRepositoryInstance: MySqlThingAdministrationReadRepository | undefined;
 let enterpriseVocabularyProvisioningServiceInstance: MySqlEnterpriseVocabularyProvisioningService | undefined;
@@ -602,6 +606,20 @@ export function getHcmReadRepository(): MySqlHcmReadRepository {
     hcmReadRepositoryInstance = new MySqlHcmReadRepository(getDatabasePool());
   }
   return hcmReadRepositoryInstance;
+}
+
+export function getSalesCommandService(): MySqlSalesCommandService {
+  if (!salesCommandServiceInstance) {
+    salesCommandServiceInstance = new MySqlSalesCommandService(getDatabasePool());
+  }
+  return salesCommandServiceInstance;
+}
+
+export function getSalesReadRepository(): MySqlSalesReadRepository {
+  if (!salesReadRepositoryInstance) {
+    salesReadRepositoryInstance = new MySqlSalesReadRepository(getDatabasePool());
+  }
+  return salesReadRepositoryInstance;
 }
 
 export function getThingAdministrationCommandService(): MySqlThingAdministrationCommandService {

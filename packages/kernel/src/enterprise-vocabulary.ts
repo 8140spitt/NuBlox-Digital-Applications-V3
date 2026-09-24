@@ -29,6 +29,7 @@ export const ENTERPRISE_THING_VOCABULARY = Object.freeze([
   {code:'CONTRACT',name:'Contract',objectFamily:'COMMERCIAL',nativeObjectType:'CONTRACT',sourceAuthority:'CONTRACT_COMMERCIAL',description:'Commercial or contractual agreement shared by delivery, procurement, finance and legal work.'},
   {code:'ASSET',name:'Asset',objectFamily:'ASSET',nativeObjectType:'ASSET',sourceAuthority:'ASSET_MASTER',description:'Physical or managed asset identity through acquisition, delivery, operation and retirement.'},
   {code:'LOCATION',name:'Location',objectFamily:'LOCATION',nativeObjectType:'LOCATION',sourceAuthority:'LOCATION_MASTER',description:'Shared physical, postal, geographic or operational location identity.'},
+  {code:'SALES_ACCOUNT',name:'Sales Account',objectFamily:'COMMERCIAL',nativeObjectType:'SALES_ACCOUNT',sourceAuthority:'SALES',description:'Sales-owned customer relationship and commercial ownership record around an authoritative Organisation; it does not duplicate Organisation identity.'},
   {code:'OPPORTUNITY',name:'Opportunity',objectFamily:'COMMERCIAL',nativeObjectType:'OPPORTUNITY',sourceAuthority:'SALES',description:'Commercial opportunity pursued by Sales and consumed by downstream contract and delivery processes.'},
   {code:'PRODUCT',name:'Product',objectFamily:'PRODUCT_SERVICE',nativeObjectType:'PRODUCT',sourceAuthority:'PRODUCT_SERVICE_MASTER',description:'Product offered, procured, manufactured, supplied or installed.'},
   {code:'SERVICE',name:'Service',objectFamily:'PRODUCT_SERVICE',nativeObjectType:'SERVICE',sourceAuthority:'PRODUCT_SERVICE_MASTER',description:'Service offered, contracted, delivered or consumed.'},
@@ -70,6 +71,28 @@ export const ENTERPRISE_RELATIONSHIP_VOCABULARY = Object.freeze([
     toCardinality:'MANY',
     nativeRelationshipTypes:['UNIT_HAS_POSITION','ORGANISATION_UNIT_HAS_POSITION'],
     sourceAuthority:'ORGANISATION_MASTER'
+  },
+  {
+    code:'ORGANISATION_HAS_SALES_ACCOUNT',
+    name:'Organisation has Sales Account',
+    inverseName:'Sales Account represents Organisation relationship',
+    fromTypeCode:'ORGANISATION',
+    toTypeCode:'SALES_ACCOUNT',
+    fromCardinality:'ONE',
+    toCardinality:'MANY',
+    nativeRelationshipTypes:['ORGANISATION_HAS_SALES_ACCOUNT'],
+    sourceAuthority:'SALES'
+  },
+  {
+    code:'SALES_ACCOUNT_HAS_OPPORTUNITY',
+    name:'Sales Account has Opportunity',
+    inverseName:'Opportunity belongs to Sales Account',
+    fromTypeCode:'SALES_ACCOUNT',
+    toTypeCode:'OPPORTUNITY',
+    fromCardinality:'ONE',
+    toCardinality:'MANY',
+    nativeRelationshipTypes:['SALES_ACCOUNT_HAS_OPPORTUNITY'],
+    sourceAuthority:'SALES'
   },
   {
     code:'PERSON_OCCUPIES_POSITION',

@@ -223,9 +223,26 @@ suite('governed records retention and disposition',()=>{
       requestedAt:'2026-09-24T09:05:00.000Z'
     });
     await service.startRun(tenantId,admin.id,destroyRun.id,'2026-09-24T09:06:00.000Z');
-    const destruction=await service.createDestruction(tenantId,admin.id,{
+
+    await expect(service.createDestruction(tenantId,admin.id,{
       runId:destroyRun.id,subjectObjectId:destroySubject.id,subjectVersion:'A',
       decisionId:destroyDecisionWhileHeld.id,method:'Cryptographic erase',
+      metadataOutcome:'TOMBSTONE_RETAINED',contentOutcome:'DELETED',
+      evidence:{storage:'vault-1',operatorAttestation:true,holdReleased:true},
+      destroyedAt:'2026-09-24T09:07:00.000Z'
+    })).rejects.toMatchObject({code:'INVALID_INPUT'});
+
+    const destructionDecision:Decision={
+      id:asId<'DecisionId'>('DEC-DEST-AFTER-HOLD-'+suffix,'Decision'),
+      tenantId,decisionType:'RECORD_DESTRUCTION_APPROVAL',
+      subjectObjectId:destroySubject.id,subjectVersion:'A',
+      outcome:'APPROVED',reason:'Approve destruction after legal hold release.',
+      deciderPersonId:admin.id,decidedAt:'2026-09-24T09:06:30.000Z'
+    };
+    await control.createDecision(tenantId,destructionDecision,{actorPersonId:admin.id,correlationId:'RET-DEST-AFTER-HOLD'});
+    const destruction=await service.createDestruction(tenantId,admin.id,{
+      runId:destroyRun.id,subjectObjectId:destroySubject.id,subjectVersion:'A',
+      decisionId:destructionDecision.id,method:'Cryptographic erase',
       metadataOutcome:'TOMBSTONE_RETAINED',contentOutcome:'DELETED',
       evidence:{storage:'vault-1',operatorAttestation:true,holdReleased:true},
       destroyedAt:'2026-09-24T09:07:00.000Z'

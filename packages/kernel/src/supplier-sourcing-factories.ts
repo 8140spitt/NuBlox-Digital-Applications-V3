@@ -109,6 +109,9 @@ export function createSourceApproval(
   invariant(decision.outcome==='APPROVED','Source Approval requires an APPROVED Decision.');
   invariant(decision.subjectObjectId===input.internalItemObjectId,'Source Approval Decision must govern the internal item.');
   invariant(decision.subjectVersion===sourceApprovalDecisionVersion(input),'Source Approval Decision must cite the exact supplier-item/context/status/effectivity tuple.');
+  invariant(Boolean(supplier.releasedAt),'Released Supplier Relationship requires release evidence.');
+  invariant(Date.parse(decision.decidedAt)>=Date.parse(supplier.releasedAt!),'Source Approval Decision cannot predate Supplier Relationship release.');
+  invariant(Date.parse(decision.decidedAt)>=Date.parse(context.createdAt),'Source Approval Decision cannot predate Sourcing Context creation.');
   required(input.rationale,'Source Approval rationale');
   validDate(input.effectiveFrom,'Source Approval effectiveFrom');
   validDate(input.approvedAt,'Source Approval approvedAt');
@@ -132,11 +135,13 @@ export function createSourcingRule(
     invariant(context!==undefined,'Scoped Sourcing Rule requires Sourcing Context.');
     sameTenant(input,context!,'Sourcing Rule Context');
     invariant(context!.id===input.sourcingContextId,'Sourcing Rule Context reference does not match.');
+    invariant(context!.status==='ACTIVE','Sourcing Rule requires an ACTIVE Sourcing Context.');
   }
   if(input.supplierRelationshipId){
     invariant(supplier!==undefined,'Supplier-scoped Sourcing Rule requires Supplier Relationship.');
     sameTenant(input,supplier!,'Sourcing Rule Supplier');
     invariant(supplier!.id===input.supplierRelationshipId,'Sourcing Rule Supplier reference does not match.');
+    invariant(supplier!.status==='RELEASED','Supplier-scoped Sourcing Rule requires a RELEASED Supplier Relationship.');
   }
   required(input.code,'Sourcing Rule code');
   required(input.name,'Sourcing Rule name');

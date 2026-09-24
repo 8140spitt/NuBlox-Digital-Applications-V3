@@ -1,8 +1,10 @@
 # ADR-0004 — Functions and CBE Domains Use Governance and Delivery Workspaces
 
-**Status:** Accepted  
+**Status:** Superseded by ADR-0006  
 **Date:** 22 September 2026  
 **Supersedes:** the draft "Generic Core 29 + CBE Bolt-On" proposal previously stored at repository root under `docs/`.
+
+> **Supersession note (25 September 2026):** ADR-0006 replaces the separate Function-versus-CBE-Domain capability model with one universal Function concept. Governance and Delivery remain valid operating sides, and the 84 CBE Job Profiles remain valid, but D01–D16 are now CBE-classified Functions rather than a peer canonical capability type. This ADR is retained as historical design context only.
 
 ## Context
 

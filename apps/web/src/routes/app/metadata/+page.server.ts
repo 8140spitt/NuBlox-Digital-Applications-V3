@@ -1,4 +1,5 @@
 import {
+  EnterpriseVocabularyProvisioningError,
   MetadataAdministrationCommandError,
   ThingAdministrationCommandError,
   type MySqlAccessRepository
@@ -14,6 +15,7 @@ import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import {
   getAccessRepository,
+  getEnterpriseVocabularyProvisioningService,
   getMetadataAdministrationCommandService,
   getMetadataAdministrationReadRepository,
   getThingAdministrationCommandService,
@@ -120,7 +122,7 @@ function submittedFieldValues(
   return result;
 }
 function failure(error: unknown, action: string) {
-  if (error instanceof MetadataAdministrationCommandError || error instanceof ThingAdministrationCommandError) {
+  if (error instanceof MetadataAdministrationCommandError || error instanceof ThingAdministrationCommandError || error instanceof EnterpriseVocabularyProvisioningError) {
     const status = error.code === 'PERMISSION_DENIED' ? 403
       : error.code === 'NOT_FOUND' ? 404
       : error.code === 'CONFLICT' ? 409 : 400;
@@ -187,6 +189,33 @@ export const load: PageServerLoad = async ({ locals }) => {
 };
 
 export const actions: Actions = {
+  provisionEnterpriseVocabulary: async ({ locals }) => {
+    const session = locals.auth;
+    if (!session) {
+      return fail(401, {
+        action: 'provisionEnterpriseVocabulary',
+        ok: false,
+        error: 'Sign in required.'
+      });
+    }
+    try {
+      const result = await getEnterpriseVocabularyProvisioningService().provision(
+        session.tenantId as TenantId,
+        session.personId
+      );
+      return {
+        action: 'provisionEnterpriseVocabulary',
+        ok: true,
+        message:
+          `Enterprise vocabulary reconciled: ${result.typeDefinitions} Types, ` +
+          `${result.relationshipTypeDefinitions} Relationship Types, ` +
+          `${result.canonicalObjectsBound} existing Things bound.`
+      };
+    } catch (error) {
+      return failure(error, 'provisionEnterpriseVocabulary');
+    }
+  },
+
   createEnumeration: async ({ request, locals }) => {
     const session = locals.auth;
     if (!session) return fail(401, { action: 'createEnumeration', ok: false, error: 'Sign in required.' });

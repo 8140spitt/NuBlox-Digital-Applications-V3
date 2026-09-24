@@ -389,6 +389,29 @@ export const actions: Actions = {
     } catch (error) { return failure(error, 'assignRelationshipAttribute'); }
   },
 
+  assignRelationshipConstraint: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { action: 'assignRelationshipConstraint', ok: false, error: 'Sign in required.' });
+    const formData = await request.formData();
+    try {
+      const item = await getThingAdministrationCommandService().assignConstraintToRelationshipAttribute(
+        session.tenantId as TenantId,
+        session.personId,
+        {
+          relationshipAttributeAssignmentId: value(formData, 'relationshipAttributeAssignmentId'),
+          constraintDefinitionId: value(formData, 'constraintDefinitionId'),
+          sequence: integerValue(value(formData, 'sequence'), 'Sequence'),
+          mandatory: value(formData, 'mandatory') !== 'false'
+        }
+      );
+      return {
+        action: 'assignRelationshipConstraint',
+        ok: true,
+        message: `Relationship constraint assignment ${item.id} created.`
+      };
+    } catch (error) { return failure(error, 'assignRelationshipConstraint'); }
+  },
+
   createThing: async ({ request, locals }) => {
     const session = locals.auth;
     if (!session) return fail(401, { action: 'createThing', ok: false, error: 'Sign in required.' });

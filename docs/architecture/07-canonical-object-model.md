@@ -304,3 +304,13 @@ For any important business concept NuBlox must be able to identify:
 - linked Work/Decisions/Evidence;
 - Change and Baseline history where required;
 - external identity/provenance where integrated or migrated.
+
+
+### Manufacturing definition
+
+- Manufacturing Process Plan;
+- Manufacturing Operation;
+- Manufacturing Sequence Link;
+- Manufacturing Resource;
+- Manufacturing Resource Allocation;
+- Control Characteristic.

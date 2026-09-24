@@ -79,7 +79,7 @@ Deliver:
 - Exchange Package / Delivery / Received Delivery / Mapping / Authority Adoption;
 - Integration Endpoint / Publication Transaction / Acknowledgement / Source Authority;
 - Migration Plan / Mapping Version / Run / Conflict / Reconciliation / Cutover;
-- Retention Policy / Hold / Disposition / Archive / Restore / Destruction Evidence.
+- Retention Policy / Rule / Hold / Disposition Schedule / Run / Item Result / Archive / Restore / Destruction Evidence — **USER-EXECUTABLE FOUNDATION IMPLEMENTED**.
 
 These capabilities extend existing engines rather than creating duplicate platform engines.
 
@@ -235,18 +235,19 @@ A wave is closed only when its mapped activities are executable and tested, not 
 
 ## Current baseline
 
-As of 21 September 2026:
+As of 24 September 2026:
 
-- 57 canonical engines defined;
+- 58 canonical engines defined;
 - 353 / 353 L2 Sub-functions mapped to native engines;
 - 1,510 / 1,510 Activities assigned canonical capability IDs;
 - 5 shared engines retain aligned backend foundations but still require full product UI exposure;
 - 4 shared engines (NTE-002, NTE-006, NTE-007, NTE-008) are now correctly classified as partial because ADR-0006 adds evidence-backed canonical control semantics not yet implemented;
 - 3 domain engines have partial implementation and require completion;
-- 45 engines remain to build, including the NTE-032 metadata-governance and NTE-043 records-governance depth consumed by Wave 0A;
+- 46 engines remain `TO_BUILD`; NTE-043 has advanced to `PARTIAL` because its records-retention control slice is now user-executable, while broader knowledge/search/CDE composition remains incomplete;
 - Wave 0 is **ACTIVE**: the tenant application shell, authenticated tenant/Person session boundary, 29 Function navigation, live My Work, Organisation/Person/Position administration, governed access request/review/administration, HCM Position/Deployment administration and competence administration are implemented;
 - the shared Lifecycle/Decision/Evidence control workspace is now exposed as a tenant-scoped read surface with separately permissioned audit history;
 - Information/Revision/Representation is now user-executable for governed container, revision, iteration, Representation, release and issue control with dedicated permissions and Authority-backed release Decisions; managed binary/content storage and broader CDE composition remain incomplete;
+- Records retention/disposition is now user-executable through versioned Retention Policy/Rule, Hold, Schedule, Run/Item Result, Archive Record, Restore Run and Destruction Evidence with Decision-backed irreversible actions; automated candidate evaluation, schedulers and physical archive/delete/restore adapters remain hardening work;
 - Change/Configuration/Baseline is now exposed through a tenant-scoped read projection and lifecycle-aware command surface covering Change assessment, affected objects, impact, Decision application, implementation, verification, discrepancy, closure, Configuration Items, Baselines and Effectivity; commitment Decisions are permission-gated and require an effective Authority Grant;
 - control mutation workflows, Deliverable/Issue/Acceptance, deeper Change/Control composition and remaining audit/history composition are still incomplete.
 

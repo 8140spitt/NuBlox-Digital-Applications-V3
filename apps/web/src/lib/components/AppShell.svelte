@@ -28,6 +28,7 @@
     if (pathname.startsWith('/app/exchange')) return 'Exchange Control';
     if (pathname.startsWith('/app/integration')) return 'Integration & Publication';
     if (pathname.startsWith('/app/migration')) return 'Migration Control';
+    if (pathname.startsWith('/app/extensions')) return 'Extension Governance';
     if (pathname.startsWith('/app/configuration-resolution')) return 'Configuration Resolution';
     if (pathname.startsWith('/app/configuration')) return 'Change & Configuration';
     if (pathname.startsWith('/app/hcm')) return 'HCM Position Management';
@@ -154,6 +155,10 @@
           >
             <span class="nav-symbol">MD</span>
             <span>Metadata governance</span>
+          </a>
+          <a class:active={isActive('/app/extensions')} href="/app/extensions" onclick={closeNavigation}>
+            <span class="nav-symbol">EG</span>
+            <span>Extension governance</span>
           </a>
         </section>
       </nav>

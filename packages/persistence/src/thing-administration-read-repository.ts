@@ -9,6 +9,9 @@ import { MySqlAccessRepository } from './access-repository.js';
 interface ThingRow extends RowDataPacket {
   id:string; object_type:string; type_definition_id:string|null; type_code:string|null; type_name:string|null;
   object_family:string|null; stable_key:string; display_name:string|null; status:'ACTIVE'|'INACTIVE'; created_at:Date;
+  lifecycle_definition_id:string|null; lifecycle_definition_name:string|null;
+  lifecycle_state_id:string|null; lifecycle_state_code:string|null; lifecycle_state_name:string|null;
+  lifecycle_state_category:string|null; lifecycle_sequence:number|null;
 }
 interface FieldRow extends RowDataPacket {
   id:string; canonical_object_id:string; type_attribute_assignment_id:string; sequence_no:number;
@@ -41,7 +44,12 @@ export interface ThingRelationshipView {
 }
 export interface ThingView {
   id:string;typeDefinitionId?:string;typeCode:string;typeName?:string;objectFamily?:string;stableKey:string;displayName:string;
-  status:'ACTIVE'|'INACTIVE';createdAt:string;fields:ThingFieldView[];relationships:ThingRelationshipView[];
+  status:'ACTIVE'|'INACTIVE';createdAt:string;
+  lifecycle?:{
+    definitionId:string;definitionName:string;stateId:string;stateCode:string;stateName:string;
+    category:string;sequence:number;
+  };
+  fields:ThingFieldView[];relationships:ThingRelationshipView[];
 }
 
 interface RelationshipTypeDefinitionRow extends RowDataPacket {
@@ -104,10 +112,21 @@ export class MySqlThingAdministrationReadRepository {
     await this.requireRead(tenantId,actorPersonId);
     const [rows]=await this.pool.execute<ThingRow[]>(
       `SELECT co.id,co.object_type,co.type_definition_id,mt.code AS type_code,mt.name AS type_name,
-              mt.object_family,co.stable_key,co.display_name,co.status,co.created_at
+              mt.object_family,co.stable_key,co.display_name,co.status,co.created_at,
+              ols.lifecycle_definition_id,ld.name AS lifecycle_definition_name,
+              ols.lifecycle_state_id,ls.code AS lifecycle_state_code,ls.name AS lifecycle_state_name,
+              ls.category AS lifecycle_state_category,ols.sequence AS lifecycle_sequence
          FROM canonical_objects co
          LEFT JOIN metadata_type_definitions mt
            ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
+         LEFT JOIN object_lifecycle_states ols
+           ON ols.tenant_id=co.tenant_id AND ols.canonical_object_id=co.id
+         LEFT JOIN lifecycle_definitions ld
+           ON ld.tenant_id=ols.tenant_id AND ld.id=ols.lifecycle_definition_id
+         LEFT JOIN lifecycle_state_definitions ls
+           ON ls.tenant_id=ols.tenant_id
+          AND ls.lifecycle_definition_id=ols.lifecycle_definition_id
+          AND ls.id=ols.lifecycle_state_id
         WHERE co.tenant_id=? AND co.type_definition_id IS NOT NULL
         ORDER BY mt.code,co.stable_key`,[tenantId]
     );
@@ -185,10 +204,21 @@ export class MySqlThingAdministrationReadRepository {
     await this.requireRead(tenantId,actorPersonId);
     const [rows]=await this.pool.execute<ThingRow[]>(
       `SELECT co.id,co.object_type,co.type_definition_id,mt.code AS type_code,mt.name AS type_name,
-              mt.object_family,co.stable_key,co.display_name,co.status,co.created_at
+              mt.object_family,co.stable_key,co.display_name,co.status,co.created_at,
+              ols.lifecycle_definition_id,ld.name AS lifecycle_definition_name,
+              ols.lifecycle_state_id,ls.code AS lifecycle_state_code,ls.name AS lifecycle_state_name,
+              ls.category AS lifecycle_state_category,ols.sequence AS lifecycle_sequence
          FROM canonical_objects co
          LEFT JOIN metadata_type_definitions mt
            ON mt.tenant_id=co.tenant_id AND mt.id=co.type_definition_id
+         LEFT JOIN object_lifecycle_states ols
+           ON ols.tenant_id=co.tenant_id AND ols.canonical_object_id=co.id
+         LEFT JOIN lifecycle_definitions ld
+           ON ld.tenant_id=ols.tenant_id AND ld.id=ols.lifecycle_definition_id
+         LEFT JOIN lifecycle_state_definitions ls
+           ON ls.tenant_id=ols.tenant_id
+          AND ls.lifecycle_definition_id=ols.lifecycle_definition_id
+          AND ls.id=ols.lifecycle_state_id
         WHERE co.tenant_id=? AND co.id=?`,[tenantId,thingId]
     );
     return rows[0]?this.getThingInternal(tenantId,rows[0]):null;
@@ -272,6 +302,14 @@ export class MySqlThingAdministrationReadRepository {
       typeCode:row.type_code??row.object_type,...(row.type_name?{typeName:row.type_name}:{}),
       ...(row.object_family?{objectFamily:row.object_family}:{}),stableKey:row.stable_key,displayName:row.display_name??row.stable_key,status:row.status,
       createdAt:row.created_at.toISOString(),
+      ...(row.lifecycle_definition_id&&row.lifecycle_definition_name&&row.lifecycle_state_id&&
+          row.lifecycle_state_code&&row.lifecycle_state_name&&row.lifecycle_state_category&&row.lifecycle_sequence!==null
+        ?{lifecycle:{
+            definitionId:row.lifecycle_definition_id,definitionName:row.lifecycle_definition_name,
+            stateId:row.lifecycle_state_id,stateCode:row.lifecycle_state_code,stateName:row.lifecycle_state_name,
+            category:row.lifecycle_state_category,sequence:Number(row.lifecycle_sequence)
+          }}
+        :{}),
       fields:fieldResult[0].map(value=>({
         id:value.id,assignmentId:value.type_attribute_assignment_id,code:value.attribute_code,
         name:value.local_label??value.attribute_name,sequence:value.sequence_no,dataType:value.data_type,value:decode(value)

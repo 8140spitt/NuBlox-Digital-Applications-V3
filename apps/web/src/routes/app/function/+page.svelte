@@ -91,6 +91,36 @@
         {/each}
       </div>
 
+      {#if data.sales.positionRollup.length>0}
+        <div class="panel-heading">
+          <div>
+            <p class="app-eyebrow">Position hierarchy · management waterfall</p>
+            <h2>My team sales roll-up</h2>
+          </div>
+          <span>{data.sales.positionRollup.length} Positions</span>
+        </div>
+        <div class="workspace-register-list">
+          {#each data.sales.positionRollup as position}
+            <article>
+              <div>
+                <strong>{position.personName??position.positionTitle}</strong>
+                <span>{position.positionTitle} · {position.positionCode} · {label(position.relation)}</span>
+              </div>
+              <div>
+                <strong>{position.openOpportunities} open</strong>
+                <span>{position.accounts} account{position.accounts===1?'':'s'}</span>
+              </div>
+              {#each position.currencyTotals as total}
+                <div>
+                  <strong>{money(total.pipelineValue,total.currency)}</strong>
+                  <span>{total.currency} pipeline · weighted {money(total.weightedPipeline,total.currency)} · won {money(total.wonValue,total.currency)}</span>
+                </div>
+              {/each}
+            </article>
+          {/each}
+        </div>
+      {/if}
+
       {#if form?.message || form?.error}
         <div class:success={form?.ok} class:error={!form?.ok} class="admin-feedback" role="status">
           <strong>{form?.ok?'Completed':'Action not completed'}</strong>

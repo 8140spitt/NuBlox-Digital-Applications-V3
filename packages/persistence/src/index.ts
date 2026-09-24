@@ -90,3 +90,6 @@ export * from './construction-site-production-read-repository.js';
 
 export * from './organisational-resource-planning-command-service.js';
 export * from './organisational-resource-planning-read-repository.js';
+
+export * from './hcm-command-service.js';
+export * from './hcm-read-repository.js';

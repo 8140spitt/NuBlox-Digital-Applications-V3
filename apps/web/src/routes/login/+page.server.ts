@@ -12,11 +12,11 @@ import { getAuthRepository } from '$lib/server/platform';
 
 export const load: PageServerLoad = ({ locals, url }) => {
   if (locals.auth) {
-    throw redirect(303, '/app');
+    throw redirect(303, '/app/function');
   }
 
   return {
-    returnTo: safeReturnTo(url.searchParams.get('returnTo'))
+    returnTo: safeReturnTo(url.searchParams.get('returnTo') ?? '/app/function')
   };
 };
 
@@ -27,7 +27,7 @@ export const actions: Actions = {
     const password = String(formData.get('password') ?? '');
     const tenantIdValue = String(formData.get('tenantId') ?? '').trim();
     const returnTo = safeReturnTo(
-      String(formData.get('returnTo') ?? url.searchParams.get('returnTo') ?? '/app')
+      String(formData.get('returnTo') ?? url.searchParams.get('returnTo') ?? '/app/function')
     );
 
     if (!email || !password) {

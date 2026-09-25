@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import type { RowDataPacket } from 'mysql2/promise';
 import { PLATFORM_ADMINISTRATOR_ROLE_ID } from '@nublox/kernel';
 import {
   EmailVerificationRequiredError,
@@ -56,7 +57,7 @@ suite('tenant registration', () => {
     expect(registration.industrySolutionIds).toContain('CBE');
     expect(registration.provisioningRunId).toMatch(/^TPR-/);
 
-    const [tenantPartyRows] = await pool.query<Array<{
+    const [tenantPartyRows] = await pool.query<Array<RowDataPacket & {
       party_id: string;
       organisation_id: string;
       party_type: string;
@@ -78,7 +79,7 @@ suite('tenant registration', () => {
       })
     ]);
 
-    const [employeeTypeRows] = await pool.query<Array<{ party_type: string }>>(
+    const [employeeTypeRows] = await pool.query<Array<RowDataPacket & { party_type: string }>>(
       `SELECT party_type
          FROM party_type_assignments
         WHERE tenant_id = ?
@@ -88,7 +89,7 @@ suite('tenant registration', () => {
     );
     expect(employeeTypeRows.map((row) => row.party_type)).toEqual(['EMPLOYEE']);
 
-    const [adminRows] = await pool.query<Array<{ access_role_id: string; scope_type: string }>>(
+    const [adminRows] = await pool.query<Array<RowDataPacket & { access_role_id: string; scope_type: string }>>(
       `SELECT access_role_id, scope_type
          FROM access_role_assignments
         WHERE tenant_id = ?
@@ -102,7 +103,7 @@ suite('tenant registration', () => {
       scope_type: 'TENANT'
     });
 
-    const [positionRows] = await pool.query<Array<{ count: number }>>(
+    const [positionRows] = await pool.query<Array<RowDataPacket & { count: number }>>(
       `SELECT COUNT(*) AS count
          FROM position_occupancies
         WHERE tenant_id = ?
@@ -111,7 +112,7 @@ suite('tenant registration', () => {
     );
     expect(Number(positionRows[0]?.count ?? 0)).toBe(0);
 
-    const [profileRows] = await pool.query<Array<{
+    const [profileRows] = await pool.query<Array<RowDataPacket & {
       primary_classification_value_id: string;
       size_tier: string;
       employee_count: number;
@@ -139,7 +140,7 @@ suite('tenant registration', () => {
       })
     );
 
-    const [templateRows] = await pool.query<Array<{
+    const [templateRows] = await pool.query<Array<RowDataPacket & {
       code: string;
       version: number;
       status: string;
@@ -158,7 +159,7 @@ suite('tenant registration', () => {
       ])
     );
 
-    const [industryRows] = await pool.query<Array<{
+    const [industryRows] = await pool.query<Array<RowDataPacket & {
       industry_solution_id: string;
       status: string;
     }>>(
@@ -178,7 +179,7 @@ suite('tenant registration', () => {
       auth.authenticate(email, password, registration.tenantId)
     ).rejects.toBeInstanceOf(EmailVerificationRequiredError);
 
-    const [verificationMessages] = await pool.query<Array<{ action_path: string; status: string }>>(
+    const [verificationMessages] = await pool.query<Array<RowDataPacket & { action_path: string; status: string }>>(
       `SELECT action_path, status
          FROM application_identity_message_outbox
         WHERE tenant_id = ?
@@ -209,7 +210,7 @@ suite('tenant registration', () => {
     expect(await auth.resolveSession(session.token)).not.toBeNull();
 
     await challenges.requestPasswordReset(email, slug);
-    const [resetMessages] = await pool.query<Array<{ action_path: string; status: string }>>(
+    const [resetMessages] = await pool.query<Array<RowDataPacket & { action_path: string; status: string }>>(
       `SELECT action_path, status
          FROM application_identity_message_outbox
         WHERE tenant_id = ?

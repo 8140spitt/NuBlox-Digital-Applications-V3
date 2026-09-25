@@ -4,6 +4,7 @@ import { TENANT_SLUG_PATTERN, tenantAppPath } from '$lib/tenant-paths';
 import { getAuthRepository } from './platform';
 
 export const LEGACY_SESSION_COOKIE = 'nublox_session';
+export const TENANT_ROUTE_HINT_COOKIE = 'nublox_tenant_route';
 const TENANT_SESSION_COOKIE_PREFIX = 'nublox_tenant_session_';
 
 function cookieSafeTenantSlug(tenantSlug: string): string {
@@ -54,6 +55,14 @@ export function setTenantApplicationSession(
     sameSite: 'lax',
     maxAge
   });
+
+  cookies.set(TENANT_ROUTE_HINT_COOKIE, tenantSlug, {
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 30
+  });
 }
 
 export function clearTenantApplicationSession(cookies: Cookies, tenantSlug: string): void {
@@ -91,4 +100,9 @@ export function safeTenantReturnTo(
   }
 
   return fallback;
+}
+
+export function tenantRouteHint(cookies: Cookies): string | null {
+  const value = cookies.get(TENANT_ROUTE_HINT_COOKIE)?.trim().toLowerCase();
+  return value && TENANT_SLUG_PATTERN.test(value) ? value : null;
 }

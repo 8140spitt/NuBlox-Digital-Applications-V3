@@ -1,3 +1,6 @@
+ALTER TABLE tenant_authentication_policies
+  ADD COLUMN passkey_enabled BOOLEAN NOT NULL DEFAULT TRUE AFTER mfa_requirement;
+
 ALTER TABLE application_sessions
   ADD COLUMN authentication_method VARCHAR(32) NOT NULL DEFAULT 'PASSWORD' AFTER authentication_strength,
   ADD CONSTRAINT chk_application_sessions_authentication_method CHECK (

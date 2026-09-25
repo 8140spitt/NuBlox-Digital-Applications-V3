@@ -2,16 +2,13 @@ import { randomUUID } from 'node:crypto';
 import {
   asId,
   PLATFORM_ADMINISTRATOR_ROLE_ID,
-  type AccessRoleAssignment,
-  type Party,
-  type Person,
-  type Tenant
+  type AccessRoleAssignment
 } from '@nublox/kernel';
 import { MySqlAccessRepository } from '../access-repository.js';
 import { MySqlAuthRepository } from '../auth-repository.js';
 import { createDatabasePool } from '../database.js';
 import { migrate } from '../migrations.js';
-import { MySqlKernelRepository } from '../repository.js';
+import { MySqlTenantRegistrationService } from '../tenant-registration-service.js';
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -28,47 +25,26 @@ try {
 
   let tenantIdValue = process.env.NUBLOX_BOOTSTRAP_TENANT_ID?.trim();
   let personIdValue = process.env.NUBLOX_BOOTSTRAP_PERSON_ID?.trim();
+  const grantPlatformAdministrator =
+    process.env.NUBLOX_BOOTSTRAP_GRANT_PLATFORM_ADMIN !== 'false';
 
   if (!tenantIdValue || !personIdValue) {
     const tenantName = required('NUBLOX_BOOTSTRAP_TENANT_NAME');
     const personName = required('NUBLOX_BOOTSTRAP_PERSON_NAME');
-    const suffix = randomUUID().replaceAll('-', '').slice(0, 16);
-
-    const tenantId = asId<'TenantId'>(`TENANT-${suffix}`, 'Tenant');
-    const partyId = asId<'PartyId'>(`PARTY-${suffix}`, 'Party');
-    const personId = asId<'PersonId'>(`PERSON-${suffix}`, 'Person');
-
-    const kernel = new MySqlKernelRepository(pool);
-    const tenant: Tenant = {
-      id: tenantId,
+    const registration = await new MySqlTenantRegistrationService(pool).register({
+      businessName: tenantName,
       ...(process.env.NUBLOX_BOOTSTRAP_TENANT_SLUG?.trim()
-        ? { slug: process.env.NUBLOX_BOOTSTRAP_TENANT_SLUG.trim() }
+        ? { tenantSlug: process.env.NUBLOX_BOOTSTRAP_TENANT_SLUG.trim() }
         : {}),
-      name: tenantName,
-      status: 'ACTIVE'
-    };
-    const party: Party = {
-      id: partyId,
-      tenantId,
-      kind: 'PERSON',
-      displayName: personName,
-      status: 'ACTIVE'
-    };
-    const person: Person = {
-      id: personId,
-      tenantId,
-      partyId,
-      legalName: personName,
-      preferredName: personName,
-      status: 'ACTIVE'
-    };
+      personName,
+      email,
+      password,
+      acceptedTerms: true,
+      grantTenantAdministrator: grantPlatformAdministrator
+    });
 
-    await kernel.createTenant(tenant);
-    await kernel.createParty(tenantId, party);
-    await kernel.createPerson(tenantId, person);
-
-    tenantIdValue = tenantId;
-    personIdValue = personId;
+    tenantIdValue = registration.tenantId;
+    personIdValue = registration.personId;
   }
 
   const auth = new MySqlAuthRepository(pool);
@@ -78,9 +54,6 @@ try {
     tenantId: tenantIdValue,
     personId: personIdValue
   });
-
-  const grantPlatformAdministrator =
-    process.env.NUBLOX_BOOTSTRAP_GRANT_PLATFORM_ADMIN !== 'false';
 
   if (grantPlatformAdministrator) {
     const access = new MySqlAccessRepository(pool);

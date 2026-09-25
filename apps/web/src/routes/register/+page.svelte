@@ -29,6 +29,33 @@
   const selectedSizeTier = $derived(
     data.catalogue.sizeTiers.find((tier) => tier.code === sizeTier)
   );
+  const industrySchemeGroups = $derived(
+    Object.values(
+      data.catalogue.industries.reduce(
+        (groups, industry) => {
+          const key = `${industry.schemeCode}:${industry.schemeEdition}`;
+          groups[key] ??= {
+            key,
+            label:
+              industry.schemeCode === 'NUBLOX_INDUSTRY'
+                ? `${industry.schemeName} · platform classification`
+                : `${industry.schemeName} ${industry.schemeEdition}${industry.schemeJurisdiction ? ` · ${industry.schemeJurisdiction}` : ''}`,
+            industries: []
+          };
+          groups[key].industries.push(industry);
+          return groups;
+        },
+        {} as Record<
+          string,
+          {
+            key: string;
+            label: string;
+            industries: typeof data.catalogue.industries;
+          }
+        >
+      )
+    )
+  );
 
   async function nextStep() {
     wizardMessage = '';
@@ -180,22 +207,27 @@
           </label>
 
           <label>
-            <span>Industry</span>
+            <span>Industry classification</span>
             <select
               name="primaryClassificationValueId"
               bind:value={primaryClassificationValueId}
               required
             >
-              <option value="">Choose an industry</option>
-              {#each data.catalogue.industries as industry}
-                <option value={industry.classificationValueId}>
-                  {industry.name}
-                </option>
+              <option value="">Choose an industry classification</option>
+              {#each industrySchemeGroups as group}
+                <optgroup label={group.label}>
+                  {#each group.industries as industry}
+                    <option value={industry.classificationValueId}>
+                      {industry.classificationCode} · {industry.name}
+                    </option>
+                  {/each}
+                </optgroup>
               {/each}
             </select>
             <small>
-              Industry is classification data. It selects Industry Solution configuration without
-              replacing the universal NuBlox enterprise model.
+              Choose the classification scheme that is meaningful for your organisation.
+              Classification data selects applicable Industry Solutions without replacing the
+              universal NuBlox enterprise model.
             </small>
           </label>
         </fieldset>
@@ -285,6 +317,11 @@
               <span>IND</span>
               <div>
                 <strong>{selectedIndustry?.name ?? 'Choose an industry'}</strong>
+                <p>
+                  {selectedIndustry
+                    ? `${selectedIndustry.schemeCode} ${selectedIndustry.schemeEdition} · ${selectedIndustry.classificationCode}`
+                    : 'No classification selected'}
+                </p>
                 <p>
                   {selectedIndustry?.industrySolutionName
                     ? `${selectedIndustry.industrySolutionName} will be activated as an Industry Solution overlay.`

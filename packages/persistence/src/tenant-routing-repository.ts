@@ -3,13 +3,16 @@ import type { Pool, RowDataPacket } from 'mysql2/promise';
 import type { TenantId } from '@nublox/kernel';
 
 export const RESERVED_TENANT_SLUGS = new Set([
+  'about',
   'api',
   'app',
   'assets',
   'auth',
   'candidate',
   'careers',
+  'contact',
   'docs',
+  'enterprise',
   'functions',
   'industries',
   'legal',
@@ -17,7 +20,10 @@ export const RESERVED_TENANT_SLUGS = new Set([
   'logout',
   'pricing',
   'privacy',
+  'product',
   'register',
+  'security',
+  'status',
   'support',
   'terms'
 ]);

@@ -76,7 +76,7 @@
                 value={industry.classificationValueId}
                 selected={form?.primaryClassificationValueId === industry.classificationValueId}
               >
-                {industry.name}
+                {industry.schemeCode} {industry.schemeEdition} · {industry.classificationCode} · {industry.name}
               </option>
             {/each}
           </select>
@@ -280,6 +280,50 @@
       </div>
     {/if}
   </section>
+
+  {#if configuration.capabilityGuidance}
+    <section class="home-section">
+      <header class="home-section-heading">
+        <div>
+          <p class="app-eyebrow">Market capability evidence</p>
+          <h2>{configuration.capabilityGuidance.catalogueName}</h2>
+        </div>
+        <p>
+          {configuration.capabilityGuidance.catalogueEdition} ·
+          {configuration.capabilityGuidance.totalCapabilities} source capabilities
+        </p>
+      </header>
+
+      <div class="home-primary-grid">
+        <article class="home-primary-card">
+          <span>●</span>
+          <div>
+            <strong>{configuration.capabilityGuidance.defaultEnabled}</strong>
+            <p>Default enabled in source guidance</p>
+          </div>
+        </article>
+        <article class="home-primary-card">
+          <span>○</span>
+          <div>
+            <strong>{configuration.capabilityGuidance.availableDisabled}</strong>
+            <p>Available but disabled in source guidance</p>
+          </div>
+        </article>
+        <article class="home-primary-card">
+          <span>—</span>
+          <div>
+            <strong>{configuration.capabilityGuidance.hiddenNotApplicable}</strong>
+            <p>Hidden/not applicable in source guidance</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="workspace-lede">
+        These are external ERP capability-applicability decisions retained as provenance.
+        They do not remove NuBlox core Functions, permissions or native runtime capability.
+      </p>
+    </section>
+  {/if}
 
   <section class="home-section">
     <header class="home-section-heading">

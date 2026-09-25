@@ -19,6 +19,7 @@
     "terminal:logs": "./scripts/list-terminal-logs.sh",
     "terminal:tail": "./scripts/tail-latest-terminal-log.sh",
     "architecture:generate": "node scripts/generate-erp-composition.mjs",
-    "architecture:check": "node scripts/generate-erp-composition.mjs --check"
+    "architecture:check": "node scripts/generate-erp-composition.mjs --check",
+    "db:retry-failed": "pnpm --dir packages/persistence db:retry-failed"
   }
 }

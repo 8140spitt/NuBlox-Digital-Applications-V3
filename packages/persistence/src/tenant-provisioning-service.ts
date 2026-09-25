@@ -113,6 +113,7 @@ export class TenantProvisioningError extends Error {
 interface ClassificationRow extends RowDataPacket {
   id: string;
   scheme_code: string;
+  scheme_edition: string;
   value_code: string;
   value_name: string;
   industry_solution_id: string | null;
@@ -154,6 +155,7 @@ interface CriterionRow extends RowDataPacket {
   template_id: string;
   criterion_type:
     | 'INDUSTRY_CLASSIFICATION'
+    | 'INDUSTRY_SOLUTION'
     | 'SIZE_TIER'
     | 'OPERATING_MODEL'
     | 'REGULATORY_REGIME'
@@ -191,6 +193,7 @@ interface ValidatedProfile {
   primaryLanguageCode: string;
   operatingModels: OperatingModelRow[];
   regulatoryRegimes: RegulatoryRow[];
+  industrySolutionIds: string[];
 }
 
 const SIZE_TIERS: TenantProvisioningCatalogue['sizeTiers'] = [
@@ -285,6 +288,8 @@ function criterionMatches(
     case 'INDUSTRY_CLASSIFICATION':
       return criterion.criterion_value ===
         `${profile.classification.scheme_code}:${profile.classification.value_code}`;
+    case 'INDUSTRY_SOLUTION':
+      return profile.industrySolutionIds.includes(criterion.criterion_value);
     case 'SIZE_TIER':
       return criterion.criterion_value === profile.sizeTier;
     case 'OPERATING_MODEL':
@@ -341,6 +346,7 @@ export class MySqlTenantProvisioningService {
       this.pool.query<ClassificationRow[]>(
         `SELECT v.id,
                 s.code AS scheme_code,
+                s.edition AS scheme_edition,
                 v.code AS value_code,
                 v.name AS value_name,
                 ism.industry_solution_id,
@@ -355,6 +361,7 @@ export class MySqlTenantProvisioningService {
              ON i.id = ism.industry_solution_id
             AND i.status = 'ACTIVE'
           WHERE v.status = 'ACTIVE'
+            AND s.code <> 'NUBLOX_INDUSTRY'
           ORDER BY s.code, v.code`
       ),
       this.pool.query<OperatingModelRow[]>(
@@ -376,7 +383,7 @@ export class MySqlTenantProvisioningService {
         classificationValueId: row.id,
         schemeCode: row.scheme_code,
         classificationCode: row.value_code,
-        name: row.value_name,
+        name: `${row.scheme_code} ${row.scheme_edition} — ${row.value_name}`,
         industrySolutionId: row.industry_solution_id,
         industrySolutionName: row.industry_solution_name
       })),
@@ -931,6 +938,7 @@ export class MySqlTenantProvisioningService {
     const [classificationRows] = await connection.query<ClassificationRow[]>(
       `SELECT v.id,
               s.code AS scheme_code,
+              s.edition AS scheme_edition,
               v.code AS value_code,
               v.name AS value_name,
               ism.industry_solution_id,
@@ -946,13 +954,20 @@ export class MySqlTenantProvisioningService {
           AND i.status = 'ACTIVE'
         WHERE v.id = ?
           AND v.status = 'ACTIVE'
-        LIMIT 1`,
+        ORDER BY ism.relationship_type, ism.industry_solution_id`,
       [classificationId]
     );
     const classification = classificationRows[0];
     if (!classification) {
       throw new TenantProvisioningError('Industry classification is not available.');
     }
+    const industrySolutionIds = [
+      ...new Set(
+        classificationRows
+          .map((row) => row.industry_solution_id)
+          .filter((value): value is string => Boolean(value))
+      )
+    ];
 
     const [operatingRows] = await connection.query<OperatingModelRow[]>(
       `SELECT code, name, description
@@ -992,7 +1007,8 @@ export class MySqlTenantProvisioningService {
       primaryCountryCode: countryCode,
       primaryLanguageCode: languageCode,
       operatingModels: operatingRows,
-      regulatoryRegimes: regulatoryRows
+      regulatoryRegimes: regulatoryRows,
+      industrySolutionIds
     };
   }
 

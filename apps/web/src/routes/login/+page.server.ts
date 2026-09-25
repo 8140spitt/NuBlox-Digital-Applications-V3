@@ -1,4 +1,5 @@
 import {
+  AuthenticationRateLimitError,
   EmailVerificationRequiredError,
   InvalidCredentialsError,
   TenantSelectionRequiredError
@@ -10,7 +11,10 @@ import {
   safeTenantReturnTo,
   setTenantApplicationSession
 } from '$lib/server/auth';
-import { getAuthRepository } from '$lib/server/platform';
+import {
+  getAuthenticationRateLimiter,
+  getAuthRepository
+} from '$lib/server/platform';
 import { tenantAppPath } from '$lib/tenant-paths';
 
 export const load: PageServerLoad = ({ locals, url }) => {
@@ -31,7 +35,7 @@ export const load: PageServerLoad = ({ locals, url }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ request, cookies, url, locals }) => {
+  default: async ({ request, cookies, url, locals, getClientAddress }) => {
     const formData = await request.formData();
     const email = String(formData.get('email') ?? '').trim();
     const password = String(formData.get('password') ?? '');
@@ -53,7 +57,11 @@ export const actions: Actions = {
       });
     }
 
+    const limiter = getAuthenticationRateLimiter();
     try {
+      const network = getClientAddress();
+      await limiter.consume('LOGIN', email, network);
+
       const repository = getAuthRepository();
       const principal = await repository.authenticate(
         email,
@@ -67,6 +75,7 @@ export const actions: Actions = {
         created.token,
         created.session.expiresAt
       );
+      await limiter.clearSuccessfulLogin(email, getClientAddress());
 
       throw redirect(
         303,
@@ -78,6 +87,7 @@ export const actions: Actions = {
       );
     } catch (error) {
       if (error instanceof TenantSelectionRequiredError && !tenant) {
+        await limiter.clearSuccessfulLogin(email, getClientAddress());
         return fail(400, {
           email,
           returnTo,
@@ -87,12 +97,22 @@ export const actions: Actions = {
       }
 
       if (error instanceof EmailVerificationRequiredError) {
+        await limiter.clearSuccessfulLogin(email, getClientAddress());
         return fail(403, {
           email,
           returnTo,
           verificationRequired: true,
           verificationTenantSlug: error.tenantSlug,
           verificationTenantName: error.tenantName
+        });
+      }
+
+      if (error instanceof AuthenticationRateLimitError) {
+        return fail(429, {
+          email,
+          returnTo,
+          rateLimited: true,
+          retryAfterSeconds: error.retryAfterSeconds
         });
       }
 

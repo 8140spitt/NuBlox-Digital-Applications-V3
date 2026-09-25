@@ -32,6 +32,10 @@ export function createEmployment(
   invariant(input.personId===person.id,'Employment must reference the supplied Person.');
   invariant(input.organisationId===organisation.id,'Employment must reference the supplied Organisation.');
   invariant(Boolean(input.employeeNumber.trim()),'Employment employeeNumber must not be empty.');
+  invariant(Boolean(input.assignmentId.trim()),'Employment assignmentId must not be empty.');
+  invariant(!input.isPrimary||input.relationshipType==='PRIMARY_EMPLOYMENT','Only PRIMARY_EMPLOYMENT may be the primary work relationship.');
+  invariant(input.workerType!=='CONTINGENT'||input.relationshipType==='CONTINGENT_ENGAGEMENT','Contingent workers require a CONTINGENT_ENGAGEMENT work relationship.');
+  invariant(input.workerType!=='EMPLOYEE'||input.relationshipType!=='CONTINGENT_ENGAGEMENT','Employees cannot use a CONTINGENT_ENGAGEMENT work relationship.');
   validPeriod(input.startDate,input.endDate,'Employment');
   if(input.status==='ENDED') invariant(Boolean(input.endDate),'Ended Employment must specify an end date.');
   return Object.freeze({...input});

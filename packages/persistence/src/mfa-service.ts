@@ -49,6 +49,7 @@ export interface MfaEnrollmentStart {
 
 export interface MfaLoginStart {
   required: boolean;
+  enrollmentRequired?: boolean;
   token?: string;
   expiresAt?: string;
 }
@@ -81,6 +82,7 @@ interface LoginChallengeRow extends RowDataPacket {
   user_id: string;
   tenant_id: string;
   person_id: string;
+  mode: 'VERIFY' | 'ENROLL';
   return_to: string;
   expires_at: Date;
   consumed_at: Date | null;
@@ -98,6 +100,26 @@ interface LoginChallengeRow extends RowDataPacket {
 
 interface RecoveryCodeRow extends RowDataPacket {
   id: string;
+}
+
+interface PolicyRow extends RowDataPacket {
+  mfa_requirement: 'OPTIONAL' | 'REQUIRED';
+}
+
+interface EnrollmentChallengeRow extends RowDataPacket {
+  token_hash: string;
+  user_id: string;
+  tenant_id: string;
+  person_id: string;
+  mode: 'ENROLL';
+  return_to: string;
+  expires_at: Date;
+  consumed_at: Date | null;
+  attempt_count: number;
+  email: string;
+  tenant_slug: string;
+  tenant_name: string;
+  person_name: string;
 }
 
 function encryptionKey(): Buffer {
@@ -585,19 +607,35 @@ export class MySqlMfaService {
   }
 
   async beginLogin(principal: AuthPrincipal, returnTo: string): Promise<MfaLoginStart> {
-    const [rows] = await this.pool.execute<Array<RowDataPacket & { id: string }>>(
-      `SELECT id
-         FROM application_mfa_enrollments
-        WHERE user_id = ?
-          AND tenant_id = ?
-          AND method = 'TOTP'
-          AND status = 'ACTIVE'
-        LIMIT 1`,
-      [principal.userId, principal.tenantId]
-    );
+    const [enrollmentRows, policyRows] = await Promise.all([
+      this.pool.execute<Array<RowDataPacket & { id: string }>>(
+        `SELECT id
+           FROM application_mfa_enrollments
+          WHERE user_id = ?
+            AND tenant_id = ?
+            AND method = 'TOTP'
+            AND status = 'ACTIVE'
+          LIMIT 1`,
+        [principal.userId, principal.tenantId]
+      ),
+      this.pool.execute<PolicyRow[]>(
+        `SELECT mfa_requirement
+           FROM tenant_authentication_policies
+          WHERE tenant_id = ?
+          LIMIT 1`,
+        [principal.tenantId]
+      )
+    ]);
 
-    if (!rows[0]) return { required: false };
+    const hasEnrollment = Boolean(enrollmentRows[0][0]);
+    const policy = policyRows[0][0];
+    if (!policy) throw new Error('Tenant authentication policy does not exist.');
 
+    if (!hasEnrollment && policy.mfa_requirement === 'OPTIONAL') {
+      return { required: false };
+    }
+
+    const mode: 'VERIFY' | 'ENROLL' = hasEnrollment ? 'VERIFY' : 'ENROLL';
     const token = randomBytes(32).toString('base64url');
     const tokenHash = challengeHash(token);
     const now = new Date();
@@ -616,14 +654,15 @@ export class MySqlMfaService {
 
       await connection.execute(
         `INSERT INTO application_mfa_login_challenges
-          (token_hash, user_id, tenant_id, person_id, return_to,
+          (token_hash, user_id, tenant_id, person_id, mode, return_to,
            created_at, expires_at, attempt_count)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 0)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)`,
         [
           tokenHash,
           principal.userId,
           principal.tenantId,
           principal.personId,
+          mode,
           safeReturnTo,
           now,
           expiresAt
@@ -634,16 +673,95 @@ export class MySqlMfaService {
         userId: principal.userId,
         tenantId: principal.tenantId,
         emailNormalized: principal.email.toLowerCase(),
-        eventType: 'MFA_LOGIN_CHALLENGE_ISSUED',
+        eventType: mode === 'ENROLL'
+          ? 'MFA_REQUIRED_ENROLLMENT_CHALLENGE_ISSUED'
+          : 'MFA_LOGIN_CHALLENGE_ISSUED',
         outcome: 'SUCCESS'
       });
     });
 
     return {
       required: true,
+      enrollmentRequired: mode === 'ENROLL',
       token,
       expiresAt: expiresAt.toISOString()
     };
+  }
+
+  async resolveRequiredEnrollmentChallenge(
+    tokenValue: string,
+    tenantSlug: string
+  ): Promise<{ principal: AuthPrincipal; returnTo: string }> {
+    const token = tokenValue.trim();
+    if (token.length < 32 || token.length > 256) {
+      throw new MfaError('The MFA enrollment challenge is not valid.', 'INVALID_CHALLENGE');
+    }
+
+    const [rows] = await this.pool.execute<EnrollmentChallengeRow[]>(
+      `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.mode, c.return_to,
+              c.expires_at, c.consumed_at, c.attempt_count,
+              u.email, t.slug AS tenant_slug, t.name AS tenant_name,
+              COALESCE(p.preferred_name, p.legal_name) AS person_name
+         FROM application_mfa_login_challenges c
+         JOIN application_users u
+           ON u.id = c.user_id
+          AND u.status = 'ACTIVE'
+         JOIN tenants t
+           ON t.id = c.tenant_id
+          AND t.status = 'ACTIVE'
+          AND t.slug = ?
+         JOIN persons p
+           ON p.tenant_id = c.tenant_id
+          AND p.id = c.person_id
+          AND p.status = 'ACTIVE'
+        WHERE c.token_hash = ?
+          AND c.mode = 'ENROLL'
+        LIMIT 1`,
+      [tenantSlug, challengeHash(token)]
+    );
+    const challenge = rows[0];
+
+    if (!challenge || challenge.consumed_at) {
+      throw new MfaError('The MFA enrollment challenge is not valid.', 'INVALID_CHALLENGE');
+    }
+    if (challenge.expires_at.getTime() <= Date.now()) {
+      throw new MfaError('The MFA enrollment challenge has expired. Sign in again.', 'CHALLENGE_EXPIRED');
+    }
+
+    return {
+      principal: {
+        userId: challenge.user_id,
+        email: challenge.email,
+        tenantId: challenge.tenant_id,
+        tenantSlug: challenge.tenant_slug,
+        tenantName: challenge.tenant_name,
+        personId: challenge.person_id,
+        personName: challenge.person_name
+      },
+      returnTo: challenge.return_to
+    };
+  }
+
+  async consumeRequiredEnrollmentChallenge(
+    tokenValue: string,
+    tenantSlug: string
+  ): Promise<void> {
+    const token = tokenValue.trim();
+    const result = await this.pool.execute<import('mysql2/promise').ResultSetHeader>(
+      `UPDATE application_mfa_login_challenges c
+       JOIN tenants t ON t.id = c.tenant_id
+          SET c.consumed_at = COALESCE(c.consumed_at, UTC_TIMESTAMP(6))
+        WHERE c.token_hash = ?
+          AND c.mode = 'ENROLL'
+          AND c.consumed_at IS NULL
+          AND c.expires_at > UTC_TIMESTAMP(6)
+          AND t.slug = ?`,
+      [challengeHash(token), tenantSlug]
+    );
+
+    if (result[0].affectedRows !== 1) {
+      throw new MfaError('The MFA enrollment challenge is not valid.', 'INVALID_CHALLENGE');
+    }
   }
 
   async verifyLoginChallenge(
@@ -658,7 +776,7 @@ export class MySqlMfaService {
 
     const result = await withTransaction(this.pool, async (connection) => {
       const [rows] = await connection.execute<LoginChallengeRow[]>(
-        `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.return_to,
+        `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.mode, c.return_to,
                 c.expires_at, c.consumed_at, c.attempt_count,
                 e.id AS enrollment_id, e.secret_ciphertext, e.secret_iv, e.secret_tag,
                 e.last_used_counter,
@@ -682,6 +800,7 @@ export class MySqlMfaService {
             AND e.method = 'TOTP'
             AND e.status = 'ACTIVE'
           WHERE c.token_hash = ?
+            AND c.mode = 'VERIFY'
           LIMIT 1
           FOR UPDATE`,
         [tenantSlug, challengeHash(token)]

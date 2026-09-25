@@ -71,7 +71,7 @@ suite('tenant authentication policy enforcement', () => {
       password,
       acceptedTerms: true,
       businessProfile: {
-        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        primaryClassificationValueId: 'BCV-NAICS-2022-23',
         sizeTier: 'SMALL',
         employeeCount: 25,
         legalEntityCount: 1,
@@ -162,7 +162,7 @@ suite('tenant authentication policy enforcement', () => {
       password,
       acceptedTerms: true,
       businessProfile: {
-        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        primaryClassificationValueId: 'BCV-NAICS-2022-23',
         sizeTier: 'SMALL',
         employeeCount: 25,
         legalEntityCount: 1,
@@ -216,7 +216,7 @@ suite('tenant authentication policy enforcement', () => {
       password,
       acceptedTerms: true,
       businessProfile: {
-        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        primaryClassificationValueId: 'BCV-NAICS-2022-23',
         sizeTier: 'SMALL',
         employeeCount: 25,
         legalEntityCount: 1,

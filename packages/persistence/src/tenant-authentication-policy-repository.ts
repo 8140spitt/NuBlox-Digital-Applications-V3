@@ -7,6 +7,7 @@ export type TenantMfaRequirement = 'OPTIONAL' | 'REQUIRED';
 export interface TenantAuthenticationPolicy {
   tenantId: string;
   mfaRequirement: TenantMfaRequirement;
+  passkeyEnabled: boolean;
   sessionTtlMinutes: number;
   idleTimeoutMinutes: number;
   maxActiveSessions: number;
@@ -16,11 +17,14 @@ export interface TenantAuthenticationPolicy {
 export interface TenantMfaCoverage {
   activeIdentities: number;
   enrolledIdentities: number;
+  passkeyEnrolledIdentities: number;
+  strongAuthenticationIdentities: number;
 }
 
 interface PolicyRow extends RowDataPacket {
   tenant_id: string;
   mfa_requirement: TenantMfaRequirement;
+  passkey_enabled: number | boolean;
   session_ttl_minutes: number;
   idle_timeout_minutes: number;
   max_active_sessions: number;
@@ -31,6 +35,7 @@ interface PolicySessionRow extends RowDataPacket {
   id: string;
   user_id: string;
   authentication_strength: 'PASSWORD' | 'MFA';
+  authentication_method: 'PASSWORD' | 'PASSWORD_TOTP' | 'PASSKEY';
   created_at: Date;
   last_seen_at: Date;
   expires_at: Date;
@@ -47,6 +52,7 @@ function mapPolicy(row: PolicyRow): TenantAuthenticationPolicy {
   return {
     tenantId: row.tenant_id,
     mfaRequirement: row.mfa_requirement,
+    passkeyEnabled: Boolean(row.passkey_enabled),
     sessionTtlMinutes: Number(row.session_ttl_minutes),
     idleTimeoutMinutes: Number(row.idle_timeout_minutes),
     maxActiveSessions: Number(row.max_active_sessions),
@@ -105,7 +111,7 @@ export class MySqlTenantAuthenticationPolicyRepository {
 
   async get(tenantId: string): Promise<TenantAuthenticationPolicy> {
     const [rows] = await this.pool.execute<PolicyRow[]>(
-      `SELECT tenant_id, mfa_requirement, session_ttl_minutes, idle_timeout_minutes,
+      `SELECT tenant_id, mfa_requirement, passkey_enabled, session_ttl_minutes, idle_timeout_minutes,
               max_active_sessions, row_version
          FROM tenant_authentication_policies
         WHERE tenant_id = ?
@@ -123,6 +129,8 @@ export class MySqlTenantAuthenticationPolicyRepository {
     const [rows] = await this.pool.execute<Array<RowDataPacket & {
       active_identities: number;
       enrolled_identities: number;
+      passkey_identities: number;
+      strong_auth_identities: number;
     }>>(
       `SELECT
           COUNT(DISTINCT CASE
@@ -135,13 +143,31 @@ export class MySqlTenantAuthenticationPolicyRepository {
              AND e.status = 'ACTIVE'
             THEN ut.user_id
             ELSE NULL
-          END) AS enrolled_identities
+          END) AS enrolled_identities,
+          COUNT(DISTINCT CASE
+            WHEN u.status = 'ACTIVE'
+             AND ut.status = 'ACTIVE'
+             AND pk.status = 'ACTIVE'
+            THEN ut.user_id
+            ELSE NULL
+          END) AS passkey_identities,
+          COUNT(DISTINCT CASE
+            WHEN u.status = 'ACTIVE'
+             AND ut.status = 'ACTIVE'
+             AND (e.status = 'ACTIVE' OR pk.status = 'ACTIVE')
+            THEN ut.user_id
+            ELSE NULL
+          END) AS strong_auth_identities
          FROM application_user_tenants ut
          JOIN application_users u ON u.id = ut.user_id
          LEFT JOIN application_mfa_enrollments e
            ON e.user_id = ut.user_id
           AND e.tenant_id = ut.tenant_id
           AND e.method = 'TOTP'
+         LEFT JOIN application_passkeys pk
+           ON pk.user_id = ut.user_id
+          AND pk.tenant_id = ut.tenant_id
+          AND pk.status = 'ACTIVE'
         WHERE ut.tenant_id = ?`,
       [tenantId]
     );
@@ -149,7 +175,9 @@ export class MySqlTenantAuthenticationPolicyRepository {
 
     return {
       activeIdentities: Number(row?.active_identities ?? 0),
-      enrolledIdentities: Number(row?.enrolled_identities ?? 0)
+      enrolledIdentities: Number(row?.enrolled_identities ?? 0),
+      passkeyEnrolledIdentities: Number(row?.passkey_identities ?? 0),
+      strongAuthenticationIdentities: Number(row?.strong_auth_identities ?? 0)
     };
   }
 
@@ -162,7 +190,7 @@ export class MySqlTenantAuthenticationPolicyRepository {
 
     return withTransaction(this.pool, async (connection) => {
       const [rows] = await connection.execute<PolicyRow[]>(
-        `SELECT tenant_id, mfa_requirement, session_ttl_minutes, idle_timeout_minutes,
+        `SELECT tenant_id, mfa_requirement, passkey_enabled, session_ttl_minutes, idle_timeout_minutes,
                 max_active_sessions, row_version
            FROM tenant_authentication_policies
           WHERE tenant_id = ?
@@ -178,6 +206,7 @@ export class MySqlTenantAuthenticationPolicyRepository {
       await connection.execute(
         `UPDATE tenant_authentication_policies
             SET mfa_requirement = ?,
+                passkey_enabled = ?,
                 session_ttl_minutes = ?,
                 idle_timeout_minutes = ?,
                 max_active_sessions = ?,
@@ -186,6 +215,7 @@ export class MySqlTenantAuthenticationPolicyRepository {
           WHERE tenant_id = ?`,
         [
           input.mfaRequirement,
+          input.passkeyEnabled,
           input.sessionTtlMinutes,
           input.idleTimeoutMinutes,
           input.maxActiveSessions,
@@ -195,7 +225,7 @@ export class MySqlTenantAuthenticationPolicyRepository {
       );
 
       const [sessionRows] = await connection.execute<PolicySessionRow[]>(
-        `SELECT id, user_id, authentication_strength, created_at, last_seen_at, expires_at
+        `SELECT id, user_id, authentication_strength, authentication_method, created_at, last_seen_at, expires_at
            FROM application_sessions
           WHERE tenant_id = ?
             AND revoked_at IS NULL
@@ -224,6 +254,11 @@ export class MySqlTenantAuthenticationPolicyRepository {
           session.authentication_strength !== 'MFA'
         ) {
           reason = 'MFA_REQUIRED_POLICY';
+        } else if (
+          !input.passkeyEnabled &&
+          session.authentication_method === 'PASSKEY'
+        ) {
+          reason = 'PASSKEY_DISABLED_POLICY';
         }
 
         const retained = retainedByUser.get(session.user_id) ?? 0;

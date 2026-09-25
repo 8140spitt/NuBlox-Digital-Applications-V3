@@ -23,7 +23,12 @@
   </div>
 </section>
 
-{#if form?.error}
+{#if form?.stepUpRequired && form?.stepUpUrl}
+  <p class="form-message error">
+    {form.error}
+    <a href={form.stepUpUrl}>Verify MFA and return</a>
+  </p>
+{:else if form?.error}
   <p class="form-message error">{form.error}</p>
 {:else if form?.message}
   <p class="form-message info">{form.message}</p>

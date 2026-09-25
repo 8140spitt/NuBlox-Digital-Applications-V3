@@ -123,6 +123,10 @@ suite('organisation structure read projection', () => {
       jobProfileId: jobProfile.id,
       code: 'PM-01',
       title: 'Project Manager',
+      lifecycleStatus: 'APPROVED',
+      incumbencyModel: 'SINGLE',
+      authorisedFte: 1,
+      effectiveFrom: '2026-01-01T00:00:00.000Z',
       status: 'ACTIVE'
     };
     await kernel.createPosition(tenantId, position);

@@ -66,6 +66,7 @@ import {
   MySqlUniversalFunctionReadRepository,
   MySqlTenantRoutingRepository,
   MySqlTenantRegistrationService,
+  MySqlTenantProvisioningService,
   MySqlIdentityChallengeService,
   MySqlAuthenticationRateLimiter,
   MySqlMfaService,
@@ -141,6 +142,7 @@ let enterpriseVocabularyProvisioningServiceInstance: MySqlEnterpriseVocabularyPr
 let universalFunctionReadRepositoryInstance: MySqlUniversalFunctionReadRepository | undefined;
 let tenantRoutingRepositoryInstance: MySqlTenantRoutingRepository | undefined;
 let tenantRegistrationServiceInstance: MySqlTenantRegistrationService | undefined;
+let tenantProvisioningServiceInstance: MySqlTenantProvisioningService | undefined;
 let identityChallengeServiceInstance: MySqlIdentityChallengeService | undefined;
 let authenticationRateLimiterInstance: MySqlAuthenticationRateLimiter | undefined;
 let mfaServiceInstance: MySqlMfaService | undefined;
@@ -679,6 +681,13 @@ export function getTenantRegistrationService(): MySqlTenantRegistrationService {
     tenantRegistrationServiceInstance = new MySqlTenantRegistrationService(getDatabasePool());
   }
   return tenantRegistrationServiceInstance;
+}
+
+export function getTenantProvisioningService(): MySqlTenantProvisioningService {
+  if (!tenantProvisioningServiceInstance) {
+    tenantProvisioningServiceInstance = new MySqlTenantProvisioningService(getDatabasePool());
+  }
+  return tenantProvisioningServiceInstance;
 }
 
 export function getIdentityChallengeService(): MySqlIdentityChallengeService {

@@ -47,7 +47,7 @@ suite('metadata-driven Tenant provisioning', () => {
       tenantId,
       `PERSON-PROVISION-${suffix}`,
       {
-        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        primaryClassificationValueId: 'BCV-NAICS-2022-23',
         sizeTier: 'LARGE',
         employeeCount: 500,
         legalEntityCount: 3,
@@ -66,9 +66,9 @@ suite('metadata-driven Tenant provisioning', () => {
     const configuration = await provisioning.getTenantConfiguration(tenantId);
     expect(configuration.profile).toEqual(
       expect.objectContaining({
-        classificationSchemeCode: 'NUBLOX_INDUSTRY',
-        classificationCode: 'CBE',
-        classificationName: 'Construction & Built Environment',
+        classificationSchemeCode: 'NAICS',
+        classificationCode: '23',
+        classificationName: 'Construction',
         sizeTier: 'LARGE',
         employeeCount: 500,
         legalEntityCount: 3,
@@ -104,7 +104,7 @@ suite('metadata-driven Tenant provisioning', () => {
         tenantId,
         `PERSON-PROVISION-${suffix}`,
         {
-          primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+          primaryClassificationValueId: 'BCV-NAICS-2022-23',
           sizeTier: 'SMALL',
           employeeCount: 25,
           legalEntityCount: 1,
@@ -116,6 +116,66 @@ suite('metadata-driven Tenant provisioning', () => {
     ).rejects.toThrow('already has a governed Business Profile');
   });
 
+  it('exposes all 20 governed NAICS 2022 sector groups and maps Construction to CBE', async () => {
+    if (!pool) throw new Error('Database pool missing.');
+
+    const provisioning = new MySqlTenantProvisioningService(pool);
+    const catalogue = await provisioning.catalogue();
+    const naics = catalogue.industries.filter(
+      (industry) =>
+        industry.schemeCode === 'NAICS' &&
+        industry.schemeEdition === '2022'
+    );
+
+    expect(naics).toHaveLength(20);
+    expect(naics.map((industry) => industry.classificationCode)).toEqual([
+      '11',
+      '21',
+      '22',
+      '23',
+      '31-33',
+      '42',
+      '44-45',
+      '48-49',
+      '51',
+      '52',
+      '53',
+      '54',
+      '55',
+      '56',
+      '61',
+      '62',
+      '71',
+      '72',
+      '81',
+      '92'
+    ]);
+
+    expect(
+      naics.find((industry) => industry.classificationCode === '23')
+    ).toEqual(
+      expect.objectContaining({
+        classificationValueId: 'BCV-NAICS-2022-23',
+        name: 'Construction',
+        industrySolutionId: 'CBE',
+        industrySolutionName: 'Construction & Built Environment'
+      })
+    );
+
+    expect(
+      catalogue.industries.find(
+        (industry) =>
+          industry.schemeCode === 'NUBLOX_INDUSTRY' &&
+          industry.classificationCode === 'CBE'
+      )
+    ).toEqual(
+      expect.objectContaining({
+        classificationValueId: 'BCV-NUBLOX-CBE',
+        industrySolutionId: 'CBE'
+      })
+    );
+  });
+
   it('rejects an exact employee count that conflicts with the selected size tier', async () => {
     if (!pool) throw new Error('Database pool missing.');
 
@@ -123,7 +183,7 @@ suite('metadata-driven Tenant provisioning', () => {
 
     await expect(
       provisioning.preview({
-        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        primaryClassificationValueId: 'BCV-NAICS-2022-23',
         sizeTier: 'SMALL',
         employeeCount: 500,
         legalEntityCount: 1,

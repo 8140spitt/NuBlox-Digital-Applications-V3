@@ -57,5 +57,11 @@ These rules are architectural constraints, not implementation preferences.
 50. **Subscription != Permission.**
 51. **Reference Collection != authoritative containment.**
 52. **Cross-Context Reference != context hierarchy.**
+53. **Tenant identity != Tenant Business Profile.**
+54. **Business classification != Industry Solution.**
+55. **The 29 Core Business Functions remain universal Tenant capability; industry templates do not disable them.**
+56. **Tenant configuration is versioned governed metadata, not source-code branching.**
+57. **Template metadata != executed capability; a component is executable only when its runtime handler exists and succeeds.**
+58. **Tenant provisioning retains exact profile, template/version, component and step provenance.**
 
 Any implementation that violates an invariant requires an explicit architecture decision before it can be accepted.

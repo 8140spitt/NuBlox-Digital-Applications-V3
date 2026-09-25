@@ -62,6 +62,21 @@ A manager sees their own authorised work plus the work and performance of subord
 
 Start with [the architecture index](docs/architecture/README.md).
 
+## Tenant-first web surfaces
+
+NuBlox uses the tenant as the stable business namespace:
+
+```text
+/                          NuBlox public product site
+/{tenantSlug}/             Tenant public site
+/{tenantSlug}/careers      Tenant careers
+/{tenantSlug}/candidate    External candidate surface
+/{tenantSlug}/app/         Private tenant application
+/{tenantSlug}/app/auth/sign-in
+```
+
+The immutable Tenant ID remains the security/persistence identity. The slug is routing metadata. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to tenant public/careers pages.
+
 ## Local application
 
 The V3 web application now has a protected tenant shell. Application login identity is deliberately separate from NuBlox Permission, Responsibility and Authority.

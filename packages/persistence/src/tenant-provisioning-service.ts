@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
+import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
 
 export type TenantSizeTier =

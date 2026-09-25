@@ -207,7 +207,7 @@ export async function queueIdentityChallenge(
 export class MySqlIdentityChallengeService {
   constructor(private readonly pool: Pool) {}
 
-  async verifyEmail(tokenValue: string): Promise<{
+  async verifyEmail(tokenValue: string, tenantSlug: string): Promise<{
     tenantId: string;
     tenantSlug: string;
     email: string;
@@ -219,7 +219,8 @@ export class MySqlIdentityChallengeService {
       const challenge = await this.requireActiveChallenge(
         connection,
         hash,
-        'EMAIL_VERIFICATION'
+        'EMAIL_VERIFICATION',
+        tenantSlug
       );
 
       if (challenge.email_verified_at) {
@@ -352,7 +353,7 @@ export class MySqlIdentityChallengeService {
     });
   }
 
-  async resetPassword(tokenValue: string, newPassword: string): Promise<{
+  async resetPassword(tokenValue: string, newPassword: string, tenantSlug: string): Promise<{
     tenantId: string;
     tenantSlug: string;
   }> {
@@ -363,7 +364,8 @@ export class MySqlIdentityChallengeService {
       const challenge = await this.requireActiveChallenge(
         connection,
         hash,
-        'PASSWORD_RESET'
+        'PASSWORD_RESET',
+        tenantSlug
       );
 
       await connection.execute(
@@ -413,7 +415,8 @@ export class MySqlIdentityChallengeService {
   private async requireActiveChallenge(
     connection: PoolConnection,
     hash: string,
-    purpose: IdentityChallengePurpose
+    purpose: IdentityChallengePurpose,
+    tenantSlug: string
   ): Promise<ChallengeRow> {
     const [rows] = await connection.execute<ChallengeRow[]>(
       `SELECT c.id, c.user_id, c.tenant_id, c.purpose, c.email_normalized,
@@ -424,9 +427,10 @@ export class MySqlIdentityChallengeService {
          JOIN tenants t ON t.id = c.tenant_id AND t.status = 'ACTIVE'
         WHERE c.token_hash = ?
           AND c.purpose = ?
+          AND t.slug = ?
         LIMIT 1
         FOR UPDATE`,
-      [hash, purpose]
+      [hash, purpose, tenantSlug]
     );
     const row = rows[0];
     const now = Date.now();

@@ -2,6 +2,9 @@
   import type { ActionData, PageData } from './$types';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(
+    form as ActionData & Partial<{ stepUpRequired: boolean; stepUpUrl: string }>
+  );
 </script>
 
 <svelte:head>
@@ -23,10 +26,10 @@
   </div>
 </section>
 
-{#if form?.stepUpRequired && form?.stepUpUrl}
+{#if viewForm?.stepUpRequired && viewForm?.stepUpUrl}
   <p class="form-message error">
     {form.error}
-    <a href={form.stepUpUrl}>Verify again and return</a>
+    <a href={viewForm.stepUpUrl}>Verify again and return</a>
   </p>
 {:else if form?.error}
   <p class="form-message error">{form.error}</p>

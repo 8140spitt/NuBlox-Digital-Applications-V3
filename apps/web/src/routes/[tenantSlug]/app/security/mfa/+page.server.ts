@@ -1,7 +1,11 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { InvalidCredentialsError, MfaError } from '@nublox/persistence';
-import { tenantSessionCookieName } from '$lib/server/auth';
+import {
+  hasRecentMfa,
+  tenantSessionCookieName,
+  tenantStepUpPath
+} from '$lib/server/auth';
 import {
   getAuthRepository,
   getMfaService,
@@ -78,9 +82,14 @@ export const actions: Actions = {
   regenerate: async ({ locals }) => {
     const session = requireSession(locals);
 
-    if (session.authenticationStrength !== 'MFA') {
-      return fail(403, {
-        error: 'Regenerating recovery codes requires an MFA-verified session. Sign out and sign in again.'
+    if (!hasRecentMfa(session)) {
+      return fail(428, {
+        stepUpRequired: true,
+        stepUpUrl: tenantStepUpPath(
+          session.tenantSlug,
+          `/${session.tenantSlug}/app/security/mfa`
+        ),
+        error: 'A recent MFA verification is required to regenerate recovery codes.'
       });
     }
 
@@ -99,6 +108,18 @@ export const actions: Actions = {
 
   disable: async ({ request, locals }) => {
     const session = requireSession(locals);
+
+    if (!hasRecentMfa(session)) {
+      return fail(428, {
+        stepUpRequired: true,
+        stepUpUrl: tenantStepUpPath(
+          session.tenantSlug,
+          `/${session.tenantSlug}/app/security/mfa`
+        ),
+        error: 'A recent MFA verification is required to disable MFA.'
+      });
+    }
+
     const policy = await getTenantAuthenticationPolicyRepository().get(session.tenantId);
     if (policy.mfaRequirement === 'REQUIRED') {
       return fail(403, {

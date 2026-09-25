@@ -40,6 +40,10 @@
         </p>
       </header>
 
+      {#if data.passwordReset}
+        <p class="form-message info">Password updated. Sign in with your new password.</p>
+      {/if}
+
       <form method="POST" class="login-form">
         <input
           type="hidden"

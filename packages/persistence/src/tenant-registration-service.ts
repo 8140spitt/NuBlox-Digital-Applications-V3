@@ -8,6 +8,11 @@ import { withTransaction } from './database.js';
 import { hashPassword } from './auth-repository.js';
 import { allocateTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
 import { queueIdentityChallenge } from './identity-challenge-service.js';
+import {
+  MySqlTenantProvisioningService,
+  TenantProvisioningError,
+  type TenantBusinessProfileInput
+} from './tenant-provisioning-service.js';
 
 export type TenantRegistrationErrorCode =
   | 'INVALID_INPUT'
@@ -31,6 +36,7 @@ export interface TenantRegistrationInput {
   email: string;
   password: string;
   acceptedTerms: boolean;
+  businessProfile: TenantBusinessProfileInput;
   grantTenantAdministrator?: boolean;
   emailVerified?: boolean;
 }
@@ -44,6 +50,8 @@ export interface TenantRegistrationResult {
   personId: string;
   employeePartyId: string;
   userId: string;
+  provisioningRunId: string;
+  industrySolutionIds: string[];
   verificationRequired: boolean;
 }
 
@@ -93,7 +101,11 @@ async function audit(
 }
 
 export class MySqlTenantRegistrationService {
-  constructor(private readonly pool: Pool) {}
+  private readonly provisioning: MySqlTenantProvisioningService;
+
+  constructor(private readonly pool: Pool) {
+    this.provisioning = new MySqlTenantProvisioningService(pool);
+  }
 
   async register(input: TenantRegistrationInput): Promise<TenantRegistrationResult> {
     if (!input.acceptedTerms) {
@@ -294,6 +306,21 @@ export class MySqlTenantRegistrationService {
         );
       }
 
+      let provisioning;
+      try {
+        provisioning = await this.provisioning.provisionRegistration(
+          connection,
+          tenantId,
+          personId,
+          input.businessProfile
+        );
+      } catch (error) {
+        if (error instanceof TenantProvisioningError) {
+          throw new TenantRegistrationError(error.message, 'INVALID_INPUT');
+        }
+        throw error;
+      }
+
       await connection.execute(
         `INSERT INTO application_auth_events
           (user_id, tenant_id, email_normalized, event_type, outcome, metadata)
@@ -302,7 +329,13 @@ export class MySqlTenantRegistrationService {
           userId,
           tenantId,
           emailNormalized,
-          JSON.stringify({ tenantSlug, organisationId, personId })
+          JSON.stringify({
+            tenantSlug,
+            organisationId,
+            personId,
+            provisioningRunId: provisioning.provisioningRunId,
+            industrySolutionIds: provisioning.industrySolutionIds
+          })
         ]
       );
 
@@ -352,6 +385,8 @@ export class MySqlTenantRegistrationService {
         personId,
         employeePartyId,
         userId,
+        provisioningRunId: provisioning.provisioningRunId,
+        industrySolutionIds: provisioning.industrySolutionIds,
         verificationRequired: input.emailVerified !== true
       };
     });

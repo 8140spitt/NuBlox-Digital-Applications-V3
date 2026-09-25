@@ -48,4 +48,13 @@
     </div>
     <span aria-hidden="true">→</span>
   </a>
+
+  <a class="home-primary-card" href={tenantAppPath(data.tenantSlug, '/app/security/activity')}>
+    <span>EV</span>
+    <div>
+      <strong>Security activity</strong>
+      <p>Review sign-in, verification, recovery, MFA, step-up and session-security events.</p>
+    </div>
+    <span aria-hidden="true">→</span>
+  </a>
 </section>

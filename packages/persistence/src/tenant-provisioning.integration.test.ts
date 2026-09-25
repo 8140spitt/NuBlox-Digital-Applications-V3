@@ -84,6 +84,14 @@ suite('metadata-driven Tenant provisioning', () => {
     expect(configuration.industrySolutions).toContainEqual(
       expect.objectContaining({ id: 'CBE', status: 'ACTIVE' })
     );
+    expect(configuration.capabilityGuidance).toEqual(
+      expect.objectContaining({
+        totalCapabilities: 47,
+        defaultEnabled: 16,
+        availableDisabled: 7,
+        hiddenNotApplicable: 24
+      })
+    );
     expect(configuration.templateApplications).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ code: 'NUBLOX_CORE', version: 1, status: 'APPLIED' }),
@@ -96,6 +104,7 @@ suite('metadata-driven Tenant provisioning', () => {
     ).toEqual([
       'BUSINESS_PROFILE',
       'TEMPLATE_RESOLUTION',
+      'MARKET_CAPABILITY_GUIDANCE',
       'CONFIGURATION_APPLICATION'
     ]);
 
@@ -159,6 +168,24 @@ suite('metadata-driven Tenant provisioning', () => {
         name: 'Construction',
         industrySolutionId: 'CBE',
         industrySolutionName: 'Construction & Built Environment'
+      })
+    );
+
+    const preview = await provisioning.preview({
+      primaryClassificationValueId: 'BCV-NAICS-2022-23',
+      sizeTier: 'MEDIUM',
+      employeeCount: 100,
+      legalEntityCount: 1,
+      primaryCountryCode: 'GB',
+      primaryLanguageCode: 'en-GB',
+      operatingModelCodes: ['PROJECT_BASED']
+    });
+    expect(preview.capabilityGuidance).toEqual(
+      expect.objectContaining({
+        totalCapabilities: 47,
+        defaultEnabled: 16,
+        availableDisabled: 7,
+        hiddenNotApplicable: 24
       })
     );
 

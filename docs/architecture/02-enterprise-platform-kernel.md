@@ -15,6 +15,8 @@ Its purpose is to implement shared enterprise concepts once, preserve one author
 
 - Tenant;
 - Party;
+- Party Type (`TENANT`, `EMPLOYEE`, `CLIENT`, `VENDOR_SUPPLIER`);
+- Tenant Party Binding;
 - Person;
 - Organisation;
 - Legal Entity;
@@ -23,8 +25,8 @@ Its purpose is to implement shared enterprise concepts once, preserve one author
 - Team;
 - Membership;
 - employment / engagement;
-- Customer relationship;
-- Supplier relationship;
+- Client relationship;
+- Vendor/Supplier relationship;
 - external Party identity.
 
 ### Responsibility, authority and access

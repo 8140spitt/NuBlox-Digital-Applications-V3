@@ -88,14 +88,20 @@ export const actions: Actions = {
       await getMfaService().consumeRequiredEnrollmentChallenge(token, tenant.slug);
 
       const userAgent = request.headers.get('user-agent')?.trim();
+      const authenticationMethod =
+        context.baseAuthenticationMethod === 'OIDC' ? 'OIDC_TOTP' : 'PASSWORD_TOTP';
       const created = await getAuthRepository().createSession(
         context.principal,
         undefined,
         'MFA',
         {
           ...(userAgent ? { userAgent } : {}),
-          networkAddress: getClientAddress()
-        }
+          networkAddress: getClientAddress(),
+          ...(context.authenticationProviderId
+            ? { authenticationProviderId: context.authenticationProviderId }
+            : {})
+        },
+        authenticationMethod
       );
 
       setTenantApplicationSession(

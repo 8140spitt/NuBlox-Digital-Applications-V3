@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ locals }) => {
   const evaluation = await getAccessRepository().evaluatePermission(
     session.tenantId as TenantId,
     session.personId,
-    PLATFORM_PERMISSION_KEYS.METADATA_READ,
+    PLATFORM_PERMISSION_KEYS.TENANT_CONFIGURATION_READ,
     { scopeType: 'TENANT' }
   );
 

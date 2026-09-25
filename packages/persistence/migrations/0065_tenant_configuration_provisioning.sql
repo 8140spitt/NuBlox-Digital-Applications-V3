@@ -446,18 +446,6 @@ INSERT INTO tenant_configuration_template_components
   (id, template_id, component_key, component_type, sequence, required, configuration_payload)
 VALUES
   (
-    'TCM-NUBLOX-CORE-MODEL-1',
-    'TPL-NUBLOX-CORE-1',
-    'NUBLOX.ENTERPRISE.CORE',
-    'METADATA_PACKAGE',
-    10,
-    TRUE,
-    JSON_OBJECT(
-      'package', 'NUBLOX_ENTERPRISE_CORE',
-      'preserveCoreFunctions', TRUE
-    )
-  ),
-  (
     'TCM-CBE-SOLUTION-1',
     'TPL-CBE-BASE-1',
     'NUBLOX.INDUSTRY.CBE',

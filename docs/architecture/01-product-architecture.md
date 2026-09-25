@@ -121,10 +121,11 @@ See [05 — Construction & Built Environment](05-construction-built-environment.
 Core concepts include:
 
 - Tenant;
-- Party, Person and Organisation;
+- Party with canonical Party Types `TENANT`, `EMPLOYEE`, `CLIENT` and `VENDOR_SUPPLIER`;
+- Person and Organisation as structural Party identities;
 - Organisation Unit, Position and Job Profile;
 - Responsibility, Role, Permission, Authority and Delegation;
-- Customer and Supplier relationships;
+- Client and Vendor/Supplier relationships on the authoritative Party/Organisation master;
 - Contract and Agreement;
 - Portfolio, Programme, Project and Work Package;
 - Site, Facility, Space, System and Asset;

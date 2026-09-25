@@ -90,6 +90,27 @@ NuBlox uses the tenant as the stable business namespace:
 
 The immutable Tenant ID remains the security/persistence identity and is never part of the normal tenant URL. The slug is human routing metadata derived from the business name by default: `BAE Systems → baesystems → /baesystems/app`. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to the explicit `/{tenantSlug}/public` namespace.
 
+## Tenant registration and provisioning
+
+Public registration captures the business context required to configure a Tenant rather than creating an unclassified shell.
+
+The registration journey is:
+
+```text
+Business Identity
+→ Size & Operating Model
+→ Configuration Preview
+→ Administrator Setup
+→ Tenant + Organisation + Employee identity
+→ versioned template resolution
+→ Industry Solution activation
+→ email verification
+```
+
+The 29 Core Business Functions remain universal. Industry, size, operating-model and regulatory metadata configure overlays and defaults; they do not remove core enterprise capability.
+
+Provisioning retains the exact Tenant Business Profile, applied template/version provenance and ordered execution evidence. Authorised users can review it at `/{tenantSlug}/app/tenant-configuration`.
+
 ## Authentication foundation
 
 Tenant application authentication is separate from NuBlox business authorisation.

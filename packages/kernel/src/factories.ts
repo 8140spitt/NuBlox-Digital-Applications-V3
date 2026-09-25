@@ -100,6 +100,11 @@ export function createPosition(
     'Position must reference the supplied Organisation Unit.'
   );
 
+  invariant(input.authorisedFte > 0 && Number.isFinite(input.authorisedFte), 'Position authorisedFte must be greater than zero.');
+  invariant(Date.parse(input.effectiveFrom) >= 0, 'Position effectiveFrom must be a valid date.');
+  assertDateOrder(input.effectiveFrom, input.effectiveTo, 'Position');
+  invariant(input.lifecycleStatus !== 'ABOLISHED' || !!input.effectiveTo, 'An abolished Position must have effectiveTo.');
+
   if (jobProfile) {
     invariant(input.jobProfileId === jobProfile.id, 'Position must reference the supplied Job Profile.');
 

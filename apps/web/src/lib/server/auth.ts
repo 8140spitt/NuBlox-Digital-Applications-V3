@@ -144,3 +144,22 @@ export function clearTenantMfaChallenge(cookies: Cookies, tenantSlug: string): v
     path: tenantMfaChallengeCookiePath(tenantSlug)
   });
 }
+
+export function hasRecentMfa(
+  session: AuthSession,
+  maxAgeMinutes = 10,
+  now = Date.now()
+): boolean {
+  if (session.authenticationStrength !== 'MFA' || !session.mfaVerifiedAt) return false;
+  if (!Number.isFinite(maxAgeMinutes) || maxAgeMinutes <= 0) return false;
+
+  const verifiedAt = new Date(session.mfaVerifiedAt).getTime();
+  if (!Number.isFinite(verifiedAt)) return false;
+
+  return now - verifiedAt <= maxAgeMinutes * 60 * 1000;
+}
+
+export function tenantStepUpPath(tenantSlug: string, returnTo: string): string {
+  const safe = safeTenantReturnTo(tenantSlug, returnTo, '/app/security');
+  return `/${tenantSlug}/app/auth/step-up?returnTo=${encodeURIComponent(safe)}`;
+}

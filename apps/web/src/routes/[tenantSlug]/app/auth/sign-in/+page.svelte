@@ -95,6 +95,32 @@
         <p class="form-message info">Password updated. Sign in with your new password.</p>
       {/if}
 
+      {#if data.federationStatus === 'failed'}
+        <p class="form-message error">
+          Enterprise sign-in could not be completed. Start the sign-in again or use another permitted method.
+        </p>
+      {:else if data.federationStatus === 'unavailable'}
+        <p class="form-message error">
+          Enterprise sign-in is currently unavailable for that provider.
+        </p>
+      {/if}
+
+      {#if data.tenantSlug && data.oidcProviders.length > 0}
+        <div class="login-form">
+          {#each data.oidcProviders as provider}
+            <a
+              class="login-submit auth-link-button"
+              href={`/${data.tenantSlug}/app/auth/oidc/${encodeURIComponent(provider.id)}/start?returnTo=${encodeURIComponent(form?.returnTo ?? data.returnTo)}`}
+            >
+              Continue with {provider.name}
+              <span aria-hidden="true">→</span>
+            </a>
+          {/each}
+        </div>
+
+        <p class="login-help">Or use your NuBlox employee credentials.</p>
+      {/if}
+
       <form method="POST" class="login-form">
         <input
           type="hidden"

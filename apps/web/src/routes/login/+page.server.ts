@@ -97,7 +97,7 @@ export const actions: Actions = {
       const userAgent = request.headers.get('user-agent')?.trim();
       const created = await repository.createSession(
         principal,
-        60 * 60 * 12,
+        undefined,
         'PASSWORD',
         {
           ...(userAgent ? { userAgent } : {}),

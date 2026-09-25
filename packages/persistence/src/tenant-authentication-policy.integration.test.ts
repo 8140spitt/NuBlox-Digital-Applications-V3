@@ -1,0 +1,178 @@
+import { createHmac, randomUUID } from 'node:crypto';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { createDatabasePool } from './database.js';
+import { migrate } from './migrations.js';
+import { MySqlAuthRepository } from './auth-repository.js';
+import { MySqlMfaService } from './mfa-service.js';
+import { MySqlTenantAuthenticationPolicyRepository } from './tenant-authentication-policy-repository.js';
+import { MySqlTenantRegistrationService } from './tenant-registration-service.js';
+
+const enabled = Boolean(process.env.NUBLOX_DATABASE_URL);
+const suite = enabled ? describe : describe.skip;
+const pool = enabled ? createDatabasePool() : undefined;
+
+const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+function base32Decode(value: string): Buffer {
+  let bits = 0;
+  let accumulator = 0;
+  const bytes: number[] = [];
+
+  for (const character of value.toUpperCase()) {
+    const index = BASE32_ALPHABET.indexOf(character);
+    if (index < 0) throw new Error('Invalid Base32 test secret.');
+
+    accumulator = (accumulator << 5) | index;
+    bits += 5;
+    if (bits >= 8) {
+      bytes.push((accumulator >>> (bits - 8)) & 255);
+      bits -= 8;
+    }
+  }
+
+  return Buffer.from(bytes);
+}
+
+function totp(secret: string, counter = Math.floor(Date.now() / 1000 / 30)): string {
+  const counterBuffer = Buffer.alloc(8);
+  counterBuffer.writeBigUInt64BE(BigInt(counter));
+  const digest = createHmac('sha1', base32Decode(secret)).update(counterBuffer).digest();
+  const offset = digest[digest.length - 1]! & 0x0f;
+  const binary =
+    ((digest[offset]! & 0x7f) << 24) |
+    ((digest[offset + 1]! & 0xff) << 16) |
+    ((digest[offset + 2]! & 0xff) << 8) |
+    (digest[offset + 3]! & 0xff);
+
+  return String(binary % 1_000_000).padStart(6, '0');
+}
+
+suite('tenant authentication policy enforcement', () => {
+  beforeAll(async () => {
+    await migrate();
+  });
+
+  afterAll(async () => {
+    await pool?.end();
+  });
+
+  it('invalidates password-only sessions when MFA becomes required and forces enrollment', async () => {
+    if (!pool) throw new Error('Database pool missing.');
+
+    const suffix = randomUUID().replaceAll('-', '').slice(0, 12);
+    const email = `policy-${suffix}@example.test`;
+    const password = 'correct-horse-battery-staple';
+
+    const registration = await new MySqlTenantRegistrationService(pool).register({
+      businessName: `Policy Test ${suffix}`,
+      tenantSlug: `policy-${suffix}`,
+      personName: 'Policy Test User',
+      email,
+      password,
+      acceptedTerms: true,
+      emailVerified: true
+    });
+
+    const auth = new MySqlAuthRepository(pool);
+    const mfa = new MySqlMfaService(pool);
+    const policyRepository = new MySqlTenantAuthenticationPolicyRepository(pool);
+    const principal = await auth.authenticate(email, password, registration.tenantId);
+
+    const initialPolicy = await policyRepository.get(registration.tenantId);
+    expect(initialPolicy.mfaRequirement).toBe('OPTIONAL');
+
+    const passwordSession = await auth.createSession(principal, undefined, 'PASSWORD');
+    expect((await auth.resolveSession(passwordSession.token))?.authenticationStrength).toBe('PASSWORD');
+
+    await policyRepository.update(
+      registration.tenantId,
+      registration.personId,
+      {
+        mfaRequirement: 'REQUIRED',
+        sessionTtlMinutes: 720,
+        idleTimeoutMinutes: 120,
+        maxActiveSessions: 10
+      }
+    );
+
+    expect(await auth.resolveSession(passwordSession.token)).toBeNull();
+
+    await expect(
+      auth.createSession(principal, undefined, 'PASSWORD')
+    ).rejects.toThrow('requires MFA');
+
+    const requiredChallenge = await mfa.beginLogin(
+      principal,
+      `/${registration.tenantSlug}/app/function`
+    );
+    expect(requiredChallenge.required).toBe(true);
+    expect(requiredChallenge.enrollmentRequired).toBe(true);
+    expect(requiredChallenge.token).toBeTruthy();
+
+    const enrollmentContext = await mfa.resolveRequiredEnrollmentChallenge(
+      requiredChallenge.token ?? '',
+      registration.tenantSlug
+    );
+    expect(enrollmentContext.principal.userId).toBe(principal.userId);
+
+    const enrollment = await mfa.startEnrollment(principal);
+    const recoveryCodes = await mfa.confirmEnrollment(principal, totp(enrollment.secret));
+    expect(recoveryCodes).toHaveLength(10);
+
+    await mfa.consumeRequiredEnrollmentChallenge(
+      requiredChallenge.token ?? '',
+      registration.tenantSlug
+    );
+
+    const mfaSession = await auth.createSession(principal, undefined, 'MFA');
+    const resolved = await auth.resolveSession(mfaSession.token);
+    expect(resolved?.authenticationStrength).toBe('MFA');
+    expect(resolved?.mfaVerifiedAt).toBeTruthy();
+
+    const nextLogin = await mfa.beginLogin(
+      principal,
+      `/${registration.tenantSlug}/app/function`
+    );
+    expect(nextLogin.required).toBe(true);
+    expect(nextLogin.enrollmentRequired).toBe(false);
+  });
+
+  it('enforces session maximum by revoking the oldest active session', async () => {
+    if (!pool) throw new Error('Database pool missing.');
+
+    const suffix = randomUUID().replaceAll('-', '').slice(0, 12);
+    const email = `sessions-${suffix}@example.test`;
+    const password = 'correct-horse-battery-staple';
+
+    const registration = await new MySqlTenantRegistrationService(pool).register({
+      businessName: `Session Limit ${suffix}`,
+      tenantSlug: `session-limit-${suffix}`,
+      personName: 'Session Limit User',
+      email,
+      password,
+      acceptedTerms: true,
+      emailVerified: true
+    });
+
+    const auth = new MySqlAuthRepository(pool);
+    const policyRepository = new MySqlTenantAuthenticationPolicyRepository(pool);
+    const principal = await auth.authenticate(email, password, registration.tenantId);
+
+    await policyRepository.update(
+      registration.tenantId,
+      registration.personId,
+      {
+        mfaRequirement: 'OPTIONAL',
+        sessionTtlMinutes: 720,
+        idleTimeoutMinutes: 120,
+        maxActiveSessions: 1
+      }
+    );
+
+    const first = await auth.createSession(principal);
+    const second = await auth.createSession(principal);
+
+    expect(await auth.resolveSession(first.token)).toBeNull();
+    expect(await auth.resolveSession(second.token)).not.toBeNull();
+  });
+});

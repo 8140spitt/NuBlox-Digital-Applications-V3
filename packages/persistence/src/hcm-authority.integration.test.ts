@@ -60,6 +60,25 @@ suite('HCM authority drives Function world and management hierarchy',()=>{
 
     const managerJob=await hcm.createJobProfile(tenantId,admin.id,{code:`SALES-MGR-${suffix}`,name:'Sales Manager'});
     const executiveJob=await hcm.createJobProfile(tenantId,admin.id,{code:`SALES-EXEC-${suffix}`,name:'Sales Executive'});
+    const salesFamily=await hcm.createJobFamily(tenantId,admin.id,{code:`COMM-${suffix}`,name:'Commercial'});
+    const salesSubfamily=await hcm.createJobSubfamily(tenantId,admin.id,{
+      familyId:salesFamily.id,code:`SALES-${suffix}`,name:'Sales'
+    });
+    const professionalLevel=await hcm.createCareerLevel(tenantId,admin.id,{
+      code:`P3-${suffix}`,name:'Senior Professional',track:'INDIVIDUAL_CONTRIBUTOR',sequence:30
+    });
+    const grade=await hcm.createGrade(tenantId,admin.id,{code:`G7-${suffix}`,name:'Grade 7',sequence:70});
+    const jobArchitecture=await hcm.assignJobProfileArchitecture(tenantId,admin.id,{
+      jobProfileId:executiveJob.id,familyId:salesFamily.id,subfamilyId:salesSubfamily.id,
+      careerLevelId:professionalLevel.id,gradeId:grade.id,effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+    expect(jobArchitecture).toMatchObject({
+      jobProfileId:executiveJob.id,familyId:salesFamily.id,subfamilyId:salesSubfamily.id,
+      careerLevelId:professionalLevel.id,gradeId:grade.id,status:'ACTIVE'
+    });
+    await expect(hcm.assignJobProfileArchitecture(tenantId,admin.id,{
+      jobProfileId:executiveJob.id,familyId:salesFamily.id,effectiveFrom:'2026-06-01T00:00:00.000Z'
+    })).rejects.toMatchObject({name:'HcmCommandError',code:'CONFLICT'} satisfies Partial<HcmCommandError>);
     const managerPosition=await organisation.createPosition(tenantId,admin.id,{
       organisationUnitId:salesUnit.id,jobProfileId:managerJob.id,code:'SALES-MGR-001',title:'Sales Manager'
     });
@@ -136,6 +155,14 @@ suite('HCM authority drives Function world and management hierarchy',()=>{
       subordinatePositionId:executivePosition.id,managerPositionId:managerPosition.id,
       relationshipType:'LINE_MANAGER',effectiveFrom:'2026-01-01T00:00:00.000Z'
     });
+
+    const projection=await reads.getProjection(tenantId,'2026-09-24T12:00:00.000Z');
+    expect(projection.jobArchitecture).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        jobProfileId:executiveJob.id,familyCode:salesFamily.code,subfamilyCode:salesSubfamily.code,
+        careerLevelCode:professionalLevel.code,gradeCode:grade.code,status:'ACTIVE'
+      })
+    ]));
 
     const executiveWorld=await reads.getUserExperience(tenantId,executive.id,'2026-09-24T12:00:00.000Z');
     expect(executiveWorld).toMatchObject({

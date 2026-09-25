@@ -95,6 +95,10 @@ describe('enterprise kernel identity invariants', () => {
       jobProfileId: profile.id,
       code: 'ARCH-LEAD',
       title: 'Lead Architect',
+      lifecycleStatus: 'APPROVED',
+      incumbencyModel: 'SINGLE',
+      authorisedFte: 1,
+      effectiveFrom: '2026-01-01T00:00:00.000Z',
       status: 'ACTIVE'
     };
 
@@ -108,6 +112,10 @@ describe('enterprise kernel identity invariants', () => {
       organisationUnitId: asId<'OrganisationUnitId'>('UNIT-1', 'Organisation Unit'),
       code: 'PM-1',
       title: 'Project Manager',
+      lifecycleStatus: 'APPROVED',
+      incumbencyModel: 'SINGLE',
+      authorisedFte: 1,
+      effectiveFrom: '2026-01-01T00:00:00.000Z',
       status: 'ACTIVE'
     };
 

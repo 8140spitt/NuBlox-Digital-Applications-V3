@@ -6,6 +6,7 @@ import { getAuthRepository } from './platform';
 export const LEGACY_SESSION_COOKIE = 'nublox_session';
 export const TENANT_ROUTE_HINT_COOKIE = 'nublox_tenant_route';
 const TENANT_SESSION_COOKIE_PREFIX = 'nublox_tenant_session_';
+const TENANT_MFA_CHALLENGE_COOKIE_PREFIX = 'nublox_mfa_challenge_';
 
 function cookieSafeTenantSlug(tenantSlug: string): string {
   if (!TENANT_SLUG_PATTERN.test(tenantSlug)) {
@@ -17,6 +18,15 @@ function cookieSafeTenantSlug(tenantSlug: string): string {
 export function tenantSessionCookieName(tenantSlug: string): string {
   return `${TENANT_SESSION_COOKIE_PREFIX}${cookieSafeTenantSlug(tenantSlug)}`;
 }
+
+export function tenantMfaChallengeCookieName(tenantSlug: string): string {
+  return `${TENANT_MFA_CHALLENGE_COOKIE_PREFIX}${cookieSafeTenantSlug(tenantSlug)}`;
+}
+
+export function tenantMfaChallengeCookiePath(tenantSlug: string): string {
+  return `/${tenantSlug}/app/auth/mfa`;
+}
+
 
 export function tenantApplicationCookiePath(tenantSlug: string): string {
   return tenantAppPath(tenantSlug);
@@ -105,4 +115,32 @@ export function safeTenantReturnTo(
 export function tenantRouteHint(cookies: Cookies): string | null {
   const value = cookies.get(TENANT_ROUTE_HINT_COOKIE)?.trim().toLowerCase();
   return value && TENANT_SLUG_PATTERN.test(value) ? value : null;
+}
+
+export function setTenantMfaChallenge(
+  cookies: Cookies,
+  tenantSlug: string,
+  token: string,
+  expiresAt: string
+): void {
+  const expiry = new Date(expiresAt);
+  const maxAge = Math.max(1, Math.floor((expiry.getTime() - Date.now()) / 1000));
+
+  cookies.set(tenantMfaChallengeCookieName(tenantSlug), token, {
+    path: tenantMfaChallengeCookiePath(tenantSlug),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge
+  });
+}
+
+export function getTenantMfaChallenge(cookies: Cookies, tenantSlug: string): string | null {
+  return cookies.get(tenantMfaChallengeCookieName(tenantSlug)) ?? null;
+}
+
+export function clearTenantMfaChallenge(cookies: Cookies, tenantSlug: string): void {
+  cookies.delete(tenantMfaChallengeCookieName(tenantSlug), {
+    path: tenantMfaChallengeCookiePath(tenantSlug)
+  });
 }

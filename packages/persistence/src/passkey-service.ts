@@ -427,7 +427,7 @@ function parseAuthenticatorData(
   const credentialLength = authData.readUInt16BE(offset);
   offset += 2;
 
-  if (credentialLength < 16 || offset + credentialLength > authData.length) {
+  if (credentialLength < 1 || offset + credentialLength > authData.length) {
     throw new PasskeyError('The credential ID is invalid.', 'INVALID_RESPONSE');
   }
 
@@ -663,7 +663,7 @@ export class MySqlPasskeyService {
       if (
         response.type !== 'public-key' ||
         !response.id ||
-        response.id.length > 1024
+        response.id.length > 2048
       ) {
         throw new PasskeyError('The passkey credential type is invalid.', 'INVALID_RESPONSE');
       }
@@ -904,7 +904,7 @@ export class MySqlPasskeyService {
       if (
         response.type !== 'public-key' ||
         !response.id ||
-        response.id.length > 1024
+        response.id.length > 2048
       ) {
         throw new PasskeyError('The passkey credential type is invalid.', 'INVALID_RESPONSE');
       }

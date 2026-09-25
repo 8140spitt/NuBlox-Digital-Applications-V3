@@ -6,42 +6,43 @@
 <section class="workspace-hero home-hero">
   <div>
     <p class="app-eyebrow">Operational home</p>
-    <h1>What needs your attention?</h1>
+    <h1>Your business. Your Function. Your work.</h1>
     <p class="workspace-lede">
-      Start with assigned work, choose the organisational Context, then enter the Team that owns the capability, its Governance, Delivery, People, work products, Decisions and evidence.
+      NuBlox resolves your occupied Position into the Function and work stream in which you operate,
+      then composes the work, tools, business objects and decisions relevant to your role.
     </p>
   </div>
 
-  <a class="primary-action" href="/app/my-work">
-    Open My Work
+  <a class="primary-action" href="/app/function">
+    Open My Function
     <span aria-hidden="true">→</span>
   </a>
 </section>
 
 <section class="home-primary-grid" aria-label="Primary work areas">
-  <a class="home-primary-card" href="/app/my-work">
+  <a class="home-primary-card" href="/app/function">
     <span>01</span>
     <div>
-      <strong>My Work</strong>
-      <p>Assignments, reviews, approvals, acceptance actions and competence obligations.</p>
+      <strong>My Function</strong>
+      <p>Your Function Governance or Function Delivery working environment, determined by your Position.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>
 
-  <a class="home-primary-card" href="/app/contexts">
+  <a class="home-primary-card" href="/app/my-work">
     <span>02</span>
     <div>
-      <strong>Contexts</strong>
-      <p>Move from the Tenant Site into the Organisation or child organisational context where work and accountability apply.</p>
+      <strong>My Work</strong>
+      <p>Assignments, reviews, approvals, acceptance actions, exceptions and other cross-Function attention.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>
 
-  <a class="home-primary-card" href="/app/teams">
+  <a class="home-primary-card" href="/app/my-team">
     <span>03</span>
     <div>
-      <strong>Teams</strong>
-      <p>Work through the 29 Core Function Teams and 16 CBE Professional Domain Teams in the selected Context.</p>
+      <strong>My Team</strong>
+      <p>For managers, roll authorised work and performance through the Position reporting hierarchy.</p>
     </div>
     <span aria-hidden="true">→</span>
   </a>
@@ -93,7 +94,7 @@
   </header>
 
   <div class="home-governance-links">
-    <a href="/app/hcm"><strong>HCM &amp; Position Management</strong><span>People, positions, occupancy and Team membership</span></a>
+    <a href="/app/hcm"><strong>HCM &amp; Position Management</strong><span>People, Job Profiles, Positions, occupancy, Function work streams and reporting hierarchy</span></a>
     <a href="/app/competence"><strong>Competence</strong><span>Required capability and evidence</span></a>
     <a href="/app/control"><strong>Control</strong><span>Lifecycle, Decision and evidence state</span></a>
     <a href="/app/access"><strong>Access</strong><span>Roles, permissions and access requests</span></a>

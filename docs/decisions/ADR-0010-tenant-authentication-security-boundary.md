@@ -34,6 +34,13 @@ The Tenant slug is routing metadata. Every protected request must resolve the sl
 - rate limiting includes identity+network and network-wide dimensions;
 - security messages are delivered through a retryable identity-message outbox;
 - successful message delivery purges the raw action link from the outbox;
+- tenant-scoped TOTP MFA uses encrypted authenticator secrets and single-use recovery codes;
+- TOTP replay is prevented by retaining the last accepted time counter;
+- application sessions record authentication strength and the time of the most recent MFA verification;
+- active sessions have public-safe session IDs, client descriptors and hashed network fingerprints;
+- Tenant authentication policy governs MFA requirement, total session lifetime, idle timeout and concurrent-session limits;
+- policy changes immediately revoke existing sessions that no longer comply;
+- sensitive authentication-administration actions require recent MFA step-up rather than relying on an old session verification;
 - production console delivery is prohibited and production origins/transports require HTTPS.
 
 ## Tenant registration
@@ -75,9 +82,15 @@ Password reset is valid only when:
 
 After reset, old sessions are revoked before the user can continue.
 
+## Authentication policy and step-up
+
+Tenant authentication policy is governed Tenant data. Changing the policy requires both the appropriate NuBlox access Permission and a recent MFA verification. Authorisation is evaluated first; stronger authentication never grants a Permission the Person does not already hold.
+
+When MFA is required and an employee has not yet enrolled, password verification creates only a short-lived pre-session enrollment challenge. A full application session is not issued until TOTP enrollment has been verified.
+
 ## Future authentication methods
 
-Passkeys/WebAuthn, TOTP/recovery MFA, step-up authentication, device/session administration and enterprise OIDC/SAML SSO remain subsequent authentication-layer capabilities. They must bind into this same Tenant/session security boundary and must not replace NuBlox's Person/Position/Function/Permission/Authority model.
+Passkeys/WebAuthn and enterprise OIDC/SAML SSO remain subsequent authentication-layer capabilities. They must bind into this same Tenant/session security boundary and must not replace NuBlox's Person/Position/Function/Permission/Authority model.
 
 ## Invariants
 
@@ -89,3 +102,5 @@ Passkeys/WebAuthn, TOTP/recovery MFA, step-up authentication, device/session adm
 6. Public recovery endpoints do not confirm account existence.
 7. Rate-limit keys do not persist raw email or network addresses.
 8. Authentication transport adapters do not own NuBlox business identity or authorisation.
+9. Authentication step-up cannot create or expand business Permission or Authority.
+10. Tenant policy changes take effect against existing sessions, not only future sessions.

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  import type { ActionData, PageData } from './$types';
 
-  let { data }: { data: PageData } = $props();
+  let { data, form }: { data: PageData; form: ActionData } = $props();
 
   function formatDate(value: string | null) {
     if (!value) return '—';
@@ -24,7 +24,7 @@
   />
 </svelte:head>
 
-{#if !data.canRead || !data.configuration}
+{#if !data.canRead}
   <section class="workspace-hero">
     <div>
       <p class="app-eyebrow">Tenant configuration</p>
@@ -32,7 +32,154 @@
       <p class="workspace-lede">{data.reason}</p>
     </div>
   </section>
-{:else}
+{:else if data.needsConfiguration}
+  <section class="workspace-hero">
+    <div>
+      <p class="app-eyebrow">Tenant configuration</p>
+      <h1>Complete this Tenant's Business Profile</h1>
+      <p class="workspace-lede">
+        This Tenant predates metadata-driven provisioning. NuBlox will not guess its industry,
+        scale or operating model. An authorised administrator must profile it once so the correct
+        versioned configuration stack can be resolved and retained as evidence.
+      </p>
+    </div>
+  </section>
+
+  {#if !data.canManage || !data.catalogue}
+    <p class="form-message error">
+      The Business Profile has not been configured and your current access does not permit the
+      initial configuration.
+    </p>
+  {:else}
+    {@const catalogue = data.catalogue}
+
+    {#if form?.error}
+      <p class="form-message error">{form.error}</p>
+    {/if}
+
+    <section class="home-section">
+      <header class="home-section-heading">
+        <div>
+          <p class="app-eyebrow">Initial profiling</p>
+          <h2>Describe this business</h2>
+        </div>
+        <p>This operation is one-time provisioning, not an uncontrolled reconfiguration.</p>
+      </header>
+
+      <form method="POST" action="?/configure" class="login-form">
+        <label>
+          <span>Industry</span>
+          <select name="primaryClassificationValueId" required>
+            <option value="">Choose an industry</option>
+            {#each catalogue.industries as industry}
+              <option
+                value={industry.classificationValueId}
+                selected={form?.primaryClassificationValueId === industry.classificationValueId}
+              >
+                {industry.name}
+              </option>
+            {/each}
+          </select>
+        </label>
+
+        <label>
+          <span>Business size</span>
+          <select name="sizeTier" required>
+            <option value="">Choose a size tier</option>
+            {#each catalogue.sizeTiers as tier}
+              <option value={tier.code} selected={form?.sizeTier === tier.code}>
+                {tier.name} · {tier.employeeRange} employees
+              </option>
+            {/each}
+          </select>
+        </label>
+
+        <label>
+          <span>Exact employee count <small>optional</small></span>
+          <input
+            name="employeeCount"
+            type="number"
+            min="1"
+            step="1"
+            value={form?.employeeCount ?? ''}
+          />
+        </label>
+
+        <label>
+          <span>Number of legal entities</span>
+          <input
+            name="legalEntityCount"
+            type="number"
+            min="1"
+            step="1"
+            value={form?.legalEntityCount ?? '1'}
+            required
+          />
+        </label>
+
+        <label>
+          <span>Primary country</span>
+          <input
+            name="primaryCountryCode"
+            maxlength="2"
+            pattern="[A-Za-z]{2}"
+            placeholder="GB"
+            value={form?.primaryCountryCode ?? ''}
+            required
+          />
+        </label>
+
+        <label>
+          <span>Primary language</span>
+          <input
+            name="primaryLanguageCode"
+            maxlength="16"
+            placeholder="en-GB"
+            value={form?.primaryLanguageCode ?? ''}
+            required
+          />
+        </label>
+
+        <div>
+          <span>Operating model</span>
+          <p class="login-help">Select every model that materially describes this business.</p>
+          {#each catalogue.operatingModels as model}
+            <label class="login-checkbox">
+              <input
+                name="operatingModelCodes"
+                type="checkbox"
+                value={model.code}
+                checked={form?.operatingModelCodes?.includes(model.code) ?? false}
+              />
+              <span><strong>{model.name}</strong> — {model.description}</span>
+            </label>
+          {/each}
+        </div>
+
+        {#if catalogue.regulatoryRegimes.length > 0}
+          <div>
+            <span>Regulatory regimes</span>
+            {#each catalogue.regulatoryRegimes as regime}
+              <label class="login-checkbox">
+                <input
+                  name="regulatoryRegimeIds"
+                  type="checkbox"
+                  value={regime.id}
+                  checked={form?.regulatoryRegimeIds?.includes(regime.id) ?? false}
+                />
+                <span>{regime.name}{regime.jurisdiction ? ` · ${regime.jurisdiction}` : ''}</span>
+              </label>
+            {/each}
+          </div>
+        {/if}
+
+        <button type="submit" class="primary-action">
+          Profile and provision this Tenant
+        </button>
+      </form>
+    </section>
+  {/if}
+{:else if data.configuration}
   {@const configuration = data.configuration}
 
   <section class="workspace-hero">

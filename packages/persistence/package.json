@@ -12,7 +12,8 @@
     "db:migrate": "tsx src/cli/migrate.ts",
     "db:status": "tsx src/cli/status.ts",
     "auth:bootstrap": "tsx src/cli/bootstrap-auth.ts",
-    "auth:dispatch-messages": "tsx src/cli/dispatch-identity-messages.ts"
+    "auth:dispatch-messages": "tsx src/cli/dispatch-identity-messages.ts",
+    "auth:dispatch-loop": "tsx src/cli/dispatch-identity-messages-loop.ts"
   },
   "dependencies": {
     "@nublox/kernel": "workspace:*",

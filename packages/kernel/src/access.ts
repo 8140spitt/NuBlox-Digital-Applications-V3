@@ -30,6 +30,8 @@ export const PLATFORM_PERMISSION_KEYS = {
   VALIDATION_CONFLICT_DISPOSITION: 'platform.validation.conflict.disposition',
   METADATA_READ: 'platform.metadata.read',
   METADATA_MANAGE: 'platform.metadata.manage',
+  TENANT_CONFIGURATION_READ: 'platform.tenant_configuration.read',
+  TENANT_CONFIGURATION_MANAGE: 'platform.tenant_configuration.manage',
   DEPLOYMENT_READ: 'platform.deployment.read',
   DEPLOYMENT_MANAGE: 'platform.deployment.manage',
   RESOURCE_PLANNING_READ: 'platform.resource_planning.read',

@@ -90,6 +90,22 @@ NuBlox uses the tenant as the stable business namespace:
 
 The immutable Tenant ID remains the security/persistence identity. The slug is routing metadata. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to the explicit `/{tenantSlug}/public` namespace.
 
+## Authentication foundation
+
+Tenant application authentication is separate from NuBlox business authorisation.
+
+Current authentication controls include:
+
+- tenant-scoped opaque server sessions and path-scoped cookies;
+- verified-email requirement for public registrations;
+- single-use expiring email-verification challenges;
+- single-use password-reset challenges with session revocation after reset;
+- retryable identity-message outbox with secret-link purging after delivery;
+- persistent HMAC-hashed throttling for login, registration, verification resend and reset requests;
+- generic recovery responses that do not disclose whether an account exists.
+
+Production identity-message delivery uses the configured HTTPS delivery webhook. Run `pnpm auth:dispatch-messages` to dispatch one queued batch; production deployment must run that worker/schedule continuously enough for timely security email.
+
 ## Local application
 
 The V3 web application now has a protected tenant shell. Application login identity is deliberately separate from NuBlox Permission, Responsibility and Authority.

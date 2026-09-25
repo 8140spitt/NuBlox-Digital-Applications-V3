@@ -79,6 +79,26 @@ suite('HCM authority drives Function world and management hierarchy',()=>{
       workerType:'EMPLOYEE',employmentType:'PERMANENT',startDate:'2026-01-01T00:00:00.000Z'
     });
 
+    expect(executiveEmployment).toMatchObject({
+      relationshipType:'PRIMARY_EMPLOYMENT',isPrimary:true
+    });
+    expect(executiveEmployment.assignmentId).toMatch(/^WR-/);
+
+    const secondaryEmployment=await hcm.createEmployment(tenantId,admin.id,{
+      personId:executive.id,organisationId:company.id,employeeNumber:`EXEC-SECONDARY-${suffix}`,
+      assignmentId:`WR-SECONDARY-${suffix}`,relationshipType:'SECONDARY_EMPLOYMENT',isPrimary:false,
+      workerType:'EMPLOYEE',employmentType:'FIXED_TERM',startDate:'2026-04-01T00:00:00.000Z',endDate:'2026-12-31T00:00:00.000Z'
+    });
+    expect(secondaryEmployment).toMatchObject({
+      assignmentId:`WR-SECONDARY-${suffix}`.toUpperCase(),relationshipType:'SECONDARY_EMPLOYMENT',isPrimary:false
+    });
+
+    await expect(hcm.createEmployment(tenantId,admin.id,{
+      personId:executive.id,organisationId:company.id,employeeNumber:`EXEC-PRIMARY-2-${suffix}`,
+      relationshipType:'PRIMARY_EMPLOYMENT',isPrimary:true,
+      workerType:'EMPLOYEE',employmentType:'PERMANENT',startDate:'2026-06-01T00:00:00.000Z'
+    })).rejects.toMatchObject({name:'HcmCommandError',code:'CONFLICT'} satisfies Partial<HcmCommandError>);
+
     await hcm.assignPositionToFunction(tenantId,admin.id,{
       positionId:managerPosition.id,functionId:'F07',deploymentPurpose:'FUNCTIONAL_DELIVERY',
       effectiveFrom:'2026-01-01T00:00:00.000Z'

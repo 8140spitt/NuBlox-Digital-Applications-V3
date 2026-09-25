@@ -66,7 +66,8 @@ import {
   MySqlUniversalFunctionReadRepository,
   MySqlTenantRoutingRepository,
   MySqlTenantRegistrationService,
-  MySqlIdentityChallengeService
+  MySqlIdentityChallengeService,
+  MySqlAuthenticationRateLimiter
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -137,6 +138,7 @@ let universalFunctionReadRepositoryInstance: MySqlUniversalFunctionReadRepositor
 let tenantRoutingRepositoryInstance: MySqlTenantRoutingRepository | undefined;
 let tenantRegistrationServiceInstance: MySqlTenantRegistrationService | undefined;
 let identityChallengeServiceInstance: MySqlIdentityChallengeService | undefined;
+let authenticationRateLimiterInstance: MySqlAuthenticationRateLimiter | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -676,4 +678,11 @@ export function getIdentityChallengeService(): MySqlIdentityChallengeService {
     identityChallengeServiceInstance = new MySqlIdentityChallengeService(getDatabasePool());
   }
   return identityChallengeServiceInstance;
+}
+
+export function getAuthenticationRateLimiter(): MySqlAuthenticationRateLimiter {
+  if (!authenticationRateLimiterInstance) {
+    authenticationRateLimiterInstance = new MySqlAuthenticationRateLimiter(getDatabasePool());
+  }
+  return authenticationRateLimiterInstance;
 }

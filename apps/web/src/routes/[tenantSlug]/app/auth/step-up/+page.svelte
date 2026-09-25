@@ -4,6 +4,7 @@
   import { tenantAppPath } from '$lib/tenant-paths';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(form as ActionData & Partial<{ enrollmentRequired: boolean }>);
   let passkeyBusy = $state(false);
   let passkeyMessage = $state('');
 
@@ -72,7 +73,7 @@
         <p class="form-message error">{form.error}</p>
       {/if}
 
-      {#if (!data.enrolled && data.passkeyCount === 0) || form?.enrollmentRequired}
+      {#if (!data.enrolled && data.passkeyCount === 0) || viewForm?.enrollmentRequired}
         <header>
           <p class="app-eyebrow">MFA required</p>
           <h2>Enroll an authenticator first</h2>

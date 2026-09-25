@@ -29,7 +29,7 @@
 
 {#if viewForm?.stepUpRequired && viewForm?.stepUpUrl}
   <p class="form-message error">
-    {form.error}
+    {viewForm?.error}
     <a href={viewForm.stepUpUrl}>Verify again and return</a>
   </p>
 {:else if form?.error}

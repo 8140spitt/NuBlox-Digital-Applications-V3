@@ -105,6 +105,10 @@ suite('MySQL enterprise kernel persistence', () => {
       jobProfileId: jobProfile.id,
       code: 'ARCH-01',
       title: 'Architect',
+      lifecycleStatus: 'APPROVED',
+      incumbencyModel: 'SINGLE',
+      authorisedFte: 1,
+      effectiveFrom: '2026-01-01T00:00:00.000Z',
       status: 'ACTIVE'
     };
     await repository.createPosition(tenantId, position, { actorPersonId: person.id });

@@ -115,7 +115,8 @@ suite('CBE service capability delivery', () => {
         organisationUnitId: architectureUnit.id,
         jobProfileId: asId<'JobProfileId'>('JP-CBE-003', 'Job Profile'),
         code: 'ARCH-01',
-        title: 'Project Architect'
+        title: 'Project Architect',
+        effectiveFrom: '2026-09-21T00:00:00.000Z'
       }
     );
     await organisations.assignPersonToPosition(

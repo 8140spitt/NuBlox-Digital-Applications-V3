@@ -7,6 +7,7 @@ import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 import { hashPassword } from './auth-repository.js';
 import { deriveTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
+import { queueIdentityChallenge } from './identity-challenge-service.js';
 
 export type TenantRegistrationErrorCode =
   | 'INVALID_INPUT'
@@ -31,6 +32,7 @@ export interface TenantRegistrationInput {
   password: string;
   acceptedTerms: boolean;
   grantTenantAdministrator?: boolean;
+  emailVerified?: boolean;
 }
 
 export interface TenantRegistrationResult {
@@ -42,6 +44,7 @@ export interface TenantRegistrationResult {
   personId: string;
   employeePartyId: string;
   userId: string;
+  verificationRequired: boolean;
 }
 
 interface CountRow extends RowDataPacket {
@@ -229,9 +232,15 @@ export class MySqlTenantRegistrationService {
 
       await connection.execute(
         `INSERT INTO application_users
-          (id, email, email_normalized, password_hash, status, password_changed_at)
-         VALUES (?, ?, ?, ?, 'ACTIVE', UTC_TIMESTAMP(6))`,
-        [userId, email.trim(), emailNormalized, passwordHash]
+          (id, email, email_normalized, password_hash, status, email_verified_at, password_changed_at)
+         VALUES (?, ?, ?, ?, 'ACTIVE', ?, UTC_TIMESTAMP(6))`,
+        [
+          userId,
+          email.trim(),
+          emailNormalized,
+          passwordHash,
+          input.emailVerified === true ? new Date() : null
+        ]
       );
 
       await connection.execute(
@@ -240,6 +249,19 @@ export class MySqlTenantRegistrationService {
          VALUES (?, ?, ?, 'ACTIVE', TRUE)`,
         [userId, tenantId, personId]
       );
+
+      if (input.emailVerified !== true) {
+        await queueIdentityChallenge(connection, {
+          userId,
+          tenantId,
+          tenantSlug,
+          tenantName: businessName,
+          personName,
+          emailNormalized,
+          purpose: 'EMAIL_VERIFICATION',
+          requestMetadata: { source: 'TENANT_REGISTRATION' }
+        });
+      }
 
       if (input.grantTenantAdministrator !== false) {
         await connection.execute(
@@ -317,7 +339,8 @@ export class MySqlTenantRegistrationService {
         tenantPartyId,
         personId,
         employeePartyId,
-        userId
+        userId,
+        verificationRequired: input.emailVerified !== true
       };
     });
   }

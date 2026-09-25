@@ -99,7 +99,14 @@ Future public publication metadata must support deliberate publish/withdraw/expi
 
 ## SvelteKit routing
 
-Tenant-first application URLs are rerouted internally to the existing /app/... route tree. This preserves one implementation of each workspace while the browser address remains tenant-first.
+The repository route tree is tenant-first by construction:
+
+~~~text
+apps/web/src/routes/[tenantSlug]/app/...
+apps/web/src/routes/[tenantSlug]/public/...
+~~~
+
+The private application is not implemented under a parallel root-level `/app` route tree. Legacy bare `/app/...` requests may be redirected for compatibility, but they are not canonical application routes.
 
 ## Consequences
 

@@ -95,6 +95,13 @@ export interface ActiveAuthSession {
   current: boolean;
 }
 
+export interface AuthSecurityEvent {
+  id: number;
+  eventType: string;
+  outcome: 'SUCCESS' | 'DENIED' | 'ERROR';
+  occurredAt: string;
+}
+
 export interface BootstrapAuthUserInput {
   email: string;
   password: string;
@@ -635,6 +642,35 @@ export class MySqlAuthRepository {
       mfaVerifiedAt: row.mfa_verified_at?.toISOString() ?? null,
       userAgent: row.client_user_agent,
       current: currentHash !== null && row.token_hash === currentHash
+    }));
+  }
+
+  async listSecurityEvents(
+    principal: AuthPrincipal,
+    limit = 100
+  ): Promise<AuthSecurityEvent[]> {
+    const safeLimit = Math.max(1, Math.min(250, Math.floor(limit)));
+
+    const [rows] = await this.pool.query<Array<RowDataPacket & {
+      id: number;
+      event_type: string;
+      outcome: 'SUCCESS' | 'DENIED' | 'ERROR';
+      occurred_at: Date;
+    }>>(
+      `SELECT id, event_type, outcome, occurred_at
+         FROM application_auth_events
+        WHERE user_id = ?
+          AND tenant_id = ?
+        ORDER BY occurred_at DESC, id DESC
+        LIMIT ${safeLimit}`,
+      [principal.userId, principal.tenantId]
+    );
+
+    return rows.map((row) => ({
+      id: Number(row.id),
+      eventType: row.event_type,
+      outcome: row.outcome,
+      occurredAt: row.occurred_at.toISOString()
     }));
   }
 

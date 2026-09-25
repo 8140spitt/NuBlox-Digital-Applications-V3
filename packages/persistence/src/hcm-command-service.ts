@@ -17,6 +17,7 @@ import {
   type PositionReportingRelationshipType,
   type TenantId,
   type WorkerType,
+  type WorkRelationshipType,
   type DeploymentPurpose
 } from '@nublox/kernel';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
@@ -36,6 +37,7 @@ interface PositionRow extends RowDataPacket {
 }
 interface EmploymentRow extends RowDataPacket {
   id:string; tenant_id:string; person_id:string; organisation_id:string; employee_number:string;
+  assignment_id:string; relationship_type:WorkRelationshipType; is_primary:number|boolean;
   worker_type:WorkerType; employment_type:EmploymentType; start_date:Date; end_date:Date|null; status:EmploymentStatus;
 }
 interface FunctionRow extends RowDataPacket { id:string; code:string; name:string; status:'ACTIVE'|'INACTIVE'; }
@@ -131,7 +133,8 @@ export class MySqlHcmCommandService {
   async createEmployment(
     tenantId:TenantId,actorPersonId:string,
     input:{
-      personId:string;organisationId:string;employeeNumber:string;workerType:WorkerType;
+      personId:string;organisationId:string;employeeNumber:string;assignmentId?:string;
+      relationshipType?:WorkRelationshipType;isPrimary?:boolean;workerType:WorkerType;
       employmentType:EmploymentType;startDate:string;endDate?:string;status?:EmploymentStatus;
     }
   ):Promise<Employment>{
@@ -141,11 +144,17 @@ export class MySqlHcmCommandService {
     const startDate=dateValue(input.startDate,'Employment start date');
     const endDate=optionalDate(input.endDate,'Employment end date');
     const status=input.status??'ACTIVE';
+    const relationshipType=input.relationshipType??(input.workerType==='CONTINGENT'?'CONTINGENT_ENGAGEMENT':'PRIMARY_EMPLOYMENT');
+    const isPrimary=input.isPrimary??relationshipType==='PRIMARY_EMPLOYMENT';
+    if(input.workerType==='CONTINGENT'&&relationshipType!=='CONTINGENT_ENGAGEMENT') throw new HcmCommandError('Contingent workers require a CONTINGENT_ENGAGEMENT work relationship.','INVALID_INPUT');
+    if(input.workerType==='EMPLOYEE'&&relationshipType==='CONTINGENT_ENGAGEMENT') throw new HcmCommandError('Employees cannot use a CONTINGENT_ENGAGEMENT work relationship.','INVALID_INPUT');
+    if(isPrimary&&relationshipType!=='PRIMARY_EMPLOYMENT') throw new HcmCommandError('Only PRIMARY_EMPLOYMENT may be marked as the primary work relationship.','INVALID_INPUT');
     const employment:Employment={
       id:asId<'EmploymentId'>(`EMP-${randomUUID()}`,'Employment'),tenantId,
       personId:personId as Employment['personId'],
       organisationId:organisationId as Employment['organisationId'],
       employeeNumber:required(input.employeeNumber,'Employee number').toUpperCase(),
+      assignmentId:(optional(input.assignmentId)??`WR-${randomUUID()}`).toUpperCase(),relationshipType,isPrimary,
       workerType:input.workerType,employmentType:input.employmentType,startDate,
       ...(endDate?{endDate}:{}),status
     };
@@ -156,14 +165,24 @@ export class MySqlHcmCommandService {
           this.requireOrganisation(connection,tenantId,organisationId)
         ]);
         createEmployment(employment,person,organisation);
+        if(employment.isPrimary){
+          const [rows]=await connection.execute<CountRow[]>(
+            `SELECT COUNT(*) AS count FROM employments
+              WHERE tenant_id=? AND person_id=? AND is_primary=TRUE
+                AND status IN ('PENDING','ACTIVE','SUSPENDED')
+                AND start_date<=? AND (end_date IS NULL OR end_date>=?)`,
+            [tenantId,employment.personId,farFuture(employment.endDate),new Date(employment.startDate)]
+          );
+          if(Number(rows[0]?.count??0)>0) throw new HcmCommandError('Person already has an overlapping primary work relationship.','CONFLICT');
+        }
         await connection.execute(
           `INSERT INTO employments
-            (id,tenant_id,person_id,organisation_id,employee_number,worker_type,employment_type,
-             start_date,end_date,status,created_by_person_id,updated_by_person_id)
-           VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+            (id,tenant_id,person_id,organisation_id,employee_number,assignment_id,relationship_type,is_primary,
+             worker_type,employment_type,start_date,end_date,status,created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
           [employment.id,tenantId,employment.personId,employment.organisationId,employment.employeeNumber,
-           employment.workerType,employment.employmentType,new Date(employment.startDate),dbDate(employment.endDate),
-           employment.status,actorPersonId,actorPersonId]
+           employment.assignmentId,employment.relationshipType,employment.isPrimary,employment.workerType,employment.employmentType,
+           new Date(employment.startDate),dbDate(employment.endDate),employment.status,actorPersonId,actorPersonId]
         );
         await writeAudit(connection,tenantId,'EMPLOYMENT',employment.id,'CREATED',actorPersonId,employment);
         return employment;
@@ -394,14 +413,16 @@ export class MySqlHcmCommandService {
 
   private async requireEmployment(connection:PoolConnection,tenantId:TenantId,id:string):Promise<Employment>{
     const [rows]=await connection.execute<EmploymentRow[]>(
-      `SELECT id,tenant_id,person_id,organisation_id,employee_number,worker_type,employment_type,start_date,end_date,status
+      `SELECT id,tenant_id,person_id,organisation_id,employee_number,assignment_id,relationship_type,is_primary,
+                worker_type,employment_type,start_date,end_date,status
          FROM employments WHERE tenant_id=? AND id=?`,[tenantId,id]
     );
     const row=rows[0];
     if(!row) throw new HcmCommandError('Employment was not found in this tenant.','NOT_FOUND');
     return {id:row.id as Employment['id'],tenantId:row.tenant_id as TenantId,
       personId:row.person_id as Employment['personId'],organisationId:row.organisation_id as Employment['organisationId'],
-      employeeNumber:row.employee_number,workerType:row.worker_type,employmentType:row.employment_type,
+      employeeNumber:row.employee_number,assignmentId:row.assignment_id,relationshipType:row.relationship_type,
+      isPrimary:Boolean(row.is_primary),workerType:row.worker_type,employmentType:row.employment_type,
       startDate:row.start_date.toISOString(),...(row.end_date?{endDate:row.end_date.toISOString()}:{}),status:row.status};
   }
 }

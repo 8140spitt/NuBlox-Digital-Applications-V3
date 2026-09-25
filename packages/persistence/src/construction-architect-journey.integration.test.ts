@@ -171,6 +171,10 @@ suite('Construction Architect representative job journey', () => {
       jobProfileId: asId<'JobProfileId'>('JP-CBE-003', 'Job Profile'),
       code: 'ARCH-01',
       title: 'Project Architect',
+      lifecycleStatus: 'APPROVED',
+      incumbencyModel: 'SINGLE',
+      authorisedFte: 1,
+      effectiveFrom: '2026-01-01T00:00:00.000Z',
       status: 'ACTIVE'
     };
     await kernel.createPosition(tenantId, architectPosition, {

@@ -606,6 +606,112 @@ export class MySqlMfaService {
     });
   }
 
+  async verifyStepUp(
+    principal: AuthPrincipal,
+    codeValue: string
+  ): Promise<'TOTP' | 'RECOVERY_CODE'> {
+    return withTransaction(this.pool, async (connection) => {
+      const [rows] = await connection.execute<EnrollmentRow[]>(
+        `SELECT id, user_id, tenant_id, secret_ciphertext, secret_iv, secret_tag,
+                status, verified_at, last_used_counter
+           FROM application_mfa_enrollments
+          WHERE user_id = ?
+            AND tenant_id = ?
+            AND method = 'TOTP'
+            AND status = 'ACTIVE'
+          LIMIT 1
+          FOR UPDATE`,
+        [principal.userId, principal.tenantId]
+      );
+      const enrollment = rows[0];
+      if (!enrollment) {
+        throw new MfaError('Multi-factor authentication is not enabled.', 'NOT_ENROLLED');
+      }
+
+      const code = codeValue.trim();
+      let method: 'TOTP' | 'RECOVERY_CODE' | null = null;
+      let matchedCounter: number | null = null;
+      let recoveryCodeId: string | null = null;
+
+      if (/^\d{6}$/.test(code)) {
+        const lastUsedCounter = enrollment.last_used_counter === null
+          ? null
+          : Number(enrollment.last_used_counter);
+        matchedCounter = verifyTotp(
+          decryptSecret(enrollment),
+          code,
+          lastUsedCounter
+        );
+        if (matchedCounter !== null) method = 'TOTP';
+      } else {
+        const normalized = normalizeRecoveryCode(code);
+        if (normalized.length >= 12) {
+          const [recoveryRows] = await connection.execute<RecoveryCodeRow[]>(
+            `SELECT id
+               FROM application_mfa_recovery_codes
+              WHERE enrollment_id = ?
+                AND code_hash = ?
+                AND consumed_at IS NULL
+              LIMIT 1
+              FOR UPDATE`,
+            [enrollment.id, recoveryCodeHash(normalized)]
+          );
+          recoveryCodeId = recoveryRows[0]?.id ?? null;
+          if (recoveryCodeId) method = 'RECOVERY_CODE';
+        }
+      }
+
+      if (!method) {
+        await authEvent(connection, {
+          userId: principal.userId,
+          tenantId: principal.tenantId,
+          emailNormalized: principal.email.toLowerCase(),
+          eventType: 'MFA_STEP_UP',
+          outcome: 'DENIED'
+        });
+        throw new MfaError(
+          'The authenticator or recovery code is not valid.',
+          'INVALID_CODE'
+        );
+      }
+
+      if (method === 'TOTP') {
+        await connection.execute(
+          `UPDATE application_mfa_enrollments
+              SET last_used_at = UTC_TIMESTAMP(6),
+                  last_used_counter = ?
+            WHERE id = ?`,
+          [matchedCounter, enrollment.id]
+        );
+      } else if (recoveryCodeId) {
+        await connection.execute(
+          `UPDATE application_mfa_recovery_codes
+              SET consumed_at = UTC_TIMESTAMP(6)
+            WHERE id = ?
+              AND consumed_at IS NULL`,
+          [recoveryCodeId]
+        );
+        await connection.execute(
+          `UPDATE application_mfa_enrollments
+              SET last_used_at = UTC_TIMESTAMP(6)
+            WHERE id = ?`,
+          [enrollment.id]
+        );
+      }
+
+      await authEvent(connection, {
+        userId: principal.userId,
+        tenantId: principal.tenantId,
+        emailNormalized: principal.email.toLowerCase(),
+        eventType: 'MFA_STEP_UP',
+        outcome: 'SUCCESS',
+        metadata: { method }
+      });
+
+      return method;
+    });
+  }
+
   async beginLogin(principal: AuthPrincipal, returnTo: string): Promise<MfaLoginStart> {
     const [enrollmentRows, policyRows] = await Promise.all([
       this.pool.execute<Array<RowDataPacket & { id: string }>>(

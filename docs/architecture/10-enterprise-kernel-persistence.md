@@ -88,8 +88,10 @@ Update commands will use compare-and-swap semantics in the next command slice ra
 
 Persistence therefore does not bypass rules such as:
 
-- Person must specialise a PERSON Party;
-- Organisation must specialise an ORGANISATION Party;
+- Person must use a structurally `PERSON` Party identity;
+- Organisation must use a structurally `ORGANISATION` Party identity;
+- business Party Type must be one of `TENANT`, `EMPLOYEE`, `CLIENT` or `VENDOR_SUPPLIER`;
+- `EMPLOYEE` applies to a PERSON structural identity while `TENANT`, `CLIENT` and `VENDOR_SUPPLIER` apply to ORGANISATION structural identities;
 - Position and Job Profile are separate;
 - Authority is explicit and scoped;
 - canonical relationships cannot cross tenants.

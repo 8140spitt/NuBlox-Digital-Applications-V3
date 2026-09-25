@@ -2,7 +2,11 @@ import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { InvalidCredentialsError, MfaError } from '@nublox/persistence';
 import { tenantSessionCookieName } from '$lib/server/auth';
-import { getAuthRepository, getMfaService } from '$lib/server/platform';
+import {
+  getAuthRepository,
+  getMfaService,
+  getTenantAuthenticationPolicyRepository
+} from '$lib/server/platform';
 
 function requireSession(locals: App.Locals) {
   if (!locals.auth) {
@@ -13,8 +17,14 @@ function requireSession(locals: App.Locals) {
 
 export const load: PageServerLoad = async ({ locals }) => {
   const session = requireSession(locals);
+  const [status, policy] = await Promise.all([
+    getMfaService().status(session),
+    getTenantAuthenticationPolicyRepository().get(session.tenantId)
+  ]);
+
   return {
-    status: await getMfaService().status(session),
+    status,
+    policy,
     authenticationStrength: session.authenticationStrength
   };
 };
@@ -89,6 +99,13 @@ export const actions: Actions = {
 
   disable: async ({ request, locals }) => {
     const session = requireSession(locals);
+    const policy = await getTenantAuthenticationPolicyRepository().get(session.tenantId);
+    if (policy.mfaRequirement === 'REQUIRED') {
+      return fail(403, {
+        error: 'This Tenant requires MFA. MFA cannot be disabled while that policy is active.'
+      });
+    }
+
     const formData = await request.formData();
     const password = String(formData.get('password') ?? '');
 

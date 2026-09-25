@@ -484,6 +484,106 @@ export class MySqlMfaService {
     });
   }
 
+  async regenerateRecoveryCodes(principal: AuthPrincipal): Promise<string[]> {
+    return withTransaction(this.pool, async (connection) => {
+      const [rows] = await connection.execute<EnrollmentRow[]>(
+        `SELECT id, user_id, tenant_id, secret_ciphertext, secret_iv, secret_tag,
+                status, verified_at, last_used_counter
+           FROM application_mfa_enrollments
+          WHERE user_id = ?
+            AND tenant_id = ?
+            AND method = 'TOTP'
+            AND status = 'ACTIVE'
+          LIMIT 1
+          FOR UPDATE`,
+        [principal.userId, principal.tenantId]
+      );
+      const enrollment = rows[0];
+      if (!enrollment) {
+        throw new MfaError('Multi-factor authentication is not enabled.', 'NOT_ENROLLED');
+      }
+
+      const recoveryCodes = Array.from({ length: RECOVERY_CODE_COUNT }, generateRecoveryCode);
+      await connection.execute(
+        'DELETE FROM application_mfa_recovery_codes WHERE enrollment_id = ?',
+        [enrollment.id]
+      );
+
+      for (const recoveryCode of recoveryCodes) {
+        const normalized = normalizeRecoveryCode(recoveryCode);
+        await connection.execute(
+          `INSERT INTO application_mfa_recovery_codes
+            (id, enrollment_id, code_hash, code_hint, created_at)
+           VALUES (?, ?, ?, ?, UTC_TIMESTAMP(6))`,
+          [
+            `MFARC-${randomUUID()}`,
+            enrollment.id,
+            recoveryCodeHash(recoveryCode),
+            normalized.slice(-4)
+          ]
+        );
+      }
+
+      await authEvent(connection, {
+        userId: principal.userId,
+        tenantId: principal.tenantId,
+        emailNormalized: principal.email.toLowerCase(),
+        eventType: 'MFA_RECOVERY_CODES_REGENERATED',
+        outcome: 'SUCCESS',
+        metadata: { recoveryCodeCount: recoveryCodes.length }
+      });
+
+      return recoveryCodes;
+    });
+  }
+
+  async disable(principal: AuthPrincipal): Promise<void> {
+    await withTransaction(this.pool, async (connection) => {
+      const [rows] = await connection.execute<EnrollmentRow[]>(
+        `SELECT id, user_id, tenant_id, secret_ciphertext, secret_iv, secret_tag,
+                status, verified_at, last_used_counter
+           FROM application_mfa_enrollments
+          WHERE user_id = ?
+            AND tenant_id = ?
+            AND method = 'TOTP'
+            AND status IN ('ACTIVE', 'PENDING')
+          LIMIT 1
+          FOR UPDATE`,
+        [principal.userId, principal.tenantId]
+      );
+      const enrollment = rows[0];
+      if (!enrollment) return;
+
+      await connection.execute(
+        `UPDATE application_mfa_enrollments
+            SET status = 'DISABLED',
+                disabled_at = UTC_TIMESTAMP(6)
+          WHERE id = ?`,
+        [enrollment.id]
+      );
+      await connection.execute(
+        'DELETE FROM application_mfa_recovery_codes WHERE enrollment_id = ?',
+        [enrollment.id]
+      );
+      await connection.execute(
+        `UPDATE application_mfa_login_challenges
+            SET consumed_at = COALESCE(consumed_at, UTC_TIMESTAMP(6))
+          WHERE user_id = ?
+            AND tenant_id = ?
+            AND consumed_at IS NULL`,
+        [principal.userId, principal.tenantId]
+      );
+
+      await authEvent(connection, {
+        userId: principal.userId,
+        tenantId: principal.tenantId,
+        emailNormalized: principal.email.toLowerCase(),
+        eventType: 'MFA_DISABLED',
+        outcome: 'SUCCESS'
+      });
+    });
+  }
+
   async beginLogin(principal: AuthPrincipal, returnTo: string): Promise<MfaLoginStart> {
     const [rows] = await this.pool.execute<Array<RowDataPacket & { id: string }>>(
       `SELECT id

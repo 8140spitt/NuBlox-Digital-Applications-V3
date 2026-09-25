@@ -139,10 +139,15 @@ CREATE TABLE tenant_operating_models (
   tenant_id VARCHAR(64) NOT NULL,
   operating_model_code VARCHAR(40) NOT NULL,
   is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+  primary_slot TINYINT
+    GENERATED ALWAYS AS (
+      CASE WHEN is_primary = TRUE THEN 1 ELSE NULL END
+    ) STORED,
   status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
   created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   created_by_person_id VARCHAR(64) NULL,
   PRIMARY KEY (tenant_id, operating_model_code),
+  UNIQUE KEY uq_tenant_operating_model_primary (tenant_id, primary_slot),
   CONSTRAINT fk_tenant_operating_model_tenant
     FOREIGN KEY (tenant_id) REFERENCES tenants(id),
   CONSTRAINT fk_tenant_operating_model_definition
@@ -358,6 +363,11 @@ CREATE TABLE tenant_provisioning_steps (
     status IN ('PENDING', 'APPLYING', 'APPLIED', 'FAILED', 'SKIPPED')
   )
 ) ENGINE=InnoDB;
+
+ALTER TABLE tenant_industry_solution_assignments
+  ADD CONSTRAINT fk_tenant_industry_solution_source_template
+    FOREIGN KEY (source_template_id) REFERENCES tenant_configuration_templates(id)
+    ON DELETE SET NULL;
 
 INSERT INTO business_classification_schemes
   (id, code, name, edition, jurisdiction, description, status)

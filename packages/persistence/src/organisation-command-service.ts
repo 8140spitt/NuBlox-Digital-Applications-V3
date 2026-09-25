@@ -57,6 +57,11 @@ interface PositionRow extends RowDataPacket {
   job_profile_id: string | null;
   code: string;
   title: string;
+  lifecycle_status: Position['lifecycleStatus'];
+  incumbency_model: Position['incumbencyModel'];
+  authorised_fte: string | number;
+  effective_from: Date;
+  effective_to: Date | null;
   status: 'ACTIVE' | 'INACTIVE';
 }
 
@@ -103,11 +108,17 @@ export interface CreatePositionInput {
   jobProfileId?: string;
   code: string;
   title: string;
+  lifecycleStatus?: Position['lifecycleStatus'];
+  incumbencyModel?: Position['incumbencyModel'];
+  authorisedFte?: number;
+  effectiveFrom?: string;
+  effectiveTo?: string;
 }
 
 export interface AssignPersonToPositionInput {
   positionId: string;
   personId: string;
+  fte?: number;
   effectiveFrom?: string;
 }
 
@@ -503,6 +514,11 @@ export class MySqlOrganisationCommandService {
     const code = nonEmpty(input.code, 'Position code').toUpperCase();
     const title = nonEmpty(input.title, 'Position title');
     const jobProfileId = optionalText(input.jobProfileId);
+    const lifecycleStatus=input.lifecycleStatus??'APPROVED';
+    const incumbencyModel=input.incumbencyModel??'SINGLE';
+    const authorisedFte=input.authorisedFte??1;
+    const effectiveFrom=input.effectiveFrom??new Date().toISOString();
+    const effectiveTo=optionalText(input.effectiveTo);
 
     try {
       return await withTransaction(this.pool, async (connection) => {
@@ -521,24 +537,25 @@ export class MySqlOrganisationCommandService {
           organisationUnitId: unit.id,
           ...(profile ? { jobProfileId: profile.id } : {}),
           code,
-          title,
-          status: 'ACTIVE'
+          title,lifecycleStatus,incumbencyModel,authorisedFte,effectiveFrom,
+          ...(effectiveTo?{effectiveTo}:{}),status: 'ACTIVE'
         };
         createPosition(position, unit, profile);
 
         await connection.execute(
           `INSERT INTO positions
-            (id, tenant_id, organisation_unit_id, job_profile_id, code, title, status,
+            (id, tenant_id, organisation_unit_id, job_profile_id, code, title, lifecycle_status,
+             incumbency_model, authorised_fte, effective_from, effective_to, status,
              created_by_person_id, updated_by_person_id)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             position.id,
             tenantId,
             position.organisationUnitId,
             position.jobProfileId ?? null,
             position.code,
-            position.title,
-            position.status,
+            position.title,position.lifecycleStatus,position.incumbencyModel,position.authorisedFte,
+            new Date(position.effectiveFrom),position.effectiveTo?new Date(position.effectiveTo):null,position.status,
             actorPersonId,
             actorPersonId
           ]
@@ -604,6 +621,8 @@ export class MySqlOrganisationCommandService {
 
     const positionId = nonEmpty(input.positionId, 'Position');
     const personId = nonEmpty(input.personId, 'Person');
+    const fte=input.fte??1;
+    if(!Number.isFinite(fte)||fte<=0) throw new OrganisationCommandError('Position occupancy FTE must be greater than zero.','INVALID_INPUT');
     const effectiveFrom = input.effectiveFrom
       ? new Date(input.effectiveFrom)
       : new Date();
@@ -621,6 +640,8 @@ export class MySqlOrganisationCommandService {
         this.requirePerson(connection, tenantId, personId)
       ]);
 
+      if(position.lifecycleStatus!=='APPROVED') throw new OrganisationCommandError('Only an approved Position may be occupied.','CONFLICT');
+      if(effectiveFrom<new Date(position.effectiveFrom)||(position.effectiveTo&&effectiveFrom>new Date(position.effectiveTo))) throw new OrganisationCommandError('Position occupancy must fall within the Position effective period.','CONFLICT');
       const [existingRows] = await connection.execute<CountRow[]>(
         `SELECT COUNT(*) AS count
            FROM position_occupancies
@@ -638,6 +659,15 @@ export class MySqlOrganisationCommandService {
         );
       }
 
+      const [capacityRows]=await connection.execute<(CountRow & {allocated_fte:string|number|null})[]>(
+        `SELECT COALESCE(SUM(fte),0) AS allocated_fte,COUNT(*) AS count FROM position_occupancies
+          WHERE tenant_id=? AND position_id=? AND effective_from<=? AND (effective_to IS NULL OR effective_to>=?)`,
+        [tenantId,positionId,effectiveFrom,effectiveFrom]
+      );
+      const allocated=Number(capacityRows[0]?.allocated_fte??0);
+      if(position.incumbencyModel==='SINGLE'&&Number(capacityRows[0]?.count??0)>0) throw new OrganisationCommandError('Single-incumbent Position is already occupied.','CONFLICT');
+      if(allocated+fte>position.authorisedFte) throw new OrganisationCommandError('Position occupancy would exceed authorised FTE.','CONFLICT');
+
       const occupancy: PositionOccupancy = {
         id: asId<'PositionOccupancyId'>(
           `OCC-${randomUUID()}`,
@@ -652,15 +682,15 @@ export class MySqlOrganisationCommandService {
 
       await connection.execute(
         `INSERT INTO position_occupancies
-          (id, tenant_id, position_id, person_id, effective_from, effective_to,
+          (id, tenant_id, position_id, person_id, fte, effective_from, effective_to,
            created_by_person_id)
-         VALUES (?, ?, ?, ?, ?, NULL, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, NULL, ?)`,
         [
           occupancy.id,
           tenantId,
           occupancy.positionId,
           occupancy.personId,
-          effectiveFrom,
+          fte,effectiveFrom,
           actorPersonId
         ]
       );
@@ -798,7 +828,8 @@ export class MySqlOrganisationCommandService {
     id: string
   ): Promise<Position> {
     const [rows] = await connection.execute<PositionRow[]>(
-      `SELECT id, tenant_id, organisation_unit_id, job_profile_id, code, title, status
+      `SELECT id, tenant_id, organisation_unit_id, job_profile_id, code, title,lifecycle_status,incumbency_model,
+              authorised_fte,effective_from,effective_to,status
          FROM positions
         WHERE tenant_id = ? AND id = ?`,
       [tenantId, id]
@@ -820,8 +851,9 @@ export class MySqlOrganisationCommandService {
         ? { jobProfileId: row.job_profile_id as NonNullable<Position['jobProfileId']> }
         : {}),
       code: row.code,
-      title: row.title,
-      status: row.status
+      title: row.title,lifecycleStatus:row.lifecycle_status,incumbencyModel:row.incumbency_model,
+      authorisedFte:Number(row.authorised_fte),effectiveFrom:row.effective_from.toISOString(),
+      ...(row.effective_to?{effectiveTo:row.effective_to.toISOString()}:{}),status: row.status
     };
   }
 

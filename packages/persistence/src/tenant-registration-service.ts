@@ -178,6 +178,14 @@ export class MySqlTenantRegistrationService {
       );
 
       await connection.execute(
+        `INSERT INTO tenant_authentication_policies
+          (tenant_id, mfa_requirement, session_ttl_minutes, idle_timeout_minutes,
+           max_active_sessions, created_by_person_id, updated_by_person_id)
+         VALUES (?, 'OPTIONAL', 720, 120, 10, ?, ?)`,
+        [tenantId, personId, personId]
+      );
+
+      await connection.execute(
         `INSERT INTO parties
           (id, tenant_id, kind, display_name, status, created_by_person_id, updated_by_person_id)
          VALUES (?, ?, 'ORGANISATION', ?, 'ACTIVE', ?, ?)`,

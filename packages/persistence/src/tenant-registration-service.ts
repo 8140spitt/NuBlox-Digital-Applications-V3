@@ -6,7 +6,7 @@ import {
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 import { hashPassword } from './auth-repository.js';
-import { deriveTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
+import { allocateTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
 import { queueIdentityChallenge } from './identity-challenge-service.js';
 
 export type TenantRegistrationErrorCode =
@@ -120,11 +120,11 @@ export class MySqlTenantRegistrationService {
     }
 
     const tenantId = `TENANT-${randomUUID()}` as TenantId;
-    let tenantSlug: string;
+    let requestedTenantSlug: string | undefined;
     try {
-      tenantSlug = input.tenantSlug?.trim()
+      requestedTenantSlug = input.tenantSlug?.trim()
         ? normaliseTenantSlug(input.tenantSlug)
-        : deriveTenantSlug(businessName, tenantId);
+        : undefined;
     } catch (error) {
       throw new TenantRegistrationError(
         error instanceof Error ? error.message : 'Tenant address is not valid.',
@@ -144,6 +144,8 @@ export class MySqlTenantRegistrationService {
     const effectiveFrom = new Date();
 
     return withTransaction(this.pool, async (connection) => {
+      const tenantSlug = requestedTenantSlug ?? await allocateTenantSlug(connection, businessName);
+
       const [emailRows] = await connection.execute<CountRow[]>(
         'SELECT COUNT(*) AS count FROM application_users WHERE email_normalized = ?',
         [emailNormalized]
@@ -155,15 +157,17 @@ export class MySqlTenantRegistrationService {
         );
       }
 
-      const [slugRows] = await connection.execute<CountRow[]>(
-        'SELECT COUNT(*) AS count FROM tenants WHERE slug = ?',
-        [tenantSlug]
-      );
-      if ((slugRows[0]?.count ?? 0) > 0) {
-        throw new TenantRegistrationError(
-          'That tenant address is already in use.',
-          'SLUG_UNAVAILABLE'
+      if (requestedTenantSlug) {
+        const [slugRows] = await connection.execute<CountRow[]>(
+          'SELECT COUNT(*) AS count FROM tenants WHERE slug = ?',
+          [tenantSlug]
         );
+        if ((slugRows[0]?.count ?? 0) > 0) {
+          throw new TenantRegistrationError(
+            'That tenant address is already in use.',
+            'SLUG_UNAVAILABLE'
+          );
+        }
       }
 
       await connection.execute(

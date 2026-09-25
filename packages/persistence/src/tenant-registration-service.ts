@@ -108,10 +108,26 @@ export class MySqlTenantRegistrationService {
       throw new TenantRegistrationError('A valid email address is required.', 'INVALID_INPUT');
     }
 
+    if (input.password.length < 12) {
+      throw new TenantRegistrationError(
+        'Password must contain at least 12 characters.',
+        'INVALID_INPUT'
+      );
+    }
+
     const tenantId = `TENANT-${randomUUID()}` as TenantId;
-    const tenantSlug = input.tenantSlug?.trim()
-      ? normaliseTenantSlug(input.tenantSlug)
-      : deriveTenantSlug(businessName, tenantId);
+    let tenantSlug: string;
+    try {
+      tenantSlug = input.tenantSlug?.trim()
+        ? normaliseTenantSlug(input.tenantSlug)
+        : deriveTenantSlug(businessName, tenantId);
+    } catch (error) {
+      throw new TenantRegistrationError(
+        error instanceof Error ? error.message : 'Tenant address is not valid.',
+        'INVALID_INPUT'
+      );
+    }
+
     const passwordHash = await hashPassword(input.password);
 
     const tenantPartyId = `PARTY-TENANT-${randomUUID()}`;

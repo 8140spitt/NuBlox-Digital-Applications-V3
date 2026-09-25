@@ -16,6 +16,7 @@ import {
   getAuthenticationRateLimiter,
   getAuthRepository,
   getMfaService,
+  getOidcService,
   getTenantAuthenticationPolicyRepository
 } from '$lib/server/platform';
 import { tenantAppPath } from '$lib/tenant-paths';
@@ -27,18 +28,23 @@ export const load: PageServerLoad = async ({ locals, url }) => {
     throw redirect(303, tenantAppPath(tenant.slug, '/app/function'));
   }
 
-  const authenticationPolicy = tenant
-    ? await getTenantAuthenticationPolicyRepository().get(tenant.tenantId)
-    : null;
+  const [authenticationPolicy, oidcProviders] = tenant
+    ? await Promise.all([
+        getTenantAuthenticationPolicyRepository().get(tenant.tenantId),
+        getOidcService().listProviders(tenant.tenantId, true)
+      ])
+    : [null, []];
 
   return {
     tenantSlug: tenant?.slug ?? null,
     passkeyEnabled: authenticationPolicy?.passkeyEnabled ?? false,
+    oidcProviders,
     tenantName: tenant?.name ?? null,
     returnTo: tenant
       ? safeTenantReturnTo(tenant.slug, url.searchParams.get('returnTo'))
       : safeReturnTo(url.searchParams.get('returnTo') ?? '/app/function'),
-    passwordReset: url.searchParams.get('passwordReset') === '1'
+    passwordReset: url.searchParams.get('passwordReset') === '1',
+    federationStatus: url.searchParams.get('federation')
   };
 };
 

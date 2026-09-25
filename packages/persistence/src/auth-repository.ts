@@ -455,6 +455,41 @@ export class MySqlAuthRepository {
     };
   }
 
+  async markSessionMfaVerified(token: string): Promise<void> {
+    if (!token) return;
+
+    const tokenHash = hashSessionToken(token);
+    await withTransaction(this.pool, async (connection) => {
+      const [rows] = await connection.query<Array<RowDataPacket & { user_id: string; tenant_id: string }>>(
+        `SELECT user_id, tenant_id
+           FROM application_sessions
+          WHERE token_hash = ?
+            AND revoked_at IS NULL
+            AND expires_at > UTC_TIMESTAMP(6)
+          LIMIT 1
+          FOR UPDATE`,
+        [tokenHash]
+      );
+      const session = rows[0];
+      if (!session) return;
+
+      await connection.execute(
+        `UPDATE application_sessions
+            SET authentication_strength = 'MFA',
+                mfa_verified_at = UTC_TIMESTAMP(6)
+          WHERE token_hash = ?`,
+        [tokenHash]
+      );
+
+      await writeAuthEvent(connection, {
+        userId: session.user_id,
+        tenantId: session.tenant_id,
+        eventType: 'SESSION_MFA_VERIFIED',
+        outcome: 'SUCCESS'
+      });
+    });
+  }
+
   async revokeSession(token: string): Promise<void> {
     if (!token) return;
 

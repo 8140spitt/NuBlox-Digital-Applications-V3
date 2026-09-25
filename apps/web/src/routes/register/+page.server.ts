@@ -1,7 +1,13 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { TenantRegistrationError } from '@nublox/persistence';
-import { getTenantRegistrationService } from '$lib/server/platform';
+import {
+  AuthenticationRateLimitError,
+  TenantRegistrationError
+} from '@nublox/persistence';
+import {
+  getAuthenticationRateLimiter,
+  getTenantRegistrationService
+} from '$lib/server/platform';
 
 function value(formData: FormData, name: string): string {
   return String(formData.get(name) ?? '').trim();
@@ -10,7 +16,7 @@ function value(formData: FormData, name: string): string {
 export const load: PageServerLoad = () => ({});
 
 export const actions: Actions = {
-  default: async ({ request }) => {
+  default: async ({ request, getClientAddress }) => {
     const formData = await request.formData();
     const businessName = value(formData, 'businessName');
     const tenantSlug = value(formData, 'tenantSlug');
@@ -20,6 +26,12 @@ export const actions: Actions = {
     const acceptedTerms = formData.get('acceptedTerms') === 'on';
 
     try {
+      await getAuthenticationRateLimiter().consume(
+        'TENANT_REGISTRATION',
+        email,
+        getClientAddress()
+      );
+
       const registration = await getTenantRegistrationService().register({
         businessName,
         ...(tenantSlug ? { tenantSlug } : {}),
@@ -34,6 +46,19 @@ export const actions: Actions = {
         `/${registration.tenantSlug}/app/auth/check-email?email=${encodeURIComponent(email)}`
       );
     } catch (error) {
+      if (error instanceof AuthenticationRateLimitError) {
+        return fail(429, {
+          businessName,
+          tenantSlug,
+          personName,
+          email,
+          acceptedTerms,
+          rateLimited: true,
+          retryAfterSeconds: error.retryAfterSeconds,
+          error: 'Too many registration attempts. Try again later.'
+        });
+      }
+
       if (error instanceof TenantRegistrationError) {
         const status =
           error.code === 'EMAIL_ALREADY_REGISTERED' || error.code === 'SLUG_UNAVAILABLE'

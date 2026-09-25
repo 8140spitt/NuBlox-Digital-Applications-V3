@@ -1,4 +1,5 @@
 import {
+  EmailVerificationRequiredError,
   InvalidCredentialsError,
   TenantSelectionRequiredError
 } from '@nublox/persistence';
@@ -81,6 +82,14 @@ export const actions: Actions = {
           returnTo,
           tenantSelection: true,
           tenants: error.tenants
+        });
+      }
+
+      if (error instanceof EmailVerificationRequiredError) {
+        return fail(403, {
+          email,
+          returnTo,
+          verificationRequired: true
         });
       }
 

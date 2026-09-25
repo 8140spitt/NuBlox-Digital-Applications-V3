@@ -4,6 +4,7 @@ import {
   createDelegation,
   createOrganisation,
   createOrganisationUnit,
+  createPartyTypeAssignment,
   createPosition,
   createPositionOccupancy,
   createPerson,
@@ -16,6 +17,8 @@ import {
   type Organisation,
   type OrganisationUnit,
   type Party,
+  type PartyType,
+  type PartyTypeAssignment,
   type Person,
   type Position,
   type PositionOccupancy,
@@ -38,6 +41,10 @@ interface PartyRow extends RowDataPacket {
   kind: 'PERSON' | 'ORGANISATION';
   display_name: string;
   status: 'ACTIVE' | 'INACTIVE';
+}
+
+interface PartyTypeRow extends RowDataPacket {
+  party_type: PartyType;
 }
 
 interface OrganisationRow extends RowDataPacket {
@@ -207,8 +214,59 @@ export class MySqlKernelRepository {
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [party.id, party.tenantId, party.kind, party.displayName, party.status, audit.actorPersonId ?? null, audit.actorPersonId ?? null]
       );
+
+      for (const partyType of party.partyTypes ?? []) {
+        const assignment = createPartyTypeAssignment(
+          {
+            tenantId: party.tenantId,
+            partyId: party.id,
+            partyType,
+            status: party.status
+          },
+          party
+        );
+        await this.upsertPartyTypeAssignment(connection, assignment, audit);
+      }
+
       await writeAudit(connection, party.tenantId, 'PARTY', party.id, 'CREATED', audit, party);
     });
+  }
+
+  async assignPartyType(
+    tenantId: TenantId,
+    assignment: PartyTypeAssignment,
+    audit: AuditContext = {}
+  ): Promise<void> {
+    assertTenant(tenantId, assignment.tenantId);
+    const party = await this.requireParty(tenantId, assignment.partyId);
+    createPartyTypeAssignment(assignment, party);
+
+    await withTransaction(this.pool, async (connection) => {
+      await this.upsertPartyTypeAssignment(connection, assignment, audit);
+      await writeAudit(
+        connection,
+        tenantId,
+        'PARTY_TYPE',
+        `${assignment.partyId}:${assignment.partyType}`,
+        assignment.status === 'ACTIVE' ? 'ASSIGNED' : 'DEACTIVATED',
+        audit,
+        assignment
+      );
+    });
+  }
+
+  async listPartyTypes(tenantId: TenantId, partyId: string): Promise<PartyType[]> {
+    await this.requireParty(tenantId, partyId);
+    const [rows] = await this.pool.execute<PartyTypeRow[]>(
+      `SELECT party_type
+         FROM party_type_assignments
+        WHERE tenant_id = ?
+          AND party_id = ?
+          AND status = 'ACTIVE'
+        ORDER BY party_type`,
+      [tenantId, partyId]
+    );
+    return rows.map((row) => row.party_type);
   }
 
   async createPerson(tenantId: TenantId, person: Person, audit: AuditContext = {}): Promise<void> {
@@ -222,6 +280,19 @@ export class MySqlKernelRepository {
           (id, tenant_id, party_id, legal_name, preferred_name, status, created_by_person_id, updated_by_person_id)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [person.id, person.tenantId, person.partyId, person.legalName, person.preferredName ?? null, person.status, audit.actorPersonId ?? null, audit.actorPersonId ?? null]
+      );
+      await this.upsertPartyTypeAssignment(
+        connection,
+        createPartyTypeAssignment(
+          {
+            tenantId: person.tenantId,
+            partyId: person.partyId,
+            partyType: 'EMPLOYEE',
+            status: person.status
+          },
+          party
+        ),
+        audit
       );
       await writeAudit(connection, person.tenantId, 'PERSON', person.id, 'CREATED', audit, person);
     });
@@ -423,7 +494,49 @@ export class MySqlKernelRepository {
     );
     const row = rows[0];
     if (!row) throw new Error('Party not found in tenant.');
-    return { id: row.id as Party['id'], tenantId: row.tenant_id as TenantId, kind: row.kind, displayName: row.display_name, status: row.status };
+
+    const [typeRows] = await this.pool.execute<PartyTypeRow[]>(
+      `SELECT party_type
+         FROM party_type_assignments
+        WHERE tenant_id = ?
+          AND party_id = ?
+          AND status = 'ACTIVE'
+        ORDER BY party_type`,
+      [tenantId, id]
+    );
+
+    return {
+      id: row.id as Party['id'],
+      tenantId: row.tenant_id as TenantId,
+      kind: row.kind,
+      displayName: row.display_name,
+      partyTypes: typeRows.map((item) => item.party_type),
+      status: row.status
+    };
+  }
+
+  private async upsertPartyTypeAssignment(
+    connection: PoolConnection,
+    assignment: PartyTypeAssignment,
+    audit: AuditContext
+  ): Promise<void> {
+    await connection.execute(
+      `INSERT INTO party_type_assignments
+        (tenant_id, party_id, party_type, status, created_by_person_id, updated_by_person_id)
+       VALUES (?, ?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+         status = VALUES(status),
+         updated_by_person_id = VALUES(updated_by_person_id),
+         row_version = row_version + 1`,
+      [
+        assignment.tenantId,
+        assignment.partyId,
+        assignment.partyType,
+        assignment.status,
+        audit.actorPersonId ?? null,
+        audit.actorPersonId ?? null
+      ]
+    );
   }
 
   private async requirePerson(tenantId: TenantId, id: string): Promise<Person> {

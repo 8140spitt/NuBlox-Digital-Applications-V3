@@ -170,7 +170,7 @@ export class MySqlSupplierSourcingRepository {
         tenantId:input.tenantId,
         partyId:organisation.partyId,
         partyType:'VENDOR_SUPPLIER',
-        actorPersonId:audit.actorPersonId
+        ...(audit.actorPersonId ? { actorPersonId:audit.actorPersonId } : {})
       });
       await evidence(c,input.tenantId,'SUPPLIER_RELATIONSHIP',input.id,'CREATED',audit,input);
     });

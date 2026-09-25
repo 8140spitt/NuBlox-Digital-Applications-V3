@@ -2,13 +2,23 @@ import { randomUUID } from 'node:crypto';
 import {
   PLATFORM_PERMISSION_KEYS,
   asId,
+  createCareerLevel,
   createEmployment,
+  createGrade,
+  createJobFamily,
+  createJobProfileArchitectureAssignment,
+  createJobSubfamily,
   createPositionFunctionAssignment,
   createPositionReportingLine,
+  type CareerLevel,
   type Employment,
   type EmploymentStatus,
   type EmploymentType,
+  type Grade,
+  type JobFamily,
   type JobProfile,
+  type JobProfileArchitectureAssignment,
+  type JobSubfamily,
   type Organisation,
   type Person,
   type Position,
@@ -18,6 +28,7 @@ import {
   type TenantId,
   type WorkerType,
   type WorkRelationshipType,
+  type CareerTrack,
   type DeploymentPurpose
 } from '@nublox/kernel';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
@@ -35,6 +46,21 @@ interface PositionRow extends RowDataPacket {
   id:string; tenant_id:string; organisation_unit_id:string; job_profile_id:string|null;
   code:string; title:string; lifecycle_status:Position['lifecycleStatus']; incumbency_model:Position['incumbencyModel'];
   authorised_fte:string|number; effective_from:Date; effective_to:Date|null; status:'ACTIVE'|'INACTIVE';
+}
+interface JobProfileRow extends RowDataPacket {
+  id:string; catalogue_scope:'PLATFORM'|'TENANT'; tenant_id:string|null; code:string; name:string; status:'ACTIVE'|'INACTIVE';
+}
+interface JobFamilyRow extends RowDataPacket {
+  id:string; tenant_id:string; code:string; name:string; description:string|null; status:'ACTIVE'|'INACTIVE';
+}
+interface JobSubfamilyRow extends RowDataPacket {
+  id:string; tenant_id:string; family_id:string; code:string; name:string; description:string|null; status:'ACTIVE'|'INACTIVE';
+}
+interface CareerLevelRow extends RowDataPacket {
+  id:string; tenant_id:string; code:string; name:string; track:CareerTrack; sequence:number; status:'ACTIVE'|'INACTIVE';
+}
+interface GradeRow extends RowDataPacket {
+  id:string; tenant_id:string; code:string; name:string; sequence:number; status:'ACTIVE'|'INACTIVE';
 }
 interface EmploymentRow extends RowDataPacket {
   id:string; tenant_id:string; person_id:string; organisation_id:string; employee_number:string;
@@ -105,6 +131,156 @@ async function writeAudit(
 export class MySqlHcmCommandService {
   private readonly access:MySqlAccessRepository;
   constructor(private readonly pool:Pool){this.access=new MySqlAccessRepository(pool);}
+
+  async createJobFamily(
+    tenantId:TenantId,actorPersonId:string,input:{code:string;name:string;description?:string}
+  ):Promise<JobFamily>{
+    await this.requireManage(tenantId,actorPersonId);
+    const family:JobFamily={
+      id:asId<'JobFamilyId'>(`JF-${randomUUID()}`,'Job Family'),tenantId,
+      code:required(input.code,'Job Family code').toUpperCase(),
+      name:required(input.name,'Job Family name'),
+      ...(optional(input.description)?{description:optional(input.description)}:{}),
+      status:'ACTIVE'
+    };
+    createJobFamily(family);
+    try{
+      await withTransaction(this.pool,async connection=>{
+        await connection.execute(
+          `INSERT INTO hcm_job_families
+            (id,tenant_id,code,name,description,status,created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?)`,
+          [family.id,tenantId,family.code,family.name,family.description??null,family.status,actorPersonId,actorPersonId]
+        );
+        await writeAudit(connection,tenantId,'JOB_FAMILY',family.id,'CREATED',actorPersonId,family);
+      });
+      return family;
+    }catch(error){return mapError(error);}
+  }
+
+  async createJobSubfamily(
+    tenantId:TenantId,actorPersonId:string,
+    input:{familyId:string;code:string;name:string;description?:string}
+  ):Promise<JobSubfamily>{
+    await this.requireManage(tenantId,actorPersonId);
+    const familyId=required(input.familyId,'Job Family');
+    try{
+      return await withTransaction(this.pool,async connection=>{
+        const family=await this.requireJobFamily(connection,tenantId,familyId);
+        const subfamily:JobSubfamily={
+          id:asId<'JobSubfamilyId'>(`JSF-${randomUUID()}`,'Job Sub-family'),tenantId,familyId:family.id,
+          code:required(input.code,'Job Sub-family code').toUpperCase(),
+          name:required(input.name,'Job Sub-family name'),
+          ...(optional(input.description)?{description:optional(input.description)}:{}),status:'ACTIVE'
+        };
+        createJobSubfamily(subfamily,family);
+        await connection.execute(
+          `INSERT INTO hcm_job_subfamilies
+            (id,tenant_id,family_id,code,name,description,status,created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?,?)`,
+          [subfamily.id,tenantId,subfamily.familyId,subfamily.code,subfamily.name,subfamily.description??null,
+           subfamily.status,actorPersonId,actorPersonId]
+        );
+        await writeAudit(connection,tenantId,'JOB_SUBFAMILY',subfamily.id,'CREATED',actorPersonId,subfamily);
+        return subfamily;
+      });
+    }catch(error){return mapError(error);}
+  }
+
+  async createCareerLevel(
+    tenantId:TenantId,actorPersonId:string,input:{code:string;name:string;track:CareerTrack;sequence:number}
+  ):Promise<CareerLevel>{
+    await this.requireManage(tenantId,actorPersonId);
+    const level:CareerLevel={
+      id:asId<'CareerLevelId'>(`CL-${randomUUID()}`,'Career Level'),tenantId,
+      code:required(input.code,'Career Level code').toUpperCase(),name:required(input.name,'Career Level name'),
+      track:input.track,sequence:Number(input.sequence),status:'ACTIVE'
+    };
+    createCareerLevel(level);
+    try{
+      await withTransaction(this.pool,async connection=>{
+        await connection.execute(
+          `INSERT INTO hcm_career_levels
+            (id,tenant_id,code,name,track,sequence,status,created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?,?)`,
+          [level.id,tenantId,level.code,level.name,level.track,level.sequence,level.status,actorPersonId,actorPersonId]
+        );
+        await writeAudit(connection,tenantId,'CAREER_LEVEL',level.id,'CREATED',actorPersonId,level);
+      });
+      return level;
+    }catch(error){return mapError(error);}
+  }
+
+  async createGrade(
+    tenantId:TenantId,actorPersonId:string,input:{code:string;name:string;sequence:number}
+  ):Promise<Grade>{
+    await this.requireManage(tenantId,actorPersonId);
+    const grade:Grade={
+      id:asId<'GradeId'>(`GRADE-${randomUUID()}`,'Grade'),tenantId,
+      code:required(input.code,'Grade code').toUpperCase(),name:required(input.name,'Grade name'),
+      sequence:Number(input.sequence),status:'ACTIVE'
+    };
+    createGrade(grade);
+    try{
+      await withTransaction(this.pool,async connection=>{
+        await connection.execute(
+          `INSERT INTO hcm_grades
+            (id,tenant_id,code,name,sequence,status,created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?)`,
+          [grade.id,tenantId,grade.code,grade.name,grade.sequence,grade.status,actorPersonId,actorPersonId]
+        );
+        await writeAudit(connection,tenantId,'GRADE',grade.id,'CREATED',actorPersonId,grade);
+      });
+      return grade;
+    }catch(error){return mapError(error);}
+  }
+
+  async assignJobProfileArchitecture(
+    tenantId:TenantId,actorPersonId:string,
+    input:{jobProfileId:string;familyId:string;subfamilyId?:string;careerLevelId?:string;gradeId?:string;effectiveFrom?:string;effectiveTo?:string}
+  ):Promise<JobProfileArchitectureAssignment>{
+    await this.requireManage(tenantId,actorPersonId);
+    const jobProfileId=required(input.jobProfileId,'Job Profile');
+    const familyId=required(input.familyId,'Job Family');
+    const effectiveFrom=dateValue(input.effectiveFrom,'Job architecture effective from',true);
+    const effectiveTo=optionalDate(input.effectiveTo,'Job architecture effective to');
+    try{
+      return await withTransaction(this.pool,async connection=>{
+        const [jobProfile,family,subfamily,careerLevel,grade]=await Promise.all([
+          this.requireJobProfile(connection,tenantId,jobProfileId),
+          this.requireJobFamily(connection,tenantId,familyId),
+          input.subfamilyId?this.requireJobSubfamily(connection,tenantId,required(input.subfamilyId,'Job Sub-family')):Promise.resolve(undefined),
+          input.careerLevelId?this.requireCareerLevel(connection,tenantId,required(input.careerLevelId,'Career Level')):Promise.resolve(undefined),
+          input.gradeId?this.requireGrade(connection,tenantId,required(input.gradeId,'Grade')):Promise.resolve(undefined)
+        ]);
+        const [rows]=await connection.execute<CountRow[]>(
+          `SELECT COUNT(*) AS count FROM hcm_job_profile_architecture_assignments
+            WHERE tenant_id=? AND job_profile_id=? AND status='ACTIVE'
+              AND effective_from<=? AND (effective_to IS NULL OR effective_to>=?)`,
+          [tenantId,jobProfileId,farFuture(effectiveTo),new Date(effectiveFrom)]
+        );
+        if(Number(rows[0]?.count??0)>0) throw new HcmCommandError('Job Profile already has an overlapping active architecture assignment.','CONFLICT');
+        const assignment:JobProfileArchitectureAssignment={
+          id:asId<'JobProfileArchitectureAssignmentId'>(`JPA-${randomUUID()}`,'Job Profile Architecture Assignment'),
+          tenantId,jobProfileId:jobProfile.id,familyId:family.id,
+          ...(subfamily?{subfamilyId:subfamily.id}:{}),...(careerLevel?{careerLevelId:careerLevel.id}:{}),
+          ...(grade?{gradeId:grade.id}:{}),effectiveFrom,...(effectiveTo?{effectiveTo}:{}),status:'ACTIVE'
+        };
+        createJobProfileArchitectureAssignment(assignment,jobProfile,family,subfamily,careerLevel,grade);
+        await connection.execute(
+          `INSERT INTO hcm_job_profile_architecture_assignments
+            (id,tenant_id,job_profile_id,family_id,subfamily_id,career_level_id,grade_id,effective_from,effective_to,status,
+             created_by_person_id,updated_by_person_id)
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+          [assignment.id,tenantId,assignment.jobProfileId,assignment.familyId,assignment.subfamilyId??null,
+           assignment.careerLevelId??null,assignment.gradeId??null,new Date(assignment.effectiveFrom),dbDate(assignment.effectiveTo),
+           assignment.status,actorPersonId,actorPersonId]
+        );
+        await writeAudit(connection,tenantId,'JOB_PROFILE_ARCHITECTURE_ASSIGNMENT',assignment.id,'CREATED',actorPersonId,assignment);
+        return assignment;
+      });
+    }catch(error){return mapError(error);}
+  }
 
   async createJobProfile(
     tenantId:TenantId,actorPersonId:string,
@@ -378,6 +554,53 @@ export class MySqlHcmCommandService {
       tenantId,actorPersonId,PLATFORM_PERMISSION_KEYS.HCM_MANAGE,{scopeType:'TENANT'}
     );
     if(!evaluation.allowed) throw new HcmCommandError(evaluation.reason,'PERMISSION_DENIED');
+  }
+
+  private async requireJobProfile(connection:PoolConnection,tenantId:TenantId,id:string):Promise<JobProfile>{
+    const [rows]=await connection.execute<JobProfileRow[]>(
+      `SELECT id,catalogue_scope,tenant_id,code,name,status FROM job_profiles
+        WHERE id=? AND status='ACTIVE' AND (catalogue_scope='PLATFORM' OR tenant_id=?)`,[id,tenantId]
+    );
+    const row=rows[0];
+    if(!row) throw new HcmCommandError('Job Profile was not found or is unavailable to this tenant.','NOT_FOUND');
+    return {id:row.id as JobProfile['id'],catalogueScope:row.catalogue_scope,
+      ...(row.tenant_id?{tenantId:row.tenant_id as TenantId}:{}),code:row.code,name:row.name,status:row.status};
+  }
+
+  private async requireJobFamily(connection:PoolConnection,tenantId:TenantId,id:string):Promise<JobFamily>{
+    const [rows]=await connection.execute<JobFamilyRow[]>(
+      `SELECT id,tenant_id,code,name,description,status FROM hcm_job_families WHERE tenant_id=? AND id=? AND status='ACTIVE'`,[tenantId,id]
+    );
+    const row=rows[0]; if(!row) throw new HcmCommandError('Job Family was not found or is inactive.','NOT_FOUND');
+    return {id:row.id as JobFamily['id'],tenantId:row.tenant_id as TenantId,code:row.code,name:row.name,
+      ...(row.description?{description:row.description}:{}),status:row.status};
+  }
+
+  private async requireJobSubfamily(connection:PoolConnection,tenantId:TenantId,id:string):Promise<JobSubfamily>{
+    const [rows]=await connection.execute<JobSubfamilyRow[]>(
+      `SELECT id,tenant_id,family_id,code,name,description,status FROM hcm_job_subfamilies WHERE tenant_id=? AND id=? AND status='ACTIVE'`,[tenantId,id]
+    );
+    const row=rows[0]; if(!row) throw new HcmCommandError('Job Sub-family was not found or is inactive.','NOT_FOUND');
+    return {id:row.id as JobSubfamily['id'],tenantId:row.tenant_id as TenantId,familyId:row.family_id as JobSubfamily['familyId'],
+      code:row.code,name:row.name,...(row.description?{description:row.description}:{}),status:row.status};
+  }
+
+  private async requireCareerLevel(connection:PoolConnection,tenantId:TenantId,id:string):Promise<CareerLevel>{
+    const [rows]=await connection.execute<CareerLevelRow[]>(
+      `SELECT id,tenant_id,code,name,track,sequence,status FROM hcm_career_levels WHERE tenant_id=? AND id=? AND status='ACTIVE'`,[tenantId,id]
+    );
+    const row=rows[0]; if(!row) throw new HcmCommandError('Career Level was not found or is inactive.','NOT_FOUND');
+    return {id:row.id as CareerLevel['id'],tenantId:row.tenant_id as TenantId,code:row.code,name:row.name,
+      track:row.track,sequence:Number(row.sequence),status:row.status};
+  }
+
+  private async requireGrade(connection:PoolConnection,tenantId:TenantId,id:string):Promise<Grade>{
+    const [rows]=await connection.execute<GradeRow[]>(
+      `SELECT id,tenant_id,code,name,sequence,status FROM hcm_grades WHERE tenant_id=? AND id=? AND status='ACTIVE'`,[tenantId,id]
+    );
+    const row=rows[0]; if(!row) throw new HcmCommandError('Grade was not found or is inactive.','NOT_FOUND');
+    return {id:row.id as Grade['id'],tenantId:row.tenant_id as TenantId,code:row.code,name:row.name,
+      sequence:Number(row.sequence),status:row.status};
   }
 
   private async requirePerson(connection:PoolConnection,tenantId:TenantId,id:string):Promise<Person>{

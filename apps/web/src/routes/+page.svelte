@@ -34,7 +34,7 @@
 <main>
   <header class="masthead">
     <a class="brand" href="/" aria-label="NuBlox home">NuBlox</a>
-    <a class="status" href="/login">Sign in</a>
+    <span class="status"><a href="/login">Sign in</a> · <a href="/register">Start with NuBlox</a></span>
   </header>
 
   <section class="hero">
@@ -45,8 +45,8 @@
         Define business strategy and carry it through the organisation, its people, Functions,
         transactions, projects, work products and results — in one connected operating environment.
       </p>
-      <a class="primary-action landing-action" href="#capabilities">
-        Explore NuBlox <span aria-hidden="true">→</span>
+      <a class="primary-action landing-action" href="/register">
+        Start with NuBlox <span aria-hidden="true">→</span>
       </a>
     </div>
   </section>

@@ -98,7 +98,7 @@ pnpm auth:bootstrap
 pnpm dev
 ```
 
-Open the local URL shown by Vite. The public product page remains public; `/app` redirects to `/login` until a valid tenant/person session exists.
+Open the local URL shown by Vite. The public NuBlox product page remains at `/`. Tenant traffic is explicit: use `/{tenantSlug}/app` for the private application and `/{tenantSlug}/public` for the Tenant public surface.
 
 Authentication uses a provisioned application account mapped to an active tenant-scoped `Person`, scrypt password hashing and server-side opaque sessions. Public self-registration is intentionally not provided.
 

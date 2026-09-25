@@ -56,10 +56,13 @@
             autocomplete="off"
             maxlength="80"
             pattern="[a-z0-9][a-z0-9-]{1,78}[a-z0-9]"
-            placeholder="spittal-construction"
+            placeholder="baesystems"
             value={form?.tenantSlug ?? ''}
           />
-          <small>Lowercase letters, numbers and hyphens. Leave blank and NuBlox will generate one.</small>
+          <small>
+            Lowercase letters, numbers and hyphens. Leave blank and NuBlox derives a clean business
+            address, for example BAE Systems → baesystems.
+          </small>
         </label>
 
         <label>

@@ -59,6 +59,49 @@ export interface TenantProvisioningResult {
   industrySolutionIds: string[];
 }
 
+export interface TenantConfigurationProjection {
+  profile: {
+    classificationSchemeCode: string;
+    classificationCode: string;
+    classificationName: string;
+    sizeTier: TenantSizeTier;
+    employeeCount: number | null;
+    legalEntityCount: number;
+    primaryCountryCode: string;
+    primaryLanguageCode: string;
+    configurationState: string;
+    provisionedAt: string | null;
+  };
+  operatingModels: Array<{ code: string; name: string; primary: boolean }>;
+  regulatoryRegimes: Array<{ code: string; name: string; jurisdiction: string | null }>;
+  industrySolutions: Array<{ id: string; code: string; name: string; status: string }>;
+  templateApplications: Array<{
+    applicationId: string;
+    templateId: string;
+    code: string;
+    name: string;
+    version: number;
+    templateKind: string;
+    status: string;
+    appliedAt: string;
+    appliedConfiguration: Record<string, unknown>;
+  }>;
+  latestProvisioningRun: {
+    id: string;
+    status: string;
+    startedAt: string;
+    completedAt: string | null;
+    steps: Array<{
+      stepKey: string;
+      sequence: number;
+      status: string;
+      evidence: Record<string, unknown> | null;
+      startedAt: string;
+      completedAt: string | null;
+    }>;
+  } | null;
+}
+
 export class TenantProvisioningError extends Error {
   constructor(message: string) {
     super(message);
@@ -348,6 +391,221 @@ export class MySqlTenantProvisioningService {
         name: row.name,
         jurisdiction: row.jurisdiction
       }))
+    };
+  }
+
+  async getTenantConfiguration(
+    tenantId: string
+  ): Promise<TenantConfigurationProjection> {
+    const [profileRows] = await this.pool.query<Array<RowDataPacket & {
+      scheme_code: string;
+      classification_code: string;
+      classification_name: string;
+      size_tier: TenantSizeTier;
+      employee_count: number | null;
+      legal_entity_count: number;
+      primary_country_code: string;
+      primary_language_code: string;
+      configuration_state: string;
+      provisioned_at: Date | null;
+    }>>(
+      `SELECT s.code AS scheme_code,
+              v.code AS classification_code,
+              v.name AS classification_name,
+              p.size_tier,
+              p.employee_count,
+              p.legal_entity_count,
+              p.primary_country_code,
+              p.primary_language_code,
+              p.configuration_state,
+              p.provisioned_at
+         FROM tenant_business_profiles p
+         JOIN business_classification_values v
+           ON v.id = p.primary_classification_value_id
+         JOIN business_classification_schemes s
+           ON s.id = v.scheme_id
+        WHERE p.tenant_id = ?
+        LIMIT 1`,
+      [tenantId]
+    );
+    const profile = profileRows[0];
+    if (!profile) {
+      throw new TenantProvisioningError('Tenant business profile does not exist.');
+    }
+
+    const [
+      operatingResult,
+      regulatoryResult,
+      industryResult,
+      templateResult,
+      runResult
+    ] = await Promise.all([
+      this.pool.query<Array<RowDataPacket & {
+        code: string;
+        name: string;
+        is_primary: number | boolean;
+      }>>(
+        `SELECT m.code, m.name, a.is_primary
+           FROM tenant_operating_models a
+           JOIN operating_model_definitions m
+             ON m.code = a.operating_model_code
+          WHERE a.tenant_id = ?
+            AND a.status = 'ACTIVE'
+          ORDER BY a.is_primary DESC, m.name`,
+        [tenantId]
+      ),
+      this.pool.query<Array<RowDataPacket & {
+        code: string;
+        name: string;
+        jurisdiction: string | null;
+      }>>(
+        `SELECT r.code, r.name, r.jurisdiction
+           FROM tenant_regulatory_regime_assignments a
+           JOIN regulatory_regimes r
+             ON r.id = a.regulatory_regime_id
+          WHERE a.tenant_id = ?
+            AND a.status = 'ACTIVE'
+          ORDER BY r.name`,
+        [tenantId]
+      ),
+      this.pool.query<Array<RowDataPacket & {
+        id: string;
+        code: string;
+        name: string;
+        status: string;
+      }>>(
+        `SELECT i.id, i.code, i.name, a.status
+           FROM tenant_industry_solution_assignments a
+           JOIN industry_solutions i ON i.id = a.industry_solution_id
+          WHERE a.tenant_id = ?
+          ORDER BY i.name`,
+        [tenantId]
+      ),
+      this.pool.query<Array<RowDataPacket & {
+        application_id: string;
+        template_id: string;
+        code: string;
+        name: string;
+        template_version: number;
+        template_kind: string;
+        status: string;
+        applied_at: Date;
+        applied_configuration: unknown;
+      }>>(
+        `SELECT a.id AS application_id,
+                a.template_id,
+                t.code,
+                t.name,
+                a.template_version,
+                t.template_kind,
+                a.status,
+                a.applied_at,
+                a.applied_configuration
+           FROM tenant_configuration_template_applications a
+           JOIN tenant_configuration_templates t ON t.id = a.template_id
+          WHERE a.tenant_id = ?
+          ORDER BY a.applied_at, t.priority, t.code`,
+        [tenantId]
+      ),
+      this.pool.query<Array<RowDataPacket & {
+        id: string;
+        status: string;
+        started_at: Date;
+        completed_at: Date | null;
+      }>>(
+        `SELECT id, status, started_at, completed_at
+           FROM tenant_provisioning_runs
+          WHERE tenant_id = ?
+          ORDER BY started_at DESC
+          LIMIT 1`,
+        [tenantId]
+      )
+    ]);
+
+    const latestRun = runResult[0][0];
+    let steps: Array<{
+      stepKey: string;
+      sequence: number;
+      status: string;
+      evidence: Record<string, unknown> | null;
+      startedAt: string;
+      completedAt: string | null;
+    }> = [];
+
+    if (latestRun) {
+      const [stepRows] = await this.pool.query<Array<RowDataPacket & {
+        step_key: string;
+        sequence: number;
+        status: string;
+        evidence: unknown;
+        started_at: Date;
+        completed_at: Date | null;
+      }>>(
+        `SELECT step_key, sequence, status, evidence, started_at, completed_at
+           FROM tenant_provisioning_steps
+          WHERE provisioning_run_id = ?
+          ORDER BY sequence, step_key`,
+        [latestRun.id]
+      );
+      steps = stepRows.map((row) => ({
+        stepKey: row.step_key,
+        sequence: Number(row.sequence),
+        status: row.status,
+        evidence: row.evidence === null ? null : asJsonObject(row.evidence),
+        startedAt: row.started_at.toISOString(),
+        completedAt: row.completed_at?.toISOString() ?? null
+      }));
+    }
+
+    return {
+      profile: {
+        classificationSchemeCode: profile.scheme_code,
+        classificationCode: profile.classification_code,
+        classificationName: profile.classification_name,
+        sizeTier: profile.size_tier,
+        employeeCount: profile.employee_count === null ? null : Number(profile.employee_count),
+        legalEntityCount: Number(profile.legal_entity_count),
+        primaryCountryCode: profile.primary_country_code,
+        primaryLanguageCode: profile.primary_language_code,
+        configurationState: profile.configuration_state,
+        provisionedAt: profile.provisioned_at?.toISOString() ?? null
+      },
+      operatingModels: operatingResult[0].map((row) => ({
+        code: row.code,
+        name: row.name,
+        primary: Boolean(row.is_primary)
+      })),
+      regulatoryRegimes: regulatoryResult[0].map((row) => ({
+        code: row.code,
+        name: row.name,
+        jurisdiction: row.jurisdiction
+      })),
+      industrySolutions: industryResult[0].map((row) => ({
+        id: row.id,
+        code: row.code,
+        name: row.name,
+        status: row.status
+      })),
+      templateApplications: templateResult[0].map((row) => ({
+        applicationId: row.application_id,
+        templateId: row.template_id,
+        code: row.code,
+        name: row.name,
+        version: Number(row.template_version),
+        templateKind: row.template_kind,
+        status: row.status,
+        appliedAt: row.applied_at.toISOString(),
+        appliedConfiguration: asJsonObject(row.applied_configuration)
+      })),
+      latestProvisioningRun: latestRun
+        ? {
+            id: latestRun.id,
+            status: latestRun.status,
+            startedAt: latestRun.started_at.toISOString(),
+            completedAt: latestRun.completed_at?.toISOString() ?? null,
+            steps
+          }
+        : null
     };
   }
 

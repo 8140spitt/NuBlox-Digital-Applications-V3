@@ -23,7 +23,9 @@ interface OrganisationRow extends RowDataPacket {
   id:string;tenant_id:string;party_id:string;legal_name:string;trading_name:string|null;status:'ACTIVE'|'INACTIVE';
 }
 interface PositionRow extends RowDataPacket {
-  id:string;tenant_id:string;organisation_unit_id:string;job_profile_id:string|null;code:string;title:string;status:'ACTIVE'|'INACTIVE';
+  id:string;tenant_id:string;organisation_unit_id:string;job_profile_id:string|null;code:string;title:string;
+  lifecycle_status:Position['lifecycleStatus'];incumbency_model:Position['incumbencyModel'];
+  authorised_fte:string|number;effective_from:Date;effective_to:Date|null;status:'ACTIVE'|'INACTIVE';
 }
 interface AccountRow extends RowDataPacket {
   id:string;tenant_id:string;canonical_object_id:string;organisation_id:string;code:string;
@@ -336,7 +338,7 @@ export class MySqlSalesCommandService {
 
   private async requireF07Position(connection:PoolConnection,tenantId:TenantId,id:string):Promise<Position> {
     const [rows]=await connection.execute<PositionRow[]>(
-      'SELECT id,tenant_id,organisation_unit_id,job_profile_id,code,title,status FROM positions WHERE tenant_id=? AND id=?',
+      'SELECT id,tenant_id,organisation_unit_id,job_profile_id,code,title,lifecycle_status,incumbency_model,authorised_fte,effective_from,effective_to,status FROM positions WHERE tenant_id=? AND id=?',
       [tenantId,id]
     );
     const row=rows[0];
@@ -355,7 +357,9 @@ export class MySqlSalesCommandService {
       id:row.id as Position['id'],tenantId:row.tenant_id as TenantId,
       organisationUnitId:row.organisation_unit_id as Position['organisationUnitId'],
       ...(row.job_profile_id?{jobProfileId:row.job_profile_id as NonNullable<Position['jobProfileId']>}:{ }),
-      code:row.code,title:row.title,status:row.status
+      code:row.code,title:row.title,lifecycleStatus:row.lifecycle_status,incumbencyModel:row.incumbency_model,
+      authorisedFte:Number(row.authorised_fte),effectiveFrom:row.effective_from.toISOString(),
+      ...(row.effective_to?{effectiveTo:row.effective_to.toISOString()}:{}),status:row.status
     };
   }
 

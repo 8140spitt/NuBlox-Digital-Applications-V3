@@ -65,7 +65,8 @@ import {
   MySqlEnterpriseVocabularyProvisioningService,
   MySqlUniversalFunctionReadRepository,
   MySqlTenantRoutingRepository,
-  MySqlTenantRegistrationService
+  MySqlTenantRegistrationService,
+  MySqlIdentityChallengeService
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -135,6 +136,7 @@ let enterpriseVocabularyProvisioningServiceInstance: MySqlEnterpriseVocabularyPr
 let universalFunctionReadRepositoryInstance: MySqlUniversalFunctionReadRepository | undefined;
 let tenantRoutingRepositoryInstance: MySqlTenantRoutingRepository | undefined;
 let tenantRegistrationServiceInstance: MySqlTenantRegistrationService | undefined;
+let identityChallengeServiceInstance: MySqlIdentityChallengeService | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -667,4 +669,11 @@ export function getTenantRegistrationService(): MySqlTenantRegistrationService {
     tenantRegistrationServiceInstance = new MySqlTenantRegistrationService(getDatabasePool());
   }
   return tenantRegistrationServiceInstance;
+}
+
+export function getIdentityChallengeService(): MySqlIdentityChallengeService {
+  if (!identityChallengeServiceInstance) {
+    identityChallengeServiceInstance = new MySqlIdentityChallengeService(getDatabasePool());
+  }
+  return identityChallengeServiceInstance;
 }

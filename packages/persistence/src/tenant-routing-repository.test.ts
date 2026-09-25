@@ -21,10 +21,11 @@ describe('tenant routing', () => {
     expect(() => normaliseTenantSlug('x')).toThrow('3-80');
   });
 
-  it('derives a deterministic unique-safe fallback from immutable tenant identity', () => {
-    const slug = deriveTenantSlug('Example Business', 'TENANT-123');
-    expect(slug).toMatch(/^example-business-[a-f0-9]{8}$/);
-    expect(deriveTenantSlug('Example Business', 'TENANT-123')).toBe(slug);
-    expect(deriveTenantSlug('Example Business', 'TENANT-456')).not.toBe(slug);
+  it('derives compact human tenant routes without exposing Tenant IDs', () => {
+    expect(deriveTenantSlug('BAE Systems')).toBe('baesystems');
+    expect(deriveTenantSlug('Example Business')).toBe('examplebusiness');
+    expect(deriveTenantSlug('North & West Design')).toBe('northandwestdesign');
+    expect(deriveTenantSlug('Example Business', 2)).toBe('examplebusiness-2');
+    expect(deriveTenantSlug('Example Business', 3)).toBe('examplebusiness-3');
   });
 });

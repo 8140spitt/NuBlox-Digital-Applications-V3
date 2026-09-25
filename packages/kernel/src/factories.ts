@@ -49,14 +49,14 @@ export function createPartyTypeAssignment(
 
 export function createPerson(input: Person, party: Party): Person {
   assertSameTenant(input.tenantId, party.tenantId, 'Person and Party');
-  invariant(party.kind === 'PERSON', 'Person must specialise a PERSON Party.');
+  invariant(party.kind === 'PERSON', 'Person must use a structurally PERSON Party identity.');
   invariant(input.partyId === party.id, 'Person partyId must reference the supplied Party.');
   return Object.freeze({ ...input });
 }
 
 export function createOrganisation(input: Organisation, party: Party): Organisation {
   assertSameTenant(input.tenantId, party.tenantId, 'Organisation and Party');
-  invariant(party.kind === 'ORGANISATION', 'Organisation must specialise an ORGANISATION Party.');
+  invariant(party.kind === 'ORGANISATION', 'Organisation must use a structurally ORGANISATION Party identity.');
   invariant(
     input.partyId === party.id,
     'Organisation partyId must reference the supplied Party.'

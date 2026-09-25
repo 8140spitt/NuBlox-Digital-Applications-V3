@@ -20,8 +20,8 @@ export interface EnterpriseRelationshipVocabularyEntry {
 }
 
 export const ENTERPRISE_THING_VOCABULARY = Object.freeze([
-  {code:'PERSON',name:'Person',objectFamily:'PARTY',nativeObjectType:'PERSON',sourceAuthority:'PEOPLE_MASTER',description:'Authoritative human identity used across HCM, access, work and evidence.'},
-  {code:'ORGANISATION',name:'Organisation',objectFamily:'PARTY',nativeObjectType:'ORGANISATION',sourceAuthority:'PARTY_MASTER',description:'Authoritative legal/trading organisation identity. Customer and supplier are roles of this identity, not duplicate masters.'},
+  {code:'PERSON',name:'Person',objectFamily:'PARTY',nativeObjectType:'PERSON',sourceAuthority:'PEOPLE_MASTER',description:'Authoritative human structural identity. Tenant workforce Persons carry the EMPLOYEE Party Type.'},
+  {code:'ORGANISATION',name:'Organisation',objectFamily:'PARTY',nativeObjectType:'ORGANISATION',sourceAuthority:'PARTY_MASTER',description:'Authoritative legal/trading organisation identity. TENANT, CLIENT and VENDOR_SUPPLIER are Party Types on this identity, not duplicate masters.'},
   {code:'ORGANISATION_UNIT',name:'Organisation Unit',objectFamily:'ORGANISATION',nativeObjectType:'ORGANISATION_UNIT',sourceAuthority:'ORGANISATION_MASTER',description:'Structural unit within an Organisation.'},
   {code:'POSITION',name:'Position',objectFamily:'HCM',nativeObjectType:'POSITION',sourceAuthority:'HCM',description:'Enduring organisational position to which people, jobs, authority and Function participation are attached.'},
   {code:'PROJECT',name:'Project',objectFamily:'WORK_CONTEXT',nativeObjectType:'PROJECT',sourceAuthority:'PROJECT_PORTFOLIO',description:'Project delivery context shared by all participating Functions.'},

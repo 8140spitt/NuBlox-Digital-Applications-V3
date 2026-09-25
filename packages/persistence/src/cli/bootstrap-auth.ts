@@ -39,7 +39,14 @@ try {
     const personId = asId<'PersonId'>(`PERSON-${suffix}`, 'Person');
 
     const kernel = new MySqlKernelRepository(pool);
-    const tenant: Tenant = { id: tenantId, name: tenantName, status: 'ACTIVE' };
+    const tenant: Tenant = {
+      id: tenantId,
+      ...(process.env.NUBLOX_BOOTSTRAP_TENANT_SLUG?.trim()
+        ? { slug: process.env.NUBLOX_BOOTSTRAP_TENANT_SLUG.trim() }
+        : {}),
+      name: tenantName,
+      status: 'ACTIVE'
+    };
     const party: Party = {
       id: partyId,
       tenantId,
@@ -110,6 +117,8 @@ try {
 
   console.log('NuBlox application account ready.');
   console.log(`Tenant: ${principal.tenantName} (${principal.tenantId})`);
+  console.log(`Tenant slug: ${principal.tenantSlug}`);
+  console.log(`Tenant app: /${principal.tenantSlug}/app/`);
   console.log(`Person: ${principal.personName} (${principal.personId})`);
   console.log(`Login: ${principal.email}`);
   console.log(

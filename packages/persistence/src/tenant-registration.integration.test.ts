@@ -1,7 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { PLATFORM_ADMINISTRATOR_ROLE_ID } from '@nublox/kernel';
-import { MySqlAuthRepository } from './auth-repository.js';
+import {
+  EmailVerificationRequiredError,
+  InvalidCredentialsError,
+  MySqlAuthRepository
+} from './auth-repository.js';
+import { MySqlIdentityChallengeService } from './identity-challenge-service.js';
 import { createDatabasePool } from './database.js';
 import { migrate } from './migrations.js';
 import { MySqlTenantRegistrationService } from './tenant-registration-service.js';
@@ -38,6 +43,7 @@ suite('tenant registration', () => {
     });
 
     expect(registration.tenantSlug).toBe(slug);
+    expect(registration.verificationRequired).toBe(true);
 
     const [tenantPartyRows] = await pool.query<Array<{
       party_id: string;
@@ -95,9 +101,67 @@ suite('tenant registration', () => {
     expect(Number(positionRows[0]?.count ?? 0)).toBe(0);
 
     const auth = new MySqlAuthRepository(pool);
+    await expect(
+      auth.authenticate(email, password, registration.tenantId)
+    ).rejects.toBeInstanceOf(EmailVerificationRequiredError);
+
+    const [verificationMessages] = await pool.query<Array<{ action_path: string; status: string }>>(
+      `SELECT action_path, status
+         FROM application_identity_message_outbox
+        WHERE tenant_id = ?
+          AND user_id = ?
+          AND message_type = 'EMAIL_VERIFICATION'
+        ORDER BY queued_at DESC
+        LIMIT 1`,
+      [registration.tenantId, registration.userId]
+    );
+    expect(verificationMessages[0]?.status).toBe('QUEUED');
+    const verificationToken = new URL(
+      verificationMessages[0]?.action_path ?? '',
+      'https://nublox.test'
+    ).searchParams.get('token');
+    expect(verificationToken).toBeTruthy();
+
+    const challenges = new MySqlIdentityChallengeService(pool);
+    const verified = await challenges.verifyEmail(verificationToken ?? '', slug);
+    expect(verified.tenantId).toBe(registration.tenantId);
+    expect(verified.alreadyVerified).toBe(false);
+
     const principal = await auth.authenticate(email, password, registration.tenantId);
     expect(principal.tenantId).toBe(registration.tenantId);
     expect(principal.tenantSlug).toBe(slug);
     expect(principal.personId).toBe(registration.personId);
+
+    const session = await auth.createSession(principal, 600);
+    expect(await auth.resolveSession(session.token)).not.toBeNull();
+
+    await challenges.requestPasswordReset(email, slug);
+    const [resetMessages] = await pool.query<Array<{ action_path: string; status: string }>>(
+      `SELECT action_path, status
+         FROM application_identity_message_outbox
+        WHERE tenant_id = ?
+          AND user_id = ?
+          AND message_type = 'PASSWORD_RESET'
+        ORDER BY queued_at DESC
+        LIMIT 1`,
+      [registration.tenantId, registration.userId]
+    );
+    expect(resetMessages[0]?.status).toBe('QUEUED');
+    const resetToken = new URL(
+      resetMessages[0]?.action_path ?? '',
+      'https://nublox.test'
+    ).searchParams.get('token');
+    expect(resetToken).toBeTruthy();
+
+    const newPassword = 'new-correct-horse-battery-staple';
+    await challenges.resetPassword(resetToken ?? '', newPassword, slug);
+
+    expect(await auth.resolveSession(session.token)).toBeNull();
+    await expect(
+      auth.authenticate(email, password, registration.tenantId)
+    ).rejects.toBeInstanceOf(InvalidCredentialsError);
+
+    const resetPrincipal = await auth.authenticate(email, newPassword, registration.tenantId);
+    expect(resetPrincipal.personId).toBe(registration.personId);
   });
 });

@@ -387,7 +387,7 @@
                                   <select name="recipientPartyId" required>
                                     <option value="">Select Party</option>
                                     {#each data.projection.parties as party}
-                                      <option value={party.id}>{party.displayName} · {party.kind}</option>
+                                      <option value={party.id}>{party.displayName}</option>
                                     {/each}
                                   </select>
                                 </label>

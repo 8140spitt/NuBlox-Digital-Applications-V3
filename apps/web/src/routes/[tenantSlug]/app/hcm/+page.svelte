@@ -45,6 +45,7 @@
     </div>
     <div class="workspace-action-row">
       <a class="primary-action" href="/app/function">Open My Function <span>→</span></a>
+      <a class="quiet-link" href="/app/hcm/job-architecture">Job Architecture</a>
       <a class="quiet-link" href="/app/my-team">Open My Team</a>
     </div>
   </section>

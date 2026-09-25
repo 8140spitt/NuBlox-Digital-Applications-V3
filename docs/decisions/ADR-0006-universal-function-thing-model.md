@@ -67,7 +67,7 @@ The same applies to native canonical relationship codes, which may be bound to g
 This means:
 
 - Organisation is one identity, regardless of which Functions use it.
-- Customer and Supplier are roles/relationships/classifications of an Organisation where appropriate; they are not separate Organisation masters.
+- `CLIENT` and `VENDOR_SUPPLIER` are canonical Party Types on the authoritative Organisation identity; they are additive classifications and do not create separate Organisation masters.
 - Person, Organisation Unit and Position remain authoritative HCM/organisation records while participating in the same Thing graph.
 - Project, Contract, Asset, Location and other shared enterprise anchors must likewise be reused cross-Function rather than copied into Function-specific masters.
 - Metadata extension must never silently create a second source of truth for a native authoritative aggregate.
@@ -81,7 +81,7 @@ This means:
 5. New configurable object types, fields and relationships should be metadata-defined rather than requiring a bespoke table/page unless strong domain semantics justify dedicated relational persistence.
 6. Relationship records may own their own field values and effectivity.
 7. Native authoritative aggregates participate in the Thing runtime through governed native-type bindings; they are not duplicated as parallel metadata-only identities.
-8. Customer/Supplier and similar business roles must reuse the authoritative Party/Organisation identity rather than create duplicate masters.
+8. `TENANT`, `EMPLOYEE`, `CLIENT` and `VENDOR_SUPPLIER` are the canonical NuBlox Party Types. `CLIENT` and `VENDOR_SUPPLIER` must reuse the authoritative Organisation identity rather than create duplicate masters; `PERSON` and `ORGANISATION` are structural identity shapes, not Party Types.
 9. Existing ADR-0003 statements that the 16 CBE domains are not Functions, and ADR-0005's separate Core Function Team / Professional Domain Team distinction, are superseded by this decision.
 
 ## Superseded rule

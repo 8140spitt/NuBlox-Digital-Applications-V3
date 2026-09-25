@@ -70,6 +70,15 @@ suite('tenant authentication policy enforcement', () => {
       email,
       password,
       acceptedTerms: true,
+      businessProfile: {
+        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        sizeTier: 'SMALL',
+        employeeCount: 25,
+        legalEntityCount: 1,
+        primaryCountryCode: 'GB',
+        primaryLanguageCode: 'en-GB',
+        operatingModelCodes: ['PROJECT_BASED']
+      },
       emailVerified: true
     });
 
@@ -152,6 +161,15 @@ suite('tenant authentication policy enforcement', () => {
       email,
       password,
       acceptedTerms: true,
+      businessProfile: {
+        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        sizeTier: 'SMALL',
+        employeeCount: 25,
+        legalEntityCount: 1,
+        primaryCountryCode: 'GB',
+        primaryLanguageCode: 'en-GB',
+        operatingModelCodes: ['PROJECT_BASED']
+      },
       emailVerified: true
     });
 
@@ -197,6 +215,15 @@ suite('tenant authentication policy enforcement', () => {
       email,
       password,
       acceptedTerms: true,
+      businessProfile: {
+        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        sizeTier: 'SMALL',
+        employeeCount: 25,
+        legalEntityCount: 1,
+        primaryCountryCode: 'GB',
+        primaryLanguageCode: 'en-GB',
+        operatingModelCodes: ['PROJECT_BASED']
+      },
       emailVerified: true
     });
 

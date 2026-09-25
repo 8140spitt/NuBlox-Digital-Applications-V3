@@ -26,7 +26,7 @@
 {#if form?.stepUpRequired && form?.stepUpUrl}
   <p class="form-message error">
     {form.error}
-    <a href={form.stepUpUrl}>Verify MFA and return</a>
+    <a href={form.stepUpUrl}>Verify again and return</a>
   </p>
 {:else if form?.error}
   <p class="form-message error">{form.error}</p>
@@ -38,10 +38,10 @@
   <article class="home-primary-card">
     <span>MFA</span>
     <div>
-      <strong>MFA coverage</strong>
+      <strong>Strong authentication coverage</strong>
       <p>
-        {data.coverage.enrolledIdentities} of {data.coverage.activeIdentities} active application
-        identities currently have tenant-scoped MFA enrolled.
+        {data.coverage.strongAuthenticationIdentities} of {data.coverage.activeIdentities} active
+        identities have TOTP MFA, a passkey, or both.
       </p>
     </div>
   </article>
@@ -50,7 +50,7 @@
     <span>PL</span>
     <div>
       <strong>Current requirement</strong>
-      <p>{data.policy.mfaRequirement === 'REQUIRED' ? 'MFA required' : 'MFA optional'}</p>
+      <p>{data.policy.mfaRequirement === 'REQUIRED' ? 'Strong authentication required' : 'Strong authentication optional'}</p>
     </div>
   </article>
 </section>
@@ -68,15 +68,28 @@
 
   <form method="POST" action="?/update" class="login-form">
     <label>
-      <span>MFA requirement</span>
+      <span>Strong authentication requirement</span>
       <select name="mfaRequirement" disabled={!data.canManage}>
         <option value="OPTIONAL" selected={data.policy.mfaRequirement === 'OPTIONAL'}>
           Optional
         </option>
         <option value="REQUIRED" selected={data.policy.mfaRequirement === 'REQUIRED'}>
-          Required for every employee application session
+          Require TOTP MFA or a user-verified passkey for every employee application session
         </option>
       </select>
+    </label>
+
+    <label>
+      <span>Passkey authentication</span>
+      <span>
+        <input
+          name="passkeyEnabled"
+          type="checkbox"
+          checked={data.policy.passkeyEnabled}
+          disabled={!data.canManage}
+        />
+        Allow WebAuthn passkey registration, sign-in and step-up authentication
+      </span>
     </label>
 
     <label>
@@ -123,10 +136,16 @@
     {/if}
   </form>
 
-  {#if data.policy.mfaRequirement === 'OPTIONAL' && data.coverage.enrolledIdentities < data.coverage.activeIdentities}
+  <p class="workspace-lede">
+    TOTP enrolled: {data.coverage.enrolledIdentities}. Passkey enrolled:
+    {data.coverage.passkeyEnrolledIdentities}. Disabling passkeys immediately revokes active
+    passkey-authenticated sessions and prevents outstanding passkey ceremonies from completing.
+  </p>
+
+  {#if data.policy.mfaRequirement === 'OPTIONAL' && data.coverage.strongAuthenticationIdentities < data.coverage.activeIdentities}
     <p class="workspace-lede">
-      If MFA is changed to required, employees without an enrollment will be taken through secure
-      MFA setup immediately after their password is verified and before NuBlox creates a full session.
+      If strong authentication is changed to required, password-only access will no longer produce
+      a full application session. Users can satisfy the requirement with TOTP MFA or a user-verified passkey.
     </p>
   {/if}
 </section>

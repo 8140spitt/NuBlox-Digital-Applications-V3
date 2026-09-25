@@ -45,7 +45,7 @@ VALUES
   ('BCV-NAICS-2022-53', 'BCS-NAICS-2022', '53', 'Real Estate and Rental and Leasing', NULL, 'Asset-based sector.', 'ACTIVE'),
   ('BCV-NAICS-2022-54', 'BCS-NAICS-2022', '54', 'Professional, Scientific, and Technical Services', NULL, 'Professional services sector.', 'ACTIVE'),
   ('BCV-NAICS-2022-55', 'BCS-NAICS-2022', '55', 'Management of Companies and Enterprises', NULL, 'Holding and management sector.', 'ACTIVE'),
-  ('BCV-NAICS-2022-56', 'BCS-NAICS-2022', '56', 'Administrative and Support and Waste Management and Remediation Services', NULL, 'Support services sector.', 'ACTIVE'),
+  ('BCV-NAICS-2022-56', 'BCS-NAICS-2022', '56', 'Administrative and Support and Waste Management', NULL, 'Support services sector.', 'ACTIVE'),
   ('BCV-NAICS-2022-61', 'BCS-NAICS-2022', '61', 'Educational Services', NULL, 'Education sector.', 'ACTIVE'),
   ('BCV-NAICS-2022-62', 'BCS-NAICS-2022', '62', 'Health Care and Social Assistance', NULL, 'Healthcare sector.', 'ACTIVE'),
   ('BCV-NAICS-2022-71', 'BCS-NAICS-2022', '71', 'Arts, Entertainment, and Recreation', NULL, 'Leisure sector.', 'ACTIVE'),

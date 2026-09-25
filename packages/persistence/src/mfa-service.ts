@@ -54,7 +54,14 @@ export interface MfaLoginStart {
   expiresAt?: string;
 }
 
-export interface MfaLoginResult {
+export type MfaBaseAuthenticationMethod = 'PASSWORD' | 'OIDC';
+
+export interface MfaLoginContext {
+  baseAuthenticationMethod: MfaBaseAuthenticationMethod;
+  authenticationProviderId: string | null;
+}
+
+export interface MfaLoginResult extends MfaLoginContext {
   principal: AuthPrincipal;
   returnTo: string;
   method: 'TOTP' | 'RECOVERY_CODE';
@@ -83,6 +90,8 @@ interface LoginChallengeRow extends RowDataPacket {
   tenant_id: string;
   person_id: string;
   mode: 'VERIFY' | 'ENROLL';
+  base_authentication_method: MfaBaseAuthenticationMethod;
+  authentication_provider_id: string | null;
   return_to: string;
   expires_at: Date;
   consumed_at: Date | null;
@@ -112,6 +121,8 @@ interface EnrollmentChallengeRow extends RowDataPacket {
   tenant_id: string;
   person_id: string;
   mode: 'ENROLL';
+  base_authentication_method: MfaBaseAuthenticationMethod;
+  authentication_provider_id: string | null;
   return_to: string;
   expires_at: Date;
   consumed_at: Date | null;
@@ -712,7 +723,22 @@ export class MySqlMfaService {
     });
   }
 
-  async beginLogin(principal: AuthPrincipal, returnTo: string): Promise<MfaLoginStart> {
+  async beginLogin(
+    principal: AuthPrincipal,
+    returnTo: string,
+    context: Partial<MfaLoginContext> = {}
+  ): Promise<MfaLoginStart> {
+    const baseAuthenticationMethod = context.baseAuthenticationMethod ?? 'PASSWORD';
+    const authenticationProviderId = context.authenticationProviderId?.trim() || null;
+    if (
+      (baseAuthenticationMethod === 'OIDC') !== Boolean(authenticationProviderId)
+    ) {
+      throw new Error(
+        baseAuthenticationMethod === 'OIDC'
+          ? 'OIDC MFA continuation requires an authentication provider.'
+          : 'Password MFA continuation cannot bind an authentication provider.'
+      );
+    }
     const [enrollmentRows, policyRows] = await Promise.all([
       this.pool.execute<Array<RowDataPacket & { id: string }>>(
         `SELECT id
@@ -760,15 +786,18 @@ export class MySqlMfaService {
 
       await connection.execute(
         `INSERT INTO application_mfa_login_challenges
-          (token_hash, user_id, tenant_id, person_id, mode, return_to,
+          (token_hash, user_id, tenant_id, person_id, mode,
+           base_authentication_method, authentication_provider_id, return_to,
            created_at, expires_at, attempt_count)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)`,
         [
           tokenHash,
           principal.userId,
           principal.tenantId,
           principal.personId,
           mode,
+          baseAuthenticationMethod,
+          authenticationProviderId,
           safeReturnTo,
           now,
           expiresAt
@@ -797,14 +826,15 @@ export class MySqlMfaService {
   async resolveRequiredEnrollmentChallenge(
     tokenValue: string,
     tenantSlug: string
-  ): Promise<{ principal: AuthPrincipal; returnTo: string }> {
+  ): Promise<{ principal: AuthPrincipal; returnTo: string } & MfaLoginContext> {
     const token = tokenValue.trim();
     if (token.length < 32 || token.length > 256) {
       throw new MfaError('The MFA enrollment challenge is not valid.', 'INVALID_CHALLENGE');
     }
 
     const [rows] = await this.pool.execute<EnrollmentChallengeRow[]>(
-      `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.mode, c.return_to,
+      `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.mode,
+              c.base_authentication_method, c.authentication_provider_id, c.return_to,
               c.expires_at, c.consumed_at, c.attempt_count,
               u.email, t.slug AS tenant_slug, t.name AS tenant_name,
               COALESCE(p.preferred_name, p.legal_name) AS person_name
@@ -844,7 +874,9 @@ export class MySqlMfaService {
         personId: challenge.person_id,
         personName: challenge.person_name
       },
-      returnTo: challenge.return_to
+      returnTo: challenge.return_to,
+      baseAuthenticationMethod: challenge.base_authentication_method,
+      authenticationProviderId: challenge.authentication_provider_id
     };
   }
 
@@ -882,7 +914,8 @@ export class MySqlMfaService {
 
     const result = await withTransaction(this.pool, async (connection) => {
       const [rows] = await connection.execute<LoginChallengeRow[]>(
-        `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.mode, c.return_to,
+        `SELECT c.token_hash, c.user_id, c.tenant_id, c.person_id, c.mode,
+                c.base_authentication_method, c.authentication_provider_id, c.return_to,
                 c.expires_at, c.consumed_at, c.attempt_count,
                 e.id AS enrollment_id, e.secret_ciphertext, e.secret_iv, e.secret_tag,
                 e.last_used_counter,
@@ -1025,7 +1058,9 @@ export class MySqlMfaService {
         ok: true as const,
         principal: principalFromChallenge(challenge),
         returnTo: challenge.return_to,
-        method
+        method,
+        baseAuthenticationMethod: challenge.base_authentication_method,
+        authenticationProviderId: challenge.authentication_provider_id
       };
     });
 
@@ -1044,7 +1079,9 @@ export class MySqlMfaService {
     return {
       principal: result.principal,
       returnTo: result.returnTo,
-      method: result.method
+      method: result.method,
+      baseAuthenticationMethod: result.baseAuthenticationMethod,
+      authenticationProviderId: result.authenticationProviderId
     };
   }
 }

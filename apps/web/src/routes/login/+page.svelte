@@ -11,13 +11,17 @@
 
 <main class="login-page">
   <section class="login-brand-panel">
-    <a class="login-brand" href="/">NuBlox</a>
+    <a class="login-brand" href={data.tenantSlug ? `/${data.tenantSlug}/` : '/'}>NuBlox</a>
     <div>
-      <p class="app-eyebrow">Enterprise Operating Platform</p>
-      <h1>One identity.<br />One tenant context.<br />Governed work.</h1>
+      <p class="app-eyebrow">{data.tenantName ?? 'Enterprise Operating Platform'}</p>
+      <h1>Secure identity.<br />Tenant boundary.<br />Governed work.</h1>
       <p>
-        Application identity selects the tenant and Person context. Permission, Responsibility,
-        competence and Authority are evaluated separately when governed work is performed.
+        {#if data.tenantName}
+          You are signing in to the private {data.tenantName} NuBlox environment. Authentication proves
+          identity; Permission, Responsibility, competence and Authority remain separately governed.
+        {:else}
+          Authenticate your NuBlox identity, then enter the tenant environment in which you are authorised to work.
+        {/if}
       </p>
     </div>
     <span class="login-version">Digital Applications V3</span>
@@ -27,8 +31,12 @@
     <div class="login-form-wrap">
       <header>
         <p class="app-eyebrow">Secure access</p>
-        <h2>Sign in to NuBlox</h2>
-        <p>Use an account provisioned against an active tenant Person.</p>
+        <h2>{data.tenantName ? `Sign in to ${data.tenantName}` : 'Sign in to NuBlox'}</h2>
+        <p>
+          {data.tenantName
+            ? 'Use the employee identity provisioned for this tenant.'
+            : 'Use an account provisioned against an active tenant Person.'}
+        </p>
       </header>
 
       <form method="POST" class="login-form">
@@ -88,8 +96,12 @@
       </form>
 
       <p class="login-help">
-        Accounts are provisioned by an authorised platform administrator. NuBlox does not expose
-        public self-registration.
+        {#if data.tenantSlug}
+          Employee access is separate from public and candidate access.
+          <a href={`/${data.tenantSlug}/careers`}>View careers</a>
+        {:else}
+          Tenant employee accounts are provisioned through governed NuBlox identity and Human Capital administration.
+        {/if}
       </p>
     </div>
   </section>

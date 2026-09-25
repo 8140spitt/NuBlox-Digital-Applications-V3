@@ -9,8 +9,11 @@ export async function upsertPartyType(
     partyType: PartyType;
     status?: RecordStatus;
     actorPersonId?: string;
+    correlationId?: string;
   }
 ): Promise<void> {
+  const status = input.status ?? 'ACTIVE';
+
   await connection.execute(
     `INSERT INTO party_type_assignments
       (tenant_id, party_id, party_type, status, created_by_person_id, updated_by_person_id)
@@ -23,9 +26,23 @@ export async function upsertPartyType(
       input.tenantId,
       input.partyId,
       input.partyType,
-      input.status ?? 'ACTIVE',
+      status,
       input.actorPersonId ?? null,
       input.actorPersonId ?? null
+    ]
+  );
+
+  await connection.execute(
+    `INSERT INTO kernel_audit_entries
+      (tenant_id, entity_type, entity_id, action, actor_person_id, correlation_id, payload)
+     VALUES (?, 'PARTY_TYPE_ASSIGNMENT', ?, ?, ?, ?, ?)`,
+    [
+      input.tenantId,
+      input.partyId,
+      status === 'ACTIVE' ? 'ASSIGNED' : 'DEACTIVATED',
+      input.actorPersonId ?? null,
+      input.correlationId ?? null,
+      JSON.stringify({ partyId: input.partyId, partyType: input.partyType, status })
     ]
   );
 }

@@ -39,11 +39,22 @@ suite('tenant registration', () => {
       personName: 'Registration Owner',
       email,
       password,
-      acceptedTerms: true
+      acceptedTerms: true,
+      businessProfile: {
+        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        sizeTier: 'MEDIUM',
+        employeeCount: 100,
+        legalEntityCount: 1,
+        primaryCountryCode: 'GB',
+        primaryLanguageCode: 'en-GB',
+        operatingModelCodes: ['PROJECT_BASED']
+      }
     });
 
     expect(registration.tenantSlug).toBe(slug);
     expect(registration.verificationRequired).toBe(true);
+    expect(registration.industrySolutionIds).toContain('CBE');
+    expect(registration.provisioningRunId).toMatch(/^TPR-/);
 
     const [tenantPartyRows] = await pool.query<Array<{
       party_id: string;
@@ -99,6 +110,68 @@ suite('tenant registration', () => {
       [registration.tenantId, registration.personId]
     );
     expect(Number(positionRows[0]?.count ?? 0)).toBe(0);
+
+    const [profileRows] = await pool.query<Array<{
+      primary_classification_value_id: string;
+      size_tier: string;
+      employee_count: number;
+      legal_entity_count: number;
+      primary_country_code: string;
+      primary_language_code: string;
+      configuration_state: string;
+    }>>(
+      `SELECT primary_classification_value_id, size_tier, employee_count,
+              legal_entity_count, primary_country_code, primary_language_code,
+              configuration_state
+         FROM tenant_business_profiles
+        WHERE tenant_id = ?`,
+      [registration.tenantId]
+    );
+    expect(profileRows[0]).toEqual(
+      expect.objectContaining({
+        primary_classification_value_id: 'BCV-NUBLOX-CBE',
+        size_tier: 'MEDIUM',
+        employee_count: 100,
+        legal_entity_count: 1,
+        primary_country_code: 'GB',
+        primary_language_code: 'en-GB',
+        configuration_state: 'ACTIVE'
+      })
+    );
+
+    const [templateRows] = await pool.query<Array<{
+      code: string;
+      version: number;
+      status: string;
+    }>>(
+      `SELECT t.code, a.template_version AS version, a.status
+         FROM tenant_configuration_template_applications a
+         JOIN tenant_configuration_templates t ON t.id = a.template_id
+        WHERE a.tenant_id = ?
+        ORDER BY t.priority, t.code`,
+      [registration.tenantId]
+    );
+    expect(templateRows).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ code: 'NUBLOX_CORE', version: 1, status: 'APPLIED' }),
+        expect.objectContaining({ code: 'CBE_BASE', version: 1, status: 'APPLIED' })
+      ])
+    );
+
+    const [industryRows] = await pool.query<Array<{
+      industry_solution_id: string;
+      status: string;
+    }>>(
+      `SELECT industry_solution_id, status
+         FROM tenant_industry_solution_assignments
+        WHERE tenant_id = ?`,
+      [registration.tenantId]
+    );
+    expect(industryRows).toContainEqual({
+      industry_solution_id: 'CBE',
+      status: 'ACTIVE'
+    });
+
 
     const auth = new MySqlAuthRepository(pool);
     await expect(

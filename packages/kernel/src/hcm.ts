@@ -21,6 +21,12 @@ export type EmploymentType =
   | 'CONTRACTOR';
 
 export type EmploymentStatus = 'PENDING' | 'ACTIVE' | 'SUSPENDED' | 'ENDED';
+export type WorkRelationshipType =
+  | 'PRIMARY_EMPLOYMENT'
+  | 'SECONDARY_EMPLOYMENT'
+  | 'GLOBAL_ASSIGNMENT'
+  | 'SECONDMENT'
+  | 'CONTINGENT_ENGAGEMENT';
 
 export interface Employment {
   id: EmploymentId;
@@ -28,6 +34,9 @@ export interface Employment {
   personId: PersonId;
   organisationId: OrganisationId;
   employeeNumber: string;
+  assignmentId: string;
+  relationshipType: WorkRelationshipType;
+  isPrimary: boolean;
   workerType: WorkerType;
   employmentType: EmploymentType;
   startDate: string;

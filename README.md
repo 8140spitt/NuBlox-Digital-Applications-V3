@@ -102,6 +102,11 @@ Current authentication controls include:
 - single-use password-reset challenges with session revocation after reset;
 - retryable identity-message outbox with secret-link purging after delivery;
 - persistent HMAC-hashed throttling for login, registration, verification resend and reset requests;
+- tenant-scoped TOTP MFA with AES-256-GCM encrypted authenticator secrets;
+- replay protection for already-used TOTP time windows;
+- single-use high-entropy recovery codes stored only as protected hashes;
+- MFA login challenges capped at five attempts and five minutes;
+- session authentication strength recorded as `PASSWORD` or `MFA`;
 - generic recovery responses that do not disclose whether an account exists.
 
 Production identity-message delivery uses the configured HTTPS delivery webhook. In local development, `pnpm dev` starts both the SvelteKit application and a continuous identity-message worker; when no webhook is configured, verification and recovery links are printed into that same terminal automatically. `pnpm auth:dispatch-messages` remains available to dispatch one queued batch manually.

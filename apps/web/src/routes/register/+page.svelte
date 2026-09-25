@@ -183,7 +183,7 @@
               name="tenantSlug"
               autocomplete="off"
               maxlength="80"
-              pattern="[a-z0-9][a-z0-9-]{1,78}[a-z0-9]"
+              pattern={'[a-z0-9][a-z0-9-]{1,78}[a-z0-9]'}
               placeholder="baesystems"
               value={form?.tenantSlug ?? ''}
             />

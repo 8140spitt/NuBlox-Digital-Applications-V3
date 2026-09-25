@@ -153,7 +153,7 @@
             <span class="nav-symbol">AC</span>
             <span>Access</span>
           </a>
-          <a class:active={isActive('/app/security/mfa')} href={appHref('/app/security/mfa')} onclick={closeNavigation}>
+          <a class:active={isActive('/app/security')} href={appHref('/app/security')} onclick={closeNavigation}>
             <span class="nav-symbol">AU</span>
             <span>Account security</span>
           </a>

@@ -1,5 +1,4 @@
-import { createHash } from 'node:crypto';
-import type { Pool, RowDataPacket } from 'mysql2/promise';
+import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import type { TenantId } from '@nublox/kernel';
 
 export const RESERVED_TENANT_SLUGS = new Set([
@@ -38,6 +37,10 @@ interface TenantRouteRow extends RowDataPacket {
   status: 'ACTIVE' | 'INACTIVE';
 }
 
+interface CountRow extends RowDataPacket {
+  count: number;
+}
+
 export interface TenantRoute {
   tenantId: TenantId;
   slug: string;
@@ -56,6 +59,21 @@ function slugBase(value: string): string {
     .replace(/-{2,}/g, '-');
 }
 
+function derivedSlugBase(value: string): string {
+  let base = value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '');
+
+  if (!base) base = 'tenant';
+  if (RESERVED_TENANT_SLUGS.has(base)) base = `tenant${base}`;
+  if (base.length < 3) base = `tenant${base}`;
+
+  return base.slice(0, 80);
+}
+
 export function normaliseTenantSlug(value: string): string {
   const slug = slugBase(value).slice(0, 80).replace(/-+$/g, '');
 
@@ -69,16 +87,44 @@ export function normaliseTenantSlug(value: string): string {
   return slug;
 }
 
-export function deriveTenantSlug(name: string, tenantId: string): string {
-  let base = slugBase(name);
-  if (!base || RESERVED_TENANT_SLUGS.has(base)) base = 'tenant';
+/**
+ * Derives a human tenant route from the business name only.
+ *
+ * Internal Tenant IDs must never be encoded into the public/private route.
+ * Sequence 1 is the clean business slug; later sequences are collision fallbacks.
+ */
+export function deriveTenantSlug(name: string, sequence = 1): string {
+  if (!Number.isInteger(sequence) || sequence < 1) {
+    throw new Error('Tenant slug sequence must be a positive integer.');
+  }
 
-  const suffix = createHash('sha256').update(tenantId).digest('hex').slice(0, 8);
-  const maxBase = 80 - suffix.length - 1;
-  base = base.slice(0, maxBase).replace(/-+$/g, '');
-  if (base.length < 2) base = 'tenant';
+  const base = derivedSlugBase(name);
+  if (sequence === 1) return base;
 
-  return `${base}-${suffix}`;
+  const suffix = `-${sequence}`;
+  const candidate = `${base.slice(0, 80 - suffix.length)}${suffix}`;
+
+  if (!TENANT_SLUG_PATTERN.test(candidate) || RESERVED_TENANT_SLUGS.has(candidate)) {
+    throw new Error('Unable to derive a valid Tenant slug.');
+  }
+
+  return candidate;
+}
+
+export async function allocateTenantSlug(
+  connection: PoolConnection,
+  name: string
+): Promise<string> {
+  for (let sequence = 1; sequence <= 10_000; sequence += 1) {
+    const candidate = deriveTenantSlug(name, sequence);
+    const [rows] = await connection.execute<CountRow[]>(
+      'SELECT COUNT(*) AS count FROM tenants WHERE slug = ?',
+      [candidate]
+    );
+    if ((rows[0]?.count ?? 0) === 0) return candidate;
+  }
+
+  throw new Error('No available Tenant slug could be allocated for this business name.');
 }
 
 function mapTenantRoute(row: TenantRouteRow): TenantRoute {

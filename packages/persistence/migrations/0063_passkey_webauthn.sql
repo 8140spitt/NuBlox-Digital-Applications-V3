@@ -1,11 +1,44 @@
-ALTER TABLE tenant_authentication_policies
-  ADD COLUMN passkey_enabled BOOLEAN NOT NULL DEFAULT TRUE AFTER mfa_requirement;
+SET @nublox_sql = IF(
+  EXISTS(
+    SELECT 1 FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'tenant_authentication_policies'
+       AND COLUMN_NAME = 'passkey_enabled'
+  ),
+  'SELECT 1',
+  'ALTER TABLE tenant_authentication_policies ADD COLUMN passkey_enabled BOOLEAN NOT NULL DEFAULT TRUE AFTER mfa_requirement'
+);
+PREPARE nublox_stmt FROM @nublox_sql;
+EXECUTE nublox_stmt;
+DEALLOCATE PREPARE nublox_stmt;
 
-ALTER TABLE application_sessions
-  ADD COLUMN authentication_method VARCHAR(32) NOT NULL DEFAULT 'PASSWORD' AFTER authentication_strength,
-  ADD CONSTRAINT chk_application_sessions_authentication_method CHECK (
-    authentication_method IN ('PASSWORD', 'PASSWORD_TOTP', 'PASSKEY')
-  );
+SET @nublox_sql = IF(
+  EXISTS(
+    SELECT 1 FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'application_sessions'
+       AND COLUMN_NAME = 'authentication_method'
+  ),
+  'SELECT 1',
+  'ALTER TABLE application_sessions ADD COLUMN authentication_method VARCHAR(32) NOT NULL DEFAULT ''PASSWORD'' AFTER authentication_strength'
+);
+PREPARE nublox_stmt FROM @nublox_sql;
+EXECUTE nublox_stmt;
+DEALLOCATE PREPARE nublox_stmt;
+
+SET @nublox_sql = IF(
+  EXISTS(
+    SELECT 1 FROM information_schema.TABLE_CONSTRAINTS
+     WHERE CONSTRAINT_SCHEMA = DATABASE()
+       AND TABLE_NAME = 'application_sessions'
+       AND CONSTRAINT_NAME = 'chk_application_sessions_authentication_method'
+  ),
+  'SELECT 1',
+  'ALTER TABLE application_sessions ADD CONSTRAINT chk_application_sessions_authentication_method CHECK (authentication_method IN (''PASSWORD'', ''PASSWORD_TOTP'', ''PASSKEY''))'
+);
+PREPARE nublox_stmt FROM @nublox_sql;
+EXECUTE nublox_stmt;
+DEALLOCATE PREPARE nublox_stmt;
 
 UPDATE application_sessions
    SET authentication_method = CASE
@@ -13,12 +46,12 @@ UPDATE application_sessions
      ELSE 'PASSWORD'
    END;
 
-CREATE TABLE application_passkey_profiles (
+CREATE TABLE IF NOT EXISTS application_passkey_profiles (
   user_id VARCHAR(64) NOT NULL,
   tenant_id VARCHAR(64) NOT NULL,
   person_id VARCHAR(64) NOT NULL,
   user_handle VARCHAR(128) NOT NULL,
-  created_at DATETIME(6) NOT NULL DEFAULT UTC_TIMESTAMP(6),
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (user_id, tenant_id),
   UNIQUE KEY uq_application_passkey_profile_handle (user_handle),
   CONSTRAINT fk_application_passkey_profile_membership
@@ -27,7 +60,7 @@ CREATE TABLE application_passkey_profiles (
     ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE application_passkeys (
+CREATE TABLE IF NOT EXISTS application_passkeys (
   credential_id VARCHAR(2048) NOT NULL PRIMARY KEY,
   user_id VARCHAR(64) NOT NULL,
   tenant_id VARCHAR(64) NOT NULL,
@@ -41,7 +74,7 @@ CREATE TABLE application_passkeys (
   backup_eligible BOOLEAN NOT NULL DEFAULT FALSE,
   backed_up BOOLEAN NOT NULL DEFAULT FALSE,
   status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
-  created_at DATETIME(6) NOT NULL DEFAULT UTC_TIMESTAMP(6),
+  created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   last_used_at DATETIME(6) NULL,
   revoked_at DATETIME(6) NULL,
   updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
@@ -61,7 +94,7 @@ CREATE TABLE application_passkeys (
   )
 ) ENGINE=InnoDB;
 
-CREATE TABLE application_passkey_challenges (
+CREATE TABLE IF NOT EXISTS application_passkey_challenges (
   token_hash CHAR(64) NOT NULL PRIMARY KEY,
   challenge VARCHAR(128) NOT NULL,
   ceremony VARCHAR(16) NOT NULL,

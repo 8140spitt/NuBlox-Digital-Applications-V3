@@ -1,4 +1,4 @@
-import { randomBytes, randomUUID, scrypt, timingSafeEqual, createHash } from 'node:crypto';
+import { randomBytes, randomUUID, scrypt, timingSafeEqual, createHash, createHmac } from 'node:crypto';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 
@@ -29,6 +29,7 @@ interface MembershipRow extends RowDataPacket {
 }
 
 interface SessionRow extends RowDataPacket {
+  id: string;
   user_id: string;
   email: string;
   tenant_id: string;
@@ -38,6 +39,7 @@ interface SessionRow extends RowDataPacket {
   person_name: string;
   authentication_strength: AuthenticationStrength;
   mfa_verified_at: Date | null;
+  client_user_agent: string | null;
   expires_at: Date;
 }
 
@@ -58,6 +60,7 @@ export interface AuthPrincipal {
 export type AuthenticationStrength = 'PASSWORD' | 'MFA';
 
 export interface AuthSession extends AuthPrincipal {
+  sessionId: string;
   authenticationStrength: AuthenticationStrength;
   mfaVerifiedAt: string | null;
   expiresAt: string;
@@ -66,6 +69,22 @@ export interface AuthSession extends AuthPrincipal {
 export interface CreatedAuthSession {
   token: string;
   session: AuthSession;
+}
+
+export interface AuthSessionContext {
+  userAgent?: string;
+  networkAddress?: string;
+}
+
+export interface ActiveAuthSession {
+  sessionId: string;
+  createdAt: string;
+  lastSeenAt: string;
+  expiresAt: string;
+  authenticationStrength: AuthenticationStrength;
+  mfaVerifiedAt: string | null;
+  userAgent: string | null;
+  current: boolean;
 }
 
 export interface BootstrapAuthUserInput {
@@ -109,6 +128,28 @@ function normaliseEmail(email: string): string {
 
 function hashSessionToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
+}
+
+function sessionPrivacyKey(): string {
+  const configured = process.env.NUBLOX_AUTH_RATE_LIMIT_SECRET?.trim();
+  if (configured) return configured;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('NUBLOX_AUTH_RATE_LIMIT_SECRET is required in production.');
+  }
+  return 'nublox-development-session-privacy-key-not-for-production';
+}
+
+function hashNetworkAddress(value: string | undefined): string | null {
+  const normalized = value?.trim();
+  if (!normalized) return null;
+  return createHmac('sha256', sessionPrivacyKey())
+    .update(normalized)
+    .digest('hex');
+}
+
+function normaliseUserAgent(value: string | undefined): string | null {
+  const normalized = value?.trim();
+  return normalized ? normalized.slice(0, 512) : null;
 }
 
 function derivePassword(password: string, salt: Buffer): Promise<Buffer> {
@@ -357,7 +398,8 @@ export class MySqlAuthRepository {
   async createSession(
     principal: AuthPrincipal,
     ttlSeconds = 60 * 60 * 12,
-    authenticationStrength: AuthenticationStrength = 'PASSWORD'
+    authenticationStrength: AuthenticationStrength = 'PASSWORD',
+    context: AuthSessionContext = {}
   ): Promise<CreatedAuthSession> {
     if (!Number.isFinite(ttlSeconds) || ttlSeconds <= 0) {
       throw new Error('Session TTL must be positive.');
@@ -365,22 +407,26 @@ export class MySqlAuthRepository {
 
     const token = randomBytes(32).toString('base64url');
     const tokenHash = hashSessionToken(token);
+    const sessionId = `SESSION-${randomUUID()}`;
     const now = new Date();
     const expiresAt = new Date(now.getTime() + ttlSeconds * 1000);
 
     await withTransaction(this.pool, async (connection) => {
       await connection.execute(
         `INSERT INTO application_sessions
-          (token_hash, user_id, tenant_id, person_id, authentication_strength, mfa_verified_at,
-           created_at, expires_at, last_seen_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          (token_hash, id, user_id, tenant_id, person_id, authentication_strength, mfa_verified_at,
+           client_user_agent, network_hash, created_at, expires_at, last_seen_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           tokenHash,
+          sessionId,
           principal.userId,
           principal.tenantId,
           principal.personId,
           authenticationStrength,
           authenticationStrength === 'MFA' ? now : null,
+          normaliseUserAgent(context.userAgent),
+          hashNetworkAddress(context.networkAddress),
           now,
           expiresAt,
           now
@@ -404,6 +450,7 @@ export class MySqlAuthRepository {
       token,
       session: {
         ...principal,
+        sessionId,
         authenticationStrength,
         mfaVerifiedAt: authenticationStrength === 'MFA' ? now.toISOString() : null,
         expiresAt: expiresAt.toISOString()
@@ -416,9 +463,9 @@ export class MySqlAuthRepository {
 
     const tokenHash = hashSessionToken(token);
     const [rows] = await this.pool.query<SessionRow[]>(
-      `SELECT s.user_id, u.email, s.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name,
+      `SELECT s.id, s.user_id, u.email, s.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name,
               s.person_id, COALESCE(p.preferred_name, p.legal_name) AS person_name,
-              s.authentication_strength, s.mfa_verified_at, s.expires_at
+              s.authentication_strength, s.mfa_verified_at, s.client_user_agent, s.expires_at
          FROM application_sessions s
          JOIN application_users u ON u.id = s.user_id AND u.status = 'ACTIVE'
          JOIN application_user_tenants ut
@@ -442,6 +489,7 @@ export class MySqlAuthRepository {
     );
 
     return {
+      sessionId: row.id,
       userId: row.user_id,
       email: row.email,
       tenantId: row.tenant_id,
@@ -487,6 +535,113 @@ export class MySqlAuthRepository {
         eventType: 'SESSION_MFA_VERIFIED',
         outcome: 'SUCCESS'
       });
+    });
+  }
+
+  async listActiveSessions(
+    principal: AuthPrincipal,
+    currentToken?: string
+  ): Promise<ActiveAuthSession[]> {
+    const currentHash = currentToken ? hashSessionToken(currentToken) : null;
+    const [rows] = await this.pool.query<Array<RowDataPacket & {
+      id: string;
+      token_hash: string;
+      created_at: Date;
+      last_seen_at: Date;
+      expires_at: Date;
+      authentication_strength: AuthenticationStrength;
+      mfa_verified_at: Date | null;
+      client_user_agent: string | null;
+    }>>(
+      `SELECT id, token_hash, created_at, last_seen_at, expires_at,
+              authentication_strength, mfa_verified_at, client_user_agent
+         FROM application_sessions
+        WHERE user_id = ?
+          AND tenant_id = ?
+          AND revoked_at IS NULL
+          AND expires_at > UTC_TIMESTAMP(6)
+        ORDER BY last_seen_at DESC, created_at DESC`,
+      [principal.userId, principal.tenantId]
+    );
+
+    return rows.map((row) => ({
+      sessionId: row.id,
+      createdAt: row.created_at.toISOString(),
+      lastSeenAt: row.last_seen_at.toISOString(),
+      expiresAt: row.expires_at.toISOString(),
+      authenticationStrength: row.authentication_strength,
+      mfaVerifiedAt: row.mfa_verified_at?.toISOString() ?? null,
+      userAgent: row.client_user_agent,
+      current: currentHash !== null && row.token_hash === currentHash
+    }));
+  }
+
+  async revokeSessionById(
+    principal: AuthPrincipal,
+    sessionId: string
+  ): Promise<boolean> {
+    return withTransaction(this.pool, async (connection) => {
+      const [rows] = await connection.query<Array<RowDataPacket & { id: string }>>(
+        `SELECT id
+           FROM application_sessions
+          WHERE id = ?
+            AND user_id = ?
+            AND tenant_id = ?
+            AND revoked_at IS NULL
+          LIMIT 1
+          FOR UPDATE`,
+        [sessionId, principal.userId, principal.tenantId]
+      );
+      if (!rows[0]) return false;
+
+      await connection.execute(
+        `UPDATE application_sessions
+            SET revoked_at = UTC_TIMESTAMP(6)
+          WHERE id = ?
+            AND user_id = ?
+            AND tenant_id = ?
+            AND revoked_at IS NULL`,
+        [sessionId, principal.userId, principal.tenantId]
+      );
+
+      await writeAuthEvent(connection, {
+        userId: principal.userId,
+        tenantId: principal.tenantId,
+        eventType: 'SESSION_REVOKED',
+        outcome: 'SUCCESS',
+        metadata: { sessionId }
+      });
+      return true;
+    });
+  }
+
+  async revokeOtherSessions(
+    principal: AuthPrincipal,
+    currentToken: string
+  ): Promise<number> {
+    const currentHash = hashSessionToken(currentToken);
+
+    return withTransaction(this.pool, async (connection) => {
+      const [result] = await connection.execute<import('mysql2/promise').ResultSetHeader>(
+        `UPDATE application_sessions
+            SET revoked_at = UTC_TIMESTAMP(6)
+          WHERE user_id = ?
+            AND tenant_id = ?
+            AND token_hash <> ?
+            AND revoked_at IS NULL
+            AND expires_at > UTC_TIMESTAMP(6)`,
+        [principal.userId, principal.tenantId, currentHash]
+      );
+
+      await writeAuthEvent(connection, {
+        userId: principal.userId,
+        tenantId: principal.tenantId,
+        eventType: 'OTHER_SESSIONS_REVOKED',
+        outcome: 'SUCCESS',
+        metadata: { count: result.affectedRows }
+      });
+
+      return result.affectedRows;
     });
   }
 

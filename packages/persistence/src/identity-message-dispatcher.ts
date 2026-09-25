@@ -110,15 +110,12 @@ export function identityEmailTransportFromEnv(): IdentityEmailTransport {
     );
   }
 
-  if (
-    process.env.NODE_ENV !== 'production' &&
-    process.env.NUBLOX_IDENTITY_EMAIL_CONSOLE === 'true'
-  ) {
+  if (process.env.NODE_ENV !== 'production') {
     return new ConsoleIdentityEmailTransport();
   }
 
   throw new Error(
-    'Identity email delivery is not configured. Set NUBLOX_IDENTITY_EMAIL_WEBHOOK_URL, or enable NUBLOX_IDENTITY_EMAIL_CONSOLE=true for local development.'
+    'Identity email delivery is not configured. Set NUBLOX_IDENTITY_EMAIL_WEBHOOK_URL in production.'
   );
 }
 

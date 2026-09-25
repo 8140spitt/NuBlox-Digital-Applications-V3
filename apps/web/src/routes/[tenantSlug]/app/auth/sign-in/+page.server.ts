@@ -15,19 +15,25 @@ import {
 import {
   getAuthenticationRateLimiter,
   getAuthRepository,
-  getMfaService
+  getMfaService,
+  getTenantAuthenticationPolicyRepository
 } from '$lib/server/platform';
 import { tenantAppPath } from '$lib/tenant-paths';
 
-export const load: PageServerLoad = ({ locals, url }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
   const tenant = locals.tenant;
 
   if (tenant && locals.auth) {
     throw redirect(303, tenantAppPath(tenant.slug, '/app/function'));
   }
 
+  const authenticationPolicy = tenant
+    ? await getTenantAuthenticationPolicyRepository().get(tenant.tenantId)
+    : null;
+
   return {
     tenantSlug: tenant?.slug ?? null,
+    passkeyEnabled: authenticationPolicy?.passkeyEnabled ?? false,
     tenantName: tenant?.name ?? null,
     returnTo: tenant
       ? safeTenantReturnTo(tenant.slug, url.searchParams.get('returnTo'))

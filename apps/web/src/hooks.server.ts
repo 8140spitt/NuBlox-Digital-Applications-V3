@@ -3,7 +3,8 @@ import {
   clearLegacyApplicationSession,
   clearTenantApplicationSession,
   resolveLegacyApplicationSession,
-  resolveTenantApplicationSession
+  resolveTenantApplicationSession,
+  tenantRouteHint
 } from '$lib/server/auth';
 import { getTenantRoutingRepository } from '$lib/server/platform';
 import {
@@ -56,8 +57,33 @@ export const handle: Handle = async ({ event, resolve }) => {
   }
 
   if (event.url.pathname === '/app' || event.url.pathname.startsWith('/app/')) {
-    const legacySession = await resolveLegacyApplicationSession(event.cookies);
+    let routingSlug: string | null = null;
+    const referer = event.request.headers.get('referer');
 
+    if (referer) {
+      try {
+        const refererUrl = new URL(referer);
+        if (refererUrl.origin === event.url.origin) {
+          routingSlug = parseTenantApplicationPath(refererUrl.pathname)?.tenantSlug ?? null;
+        }
+      } catch {
+        routingSlug = null;
+      }
+    }
+
+    routingSlug ??= tenantRouteHint(event.cookies);
+
+    if (routingSlug) {
+      const tenant = await getTenantRoutingRepository().findActiveBySlug(routingSlug);
+      if (tenant) {
+        throw redirect(
+          303,
+          withQuery(tenantAppPath(tenant.slug, event.url.pathname), event.url.search)
+        );
+      }
+    }
+
+    const legacySession = await resolveLegacyApplicationSession(event.cookies);
     if (legacySession) {
       const tenant = await getTenantRoutingRepository().findByTenantId(legacySession.tenantId);
       if (tenant?.status === 'ACTIVE') {

@@ -40,7 +40,8 @@ try {
       email,
       password,
       acceptedTerms: true,
-      grantTenantAdministrator: grantPlatformAdministrator
+      grantTenantAdministrator: grantPlatformAdministrator,
+      emailVerified: true
     });
 
     tenantIdValue = registration.tenantId;

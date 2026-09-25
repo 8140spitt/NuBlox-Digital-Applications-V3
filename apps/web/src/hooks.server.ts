@@ -42,9 +42,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     event.locals.auth = session;
 
-    const isAuthRoute =
-      tenantApp.internalPath === '/app/auth/sign-in' ||
-      tenantApp.internalPath === '/app/auth/sign-out';
+    const isAuthRoute = tenantApp.internalPath.startsWith('/app/auth/');
 
     if (!isAuthRoute && !session) {
       throw redirect(

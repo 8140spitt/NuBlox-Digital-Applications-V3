@@ -9,6 +9,7 @@ import type {
   Organisation,
   OrganisationUnit,
   Party,
+  PartyTypeAssignment,
   Person,
   Position,
   PositionOccupancy
@@ -25,6 +26,25 @@ function assertDateOrder(from: string, to: string | undefined, label: string) {
       `${label} effectiveTo must not be earlier than effectiveFrom.`
     );
   }
+}
+
+export function createPartyTypeAssignment(
+  input: PartyTypeAssignment,
+  party: Party
+): PartyTypeAssignment {
+  assertSameTenant(input.tenantId, party.tenantId, 'Party Type assignment and Party');
+  invariant(input.partyId === party.id, 'Party Type assignment must reference the supplied Party.');
+
+  if (input.partyType === 'EMPLOYEE') {
+    invariant(party.kind === 'PERSON', 'EMPLOYEE Party Type requires a PERSON structural Party.');
+  } else {
+    invariant(
+      party.kind === 'ORGANISATION',
+      `${input.partyType} Party Type requires an ORGANISATION structural Party.`
+    );
+  }
+
+  return Object.freeze({ ...input });
 }
 
 export function createPerson(input: Person, party: Party): Person {

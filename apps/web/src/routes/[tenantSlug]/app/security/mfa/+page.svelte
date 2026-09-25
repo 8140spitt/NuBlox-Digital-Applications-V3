@@ -21,6 +21,7 @@
     <p class="workspace-lede">
       Protect this Tenant with a time-based authenticator. MFA enrollment is tenant-scoped and
       does not change your Person, Position, Permission or Authority.
+      Tenant policy: {data.policy.mfaRequirement === 'REQUIRED' ? 'MFA required' : 'MFA optional'}.
     </p>
   </div>
 </section>
@@ -120,6 +121,7 @@
         </div>
       </article>
 
+      {#if data.policy.mfaRequirement !== 'REQUIRED'}
       <article class="home-primary-card">
         <span>OFF</span>
         <div>
@@ -134,6 +136,7 @@
           </form>
         </div>
       </article>
+      {/if}
     </div>
   {/if}
 </section>

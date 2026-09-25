@@ -67,15 +67,15 @@ Start with [the architecture index](docs/architecture/README.md).
 NuBlox uses the tenant as the stable business namespace:
 
 ```text
-/                          NuBlox public product site
-/{tenantSlug}/             Tenant public site
-/{tenantSlug}/careers      Tenant careers
-/{tenantSlug}/candidate    External candidate surface
-/{tenantSlug}/app/         Private tenant application
-/{tenantSlug}/app/auth/sign-in
+/                                 NuBlox public product site
+/{tenantSlug}/app                  Private tenant application
+/{tenantSlug}/app/auth/sign-in     Tenant employee sign-in
+/{tenantSlug}/public               Tenant public site
+/{tenantSlug}/public/careers       Tenant careers
+/{tenantSlug}/public/candidate     External candidate surface
 ```
 
-The immutable Tenant ID remains the security/persistence identity. The slug is routing metadata. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to tenant public/careers pages.
+The immutable Tenant ID remains the security/persistence identity. The slug is routing metadata. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to the explicit `/{tenantSlug}/public` namespace.
 
 ## Local application
 

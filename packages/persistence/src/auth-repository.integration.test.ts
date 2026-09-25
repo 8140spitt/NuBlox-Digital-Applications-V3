@@ -58,6 +58,7 @@ suite('application authentication persistence', () => {
 
     const principal = await auth.authenticate(email, 'correct-horse-battery-staple');
     expect(principal.tenantId).toBe(tenantId);
+    expect(principal.tenantSlug).toMatch(/^authentication-test-tenant-[a-f0-9]{8}$/);
     expect(principal.personId).toBe(person.id);
     expect(principal.personName).toBe('Auth User');
 
@@ -78,6 +79,7 @@ suite('application authentication persistence', () => {
 
     const resolved = await auth.resolveSession(created.token);
     expect(resolved?.tenantId).toBe(tenantId);
+    expect(resolved?.tenantSlug).toBe(principal.tenantSlug);
     expect(resolved?.personId).toBe(person.id);
 
     await auth.revokeSession(created.token);

@@ -7,7 +7,8 @@ import {
 } from '$lib/server/auth';
 import {
   getAuthRepository,
-  getMfaService
+  getMfaService,
+  getPasskeyService
 } from '$lib/server/platform';
 import { tenantAppPath, tenantSignInPath } from '$lib/tenant-paths';
 
@@ -28,11 +29,15 @@ export const load: PageServerLoad = async ({ locals, url }) => {
     );
   }
 
-  const status = await getMfaService().status(session);
+  const [status, passkeys] = await Promise.all([
+    getMfaService().status(session),
+    getPasskeyService().list(session)
+  ]);
   return {
     tenantSlug: tenant.slug,
     tenantName: tenant.name,
     enrolled: status.enabled,
+    passkeyCount: passkeys.length,
     returnTo: safeTenantReturnTo(
       tenant.slug,
       url.searchParams.get('returnTo'),

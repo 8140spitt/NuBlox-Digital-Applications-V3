@@ -27,6 +27,12 @@ function eventLabel(eventType: string): string {
     MFA_REQUIRED_ENROLLMENT_CHALLENGE_ISSUED: 'Required MFA enrollment challenge issued',
     MFA_LOGIN: 'MFA sign-in verification',
     MFA_STEP_UP: 'MFA step-up verification',
+    PASSKEY_REGISTRATION_CHALLENGE_ISSUED: 'Passkey registration started',
+    PASSKEY_REGISTERED: 'Passkey registered',
+    PASSKEY_REGISTRATION: 'Passkey registration verification',
+    PASSKEY_LOGIN_CHALLENGE_ISSUED: 'Passkey sign-in challenge issued',
+    PASSKEY_LOGIN: 'Passkey verification',
+    PASSKEY_REVOKED: 'Passkey revoked',
     TENANT_REGISTERED: 'Tenant registration completed',
     ACCOUNT_BOOTSTRAPPED: 'Application account bootstrapped'
   };

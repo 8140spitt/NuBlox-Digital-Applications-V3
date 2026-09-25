@@ -246,8 +246,8 @@ export class MySqlKernelRepository {
       await writeAudit(
         connection,
         tenantId,
-        'PARTY_TYPE',
-        `${assignment.partyId}:${assignment.partyType}`,
+        'PARTY_TYPE_ASSIGNMENT',
+        assignment.partyId,
         assignment.status === 'ACTIVE' ? 'ASSIGNED' : 'DEACTIVATED',
         audit,
         assignment
@@ -281,18 +281,24 @@ export class MySqlKernelRepository {
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [person.id, person.tenantId, person.partyId, person.legalName, person.preferredName ?? null, person.status, audit.actorPersonId ?? null, audit.actorPersonId ?? null]
       );
-      await this.upsertPartyTypeAssignment(
+      const employeePartyType = createPartyTypeAssignment(
+        {
+          tenantId: person.tenantId,
+          partyId: person.partyId,
+          partyType: 'EMPLOYEE',
+          status: person.status
+        },
+        party
+      );
+      await this.upsertPartyTypeAssignment(connection, employeePartyType, audit);
+      await writeAudit(
         connection,
-        createPartyTypeAssignment(
-          {
-            tenantId: person.tenantId,
-            partyId: person.partyId,
-            partyType: 'EMPLOYEE',
-            status: person.status
-          },
-          party
-        ),
-        audit
+        person.tenantId,
+        'PARTY_TYPE_ASSIGNMENT',
+        person.partyId,
+        person.status === 'ACTIVE' ? 'ASSIGNED' : 'DEACTIVATED',
+        audit,
+        employeePartyType
       );
       await writeAudit(connection, person.tenantId, 'PERSON', person.id, 'CREATED', audit, person);
     });

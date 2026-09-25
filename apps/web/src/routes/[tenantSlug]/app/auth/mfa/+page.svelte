@@ -47,7 +47,6 @@
             <input
               name="code"
               autocomplete="one-time-code"
-              inputmode="numeric"
               autocapitalize="characters"
               spellcheck="false"
               autofocus

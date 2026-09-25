@@ -20,6 +20,7 @@ interface UserRow extends RowDataPacket {
 interface MembershipRow extends RowDataPacket {
   user_id: string;
   tenant_id: string;
+  tenant_slug: string;
   tenant_name: string;
   person_id: string;
   person_name: string;
@@ -30,6 +31,7 @@ interface SessionRow extends RowDataPacket {
   user_id: string;
   email: string;
   tenant_id: string;
+  tenant_slug: string;
   tenant_name: string;
   person_id: string;
   person_name: string;
@@ -44,6 +46,7 @@ export interface AuthPrincipal {
   userId: string;
   email: string;
   tenantId: string;
+  tenantSlug: string;
   tenantName: string;
   personId: string;
   personName: string;
@@ -314,6 +317,7 @@ export class MySqlAuthRepository {
       userId: user.id,
       email: user.email,
       tenantId: selected.tenantId,
+      tenantSlug: selected.tenantSlug,
       tenantName: selected.tenantName,
       personId: selected.personId,
       personName: selected.personName
@@ -361,7 +365,7 @@ export class MySqlAuthRepository {
 
     const tokenHash = hashSessionToken(token);
     const [rows] = await this.pool.query<SessionRow[]>(
-      `SELECT s.user_id, u.email, s.tenant_id, t.name AS tenant_name,
+      `SELECT s.user_id, u.email, s.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name,
               s.person_id, COALESCE(p.preferred_name, p.legal_name) AS person_name,
               s.expires_at
          FROM application_sessions s
@@ -390,6 +394,7 @@ export class MySqlAuthRepository {
       userId: row.user_id,
       email: row.email,
       tenantId: row.tenant_id,
+      tenantSlug: row.tenant_slug,
       tenantName: row.tenant_name,
       personId: row.person_id,
       personName: row.person_name,
@@ -435,13 +440,14 @@ export class MySqlAuthRepository {
 
   private async memberships(userId: string): Promise<Array<{
     tenantId: string;
+    tenantSlug: string;
     tenantName: string;
     personId: string;
     personName: string;
     isDefault: boolean;
   }>> {
     const [rows] = await this.pool.query<MembershipRow[]>(
-      `SELECT ut.user_id, ut.tenant_id, t.name AS tenant_name, ut.person_id,
+      `SELECT ut.user_id, ut.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name, ut.person_id,
               COALESCE(p.preferred_name, p.legal_name) AS person_name, ut.is_default
          FROM application_user_tenants ut
          JOIN tenants t ON t.id = ut.tenant_id AND t.status = 'ACTIVE'
@@ -453,6 +459,7 @@ export class MySqlAuthRepository {
 
     return rows.map((row) => ({
       tenantId: row.tenant_id,
+      tenantSlug: row.tenant_slug,
       tenantName: row.tenant_name,
       personId: row.person_id,
       personName: row.person_name,
@@ -469,11 +476,12 @@ export class MySqlAuthRepository {
       user_id: string;
       email: string;
       tenant_id: string;
+      tenant_slug: string;
       tenant_name: string;
       person_id: string;
       person_name: string;
     }>>(
-      `SELECT u.id AS user_id, u.email, ut.tenant_id, t.name AS tenant_name,
+      `SELECT u.id AS user_id, u.email, ut.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name,
               ut.person_id, COALESCE(p.preferred_name, p.legal_name) AS person_name
          FROM application_users u
          JOIN application_user_tenants ut ON ut.user_id = u.id AND ut.status = 'ACTIVE'
@@ -489,6 +497,7 @@ export class MySqlAuthRepository {
       userId: row.user_id,
       email: row.email,
       tenantId: row.tenant_id,
+      tenantSlug: row.tenant_slug,
       tenantName: row.tenant_name,
       personId: row.person_id,
       personName: row.person_name

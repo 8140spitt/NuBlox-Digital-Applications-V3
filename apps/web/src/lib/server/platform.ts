@@ -68,7 +68,8 @@ import {
   MySqlTenantRegistrationService,
   MySqlIdentityChallengeService,
   MySqlAuthenticationRateLimiter,
-  MySqlMfaService
+  MySqlMfaService,
+  MySqlTenantAuthenticationPolicyRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -141,6 +142,7 @@ let tenantRegistrationServiceInstance: MySqlTenantRegistrationService | undefine
 let identityChallengeServiceInstance: MySqlIdentityChallengeService | undefined;
 let authenticationRateLimiterInstance: MySqlAuthenticationRateLimiter | undefined;
 let mfaServiceInstance: MySqlMfaService | undefined;
+let tenantAuthenticationPolicyRepositoryInstance: MySqlTenantAuthenticationPolicyRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -694,4 +696,12 @@ export function getMfaService(): MySqlMfaService {
     mfaServiceInstance = new MySqlMfaService(getDatabasePool());
   }
   return mfaServiceInstance;
+}
+
+export function getTenantAuthenticationPolicyRepository(): MySqlTenantAuthenticationPolicyRepository {
+  if (!tenantAuthenticationPolicyRepositoryInstance) {
+    tenantAuthenticationPolicyRepositoryInstance =
+      new MySqlTenantAuthenticationPolicyRepository(getDatabasePool());
+  }
+  return tenantAuthenticationPolicyRepositoryInstance;
 }

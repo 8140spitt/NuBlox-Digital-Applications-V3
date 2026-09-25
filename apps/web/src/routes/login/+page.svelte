@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ActionData, PageData } from './$types';
+  import { tenantPublicPath } from '$lib/tenant-paths';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 </script>
@@ -11,7 +12,7 @@
 
 <main class="login-page">
   <section class="login-brand-panel">
-    <a class="login-brand" href={data.tenantSlug ? `/${data.tenantSlug}/` : '/'}>NuBlox</a>
+    <a class="login-brand" href={data.tenantSlug ? tenantPublicPath(data.tenantSlug) : '/'}>NuBlox</a>
     <div>
       <p class="app-eyebrow">{data.tenantName ?? 'Enterprise Operating Platform'}</p>
       <h1>Secure identity.<br />Tenant boundary.<br />Governed work.</h1>
@@ -98,7 +99,7 @@
       <p class="login-help">
         {#if data.tenantSlug}
           Employee access is separate from public and candidate access.
-          <a href={`/${data.tenantSlug}/careers`}>View careers</a>
+          <a href={tenantPublicPath(data.tenantSlug, '/careers')}>View careers</a>
         {:else}
           Tenant employee accounts are provisioned through governed NuBlox identity and Human Capital administration.
         {/if}

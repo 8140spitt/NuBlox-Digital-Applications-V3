@@ -108,8 +108,8 @@ export class MySqlAuthenticationRateLimiter {
       `bucket:${purpose}:network:${network}`
     );
 
-    await withTransaction(this.pool, async (connection) => {
-      await this.consumeBucket(connection, {
+    const retryAfterSeconds = await withTransaction(this.pool, async (connection) => {
+      const networkRetry = await this.consumeBucket(connection, {
         bucketKey: networkKey,
         purpose,
         dimension: 'NETWORK',
@@ -120,7 +120,9 @@ export class MySqlAuthenticationRateLimiter {
         blockSeconds: policy.blockSeconds
       });
 
-      await this.consumeBucket(connection, {
+      if (networkRetry > 0) return networkRetry;
+
+      return this.consumeBucket(connection, {
         bucketKey: subjectNetworkKey,
         purpose,
         dimension: 'SUBJECT_NETWORK',
@@ -131,6 +133,10 @@ export class MySqlAuthenticationRateLimiter {
         blockSeconds: policy.blockSeconds
       });
     });
+
+    if (retryAfterSeconds > 0) {
+      throw new AuthenticationRateLimitError(retryAfterSeconds);
+    }
   }
 
   async clearSuccessfulLogin(subjectValue: string, networkValue: string): Promise<void> {
@@ -161,7 +167,7 @@ export class MySqlAuthenticationRateLimiter {
       windowSeconds: number;
       blockSeconds: number;
     }
-  ): Promise<void> {
+  ): Promise<number> {
     const [rows] = await connection.execute<BucketRow[]>(
       `SELECT attempt_count, window_started_at, blocked_until
          FROM application_auth_throttle_buckets
@@ -189,12 +195,13 @@ export class MySqlAuthenticationRateLimiter {
           now
         ]
       );
-      return;
+      return 0;
     }
 
     if (row.blocked_until && row.blocked_until.getTime() > now.getTime()) {
-      throw new AuthenticationRateLimitError(
-        Math.max(1, Math.ceil((row.blocked_until.getTime() - now.getTime()) / 1000))
+      return Math.max(
+        1,
+        Math.ceil((row.blocked_until.getTime() - now.getTime()) / 1000)
       );
     }
 
@@ -211,7 +218,7 @@ export class MySqlAuthenticationRateLimiter {
           WHERE bucket_key = ?`,
         [now, now, input.bucketKey]
       );
-      return;
+      return 0;
     }
 
     const nextCount = Number(row.attempt_count) + 1;
@@ -225,7 +232,7 @@ export class MySqlAuthenticationRateLimiter {
           WHERE bucket_key = ?`,
         [nextCount, now, blockedUntil, input.bucketKey]
       );
-      throw new AuthenticationRateLimitError(input.blockSeconds);
+      return input.blockSeconds;
     }
 
     await connection.execute(
@@ -236,5 +243,6 @@ export class MySqlAuthenticationRateLimiter {
         WHERE bucket_key = ?`,
       [nextCount, now, input.bucketKey]
     );
+    return 0;
   }
 }

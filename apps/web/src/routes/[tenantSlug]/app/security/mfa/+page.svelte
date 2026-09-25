@@ -2,6 +2,9 @@
   import type { ActionData, PageData } from './$types';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(
+    form as ActionData & Partial<{ stepUpRequired: boolean; stepUpUrl: string }>
+  );
 
   const enabled = $derived(form?.disabled ? false : form?.enabled ? true : data.status.enabled);
 </script>
@@ -26,10 +29,10 @@
   </div>
 </section>
 
-{#if form?.stepUpRequired && form?.stepUpUrl}
+{#if viewForm?.stepUpRequired && viewForm?.stepUpUrl}
   <p class="form-message error">
     {form.error}
-    <a href={form.stepUpUrl}>Verify MFA and return</a>
+    <a href={viewForm.stepUpUrl}>Verify MFA and return</a>
   </p>
 {:else if form?.error}
   <p class="form-message error">{form.error}</p>

@@ -61,6 +61,7 @@
     if (pathname.startsWith('/app/policy')) return 'Policy Governance';
     if (pathname.startsWith('/app/security-classification')) return 'Information Security';
     if (pathname.startsWith('/app/validation-policy')) return 'Validation Policy';
+    if (pathname.startsWith('/app/tenant-configuration')) return 'Tenant Configuration';
     if (pathname.startsWith('/app/metadata')) return 'Metadata Governance';
     return 'Home';
   }
@@ -176,6 +177,14 @@
           >
             <span class="nav-symbol">VR</span>
             <span>Validation policy</span>
+          </a>
+          <a
+            class:active={isActive('/app/tenant-configuration')}
+            href={appHref('/app/tenant-configuration')}
+            onclick={closeNavigation}
+          >
+            <span class="nav-symbol">TC</span>
+            <span>Tenant configuration</span>
           </a>
           <a
             class:active={isActive('/app/metadata')}

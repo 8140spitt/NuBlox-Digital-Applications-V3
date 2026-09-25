@@ -302,11 +302,15 @@ CREATE TABLE tenant_configuration_overrides (
   configuration_payload JSON NOT NULL,
   rationale TEXT NOT NULL,
   status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
+  active_component_key VARCHAR(160)
+    GENERATED ALWAYS AS (
+      CASE WHEN status = 'ACTIVE' THEN component_key ELSE NULL END
+    ) STORED,
   created_at DATETIME(6) NOT NULL,
   created_by_person_id VARCHAR(64) NOT NULL,
   superseded_at DATETIME(6) NULL,
   UNIQUE KEY uq_tenant_configuration_override_active
-    (tenant_id, component_key, status),
+    (tenant_id, active_component_key),
   CONSTRAINT fk_tenant_configuration_override_tenant
     FOREIGN KEY (tenant_id) REFERENCES tenants(id),
   CONSTRAINT chk_tenant_configuration_override_status CHECK (

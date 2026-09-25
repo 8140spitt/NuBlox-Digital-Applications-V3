@@ -17,13 +17,20 @@ Every tenant-owned kernel record carries `tenantId`.
 
 Cross-tenant relationships, occupancies, authority grants and specialisations are rejected by kernel invariants.
 
-### Party and specialisations
+### Party identity and Party Types
 
 `Party` is the canonical enterprise party identity.
 
-`Person` and `Organisation` are explicit specialisations of Party rather than unrelated duplicate identities.
+NuBlox has exactly four business Party Types:
 
-This supports one shared relationship model while preserving person-specific and organisation-specific attributes.
+- `TENANT`;
+- `EMPLOYEE`;
+- `CLIENT`;
+- `VENDOR_SUPPLIER`.
+
+`Person` and `Organisation` are structural specialisations of Party identity, not Party Types. A Party may hold more than one business Party Type where reality requires it; for example, the same Organisation may be both a Client and a Vendor/Supplier without creating duplicate Organisation masters.
+
+Each Tenant has one authoritative binding to its `TENANT` Party and Organisation.
 
 ### Organisation structure
 
@@ -66,8 +73,11 @@ The kernel rejects cross-tenant relationships and self-relationships.
 
 Automated tests currently verify:
 
-- Person must specialise a PERSON Party;
-- Organisation must specialise an ORGANISATION Party;
+- Person must use a structurally PERSON Party;
+- Organisation must use a structurally ORGANISATION Party;
+- NuBlox Party Type is one of TENANT, EMPLOYEE, CLIENT or VENDOR_SUPPLIER;
+- EMPLOYEE applies to a PERSON structural Party;
+- TENANT, CLIENT and VENDOR_SUPPLIER apply to an ORGANISATION structural Party;
 - specialisation cannot cross tenant boundaries;
 - Position and Job Profile remain separate;
 - Position Occupancy cannot cross tenant boundaries;

@@ -27,6 +27,15 @@ interface PolicyRow extends RowDataPacket {
   row_version: number;
 }
 
+interface PolicySessionRow extends RowDataPacket {
+  id: string;
+  user_id: string;
+  authentication_strength: 'PASSWORD' | 'MFA';
+  created_at: Date;
+  last_seen_at: Date;
+  expires_at: Date;
+}
+
 export class TenantAuthenticationPolicyError extends Error {
   constructor(message: string) {
     super(message);
@@ -185,12 +194,78 @@ export class MySqlTenantAuthenticationPolicyRepository {
         ]
       );
 
+      const [sessionRows] = await connection.execute<PolicySessionRow[]>(
+        `SELECT id, user_id, authentication_strength, created_at, last_seen_at, expires_at
+           FROM application_sessions
+          WHERE tenant_id = ?
+            AND revoked_at IS NULL
+          ORDER BY user_id, last_seen_at DESC, created_at DESC
+          FOR UPDATE`,
+        [tenantId]
+      );
+
+      const now = Date.now();
+      const ttlCutoff = now - input.sessionTtlMinutes * 60 * 1000;
+      const idleCutoff = now - input.idleTimeoutMinutes * 60 * 1000;
+      const retainedByUser = new Map<string, number>();
+      const revocations: Array<{ id: string; userId: string; reason: string }> = [];
+
+      for (const session of sessionRows) {
+        let reason: string | null = null;
+
+        if (session.expires_at.getTime() <= now) {
+          reason = 'EXPIRED';
+        } else if (session.created_at.getTime() <= ttlCutoff) {
+          reason = 'SESSION_TTL_POLICY';
+        } else if (session.last_seen_at.getTime() <= idleCutoff) {
+          reason = 'IDLE_TIMEOUT_POLICY';
+        } else if (
+          input.mfaRequirement === 'REQUIRED' &&
+          session.authentication_strength !== 'MFA'
+        ) {
+          reason = 'MFA_REQUIRED_POLICY';
+        }
+
+        const retained = retainedByUser.get(session.user_id) ?? 0;
+        if (!reason && retained >= input.maxActiveSessions) {
+          reason = 'MAX_ACTIVE_SESSIONS_POLICY';
+        }
+
+        if (reason) {
+          revocations.push({ id: session.id, userId: session.user_id, reason });
+        } else {
+          retainedByUser.set(session.user_id, retained + 1);
+        }
+      }
+
+      for (const revoked of revocations) {
+        await connection.execute(
+          `UPDATE application_sessions
+              SET revoked_at = COALESCE(revoked_at, UTC_TIMESTAMP(6))
+            WHERE id = ?`,
+          [revoked.id]
+        );
+        await connection.execute(
+          `INSERT INTO application_auth_events
+            (user_id, tenant_id, event_type, outcome, metadata)
+           VALUES (?, ?, 'SESSION_POLICY_REVOKED', 'SUCCESS', ?)`,
+          [
+            revoked.userId,
+            tenantId,
+            JSON.stringify({ sessionId: revoked.id, reason: revoked.reason })
+          ]
+        );
+      }
+
       const next: TenantAuthenticationPolicy = {
         tenantId,
         ...input,
         rowVersion: Number(current.row_version) + 1
       };
-      await writeAudit(connection, tenantId, actorPersonId, next);
+      await writeAudit(connection, tenantId, actorPersonId, {
+        ...next,
+        revokedSessionCount: revocations.length
+      });
       return next;
     });
   }

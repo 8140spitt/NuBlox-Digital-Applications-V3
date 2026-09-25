@@ -31,7 +31,10 @@
       <header>
         <p class="app-eyebrow">Tenant registration</p>
         <h2>Create your NuBlox tenant</h2>
-        <p>Your business address becomes <code>nublox.com/your-slug/app</code>.</p>
+        <p>
+          Your business address becomes <code>nublox.com/your-slug/app</code>.
+          NuBlox verifies your work email before the first sign-in.
+        </p>
       </header>
 
       <form method="POST" class="login-form">

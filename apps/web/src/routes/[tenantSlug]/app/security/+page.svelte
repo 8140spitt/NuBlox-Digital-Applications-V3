@@ -39,4 +39,13 @@
     </div>
     <span aria-hidden="true">→</span>
   </a>
+
+  <a class="home-primary-card" href={tenantAppPath(data.tenantSlug, '/app/security/policy')}>
+    <span>PL</span>
+    <div>
+      <strong>Tenant authentication policy</strong>
+      <p>Govern MFA requirement, session lifetime, idle timeout and concurrent-session limits.</p>
+    </div>
+    <span aria-hidden="true">→</span>
+  </a>
 </section>

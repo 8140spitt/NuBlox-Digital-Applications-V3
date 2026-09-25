@@ -4,8 +4,18 @@
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
   let step = $state(1);
-  let registrationForm: HTMLFormElement;
+  let registrationForm: HTMLFormElement | undefined;
   let wizardMessage = $state('');
+  let preview = $state<{
+    templates: Array<{
+      templateId: string;
+      code: string;
+      name: string;
+      version: number;
+      templateKind: string;
+    }>;
+    industrySolutionIds: string[];
+  } | null>(null);
   let businessName = $state(form?.businessName ?? '');
   let primaryClassificationValueId = $state(form?.primaryClassificationValueId ?? '');
   let sizeTier = $state(form?.sizeTier ?? '');
@@ -20,7 +30,7 @@
     data.catalogue.sizeTiers.find((tier) => tier.code === sizeTier)
   );
 
-  function nextStep() {
+  async function nextStep() {
     wizardMessage = '';
 
     const fieldset = registrationForm?.querySelector<HTMLFieldSetElement>(
@@ -44,6 +54,21 @@
     if (step === 2 && operatingModelCodes.length === 0) {
       wizardMessage = 'Select at least one operating model.';
       return;
+    }
+
+    if (step === 2 && registrationForm) {
+      const response = await fetch('/register/preview', {
+        method: 'POST',
+        body: new FormData(registrationForm)
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        wizardMessage = result.error ?? 'NuBlox could not resolve this Tenant configuration.';
+        return;
+      }
+
+      preview = result;
     }
 
     step = Math.min(4, step + 1);
@@ -291,6 +316,35 @@
               </div>
             </article>
           </div>
+
+          {#if preview}
+            <section class="home-section">
+              <header class="home-section-heading">
+                <div>
+                  <p class="app-eyebrow">Resolved by NuBlox</p>
+                  <h2>Configuration template stack</h2>
+                </div>
+              </header>
+
+              <div class="home-primary-grid">
+                {#each preview.templates as template}
+                  <article class="home-primary-card">
+                    <span>V{template.version}</span>
+                    <div>
+                      <strong>{template.name}</strong>
+                      <p>{template.code} · {template.templateKind.toLowerCase().replaceAll('_', ' ')}</p>
+                    </div>
+                  </article>
+                {/each}
+              </div>
+
+              {#if preview.industrySolutionIds.length > 0}
+                <p class="workspace-lede">
+                  Industry Solutions resolved: {preview.industrySolutionIds.join(', ')}.
+                </p>
+              {/if}
+            </section>
+          {/if}
         </fieldset>
 
         <fieldset data-step="4" hidden={step !== 4}>

@@ -660,7 +660,15 @@ export class MySqlPasskeyService {
     this.assertPrincipal(challenge, principal);
 
     try {
-      const clientData = parseClientData(
+      if (
+        response.type !== 'public-key' ||
+        !response.id ||
+        response.id.length > 1024
+      ) {
+        throw new PasskeyError('The passkey credential type is invalid.', 'INVALID_RESPONSE');
+      }
+
+      parseClientData(
         response.response.clientDataJSON,
         'webauthn.create',
         challenge.challenge,
@@ -893,7 +901,22 @@ export class MySqlPasskeyService {
     const challenge = await this.challenge(tokenValue, 'AUTHENTICATE');
 
     try {
+      if (
+        response.type !== 'public-key' ||
+        !response.id ||
+        response.id.length > 1024
+      ) {
+        throw new PasskeyError('The passkey credential type is invalid.', 'INVALID_RESPONSE');
+      }
+
       const passkey = await this.passkeyForChallenge(challenge, response.id);
+      if (
+        response.response.userHandle &&
+        response.response.userHandle !== passkey.user_handle
+      ) {
+        throw new PasskeyError('The passkey user handle is invalid.', 'INVALID_RESPONSE');
+      }
+
       const clientData = parseClientData(
         response.response.clientDataJSON,
         'webauthn.get',

@@ -470,3 +470,28 @@ VALUES
       'industrySolutionId', 'CBE'
     )
   );
+
+
+INSERT INTO permission_definitions (permission_key, name, description) VALUES
+  (
+    'platform.tenant_configuration.read',
+    'Read Tenant configuration',
+    'View the Tenant Business Profile, Industry Solution assignments, applied configuration templates and provisioning evidence.'
+  ),
+  (
+    'platform.tenant_configuration.manage',
+    'Manage Tenant configuration',
+    'Govern Tenant Business Profile changes, configuration overrides and template adoption subject to configuration impact and authority controls.'
+  );
+
+INSERT INTO access_role_permissions (id, access_role_id, permission_key) VALUES
+  (
+    'ARP-PLATFORM-ADMIN-090',
+    'ROLE-PLATFORM-ADMINISTRATOR',
+    'platform.tenant_configuration.read'
+  ),
+  (
+    'ARP-PLATFORM-ADMIN-091',
+    'ROLE-PLATFORM-ADMINISTRATOR',
+    'platform.tenant_configuration.manage'
+  );

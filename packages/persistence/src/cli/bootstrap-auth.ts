@@ -9,6 +9,7 @@ import { MySqlAuthRepository } from '../auth-repository.js';
 import { createDatabasePool } from '../database.js';
 import { migrate } from '../migrations.js';
 import { MySqlTenantRegistrationService } from '../tenant-registration-service.js';
+import type { TenantSizeTier } from '../tenant-provisioning-service.js';
 
 function required(name: string): string {
   const value = process.env[name]?.trim();
@@ -31,6 +32,18 @@ try {
   if (!tenantIdValue || !personIdValue) {
     const tenantName = required('NUBLOX_BOOTSTRAP_TENANT_NAME');
     const personName = required('NUBLOX_BOOTSTRAP_PERSON_NAME');
+    const sizeTier = (process.env.NUBLOX_BOOTSTRAP_SIZE_TIER?.trim() || 'SMALL') as TenantSizeTier;
+    const employeeCountValue = process.env.NUBLOX_BOOTSTRAP_EMPLOYEE_COUNT?.trim();
+    const employeeCount = employeeCountValue ? Number(employeeCountValue) : undefined;
+    const legalEntityCount = Number(
+      process.env.NUBLOX_BOOTSTRAP_LEGAL_ENTITY_COUNT?.trim() || '1'
+    );
+    const operatingModelCodes = (
+      process.env.NUBLOX_BOOTSTRAP_OPERATING_MODELS?.trim() || 'PROJECT_BASED'
+    )
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
     const registration = await new MySqlTenantRegistrationService(pool).register({
       businessName: tenantName,
       ...(process.env.NUBLOX_BOOTSTRAP_TENANT_SLUG?.trim()
@@ -40,6 +53,19 @@ try {
       email,
       password,
       acceptedTerms: true,
+      businessProfile: {
+        primaryClassificationValueId:
+          process.env.NUBLOX_BOOTSTRAP_INDUSTRY_CLASSIFICATION_ID?.trim() ||
+          'BCV-NUBLOX-CBE',
+        sizeTier,
+        ...(employeeCount !== undefined ? { employeeCount } : {}),
+        legalEntityCount,
+        primaryCountryCode:
+          process.env.NUBLOX_BOOTSTRAP_COUNTRY_CODE?.trim().toUpperCase() || 'GB',
+        primaryLanguageCode:
+          process.env.NUBLOX_BOOTSTRAP_LANGUAGE_CODE?.trim() || 'en-GB',
+        operatingModelCodes
+      },
       grantTenantAdministrator: grantPlatformAdministrator,
       emailVerified: true
     });

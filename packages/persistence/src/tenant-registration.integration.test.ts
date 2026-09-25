@@ -41,7 +41,7 @@ suite('tenant registration', () => {
       password,
       acceptedTerms: true,
       businessProfile: {
-        primaryClassificationValueId: 'BCV-NUBLOX-CBE',
+        primaryClassificationValueId: 'BCV-NAICS-2022-23',
         sizeTier: 'MEDIUM',
         employeeCount: 100,
         legalEntityCount: 1,
@@ -129,7 +129,7 @@ suite('tenant registration', () => {
     );
     expect(profileRows[0]).toEqual(
       expect.objectContaining({
-        primary_classification_value_id: 'BCV-NUBLOX-CBE',
+        primary_classification_value_id: 'BCV-NAICS-2022-23',
         size_tier: 'MEDIUM',
         employee_count: 100,
         legal_entity_count: 1,

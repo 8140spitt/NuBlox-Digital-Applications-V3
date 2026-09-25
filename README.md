@@ -125,6 +125,16 @@ pnpm install
 pnpm db:migrate
 ```
 
+If a migration is recorded as `FAILED` and its repository SQL has subsequently been corrected, recovery is explicit rather than automatic:
+
+```bash
+pnpm db:retry-failed <migration-file>
+pnpm db:migrate
+pnpm db:status
+```
+
+Applied migrations remain checksum-locked. The retry command is only for migrations currently recorded as `FAILED`.
+
 For the first controlled local account, set the `NUBLOX_BOOTSTRAP_*` values shown in `.env.example`, then run:
 
 ```bash

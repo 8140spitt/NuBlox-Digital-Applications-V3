@@ -60,14 +60,20 @@ export const actions: Actions = {
       );
 
       const userAgent = request.headers.get('user-agent')?.trim();
+      const authenticationMethod =
+        result.baseAuthenticationMethod === 'OIDC' ? 'OIDC_TOTP' : 'PASSWORD_TOTP';
       const created = await getAuthRepository().createSession(
         result.principal,
         undefined,
         'MFA',
         {
           ...(userAgent ? { userAgent } : {}),
-          networkAddress: getClientAddress()
-        }
+          networkAddress: getClientAddress(),
+          ...(result.authenticationProviderId
+            ? { authenticationProviderId: result.authenticationProviderId }
+            : {})
+        },
+        authenticationMethod
       );
       setTenantApplicationSession(
         cookies,

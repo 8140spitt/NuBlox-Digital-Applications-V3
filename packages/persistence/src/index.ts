@@ -64,6 +64,7 @@ export * from './party-type-writes.js';
 export * from './tenant-registration-service.js';
 export * from './identity-challenge-service.js';
 export * from './identity-message-dispatcher.js';
+export * from './authentication-rate-limiter.js';
 
 export * from './extension-repository.js';
 export * from './extension-command-service.js';

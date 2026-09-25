@@ -63,7 +63,8 @@ import {
   MySqlThingAdministrationCommandService,
   MySqlThingAdministrationReadRepository,
   MySqlEnterpriseVocabularyProvisioningService,
-  MySqlUniversalFunctionReadRepository
+  MySqlUniversalFunctionReadRepository,
+  MySqlTenantRoutingRepository
 } from '@nublox/persistence';
 
 let poolInstance: ReturnType<typeof createDatabasePool> | undefined;
@@ -131,6 +132,7 @@ let thingAdministrationCommandServiceInstance: MySqlThingAdministrationCommandSe
 let thingAdministrationReadRepositoryInstance: MySqlThingAdministrationReadRepository | undefined;
 let enterpriseVocabularyProvisioningServiceInstance: MySqlEnterpriseVocabularyProvisioningService | undefined;
 let universalFunctionReadRepositoryInstance: MySqlUniversalFunctionReadRepository | undefined;
+let tenantRoutingRepositoryInstance: MySqlTenantRoutingRepository | undefined;
 
 export function getDatabasePool(): ReturnType<typeof createDatabasePool> {
   if (!poolInstance) {
@@ -649,4 +651,11 @@ export function getEnterpriseVocabularyProvisioningService(): MySqlEnterpriseVoc
       new MySqlEnterpriseVocabularyProvisioningService(getDatabasePool());
   }
   return enterpriseVocabularyProvisioningServiceInstance;
+}
+
+export function getTenantRoutingRepository(): MySqlTenantRoutingRepository {
+  if (!tenantRoutingRepositoryInstance) {
+    tenantRoutingRepositoryInstance = new MySqlTenantRoutingRepository(getDatabasePool());
+  }
+  return tenantRoutingRepositoryInstance;
 }

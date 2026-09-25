@@ -59,6 +59,7 @@ export * from './control-repository.js';
 export * from './database.js';
 export * from './migrations.js';
 export * from './repository.js';
+export * from './tenant-routing-repository.js';
 
 export * from './extension-repository.js';
 export * from './extension-command-service.js';

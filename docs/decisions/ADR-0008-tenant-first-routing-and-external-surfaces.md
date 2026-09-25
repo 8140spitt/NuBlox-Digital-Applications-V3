@@ -21,17 +21,17 @@ NuBlox uses a tenant-first URL namespace.
 nublox.com/
     NuBlox public product / marketing site
 
-nublox.com/{tenantSlug}/
+nublox.com/{tenantSlug}/app
+    private tenant enterprise application
+
+nublox.com/{tenantSlug}/public
     tenant-controlled public site
 
-nublox.com/{tenantSlug}/careers
+nublox.com/{tenantSlug}/public/careers
     public advertised roles
 
-nublox.com/{tenantSlug}/candidate
+nublox.com/{tenantSlug}/public/candidate
     external candidate surface
-
-nublox.com/{tenantSlug}/app/
-    private tenant enterprise application
 
 nublox.com/{tenantSlug}/app/auth/sign-in
     tenant-scoped employee authentication
@@ -66,7 +66,7 @@ Employee application cookies are scoped to:
 /{tenantSlug}/app
 ~~~
 
-They are not sent to the tenant public site or careers surface.
+They are not sent to the tenant public namespace under `/{tenantSlug}/public`.
 
 The server-side session also records the immutable TenantId and resolved tenant slug. A URL/session mismatch is denied and the tenant cookie is cleared.
 
@@ -105,6 +105,7 @@ Tenant-first application URLs are rerouted internally to the existing /app/... r
 
 - the tenant is visible and stable in all private application URLs;
 - one identity may hold separate sessions in several tenants without sharing an employee session cookie;
+- all tenant-owned traffic is explicitly separated beneath either `/{tenantSlug}/app` or `/{tenantSlug}/public`;
 - public and candidate traffic does not receive the employee application cookie;
 - legacy /app/... links can converge safely by immediate tenant redirect;
 - all persistence remains scoped by immutable TenantId rather than slug;

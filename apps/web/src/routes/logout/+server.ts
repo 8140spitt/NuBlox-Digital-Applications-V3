@@ -1,22 +1,41 @@
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import {
-  clearApplicationSession,
-  SESSION_COOKIE
+  clearLegacyApplicationSession,
+  clearTenantApplicationSession,
+  LEGACY_SESSION_COOKIE,
+  tenantSessionCookieName
 } from '$lib/server/auth';
 import { getAuthRepository } from '$lib/server/platform';
+import { tenantSignInPath } from '$lib/tenant-paths';
 
-export const POST: RequestHandler = async ({ cookies }) => {
-  const token = cookies.get(SESSION_COOKIE);
+export const POST: RequestHandler = async ({ cookies, locals }) => {
+  const tenant = locals.tenant;
 
-  if (token) {
+  if (tenant) {
+    const token = cookies.get(tenantSessionCookieName(tenant.slug));
+
+    if (token) {
+      try {
+        await getAuthRepository().revokeSession(token);
+      } catch (error) {
+        console.error('Failed to revoke NuBlox tenant application session.', error);
+      }
+    }
+
+    clearTenantApplicationSession(cookies, tenant.slug);
+    throw redirect(303, tenantSignInPath(tenant.slug));
+  }
+
+  const legacyToken = cookies.get(LEGACY_SESSION_COOKIE);
+  if (legacyToken) {
     try {
-      await getAuthRepository().revokeSession(token);
+      await getAuthRepository().revokeSession(legacyToken);
     } catch (error) {
-      console.error('Failed to revoke NuBlox application session.', error);
+      console.error('Failed to revoke legacy NuBlox application session.', error);
     }
   }
 
-  clearApplicationSession(cookies);
-  throw redirect(303, '/login');
+  clearLegacyApplicationSession(cookies);
+  throw redirect(303, '/');
 };

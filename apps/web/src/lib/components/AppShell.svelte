@@ -56,6 +56,7 @@
     if (pathname.startsWith('/app/deployments')) return 'HCM Position Management';
     if (pathname.startsWith('/app/competence')) return 'Competence';
     if (pathname.startsWith('/app/control')) return 'Control';
+    if (pathname === '/app/security' || pathname.startsWith('/app/security/')) return 'Account Security';
     if (pathname.startsWith('/app/access')) return 'Access';
     if (pathname.startsWith('/app/policy')) return 'Policy Governance';
     if (pathname.startsWith('/app/security-classification')) return 'Information Security';
@@ -151,6 +152,10 @@
           <a class:active={isActive('/app/access')} href={appHref('/app/access')} onclick={closeNavigation}>
             <span class="nav-symbol">AC</span>
             <span>Access</span>
+          </a>
+          <a class:active={isActive('/app/security/mfa')} href={appHref('/app/security/mfa')} onclick={closeNavigation}>
+            <span class="nav-symbol">AU</span>
+            <span>Account security</span>
           </a>
           <a class:active={isActive('/app/policy')} href={appHref('/app/policy')} onclick={closeNavigation}>
             <span class="nav-symbol">PL</span>

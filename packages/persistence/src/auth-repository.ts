@@ -522,6 +522,7 @@ export class MySqlAuthRepository {
         WHERE s.token_hash = ?
           AND s.revoked_at IS NULL
           AND s.expires_at > UTC_TIMESTAMP(6)
+          AND s.created_at > TIMESTAMPADD(MINUTE, -tap.session_ttl_minutes, UTC_TIMESTAMP(6))
           AND s.last_seen_at > TIMESTAMPADD(MINUTE, -tap.idle_timeout_minutes, UTC_TIMESTAMP(6))
           AND (tap.mfa_requirement = 'OPTIONAL' OR s.authentication_strength = 'MFA')`,
       [tokenHash]
@@ -606,13 +607,23 @@ export class MySqlAuthRepository {
           AND tenant_id = ?
           AND revoked_at IS NULL
           AND expires_at > UTC_TIMESTAMP(6)
+          AND created_at > TIMESTAMPADD(
+            MINUTE,
+            -(SELECT session_ttl_minutes FROM tenant_authentication_policies WHERE tenant_id = ?),
+            UTC_TIMESTAMP(6)
+          )
           AND last_seen_at > TIMESTAMPADD(
             MINUTE,
             -(SELECT idle_timeout_minutes FROM tenant_authentication_policies WHERE tenant_id = ?),
             UTC_TIMESTAMP(6)
           )
         ORDER BY last_seen_at DESC, created_at DESC`,
-      [principal.userId, principal.tenantId, principal.tenantId]
+      [
+        principal.userId,
+        principal.tenantId,
+        principal.tenantId,
+        principal.tenantId
+      ]
     );
 
     return rows.map((row) => ({

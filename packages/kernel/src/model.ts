@@ -19,6 +19,7 @@ export type PartyKind = 'PERSON' | 'ORGANISATION';
 
 export interface Tenant {
   id: TenantId;
+  slug?: string;
   name: string;
   status: RecordStatus;
 }

@@ -33,7 +33,8 @@ interface OrganisationRow extends RowDataPacket {
 }
 interface PositionRow extends RowDataPacket {
   id:string; tenant_id:string; organisation_unit_id:string; job_profile_id:string|null;
-  code:string; title:string; status:'ACTIVE'|'INACTIVE';
+  code:string; title:string; lifecycle_status:Position['lifecycleStatus']; incumbency_model:Position['incumbencyModel'];
+  authorised_fte:string|number; effective_from:Date; effective_to:Date|null; status:'ACTIVE'|'INACTIVE';
 }
 interface EmploymentRow extends RowDataPacket {
   id:string; tenant_id:string; person_id:string; organisation_id:string; employee_number:string;
@@ -401,14 +402,16 @@ export class MySqlHcmCommandService {
 
   private async requirePosition(connection:PoolConnection,tenantId:TenantId,id:string):Promise<Position>{
     const [rows]=await connection.execute<PositionRow[]>(
-      `SELECT id,tenant_id,organisation_unit_id,job_profile_id,code,title,status FROM positions WHERE tenant_id=? AND id=?`,[tenantId,id]
+      `SELECT id,tenant_id,organisation_unit_id,job_profile_id,code,title,lifecycle_status,incumbency_model,authorised_fte,effective_from,effective_to,status FROM positions WHERE tenant_id=? AND id=?`,[tenantId,id]
     );
     const row=rows[0];
     if(!row) throw new HcmCommandError('Position was not found in this tenant.','NOT_FOUND');
     return {id:row.id as Position['id'],tenantId:row.tenant_id as TenantId,
       organisationUnitId:row.organisation_unit_id as Position['organisationUnitId'],
       ...(row.job_profile_id?{jobProfileId:row.job_profile_id as NonNullable<Position['jobProfileId']>}:{}),
-      code:row.code,title:row.title,status:row.status};
+      code:row.code,title:row.title,lifecycleStatus:row.lifecycle_status,incumbencyModel:row.incumbency_model,
+      authorisedFte:Number(row.authorised_fte),effectiveFrom:row.effective_from.toISOString(),
+      ...(row.effective_to?{effectiveTo:row.effective_to.toISOString()}:{}),status:row.status};
   }
 
   private async requireEmployment(connection:PoolConnection,tenantId:TenantId,id:string):Promise<Employment>{

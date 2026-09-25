@@ -143,6 +143,20 @@ export async function queueIdentityChallenge(
   );
 
   await connection.execute(
+    `UPDATE application_identity_message_outbox m
+      JOIN application_identity_challenges c ON c.id = m.challenge_id
+        SET m.status = 'CANCELLED',
+            m.action_path = '',
+            m.secret_purged_at = COALESCE(m.secret_purged_at, ?)
+      WHERE c.user_id = ?
+        AND c.tenant_id = ?
+        AND c.purpose = ?
+        AND c.invalidated_at IS NOT NULL
+        AND m.status IN ('QUEUED', 'FAILED')`,
+    [now, input.userId, input.tenantId, input.purpose]
+  );
+
+  await connection.execute(
     `INSERT INTO application_identity_challenges
       (id, user_id, tenant_id, purpose, token_hash, email_normalized,
        created_at, expires_at, request_metadata)
@@ -228,6 +242,17 @@ export class MySqlIdentityChallengeService {
           'UPDATE application_identity_challenges SET consumed_at = COALESCE(consumed_at, UTC_TIMESTAMP(6)) WHERE id = ?',
           [challenge.id]
         );
+        await connection.execute(
+          `UPDATE application_identity_message_outbox
+              SET status = CASE WHEN status IN ('QUEUED', 'FAILED') THEN 'CANCELLED' ELSE status END,
+                  action_path = CASE WHEN status IN ('QUEUED', 'FAILED') THEN '' ELSE action_path END,
+                  secret_purged_at = CASE
+                    WHEN status IN ('QUEUED', 'FAILED') THEN COALESCE(secret_purged_at, UTC_TIMESTAMP(6))
+                    ELSE secret_purged_at
+                  END
+            WHERE challenge_id = ?`,
+          [challenge.id]
+        );
         return {
           tenantId: challenge.tenant_id,
           tenantSlug: challenge.tenant_slug,
@@ -245,6 +270,17 @@ export class MySqlIdentityChallengeService {
       );
       await connection.execute(
         'UPDATE application_identity_challenges SET consumed_at = UTC_TIMESTAMP(6) WHERE id = ?',
+        [challenge.id]
+      );
+      await connection.execute(
+        `UPDATE application_identity_message_outbox
+            SET status = CASE WHEN status IN ('QUEUED', 'FAILED') THEN 'CANCELLED' ELSE status END,
+                action_path = CASE WHEN status IN ('QUEUED', 'FAILED') THEN '' ELSE action_path END,
+                secret_purged_at = CASE
+                  WHEN status IN ('QUEUED', 'FAILED') THEN COALESCE(secret_purged_at, UTC_TIMESTAMP(6))
+                  ELSE secret_purged_at
+                END
+          WHERE challenge_id = ?`,
         [challenge.id]
       );
       await connection.execute(
@@ -384,6 +420,17 @@ export class MySqlIdentityChallengeService {
       );
       await connection.execute(
         'UPDATE application_identity_challenges SET consumed_at = UTC_TIMESTAMP(6) WHERE id = ?',
+        [challenge.id]
+      );
+      await connection.execute(
+        `UPDATE application_identity_message_outbox
+            SET status = CASE WHEN status IN ('QUEUED', 'FAILED') THEN 'CANCELLED' ELSE status END,
+                action_path = CASE WHEN status IN ('QUEUED', 'FAILED') THEN '' ELSE action_path END,
+                secret_purged_at = CASE
+                  WHEN status IN ('QUEUED', 'FAILED') THEN COALESCE(secret_purged_at, UTC_TIMESTAMP(6))
+                  ELSE secret_purged_at
+                END
+          WHERE challenge_id = ?`,
         [challenge.id]
       );
       await connection.execute(

@@ -66,9 +66,24 @@ suite('HCM authority drives Function world and management hierarchy',()=>{
     const executivePosition=await organisation.createPosition(tenantId,admin.id,{
       organisationUnitId:salesUnit.id,jobProfileId:executiveJob.id,code:'SALES-EXEC-001',title:'Sales Executive'
     });
+    const sharedPosition=await organisation.createPosition(tenantId,admin.id,{
+      organisationUnitId:salesUnit.id,jobProfileId:executiveJob.id,code:'SALES-SHARED-001',title:'Shared Sales Role',
+      lifecycleStatus:'APPROVED',incumbencyModel:'SHARED',authorisedFte:1.5,effectiveFrom:'2026-01-01T00:00:00.000Z'
+    });
+    const plannedPosition=await organisation.createPosition(tenantId,admin.id,{
+      organisationUnitId:salesUnit.id,jobProfileId:executiveJob.id,code:'SALES-PLAN-001',title:'Future Sales Role',
+      lifecycleStatus:'PLANNED',authorisedFte:1,effectiveFrom:'2027-01-01T00:00:00.000Z'
+    });
+    expect(sharedPosition).toMatchObject({lifecycleStatus:'APPROVED',incumbencyModel:'SHARED',authorisedFte:1.5});
 
     const manager=await organisation.createPerson(tenantId,admin.id,{legalName:'Jane Manager'});
     const executive=await organisation.createPerson(tenantId,admin.id,{legalName:'Stephen Sales'});
+    const sharedA=await organisation.createPerson(tenantId,admin.id,{legalName:'Shared Worker A'});
+    const sharedB=await organisation.createPerson(tenantId,admin.id,{legalName:'Shared Worker B'});
+    await organisation.assignPersonToPosition(tenantId,admin.id,{positionId:sharedPosition.id,personId:sharedA.id,fte:0.75,effectiveFrom:'2026-01-01T00:00:00.000Z'});
+    await organisation.assignPersonToPosition(tenantId,admin.id,{positionId:sharedPosition.id,personId:sharedB.id,fte:0.75,effectiveFrom:'2026-01-01T00:00:00.000Z'});
+    await expect(organisation.assignPersonToPosition(tenantId,admin.id,{positionId:sharedPosition.id,personId:executive.id,fte:0.25,effectiveFrom:'2026-01-01T00:00:00.000Z'})).rejects.toMatchObject({name:'OrganisationCommandError',code:'CONFLICT'});
+    await expect(organisation.assignPersonToPosition(tenantId,admin.id,{positionId:plannedPosition.id,personId:executive.id,fte:1,effectiveFrom:'2027-01-01T00:00:00.000Z'})).rejects.toMatchObject({name:'OrganisationCommandError',code:'CONFLICT'});
 
     const managerEmployment=await hcm.createEmployment(tenantId,admin.id,{
       personId:manager.id,organisationId:company.id,employeeNumber:`MGR-${suffix}`,

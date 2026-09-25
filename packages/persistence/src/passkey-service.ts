@@ -556,6 +556,7 @@ export class MySqlPasskeyService {
     origin: string
   ): Promise<PasskeyRegistrationStart> {
     validateRelyingParty(rpId, origin);
+    await this.assertPasskeyEnabled(principal.tenantId);
 
     const existing = await this.list(principal);
     const now = new Date();
@@ -786,6 +787,7 @@ export class MySqlPasskeyService {
     returnTo: string
   ): Promise<PasskeyAuthenticationStart> {
     validateRelyingParty(rpId, origin);
+    await this.assertPasskeyEnabled(tenantId);
     const email = normaliseEmail(emailValue);
 
     const [identityRows] = await this.pool.query<IdentityRow[]>(
@@ -1082,7 +1084,25 @@ export class MySqlPasskeyService {
       throw new PasskeyError('Too many passkey attempts. Start again.', 'TOO_MANY_ATTEMPTS');
     }
 
+    await this.assertPasskeyEnabled(row.tenant_id);
     return row;
+  }
+
+  private async assertPasskeyEnabled(tenantId: string): Promise<void> {
+    const [rows] = await this.pool.query<Array<RowDataPacket & { passkey_enabled: number | boolean }>>(
+      `SELECT passkey_enabled
+         FROM tenant_authentication_policies
+        WHERE tenant_id = ?
+        LIMIT 1`,
+      [tenantId]
+    );
+
+    if (!rows[0] || !Boolean(rows[0].passkey_enabled)) {
+      throw new PasskeyError(
+        'Passkey authentication is disabled for this Tenant.',
+        'NOT_AVAILABLE'
+      );
+    }
   }
 
   private assertPrincipal(challenge: ChallengeRow, principal: AuthPrincipal): void {

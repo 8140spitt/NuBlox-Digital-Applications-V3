@@ -15,7 +15,21 @@ import type {
 } from './ids.js';
 
 export type RecordStatus = 'ACTIVE' | 'INACTIVE';
-export type PartyKind = 'PERSON' | 'ORGANISATION';
+
+/**
+ * Structural persistence shape only. This is not a NuBlox Party Type.
+ */
+export type PartyEntityKind = 'PERSON' | 'ORGANISATION';
+
+/**
+ * Canonical NuBlox Party Types.
+ * A Party may hold more than one Party Type where the business relationship requires it
+ * (for example an Organisation may be both CLIENT and VENDOR_SUPPLIER).
+ */
+export type PartyType = 'TENANT' | 'EMPLOYEE' | 'CLIENT' | 'VENDOR_SUPPLIER';
+
+/** @deprecated Use PartyEntityKind when referring to structural identity shape. */
+export type PartyKind = PartyEntityKind;
 
 export interface Tenant {
   id: TenantId;
@@ -27,8 +41,16 @@ export interface Tenant {
 export interface Party {
   id: PartyId;
   tenantId: TenantId;
-  kind: PartyKind;
+  kind: PartyEntityKind;
   displayName: string;
+  partyTypes?: readonly PartyType[];
+  status: RecordStatus;
+}
+
+export interface PartyTypeAssignment {
+  tenantId: TenantId;
+  partyId: PartyId;
+  partyType: PartyType;
   status: RecordStatus;
 }
 

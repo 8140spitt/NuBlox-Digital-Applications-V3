@@ -45,6 +45,12 @@ export const actions: Actions = {
     const session = requireSession(locals);
     const evaluation = await canManage(session);
 
+    if (!evaluation.allowed) {
+      return fail(403, {
+        error: 'Your current access does not permit Tenant authentication policy changes.'
+      });
+    }
+
     if (!hasRecentMfa(session)) {
       return fail(428, {
         stepUpRequired: true,
@@ -53,12 +59,6 @@ export const actions: Actions = {
           `/${session.tenantSlug}/app/security/policy`
         ),
         error: 'A recent MFA verification is required to change Tenant authentication policy.'
-      });
-    }
-
-    if (!evaluation.allowed) {
-      return fail(403, {
-        error: 'Your current access does not permit Tenant authentication policy changes.'
       });
     }
 

@@ -25,7 +25,8 @@ export const load: PageServerLoad = ({ locals, url }) => {
     tenantName: tenant?.name ?? null,
     returnTo: tenant
       ? safeTenantReturnTo(tenant.slug, url.searchParams.get('returnTo'))
-      : safeReturnTo(url.searchParams.get('returnTo') ?? '/app/function')
+      : safeReturnTo(url.searchParams.get('returnTo') ?? '/app/function'),
+    passwordReset: url.searchParams.get('passwordReset') === '1'
   };
 };
 
@@ -89,7 +90,9 @@ export const actions: Actions = {
         return fail(403, {
           email,
           returnTo,
-          verificationRequired: true
+          verificationRequired: true,
+          verificationTenantSlug: error.tenantSlug,
+          verificationTenantName: error.tenantName
         });
       }
 

@@ -567,7 +567,10 @@ export class MySqlAuthRepository {
     };
   }
 
-  async markSessionMfaVerified(token: string): Promise<void> {
+  async markSessionMfaVerified(
+    token: string,
+    authenticationMethod: Extract<AuthenticationMethod, 'PASSWORD_TOTP' | 'PASSKEY'> = 'PASSWORD_TOTP'
+  ): Promise<void> {
     if (!token) return;
 
     const tokenHash = hashSessionToken(token);
@@ -588,20 +591,18 @@ export class MySqlAuthRepository {
       await connection.execute(
         `UPDATE application_sessions
             SET authentication_strength = 'MFA',
-                authentication_method = CASE
-                  WHEN authentication_method = 'PASSWORD' THEN 'PASSWORD_TOTP'
-                  ELSE authentication_method
-                END,
+                authentication_method = ?,
                 mfa_verified_at = UTC_TIMESTAMP(6)
           WHERE token_hash = ?`,
-        [tokenHash]
+        [authenticationMethod, tokenHash]
       );
 
       await writeAuthEvent(connection, {
         userId: session.user_id,
         tenantId: session.tenant_id,
         eventType: 'SESSION_MFA_VERIFIED',
-        outcome: 'SUCCESS'
+        outcome: 'SUCCESS',
+        metadata: { authenticationMethod }
       });
     });
   }

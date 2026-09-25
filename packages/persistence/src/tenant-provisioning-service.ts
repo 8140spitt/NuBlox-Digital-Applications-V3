@@ -63,6 +63,26 @@ export interface TenantProvisioningResult {
   industrySolutionIds: string[];
 }
 
+export interface TenantCapabilityGuidance {
+  catalogueCode: string;
+  catalogueName: string;
+  catalogueEdition: string;
+  totalCapabilities: number;
+  defaultEnabled: number;
+  availableDisabled: number;
+  hiddenNotApplicable: number;
+  decisions: Array<{
+    capabilityKey: string;
+    name: string;
+    capabilityGroup: 'CORE' | 'OPERATIONAL_INDUSTRY';
+    sourceSymbol: '●' | '○' | '—';
+    sourceState:
+      | 'DEFAULT_ENABLED'
+      | 'AVAILABLE_DISABLED'
+      | 'HIDDEN_NOT_APPLICABLE';
+  }>;
+}
+
 export interface TenantConfigurationProjection {
   profile: {
     classificationSchemeCode: string;
@@ -79,6 +99,7 @@ export interface TenantConfigurationProjection {
   operatingModels: Array<{ code: string; name: string; primary: boolean }>;
   regulatoryRegimes: Array<{ code: string; name: string; jurisdiction: string | null }>;
   industrySolutions: Array<{ id: string; code: string; name: string; status: string }>;
+  capabilityGuidance: TenantCapabilityGuidance | null;
   templateApplications: Array<{
     applicationId: string;
     templateId: string;
@@ -420,6 +441,7 @@ export class MySqlTenantProvisioningService {
     const [profileRows] = await this.pool.query<Array<RowDataPacket & {
       scheme_code: string;
       classification_code: string;
+      classification_value_id: string;
       classification_name: string;
       size_tier: TenantSizeTier;
       employee_count: number | null;
@@ -429,7 +451,8 @@ export class MySqlTenantProvisioningService {
       configuration_state: string;
       provisioned_at: Date | null;
     }>>(
-      `SELECT s.code AS scheme_code,
+      `SELECT v.id AS classification_value_id,
+              s.code AS scheme_code,
               v.code AS classification_code,
               v.name AS classification_name,
               p.size_tier,
@@ -452,6 +475,11 @@ export class MySqlTenantProvisioningService {
     if (!profile) {
       throw new TenantProvisioningError('Tenant business profile does not exist.');
     }
+
+    const capabilityGuidance = await this.readCapabilityGuidance(
+      this.pool,
+      profile.classification_value_id
+    );
 
     const [
       operatingResult,
@@ -606,6 +634,7 @@ export class MySqlTenantProvisioningService {
         name: row.name,
         status: row.status
       })),
+      capabilityGuidance,
       templateApplications: templateResult[0].map((row) => ({
         applicationId: row.application_id,
         templateId: row.template_id,
@@ -674,11 +703,16 @@ export class MySqlTenantProvisioningService {
   async preview(input: TenantBusinessProfileInput): Promise<{
     templates: TenantProvisioningResult['templateApplications'];
     industrySolutionIds: string[];
+    capabilityGuidance: TenantCapabilityGuidance | null;
   }> {
     const connection = await this.pool.getConnection();
     try {
       const profile = await this.validateProfile(connection, input);
       const resolved = await this.resolveTemplates(connection, profile);
+      const capabilityGuidance = await this.readCapabilityGuidance(
+        connection,
+        profile.classification.id
+      );
       return {
         templates: resolved.templates.map((template) => ({
           templateId: template.id,
@@ -687,7 +721,8 @@ export class MySqlTenantProvisioningService {
           version: Number(template.version),
           templateKind: template.template_kind
         })),
-        industrySolutionIds: resolved.industrySolutionIds
+        industrySolutionIds: resolved.industrySolutionIds,
+        capabilityGuidance
       };
     } finally {
       connection.release();
@@ -702,6 +737,10 @@ export class MySqlTenantProvisioningService {
   ): Promise<TenantProvisioningResult> {
     const profile = await this.validateProfile(connection, input);
     const resolved = await this.resolveTemplates(connection, profile);
+    const capabilityGuidance = await this.readCapabilityGuidance(
+      connection,
+      profile.classification.id
+    );
     const runId = `TPR-${randomUUID()}`;
     const now = new Date();
 
@@ -790,6 +829,19 @@ export class MySqlTenantProvisioningService {
     await this.recordStep(connection, runId, 'TEMPLATE_RESOLUTION', 20, {
       templates: templateResolution
     });
+
+    if (capabilityGuidance) {
+      await this.recordStep(connection, runId, 'MARKET_CAPABILITY_GUIDANCE', 25, {
+        catalogueCode: capabilityGuidance.catalogueCode,
+        catalogueName: capabilityGuidance.catalogueName,
+        catalogueEdition: capabilityGuidance.catalogueEdition,
+        totalCapabilities: capabilityGuidance.totalCapabilities,
+        defaultEnabled: capabilityGuidance.defaultEnabled,
+        availableDisabled: capabilityGuidance.availableDisabled,
+        hiddenNotApplicable: capabilityGuidance.hiddenNotApplicable,
+        decisions: capabilityGuidance.decisions
+      });
+    }
 
     const appliedTemplates: TenantProvisioningResult['templateApplications'] = [];
     const activatedIndustries = new Set<string>();
@@ -1023,6 +1075,73 @@ export class MySqlTenantProvisioningService {
       operatingModels: operatingRows,
       regulatoryRegimes: regulatoryRows,
       industrySolutionIds
+    };
+  }
+
+  private async readCapabilityGuidance(
+    connection: Pick<Pool, 'query'> | Pick<PoolConnection, 'query'>,
+    classificationValueId: string
+  ): Promise<TenantCapabilityGuidance | null> {
+    const [rows] = await connection.query<Array<RowDataPacket & {
+      catalogue_code: string;
+      catalogue_name: string;
+      catalogue_edition: string;
+      capability_key: string;
+      capability_name: string;
+      capability_group: 'CORE' | 'OPERATIONAL_INDUSTRY';
+      source_symbol: '●' | '○' | '—';
+      source_state:
+        | 'DEFAULT_ENABLED'
+        | 'AVAILABLE_DISABLED'
+        | 'HIDDEN_NOT_APPLICABLE';
+    }>>(
+      `SELECT c.code AS catalogue_code,
+              c.name AS catalogue_name,
+              c.edition AS catalogue_edition,
+              r.capability_key,
+              r.name AS capability_name,
+              r.capability_group,
+              g.source_symbol,
+              g.source_state
+         FROM business_classification_capability_guidance g
+         JOIN market_capability_references r
+           ON r.id = g.capability_reference_id
+          AND r.status = 'ACTIVE'
+         JOIN market_capability_catalogues c
+           ON c.id = r.catalogue_id
+          AND c.status = 'ACTIVE'
+        WHERE g.classification_value_id = ?
+        ORDER BY
+          CASE r.capability_group WHEN 'CORE' THEN 0 ELSE 1 END,
+          r.capability_key`,
+      [classificationValueId]
+    );
+
+    if (rows.length === 0) return null;
+
+    const decisions: TenantCapabilityGuidance['decisions'] = rows.map((row) => ({
+      capabilityKey: row.capability_key,
+      name: row.capability_name,
+      capabilityGroup: row.capability_group,
+      sourceSymbol: row.source_symbol,
+      sourceState: row.source_state
+    }));
+
+    return {
+      catalogueCode: rows[0]!.catalogue_code,
+      catalogueName: rows[0]!.catalogue_name,
+      catalogueEdition: rows[0]!.catalogue_edition,
+      totalCapabilities: decisions.length,
+      defaultEnabled: decisions.filter(
+        (decision) => decision.sourceState === 'DEFAULT_ENABLED'
+      ).length,
+      availableDisabled: decisions.filter(
+        (decision) => decision.sourceState === 'AVAILABLE_DISABLED'
+      ).length,
+      hiddenNotApplicable: decisions.filter(
+        (decision) => decision.sourceState === 'HIDDEN_NOT_APPLICABLE'
+      ).length,
+      decisions
     };
   }
 

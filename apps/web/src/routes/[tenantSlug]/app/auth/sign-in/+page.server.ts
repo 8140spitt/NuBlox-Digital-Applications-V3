@@ -9,11 +9,13 @@ import type { Actions, PageServerLoad } from './$types';
 import {
   safeReturnTo,
   safeTenantReturnTo,
-  setTenantApplicationSession
+  setTenantApplicationSession,
+  setTenantMfaChallenge
 } from '$lib/server/auth';
 import {
   getAuthenticationRateLimiter,
-  getAuthRepository
+  getAuthRepository,
+  getMfaService
 } from '$lib/server/platform';
 import { tenantAppPath } from '$lib/tenant-paths';
 
@@ -68,6 +70,25 @@ export const actions: Actions = {
         password,
         tenant?.tenantId ?? (tenantIdValue || undefined)
       );
+      const finalReturnTo = safeTenantReturnTo(
+        principal.tenantSlug,
+        tenant ? returnTo : requestedReturnTo,
+        '/app/function'
+      );
+      const mfa = await getMfaService().beginLogin(principal, finalReturnTo);
+
+      await limiter.clearSuccessfulLogin(email, getClientAddress());
+
+      if (mfa.required && mfa.token && mfa.expiresAt) {
+        setTenantMfaChallenge(
+          cookies,
+          principal.tenantSlug,
+          mfa.token,
+          mfa.expiresAt
+        );
+        throw redirect(303, `/${principal.tenantSlug}/app/auth/mfa`);
+      }
+
       const created = await repository.createSession(principal);
       setTenantApplicationSession(
         cookies,
@@ -75,16 +96,8 @@ export const actions: Actions = {
         created.token,
         created.session.expiresAt
       );
-      await limiter.clearSuccessfulLogin(email, getClientAddress());
 
-      throw redirect(
-        303,
-        safeTenantReturnTo(
-          principal.tenantSlug,
-          tenant ? returnTo : requestedReturnTo,
-          '/app/function'
-        )
-      );
+      throw redirect(303, finalReturnTo);
     } catch (error) {
       if (error instanceof TenantSelectionRequiredError && !tenant) {
         await limiter.clearSuccessfulLogin(email, getClientAddress());

@@ -1,12 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { TenantRegistrationError } from '@nublox/persistence';
-import {
-  getAuthRepository,
-  getTenantRegistrationService
-} from '$lib/server/platform';
-import { setTenantApplicationSession } from '$lib/server/auth';
-import { tenantAppPath } from '$lib/tenant-paths';
+import { getTenantRegistrationService } from '$lib/server/platform';
 
 function value(formData: FormData, name: string): string {
   return String(formData.get(name) ?? '').trim();
@@ -15,7 +10,7 @@ function value(formData: FormData, name: string): string {
 export const load: PageServerLoad = () => ({});
 
 export const actions: Actions = {
-  default: async ({ request, cookies }) => {
+  default: async ({ request }) => {
     const formData = await request.formData();
     const businessName = value(formData, 'businessName');
     const tenantSlug = value(formData, 'tenantSlug');
@@ -34,18 +29,10 @@ export const actions: Actions = {
         acceptedTerms
       });
 
-      const auth = getAuthRepository();
-      const principal = await auth.authenticate(email, password, registration.tenantId);
-      const created = await auth.createSession(principal);
-
-      setTenantApplicationSession(
-        cookies,
-        principal.tenantSlug,
-        created.token,
-        created.session.expiresAt
+      throw redirect(
+        303,
+        `/${registration.tenantSlug}/app/auth/check-email?email=${encodeURIComponent(email)}`
       );
-
-      throw redirect(303, tenantAppPath(principal.tenantSlug));
     } catch (error) {
       if (error instanceof TenantRegistrationError) {
         const status =

@@ -104,7 +104,7 @@ Current authentication controls include:
 - persistent HMAC-hashed throttling for login, registration, verification resend and reset requests;
 - generic recovery responses that do not disclose whether an account exists.
 
-Production identity-message delivery uses the configured HTTPS delivery webhook. Run `pnpm auth:dispatch-messages` to dispatch one queued batch; production deployment must run that worker/schedule continuously enough for timely security email.
+Production identity-message delivery uses the configured HTTPS delivery webhook. In local development, `pnpm dev` starts both the SvelteKit application and a continuous identity-message worker; when no webhook is configured, verification and recovery links are printed into that same terminal automatically. `pnpm auth:dispatch-messages` remains available to dispatch one queued batch manually.
 
 ## Local application
 

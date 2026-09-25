@@ -264,7 +264,7 @@ End-to-end ERP requires identity continuity.
 
 Examples:
 
-- one Party / Organisation identity across Customer, Supplier, Contract, Finance and Service contexts;
+- one Party / Organisation identity across `CLIENT`, `VENDOR_SUPPLIER`, Contract, Finance and Service contexts; the same Organisation may carry both external Party Types;
 - one Project identity across Commercial, Planning, Design, Procurement, Delivery, Quality, Finance and Handover;
 - one Asset identity across procurement/creation, commissioning, Finance, operation, maintenance and retirement;
 - one Product / Item identity across definition, sourcing, stock, manufacturing, quality and fulfilment;
@@ -379,7 +379,7 @@ The implementation sequence is:
 The product must progressively demonstrate complete scenarios such as:
 
 - recruit a Person, occupy a Position, assign that Position to its Function and Governance/Delivery side, prove competence and deliver actionable My Work;
-- create Customer demand, quote/bid, contract, fulfil, accept, invoice, account and receive payment;
+- create Client demand, quote/bid, contract, fulfil, accept, invoice, account and receive payment;
 - create procurement demand, source, place Purchase Order, receive, match invoice, account and pay;
 - establish a Project, baseline it, author/release design information, procure, perform site work, inspect/test, value/pay, commission and hand over Assets/information;
 - raise a service request, schedule/dispatch work, capture field evidence, complete, accept and bill;

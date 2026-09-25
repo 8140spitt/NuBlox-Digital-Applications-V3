@@ -152,7 +152,7 @@ export async function queueIdentityChallenge(
         AND c.tenant_id = ?
         AND c.purpose = ?
         AND c.invalidated_at IS NOT NULL
-        AND m.status IN ('QUEUED', 'FAILED')`,
+        AND m.status IN ('QUEUED', 'FAILED', 'SENDING')`,
     [now, input.userId, input.tenantId, input.purpose]
   );
 

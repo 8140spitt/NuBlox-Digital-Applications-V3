@@ -89,7 +89,16 @@ export const actions: Actions = {
         throw redirect(303, `/${principal.tenantSlug}/app/auth/mfa`);
       }
 
-      const created = await repository.createSession(principal);
+      const userAgent = request.headers.get('user-agent')?.trim();
+      const created = await repository.createSession(
+        principal,
+        60 * 60 * 12,
+        'PASSWORD',
+        {
+          ...(userAgent ? { userAgent } : {}),
+          networkAddress: getClientAddress()
+        }
+      );
       setTenantApplicationSession(
         cookies,
         principal.tenantSlug,

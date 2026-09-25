@@ -1,5 +1,6 @@
 import { PLATFORM_PERMISSION_KEYS, type TenantId } from '@nublox/kernel';
 import { fail } from '@sveltejs/kit';
+import { hasRecentMfa, tenantStepUpPath } from '$lib/server/auth';
 import type { Actions, PageServerLoad } from './$types';
 import { TenantAuthenticationPolicyError } from '@nublox/persistence';
 import {
@@ -43,6 +44,17 @@ export const actions: Actions = {
   update: async ({ request, locals }) => {
     const session = requireSession(locals);
     const evaluation = await canManage(session);
+
+    if (!hasRecentMfa(session)) {
+      return fail(428, {
+        stepUpRequired: true,
+        stepUpUrl: tenantStepUpPath(
+          session.tenantSlug,
+          `/${session.tenantSlug}/app/security/policy`
+        ),
+        error: 'A recent MFA verification is required to change Tenant authentication policy.'
+      });
+    }
 
     if (!evaluation.allowed) {
       return fail(403, {

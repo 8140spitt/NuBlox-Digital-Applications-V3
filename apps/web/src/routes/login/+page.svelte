@@ -88,7 +88,11 @@
           </p>
         {/if}
 
-        {#if form?.verificationRequired}
+        {#if form?.rateLimited}
+          <p class="form-message error">
+            Too many sign-in attempts. Try again in about {Math.max(1, Math.ceil((form.retryAfterSeconds ?? 60) / 60))} minute(s).
+          </p>
+        {:else if form?.verificationRequired}
           <p class="form-message info">
             Verify this email address before signing in.
             <a href={`/${form.verificationTenantSlug}/app/auth/check-email?email=${encodeURIComponent(form.email ?? '')}`}>

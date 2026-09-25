@@ -31,6 +31,15 @@
     <span aria-hidden="true">→</span>
   </a>
 
+  <a class="home-primary-card" href={tenantAppPath(data.tenantSlug, '/app/security/passkeys')}>
+    <span>PK</span>
+    <div>
+      <strong>Passkeys</strong>
+      <p>Register and revoke phishing-resistant WebAuthn credentials for this Tenant.</p>
+    </div>
+    <span aria-hidden="true">→</span>
+  </a>
+
   <a class="home-primary-card" href={tenantAppPath(data.tenantSlug, '/app/security/sessions')}>
     <span>SS</span>
     <div>

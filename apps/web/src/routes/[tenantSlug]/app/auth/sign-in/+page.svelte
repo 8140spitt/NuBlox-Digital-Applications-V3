@@ -84,7 +84,14 @@
           </p>
         {/if}
 
-        {#if form?.invalid}
+        {#if form?.verificationRequired}
+          <p class="form-message info">
+            Verify this email address before signing in.
+            <a href={`/${data.tenantSlug}/app/auth/check-email?email=${encodeURIComponent(form.email ?? '')}`}>
+              Resend verification
+            </a>
+          </p>
+        {:else if form?.invalid}
           <p class="form-message error">Email or password is not valid for an active account.</p>
         {:else if form?.missing}
           <p class="form-message error">Email and password are required.</p>
@@ -98,6 +105,8 @@
 
       <p class="login-help">
         {#if data.tenantSlug}
+          <a href={`/${data.tenantSlug}/app/auth/forgot-password`}>Forgot password?</a> ·
+
           Employee access is separate from public and candidate access.
           <a href={tenantPublicPath(data.tenantSlug, '/careers')}>View careers</a>
         {:else}

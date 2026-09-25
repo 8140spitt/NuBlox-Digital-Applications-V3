@@ -161,7 +161,7 @@
           <span aria-hidden="true">→</span>
         </button>
 
-        {#if data.tenantSlug}
+        {#if data.tenantSlug && data.passkeyEnabled}
           <button
             type="button"
             class="quiet-button"
@@ -178,7 +178,7 @@
       {/if}
 
       <p class="login-help">
-        {#if data.tenantSlug}
+        {#if data.tenantSlug && data.passkeyEnabled}
           <a href={`/${data.tenantSlug}/app/auth/forgot-password`}>Forgot password?</a> ·
 
           Employee access is separate from public and candidate access.

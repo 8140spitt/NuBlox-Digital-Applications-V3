@@ -34,15 +34,17 @@
       data.catalogue.industries.reduce(
         (groups, industry) => {
           const key = `${industry.schemeCode}:${industry.schemeEdition}`;
-          groups[key] ??= {
-            key,
-            label:
-              industry.schemeCode === 'NUBLOX_INDUSTRY'
-                ? `${industry.schemeName} · platform classification`
-                : `${industry.schemeName} ${industry.schemeEdition}${industry.schemeJurisdiction ? ` · ${industry.schemeJurisdiction}` : ''}`,
-            industries: []
-          };
-          groups[key].industries.push(industry);
+          const group =
+            groups[key] ??
+            (groups[key] = {
+              key,
+              label:
+                industry.schemeCode === 'NUBLOX_INDUSTRY'
+                  ? `${industry.schemeName} · platform classification`
+                  : `${industry.schemeName} ${industry.schemeEdition}${industry.schemeJurisdiction ? ` · ${industry.schemeJurisdiction}` : ''}`,
+              industries: []
+            });
+          group.industries.push(industry);
           return groups;
         },
         {} as Record<

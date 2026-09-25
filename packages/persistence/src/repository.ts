@@ -193,6 +193,18 @@ export class MySqlKernelRepository {
           audit.actorPersonId ?? null
         ]
       );
+
+      await connection.execute(
+        `INSERT INTO tenant_authentication_policies
+          (tenant_id, mfa_requirement, session_ttl_minutes, idle_timeout_minutes,
+           max_active_sessions, created_by_person_id, updated_by_person_id)
+         VALUES (?, 'OPTIONAL', 720, 120, 10, ?, ?)`,
+        [
+          tenant.id,
+          audit.actorPersonId ?? null,
+          audit.actorPersonId ?? null
+        ]
+      );
       await writeAudit(
         connection,
         tenant.id,

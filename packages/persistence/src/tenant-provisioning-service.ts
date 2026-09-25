@@ -609,6 +609,48 @@ export class MySqlTenantProvisioningService {
     };
   }
 
+  async provisionExistingTenant(
+    tenantId: string,
+    actorPersonId: string,
+    input: TenantBusinessProfileInput
+  ): Promise<TenantProvisioningResult> {
+    return withTransaction(this.pool, async (connection) => {
+      const [tenantRows] = await connection.query<Array<RowDataPacket & { id: string }>>(
+        `SELECT id
+           FROM tenants
+          WHERE id = ?
+            AND status = 'ACTIVE'
+          LIMIT 1
+          FOR UPDATE`,
+        [tenantId]
+      );
+      if (!tenantRows[0]) {
+        throw new TenantProvisioningError('Active Tenant not found.');
+      }
+
+      const [profileRows] = await connection.query<Array<RowDataPacket & { tenant_id: string }>>(
+        `SELECT tenant_id
+           FROM tenant_business_profiles
+          WHERE tenant_id = ?
+          LIMIT 1
+          FOR UPDATE`,
+        [tenantId]
+      );
+      if (profileRows[0]) {
+        throw new TenantProvisioningError(
+          'This Tenant already has a governed Business Profile. Changes require configuration impact assessment rather than reprovisioning.'
+        );
+      }
+
+      return this.provisionRegistration(
+        connection,
+        tenantId,
+        actorPersonId,
+        input
+      );
+    });
+  }
+
   async preview(input: TenantBusinessProfileInput): Promise<{
     templates: TenantProvisioningResult['templateApplications'];
     industrySolutionIds: string[];

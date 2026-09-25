@@ -2,14 +2,24 @@
   import { page } from '$app/state';
   import type { AuthSession } from '@nublox/persistence';
   import type { Snippet } from 'svelte';
+  import { parseTenantApplicationPath, tenantAppPath, tenantSignOutPath } from '$lib/tenant-paths';
 
   let { children, session }: { children: Snippet; session: AuthSession } = $props();
   let navigationOpen = $state(false);
 
+  function currentInternalPath(pathname: string) {
+    return parseTenantApplicationPath(pathname)?.internalPath ?? pathname;
+  }
+
+  function appHref(href: string) {
+    return tenantAppPath(session.tenantSlug, href);
+  }
+
   function isActive(href: string, exact = false) {
+    const pathname = currentInternalPath(page.url.pathname);
     return exact
-      ? page.url.pathname === href
-      : page.url.pathname === href || page.url.pathname.startsWith(`${href}/`);
+      ? pathname === href
+      : pathname === href || pathname.startsWith(`${href}/`);
   }
 
   function closeNavigation() {
@@ -17,6 +27,7 @@
   }
 
   function currentArea(pathname: string) {
+    pathname = currentInternalPath(pathname);
     if (pathname.startsWith('/app/function')) return 'My Function';
     if (pathname.startsWith('/app/my-team')) return 'My Team';
     if (pathname.startsWith('/app/my-work')) return 'My Work';
@@ -57,7 +68,7 @@
 <div class="app-shell" class:nav-open={navigationOpen}>
   <aside class="app-sidebar" aria-label="NuBlox application navigation">
     <div class="app-brand-row">
-      <a class="app-brand" href="/app" onclick={closeNavigation}>NuBlox</a>
+      <a class="app-brand" href={appHref('/app')} onclick={closeNavigation}>NuBlox</a>
       <span class="app-version">V3</span>
     </div>
 
@@ -65,23 +76,23 @@
       <nav class="primary-nav" aria-label="Workspace navigation">
         <section class="nav-section">
           <h2>Work</h2>
-          <a class:active={isActive('/app', true)} href="/app" onclick={closeNavigation}>
+          <a class:active={isActive('/app', true)} href={appHref('/app')} onclick={closeNavigation}>
             <span class="nav-symbol">HM</span>
             <span>Home</span>
           </a>
-          <a class:active={isActive('/app/function')} href="/app/function" onclick={closeNavigation}>
+          <a class:active={isActive('/app/function')} href={appHref('/app/function')} onclick={closeNavigation}>
             <span class="nav-symbol">FN</span>
             <span>My Function</span>
           </a>
-          <a class:active={isActive('/app/my-work')} href="/app/my-work" onclick={closeNavigation}>
+          <a class:active={isActive('/app/my-work')} href={appHref('/app/my-work')} onclick={closeNavigation}>
             <span class="nav-symbol">MW</span>
             <span>My Work</span>
           </a>
-          <a class:active={isActive('/app/my-team')} href="/app/my-team" onclick={closeNavigation}>
+          <a class:active={isActive('/app/my-team')} href={appHref('/app/my-team')} onclick={closeNavigation}>
             <span class="nav-symbol">MT</span>
             <span>My Team</span>
           </a>
-          <a class:active={isActive('/app/contexts')} href="/app/contexts" onclick={closeNavigation}>
+          <a class:active={isActive('/app/contexts')} href={appHref('/app/contexts')} onclick={closeNavigation}>
             <span class="nav-symbol">CX</span>
             <span>My Contexts</span>
           </a>
@@ -89,33 +100,33 @@
 
         <section class="nav-section">
           <h2>Work products</h2>
-          <a class:active={isActive('/app/information')} href="/app/information" onclick={closeNavigation}>
+          <a class:active={isActive('/app/information')} href={appHref('/app/information')} onclick={closeNavigation}>
             <span class="nav-symbol">IN</span>
             <span>Information</span>
           </a>
-          <a class:active={isActive('/app/deliverables')} href="/app/deliverables" onclick={closeNavigation}>
+          <a class:active={isActive('/app/deliverables')} href={appHref('/app/deliverables')} onclick={closeNavigation}>
             <span class="nav-symbol">DL</span>
             <span>Deliverables</span>
           </a>
-          <a class:active={isActive('/app/exchange')} href="/app/exchange" onclick={closeNavigation}>
+          <a class:active={isActive('/app/exchange')} href={appHref('/app/exchange')} onclick={closeNavigation}>
             <span class="nav-symbol">EX</span>
             <span>Exchange control</span>
           </a>
-          <a class:active={isActive('/app/integration')} href="/app/integration" onclick={closeNavigation}>
+          <a class:active={isActive('/app/integration')} href={appHref('/app/integration')} onclick={closeNavigation}>
             <span class="nav-symbol">IP</span>
             <span>Integration control</span>
           </a>
-          <a class:active={isActive('/app/migration')} href="/app/migration" onclick={closeNavigation}>
+          <a class:active={isActive('/app/migration')} href={appHref('/app/migration')} onclick={closeNavigation}>
             <span class="nav-symbol">MG</span>
             <span>Migration control</span>
           </a>
-          <a class:active={isActive('/app/configuration')} href="/app/configuration" onclick={closeNavigation}>
+          <a class:active={isActive('/app/configuration')} href={appHref('/app/configuration')} onclick={closeNavigation}>
             <span class="nav-symbol">CC</span>
             <span>Change &amp; configuration</span>
           </a>
           <a
             class:active={isActive('/app/configuration-resolution')}
-            href="/app/configuration-resolution"
+            href={appHref('/app/configuration-resolution')}
             onclick={closeNavigation}
           >
             <span class="nav-symbol">CR</span>
@@ -125,29 +136,29 @@
 
         <section class="nav-section">
           <h2>Governance</h2>
-          <a class:active={isActive('/app/hcm')} href="/app/hcm" onclick={closeNavigation}>
+          <a class:active={isActive('/app/hcm')} href={appHref('/app/hcm')} onclick={closeNavigation}>
             <span class="nav-symbol">HC</span>
             <span>Human Capital</span>
           </a>
-          <a class:active={isActive('/app/competence')} href="/app/competence" onclick={closeNavigation}>
+          <a class:active={isActive('/app/competence')} href={appHref('/app/competence')} onclick={closeNavigation}>
             <span class="nav-symbol">CP</span>
             <span>Competence</span>
           </a>
-          <a class:active={isActive('/app/control')} href="/app/control" onclick={closeNavigation}>
+          <a class:active={isActive('/app/control')} href={appHref('/app/control')} onclick={closeNavigation}>
             <span class="nav-symbol">CT</span>
             <span>Control</span>
           </a>
-          <a class:active={isActive('/app/access')} href="/app/access" onclick={closeNavigation}>
+          <a class:active={isActive('/app/access')} href={appHref('/app/access')} onclick={closeNavigation}>
             <span class="nav-symbol">AC</span>
             <span>Access</span>
           </a>
-          <a class:active={isActive('/app/policy')} href="/app/policy" onclick={closeNavigation}>
+          <a class:active={isActive('/app/policy')} href={appHref('/app/policy')} onclick={closeNavigation}>
             <span class="nav-symbol">PL</span>
             <span>Policy</span>
           </a>
           <a
             class:active={isActive('/app/security-classification')}
-            href="/app/security-classification"
+            href={appHref('/app/security-classification')}
             onclick={closeNavigation}
           >
             <span class="nav-symbol">SC</span>
@@ -155,7 +166,7 @@
           </a>
           <a
             class:active={isActive('/app/validation-policy')}
-            href="/app/validation-policy"
+            href={appHref('/app/validation-policy')}
             onclick={closeNavigation}
           >
             <span class="nav-symbol">VR</span>
@@ -163,33 +174,33 @@
           </a>
           <a
             class:active={isActive('/app/metadata')}
-            href="/app/metadata"
+            href={appHref('/app/metadata')}
             onclick={closeNavigation}
           >
             <span class="nav-symbol">MD</span>
             <span>Metadata governance</span>
           </a>
-          <a class:active={isActive('/app/extensions')} href="/app/extensions" onclick={closeNavigation}>
+          <a class:active={isActive('/app/extensions')} href={appHref('/app/extensions')} onclick={closeNavigation}>
             <span class="nav-symbol">EG</span>
             <span>Extension governance</span>
           </a>
-          <a class:active={isActive('/app/configuration-promotion')} href="/app/configuration-promotion" onclick={closeNavigation}>
+          <a class:active={isActive('/app/configuration-promotion')} href={appHref('/app/configuration-promotion')} onclick={closeNavigation}>
             <span class="nav-symbol">PG</span>
             <span>Configuration promotion</span>
           </a>
-          <a class:active={isActive('/app/records-retention')} href="/app/records-retention" onclick={closeNavigation}>
+          <a class:active={isActive('/app/records-retention')} href={appHref('/app/records-retention')} onclick={closeNavigation}>
             <span class="nav-symbol">RR</span>
             <span>Records retention</span>
           </a>
-          <a class:active={isActive('/app/supplier-sourcing')} href="/app/supplier-sourcing" onclick={closeNavigation}>
+          <a class:active={isActive('/app/supplier-sourcing')} href={appHref('/app/supplier-sourcing')} onclick={closeNavigation}>
             <span class="nav-symbol">SS</span>
             <span>Supplier sourcing</span>
           </a>
-          <a class:active={isActive('/app/manufacturing')} href="/app/manufacturing" onclick={closeNavigation}>
+          <a class:active={isActive('/app/manufacturing')} href={appHref('/app/manufacturing')} onclick={closeNavigation}>
             <span class="nav-symbol">MF</span>
             <span>Manufacturing</span>
           </a>
-          <a class:active={isActive('/app/service-delivery')} href="/app/service-delivery" onclick={closeNavigation}>
+          <a class:active={isActive('/app/service-delivery')} href={appHref('/app/service-delivery')} onclick={closeNavigation}>
             <span class="nav-symbol">SD</span>
             <span>Service delivery</span>
           </a>
@@ -230,7 +241,7 @@
           <strong>{session.personName}</strong>
           <span>{session.tenantName}</span>
         </div>
-        <form method="POST" action="/logout">
+        <form method="POST" action={tenantSignOutPath(session.tenantSlug)}>
           <button type="submit" class="quiet-button">Sign out</button>
         </form>
       </div>

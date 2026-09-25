@@ -182,7 +182,7 @@ CREATE TABLE tenant_industry_solution_assignments (
   industry_solution_id VARCHAR(32) NOT NULL,
   source_template_id VARCHAR(64) NULL,
   status VARCHAR(16) NOT NULL DEFAULT 'ACTIVE',
-  activated_at DATETIME(6) NOT NULL DEFAULT UTC_TIMESTAMP(6),
+  activated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   created_by_person_id VARCHAR(64) NULL,
   PRIMARY KEY (tenant_id, industry_solution_id),
   CONSTRAINT fk_tenant_industry_solution_tenant

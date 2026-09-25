@@ -178,7 +178,7 @@
       {/if}
 
       <p class="login-help">
-        {#if data.tenantSlug && data.passkeyEnabled}
+        {#if data.tenantSlug}
           <a href={`/${data.tenantSlug}/app/auth/forgot-password`}>Forgot password?</a> ·
 
           Employee access is separate from public and candidate access.

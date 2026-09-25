@@ -1,5 +1,6 @@
 import {
   PLATFORM_PERMISSION_KEYS,
+  type CareerTrack,
   type EmploymentStatus,
   type EmploymentType,
   type PositionReportingRelationshipType,
@@ -30,6 +31,7 @@ type OrganisationTenantId=Parameters<MySqlOrganisationReadRepository['getStructu
 function value(form:FormData,name:string){return String(form.get(name)??'').trim();}
 function optionalValue(form:FormData,name:string){const result=value(form,name);return result||undefined;}
 function boolValue(form:FormData,name:string){return ['true','1','on','yes'].includes(value(form,name).toLowerCase());}
+function numberValue(form:FormData,name:string){const result=Number(value(form,name));if(!Number.isFinite(result))throw new HcmCommandError(`${name} must be numeric.`,'INVALID_INPUT');return result;}
 function enumValue<T extends string>(raw:string,allowed:readonly T[],label:string):T{
   if(!allowed.includes(raw as T)) throw new HcmCommandError(`A valid ${label} is required.`,'INVALID_INPUT');
   return raw as T;
@@ -68,8 +70,57 @@ const EMPLOYMENT_TYPES=['PERMANENT','FIXED_TERM','TEMPORARY','APPRENTICE','INTER
 const EMPLOYMENT_STATUSES=['PENDING','ACTIVE','SUSPENDED','ENDED'] as const satisfies readonly EmploymentStatus[];
 const PURPOSES=['FUNCTIONAL_GOVERNANCE','FUNCTIONAL_DELIVERY'] as const satisfies readonly DeploymentPurpose[];
 const REPORTING_TYPES=['LINE_MANAGER','FUNCTIONAL_MANAGER','DOTTED_LINE'] as const satisfies readonly PositionReportingRelationshipType[];
+const CAREER_TRACKS=['INDIVIDUAL_CONTRIBUTOR','MANAGEMENT','EXECUTIVE','SPECIALIST'] as const satisfies readonly CareerTrack[];
 
 export const actions:Actions={
+  createJobFamily:async({request,locals})=>{
+    try{
+      const session=signedIn(locals);const form=await request.formData();
+      const result=await getHcmCommandService().createJobFamily(session.tenantId as TenantId,session.personId,{
+        code:value(form,'code'),name:value(form,'name'),description:optionalValue(form,'description')
+      });
+      return {action:'createJobFamily',ok:true,message:`Job Family ${result.code} — ${result.name} created.`};
+    }catch(error){return actionFailure(error,'createJobFamily');}
+  },
+  createJobSubfamily:async({request,locals})=>{
+    try{
+      const session=signedIn(locals);const form=await request.formData();
+      const result=await getHcmCommandService().createJobSubfamily(session.tenantId as TenantId,session.personId,{
+        familyId:value(form,'familyId'),code:value(form,'code'),name:value(form,'name'),description:optionalValue(form,'description')
+      });
+      return {action:'createJobSubfamily',ok:true,message:`Job Sub-family ${result.code} — ${result.name} created.`};
+    }catch(error){return actionFailure(error,'createJobSubfamily');}
+  },
+  createCareerLevel:async({request,locals})=>{
+    try{
+      const session=signedIn(locals);const form=await request.formData();
+      const result=await getHcmCommandService().createCareerLevel(session.tenantId as TenantId,session.personId,{
+        code:value(form,'code'),name:value(form,'name'),
+        track:enumValue(value(form,'track'),CAREER_TRACKS,'career track'),sequence:numberValue(form,'sequence')
+      });
+      return {action:'createCareerLevel',ok:true,message:`Career Level ${result.code} — ${result.name} created.`};
+    }catch(error){return actionFailure(error,'createCareerLevel');}
+  },
+  createGrade:async({request,locals})=>{
+    try{
+      const session=signedIn(locals);const form=await request.formData();
+      const result=await getHcmCommandService().createGrade(session.tenantId as TenantId,session.personId,{
+        code:value(form,'code'),name:value(form,'name'),sequence:numberValue(form,'sequence')
+      });
+      return {action:'createGrade',ok:true,message:`Grade ${result.code} — ${result.name} created.`};
+    }catch(error){return actionFailure(error,'createGrade');}
+  },
+  assignJobArchitecture:async({request,locals})=>{
+    try{
+      const session=signedIn(locals);const form=await request.formData();
+      const result=await getHcmCommandService().assignJobProfileArchitecture(session.tenantId as TenantId,session.personId,{
+        jobProfileId:value(form,'jobProfileId'),familyId:value(form,'familyId'),
+        subfamilyId:optionalValue(form,'subfamilyId'),careerLevelId:optionalValue(form,'careerLevelId'),
+        gradeId:optionalValue(form,'gradeId'),effectiveFrom:optionalValue(form,'effectiveFrom'),effectiveTo:optionalValue(form,'effectiveTo')
+      });
+      return {action:'assignJobArchitecture',ok:true,message:`Job Profile architecture assigned to ${result.jobProfileId}.`};
+    }catch(error){return actionFailure(error,'assignJobArchitecture');}
+  },
   createJobProfile:async({request,locals})=>{
     try{
       const session=signedIn(locals);const form=await request.formData();

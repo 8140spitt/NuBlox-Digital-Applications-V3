@@ -1,6 +1,12 @@
 import type {
   EmploymentId,
   FunctionId,
+  JobFamilyId,
+  JobSubfamilyId,
+  CareerLevelId,
+  GradeId,
+  JobProfileArchitectureAssignmentId,
+  JobProfileId,
   OrganisationId,
   PersonId,
   PositionFunctionAssignmentId,
@@ -42,6 +48,60 @@ export interface Employment {
   startDate: string;
   endDate?: string;
   status: EmploymentStatus;
+}
+
+
+export interface JobFamily {
+  id: JobFamilyId;
+  tenantId: TenantId;
+  code: string;
+  name: string;
+  description?: string;
+  status: RecordStatus;
+}
+
+export interface JobSubfamily {
+  id: JobSubfamilyId;
+  tenantId: TenantId;
+  familyId: JobFamilyId;
+  code: string;
+  name: string;
+  description?: string;
+  status: RecordStatus;
+}
+
+export type CareerTrack = 'INDIVIDUAL_CONTRIBUTOR' | 'MANAGEMENT' | 'EXECUTIVE' | 'SPECIALIST';
+
+export interface CareerLevel {
+  id: CareerLevelId;
+  tenantId: TenantId;
+  code: string;
+  name: string;
+  track: CareerTrack;
+  sequence: number;
+  status: RecordStatus;
+}
+
+export interface Grade {
+  id: GradeId;
+  tenantId: TenantId;
+  code: string;
+  name: string;
+  sequence: number;
+  status: RecordStatus;
+}
+
+export interface JobProfileArchitectureAssignment {
+  id: JobProfileArchitectureAssignmentId;
+  tenantId: TenantId;
+  jobProfileId: JobProfileId;
+  familyId: JobFamilyId;
+  subfamilyId?: JobSubfamilyId;
+  careerLevelId?: CareerLevelId;
+  gradeId?: GradeId;
+  effectiveFrom: string;
+  effectiveTo?: string;
+  status: RecordStatus;
 }
 
 export interface PositionFunctionAssignment {

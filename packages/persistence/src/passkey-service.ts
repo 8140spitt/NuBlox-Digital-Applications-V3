@@ -687,7 +687,11 @@ export class MySqlPasskeyService {
 
       const authData = cborBuffer(attestation.get('authData'));
       const parsed = parseAuthenticatorData(authData, challenge.rp_id, true);
-      const credentialId = parsed.credentialId!;
+      const credentialId = parsed.credentialId;
+      const publicKeyCose = parsed.publicKeyCose;
+      if (!credentialId || !publicKeyCose) {
+        throw new PasskeyError('The authenticator did not provide complete credential data.', 'INVALID_RESPONSE');
+      }
       const rawId = response.rawId ?? response.id;
 
       if (credentialId !== response.id || credentialId !== rawId) {
@@ -739,7 +743,7 @@ export class MySqlPasskeyService {
             principal.personId,
             userHandle,
             displayName,
-            parsed.publicKeyCose,
+            publicKeyCose,
             ES256_ALGORITHM,
             parsed.counter,
             transports.length > 0 ? transports.join(',') : null,
@@ -885,13 +889,14 @@ export class MySqlPasskeyService {
         rpId,
         timeout: CHALLENGE_TTL_SECONDS * 1000,
         userVerification: 'required',
-        allowCredentials: passkeys.map((passkey) => ({
-          type: 'public-key',
-          id: passkey.credential_id,
-          ...(parseStoredTransports(passkey.transports)
-            ? { transports: parseStoredTransports(passkey.transports) }
-            : {})
-        }))
+        allowCredentials: passkeys.map((passkey) => {
+          const transports = parseStoredTransports(passkey.transports);
+          return {
+            type: 'public-key' as const,
+            id: passkey.credential_id,
+            ...(transports ? { transports } : {})
+          };
+        })
       }
     };
   }

@@ -17,6 +17,7 @@ import type { Pool, PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql
 import { withTransaction } from './database.js';
 import { MySqlFunctionWorkAuthorizationService } from './function-work-authorization.js';
 import { writeOutboxEvent } from './platform-writes.js';
+import { upsertPartyType } from './party-type-writes.js';
 
 interface OrganisationRow extends RowDataPacket {
   id:string;tenant_id:string;party_id:string;legal_name:string;trading_name:string|null;status:'ACTIVE'|'INACTIVE';
@@ -165,6 +166,12 @@ export class MySqlSalesCommandService {
           [account.id,tenantId,account.canonicalObjectId,account.organisationId,account.code,
            account.ownerPositionId,account.segment??null,actorPersonId,actorPersonId]
         );
+        await upsertPartyType(connection,{
+          tenantId,
+          partyId:organisation.partyId,
+          partyType:'CLIENT',
+          actorPersonId
+        });
         const organisationObject=await this.requireCanonicalObject(connection,tenantId,'ORGANISATION',organisation.id);
         await this.createCanonicalRelationship(
           connection,tenantId,'ORGANISATION_HAS_SALES_ACCOUNT',organisationObject.id,canonical.id,actorPersonId

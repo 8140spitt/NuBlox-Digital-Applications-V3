@@ -25,6 +25,7 @@ import {
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
+import { deriveTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
 
 export interface AuditContext {
   actorPersonId?: string;
@@ -168,13 +169,32 @@ export class MySqlKernelRepository {
   constructor(private readonly pool: Pool) {}
 
   async createTenant(tenant: Tenant, audit: AuditContext = {}): Promise<void> {
+    const slug = tenant.slug
+      ? normaliseTenantSlug(tenant.slug)
+      : deriveTenantSlug(tenant.name, tenant.id);
+
     await withTransaction(this.pool, async (connection) => {
       await connection.execute(
-        `INSERT INTO tenants (id, name, status, created_by_person_id, updated_by_person_id)
-         VALUES (?, ?, ?, ?, ?)`,
-        [tenant.id, tenant.name, tenant.status, audit.actorPersonId ?? null, audit.actorPersonId ?? null]
+        `INSERT INTO tenants (id, slug, name, status, created_by_person_id, updated_by_person_id)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [
+          tenant.id,
+          slug,
+          tenant.name,
+          tenant.status,
+          audit.actorPersonId ?? null,
+          audit.actorPersonId ?? null
+        ]
       );
-      await writeAudit(connection, tenant.id, 'TENANT', tenant.id, 'CREATED', audit, tenant);
+      await writeAudit(
+        connection,
+        tenant.id,
+        'TENANT',
+        tenant.id,
+        'CREATED',
+        audit,
+        { ...tenant, slug }
+      );
     });
   }
 

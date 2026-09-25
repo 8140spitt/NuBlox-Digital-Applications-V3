@@ -1,9 +1,3 @@
-ALTER TABLE application_sessions
-  DROP CHECK chk_application_sessions_authentication_method,
-  ADD CONSTRAINT chk_application_sessions_authentication_method CHECK (
-    authentication_method IN ('PASSWORD', 'PASSWORD_TOTP', 'PASSKEY', 'OIDC')
-  );
-
 CREATE TABLE application_oidc_providers (
   id VARCHAR(64) NOT NULL PRIMARY KEY,
   tenant_id VARCHAR(64) NOT NULL,
@@ -37,6 +31,22 @@ CREATE TABLE application_oidc_providers (
     status IN ('ACTIVE', 'DISABLED')
   )
 ) ENGINE=InnoDB;
+
+ALTER TABLE application_sessions
+  DROP CHECK chk_application_sessions_authentication_method,
+  ADD COLUMN authentication_provider_id VARCHAR(64) NULL AFTER authentication_method,
+  ADD CONSTRAINT chk_application_sessions_authentication_method CHECK (
+    authentication_method IN ('PASSWORD', 'PASSWORD_TOTP', 'PASSKEY', 'OIDC', 'OIDC_TOTP')
+  ),
+  ADD CONSTRAINT chk_application_sessions_provider_binding CHECK (
+    (authentication_method IN ('OIDC', 'OIDC_TOTP') AND authentication_provider_id IS NOT NULL)
+    OR
+    (authentication_method NOT IN ('OIDC', 'OIDC_TOTP') AND authentication_provider_id IS NULL)
+  ),
+  ADD CONSTRAINT fk_application_sessions_authentication_provider
+    FOREIGN KEY (authentication_provider_id)
+    REFERENCES application_oidc_providers(id)
+    ON DELETE SET NULL;
 
 CREATE TABLE application_oidc_login_challenges (
   state_hash CHAR(64) NOT NULL PRIMARY KEY,
@@ -90,3 +100,19 @@ CREATE TABLE application_federated_identities (
     REFERENCES application_user_tenants(user_id, tenant_id, person_id)
     ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+ALTER TABLE application_mfa_login_challenges
+  ADD COLUMN base_authentication_method VARCHAR(16) NOT NULL DEFAULT 'PASSWORD' AFTER mode,
+  ADD COLUMN authentication_provider_id VARCHAR(64) NULL AFTER base_authentication_method,
+  ADD CONSTRAINT chk_application_mfa_login_base_method CHECK (
+    base_authentication_method IN ('PASSWORD', 'OIDC')
+  ),
+  ADD CONSTRAINT chk_application_mfa_login_provider_binding CHECK (
+    (base_authentication_method = 'OIDC' AND authentication_provider_id IS NOT NULL)
+    OR
+    (base_authentication_method = 'PASSWORD' AND authentication_provider_id IS NULL)
+  ),
+  ADD CONSTRAINT fk_application_mfa_login_authentication_provider
+    FOREIGN KEY (authentication_provider_id)
+    REFERENCES application_oidc_providers(id)
+    ON DELETE CASCADE;

@@ -40,6 +40,10 @@
         </p>
       </header>
 
+      {#if data.passwordReset}
+        <p class="form-message info">Password updated. Sign in with your new password.</p>
+      {/if}
+
       <form method="POST" class="login-form">
         <input
           type="hidden"
@@ -87,8 +91,8 @@
         {#if form?.verificationRequired}
           <p class="form-message info">
             Verify this email address before signing in.
-            <a href={`/${data.tenantSlug}/app/auth/check-email?email=${encodeURIComponent(form.email ?? '')}`}>
-              Resend verification
+            <a href={`/${form.verificationTenantSlug}/app/auth/check-email?email=${encodeURIComponent(form.email ?? '')}`}>
+              Resend verification{form.verificationTenantName ? ` for ${form.verificationTenantName}` : ''}
             </a>
           </p>
         {:else if form?.invalid}

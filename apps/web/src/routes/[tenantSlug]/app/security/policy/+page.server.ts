@@ -58,12 +58,13 @@ export const actions: Actions = {
           session.tenantSlug,
           `/${session.tenantSlug}/app/security/policy`
         ),
-        error: 'A recent MFA verification is required to change Tenant authentication policy.'
+        error: 'A recent strong authentication is required to change Tenant authentication policy.'
       });
     }
 
     const formData = await request.formData();
     const mfaRequirement = String(formData.get('mfaRequirement') ?? '').trim();
+    const passkeyEnabled = formData.get('passkeyEnabled') === 'on';
     const sessionTtlMinutes = Number(formData.get('sessionTtlMinutes'));
     const idleTimeoutMinutes = Number(formData.get('idleTimeoutMinutes'));
     const maxActiveSessions = Number(formData.get('maxActiveSessions'));
@@ -78,6 +79,7 @@ export const actions: Actions = {
         session.personId,
         {
           mfaRequirement,
+          passkeyEnabled,
           sessionTtlMinutes,
           idleTimeoutMinutes,
           maxActiveSessions

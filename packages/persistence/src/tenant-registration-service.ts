@@ -30,6 +30,7 @@ export interface TenantRegistrationInput {
   email: string;
   password: string;
   acceptedTerms: boolean;
+  grantTenantAdministrator?: boolean;
 }
 
 export interface TenantRegistrationResult {
@@ -240,22 +241,24 @@ export class MySqlTenantRegistrationService {
         [userId, tenantId, personId]
       );
 
-      await connection.execute(
-        `INSERT INTO access_role_assignments
-          (id, tenant_id, access_role_id, principal_type, principal_id,
-           scope_type, scope_id, effective_from, effective_to, status,
-           created_by_person_id, updated_by_person_id)
-         VALUES (?, ?, ?, 'PERSON', ?, 'TENANT', NULL, ?, NULL, 'ACTIVE', ?, ?)`,
-        [
-          accessAssignmentId,
-          tenantId,
-          PLATFORM_ADMINISTRATOR_ROLE_ID,
-          personId,
-          effectiveFrom,
-          personId,
-          personId
-        ]
-      );
+      if (input.grantTenantAdministrator !== false) {
+        await connection.execute(
+          `INSERT INTO access_role_assignments
+            (id, tenant_id, access_role_id, principal_type, principal_id,
+             scope_type, scope_id, effective_from, effective_to, status,
+             created_by_person_id, updated_by_person_id)
+           VALUES (?, ?, ?, 'PERSON', ?, 'TENANT', NULL, ?, NULL, 'ACTIVE', ?, ?)`,
+          [
+            accessAssignmentId,
+            tenantId,
+            PLATFORM_ADMINISTRATOR_ROLE_ID,
+            personId,
+            effectiveFrom,
+            personId,
+            personId
+          ]
+        );
+      }
 
       await connection.execute(
         `INSERT INTO application_auth_events
@@ -289,20 +292,22 @@ export class MySqlTenantRegistrationService {
         partyId: employeePartyId,
         partyType: 'EMPLOYEE'
       });
-      await audit(
-        connection,
-        tenantId,
-        'ACCESS_ROLE_ASSIGNMENT',
-        accessAssignmentId,
-        'GRANTED',
-        personId,
-        {
-          accessRoleId: PLATFORM_ADMINISTRATOR_ROLE_ID,
-          principalType: 'PERSON',
-          principalId: personId,
-          scopeType: 'TENANT'
-        }
-      );
+      if (input.grantTenantAdministrator !== false) {
+        await audit(
+          connection,
+          tenantId,
+          'ACCESS_ROLE_ASSIGNMENT',
+          accessAssignmentId,
+          'GRANTED',
+          personId,
+          {
+            accessRoleId: PLATFORM_ADMINISTRATOR_ROLE_ID,
+            principalType: 'PERSON',
+            principalId: personId,
+            scopeType: 'TENANT'
+          }
+        );
+      }
 
       return {
         tenantId,

@@ -25,6 +25,9 @@ export interface TenantProvisioningCatalogue {
   industries: Array<{
     classificationValueId: string;
     schemeCode: string;
+    schemeName: string;
+    schemeEdition: string;
+    schemeJurisdiction: string | null;
     classificationCode: string;
     name: string;
     industrySolutionId: string | null;
@@ -113,7 +116,9 @@ export class TenantProvisioningError extends Error {
 interface ClassificationRow extends RowDataPacket {
   id: string;
   scheme_code: string;
+  scheme_name: string;
   scheme_edition: string;
+  scheme_jurisdiction: string | null;
   value_code: string;
   value_name: string;
   industry_solution_id: string | null;
@@ -346,7 +351,9 @@ export class MySqlTenantProvisioningService {
       this.pool.query<ClassificationRow[]>(
         `SELECT v.id,
                 s.code AS scheme_code,
+                s.name AS scheme_name,
                 s.edition AS scheme_edition,
+                s.jurisdiction AS scheme_jurisdiction,
                 v.code AS value_code,
                 v.name AS value_name,
                 ism.industry_solution_id,
@@ -361,8 +368,10 @@ export class MySqlTenantProvisioningService {
              ON i.id = ism.industry_solution_id
             AND i.status = 'ACTIVE'
           WHERE v.status = 'ACTIVE'
-            AND s.code <> 'NUBLOX_INDUSTRY'
-          ORDER BY s.code, v.code`
+          ORDER BY
+            CASE WHEN s.code = 'NUBLOX_INDUSTRY' THEN 0 ELSE 1 END,
+            s.code,
+            v.code`
       ),
       this.pool.query<OperatingModelRow[]>(
         `SELECT code, name, description
@@ -382,8 +391,11 @@ export class MySqlTenantProvisioningService {
       industries: industryResult[0].map((row) => ({
         classificationValueId: row.id,
         schemeCode: row.scheme_code,
+        schemeName: row.scheme_name,
+        schemeEdition: row.scheme_edition,
+        schemeJurisdiction: row.scheme_jurisdiction,
         classificationCode: row.value_code,
-        name: `${row.scheme_code} ${row.scheme_edition} — ${row.value_name}`,
+        name: row.value_name,
         industrySolutionId: row.industry_solution_id,
         industrySolutionName: row.industry_solution_name
       })),
@@ -938,7 +950,9 @@ export class MySqlTenantProvisioningService {
     const [classificationRows] = await connection.query<ClassificationRow[]>(
       `SELECT v.id,
               s.code AS scheme_code,
+              s.name AS scheme_name,
               s.edition AS scheme_edition,
+              s.jurisdiction AS scheme_jurisdiction,
               v.code AS value_code,
               v.name AS value_name,
               ism.industry_solution_id,

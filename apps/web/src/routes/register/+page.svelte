@@ -4,6 +4,8 @@
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
   let step = $state(1);
+  let registrationForm: HTMLFormElement;
+  let wizardMessage = $state('');
   let businessName = $state(form?.businessName ?? '');
   let primaryClassificationValueId = $state(form?.primaryClassificationValueId ?? '');
   let sizeTier = $state(form?.sizeTier ?? '');
@@ -19,6 +21,31 @@
   );
 
   function nextStep() {
+    wizardMessage = '';
+
+    const fieldset = registrationForm?.querySelector<HTMLFieldSetElement>(
+      `fieldset[data-step="${step}"]`
+    );
+    const controls = fieldset
+      ? Array.from(
+          fieldset.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+            'input, select, textarea'
+          )
+        )
+      : [];
+
+    for (const control of controls) {
+      if (!control.checkValidity()) {
+        control.reportValidity();
+        return;
+      }
+    }
+
+    if (step === 2 && operatingModelCodes.length === 0) {
+      wizardMessage = 'Select at least one operating model.';
+      return;
+    }
+
     step = Math.min(4, step + 1);
   }
 
@@ -74,8 +101,8 @@
         </p>
       </header>
 
-      <form method="POST" class="login-form">
-        <fieldset hidden={step !== 1}>
+      <form method="POST" class="login-form" bind:this={registrationForm}>
+        <fieldset data-step="1" hidden={step !== 1}>
           <label>
             <span>Business name</span>
             <input
@@ -148,7 +175,7 @@
           </label>
         </fieldset>
 
-        <fieldset hidden={step !== 2}>
+        <fieldset data-step="2" hidden={step !== 2}>
           <label>
             <span>Business size</span>
             <select name="sizeTier" bind:value={sizeTier} required>
@@ -216,7 +243,7 @@
           {/if}
         </fieldset>
 
-        <fieldset hidden={step !== 3}>
+        <fieldset data-step="3" hidden={step !== 3}>
           <div class="home-primary-grid">
             <article class="home-primary-card">
               <span>CORE</span>
@@ -266,7 +293,7 @@
           </div>
         </fieldset>
 
-        <fieldset hidden={step !== 4}>
+        <fieldset data-step="4" hidden={step !== 4}>
           <label>
             <span>Your name</span>
             <input
@@ -311,6 +338,10 @@
             <span>I accept the NuBlox terms and privacy notice.</span>
           </label>
         </fieldset>
+
+        {#if wizardMessage}
+          <p class="form-message error">{wizardMessage}</p>
+        {/if}
 
         {#if form?.error}
           <p class="form-message error">{form.error}</p>

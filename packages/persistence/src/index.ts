@@ -66,6 +66,7 @@ export * from './identity-challenge-service.js';
 export * from './identity-message-dispatcher.js';
 export * from './authentication-rate-limiter.js';
 export * from './mfa-service.js';
+export * from './tenant-authentication-policy-repository.js';
 
 export * from './extension-repository.js';
 export * from './extension-command-service.js';

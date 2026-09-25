@@ -26,7 +26,7 @@ export const actions: Actions = {
     }
 
     try {
-      const result = await getIdentityChallengeService().resetPassword(token, password);
+      const result = await getIdentityChallengeService().resetPassword(token, password, tenant.slug);
       if (result.tenantId !== tenant.tenantId || result.tenantSlug !== tenant.slug) {
         return fail(400, { error: 'The reset link does not belong to this Tenant.' });
       }

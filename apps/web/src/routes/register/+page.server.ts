@@ -2,57 +2,126 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import {
   AuthenticationRateLimitError,
-  TenantRegistrationError
+  TenantRegistrationError,
+  type TenantSizeTier
 } from '@nublox/persistence';
 import {
   getAuthenticationRateLimiter,
+  getTenantProvisioningService,
   getTenantRegistrationService
 } from '$lib/server/platform';
+
+const SIZE_TIERS = new Set<TenantSizeTier>([
+  'MICRO',
+  'SMALL',
+  'MEDIUM',
+  'LARGE',
+  'ENTERPRISE'
+]);
 
 function value(formData: FormData, name: string): string {
   return String(formData.get(name) ?? '').trim();
 }
 
-export const load: PageServerLoad = () => ({});
+function values(formData: FormData, name: string): string[] {
+  return formData
+    .getAll(name)
+    .map((item) => String(item).trim())
+    .filter(Boolean);
+}
+
+function optionalPositiveInteger(value: string): number | undefined {
+  if (!value) return undefined;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : Number.NaN;
+}
+
+function formState(formData: FormData) {
+  return {
+    businessName: value(formData, 'businessName'),
+    tenantSlug: value(formData, 'tenantSlug'),
+    primaryCountryCode: value(formData, 'primaryCountryCode').toUpperCase(),
+    primaryLanguageCode: value(formData, 'primaryLanguageCode'),
+    primaryClassificationValueId: value(formData, 'primaryClassificationValueId'),
+    sizeTier: value(formData, 'sizeTier'),
+    employeeCount: value(formData, 'employeeCount'),
+    legalEntityCount: value(formData, 'legalEntityCount'),
+    operatingModelCodes: values(formData, 'operatingModelCodes'),
+    regulatoryRegimeIds: values(formData, 'regulatoryRegimeIds'),
+    personName: value(formData, 'personName'),
+    email: value(formData, 'email'),
+    acceptedTerms: formData.get('acceptedTerms') === 'on'
+  };
+}
+
+export const load: PageServerLoad = async () => ({
+  catalogue: await getTenantProvisioningService().catalogue()
+});
 
 export const actions: Actions = {
   default: async ({ request, getClientAddress }) => {
     const formData = await request.formData();
-    const businessName = value(formData, 'businessName');
-    const tenantSlug = value(formData, 'tenantSlug');
-    const personName = value(formData, 'personName');
-    const email = value(formData, 'email');
+    const state = formState(formData);
     const password = String(formData.get('password') ?? '');
-    const acceptedTerms = formData.get('acceptedTerms') === 'on';
+
+    if (!SIZE_TIERS.has(state.sizeTier as TenantSizeTier)) {
+      return fail(400, {
+        ...state,
+        error: 'Choose a valid business size tier.'
+      });
+    }
+
+    const employeeCount = optionalPositiveInteger(state.employeeCount);
+    const legalEntityCount = optionalPositiveInteger(state.legalEntityCount);
+
+    if (Number.isNaN(employeeCount)) {
+      return fail(400, {
+        ...state,
+        error: 'Employee count must be a positive whole number when supplied.'
+      });
+    }
+
+    if (!legalEntityCount || Number.isNaN(legalEntityCount)) {
+      return fail(400, {
+        ...state,
+        error: 'Number of legal entities must be a positive whole number.'
+      });
+    }
 
     try {
       await getAuthenticationRateLimiter().consume(
         'TENANT_REGISTRATION',
-        email,
+        state.email,
         getClientAddress()
       );
 
       const registration = await getTenantRegistrationService().register({
-        businessName,
-        ...(tenantSlug ? { tenantSlug } : {}),
-        personName,
-        email,
+        businessName: state.businessName,
+        ...(state.tenantSlug ? { tenantSlug: state.tenantSlug } : {}),
+        personName: state.personName,
+        email: state.email,
         password,
-        acceptedTerms
+        acceptedTerms: state.acceptedTerms,
+        businessProfile: {
+          primaryClassificationValueId: state.primaryClassificationValueId,
+          sizeTier: state.sizeTier as TenantSizeTier,
+          ...(employeeCount !== undefined ? { employeeCount } : {}),
+          legalEntityCount,
+          primaryCountryCode: state.primaryCountryCode,
+          primaryLanguageCode: state.primaryLanguageCode,
+          operatingModelCodes: state.operatingModelCodes,
+          regulatoryRegimeIds: state.regulatoryRegimeIds
+        }
       });
 
       throw redirect(
         303,
-        `/${registration.tenantSlug}/app/auth/check-email?email=${encodeURIComponent(email)}`
+        `/${registration.tenantSlug}/app/auth/check-email?email=${encodeURIComponent(state.email)}`
       );
     } catch (error) {
       if (error instanceof AuthenticationRateLimitError) {
         return fail(429, {
-          businessName,
-          tenantSlug,
-          personName,
-          email,
-          acceptedTerms,
+          ...state,
           rateLimited: true,
           retryAfterSeconds: error.retryAfterSeconds,
           error: 'Too many registration attempts. Try again later.'
@@ -66,11 +135,7 @@ export const actions: Actions = {
             : 400;
 
         return fail(status, {
-          businessName,
-          tenantSlug,
-          personName,
-          email,
-          acceptedTerms,
+          ...state,
           error: error.message,
           code: error.code
         });

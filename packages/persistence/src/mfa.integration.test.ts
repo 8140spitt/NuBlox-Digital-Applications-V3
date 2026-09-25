@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createDatabasePool } from './database.js';
 import { migrate } from './migrations.js';
 import { MySqlAuthRepository } from './auth-repository.js';
-import { MfaError, MySqlMfaService } from './mfa-service.js';
+import { MySqlMfaService } from './mfa-service.js';
 import { MySqlTenantRegistrationService } from './tenant-registration-service.js';
 
 const enabled = Boolean(process.env.NUBLOX_DATABASE_URL);
@@ -129,7 +129,7 @@ suite('tenant-scoped TOTP MFA', () => {
         registration.tenantSlug,
         currentCode
       )
-    ).rejects.toMatchObject<MfaError>({ code: 'INVALID_CODE' });
+    ).rejects.toMatchObject({ code: 'INVALID_CODE' });
 
     const recoveryLogin = await mfa.verifyLoginChallenge(
       replayChallenge.token ?? '',

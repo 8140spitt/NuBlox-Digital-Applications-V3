@@ -386,12 +386,15 @@ async function assertSafeRemoteUrl(value: string): Promise<URL> {
     return parsed;
   }
 
-  let addresses: Awaited<ReturnType<typeof lookup>>;
-  try {
-    addresses = await lookup(parsed.hostname, { all: true, verbatim: true });
-  } catch {
-    throw new OidcError('OIDC endpoint host could not be resolved.', 'DISCOVERY_FAILED');
-  }
+  const addresses = await lookup(parsed.hostname, {
+    all: true,
+    verbatim: true
+  }).catch(() => {
+    throw new OidcError(
+      'OIDC endpoint host could not be resolved.',
+      'DISCOVERY_FAILED'
+    );
+  });
 
   if (addresses.length === 0 || addresses.some((entry) => isPrivateAddress(entry.address))) {
     throw new OidcError('OIDC endpoint cannot target a private network.', 'INVALID_CONFIGURATION');
@@ -715,7 +718,7 @@ async function verifyIdToken(
   let publicKey;
   try {
     publicKey = createPublicKey({
-      key: candidates[0] as JsonWebKey,
+      key: candidates[0]! as JsonWebKey,
       format: 'jwk'
     });
   } catch {

@@ -41,12 +41,3 @@ export function tenantPublicPath(tenantSlug: string, path = ''): string {
   return `/${tenantSlug}/public${suffix}`;
 }
 
-export function rerouteTenantApplicationPath(pathname: string): string | undefined {
-  const parsed = parseTenantApplicationPath(pathname);
-  if (!parsed) return undefined;
-
-  if (parsed.internalPath === '/app/auth/sign-in') return '/login';
-  if (parsed.internalPath === '/app/auth/sign-out') return '/logout';
-
-  return parsed.internalPath;
-}

@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS application_passkey_profiles (
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS application_passkeys (
-  credential_id VARCHAR(2048) NOT NULL PRIMARY KEY,
+  credential_id VARCHAR(2048) CHARACTER SET ascii COLLATE ascii_bin NOT NULL PRIMARY KEY,
   user_id VARCHAR(64) NOT NULL,
   tenant_id VARCHAR(64) NOT NULL,
   person_id VARCHAR(64) NOT NULL,

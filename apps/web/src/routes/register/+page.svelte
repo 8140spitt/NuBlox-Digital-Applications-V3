@@ -15,6 +15,15 @@
       templateKind: string;
     }>;
     industrySolutionIds: string[];
+    capabilityGuidance: {
+      catalogueCode: string;
+      catalogueName: string;
+      catalogueEdition: string;
+      totalCapabilities: number;
+      defaultEnabled: number;
+      availableDisabled: number;
+      hiddenNotApplicable: number;
+    } | null;
   } | null>(null);
   let businessName = $state(form?.businessName ?? '');
   let primaryClassificationValueId = $state(form?.primaryClassificationValueId ?? '');
@@ -380,6 +389,39 @@
               {#if preview.industrySolutionIds.length > 0}
                 <p class="workspace-lede">
                   Industry Solutions resolved: {preview.industrySolutionIds.join(', ')}.
+                </p>
+              {/if}
+
+              {#if preview.capabilityGuidance}
+                <div class="home-primary-grid">
+                  <article class="home-primary-card">
+                    <span>●</span>
+                    <div>
+                      <strong>{preview.capabilityGuidance.defaultEnabled}</strong>
+                      <p>Source capabilities enabled by default</p>
+                    </div>
+                  </article>
+                  <article class="home-primary-card">
+                    <span>○</span>
+                    <div>
+                      <strong>{preview.capabilityGuidance.availableDisabled}</strong>
+                      <p>Source capabilities available but disabled</p>
+                    </div>
+                  </article>
+                  <article class="home-primary-card">
+                    <span>—</span>
+                    <div>
+                      <strong>{preview.capabilityGuidance.hiddenNotApplicable}</strong>
+                      <p>Source capabilities marked hidden/not applicable</p>
+                    </div>
+                  </article>
+                </div>
+                <p class="workspace-lede">
+                  Market capability guidance from
+                  {preview.capabilityGuidance.catalogueName}
+                  {preview.capabilityGuidance.catalogueEdition}.
+                  These states are evidence for NuBlox capability composition; they do not switch
+                  off the 29 core Functions.
                 </p>
               {/if}
             </section>

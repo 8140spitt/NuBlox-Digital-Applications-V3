@@ -146,7 +146,8 @@ suite('organisation administration command service', () => {
         organisationUnitId: unit.id,
         jobProfileId: jobProfile.id,
         code: 'PM-01',
-        title: 'Project Manager'
+        title: 'Project Manager',
+        effectiveFrom: '2026-09-21T00:00:00.000Z'
       }
     );
 

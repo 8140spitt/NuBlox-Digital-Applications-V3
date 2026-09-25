@@ -88,7 +88,14 @@
           </p>
         {/if}
 
-        {#if form?.invalid}
+        {#if form?.verificationRequired}
+          <p class="form-message info">
+            Verify this email address before signing in.
+            <a href={`/${form.verificationTenantSlug}/app/auth/check-email?email=${encodeURIComponent(form.email ?? '')}`}>
+              Continue to {form.verificationTenantName ?? 'Tenant'} verification
+            </a>
+          </p>
+        {:else if form?.invalid}
           <p class="form-message error">Email or password is not valid for an active account.</p>
         {:else if form?.missing}
           <p class="form-message error">Email and password are required.</p>

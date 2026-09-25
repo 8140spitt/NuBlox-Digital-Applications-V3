@@ -114,3 +114,5 @@ export * from './universal-function-read-repository.js';
 export * from './enterprise-vocabulary-provisioning-service.js';
 
 export * from './nublox-object-runtime.js';
+
+export * from './tenant-provisioning-service.js';

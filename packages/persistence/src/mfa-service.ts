@@ -465,10 +465,10 @@ export class MySqlMfaService {
         `UPDATE application_mfa_enrollments
             SET status = 'ACTIVE',
                 verified_at = UTC_TIMESTAMP(6),
-                last_used_at = UTC_TIMESTAMP(6),
-                last_used_counter = ?
+                last_used_at = NULL,
+                last_used_counter = NULL
           WHERE id = ?`,
-        [counter, enrollment.id]
+        [enrollment.id]
       );
 
       await authEvent(connection, {

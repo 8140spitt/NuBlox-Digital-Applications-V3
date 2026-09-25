@@ -86,7 +86,12 @@ export const actions: Actions = {
           mfa.token,
           mfa.expiresAt
         );
-        throw redirect(303, `/${principal.tenantSlug}/app/auth/mfa`);
+        throw redirect(
+          303,
+          mfa.enrollmentRequired
+            ? `/${principal.tenantSlug}/app/auth/mfa/enroll`
+            : `/${principal.tenantSlug}/app/auth/mfa`
+        );
       }
 
       const userAgent = request.headers.get('user-agent')?.trim();

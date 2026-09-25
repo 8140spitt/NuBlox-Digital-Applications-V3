@@ -115,6 +115,10 @@ suite('tenant-scoped TOTP MFA', () => {
     expect(resolved?.authenticationStrength).toBe('MFA');
     expect(resolved?.mfaVerifiedAt).toBeTruthy();
 
+    const stepUpMethod = await mfa.verifyStepUp(principal, recoveryCodes[0]!);
+    expect(stepUpMethod).toBe('RECOVERY_CODE');
+    expect((await mfa.status(principal)).recoveryCodesRemaining).toBe(9);
+
     const replayChallenge = await mfa.beginLogin(
       principal,
       `/${registration.tenantSlug}/app/function`
@@ -130,11 +134,11 @@ suite('tenant-scoped TOTP MFA', () => {
     const recoveryLogin = await mfa.verifyLoginChallenge(
       replayChallenge.token ?? '',
       registration.tenantSlug,
-      recoveryCodes[0]!
+      recoveryCodes[1]!
     );
     expect(recoveryLogin.method).toBe('RECOVERY_CODE');
 
     const afterRecovery = await mfa.status(principal);
-    expect(afterRecovery.recoveryCodesRemaining).toBe(9);
+    expect(afterRecovery.recoveryCodesRemaining).toBe(8);
   });
 });

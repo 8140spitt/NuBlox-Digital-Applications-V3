@@ -62,7 +62,7 @@ export const actions: Actions = {
       const userAgent = request.headers.get('user-agent')?.trim();
       const created = await getAuthRepository().createSession(
         result.principal,
-        60 * 60 * 12,
+        undefined,
         'MFA',
         {
           ...(userAgent ? { userAgent } : {}),

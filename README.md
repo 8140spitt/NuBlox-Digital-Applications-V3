@@ -81,14 +81,14 @@ NuBlox uses the tenant as the stable business namespace:
 
 ```text
 /                                 NuBlox public product site
-/{tenantSlug}/app                  Private tenant application
+/{tenantSlug}/app                  Private tenant application, e.g. /baesystems/app
 /{tenantSlug}/app/auth/sign-in     Tenant employee sign-in
 /{tenantSlug}/public               Tenant public site
 /{tenantSlug}/public/careers       Tenant careers
 /{tenantSlug}/public/candidate     External candidate surface
 ```
 
-The immutable Tenant ID remains the security/persistence identity. The slug is routing metadata. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to the explicit `/{tenantSlug}/public` namespace.
+The immutable Tenant ID remains the security/persistence identity and is never part of the normal tenant URL. The slug is human routing metadata derived from the business name by default: `BAE Systems → baesystems → /baesystems/app`. Employee application session cookies are scoped to `/{tenantSlug}/app` and are not sent to the explicit `/{tenantSlug}/public` namespace.
 
 ## Authentication foundation
 

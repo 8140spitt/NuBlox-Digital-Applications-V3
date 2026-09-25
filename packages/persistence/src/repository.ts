@@ -207,6 +207,9 @@ export class MySqlKernelRepository {
 
   async createParty(tenantId: TenantId, party: Party, audit: AuditContext = {}): Promise<void> {
     assertTenant(tenantId, party.tenantId);
+    if (party.partyTypes?.includes('TENANT')) {
+      throw new Error('TENANT Party Type must be established through the authoritative Tenant Party binding.');
+    }
     await withTransaction(this.pool, async (connection) => {
       await connection.execute(
         `INSERT INTO parties
@@ -240,6 +243,22 @@ export class MySqlKernelRepository {
     assertTenant(tenantId, assignment.tenantId);
     const party = await this.requireParty(tenantId, assignment.partyId);
     createPartyTypeAssignment(assignment, party);
+
+    if (assignment.partyType === 'TENANT') {
+      if (assignment.status !== 'ACTIVE') {
+        throw new Error('The authoritative TENANT Party Type cannot be deactivated through generic Party Type administration.');
+      }
+      const [rows] = await this.pool.execute<Array<RowDataPacket & { count: number }>>(
+        `SELECT COUNT(*) AS count
+           FROM tenant_party_bindings
+          WHERE tenant_id = ?
+            AND party_id = ?`,
+        [tenantId, assignment.partyId]
+      );
+      if ((rows[0]?.count ?? 0) !== 1) {
+        throw new Error('TENANT Party Type must match the authoritative Tenant Party binding.');
+      }
+    }
 
     await withTransaction(this.pool, async (connection) => {
       await this.upsertPartyTypeAssignment(connection, assignment, audit);

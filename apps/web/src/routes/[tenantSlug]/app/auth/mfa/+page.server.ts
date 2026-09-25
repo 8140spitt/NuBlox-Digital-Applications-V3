@@ -34,7 +34,7 @@ export const load: PageServerLoad = ({ cookies, locals }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ request, cookies, locals }) => {
+  default: async ({ request, cookies, locals, getClientAddress }) => {
     const tenant = locals.tenant;
     if (!tenant) return fail(404, { error: 'Tenant not found.' });
 
@@ -59,10 +59,15 @@ export const actions: Actions = {
         code
       );
 
+      const userAgent = request.headers.get('user-agent')?.trim();
       const created = await getAuthRepository().createSession(
         result.principal,
         60 * 60 * 12,
-        'MFA'
+        'MFA',
+        {
+          ...(userAgent ? { userAgent } : {}),
+          networkAddress: getClientAddress()
+        }
       );
       setTenantApplicationSession(
         cookies,

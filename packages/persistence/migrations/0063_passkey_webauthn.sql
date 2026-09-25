@@ -25,7 +25,7 @@ CREATE TABLE application_passkey_profiles (
 ) ENGINE=InnoDB;
 
 CREATE TABLE application_passkeys (
-  credential_id VARCHAR(1024) NOT NULL PRIMARY KEY,
+  credential_id VARCHAR(2048) NOT NULL PRIMARY KEY,
   user_id VARCHAR(64) NOT NULL,
   tenant_id VARCHAR(64) NOT NULL,
   person_id VARCHAR(64) NOT NULL,

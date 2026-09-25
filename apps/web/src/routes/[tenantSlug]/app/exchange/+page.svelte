@@ -209,7 +209,7 @@
               <select name="recipientPartyId" required>
                 <option value="">Select party</option>
                 {#each data.projection.parties as item}
-                  <option value={item.id}>{item.displayName} · {item.kind}</option>
+                  <option value={item.id}>{item.displayName}</option>
                 {/each}
               </select>
             </label>

@@ -1497,6 +1497,11 @@ export class MySqlDeliverableRepository {
         ...(row.job_profile_id ? { jobProfileId: String(row.job_profile_id) as NonNullable<Position['jobProfileId']> } : {}),
         code: String(row.code),
         title: String(row.title),
+        lifecycleStatus: row.lifecycle_status as Position['lifecycleStatus'],
+        incumbencyModel: row.incumbency_model as Position['incumbencyModel'],
+        authorisedFte: Number(row.authorised_fte),
+        effectiveFrom: new Date(String(row.effective_from)).toISOString(),
+        ...(row.effective_to ? { effectiveTo: new Date(String(row.effective_to)).toISOString() } : {}),
         status: row.status as Position['status']
       };
     }

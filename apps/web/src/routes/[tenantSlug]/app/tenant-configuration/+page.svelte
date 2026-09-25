@@ -2,6 +2,19 @@
   import type { ActionData, PageData } from './$types';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(
+    form as ActionData &
+      Partial<{
+        primaryClassificationValueId: string;
+        sizeTier: string;
+        employeeCount: string;
+        legalEntityCount: string;
+        primaryCountryCode: string;
+        primaryLanguageCode: string;
+        operatingModelCodes: string[];
+        regulatoryRegimeIds: string[];
+      }>
+  );
 
   function formatDate(value: string | null) {
     if (!value) return '—';
@@ -74,7 +87,7 @@
             {#each catalogue.industries as industry}
               <option
                 value={industry.classificationValueId}
-                selected={form?.primaryClassificationValueId === industry.classificationValueId}
+                selected={viewForm?.primaryClassificationValueId === industry.classificationValueId}
               >
                 {industry.schemeCode} {industry.schemeEdition} · {industry.classificationCode} · {industry.name}
               </option>
@@ -87,7 +100,7 @@
           <select name="sizeTier" required>
             <option value="">Choose a size tier</option>
             {#each catalogue.sizeTiers as tier}
-              <option value={tier.code} selected={form?.sizeTier === tier.code}>
+              <option value={tier.code} selected={viewForm?.sizeTier === tier.code}>
                 {tier.name} · {tier.employeeRange} employees
               </option>
             {/each}
@@ -101,7 +114,7 @@
             type="number"
             min="1"
             step="1"
-            value={form?.employeeCount ?? ''}
+            value={viewForm?.employeeCount ?? ''}
           />
         </label>
 
@@ -112,7 +125,7 @@
             type="number"
             min="1"
             step="1"
-            value={form?.legalEntityCount ?? '1'}
+            value={viewForm?.legalEntityCount ?? '1'}
             required
           />
         </label>
@@ -124,7 +137,7 @@
             maxlength="2"
             pattern="[A-Za-z]{2}"
             placeholder="GB"
-            value={form?.primaryCountryCode ?? ''}
+            value={viewForm?.primaryCountryCode ?? ''}
             required
           />
         </label>
@@ -135,7 +148,7 @@
             name="primaryLanguageCode"
             maxlength="16"
             placeholder="en-GB"
-            value={form?.primaryLanguageCode ?? ''}
+            value={viewForm?.primaryLanguageCode ?? ''}
             required
           />
         </label>
@@ -149,7 +162,7 @@
                 name="operatingModelCodes"
                 type="checkbox"
                 value={model.code}
-                checked={form?.operatingModelCodes?.includes(model.code) ?? false}
+                checked={viewForm?.operatingModelCodes?.includes(model.code) ?? false}
               />
               <span><strong>{model.name}</strong> — {model.description}</span>
             </label>
@@ -165,7 +178,7 @@
                   name="regulatoryRegimeIds"
                   type="checkbox"
                   value={regime.id}
-                  checked={form?.regulatoryRegimeIds?.includes(regime.id) ?? false}
+                  checked={viewForm?.regulatoryRegimeIds?.includes(regime.id) ?? false}
                 />
                 <span>{regime.name}{regime.jurisdiction ? ` · ${regime.jurisdiction}` : ''}</span>
               </label>

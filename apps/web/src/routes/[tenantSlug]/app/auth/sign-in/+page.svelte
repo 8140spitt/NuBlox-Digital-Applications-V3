@@ -1,8 +1,59 @@
 <script lang="ts">
   import type { ActionData, PageData } from './$types';
+  import { browserSupportsPasskeys, getPasskey } from '$lib/passkeys';
   import { tenantPublicPath } from '$lib/tenant-paths';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  let email = $state(form?.email ?? '');
+  let passkeyBusy = $state(false);
+  let passkeyMessage = $state('');
+
+  async function signInWithPasskey() {
+    if (!data.tenantSlug) return;
+    if (!email.trim()) {
+      passkeyMessage = 'Enter your employee email address first.';
+      return;
+    }
+    if (!browserSupportsPasskeys()) {
+      passkeyMessage = 'This browser does not support WebAuthn passkeys.';
+      return;
+    }
+
+    passkeyBusy = true;
+    passkeyMessage = '';
+
+    try {
+      const startResponse = await fetch(`/${data.tenantSlug}/app/auth/passkey/options`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          returnTo: form?.returnTo ?? data.returnTo
+        })
+      });
+      const start = await startResponse.json();
+      if (!startResponse.ok) {
+        throw new Error(start.error ?? 'Passkey sign-in could not start.');
+      }
+
+      const credential = await getPasskey(start.options);
+      const verifyResponse = await fetch(`/${data.tenantSlug}/app/auth/passkey/verify`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token: start.token, credential })
+      });
+      const result = await verifyResponse.json();
+      if (!verifyResponse.ok) {
+        throw new Error(result.error ?? 'Passkey verification failed.');
+      }
+
+      window.location.href = result.redirectTo;
+    } catch (error) {
+      passkeyMessage = error instanceof Error ? error.message : 'Passkey sign-in failed.';
+    } finally {
+      passkeyBusy = false;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -57,7 +108,7 @@
             name="email"
             type="email"
             autocomplete="username"
-            value={form?.email ?? ''}
+            bind:value={email}
             required
           />
         </label>
@@ -109,7 +160,22 @@
           Sign in
           <span aria-hidden="true">→</span>
         </button>
+
+        {#if data.tenantSlug}
+          <button
+            type="button"
+            class="quiet-button"
+            onclick={signInWithPasskey}
+            disabled={passkeyBusy}
+          >
+            {passkeyBusy ? 'Waiting for passkey…' : 'Sign in with passkey'}
+          </button>
+        {/if}
       </form>
+
+      {#if passkeyMessage}
+        <p class="form-message error">{passkeyMessage}</p>
+      {/if}
 
       <p class="login-help">
         {#if data.tenantSlug}

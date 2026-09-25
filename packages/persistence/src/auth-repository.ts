@@ -38,6 +38,7 @@ interface SessionRow extends RowDataPacket {
   person_id: string;
   person_name: string;
   authentication_strength: AuthenticationStrength;
+  authentication_method: AuthenticationMethod;
   mfa_verified_at: Date | null;
   client_user_agent: string | null;
   expires_at: Date;
@@ -66,10 +67,12 @@ export interface AuthPrincipal {
 }
 
 export type AuthenticationStrength = 'PASSWORD' | 'MFA';
+export type AuthenticationMethod = 'PASSWORD' | 'PASSWORD_TOTP' | 'PASSKEY';
 
 export interface AuthSession extends AuthPrincipal {
   sessionId: string;
   authenticationStrength: AuthenticationStrength;
+  authenticationMethod: AuthenticationMethod;
   mfaVerifiedAt: string | null;
   expiresAt: string;
 }
@@ -90,6 +93,7 @@ export interface ActiveAuthSession {
   lastSeenAt: string;
   expiresAt: string;
   authenticationStrength: AuthenticationStrength;
+  authenticationMethod: AuthenticationMethod;
   mfaVerifiedAt: string | null;
   userAgent: string | null;
   current: boolean;
@@ -414,7 +418,9 @@ export class MySqlAuthRepository {
     principal: AuthPrincipal,
     ttlSeconds?: number,
     authenticationStrength: AuthenticationStrength = 'PASSWORD',
-    context: AuthSessionContext = {}
+    context: AuthSessionContext = {},
+    authenticationMethod: AuthenticationMethod =
+      authenticationStrength === 'MFA' ? 'PASSWORD_TOTP' : 'PASSWORD'
   ): Promise<CreatedAuthSession> {
     const policy = await this.sessionPolicy(principal.tenantId);
     const policyTtlSeconds = Number(policy.session_ttl_minutes) * 60;
@@ -464,9 +470,9 @@ export class MySqlAuthRepository {
       }
       await connection.execute(
         `INSERT INTO application_sessions
-          (token_hash, id, user_id, tenant_id, person_id, authentication_strength, mfa_verified_at,
-           client_user_agent, network_hash, created_at, expires_at, last_seen_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          (token_hash, id, user_id, tenant_id, person_id, authentication_strength, authentication_method,
+           mfa_verified_at, client_user_agent, network_hash, created_at, expires_at, last_seen_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           tokenHash,
           sessionId,
@@ -474,6 +480,7 @@ export class MySqlAuthRepository {
           principal.tenantId,
           principal.personId,
           authenticationStrength,
+          authenticationMethod,
           authenticationStrength === 'MFA' ? now : null,
           normaliseUserAgent(context.userAgent),
           hashNetworkAddress(context.networkAddress),
@@ -492,7 +499,7 @@ export class MySqlAuthRepository {
         emailNormalized: normaliseEmail(principal.email),
         eventType: 'SESSION_CREATED',
         outcome: 'SUCCESS',
-        metadata: { authenticationStrength }
+        metadata: { authenticationStrength, authenticationMethod }
       });
     });
 
@@ -502,6 +509,7 @@ export class MySqlAuthRepository {
         ...principal,
         sessionId,
         authenticationStrength,
+        authenticationMethod,
         mfaVerifiedAt: authenticationStrength === 'MFA' ? now.toISOString() : null,
         expiresAt: expiresAt.toISOString()
       }
@@ -515,7 +523,8 @@ export class MySqlAuthRepository {
     const [rows] = await this.pool.query<SessionRow[]>(
       `SELECT s.id, s.user_id, u.email, s.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name,
               s.person_id, COALESCE(p.preferred_name, p.legal_name) AS person_name,
-              s.authentication_strength, s.mfa_verified_at, s.client_user_agent, s.expires_at
+              s.authentication_strength, s.authentication_method, s.mfa_verified_at,
+              s.client_user_agent, s.expires_at
          FROM application_sessions s
          JOIN application_users u ON u.id = s.user_id AND u.status = 'ACTIVE'
          JOIN application_user_tenants ut
@@ -552,6 +561,7 @@ export class MySqlAuthRepository {
       personId: row.person_id,
       personName: row.person_name,
       authenticationStrength: row.authentication_strength,
+      authenticationMethod: row.authentication_method,
       mfaVerifiedAt: row.mfa_verified_at?.toISOString() ?? null,
       expiresAt: row.expires_at.toISOString()
     };
@@ -578,6 +588,10 @@ export class MySqlAuthRepository {
       await connection.execute(
         `UPDATE application_sessions
             SET authentication_strength = 'MFA',
+                authentication_method = CASE
+                  WHEN authentication_method = 'PASSWORD' THEN 'PASSWORD_TOTP'
+                  ELSE authentication_method
+                END,
                 mfa_verified_at = UTC_TIMESTAMP(6)
           WHERE token_hash = ?`,
         [tokenHash]
@@ -604,11 +618,12 @@ export class MySqlAuthRepository {
       last_seen_at: Date;
       expires_at: Date;
       authentication_strength: AuthenticationStrength;
+      authentication_method: AuthenticationMethod;
       mfa_verified_at: Date | null;
       client_user_agent: string | null;
     }>>(
       `SELECT id, token_hash, created_at, last_seen_at, expires_at,
-              authentication_strength, mfa_verified_at, client_user_agent
+              authentication_strength, authentication_method, mfa_verified_at, client_user_agent
          FROM application_sessions
         WHERE user_id = ?
           AND tenant_id = ?
@@ -639,6 +654,7 @@ export class MySqlAuthRepository {
       lastSeenAt: row.last_seen_at.toISOString(),
       expiresAt: row.expires_at.toISOString(),
       authenticationStrength: row.authentication_strength,
+      authenticationMethod: row.authentication_method,
       mfaVerifiedAt: row.mfa_verified_at?.toISOString() ?? null,
       userAgent: row.client_user_agent,
       current: currentHash !== null && row.token_hash === currentHash

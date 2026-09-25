@@ -136,11 +136,12 @@ export class MySqlHcmCommandService {
     tenantId:TenantId,actorPersonId:string,input:{code:string;name:string;description?:string}
   ):Promise<JobFamily>{
     await this.requireManage(tenantId,actorPersonId);
+    const description=optional(input.description);
     const family:JobFamily={
       id:asId<'JobFamilyId'>(`JF-${randomUUID()}`,'Job Family'),tenantId,
       code:required(input.code,'Job Family code').toUpperCase(),
       name:required(input.name,'Job Family name'),
-      ...(optional(input.description)?{description:optional(input.description)}:{}),
+      ...(description?{description}:{}),
       status:'ACTIVE'
     };
     createJobFamily(family);
@@ -167,11 +168,12 @@ export class MySqlHcmCommandService {
     try{
       return await withTransaction(this.pool,async connection=>{
         const family=await this.requireJobFamily(connection,tenantId,familyId);
+        const description=optional(input.description);
         const subfamily:JobSubfamily={
           id:asId<'JobSubfamilyId'>(`JSF-${randomUUID()}`,'Job Sub-family'),tenantId,familyId:family.id,
           code:required(input.code,'Job Sub-family code').toUpperCase(),
           name:required(input.name,'Job Sub-family name'),
-          ...(optional(input.description)?{description:optional(input.description)}:{}),status:'ACTIVE'
+          ...(description?{description}:{}),status:'ACTIVE'
         };
         createJobSubfamily(subfamily,family);
         await connection.execute(

@@ -15,6 +15,7 @@ interface UserRow extends RowDataPacket {
   email_normalized: string;
   password_hash: string;
   status: 'ACTIVE' | 'INACTIVE';
+  email_verified_at: Date | null;
 }
 
 interface MembershipRow extends RowDataPacket {
@@ -73,6 +74,13 @@ export class InvalidCredentialsError extends Error {
   constructor() {
     super('Invalid email or password.');
     this.name = 'InvalidCredentialsError';
+  }
+}
+
+export class EmailVerificationRequiredError extends Error {
+  constructor() {
+    super('Email verification is required before sign in.');
+    this.name = 'EmailVerificationRequiredError';
   }
 }
 
@@ -219,7 +227,7 @@ export class MySqlAuthRepository {
       }
 
       const [existingRows] = await connection.query<UserRow[]>(
-        'SELECT id, email, email_normalized, password_hash, status FROM application_users WHERE email_normalized = ? FOR UPDATE',
+        'SELECT id, email, email_normalized, password_hash, status, email_verified_at FROM application_users WHERE email_normalized = ? FOR UPDATE',
         [emailNormalized]
       );
 
@@ -228,8 +236,8 @@ export class MySqlAuthRepository {
         userId = `USER-${randomUUID()}`;
         await connection.execute(
           `INSERT INTO application_users
-            (id, email, email_normalized, password_hash, status, password_changed_at)
-           VALUES (?, ?, ?, ?, 'ACTIVE', UTC_TIMESTAMP(6))`,
+            (id, email, email_normalized, password_hash, status, email_verified_at, password_changed_at)
+           VALUES (?, ?, ?, ?, 'ACTIVE', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))`,
           [userId, email, emailNormalized, passwordHash]
         );
       }
@@ -272,7 +280,7 @@ export class MySqlAuthRepository {
   async authenticate(email: string, password: string, tenantId?: string): Promise<AuthPrincipal> {
     const emailNormalized = normaliseEmail(email);
     const [rows] = await this.pool.query<UserRow[]>(
-      `SELECT id, email, email_normalized, password_hash, status
+      `SELECT id, email, email_normalized, password_hash, status, email_verified_at
          FROM application_users
         WHERE email_normalized = ?`,
       [emailNormalized]
@@ -289,6 +297,18 @@ export class MySqlAuthRepository {
         });
       });
       throw new InvalidCredentialsError();
+    }
+
+    if (!user.email_verified_at) {
+      await withTransaction(this.pool, async (connection) => {
+        await writeAuthEvent(connection, {
+          userId: user.id,
+          emailNormalized,
+          eventType: 'LOGIN_EMAIL_UNVERIFIED',
+          outcome: 'DENIED'
+        });
+      });
+      throw new EmailVerificationRequiredError();
     }
 
     const memberships = await this.memberships(user.id);

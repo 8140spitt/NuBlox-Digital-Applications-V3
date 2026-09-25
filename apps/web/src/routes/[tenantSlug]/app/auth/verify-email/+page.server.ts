@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
   }
 
   try {
-    const result = await getIdentityChallengeService().verifyEmail(token);
+    const result = await getIdentityChallengeService().verifyEmail(token, tenant.slug);
     if (result.tenantId !== tenant.tenantId || result.tenantSlug !== tenant.slug) {
       return {
         tenantSlug: tenant.slug,

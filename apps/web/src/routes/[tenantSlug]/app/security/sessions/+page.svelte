@@ -49,7 +49,11 @@
         <div>
           <strong>{session.clientLabel}</strong>
           <p>
-            {session.authenticationStrength === 'MFA' ? 'MFA verified' : 'Password verified'}
+            {session.authenticationMethod === 'PASSKEY'
+              ? 'Passkey verified'
+              : session.authenticationMethod === 'PASSWORD_TOTP'
+                ? 'Password + authenticator verified'
+                : 'Password verified'}
             · Last active {formatDate(session.lastSeenAt)}
           </p>
           <p>

@@ -39,6 +39,8 @@ interface SessionRow extends RowDataPacket {
   person_name: string;
   authentication_strength: AuthenticationStrength;
   authentication_method: AuthenticationMethod;
+  authentication_provider_id: string | null;
+  authentication_provider_name: string | null;
   mfa_verified_at: Date | null;
   client_user_agent: string | null;
   expires_at: Date;
@@ -67,12 +69,19 @@ export interface AuthPrincipal {
 }
 
 export type AuthenticationStrength = 'PASSWORD' | 'MFA';
-export type AuthenticationMethod = 'PASSWORD' | 'PASSWORD_TOTP' | 'PASSKEY';
+export type AuthenticationMethod =
+  | 'PASSWORD'
+  | 'PASSWORD_TOTP'
+  | 'PASSKEY'
+  | 'OIDC'
+  | 'OIDC_TOTP';
 
 export interface AuthSession extends AuthPrincipal {
   sessionId: string;
   authenticationStrength: AuthenticationStrength;
   authenticationMethod: AuthenticationMethod;
+  authenticationProviderId: string | null;
+  authenticationProviderName: string | null;
   mfaVerifiedAt: string | null;
   expiresAt: string;
 }
@@ -85,6 +94,7 @@ export interface CreatedAuthSession {
 export interface AuthSessionContext {
   userAgent?: string;
   networkAddress?: string;
+  authenticationProviderId?: string;
 }
 
 export interface ActiveAuthSession {
@@ -94,6 +104,8 @@ export interface ActiveAuthSession {
   expiresAt: string;
   authenticationStrength: AuthenticationStrength;
   authenticationMethod: AuthenticationMethod;
+  authenticationProviderId: string | null;
+  authenticationProviderName: string | null;
   mfaVerifiedAt: string | null;
   userAgent: string | null;
   current: boolean;
@@ -434,6 +446,17 @@ export class MySqlAuthRepository {
       throw new Error('Tenant authentication policy requires MFA before a session can be created.');
     }
 
+    const federatedMethod =
+      authenticationMethod === 'OIDC' || authenticationMethod === 'OIDC_TOTP';
+    const authenticationProviderId = context.authenticationProviderId?.trim() || null;
+    if (federatedMethod !== Boolean(authenticationProviderId)) {
+      throw new Error(
+        federatedMethod
+          ? 'Federated sessions require an authentication provider.'
+          : 'Only federated sessions may bind an authentication provider.'
+      );
+    }
+
     const effectiveTtlSeconds = Math.min(requestedTtlSeconds, policyTtlSeconds);
     const token = randomBytes(32).toString('base64url');
     const tokenHash = hashSessionToken(token);
@@ -471,8 +494,9 @@ export class MySqlAuthRepository {
       await connection.execute(
         `INSERT INTO application_sessions
           (token_hash, id, user_id, tenant_id, person_id, authentication_strength, authentication_method,
-           mfa_verified_at, client_user_agent, network_hash, created_at, expires_at, last_seen_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           authentication_provider_id, mfa_verified_at, client_user_agent, network_hash,
+           created_at, expires_at, last_seen_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           tokenHash,
           sessionId,
@@ -481,6 +505,7 @@ export class MySqlAuthRepository {
           principal.personId,
           authenticationStrength,
           authenticationMethod,
+          authenticationProviderId,
           authenticationStrength === 'MFA' ? now : null,
           normaliseUserAgent(context.userAgent),
           hashNetworkAddress(context.networkAddress),
@@ -499,7 +524,11 @@ export class MySqlAuthRepository {
         emailNormalized: normaliseEmail(principal.email),
         eventType: 'SESSION_CREATED',
         outcome: 'SUCCESS',
-        metadata: { authenticationStrength, authenticationMethod }
+        metadata: {
+          authenticationStrength,
+          authenticationMethod,
+          ...(authenticationProviderId ? { authenticationProviderId } : {})
+        }
       });
     });
 
@@ -510,6 +539,8 @@ export class MySqlAuthRepository {
         sessionId,
         authenticationStrength,
         authenticationMethod,
+        authenticationProviderId,
+        authenticationProviderName: null,
         mfaVerifiedAt: authenticationStrength === 'MFA' ? now.toISOString() : null,
         expiresAt: expiresAt.toISOString()
       }
@@ -523,8 +554,9 @@ export class MySqlAuthRepository {
     const [rows] = await this.pool.query<SessionRow[]>(
       `SELECT s.id, s.user_id, u.email, s.tenant_id, t.slug AS tenant_slug, t.name AS tenant_name,
               s.person_id, COALESCE(p.preferred_name, p.legal_name) AS person_name,
-              s.authentication_strength, s.authentication_method, s.mfa_verified_at,
-              s.client_user_agent, s.expires_at
+              s.authentication_strength, s.authentication_method,
+              s.authentication_provider_id, op.name AS authentication_provider_name,
+              s.mfa_verified_at, s.client_user_agent, s.expires_at
          FROM application_sessions s
          JOIN application_users u ON u.id = s.user_id AND u.status = 'ACTIVE'
          JOIN application_user_tenants ut
@@ -535,12 +567,19 @@ export class MySqlAuthRepository {
          JOIN tenants t ON t.id = s.tenant_id AND t.status = 'ACTIVE'
          JOIN tenant_authentication_policies tap ON tap.tenant_id = s.tenant_id
          JOIN persons p ON p.tenant_id = s.tenant_id AND p.id = s.person_id AND p.status = 'ACTIVE'
+         LEFT JOIN application_oidc_providers op
+           ON op.id = s.authentication_provider_id
+          AND op.tenant_id = s.tenant_id
         WHERE s.token_hash = ?
           AND s.revoked_at IS NULL
           AND s.expires_at > UTC_TIMESTAMP(6)
           AND s.created_at > TIMESTAMPADD(MINUTE, -tap.session_ttl_minutes, UTC_TIMESTAMP(6))
           AND s.last_seen_at > TIMESTAMPADD(MINUTE, -tap.idle_timeout_minutes, UTC_TIMESTAMP(6))
-          AND (tap.mfa_requirement = 'OPTIONAL' OR s.authentication_strength = 'MFA')`,
+          AND (tap.mfa_requirement = 'OPTIONAL' OR s.authentication_strength = 'MFA')
+          AND (
+            s.authentication_method NOT IN ('OIDC', 'OIDC_TOTP')
+            OR op.status = 'ACTIVE'
+          )`,
       [tokenHash]
     );
     const row = rows[0];
@@ -562,6 +601,8 @@ export class MySqlAuthRepository {
       personName: row.person_name,
       authenticationStrength: row.authentication_strength,
       authenticationMethod: row.authentication_method,
+      authenticationProviderId: row.authentication_provider_id,
+      authenticationProviderName: row.authentication_provider_name,
       mfaVerifiedAt: row.mfa_verified_at?.toISOString() ?? null,
       expiresAt: row.expires_at.toISOString()
     };
@@ -620,27 +661,38 @@ export class MySqlAuthRepository {
       expires_at: Date;
       authentication_strength: AuthenticationStrength;
       authentication_method: AuthenticationMethod;
+      authentication_provider_id: string | null;
+      authentication_provider_name: string | null;
       mfa_verified_at: Date | null;
       client_user_agent: string | null;
     }>>(
-      `SELECT id, token_hash, created_at, last_seen_at, expires_at,
-              authentication_strength, authentication_method, mfa_verified_at, client_user_agent
-         FROM application_sessions
-        WHERE user_id = ?
-          AND tenant_id = ?
-          AND revoked_at IS NULL
-          AND expires_at > UTC_TIMESTAMP(6)
-          AND created_at > TIMESTAMPADD(
+      `SELECT s.id, s.token_hash, s.created_at, s.last_seen_at, s.expires_at,
+              s.authentication_strength, s.authentication_method,
+              s.authentication_provider_id, op.name AS authentication_provider_name,
+              s.mfa_verified_at, s.client_user_agent
+         FROM application_sessions s
+         LEFT JOIN application_oidc_providers op
+           ON op.id = s.authentication_provider_id
+          AND op.tenant_id = s.tenant_id
+        WHERE s.user_id = ?
+          AND s.tenant_id = ?
+          AND s.revoked_at IS NULL
+          AND s.expires_at > UTC_TIMESTAMP(6)
+          AND (
+            s.authentication_method NOT IN ('OIDC', 'OIDC_TOTP')
+            OR op.status = 'ACTIVE'
+          )
+          AND s.created_at > TIMESTAMPADD(
             MINUTE,
             -(SELECT session_ttl_minutes FROM tenant_authentication_policies WHERE tenant_id = ?),
             UTC_TIMESTAMP(6)
           )
-          AND last_seen_at > TIMESTAMPADD(
+          AND s.last_seen_at > TIMESTAMPADD(
             MINUTE,
             -(SELECT idle_timeout_minutes FROM tenant_authentication_policies WHERE tenant_id = ?),
             UTC_TIMESTAMP(6)
           )
-        ORDER BY last_seen_at DESC, created_at DESC`,
+        ORDER BY s.last_seen_at DESC, s.created_at DESC`,
       [
         principal.userId,
         principal.tenantId,
@@ -656,6 +708,8 @@ export class MySqlAuthRepository {
       expiresAt: row.expires_at.toISOString(),
       authenticationStrength: row.authentication_strength,
       authenticationMethod: row.authentication_method,
+      authenticationProviderId: row.authentication_provider_id,
+      authenticationProviderName: row.authentication_provider_name,
       mfaVerifiedAt: row.mfa_verified_at?.toISOString() ?? null,
       userAgent: row.client_user_agent,
       current: currentHash !== null && row.token_hash === currentHash

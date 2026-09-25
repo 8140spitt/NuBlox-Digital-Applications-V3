@@ -24,6 +24,16 @@ nublox.com/
 nublox.com/{tenantSlug}/app
     private tenant enterprise application
 
+Example:
+
+~~~text
+BAE Systems
+-> tenant slug: baesystems
+-> nublox.com/baesystems/app
+~~~
+
+The Tenant slug is a human routing key derived from the business name by default. The immutable internal Tenant ID must never be encoded into the normal tenant URL. If the clean business slug is already allocated, NuBlox appends a human collision sequence such as `-2`, `-3`, and so on.
+
 nublox.com/{tenantSlug}/public
     tenant-controlled public site
 

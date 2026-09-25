@@ -28,7 +28,7 @@ import {
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
-import { deriveTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
+import { allocateTenantSlug, normaliseTenantSlug } from './tenant-routing-repository.js';
 
 export interface AuditContext {
   actorPersonId?: string;
@@ -176,11 +176,11 @@ export class MySqlKernelRepository {
   constructor(private readonly pool: Pool) {}
 
   async createTenant(tenant: Tenant, audit: AuditContext = {}): Promise<void> {
-    const slug = tenant.slug
-      ? normaliseTenantSlug(tenant.slug)
-      : deriveTenantSlug(tenant.name, tenant.id);
+    const requestedSlug = tenant.slug ? normaliseTenantSlug(tenant.slug) : undefined;
 
     await withTransaction(this.pool, async (connection) => {
+      const slug = requestedSlug ?? await allocateTenantSlug(connection, tenant.name);
+
       await connection.execute(
         `INSERT INTO tenants (id, slug, name, status, created_by_person_id, updated_by_person_id)
          VALUES (?, ?, ?, ?, ?, ?)`,

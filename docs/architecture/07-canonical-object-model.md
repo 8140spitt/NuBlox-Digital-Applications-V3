@@ -13,6 +13,8 @@ The objective is not one giant table or one universal object type. The objective
 
 - Tenant;
 - Party;
+- Party Type: `TENANT`, `EMPLOYEE`, `CLIENT`, `VENDOR_SUPPLIER`;
+- Tenant Party Binding;
 - Person;
 - Organisation;
 - Legal Entity;
@@ -219,7 +221,7 @@ Where configuration control is required, a stable Master identity is distinct fr
 
 ## One identity, many views
 
-An Organisation may be customer, Supplier, subcontractor, consultant, partner or regulator without becoming several Organisation masters.
+An Organisation may hold both `CLIENT` and `VENDOR_SUPPLIER` Party Types and participate in other governed relationships without becoming several Organisation masters.
 
 A Project may be viewed by Project Management, Commercial, Planning, Design, Procurement, Finance, HSE, Quality and Information Management without being duplicated.
 

@@ -78,7 +78,10 @@ export class InvalidCredentialsError extends Error {
 }
 
 export class EmailVerificationRequiredError extends Error {
-  constructor() {
+  constructor(
+    readonly tenantSlug: string,
+    readonly tenantName: string
+  ) {
     super('Email verification is required before sign in.');
     this.name = 'EmailVerificationRequiredError';
   }
@@ -299,18 +302,6 @@ export class MySqlAuthRepository {
       throw new InvalidCredentialsError();
     }
 
-    if (!user.email_verified_at) {
-      await withTransaction(this.pool, async (connection) => {
-        await writeAuthEvent(connection, {
-          userId: user.id,
-          emailNormalized,
-          eventType: 'LOGIN_EMAIL_UNVERIFIED',
-          outcome: 'DENIED'
-        });
-      });
-      throw new EmailVerificationRequiredError();
-    }
-
     const memberships = await this.memberships(user.id);
     if (memberships.length === 0) {
       throw new InvalidCredentialsError();
@@ -331,6 +322,19 @@ export class MySqlAuthRepository {
           tenantName: membership.tenantName
         }))
       );
+    }
+
+    if (!user.email_verified_at) {
+      await withTransaction(this.pool, async (connection) => {
+        await writeAuthEvent(connection, {
+          userId: user.id,
+          tenantId: selected.tenantId,
+          emailNormalized,
+          eventType: 'LOGIN_EMAIL_UNVERIFIED',
+          outcome: 'DENIED'
+        });
+      });
+      throw new EmailVerificationRequiredError(selected.tenantSlug, selected.tenantName);
     }
 
     return {

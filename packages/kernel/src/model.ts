@@ -91,6 +91,9 @@ export interface JobProfile {
   status: RecordStatus;
 }
 
+export type PositionLifecycleStatus = 'PLANNED' | 'APPROVED' | 'FROZEN' | 'ABOLISHED';
+export type PositionIncumbencyModel = 'SINGLE' | 'SHARED';
+
 export interface Position {
   id: PositionId;
   tenantId: TenantId;
@@ -98,6 +101,11 @@ export interface Position {
   jobProfileId?: JobProfileId;
   code: string;
   title: string;
+  lifecycleStatus: PositionLifecycleStatus;
+  incumbencyModel: PositionIncumbencyModel;
+  authorisedFte: number;
+  effectiveFrom: string;
+  effectiveTo?: string;
   status: RecordStatus;
 }
 

@@ -18,6 +18,7 @@ import {
 import type { Pool, PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
+import { upsertPartyType } from './party-type-writes.js';
 import type { AuditContext } from './repository.js';
 
 interface SupplierRelationshipRow extends RowDataPacket {
@@ -165,6 +166,12 @@ export class MySqlSupplierSourcingRepository {
         'INSERT INTO supplier_relationships (id,tenant_id,canonical_object_id,supplier_organisation_id,relationship_type,code,name,status,created_by_person_id,relationship_created_at,released_decision_id,released_at,cancelled_decision_id,cancelled_at,updated_by_person_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
         [input.id,input.tenantId,input.canonicalObjectId,input.supplierOrganisationId,input.relationshipType,input.code,input.name,input.status,input.createdByPersonId,new Date(input.createdAt),null,null,null,null,audit.actorPersonId??null]
       );
+      await upsertPartyType(c,{
+        tenantId:input.tenantId,
+        partyId:organisation.partyId,
+        partyType:'VENDOR_SUPPLIER',
+        actorPersonId:audit.actorPersonId
+      });
       await evidence(c,input.tenantId,'SUPPLIER_RELATIONSHIP',input.id,'CREATED',audit,input);
     });
   }

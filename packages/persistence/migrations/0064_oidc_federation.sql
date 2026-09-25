@@ -46,7 +46,7 @@ ALTER TABLE application_sessions
   ADD CONSTRAINT fk_application_sessions_authentication_provider
     FOREIGN KEY (authentication_provider_id)
     REFERENCES application_oidc_providers(id)
-    ON DELETE SET NULL;
+    ON DELETE RESTRICT;
 
 CREATE TABLE application_oidc_login_challenges (
   state_hash CHAR(64) NOT NULL PRIMARY KEY,

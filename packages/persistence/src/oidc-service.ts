@@ -7,6 +7,7 @@ import {
   randomUUID,
   verify as verifySignature
 } from 'node:crypto';
+import type { JsonWebKey as NodeJsonWebKey } from 'node:crypto';
 import { lookup } from 'node:dns/promises';
 import { isIP } from 'node:net';
 import type { Pool, PoolConnection, RowDataPacket } from 'mysql2/promise';
@@ -718,7 +719,7 @@ async function verifyIdToken(
   let publicKey;
   try {
     publicKey = createPublicKey({
-      key: candidates[0]! as JsonWebKey,
+      key: candidates[0]! as unknown as NodeJsonWebKey,
       format: 'jwk'
     });
   } catch {

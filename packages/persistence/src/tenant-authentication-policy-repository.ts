@@ -13,6 +13,11 @@ export interface TenantAuthenticationPolicy {
   rowVersion: number;
 }
 
+export interface TenantMfaCoverage {
+  activeIdentities: number;
+  enrolledIdentities: number;
+}
+
 interface PolicyRow extends RowDataPacket {
   tenant_id: string;
   mfa_requirement: TenantMfaRequirement;
@@ -103,6 +108,40 @@ export class MySqlTenantAuthenticationPolicyRepository {
       throw new TenantAuthenticationPolicyError('Tenant authentication policy does not exist.');
     }
     return mapPolicy(row);
+  }
+
+  async mfaCoverage(tenantId: string): Promise<TenantMfaCoverage> {
+    const [rows] = await this.pool.execute<Array<RowDataPacket & {
+      active_identities: number;
+      enrolled_identities: number;
+    }>>(
+      `SELECT
+          COUNT(DISTINCT CASE
+            WHEN u.status = 'ACTIVE' AND ut.status = 'ACTIVE' THEN ut.user_id
+            ELSE NULL
+          END) AS active_identities,
+          COUNT(DISTINCT CASE
+            WHEN u.status = 'ACTIVE'
+             AND ut.status = 'ACTIVE'
+             AND e.status = 'ACTIVE'
+            THEN ut.user_id
+            ELSE NULL
+          END) AS enrolled_identities
+         FROM application_user_tenants ut
+         JOIN application_users u ON u.id = ut.user_id
+         LEFT JOIN application_mfa_enrollments e
+           ON e.user_id = ut.user_id
+          AND e.tenant_id = ut.tenant_id
+          AND e.method = 'TOTP'
+        WHERE ut.tenant_id = ?`,
+      [tenantId]
+    );
+    const row = rows[0];
+
+    return {
+      activeIdentities: Number(row?.active_identities ?? 0),
+      enrolledIdentities: Number(row?.enrolled_identities ?? 0)
+    };
   }
 
   async update(

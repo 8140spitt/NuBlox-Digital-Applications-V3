@@ -18,6 +18,7 @@ export interface MigrationStatus {
   checksum: string;
   appliedAt?: string;
   errorMessage?: string;
+  repositoryChecksumChanged?: boolean;
 }
 
 const migrationsDirectory = fileURLToPath(new URL('../migrations/', import.meta.url));
@@ -74,7 +75,9 @@ export async function getMigrationStatus(): Promise<MigrationStatus[]> {
         continue;
       }
 
-      if (row.checksum !== digest) {
+      const repositoryChecksumChanged = row.checksum !== digest;
+
+      if (repositoryChecksumChanged && row.status === 'APPLIED') {
         throw new Error(`Applied migration ${version} checksum does not match the repository.`);
       }
 
@@ -83,7 +86,8 @@ export async function getMigrationStatus(): Promise<MigrationStatus[]> {
         status: row.status,
         checksum: digest,
         ...(row.applied_at ? { appliedAt: row.applied_at.toISOString() } : {}),
-        ...(row.error_message ? { errorMessage: row.error_message } : {})
+        ...(row.error_message ? { errorMessage: row.error_message } : {}),
+        ...(repositoryChecksumChanged ? { repositoryChecksumChanged: true } : {})
       });
     }
 
@@ -104,8 +108,14 @@ export async function migrate(): Promise<MigrationStatus[]> {
     );
 
     if (dirtyRows.length > 0) {
+      const retryable = dirtyRows.filter((row) => row.status === 'FAILED');
+      const retryHint =
+        retryable.length === 1 && dirtyRows.length === 1
+          ? ` Run "pnpm db:retry-failed ${retryable[0]!.version}" after reviewing the corrected migration.`
+          : '';
+
       throw new Error(
-        `Database has an incomplete migration: ${dirtyRows.map((row) => `${row.version}:${row.status}`).join(', ')}`
+        `Database has an incomplete migration: ${dirtyRows.map((row) => `${row.version}:${row.status}`).join(', ')}.${retryHint}`
       );
     }
 
@@ -144,6 +154,87 @@ export async function migrate(): Promise<MigrationStatus[]> {
         );
         throw error;
       }
+    }
+  } finally {
+    await connection.end();
+  }
+
+  return getMigrationStatus();
+}
+
+
+export async function retryFailedMigration(version?: string): Promise<MigrationStatus[]> {
+  const connection = await openMigrationConnection();
+
+  try {
+    await ensureTable(connection);
+
+    const [failedRows] = await connection.query<MigrationRow[]>(
+      "SELECT version, checksum, status, applied_at, error_message FROM kernel_schema_migrations WHERE status = 'FAILED' ORDER BY version"
+    );
+
+    if (failedRows.length === 0) {
+      throw new Error('Database has no failed migration to retry.');
+    }
+
+    const selected = version
+      ? failedRows.find((row) => row.version === version)
+      : failedRows.length === 1
+        ? failedRows[0]
+        : undefined;
+
+    if (!selected) {
+      if (version) {
+        throw new Error(`Migration ${version} is not currently FAILED.`);
+      }
+
+      throw new Error(
+        `Database has multiple failed migrations. Specify one explicitly: ${failedRows.map((row) => row.version).join(', ')}`
+      );
+    }
+
+    const files = await migrationFiles();
+    if (!files.includes(selected.version)) {
+      throw new Error(`Failed migration ${selected.version} does not exist in the repository.`);
+    }
+
+    const sql = await readFile(
+      new URL(`../migrations/${selected.version}`, import.meta.url),
+      'utf8'
+    );
+    const digest = checksum(sql);
+
+    await connection.execute(
+      `UPDATE kernel_schema_migrations
+          SET checksum = ?,
+              status = 'APPLYING',
+              applied_at = NULL,
+              error_message = NULL
+        WHERE version = ?
+          AND status = 'FAILED'`,
+      [digest, selected.version]
+    );
+
+    try {
+      await connection.query(sql);
+      await connection.execute(
+        `UPDATE kernel_schema_migrations
+            SET status = 'APPLIED',
+                applied_at = CURRENT_TIMESTAMP(6),
+                error_message = NULL
+          WHERE version = ?`,
+        [selected.version]
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      await connection.execute(
+        `UPDATE kernel_schema_migrations
+            SET status = 'FAILED',
+                error_message = ?
+          WHERE version = ?`,
+        [message.slice(0, 65000), selected.version]
+      );
+      throw error;
     }
   } finally {
     await connection.end();

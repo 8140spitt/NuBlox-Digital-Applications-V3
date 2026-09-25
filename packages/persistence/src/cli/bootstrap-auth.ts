@@ -56,7 +56,7 @@ try {
       businessProfile: {
         primaryClassificationValueId:
           process.env.NUBLOX_BOOTSTRAP_INDUSTRY_CLASSIFICATION_ID?.trim() ||
-          'BCV-NUBLOX-CBE',
+          'BCV-NAICS-2022-23',
         sizeTier,
         ...(employeeCount !== undefined ? { employeeCount } : {}),
         legalEntityCount,

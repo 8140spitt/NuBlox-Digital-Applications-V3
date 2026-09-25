@@ -1079,7 +1079,7 @@ export class MySqlTenantProvisioningService {
   }
 
   private async readCapabilityGuidance(
-    connection: Pick<Pool, 'query'> | Pick<PoolConnection, 'query'>,
+    connection: Pool | PoolConnection,
     classificationValueId: string
   ): Promise<TenantCapabilityGuidance | null> {
     const [rows] = await connection.query<Array<RowDataPacket & {

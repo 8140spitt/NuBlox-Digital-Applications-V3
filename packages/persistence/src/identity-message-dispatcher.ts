@@ -217,7 +217,7 @@ export class MySqlIdentityMessageDispatcher {
                   failure_message = ?,
                   next_attempt_at = CASE
                     WHEN attempt_count < 5
-                    THEN DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ? SECOND)
+                    THEN TIMESTAMPADD(SECOND, ?, UTC_TIMESTAMP(6))
                     ELSE NULL
                   END
             WHERE id = ?

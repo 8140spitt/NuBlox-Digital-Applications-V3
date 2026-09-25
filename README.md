@@ -62,6 +62,19 @@ A manager sees their own authorised work plus the work and performance of subord
 
 Start with [the architecture index](docs/architecture/README.md).
 
+## Canonical Party Types
+
+NuBlox has exactly four business Party Types:
+
+```text
+TENANT
+EMPLOYEE
+CLIENT
+VENDOR_SUPPLIER
+```
+
+`PERSON` and `ORGANISATION` are structural identity shapes, not Party Types. Party Types are additive classifications: the same authoritative Organisation may, for example, be both `CLIENT` and `VENDOR_SUPPLIER` without creating duplicate masters.
+
 ## Tenant-first web surfaces
 
 NuBlox uses the tenant as the stable business namespace:
@@ -100,7 +113,7 @@ pnpm dev
 
 Open the local URL shown by Vite. The public NuBlox product page remains at `/`. Tenant traffic is explicit: use `/{tenantSlug}/app` for the private application and `/{tenantSlug}/public` for the Tenant public surface.
 
-Authentication uses a provisioned application account mapped to an active tenant-scoped `Person`, scrypt password hashing and server-side opaque sessions. Public self-registration is intentionally not provided.
+Public tenant self-registration is available at `/register`. Registration atomically creates the Tenant, authoritative `TENANT` Party and Organisation, the registrant's `EMPLOYEE` Party and Person identity, tenant membership and initial Tenant-administrator access, then establishes the tenant-scoped application session. It deliberately does not fabricate a Job Profile, Position or Position Occupancy.
 
 ## Terminal logging
 

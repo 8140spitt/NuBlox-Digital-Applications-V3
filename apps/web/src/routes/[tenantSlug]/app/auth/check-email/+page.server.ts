@@ -1,6 +1,10 @@
 import { fail } from '@sveltejs/kit';
+import { AuthenticationRateLimitError } from '@nublox/persistence';
 import type { Actions, PageServerLoad } from './$types';
-import { getIdentityChallengeService } from '$lib/server/platform';
+import {
+  getAuthenticationRateLimiter,
+  getIdentityChallengeService
+} from '$lib/server/platform';
 
 function emailValue(formData: FormData): string {
   return String(formData.get('email') ?? '').trim();
@@ -13,7 +17,7 @@ export const load: PageServerLoad = ({ locals, url }) => ({
 });
 
 export const actions: Actions = {
-  default: async ({ request, locals }) => {
+  default: async ({ request, locals, getClientAddress }) => {
     const tenant = locals.tenant;
     if (!tenant) return fail(404, { message: 'Tenant not found.' });
 
@@ -21,7 +25,24 @@ export const actions: Actions = {
     const email = emailValue(formData);
     if (!email) return fail(400, { email, message: 'Email is required.' });
 
-    await getIdentityChallengeService().resendEmailVerification(email, tenant.slug);
+    try {
+      await getAuthenticationRateLimiter().consume(
+        'EMAIL_VERIFICATION_RESEND',
+        `${tenant.slug}:${email}`,
+        getClientAddress()
+      );
+      await getIdentityChallengeService().resendEmailVerification(email, tenant.slug);
+    } catch (error) {
+      if (error instanceof AuthenticationRateLimitError) {
+        return fail(429, {
+          email,
+          rateLimited: true,
+          retryAfterSeconds: error.retryAfterSeconds,
+          message: 'Too many requests. Try again later.'
+        });
+      }
+      throw error;
+    }
 
     return {
       ok: true,

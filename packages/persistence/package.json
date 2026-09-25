@@ -11,7 +11,8 @@
     "build": "tsc -p tsconfig.build.json",
     "db:migrate": "tsx src/cli/migrate.ts",
     "db:status": "tsx src/cli/status.ts",
-    "auth:bootstrap": "tsx src/cli/bootstrap-auth.ts"
+    "auth:bootstrap": "tsx src/cli/bootstrap-auth.ts",
+    "auth:dispatch-messages": "tsx src/cli/dispatch-identity-messages.ts"
   },
   "dependencies": {
     "@nublox/kernel": "workspace:*",

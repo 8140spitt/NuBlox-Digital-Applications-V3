@@ -71,7 +71,7 @@ suite('Function supply to Project organisational resource planning',()=>{
 
     const position=await organisation.createPosition(tenantId,admin.id,{
       organisationUnitId:financeUnit.id,jobProfileId:financialControllerProfile.id,
-      code:'FIN-FC-001',title:'Financial Controller'
+      code:'FIN-FC-001',title:'Financial Controller',effectiveFrom:'2026-09-24T00:00:00.000Z'
     });
     const jane=await organisation.createPerson(tenantId,admin.id,{legalName:'Jane Smith'});
     await organisation.assignPersonToPosition(tenantId,admin.id,{

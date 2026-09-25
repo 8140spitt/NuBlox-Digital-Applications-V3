@@ -1,8 +1,12 @@
-import {
+import { loadCliEnvironment } from './load-cli-env.js';
+
+loadCliEnvironment();
+
+const {
   MySqlIdentityMessageDispatcher,
   createDatabasePool,
   identityEmailTransportFromEnv
-} from '../index.js';
+} = await import('../index.js');
 
 const pool = createDatabasePool();
 

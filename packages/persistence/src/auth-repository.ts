@@ -47,6 +47,14 @@ interface ExistenceRow extends RowDataPacket {
   count: number;
 }
 
+interface SessionPolicyRow extends RowDataPacket {
+  mfa_requirement: 'OPTIONAL' | 'REQUIRED';
+  session_ttl_minutes: number;
+  idle_timeout_minutes: number;
+  max_active_sessions: number;
+}
+
+
 export interface AuthPrincipal {
   userId: string;
   email: string;
@@ -397,21 +405,56 @@ export class MySqlAuthRepository {
 
   async createSession(
     principal: AuthPrincipal,
-    ttlSeconds = 60 * 60 * 12,
+    ttlSeconds?: number,
     authenticationStrength: AuthenticationStrength = 'PASSWORD',
     context: AuthSessionContext = {}
   ): Promise<CreatedAuthSession> {
-    if (!Number.isFinite(ttlSeconds) || ttlSeconds <= 0) {
+    const policy = await this.sessionPolicy(principal.tenantId);
+    const policyTtlSeconds = Number(policy.session_ttl_minutes) * 60;
+    const requestedTtlSeconds = ttlSeconds ?? policyTtlSeconds;
+
+    if (!Number.isFinite(requestedTtlSeconds) || requestedTtlSeconds <= 0) {
       throw new Error('Session TTL must be positive.');
     }
 
+    if (policy.mfa_requirement === 'REQUIRED' && authenticationStrength !== 'MFA') {
+      throw new Error('Tenant authentication policy requires MFA before a session can be created.');
+    }
+
+    const effectiveTtlSeconds = Math.min(requestedTtlSeconds, policyTtlSeconds);
     const token = randomBytes(32).toString('base64url');
     const tokenHash = hashSessionToken(token);
     const sessionId = `SESSION-${randomUUID()}`;
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + ttlSeconds * 1000);
+    const expiresAt = new Date(now.getTime() + effectiveTtlSeconds * 1000);
 
     await withTransaction(this.pool, async (connection) => {
+      const [activeRows] = await connection.execute<Array<RowDataPacket & { id: string }>>(
+        `SELECT s.id
+           FROM application_sessions s
+          WHERE s.user_id = ?
+            AND s.tenant_id = ?
+            AND s.revoked_at IS NULL
+            AND s.expires_at > UTC_TIMESTAMP(6)
+            AND s.last_seen_at > TIMESTAMPADD(MINUTE, ?, UTC_TIMESTAMP(6))
+          ORDER BY s.last_seen_at ASC, s.created_at ASC
+          FOR UPDATE`,
+        [principal.userId, principal.tenantId, -Number(policy.idle_timeout_minutes)]
+      );
+
+      const overflow = Math.max(
+        0,
+        activeRows.length - Number(policy.max_active_sessions) + 1
+      );
+      for (const row of activeRows.slice(0, overflow)) {
+        await connection.execute(
+          `UPDATE application_sessions
+              SET revoked_at = UTC_TIMESTAMP(6)
+            WHERE id = ?
+              AND revoked_at IS NULL`,
+          [row.id]
+        );
+      }
       await connection.execute(
         `INSERT INTO application_sessions
           (token_hash, id, user_id, tenant_id, person_id, authentication_strength, mfa_verified_at,
@@ -474,10 +517,13 @@ export class MySqlAuthRepository {
           AND ut.person_id = s.person_id
           AND ut.status = 'ACTIVE'
          JOIN tenants t ON t.id = s.tenant_id AND t.status = 'ACTIVE'
+         JOIN tenant_authentication_policies tap ON tap.tenant_id = s.tenant_id
          JOIN persons p ON p.tenant_id = s.tenant_id AND p.id = s.person_id AND p.status = 'ACTIVE'
         WHERE s.token_hash = ?
           AND s.revoked_at IS NULL
-          AND s.expires_at > UTC_TIMESTAMP(6)`,
+          AND s.expires_at > UTC_TIMESTAMP(6)
+          AND s.last_seen_at > TIMESTAMPADD(MINUTE, -tap.idle_timeout_minutes, UTC_TIMESTAMP(6))
+          AND (tap.mfa_requirement = 'OPTIONAL' OR s.authentication_strength = 'MFA')`,
       [tokenHash]
     );
     const row = rows[0];
@@ -560,8 +606,13 @@ export class MySqlAuthRepository {
           AND tenant_id = ?
           AND revoked_at IS NULL
           AND expires_at > UTC_TIMESTAMP(6)
+          AND last_seen_at > TIMESTAMPADD(
+            MINUTE,
+            -(SELECT idle_timeout_minutes FROM tenant_authentication_policies WHERE tenant_id = ?),
+            UTC_TIMESTAMP(6)
+          )
         ORDER BY last_seen_at DESC, created_at DESC`,
-      [principal.userId, principal.tenantId]
+      [principal.userId, principal.tenantId, principal.tenantId]
     );
 
     return rows.map((row) => ({
@@ -679,6 +730,21 @@ export class MySqlAuthRepository {
            OR (revoked_at IS NOT NULL AND revoked_at < UTC_TIMESTAMP(6) - INTERVAL 7 DAY)`
     );
     return result.affectedRows;
+  }
+
+  private async sessionPolicy(tenantId: string): Promise<SessionPolicyRow> {
+    const [rows] = await this.pool.execute<SessionPolicyRow[]>(
+      `SELECT mfa_requirement, session_ttl_minutes, idle_timeout_minutes, max_active_sessions
+         FROM tenant_authentication_policies
+        WHERE tenant_id = ?
+        LIMIT 1`,
+      [tenantId]
+    );
+    const row = rows[0];
+    if (!row) {
+      throw new Error('Tenant authentication policy does not exist.');
+    }
+    return row;
   }
 
   private async memberships(userId: string): Promise<Array<{

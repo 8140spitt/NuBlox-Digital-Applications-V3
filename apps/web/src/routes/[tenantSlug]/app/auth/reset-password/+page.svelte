@@ -3,6 +3,7 @@
   import { tenantPublicPath, tenantSignInPath } from '$lib/tenant-paths';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(form as ActionData & Partial<{ token: string }>);
 </script>
 
 <svelte:head>
@@ -29,7 +30,7 @@
       </header>
 
       <form method="POST" class="login-form">
-        <input type="hidden" name="token" value={form?.token ?? data.token} />
+        <input type="hidden" name="token" value={viewForm?.token ?? data.token} />
         <label>
           <span>New password</span>
           <input name="password" type="password" autocomplete="new-password" minlength="12" required />

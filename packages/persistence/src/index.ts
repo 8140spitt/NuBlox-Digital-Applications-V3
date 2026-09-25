@@ -68,6 +68,7 @@ export * from './authentication-rate-limiter.js';
 export * from './mfa-service.js';
 export * from './tenant-authentication-policy-repository.js';
 export * from './passkey-service.js';
+export * from './oidc-service.js';
 
 export * from './extension-repository.js';
 export * from './extension-command-service.js';

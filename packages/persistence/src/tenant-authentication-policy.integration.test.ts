@@ -89,6 +89,7 @@ suite('tenant authentication policy enforcement', () => {
       registration.personId,
       {
         mfaRequirement: 'REQUIRED',
+        passkeyEnabled: true,
         sessionTtlMinutes: 720,
         idleTimeoutMinutes: 120,
         maxActiveSessions: 10
@@ -137,6 +138,51 @@ suite('tenant authentication policy enforcement', () => {
     expect(nextLogin.enrollmentRequired).toBe(false);
   });
 
+  it('revokes passkey-authenticated sessions when passkeys are disabled', async () => {
+    if (!pool) throw new Error('Database pool missing.');
+
+    const suffix = randomUUID().replaceAll('-', '').slice(0, 12);
+    const email = `passkey-policy-${suffix}@example.test`;
+    const password = 'correct-horse-battery-staple';
+
+    const registration = await new MySqlTenantRegistrationService(pool).register({
+      businessName: `Passkey Policy ${suffix}`,
+      tenantSlug: `passkey-policy-${suffix}`,
+      personName: 'Passkey Policy User',
+      email,
+      password,
+      acceptedTerms: true,
+      emailVerified: true
+    });
+
+    const auth = new MySqlAuthRepository(pool);
+    const policyRepository = new MySqlTenantAuthenticationPolicyRepository(pool);
+    const principal = await auth.authenticate(email, password, registration.tenantId);
+
+    const passkeySession = await auth.createSession(
+      principal,
+      undefined,
+      'MFA',
+      {},
+      'PASSKEY'
+    );
+    expect((await auth.resolveSession(passkeySession.token))?.authenticationMethod).toBe('PASSKEY');
+
+    await policyRepository.update(
+      registration.tenantId,
+      registration.personId,
+      {
+        mfaRequirement: 'OPTIONAL',
+        passkeyEnabled: false,
+        sessionTtlMinutes: 720,
+        idleTimeoutMinutes: 120,
+        maxActiveSessions: 10
+      }
+    );
+
+    expect(await auth.resolveSession(passkeySession.token)).toBeNull();
+  });
+
   it('enforces session maximum by revoking the oldest active session', async () => {
     if (!pool) throw new Error('Database pool missing.');
 
@@ -163,6 +209,7 @@ suite('tenant authentication policy enforcement', () => {
       registration.personId,
       {
         mfaRequirement: 'OPTIONAL',
+        passkeyEnabled: true,
         sessionTtlMinutes: 720,
         idleTimeoutMinutes: 120,
         maxActiveSessions: 1

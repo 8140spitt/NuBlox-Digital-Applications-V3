@@ -21,6 +21,18 @@ interface ReportingRow extends RowDataPacket {
   id:string; subordinate_position_id:string; manager_position_id:string; manager_title:string;
   relationship_type:string; effective_from:Date; effective_to:Date|null; status:'ACTIVE'|'INACTIVE';
 }
+interface JobFamilyViewRow extends RowDataPacket { id:string;code:string;name:string;description:string|null;status:'ACTIVE'|'INACTIVE'; }
+interface JobSubfamilyViewRow extends RowDataPacket { id:string;family_id:string;code:string;name:string;description:string|null;status:'ACTIVE'|'INACTIVE'; }
+interface CareerLevelViewRow extends RowDataPacket { id:string;code:string;name:string;track:string;sequence:number;status:'ACTIVE'|'INACTIVE'; }
+interface GradeViewRow extends RowDataPacket { id:string;code:string;name:string;sequence:number;status:'ACTIVE'|'INACTIVE'; }
+interface JobArchitectureViewRow extends RowDataPacket {
+  id:string;job_profile_id:string;job_profile_code:string;job_profile_name:string;
+  family_id:string;family_code:string;family_name:string;
+  subfamily_id:string|null;subfamily_code:string|null;subfamily_name:string|null;
+  career_level_id:string|null;career_level_code:string|null;career_level_name:string|null;
+  grade_id:string|null;grade_code:string|null;grade_name:string|null;
+  effective_from:Date;effective_to:Date|null;status:'ACTIVE'|'INACTIVE';
+}
 interface FunctionRow extends RowDataPacket { id:string; code:string; name:string; }
 interface ExperienceRow extends RowDataPacket {
   person_id:string; person_name:string; employment_id:string|null; employee_number:string|null;
@@ -53,9 +65,26 @@ export interface HcmPositionView {
   organisationId:string; organisationName:string; jobProfileId?:string; jobProfileName?:string; status:'ACTIVE'|'INACTIVE';
   occupants:HcmOccupancyView[]; functionAssignments:HcmFunctionAssignmentView[]; reportingLines:HcmReportingLineView[];
 }
+export interface HcmJobFamilyView { id:string;code:string;name:string;description?:string;status:'ACTIVE'|'INACTIVE'; }
+export interface HcmJobSubfamilyView { id:string;familyId:string;code:string;name:string;description?:string;status:'ACTIVE'|'INACTIVE'; }
+export interface HcmCareerLevelView { id:string;code:string;name:string;track:string;sequence:number;status:'ACTIVE'|'INACTIVE'; }
+export interface HcmGradeView { id:string;code:string;name:string;sequence:number;status:'ACTIVE'|'INACTIVE'; }
+export interface HcmJobArchitectureView {
+  id:string;jobProfileId:string;jobProfileCode:string;jobProfileName:string;
+  familyId:string;familyCode:string;familyName:string;
+  subfamilyId?:string;subfamilyCode?:string;subfamilyName?:string;
+  careerLevelId?:string;careerLevelCode?:string;careerLevelName?:string;
+  gradeId?:string;gradeCode?:string;gradeName?:string;
+  effectiveFrom:string;effectiveTo?:string;status:'ACTIVE'|'INACTIVE';
+}
 export interface HcmProjection {
   employments:HcmEmploymentView[];
   positions:HcmPositionView[];
+  jobFamilies:HcmJobFamilyView[];
+  jobSubfamilies:HcmJobSubfamilyView[];
+  careerLevels:HcmCareerLevelView[];
+  grades:HcmGradeView[];
+  jobArchitecture:HcmJobArchitectureView[];
   functions:{id:string;code:string;name:string}[];
   totals:{employments:number;activeEmployments:number;positions:number;occupiedPositions:number;functionOwnedPositions:number;managerPositions:number};
 }
@@ -79,7 +108,8 @@ export class MySqlHcmReadRepository {
   async getProjection(tenantId:TenantId,evaluatedAt=new Date().toISOString()):Promise<HcmProjection>{
     const at=new Date(evaluatedAt);
     if(Number.isNaN(at.getTime())) throw new Error('HCM projection evaluation time is invalid.');
-    const [employmentResult,positionResult,occupancyResult,functionAssignmentResult,reportingResult,functionResult]=await Promise.all([
+    const [employmentResult,positionResult,occupancyResult,functionAssignmentResult,reportingResult,functionResult,
+      jobFamilyResult,jobSubfamilyResult,careerLevelResult,gradeResult,jobArchitectureResult]=await Promise.all([
       this.pool.execute<EmploymentViewRow[]>(
         `SELECT e.id,e.employee_number,e.person_id,COALESCE(pe.preferred_name,pe.legal_name) AS person_name,
                 e.organisation_id,COALESCE(o.trading_name,o.legal_name) AS organisation_name,
@@ -126,6 +156,34 @@ export class MySqlHcmReadRepository {
       ),
       this.pool.execute<FunctionRow[]>(
         `SELECT id,code,name FROM function_definitions WHERE status='ACTIVE' ORDER BY code`
+      ),
+      this.pool.execute<JobFamilyViewRow[]>(
+        `SELECT id,code,name,description,status FROM hcm_job_families WHERE tenant_id=? ORDER BY status='ACTIVE' DESC,name,code`,[tenantId]
+      ),
+      this.pool.execute<JobSubfamilyViewRow[]>(
+        `SELECT id,family_id,code,name,description,status FROM hcm_job_subfamilies WHERE tenant_id=? ORDER BY status='ACTIVE' DESC,name,code`,[tenantId]
+      ),
+      this.pool.execute<CareerLevelViewRow[]>(
+        `SELECT id,code,name,track,sequence,status FROM hcm_career_levels WHERE tenant_id=? ORDER BY track,sequence,name`,[tenantId]
+      ),
+      this.pool.execute<GradeViewRow[]>(
+        `SELECT id,code,name,sequence,status FROM hcm_grades WHERE tenant_id=? ORDER BY sequence,name,code`,[tenantId]
+      ),
+      this.pool.execute<JobArchitectureViewRow[]>(
+        `SELECT a.id,a.job_profile_id,jp.code AS job_profile_code,jp.name AS job_profile_name,
+                a.family_id,jf.code AS family_code,jf.name AS family_name,
+                a.subfamily_id,jsf.code AS subfamily_code,jsf.name AS subfamily_name,
+                a.career_level_id,cl.code AS career_level_code,cl.name AS career_level_name,
+                a.grade_id,g.code AS grade_code,g.name AS grade_name,
+                a.effective_from,a.effective_to,a.status
+           FROM hcm_job_profile_architecture_assignments a
+           JOIN job_profiles jp ON jp.id=a.job_profile_id
+           JOIN hcm_job_families jf ON jf.tenant_id=a.tenant_id AND jf.id=a.family_id
+           LEFT JOIN hcm_job_subfamilies jsf ON jsf.tenant_id=a.tenant_id AND jsf.id=a.subfamily_id
+           LEFT JOIN hcm_career_levels cl ON cl.tenant_id=a.tenant_id AND cl.id=a.career_level_id
+           LEFT JOIN hcm_grades g ON g.tenant_id=a.tenant_id AND g.id=a.grade_id
+          WHERE a.tenant_id=?
+          ORDER BY a.status='ACTIVE' DESC,jf.name,jsf.name,jp.name,a.effective_from DESC`,[tenantId]
       )
     ]);
 
@@ -176,6 +234,29 @@ export class MySqlHcmReadRepository {
         employmentType:row.employment_type,startDate:iso(row.start_date),...(row.end_date?{endDate:iso(row.end_date)}:{}),status:row.status
       })),
       positions,
+      jobFamilies:jobFamilyResult[0].map(row=>({
+        id:row.id,code:row.code,name:row.name,...(row.description?{description:row.description}:{}),status:row.status
+      })),
+      jobSubfamilies:jobSubfamilyResult[0].map(row=>({
+        id:row.id,familyId:row.family_id,code:row.code,name:row.name,...(row.description?{description:row.description}:{}),status:row.status
+      })),
+      careerLevels:careerLevelResult[0].map(row=>({
+        id:row.id,code:row.code,name:row.name,track:row.track,sequence:Number(row.sequence),status:row.status
+      })),
+      grades:gradeResult[0].map(row=>({
+        id:row.id,code:row.code,name:row.name,sequence:Number(row.sequence),status:row.status
+      })),
+      jobArchitecture:jobArchitectureResult[0].map(row=>({
+        id:row.id,jobProfileId:row.job_profile_id,jobProfileCode:row.job_profile_code,jobProfileName:row.job_profile_name,
+        familyId:row.family_id,familyCode:row.family_code,familyName:row.family_name,
+        ...(row.subfamily_id?{subfamilyId:row.subfamily_id}:{}),...(row.subfamily_code?{subfamilyCode:row.subfamily_code}:{}),
+        ...(row.subfamily_name?{subfamilyName:row.subfamily_name}:{}),
+        ...(row.career_level_id?{careerLevelId:row.career_level_id}:{}),...(row.career_level_code?{careerLevelCode:row.career_level_code}:{}),
+        ...(row.career_level_name?{careerLevelName:row.career_level_name}:{}),
+        ...(row.grade_id?{gradeId:row.grade_id}:{}),...(row.grade_code?{gradeCode:row.grade_code}:{}),
+        ...(row.grade_name?{gradeName:row.grade_name}:{}),
+        effectiveFrom:iso(row.effective_from),...(row.effective_to?{effectiveTo:iso(row.effective_to)}:{}),status:row.status
+      })),
       functions:functionResult[0],
       totals:{
         employments:employmentResult[0].length,

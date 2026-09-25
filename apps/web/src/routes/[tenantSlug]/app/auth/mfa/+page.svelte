@@ -3,6 +3,7 @@
   import { tenantPublicPath, tenantSignInPath } from '$lib/tenant-paths';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(form as ActionData & Partial<{ expired: boolean }>);
 </script>
 
 <svelte:head>
@@ -36,7 +37,7 @@
         <p class="form-message error">{form.error}</p>
       {/if}
 
-      {#if form?.expired}
+      {#if viewForm?.expired}
         <p class="login-help">
           <a href={tenantSignInPath(data.tenantSlug)}>Start sign in again</a>
         </p>

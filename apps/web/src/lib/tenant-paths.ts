@@ -38,7 +38,7 @@ export function tenantSignOutPath(tenantSlug: string): string {
 
 export function tenantPublicPath(tenantSlug: string, path = ''): string {
   const suffix = path ? (path.startsWith('/') ? path : `/${path}`) : '';
-  return `/${tenantSlug}${suffix}`;
+  return `/${tenantSlug}/public${suffix}`;
 }
 
 export function rerouteTenantApplicationPath(pathname: string): string | undefined {

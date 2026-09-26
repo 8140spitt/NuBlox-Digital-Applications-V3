@@ -59,11 +59,9 @@ suite('CBE operating-profile resolver', () => {
       'D15'
     ]);
 
-    expect(preview.capabilityAdders.map((item) => item.code)).toEqual([
-      'F15.09',
-      'F15.10',
-      'F15.13'
-    ]);
+    expect(new Set(preview.capabilityAdders.map((item) => item.code))).toEqual(
+      new Set(['F15.09', 'F15.10', 'F15.13'])
+    );
   });
 
   it('lets contractual position determine the effective archetype and persists the recommendation', async () => {

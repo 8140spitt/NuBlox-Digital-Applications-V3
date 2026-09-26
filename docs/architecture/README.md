@@ -17,6 +17,7 @@ NuBlox is the product. Industry solutions configure it. External products inform
 9. [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md)
 10. [Functional Governance and Functional Delivery](13-functional-governance-and-functional-delivery.md)
 11. [Enterprise ERP Composition & Execution Contract](14-enterprise-erp-composition-and-execution-contract.md)
+12. [Market Tool Activity Evidence Model](15-market-tool-activity-evidence-model.md)
 
 ## Governing proposition
 
@@ -57,6 +58,8 @@ Contexts such as Project, Contract, Site, Asset, Product and Service are governe
 The market benchmark is translated into NuBlox-native architecture through:
 
 - [Canonical Capability & Native Tool Architecture](11-canonical-capability-and-native-tool-architecture.md);
+- [Market Tool Activity Evidence Model](15-market-tool-activity-evidence-model.md);
+- [Typical Activities in Industry Standard Tools](../reference/Typical%20Activities%20in%20industy%20standard%20tools.tsv) — machine-readable market activity evidence, not a competing NuBlox taxonomy;
 - [Canonical Native Tool Engine Register](canonical-native-tool-engine-register.csv);
 - [353-L2 Native Engine Map](canonical-l2-native-engine-map.csv);
 - [1,510-Activity Canonical Capability Map](canonical-activity-capability-map.csv);

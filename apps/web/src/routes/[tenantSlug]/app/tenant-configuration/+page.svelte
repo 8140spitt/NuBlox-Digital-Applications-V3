@@ -131,15 +131,20 @@
         </label>
 
         <label>
-          <span>Primary country</span>
+          <span>Primary country <small>ISO alpha-2</small></span>
           <input
             name="primaryCountryCode"
+            type="text"
+            minlength="2"
             maxlength="2"
-            pattern="[A-Za-z]{2}"
+            autocomplete="country"
+            autocapitalize="characters"
             placeholder="GB"
+            title="Enter the two-letter ISO country code, for example GB."
             value={viewForm?.primaryCountryCode ?? ''}
             required
           />
+          <small class="login-help">Use the two-letter country code, for example GB.</small>
         </label>
 
         <label>

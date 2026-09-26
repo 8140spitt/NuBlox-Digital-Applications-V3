@@ -1,0 +1,213 @@
+Acronym	Full Name	Horizontal/Vertical	Industry	Activities Managed/Coordinated
+ERP	Enterprise Resource Planning	Horizontal	Cross-Industry	Financial accounting; management accounting; general ledger; accounts payable; accounts receivable; fixed assets; cash management; procurement; purchasing; inventory; order management; manufacturing; production planning; MRP; HR/payroll; project accounting; supply chain; reporting; compliance
+ERM	Enterprise Risk Management	Horizontal	Cross-Industry	Risk identification; risk assessment; risk register; risk appetite; risk mitigation; internal controls; compliance; audit management; incident management; business continuity; risk reporting; KRIs; scenario analysis
+ERM	Enterprise Resource Management	Horizontal	Cross-Industry	ERP functions; performance management; project portfolio management; asset lifecycle management; resource allocation; risk management; compliance; financial consolidation
+EPM	Enterprise Performance Management	Horizontal	Cross-Industry	Budgeting; forecasting; planning; financial consolidation; close management; management reporting; scorecards; dashboards; profitability analysis; scenario modeling; workforce planning; capital planning
+FP&A	Financial Planning & Analysis	Horizontal	Cross-Industry	Budgeting; forecasting; variance analysis; financial modeling; scenario planning; management reporting; KPI tracking; profitability analysis; capital allocation; strategic planning
+PPM	Project & Portfolio Management	Horizontal	Cross-Industry	Project initiation; prioritization; portfolio selection; resource allocation; scheduling; budgeting; cost tracking; risk management; issue management; change management; time tracking; collaboration; reporting; stage-gate
+SPM	Strategic Portfolio Management	Horizontal	Cross-Industry	Strategic planning; portfolio prioritization; investment alignment; roadmap management; capacity planning; benefits realization; performance tracking; scenario planning
+PSA	Professional Services Automation	Horizontal	Cross-Industry	Project management; resource management; time and expense; billing; invoicing; utilization; profitability; collaboration; document management; client management
+EAM	Enterprise Asset Management	Horizontal	Cross-Industry	Asset registry; asset lifecycle; maintenance planning; preventive maintenance; predictive maintenance; work orders; spare parts; inventory; labor; scheduling; depreciation; compliance; performance monitoring
+CMMS	Computerized Maintenance Management System	Horizontal	Cross-Industry	Work orders; preventive maintenance; corrective maintenance; asset history; spare parts inventory; labor tracking; scheduling; meter readings; maintenance reporting; compliance
+MRO	Maintenance, Repair & Operations	Horizontal	Cross-Industry	Maintenance; repair; operations; procurement of MRO supplies; inventory; work orders; vendor management; scheduling; compliance
+SCM	Supply Chain Management	Horizontal	Cross-Industry	Demand planning; supply planning; procurement; sourcing; supplier management; production planning; inventory management; warehousing; transportation; order fulfillment; returns; logistics; collaboration; visibility
+WMS	Warehouse Management System	Horizontal	Cross-Industry	Receiving; putaway; storage; inventory tracking; picking; packing; shipping; cycle counting; replenishment; wave planning; labor management; yard integration; returns
+TMS	Transportation Management System	Horizontal	Cross-Industry	Route planning; load planning; carrier selection; freight rating; tendering; shipment tracking; freight payment; audit; optimization; visibility; documentation
+TMS	Talent Management System	Horizontal	Cross-Industry	Talent acquisition; onboarding; performance management; goal management; succession planning; career development; learning; compensation; competency management; talent review
+TMS	Treasury Management System	Horizontal	Cross-Industry	Cash management; liquidity forecasting; bank reconciliation; payments; debt management; investment management; FX risk; interest rate risk; compliance; treasury reporting
+YMS	Yard Management System	Horizontal	Cross-Industry	Yard inventory; trailer tracking; gate check-in/out; dock scheduling; spot assignment; yard moves; load/unload coordination; yard jockey tasking; visibility
+OMS	Order Management System	Horizontal	Cross-Industry	Order capture; order orchestration; inventory availability; pricing; promotions; fulfillment routing; returns; exchanges; order tracking; customer communication; settlement
+MES	Manufacturing Execution System	Horizontal	Cross-Industry	Production scheduling; work order execution; dispatching; machine data collection; quality management; traceability; inventory tracking; performance analysis; OEE; labor tracking; document control
+MOM	Manufacturing Operations Management	Horizontal	Cross-Industry	Production operations; maintenance; quality; inventory; scheduling; dispatching; performance; safety; compliance; integration with ERP
+APS	Advanced Planning & Scheduling	Horizontal	Cross-Industry	Demand-driven scheduling; capacity planning; finite scheduling; material constraints; resource optimization; sequencing; what-if scenarios; order promising; bottleneck management
+DRP	Distribution Resource Planning	Horizontal	Cross-Industry	Distribution requirements; inventory replenishment; warehouse planning; transportation planning; demand forecasting; supply allocation; DRP runs
+DRP	Disaster Recovery Plan	Horizontal	Cross-Industry	Business impact analysis; recovery strategies; backup/restore; failover; incident response; communication plans; testing; training; plan maintenance
+MRP	Material Requirements Planning	Horizontal	Cross-Industry	Material requirements; bill of materials explosion; inventory netting; lot sizing; lead time offsetting; planned orders; purchase requisitions; capacity checks
+MRP II	Manufacturing Resource Planning	Horizontal	Cross-Industry	MRP; capacity planning; shop floor control; scheduling; costing; financial integration; sales and operations planning; demand management
+QMS	Quality Management System	Horizontal	Cross-Industry	Quality planning; quality control; quality assurance; inspections; audits; nonconformance; CAPA; document control; training; supplier quality; risk management; complaints
+EHS	Environment, Health & Safety	Horizontal	Cross-Industry	Incident management; hazard identification; risk assessment; permits; inspections; audits; training; chemical management; waste management; occupational health; environmental compliance; reporting
+LIMS	Laboratory Information Management System	Horizontal	Cross-Industry	Sample login; sample tracking; test scheduling; results entry; instrument integration; QC; reporting; chain of custody; inventory; compliance
+ELN	Electronic Laboratory Notebook	Horizontal	Cross-Industry	Experiment design; protocol capture; data recording; observations; calculations; collaboration; search; IP protection; integration with LIMS
+PLM	Product Lifecycle Management	Horizontal	Cross-Industry	Idea management; requirements; portfolio; product design; engineering change; BOM; configuration; documentation; compliance; quality; sourcing; manufacturing handoff; service; end-of-life
+PDM	Product Data Management	Horizontal	Cross-Industry	CAD file management; version control; revision control; check-in/out; vaulting; metadata; BOM; workflow; collaboration; access control
+BOM	Bill of Materials	Horizontal	Cross-Industry	BOM creation; structuring; multi-level BOM; variant config; effectivity; cost roll-up; manufacturing BOM; engineering BOM; change control
+ECM	Enterprise Content Management	Horizontal	Cross-Industry	Document capture; imaging; workflow; records management; retention; versioning; collaboration; search; security; archiving; compliance
+DMS	Document Management System	Horizontal	Cross-Industry	Document storage; version control; metadata; check-in/out; access control; workflow; approval; search; retention; audit trail
+CMS	Content Management System	Horizontal	Cross-Industry	Content creation; editing; publishing; workflow; templates; versioning; SEO; multi-channel; user permissions; media management
+WCM	Web Content Management	Horizontal	Cross-Industry	Web content authoring; publishing; templates; workflow; localization; SEO; analytics; personalization; governance
+BPM	Business Process Management	Horizontal	Cross-Industry	Process modeling; process execution; workflow automation; task management; business rules; monitoring; optimization; integration; analytics
+RPA	Robotic Process Automation	Horizontal	Cross-Industry	Task automation; bot development; bot orchestration; screen scraping; data entry; rule-based processing; exception handling; monitoring; scheduling
+GRC	Governance, Risk & Compliance	Horizontal	Cross-Industry	Governance; risk management; compliance management; policy management; audit management; control testing; incident management; regulatory change; reporting
+BCP	Business Continuity Planning	Horizontal	Cross-Industry	Business impact analysis; recovery strategies; plan development; testing; training; communication; maintenance; coordination with DR
+CRM	Customer Relationship Management	Horizontal	Cross-Industry	Lead management; opportunity management; account management; contact management; sales forecasting; pipeline management; customer service; case management; marketing; analytics
+SFA	Sales Force Automation	Horizontal	Cross-Industry	Lead capture; opportunity tracking; pipeline; sales forecasting; activity management; quote generation; order entry; territory management; reporting
+CPQ	Configure, Price, Quote	Horizontal	Cross-Industry	Product configuration; pricing; discounting; quoting; proposal generation; approval workflows; e-commerce; order capture
+CLM	Contract Lifecycle Management	Horizontal	Cross-Industry	Contract creation; negotiation; approval; execution; storage; renewal; obligation management; compliance; analytics
+PRM	Partner Relationship Management	Horizontal	Cross-Industry	Partner onboarding; enablement; deal registration; lead distribution; co-selling; commissions; performance tracking; communication
+MAS	Marketing Automation System	Horizontal	Cross-Industry	Campaign management; email marketing; lead nurturing; lead scoring; segmentation; personalization; analytics; social media; landing pages
+MAP	Marketing Automation Platform	Horizontal	Cross-Industry	Campaign management; email marketing; lead nurturing; lead scoring; segmentation; personalization; analytics; social media; landing pages
+CDP	Customer Data Platform	Horizontal	Cross-Industry	Customer data collection; identity resolution; profile unification; segmentation; audience activation; analytics; privacy
+DMP	Data Management Platform	Horizontal	Cross-Industry	Data collection; audience segmentation; targeting; data exchange; analytics; activation
+CSM	Customer Success Management	Horizontal	Cross-Industry	Customer onboarding; adoption; health scoring; renewals; upsell; support; feedback; success planning
+CX	Customer Experience	Horizontal	Cross-Industry	Journey mapping; feedback; personalization; omnichannel; analytics; experience optimization
+VoC	Voice of the Customer	Horizontal	Cross-Industry	Feedback collection; surveys; sentiment analysis; text analytics; reporting; action planning
+HCM	Human Capital Management	Horizontal	Cross-Industry	Core HR; payroll; benefits; time and attendance; talent acquisition; onboarding; performance; learning; compensation; succession; workforce planning
+HRM	Human Resource Management	Horizontal	Cross-Industry	Employee records; payroll; benefits; time; attendance; performance; recruiting; training; compliance
+HRIS	HR Information System	Horizontal	Cross-Industry	Employee data; payroll; benefits; time; reporting; compliance; self-service
+HRMS	HR Management System	Horizontal	Cross-Industry	Employee records; payroll; benefits; time; attendance; performance; recruiting; training; compliance
+ATS	Applicant Tracking System	Horizontal	Cross-Industry	Job requisition; posting; resume parsing; candidate tracking; interviewing; offer management; onboarding; compliance
+LMS	Learning Management System	Horizontal	Cross-Industry	Course catalog; enrollment; content delivery; assessments; certifications; tracking; reporting; compliance training
+WFM	Workforce Management	Horizontal	Cross-Industry	Forecasting; scheduling; time and attendance; absence management; task management; labor optimization; compliance
+ITSM	IT Service Management	Horizontal	Cross-Industry	Incident management; problem management; change management; request fulfillment; asset management; service catalog; SLA; knowledge; CMDB
+ITOM	IT Operations Management	Horizontal	Cross-Industry	Monitoring; event management; automation; discovery; service mapping; performance; capacity; availability
+ITAM	IT Asset Management	Horizontal	Cross-Industry	Hardware asset; software asset; license management; lifecycle; inventory; compliance; financials; contract
+CMDB	Configuration Management Database	Horizontal	Cross-Industry	Configuration items; relationships; dependency mapping; service mapping; inventory; change tracking
+IAM	Identity & Access Management	Horizontal	Cross-Industry	User provisioning; deprovisioning; authentication; authorization; roles; access requests; certification; SSO; MFA; governance
+SSO	Single Sign-On	Horizontal	Cross-Industry	Authentication; session management; credential mapping; access control
+MFA	Multi-Factor Authentication	Horizontal	Cross-Industry	Authentication; token management; biometrics; push; OTP; policy
+PAM	Privileged Access Management	Horizontal	Cross-Industry	Privileged account discovery; credential vaulting; session management; least privilege; auditing; rotation
+SIEM	Security Information & Event Management	Horizontal	Cross-Industry	Log collection; event correlation; threat detection; alerting; incident response; forensics; compliance reporting
+SOAR	Security Orchestration, Automation & Response	Horizontal	Cross-Industry	Orchestration; automation; playbooks; case management; threat intelligence; incident response
+DLP	Data Loss Prevention	Horizontal	Cross-Industry	Data discovery; classification; monitoring; blocking; policy enforcement; incident response
+CASB	Cloud Access Security Broker	Horizontal	Cross-Industry	Cloud app discovery; access control; data security; threat protection; compliance; shadow IT
+SASE	Secure Access Service Edge	Horizontal	Cross-Industry	Network security; secure web gateway; firewall; CASB; ZTNA; SD-WAN; DLP
+ZTNA	Zero Trust Network Access	Horizontal	Cross-Industry	Identity-based access; microsegmentation; policy enforcement; continuous verification
+EDR	Endpoint Detection & Response	Horizontal	Cross-Industry	Endpoint monitoring; threat detection; response; isolation; forensics; remediation
+XDR	Extended Detection & Response	Horizontal	Cross-Industry	Cross-layer detection; correlation; response; automation; threat hunting
+MDM	Master Data Management	Horizontal	Cross-Industry	Data governance; data quality; data stewardship; entity resolution; hierarchy management; data synchronization; golden record
+MDM	Mobile Device Management	Horizontal	Cross-Industry	Device enrollment; configuration; policy; security; app management; inventory; wipe
+UEM	Unified Endpoint Management	Horizontal	Cross-Industry	Unified endpoint management; device enrollment; configuration; security; app management; patch; inventory
+BYOD	Bring Your Own Device	Horizontal	Cross-Industry	Device enrollment; policy; access control; containerization; security; compliance
+ALM	Application Lifecycle Management	Horizontal	Cross-Industry	Requirements; planning; development; testing; release; deployment; issue tracking; traceability
+SDLC	Software Development Life Cycle	Horizontal	Cross-Industry	Requirements; design; development; testing; deployment; maintenance
+CI/CD	Continuous Integration / Continuous Delivery	Horizontal	Cross-Industry	Code integration; build; test; deployment; release; monitoring
+APM	Application Performance Management	Horizontal	Cross-Industry	Application monitoring; performance; transaction tracing; diagnostics; root cause; user experience
+NPM	Network Performance Management	Horizontal	Cross-Industry	Network monitoring; performance; traffic analysis; fault; capacity; availability
+VDI	Virtual Desktop Infrastructure	Horizontal	Cross-Industry	Desktop virtualization; provisioning; management; security; user profiles; app delivery
+DaaS	Desktop as a Service	Horizontal	Cross-Industry	Desktop provisioning; management; security; patching; user data; scaling
+SaaS	Software as a Service	Horizontal	Cross-Industry	Software delivery; subscription management; access; updates; multi-tenancy; billing
+PaaS	Platform as a Service	Horizontal	Cross-Industry	Application hosting; development; deployment; scaling; middleware; databases
+IaaS	Infrastructure as a Service	Horizontal	Cross-Industry	Compute; storage; network; virtualization; provisioning; scaling
+BI	Business Intelligence	Horizontal	Cross-Industry	Data visualization; reporting; dashboards; ad-hoc queries; OLAP; scorecards; KPIs
+BA	Business Analytics	Horizontal	Cross-Industry	Data analysis; predictive; statistical; reporting; visualization; decision support
+AI	Artificial Intelligence	Horizontal	Cross-Industry	Model training; inference; automation; decision support; NLP; vision; robotics
+ML	Machine Learning	Horizontal	Cross-Industry	Data preparation; feature engineering; training; evaluation; deployment; monitoring
+DL	Deep Learning	Horizontal	Cross-Industry	Neural network training; feature learning; inference; computer vision; NLP
+NLP	Natural Language Processing	Horizontal	Cross-Industry	Text analysis; sentiment; entity extraction; translation; summarization; chatbots
+ETL	Extract, Transform, Load	Horizontal	Cross-Industry	Data extraction; transformation; cleansing; loading; scheduling; error handling
+ELT	Extract, Load, Transform	Horizontal	Cross-Industry	Extraction; loading; transformation in target; orchestration
+OLAP	Online Analytical Processing	Horizontal	Cross-Industry	Multidimensional analysis; slicing; dicing; drill-down; roll-up; pivoting
+OLTP	Online Transaction Processing	Horizontal	Cross-Industry	Transaction processing; data entry; retrieval; update; concurrency; integrity
+DWH	Data Warehouse	Horizontal	Cross-Industry	Data storage; integration; historization; reporting; analytics; data marts
+DBMS	Database Management System	Horizontal	Cross-Industry	Data storage; retrieval; update; backup; recovery; security; concurrency
+RDBMS	Relational Database Management System	Horizontal	Cross-Industry	Relational storage; SQL; transactions; constraints; indexing; views
+NoSQL	Not Only SQL	Horizontal	Cross-Industry	Document/key-value/graph storage; flexible schema; scaling; distributed
+EAI	Enterprise Application Integration	Horizontal	Cross-Industry	Application integration; data mapping; routing; transformation; orchestration; messaging
+ESB	Enterprise Service Bus	Horizontal	Cross-Industry	Service mediation; routing; transformation; protocol conversion; messaging; orchestration
+API	Application Programming Interface	Horizontal	Cross-Industry	API creation; publishing; security; throttling; monitoring; versioning; developer portal
+iPaaS	Integration Platform as a Service	Horizontal	Cross-Industry	Cloud integration; connectors; workflows; data mapping; orchestration; monitoring
+B2B	Business-to-Business	Horizontal	Cross-Industry	B2B commerce; partner integration; EDI; order exchange; catalogs; pricing
+EDI	Electronic Data Interchange	Horizontal	Cross-Industry	Electronic document exchange; purchase orders; invoices; ASN; acknowledgments; mapping
+BAM	Business Activity Monitoring	Horizontal	Cross-Industry	Business activity monitoring; real-time dashboards; alerts; KPIs; process monitoring
+UC	Unified Communications	Horizontal	Cross-Industry	Voice; video; messaging; presence; conferencing; collaboration
+UCaaS	Unified Communications as a Service	Horizontal	Cross-Industry	Cloud voice; video; messaging; presence; contact center integration
+CCaaS	Contact Center as a Service	Horizontal	Cross-Industry	Contact center routing; IVR; queueing; agent management; analytics; omnichannel
+VoIP	Voice over IP	Horizontal	Cross-Industry	Voice calls; signaling; media transport; numbering; QoS
+IM	Instant Messaging	Horizontal	Cross-Industry	Instant messaging; presence; group chat; file sharing
+KM	Knowledge Management	Horizontal	Cross-Industry	Knowledge capture; storage; sharing; search; collaboration; expertise location
+EHR	Electronic Health Record	Vertical	Healthcare	Patient demographics; medical history; diagnoses; medications; orders; results; notes; immunizations; appointments; billing; reporting; interoperability
+EMR	Electronic Medical Record	Vertical	Healthcare	Patient chart; clinical documentation; orders; results; medications; billing; scheduling
+PMS	Practice Management System	Vertical	Healthcare	Patient scheduling; registration; billing; claims; clinical records; reporting
+HIS	Hospital Information System	Vertical	Healthcare	Hospital operations; patient administration; clinical; financial; ancillary; scheduling; billing
+RIS	Radiology Information System	Vertical	Healthcare	Radiology scheduling; patient tracking; exam ordering; reporting; billing; integration with PACS
+PACS	Picture Archiving & Communication System	Vertical	Healthcare	Medical image storage; retrieval; viewing; archiving; communication; workflow
+LIS	Laboratory Information System	Vertical	Healthcare	Sample tracking; test orders; results; QC; reporting; instrument integration
+CPOE	Computerized Physician Order Entry	Vertical	Healthcare	Order entry; medication orders; lab orders; radiology orders; alerts; decision support
+CDSS	Clinical Decision Support System	Vertical	Healthcare	Clinical guidelines; alerts; reminders; drug interactions; diagnostic support
+HIE	Health Information Exchange	Vertical	Healthcare	Health data exchange; interoperability; patient records; consent; analytics
+RCM	Revenue Cycle Management	Vertical	Healthcare	Billing; coding; claims; denials; payments; collections; reporting
+PHM	Population Health Management	Vertical	Healthcare	Population risk stratification; care management; outreach; analytics; outcomes
+eMAR	Electronic Medication Administration Record	Vertical	Healthcare	Medication administration; barcode scanning; documentation; alerts
+BCMA	Bar Code Medication Administration	Vertical	Healthcare	Barcode medication administration; verification; documentation; safety
+CTMS	Clinical Trial Management System	Vertical	Healthcare	Clinical trial planning; patient recruitment; enrollment; monitoring; data collection; compliance; reporting
+EDC	Electronic Data Capture	Vertical	Healthcare	Clinical data entry; validation; query management; reporting
+eTMF	Electronic Trial Master File	Vertical	Healthcare	Trial master file management; document storage; tracking; compliance; submissions
+CBS	Core Banking System	Vertical	Banking	Core banking transactions; accounts; deposits; loans; payments; interest; statements
+LOS	Loan Origination System	Vertical	Banking	Loan application; underwriting; approval; closing; disbursement; servicing
+ATM	Automated Teller Machine	Vertical	Banking	Cash dispensing; deposits; balance inquiry; transfers; card processing
+AML	Anti-Money Laundering	Vertical	Banking	Transaction monitoring; suspicious activity reporting; customer screening; sanctions; case management
+KYC	Know Your Customer	Vertical	Banking	Customer identification; verification; due diligence; risk rating; ongoing monitoring
+CIF	Customer Information File	Vertical	Banking	Customer master data; accounts; relationships; demographics; preferences
+ALM	Asset Liability Management	Vertical	Banking	Asset liability matching; interest rate risk; liquidity risk; capital planning
+FTP	Funds Transfer Pricing	Vertical	Banking	Funds transfer pricing; profitability; margin analysis; rate setting
+IFRS	International Financial Reporting Standards	Vertical	Banking	Financial reporting; consolidation; disclosure; compliance
+PAS	Policy Administration System	Vertical	Insurance	Policy issuance; endorsements; renewals; cancellations; billing; claims integration
+UW	Underwriting	Vertical	Insurance	Risk assessment; pricing; policy issuance; reinsurance
+CLM	Claims Management	Vertical	Insurance	Claim intake; adjudication; payments; fraud detection; reporting
+POS	Point of Sale	Vertical	Retail	Sales; payment processing; inventory; returns; receipts; loyalty
+PIM	Product Information Management	Vertical	Retail	Product data; attributes; catalogs; enrichment; syndication
+DAM	Digital Asset Management	Vertical	Retail	Digital asset storage; metadata; retrieval; rights; distribution
+CDP	Customer Data Platform	Vertical	Retail	Customer data unification; segmentation; activation
+LMS	Loyalty Management System	Vertical	Retail	Loyalty enrollment; points; rewards; redemption; tiers; analytics
+Merch	Merchandising System	Vertical	Retail	Assortment planning; pricing; promotions; replenishment; allocation
+CAD	Computer-Aided Design	Vertical	Manufacturing	2D/3D modeling; drafting; design; simulation; documentation
+CAM	Computer-Aided Manufacturing	Vertical	Manufacturing	Toolpath generation; machining; post-processing; simulation
+CAE	Computer-Aided Engineering	Vertical	Manufacturing	Simulation; stress analysis; thermal; fluid; optimization
+CAPP	Computer-Aided Process Planning	Vertical	Manufacturing	Process planning; routing; operation sequencing; tooling
+CMM	Coordinate Measuring Machine	Vertical	Manufacturing	Measurement; inspection; quality control; reporting
+SCADA	Supervisory Control & Data Acquisition	Vertical	Manufacturing	Data acquisition; monitoring; control; alarms; historian; HMI
+HMI	Human-Machine Interface	Vertical	Manufacturing	Operator interface; visualization; control; alarms
+PLC	Programmable Logic Controller	Vertical	Manufacturing	Logic control; sequencing; automation; I/O
+DCS	Distributed Control System	Vertical	Manufacturing	Process control; regulatory control; batch; safety
+MES	Manufacturing Execution System	Vertical	Manufacturing	Production scheduling; work order execution; dispatching; machine data; quality; traceability; inventory; OEE
+MOM	Manufacturing Operations Management	Vertical	Manufacturing	Production operations; maintenance; quality; inventory; scheduling; dispatching; performance; safety
+APS	Advanced Planning & Scheduling	Vertical	Manufacturing	Demand-driven scheduling; capacity planning; finite scheduling; material constraints; optimization; sequencing
+BIM	Building Information Modeling	Vertical	Construction	3D modeling; clash detection; 4D scheduling; 5D cost; facility management; collaboration
+VDC	Virtual Design & Construction	Vertical	Construction	Virtual design; coordination; simulation; construction planning
+GIS	Geographic Information System	Vertical	Construction	Mapping; spatial analysis; data management; visualization
+PMIS	Project Management Information System	Vertical	Construction	Project planning; scheduling; cost; documents; communication
+IWMS	Integrated Workplace Management System	Vertical	Construction	Real estate; facilities; maintenance; space; leases; capital projects
+CAFM	Computer-Aided Facility Management	Vertical	Construction	Space management; maintenance; moves; assets; leases
+CMMS	Computerized Maintenance Management System	Vertical	Construction	Work orders; preventive maintenance; asset history; spare parts; labor; scheduling; reporting
+SIS	Student Information System	Vertical	Education	Student records; enrollment; grades; scheduling; billing; reporting
+LMS	Learning Management System	Vertical	Education	Course catalog; enrollment; content delivery; assessments; certifications; tracking; reporting
+LCMS	Learning Content Management System	Vertical	Education	Learning content authoring; storage; delivery; tracking
+EMIS	Education Management Information System	Vertical	Education	Student data; staff; finance; reporting
+VLE	Virtual Learning Environment	Vertical	Education	Online courses; collaboration; assessment; content
+CJIS	Criminal Justice Information System	Vertical	Government	Criminal records; incidents; arrests; warrants; cases; reporting
+GIS	Geographic Information System	Vertical	Government	Mapping; spatial analysis; data management; visualization
+ECM	Enterprise Content Management	Vertical	Government	Document capture; records management; workflow; retention; search; security
+BPM	Business Process Management	Vertical	Government	Process modeling; workflow automation; task management; monitoring; optimization
+OSS	Operations Support System	Vertical	Telecom	Network operations; service assurance; fulfillment; inventory; performance; fault
+BSS	Business Support System	Vertical	Telecom	Billing; CRM; order management; revenue management; customer care
+NMS	Network Management System	Vertical	Telecom	Network monitoring; fault; configuration; performance; security
+EMS	Element Management System	Vertical	Telecom	Element management; configuration; fault; performance
+SDP	Service Delivery Platform	Vertical	Telecom	Service creation; delivery; charging; policy
+IN	Intelligent Network	Vertical	Telecom	Call routing; number translation; prepaid; VPN
+SCADA	Supervisory Control & Data Acquisition	Vertical	Energy	Data acquisition; monitoring; control; alarms; historian; HMI
+EMS	Energy Management System	Vertical	Energy	Energy monitoring; optimization; demand response; load management
+DMS	Distribution Management System	Vertical	Energy	Distribution network management; outage; switching; planning
+OMS	Outage Management System	Vertical	Energy	Outage detection; restoration; crew dispatch; reporting
+MDMS	Meter Data Management System	Vertical	Energy	Meter data collection; validation; billing; analytics
+CIS	Customer Information System	Vertical	Energy	Customer accounts; billing; service orders; meter reading
+DERMS	Distributed Energy Resource Management System	Vertical	Energy	Distributed energy resources; solar; storage; EV; grid services
+TMS	Transportation Management System	Vertical	Logistics	Route planning; load planning; carrier selection; freight rating; tendering; shipment tracking; freight payment
+WMS	Warehouse Management System	Vertical	Logistics	Receiving; putaway; storage; picking; packing; shipping; cycle counting; replenishment
+YMS	Yard Management System	Vertical	Logistics	Yard inventory; trailer tracking; gate check-in/out; dock scheduling; yard moves
+OMS	Order Management System	Vertical	Logistics	Order capture; order orchestration; inventory availability; fulfillment routing; returns; tracking
+FMS	Fleet Management System	Vertical	Logistics	Fleet tracking; maintenance; fuel; driver; routing; compliance
+EDI	Electronic Data Interchange	Vertical	Logistics	Electronic document exchange; purchase orders; invoices; ASN; acknowledgments; mapping
+MAM	Media Asset Management	Vertical	Media	Media ingestion; cataloging; editing; storage; retrieval; distribution
+DAM	Digital Asset Management	Vertical	Media	Digital asset storage; metadata; retrieval; rights; distribution
+DRM	Digital Rights Management	Vertical	Media	Rights management; encryption; licensing; distribution control
+PMS	Property Management System	Vertical	Hospitality	Reservations; check-in/out; room assignments; billing; housekeeping
+CRS	Central Reservation System	Vertical	Hospitality	Reservations; availability; rates; inventory; distribution
+RMS	Revenue Management System	Vertical	Hospitality	Revenue management; pricing; forecasting; optimization
+GDS	Global Distribution System	Vertical	Hospitality	Travel distribution; bookings; availability; ticketing
+DMS	Document Management System	Vertical	Legal	Document storage; versioning; search; security; retention
+CLM	Contract Lifecycle Management	Vertical	Legal	Contract creation; negotiation; approval; execution; storage; renewal; obligation management
+PSA	Professional Services Automation	Vertical	Legal	Project management; resource management; time and expense; billing; invoicing; utilization
+FMIS	Farm Management Information System	Vertical	Agriculture	Farm planning; crop management; livestock; inventory; finance; compliance
+GIS	Geographic Information System	Vertical	Agriculture	Mapping; spatial analysis; data management; visualization
+CRM	Constituent Relationship Management	Vertical	Nonprofit	Donor management; volunteers; campaigns; grants; communications
+DMS	Donor Management System	Vertical	Nonprofit	Donor records; donations; pledges; receipts; reporting

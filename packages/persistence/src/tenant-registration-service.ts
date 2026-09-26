@@ -13,6 +13,11 @@ import {
   TenantProvisioningError,
   type TenantBusinessProfileInput
 } from './tenant-provisioning-service.js';
+import {
+  CbeOperatingProfileError,
+  MySqlCbeOperatingProfileService,
+  type CbeOperatingProfileInput
+} from './cbe-operating-profile-service.js';
 
 export type TenantRegistrationErrorCode =
   | 'INVALID_INPUT'
@@ -37,6 +42,7 @@ export interface TenantRegistrationInput {
   password: string;
   acceptedTerms: boolean;
   businessProfile: TenantBusinessProfileInput;
+  cbeOperatingProfile?: CbeOperatingProfileInput;
   grantTenantAdministrator?: boolean;
   emailVerified?: boolean;
 }
@@ -52,6 +58,7 @@ export interface TenantRegistrationResult {
   userId: string;
   provisioningRunId: string;
   industrySolutionIds: string[];
+  cbeProvisioningCode?: string;
   verificationRequired: boolean;
 }
 
@@ -102,9 +109,11 @@ async function audit(
 
 export class MySqlTenantRegistrationService {
   private readonly provisioning: MySqlTenantProvisioningService;
+  private readonly cbeOperatingProfiles: MySqlCbeOperatingProfileService;
 
   constructor(private readonly pool: Pool) {
     this.provisioning = new MySqlTenantProvisioningService(pool);
+    this.cbeOperatingProfiles = new MySqlCbeOperatingProfileService(pool);
   }
 
   async register(input: TenantRegistrationInput): Promise<TenantRegistrationResult> {
@@ -321,6 +330,25 @@ export class MySqlTenantRegistrationService {
         throw error;
       }
 
+      let cbeOperatingProfile;
+      if (input.cbeOperatingProfile) {
+        try {
+          cbeOperatingProfile = await this.cbeOperatingProfiles.applyToTenant(
+            connection,
+            tenantId,
+            personId,
+            input.businessProfile.sizeTier,
+            input.cbeOperatingProfile,
+            provisioning.provisioningRunId
+          );
+        } catch (error) {
+          if (error instanceof CbeOperatingProfileError) {
+            throw new TenantRegistrationError(error.message, 'INVALID_INPUT');
+          }
+          throw error;
+        }
+      }
+
       await connection.execute(
         `INSERT INTO application_auth_events
           (user_id, tenant_id, email_normalized, event_type, outcome, metadata)
@@ -334,7 +362,10 @@ export class MySqlTenantRegistrationService {
             organisationId,
             personId,
             provisioningRunId: provisioning.provisioningRunId,
-            industrySolutionIds: provisioning.industrySolutionIds
+            industrySolutionIds: provisioning.industrySolutionIds,
+            ...(cbeOperatingProfile
+              ? { cbeProvisioningCode: cbeOperatingProfile.provisioningCode }
+              : {})
           })
         ]
       );
@@ -344,7 +375,10 @@ export class MySqlTenantRegistrationService {
         tenantSlug,
         name: businessName,
         tenantPartyId,
-        organisationId
+        organisationId,
+        ...(cbeOperatingProfile
+          ? { cbeProvisioningCode: cbeOperatingProfile.provisioningCode }
+          : {})
       });
       await audit(connection, tenantId, 'PARTY', tenantPartyId, 'CREATED', personId, {
         partyType: 'TENANT',
@@ -387,6 +421,9 @@ export class MySqlTenantRegistrationService {
         userId,
         provisioningRunId: provisioning.provisioningRunId,
         industrySolutionIds: provisioning.industrySolutionIds,
+        ...(cbeOperatingProfile
+          ? { cbeProvisioningCode: cbeOperatingProfile.provisioningCode }
+          : {}),
         verificationRequired: input.emailVerified !== true
       };
     });

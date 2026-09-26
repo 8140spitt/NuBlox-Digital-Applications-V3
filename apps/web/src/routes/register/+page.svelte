@@ -2,6 +2,28 @@
   import type { ActionData, PageData } from './$types';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
+  const viewForm = $derived(
+    form as ActionData &
+      Partial<{
+        error: string;
+        businessName: string;
+        tenantSlug: string;
+        primaryCountryCode: string;
+        primaryLanguageCode: string;
+        primaryClassificationValueId: string;
+        sizeTier: string;
+        employeeCount: string;
+        legalEntityCount: string;
+        operatingModelCodes: string[];
+        regulatoryRegimeIds: string[];
+        cbeArchetypeCode: string;
+        cbeContractualPositionCode: string;
+        cbeEmploysOperatives: string;
+        personName: string;
+        email: string;
+        acceptedTerms: boolean;
+      }>
+  );
 
   type FunctionState = 'DEFAULT_ENABLED' | 'AVAILABLE_DISABLED' | 'HIDDEN_NOT_APPLICABLE';
 
@@ -58,13 +80,13 @@
     } | null;
     cbeOperatingProfile: CbeOperatingProfilePreview | null;
   } | null>(null);
-  let businessName = $state(form?.businessName ?? '');
-  let primaryClassificationValueId = $state(form?.primaryClassificationValueId ?? '');
-  let sizeTier = $state(form?.sizeTier ?? '');
-  let operatingModelCodes = $state<string[]>(form?.operatingModelCodes ?? []);
-  let cbeArchetypeCode = $state(form?.cbeArchetypeCode ?? '');
-  let cbeContractualPositionCode = $state(form?.cbeContractualPositionCode ?? '');
-  let cbeEmploysOperatives = $state(form?.cbeEmploysOperatives ?? '');
+  let businessName = $state(viewForm?.businessName ?? '');
+  let primaryClassificationValueId = $state(viewForm?.primaryClassificationValueId ?? '');
+  let sizeTier = $state(viewForm?.sizeTier ?? '');
+  let operatingModelCodes = $state<string[]>(viewForm?.operatingModelCodes ?? []);
+  let cbeArchetypeCode = $state(viewForm?.cbeArchetypeCode ?? '');
+  let cbeContractualPositionCode = $state(viewForm?.cbeContractualPositionCode ?? '');
+  let cbeEmploysOperatives = $state(viewForm?.cbeEmploysOperatives ?? '');
 
   const selectedIndustry = $derived(
     data.catalogue.industries.find(
@@ -231,7 +253,7 @@
               maxlength="80"
               pattern={'[a-z0-9][a-z0-9-]{1,78}[a-z0-9]'}
               placeholder="baesystems"
-              value={form?.tenantSlug ?? ''}
+              value={viewForm?.tenantSlug ?? ''}
             />
             <small>
               Leave blank and NuBlox derives the business route, for example
@@ -247,7 +269,7 @@
               maxlength="2"
               autocomplete="country"
               placeholder="GB"
-              value={form?.primaryCountryCode ?? ''}
+              value={viewForm?.primaryCountryCode ?? ''}
               required
             />
             <small>ISO alpha-2 country code, for example GB.</small>
@@ -259,7 +281,7 @@
               name="primaryLanguageCode"
               maxlength="16"
               placeholder="en-GB"
-              value={form?.primaryLanguageCode ?? ''}
+              value={viewForm?.primaryLanguageCode ?? ''}
               required
             />
           </label>
@@ -308,7 +330,7 @@
               type="number"
               min="1"
               step="1"
-              value={form?.employeeCount ?? ''}
+              value={viewForm?.employeeCount ?? ''}
             />
           </label>
 
@@ -319,7 +341,7 @@
               type="number"
               min="1"
               step="1"
-              value={form?.legalEntityCount ?? '1'}
+              value={viewForm?.legalEntityCount ?? '1'}
               required
             />
           </label>
@@ -349,7 +371,7 @@
                     name="regulatoryRegimeIds"
                     type="checkbox"
                     value={regime.id}
-                    checked={form?.regulatoryRegimeIds?.includes(regime.id) ?? false}
+                    checked={viewForm?.regulatoryRegimeIds?.includes(regime.id) ?? false}
                   />
                   <span>{regime.name}{regime.jurisdiction ? ` · ${regime.jurisdiction}` : ''}</span>
                 </label>
@@ -626,7 +648,7 @@
               name="personName"
               autocomplete="name"
               maxlength="255"
-              value={form?.personName ?? ''}
+              value={viewForm?.personName ?? ''}
               required
             />
           </label>
@@ -638,7 +660,7 @@
               type="email"
               autocomplete="email"
               maxlength="320"
-              value={form?.email ?? ''}
+              value={viewForm?.email ?? ''}
               required
             />
           </label>
@@ -658,7 +680,7 @@
             <input
               name="acceptedTerms"
               type="checkbox"
-              checked={form?.acceptedTerms ?? false}
+              checked={viewForm?.acceptedTerms ?? false}
               required
             />
             <span>I accept the NuBlox terms and privacy notice.</span>
@@ -669,8 +691,8 @@
           <p class="form-message error">{wizardMessage}</p>
         {/if}
 
-        {#if form?.error}
-          <p class="form-message error">{form.error}</p>
+        {#if viewForm?.error}
+          <p class="form-message error">{viewForm.error}</p>
         {/if}
 
         <div class="login-form">

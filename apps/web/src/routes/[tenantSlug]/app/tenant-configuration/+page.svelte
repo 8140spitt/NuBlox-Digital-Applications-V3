@@ -13,6 +13,9 @@
         primaryLanguageCode: string;
         operatingModelCodes: string[];
         regulatoryRegimeIds: string[];
+        functionError: string;
+        functionUpdated: boolean;
+        functionId: string;
       }>
   );
 
@@ -26,6 +29,12 @@
 
   function prettyKind(value: string) {
     return value.toLowerCase().replaceAll('_', ' ');
+  }
+
+  function stateLabel(value: string) {
+    if (value === 'DEFAULT_ENABLED') return 'Enabled';
+    if (value === 'AVAILABLE_DISABLED') return 'Available · disabled';
+    return 'Hidden · not applicable';
   }
 </script>
 
@@ -212,6 +221,12 @@
     </div>
   </section>
 
+  {#if viewForm?.functionError}
+    <p class="form-message error">{viewForm.functionError}</p>
+  {:else if viewForm?.functionUpdated}
+    <p class="form-message">Function configuration updated and audit evidence recorded.</p>
+  {/if}
+
   <section class="home-primary-grid">
     <article class="home-primary-card">
       <span>IND</span>
@@ -298,6 +313,96 @@
       </div>
     {/if}
   </section>
+
+  {#if data.cbeOperatingProfile}
+    {@const profile = data.cbeOperatingProfile}
+    <section class="home-section">
+      <header class="home-section-heading">
+        <div>
+          <p class="app-eyebrow">CBE operating profile</p>
+          <h2>{profile.provisioningCode}</h2>
+        </div>
+        <p>
+          Resolver v{profile.resolverVersion} · {profile.effectiveArchetypeCode} ·
+          {profile.contractualPositionCode} · {profile.sizeBand}
+        </p>
+      </header>
+
+      <div class="home-primary-grid">
+        <article class="home-primary-card">
+          <span>●</span>
+          <div>
+            <strong>{profile.functions.filter((item) => item.effectiveState === 'DEFAULT_ENABLED').length}</strong>
+            <p>Functions currently enabled</p>
+          </div>
+        </article>
+        <article class="home-primary-card">
+          <span>○</span>
+          <div>
+            <strong>{profile.functions.filter((item) => item.effectiveState === 'AVAILABLE_DISABLED').length}</strong>
+            <p>Functions available but disabled</p>
+          </div>
+        </article>
+        <article class="home-primary-card">
+          <span>—</span>
+          <div>
+            <strong>{profile.functions.filter((item) => item.effectiveState === 'HIDDEN_NOT_APPLICABLE').length}</strong>
+            <p>Functions hidden as not applicable</p>
+          </div>
+        </article>
+      </div>
+
+      <p class="workspace-lede">
+        Recommendation state is the resolver's governed baseline. Effective state is the Tenant's
+        current choice. Hidden Functions require an operating-profile reassessment before activation.
+      </p>
+
+      <div class="home-primary-grid">
+        {#each profile.functions as item}
+          <article class="home-primary-card">
+            <span>{item.code}</span>
+            <div>
+              <strong>{item.name}</strong>
+              <p>{item.functionFamily === 'CORE_BUSINESS' ? 'Core Business Function' : 'CBE Function'}</p>
+              <p>
+                Recommended: {stateLabel(item.recommendationState)} · Current: {stateLabel(item.effectiveState)}
+              </p>
+              <p>{item.rationale}</p>
+
+              {#if data.canManage && item.recommendationState !== 'HIDDEN_NOT_APPLICABLE'}
+                <form method="POST" action="?/setFunctionState" class="login-form">
+                  <input type="hidden" name="functionId" value={item.functionId} />
+                  <label>
+                    <span>Effective state</span>
+                    <select name="effectiveState" required>
+                      <option value="DEFAULT_ENABLED" selected={item.effectiveState === 'DEFAULT_ENABLED'}>
+                        Enabled
+                      </option>
+                      <option value="AVAILABLE_DISABLED" selected={item.effectiveState === 'AVAILABLE_DISABLED'}>
+                        Available · disabled
+                      </option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>Reason for change</span>
+                    <input
+                      name="reason"
+                      maxlength="1000"
+                      placeholder="Why is this Function being enabled or disabled?"
+                      required
+                    />
+                  </label>
+                  <button type="submit" class="quiet-button">Save Function state</button>
+                </form>
+              {:else if item.recommendationState === 'HIDDEN_NOT_APPLICABLE'}
+                <p class="login-help">Reassess the CBE operating profile before enabling this Function.</p>
+              {/if}
+            </div>
+          </article>
+        {/each}
+      </div>
+    </section>
+  {/if}
 
   {#if configuration.capabilityGuidance}
     <section class="home-section">

@@ -3,6 +3,22 @@
   import type { ActionData } from './$types';
 
   let { form }: { form: ActionData } = $props();
+  const viewForm = $derived(
+    form as ActionData &
+      Partial<{
+        success: boolean;
+        error: string;
+        values: {
+          name: string;
+          email: string;
+          company: string;
+          jobTitle: string;
+          phone: string;
+          interest: string;
+          message: string;
+        };
+      }>
+  );
 </script>
 
 <svelte:head>
@@ -36,7 +52,7 @@
       </aside>
 
       <div class="marketing-form-panel">
-        {#if form?.success}
+        {#if viewForm?.success}
           <div class="marketing-success" role="status">
             <p class="marketing-kicker">Enquiry received</p>
             <h2>Thank you. Your enquiry has been recorded.</h2>
@@ -44,29 +60,29 @@
             <a class="marketing-link-arrow" href="/resources">Continue exploring NuBlox <span>→</span></a>
           </div>
         {:else}
-          {#if form?.error}<p class="marketing-form-error" role="alert">{form.error}</p>{/if}
+          {#if viewForm?.error}<p class="marketing-form-error" role="alert">{viewForm.error}</p>{/if}
           <form method="POST" class="marketing-form">
             <div class="marketing-form-grid">
-              <label><span>Name</span><input name="name" autocomplete="name" required value={form?.values?.name ?? ''} /></label>
-              <label><span>Business email</span><input name="email" type="email" autocomplete="email" required value={form?.values?.email ?? ''} /></label>
-              <label><span>Organisation</span><input name="company" autocomplete="organization" required value={form?.values?.company ?? ''} /></label>
-              <label><span>Job title</span><input name="jobTitle" autocomplete="organization-title" value={form?.values?.jobTitle ?? ''} /></label>
-              <label><span>Telephone <small>optional</small></span><input name="phone" autocomplete="tel" value={form?.values?.phone ?? ''} /></label>
+              <label><span>Name</span><input name="name" autocomplete="name" required value={viewForm?.values?.name ?? ''} /></label>
+              <label><span>Business email</span><input name="email" type="email" autocomplete="email" required value={viewForm?.values?.email ?? ''} /></label>
+              <label><span>Organisation</span><input name="company" autocomplete="organization" required value={viewForm?.values?.company ?? ''} /></label>
+              <label><span>Job title</span><input name="jobTitle" autocomplete="organization-title" value={viewForm?.values?.jobTitle ?? ''} /></label>
+              <label><span>Telephone <small>optional</small></span><input name="phone" autocomplete="tel" value={viewForm?.values?.phone ?? ''} /></label>
               <label>
                 <span>Area of interest</span>
-                <select name="interest" required value={form?.values?.interest ?? ''}>
+                <select name="interest" required>
                   <option value="">Choose one</option>
-                  <option value="ENTERPRISE_ERP">Enterprise ERP / application consolidation</option>
-                  <option value="CBE">Construction & Built Environment</option>
-                  <option value="HCM">Human Capital / organisation design</option>
-                  <option value="ARCHITECTURE">Platform / architecture review</option>
-                  <option value="SECURITY">Security / procurement review</option>
-                  <option value="PRICING">Pricing / commercial discussion</option>
-                  <option value="PARTNERSHIP">Partnership / other</option>
+                  <option value="ENTERPRISE_ERP" selected={viewForm?.values?.interest === 'ENTERPRISE_ERP'}>Enterprise ERP / application consolidation</option>
+                  <option value="CBE" selected={viewForm?.values?.interest === 'CBE'}>Construction & Built Environment</option>
+                  <option value="HCM" selected={viewForm?.values?.interest === 'HCM'}>Human Capital / organisation design</option>
+                  <option value="ARCHITECTURE" selected={viewForm?.values?.interest === 'ARCHITECTURE'}>Platform / architecture review</option>
+                  <option value="SECURITY" selected={viewForm?.values?.interest === 'SECURITY'}>Security / procurement review</option>
+                  <option value="PRICING" selected={viewForm?.values?.interest === 'PRICING'}>Pricing / commercial discussion</option>
+                  <option value="PARTNERSHIP" selected={viewForm?.values?.interest === 'PARTNERSHIP'}>Partnership / other</option>
                 </select>
               </label>
             </div>
-            <label><span>Tell us what you need NuBlox to handle</span><textarea name="message" rows="8" minlength="20" required>{form?.values?.message ?? ''}</textarea></label>
+            <label><span>Tell us what you need NuBlox to handle</span><textarea name="message" rows="8" minlength="20" required>{viewForm?.values?.message ?? ''}</textarea></label>
             <label class="marketing-honeypot" aria-hidden="true"><span>Website</span><input name="website" tabindex="-1" autocomplete="off" /></label>
             <p class="marketing-form-note">By submitting this form, you are asking NuBlox to use the details provided to respond to this enquiry.</p>
             <button class="marketing-button" type="submit">Send enquiry</button>

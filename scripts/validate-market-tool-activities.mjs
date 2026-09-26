@@ -30,7 +30,10 @@ if (lines.length < 2) {
 
 const header = lines[0].split('\t');
 
-if (header.length !== EXPECTED_HEADER.length || header.some((value, index) => value !== EXPECTED_HEADER[index])) {
+if (
+  header.length !== EXPECTED_HEADER.length ||
+  header.some((value, index) => value !== EXPECTED_HEADER[index])
+) {
   throw new Error(
     `${SOURCE_PATH} has an unexpected header. Expected: ${EXPECTED_HEADER.join(' | ')}`
   );
@@ -41,6 +44,9 @@ const uniqueObservations = new Set();
 const scopes = new Set();
 const industries = new Set();
 const toolAcronyms = new Set();
+const toolIdentityKeys = new Set();
+const acronymMeanings = new Map();
+const scopeCounts = new Map();
 let observationCount = 0;
 
 for (let index = 1; index < lines.length; index += 1) {
@@ -64,6 +70,19 @@ for (let index = 1; index < lines.length; index += 1) {
       `${SOURCE_PATH}:${sourceLine} has unsupported Horizontal/Vertical value "${scope}".`
     );
   }
+
+  const identityKey = [acronym, fullName, scope, industry].join('|');
+  if (toolIdentityKeys.has(identityKey)) {
+    throw new Error(
+      `${SOURCE_PATH}:${sourceLine} duplicates market-tool identity ${identityKey}.`
+    );
+  }
+  toolIdentityKeys.add(identityKey);
+
+  const meanings = acronymMeanings.get(acronym) ?? new Set();
+  meanings.add(fullName);
+  acronymMeanings.set(acronym, meanings);
+  scopeCounts.set(scope, (scopeCounts.get(scope) ?? 0) + 1);
 
   const activities = activitiesField
     .split(';')
@@ -119,6 +138,15 @@ for (const acronym of ['ERP', 'HCM', 'IAM', 'BIM', 'PMIS']) {
   }
 }
 
+const ambiguousAcronyms = [...acronymMeanings.entries()]
+  .filter(([, meanings]) => meanings.size > 1)
+  .map(([acronym]) => acronym)
+  .sort();
+
 console.log(
-  `Market tool activity evidence is structurally valid: ${rows.length} tool rows, ${observationCount} activity observations, ${uniqueObservations.size} unique normalised phrases.`
+  `Market tool activity evidence is structurally valid: ${rows.length} tool rows (${scopeCounts.get('Horizontal') ?? 0} horizontal / ${scopeCounts.get('Vertical') ?? 0} vertical), ${observationCount} activity observations, ${uniqueObservations.size} unique normalised phrases, ${ambiguousAcronyms.length} acronyms with multiple full-name meanings.`
 );
+
+if (ambiguousAcronyms.length > 0) {
+  console.log(`Ambiguous acronym meanings require full-name/context disambiguation: ${ambiguousAcronyms.join(', ')}.`);
+}

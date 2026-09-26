@@ -116,3 +116,4 @@ export * from './enterprise-vocabulary-provisioning-service.js';
 export * from './nublox-object-runtime.js';
 
 export * from './tenant-provisioning-service.js';
+export * from './platform-administration-service.js';

@@ -17,7 +17,9 @@ describe('tenant routing', () => {
 
   it('rejects NuBlox-reserved platform paths', () => {
     expect(RESERVED_TENANT_SLUGS.has('app')).toBe(true);
+    expect(RESERVED_TENANT_SLUGS.has('platform')).toBe(true);
     expect(() => normaliseTenantSlug('app')).toThrow('reserved');
+    expect(() => normaliseTenantSlug('platform')).toThrow('reserved');
     expect(() => normaliseTenantSlug('x')).toThrow('3-80');
   });
 

@@ -13,6 +13,7 @@
     "format": "pnpm --dir apps/web format",
     "format:check": "pnpm --dir apps/web format:check",
     "auth:bootstrap": "pnpm --dir packages/persistence auth:bootstrap",
+    "platform:bootstrap": "pnpm --dir packages/persistence platform:bootstrap",
     "auth:dispatch-messages": "pnpm --dir packages/persistence auth:dispatch-messages",
     "auth:dispatch-loop": "pnpm --dir packages/persistence auth:dispatch-loop",
     "terminal:logged": "./scripts/start-logged-terminal.sh",

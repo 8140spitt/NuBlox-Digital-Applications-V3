@@ -17,6 +17,7 @@ export const RESERVED_TENANT_SLUGS = new Set([
   'legal',
   'login',
   'logout',
+  'platform',
   'pricing',
   'privacy',
   'product',

@@ -1,9 +1,16 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 import {
+  CbeOperatingProfileError,
+  MySqlCbeOperatingProfileService,
   TenantProvisioningError,
+  type CbeArchetypeCode,
+  type CbeContractualPositionCode,
   type TenantSizeTier
 } from '@nublox/persistence';
-import { getTenantProvisioningService } from '$lib/server/platform';
+import {
+  getDatabasePool,
+  getTenantProvisioningService
+} from '$lib/server/platform';
 
 const SIZE_TIERS = new Set<TenantSizeTier>([
   'MICRO',
@@ -67,9 +74,39 @@ export const POST: RequestHandler = async ({ request }) => {
       regulatoryRegimeIds: values(formData, 'regulatoryRegimeIds')
     });
 
-    return json(preview);
+    let cbeOperatingProfile = null;
+    if (preview.industrySolutionIds.includes('CBE')) {
+      const archetypeCode = value(formData, 'cbeArchetypeCode');
+      const contractualPositionCode = value(formData, 'cbeContractualPositionCode');
+      const employsOperatives = value(formData, 'cbeEmploysOperatives');
+
+      if (
+        !archetypeCode ||
+        !contractualPositionCode ||
+        !['Y', 'N'].includes(employsOperatives)
+      ) {
+        return json(
+          { error: 'Complete the Construction & Built Environment operating-profile questions.' },
+          { status: 400 }
+        );
+      }
+
+      cbeOperatingProfile = await new MySqlCbeOperatingProfileService(
+        getDatabasePool()
+      ).preview(sizeTier, {
+        archetypeCode: archetypeCode as CbeArchetypeCode,
+        contractualPositionCode:
+          contractualPositionCode as CbeContractualPositionCode,
+        employsOperatives: employsOperatives === 'Y'
+      });
+    }
+
+    return json({ ...preview, cbeOperatingProfile });
   } catch (error) {
-    if (error instanceof TenantProvisioningError) {
+    if (
+      error instanceof TenantProvisioningError ||
+      error instanceof CbeOperatingProfileError
+    ) {
       return json({ error: error.message }, { status: 400 });
     }
     throw error;

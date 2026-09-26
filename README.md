@@ -1,3 +1,8 @@
+# NuBlox V3 — Frozen Reference
+
+> **FROZEN REFERENCE — 26 September 2026**  
+> Active product development is moving to a clean-slate V4 baseline. V3 is retained as an evidence and implementation archive; nothing in V3 is automatically canonical for V4. See [docs/V3-FROZEN.md](docs/V3-FROZEN.md).
+
 # NuBlox
 
 **NuBlox is an enterprise operating platform.**

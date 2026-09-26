@@ -116,6 +116,7 @@ export * from './enterprise-vocabulary-provisioning-service.js';
 export * from './nublox-object-runtime.js';
 
 export * from './tenant-provisioning-service.js';
+export * from './cbe-operating-profile-service.js';
 export * from './platform-administration-service.js';
 export * from './platform-control-plane-read-repository.js';
 export * from './platform-control-plane-command-service.js';

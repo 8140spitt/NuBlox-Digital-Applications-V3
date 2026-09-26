@@ -164,6 +164,12 @@ export const actions: Actions = {
         error: 'Number of legal entities must be a positive whole number.'
       });
     }
+    if (!/^[A-Z]{2}$/u.test(submitted.primaryCountryCode)) {
+      return fail(400, {
+        ...submitted,
+        error: 'Primary country must use a two-letter ISO country code, for example GB.'
+      });
+    }
 
     try {
       const result = await getTenantProvisioningService().provisionExistingTenant(

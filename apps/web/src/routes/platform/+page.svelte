@@ -1,337 +1,48 @@
 <script lang="ts">
-  import type { ActionData, PageData } from './$types';
-
-  let { data, form }: { data: PageData; form: ActionData } = $props();
-
-  function formatDate(value: string | null) {
-    if (!value) return '—';
-    return new Intl.DateTimeFormat(undefined, {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    }).format(new Date(value));
-  }
-
-  function stateLabel(value: string) {
-    return value.toLowerCase().replaceAll('_', ' ');
-  }
+  import PlatformAdminNav from '$lib/components/platform/PlatformAdminNav.svelte';
+  import type { PageData } from './$types';
+  let { data }: { data:PageData }=$props();
+  function value(row:Record<string,string|number|boolean|null>,key:string){return row[key]??'—';}
 </script>
 
-<svelte:head>
-  <title>NuBlox Platform Administration</title>
-  <meta name="robots" content="noindex,nofollow" />
-</svelte:head>
+<svelte:head><title>NuBlox Platform Administration</title><meta name="robots" content="noindex,nofollow" /></svelte:head>
 
-<main class="platform-shell">
-  <header class="platform-header">
-    <div>
-      <p class="platform-eyebrow">NuBlox Operator Control Plane</p>
-      <h1>Tenant administration</h1>
-      <p>
-        Service-provider controls for NuBlox Tenants. This authority is separate from every Tenant's own administration.
-      </p>
-    </div>
-    <div class="operator-block">
-      <strong>{data.operator.displayName}</strong>
-      <span>{data.operator.role.replaceAll('_', ' ')}</span>
-      <a href="/platform/logout">Sign out</a>
-    </div>
-  </header>
+<div class="platform-layout">
+  <PlatformAdminNav operator={data.operator} />
+  <main>
+    <header><p class="eyebrow">NuBlox Operator Control Plane</p><h1>Platform administration</h1><p>Operate the NuBlox service independently of every Tenant's own administration.</p></header>
 
-  <section class="platform-summary">
-    <article>
-      <strong>{data.tenants.length}</strong>
-      <span>Tenants shown</span>
-    </article>
-    <article>
-      <strong>{data.tenants.filter((tenant) => tenant.lifecycleState === 'ACTIVE').length}</strong>
-      <span>Active</span>
-    </article>
-    <article>
-      <strong>{data.tenants.filter((tenant) => tenant.lifecycleState === 'SUSPENDED').length}</strong>
-      <span>Suspended</span>
-    </article>
-    <article>
-      <strong>{data.tenants.filter((tenant) => tenant.lifecycleState === 'DELETION_REQUESTED').length}</strong>
-      <span>Deletion requested</span>
-    </article>
-  </section>
-
-  <section class="platform-panel">
-    <form method="GET" class="search-form">
-      <label>
-        <span>Find a Tenant</span>
-        <input name="q" value={data.search} placeholder="Business name, slug or Tenant ID" />
-      </label>
-      <button type="submit">Search</button>
-      {#if data.search}<a href="/platform">Clear</a>{/if}
-    </form>
-  </section>
-
-  {#if form?.error}
-    <p class="platform-message error">{form.error}</p>
-  {:else if form?.success}
-    <p class="platform-message success">Tenant lifecycle updated.</p>
-  {/if}
-
-  <section class="tenant-list">
-    {#if data.tenants.length === 0}
-      <div class="platform-panel"><p>No Tenants matched the current search.</p></div>
-    {:else}
-      {#each data.tenants as tenant}
-        <article class="tenant-card">
-          <div class="tenant-heading">
-            <div>
-              <div class="tenant-title-row">
-                <h2>{tenant.name}</h2>
-                <span class:danger={tenant.lifecycleState === 'DELETED'} class:warning={tenant.lifecycleState === 'SUSPENDED' || tenant.lifecycleState === 'DELETION_REQUESTED'} class="state-chip">
-                  {stateLabel(tenant.lifecycleState)}
-                </span>
-              </div>
-              <p><code>{tenant.slug}</code> · <code>{tenant.tenantId}</code></p>
-            </div>
-            {#if tenant.lifecycleState === 'ACTIVE'}
-              <div class="tenant-links">
-                <a href={`/${tenant.slug}/app`}>Open app</a>
-                <a href={`/${tenant.slug}/public`}>Open public site</a>
-              </div>
-            {/if}
-          </div>
-
-          <dl class="tenant-facts">
-            <div><dt>Members</dt><dd>{tenant.memberCount}</dd></div>
-            <div><dt>Active sessions</dt><dd>{tenant.activeSessionCount}</dd></div>
-            <div><dt>Created</dt><dd>{formatDate(tenant.createdAt)}</dd></div>
-            <div><dt>Tenant status</dt><dd>{tenant.tenantStatus}</dd></div>
-          </dl>
-
-          {#if tenant.lifecycleReason}
-            <p class="lifecycle-reason"><strong>Latest lifecycle reason:</strong> {tenant.lifecycleReason}</p>
-          {/if}
-          {#if tenant.deletionRequestedAt}
-            <p class="lifecycle-reason"><strong>Deletion requested:</strong> {formatDate(tenant.deletionRequestedAt)}</p>
-          {/if}
-          {#if tenant.deletedAt}
-            <p class="lifecycle-reason"><strong>Deleted from service:</strong> {formatDate(tenant.deletedAt)}</p>
-          {/if}
-
-          {#if data.operator.role !== 'READ_ONLY' && tenant.lifecycleState !== 'DELETED'}
-            <div class="tenant-actions">
-              {#if tenant.lifecycleState === 'ACTIVE'}
-                <form method="POST" action="?/suspend" class="action-form">
-                  <input type="hidden" name="tenantId" value={tenant.tenantId} />
-                  <label>
-                    <span>Suspension reason</span>
-                    <input name="reason" minlength="8" required placeholder="Why access is being suspended" />
-                  </label>
-                  <button type="submit">Suspend Tenant</button>
-                </form>
-              {:else if tenant.lifecycleState === 'SUSPENDED' || tenant.lifecycleState === 'DELETION_REQUESTED'}
-                <form method="POST" action="?/reactivate" class="action-form">
-                  <input type="hidden" name="tenantId" value={tenant.tenantId} />
-                  <label>
-                    <span>Reactivation reason</span>
-                    <input name="reason" minlength="8" required placeholder="Why access is being restored" />
-                  </label>
-                  <button type="submit">Reactivate Tenant</button>
-                </form>
-              {/if}
-
-              {#if data.operator.role === 'SUPER_ADMIN' && tenant.lifecycleState !== 'DELETION_REQUESTED'}
-                <form method="POST" action="?/requestDeletion" class="action-form danger-zone">
-                  <input type="hidden" name="tenantId" value={tenant.tenantId} />
-                  <label>
-                    <span>Deletion reason</span>
-                    <input name="reason" minlength="8" required placeholder="Why this Tenant must be removed from service" />
-                  </label>
-                  <button type="submit">Request deletion</button>
-                </form>
-              {/if}
-
-              {#if data.operator.role === 'SUPER_ADMIN' && tenant.lifecycleState === 'DELETION_REQUESTED'}
-                <form method="POST" action="?/finaliseDeletion" class="action-form danger-zone final-delete">
-                  <input type="hidden" name="tenantId" value={tenant.tenantId} />
-                  <p>
-                    Final deletion removes this Tenant from service but does <strong>not</strong> physically purge retained ERP data.
-                  </p>
-                  <label>
-                    <span>Type <code>{tenant.slug}</code> to confirm</span>
-                    <input name="confirmationSlug" required autocomplete="off" />
-                  </label>
-                  <label>
-                    <span>Final deletion reason</span>
-                    <input name="reason" minlength="8" required placeholder="Confirm the governed deletion rationale" />
-                  </label>
-                  <button type="submit">Delete Tenant from service</button>
-                </form>
-              {/if}
-            </div>
-          {/if}
-        </article>
+    <section class="metrics">
+      {#each data.dashboard.metrics as metric}
+        <article><strong>{metric.value}</strong><span>{metric.label}</span><small>{metric.detail}</small></article>
       {/each}
-    {/if}
-  </section>
-</main>
+    </section>
+
+    <section class="panel">
+      <div class="heading"><div><p class="eyebrow">Control estate</p><h2>Platform administration areas</h2></div></div>
+      <div class="section-grid">
+        <a href="/platform/tenants"><strong>Tenants</strong><span>Lifecycle, configuration, people, security, sessions, audit, provisioning and deletion.</span></a>
+        {#each data.dashboard.globalSections as section}
+          <a href={`/platform/${section.key}`}><strong>{section.title}</strong><span>{section.description}</span></a>
+        {/each}
+      </div>
+    </section>
+
+    <div class="two-column">
+      <section class="panel">
+        <div class="heading"><div><p class="eyebrow">Attention</p><h2>Needs operator review</h2></div><span>{data.dashboard.attention.length}</span></div>
+        {#if data.dashboard.attention.length===0}<p class="empty">No current provider attention items.</p>{:else}
+          <div class="rows">{#each data.dashboard.attention as row}<article><strong>{value(row,'attention_type')}</strong><span>{value(row,'subject')}</span><small>{value(row,'reason')}</small></article>{/each}</div>
+        {/if}
+      </section>
+      <section class="panel">
+        <div class="heading"><div><p class="eyebrow">Provider audit</p><h2>Recent operator activity</h2></div><a href="/platform/audit">Open audit</a></div>
+        <div class="rows">{#each data.dashboard.recentAudit as row}<article><strong>{value(row,'action')}</strong><span>{value(row,'operator_name')} · {value(row,'tenant_id')}</span><small>{value(row,'occurred_at')}</small></article>{/each}</div>
+      </section>
+    </div>
+  </main>
+</div>
 
 <style>
-  .platform-shell {
-    max-width: 96rem;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
-  .platform-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    align-items: start;
-    margin-bottom: 2rem;
-  }
-
-  .platform-eyebrow {
-    margin: 0 0 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  h1, h2, p { margin-top: 0; }
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 0.7rem; }
-  h2 { margin-bottom: 0.25rem; }
-
-  .operator-block {
-    display: grid;
-    min-width: 14rem;
-    gap: 0.25rem;
-    padding: 1rem;
-    border: 1px solid #d8d8d2;
-    border-radius: 0.75rem;
-    background: #fff;
-  }
-
-  .operator-block span { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
-
-  .platform-summary {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .platform-summary article, .platform-panel, .tenant-card {
-    border: 1px solid #d8d8d2;
-    border-radius: 0.8rem;
-    background: #fff;
-  }
-
-  .platform-summary article {
-    display: grid;
-    padding: 1rem;
-  }
-
-  .platform-summary strong { font-size: 1.7rem; }
-  .platform-summary span { font-size: 0.85rem; }
-  .platform-panel { padding: 1rem; margin-bottom: 1rem; }
-
-  .search-form {
-    display: flex;
-    gap: 0.75rem;
-    align-items: end;
-  }
-
-  .search-form label { flex: 1; }
-  label { display: grid; gap: 0.35rem; font-weight: 650; }
-
-  input {
-    width: 100%;
-    padding: 0.7rem 0.8rem;
-    border: 1px solid #c8c8c2;
-    border-radius: 0.5rem;
-    font: inherit;
-  }
-
-  button {
-    padding: 0.72rem 0.9rem;
-    border: 1px solid #1e1e1b;
-    border-radius: 0.5rem;
-    background: #1e1e1b;
-    color: #fff;
-    font: inherit;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  .tenant-list { display: grid; gap: 1rem; }
-  .tenant-card { padding: 1.25rem; }
-
-  .tenant-heading, .tenant-title-row, .tenant-links {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .tenant-links { justify-content: flex-end; }
-
-  .state-chip {
-    display: inline-flex;
-    padding: 0.3rem 0.55rem;
-    border-radius: 999px;
-    background: #e8f5ea;
-    font-size: 0.75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  .state-chip.warning { background: #fff3cd; }
-  .state-chip.danger { background: #fde3e0; }
-
-  .tenant-facts {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin: 1rem 0;
-  }
-
-  .tenant-facts div { padding: 0.8rem; background: #f7f7f4; border-radius: 0.6rem; }
-  dt { font-size: 0.75rem; text-transform: uppercase; font-weight: 800; }
-  dd { margin: 0.2rem 0 0; }
-
-  .lifecycle-reason { margin-bottom: 0.5rem; }
-  .tenant-actions { display: grid; gap: 0.8rem; margin-top: 1rem; }
-
-  .action-form {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.8rem;
-    align-items: end;
-    padding: 0.9rem;
-    border: 1px solid #dfdfd8;
-    border-radius: 0.65rem;
-  }
-
-  .danger-zone { border-color: #d7958e; background: #fff9f8; }
-  .danger-zone button { background: #8a1f17; border-color: #8a1f17; }
-
-  .final-delete {
-    grid-template-columns: 1fr 1fr auto;
-  }
-
-  .final-delete p { grid-column: 1 / -1; margin-bottom: 0; }
-
-  .platform-message { padding: 0.85rem 1rem; border-radius: 0.6rem; }
-  .error { background: #fff1f0; color: #8a1f17; }
-  .success { background: #edf8ef; color: #1f6430; }
-
-  code { font-size: 0.88em; }
-
-  @media (max-width: 800px) {
-    .platform-header, .tenant-heading, .tenant-title-row, .tenant-links, .search-form {
-      align-items: stretch;
-      flex-direction: column;
-    }
-
-    .platform-summary, .tenant-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .action-form, .final-delete { grid-template-columns: 1fr; }
-  }
+  :global(body){margin:0;background:#f5f6f8;color:#111827;font-family:Inter,system-ui,sans-serif}.platform-layout{display:grid;grid-template-columns:17rem minmax(0,1fr);min-height:100vh}main{padding:2rem;max-width:100rem;width:100%;box-sizing:border-box}header{margin-bottom:1.5rem}h1{font-size:2.4rem;margin:.2rem 0 .5rem}h2{margin:.1rem 0}.eyebrow{margin:0;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:#667085}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-bottom:1rem}.metrics article,.panel{background:#fff;border:1px solid #dfe3e8;border-radius:.65rem}.metrics article{padding:1rem;display:grid;gap:.25rem}.metrics strong{font-size:1.8rem}.metrics small{color:#667085}.panel{padding:1rem;margin-bottom:1rem}.heading{display:flex;justify-content:space-between;align-items:start;gap:1rem;margin-bottom:1rem}.section-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}.section-grid a{display:grid;gap:.35rem;padding:1rem;border:1px solid #e4e7ec;border-radius:.5rem;text-decoration:none;color:inherit;background:#fafbfc}.section-grid a:hover{border-color:#98a2b3;background:#fff}.section-grid span,.rows span,.rows small{color:#667085}.two-column{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.rows{display:grid;gap:.5rem}.rows article{display:grid;gap:.15rem;padding:.65rem 0;border-top:1px solid #eee}.empty{color:#667085}@media(max-width:1000px){.platform-layout{grid-template-columns:1fr}.metrics,.section-grid,.two-column{grid-template-columns:1fr}}
 </style>

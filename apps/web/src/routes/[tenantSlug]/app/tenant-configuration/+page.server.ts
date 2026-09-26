@@ -1,5 +1,7 @@
 import { PLATFORM_PERMISSION_KEYS } from '@nublox/kernel';
 import {
+  MySqlTenantFunctionConfigurationService,
+  TenantFunctionConfigurationError,
   TenantProvisioningError,
   type MySqlAccessRepository,
   type TenantSizeTier
@@ -8,6 +10,7 @@ import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import {
   getAccessRepository,
+  getDatabasePool,
   getTenantProvisioningService
 } from '$lib/server/platform';
 
@@ -73,6 +76,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       canManage: false,
       reason: 'No authenticated Tenant context is available.',
       configuration: null,
+      cbeOperatingProfile: null,
       catalogue: null,
       needsConfiguration: false
     };
@@ -83,17 +87,23 @@ export const load: PageServerLoad = async ({ locals }) => {
     return {
       ...permission,
       configuration: null,
+      cbeOperatingProfile: null,
       catalogue: null,
       needsConfiguration: false
     };
   }
 
   try {
+    const [configuration, cbeOperatingProfile] = await Promise.all([
+      getTenantProvisioningService().getTenantConfiguration(session.tenantId),
+      new MySqlTenantFunctionConfigurationService(getDatabasePool()).getTenantConfiguration(
+        session.tenantId
+      )
+    ]);
     return {
       ...permission,
-      configuration: await getTenantProvisioningService().getTenantConfiguration(
-        session.tenantId
-      ),
+      configuration,
+      cbeOperatingProfile,
       catalogue: null,
       needsConfiguration: false
     };
@@ -105,6 +115,7 @@ export const load: PageServerLoad = async ({ locals }) => {
       return {
         ...permission,
         configuration: null,
+        cbeOperatingProfile: null,
         catalogue: permission.canManage
           ? await getTenantProvisioningService().catalogue()
           : null,
@@ -195,6 +206,43 @@ export const actions: Actions = {
     } catch (error) {
       if (error instanceof TenantProvisioningError) {
         return fail(400, { ...submitted, error: error.message });
+      }
+      throw error;
+    }
+  },
+
+  setFunctionState: async ({ request, locals }) => {
+    const session = locals.auth;
+    if (!session) return fail(401, { functionError: 'Authentication required.' });
+
+    const permission = await permissions(session.tenantId, session.personId);
+    if (!permission.canManage) {
+      return fail(403, {
+        functionError: 'Your current access does not permit Tenant Function configuration changes.'
+      });
+    }
+
+    const formData = await request.formData();
+    const functionId = value(formData, 'functionId');
+    const effectiveState = value(formData, 'effectiveState');
+    const reason = value(formData, 'reason');
+
+    if (!['DEFAULT_ENABLED', 'AVAILABLE_DISABLED'].includes(effectiveState)) {
+      return fail(400, { functionError: 'Choose a valid Function state.' });
+    }
+
+    try {
+      await new MySqlTenantFunctionConfigurationService(getDatabasePool()).setEffectiveState({
+        tenantId: session.tenantId,
+        actorPersonId: session.personId,
+        functionId,
+        effectiveState: effectiveState as 'DEFAULT_ENABLED' | 'AVAILABLE_DISABLED',
+        reason
+      });
+      return { functionUpdated: true, functionId };
+    } catch (error) {
+      if (error instanceof TenantFunctionConfigurationError) {
+        return fail(400, { functionError: error.message, functionId });
       }
       throw error;
     }

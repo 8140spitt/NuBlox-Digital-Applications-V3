@@ -292,9 +292,16 @@ export class MySqlPlatformControlPlaneReadRepository {
         UNION ALL SELECT 'Metadata types',COUNT(*),'count' FROM metadata_type_definitions WHERE tenant_id=? AND status='ACTIVE'
         UNION ALL SELECT 'Audit entries',COUNT(*),'count' FROM kernel_audit_entries WHERE tenant_id=?
         UNION ALL SELECT CONCAT('Snapshot: ',metric_key),metric_value,unit FROM platform_usage_snapshots WHERE tenant_id=? ORDER BY metric`,[tenantId,tenantId,tenantId,tenantId,tenantId,tenantId]);
-      case 'health': return make(`SELECT 'Lifecycle' AS signal,COALESCE(c.lifecycle_state,t.status) AS state,c.reason AS detail,c.updated_at
+      case 'health': return make(`SELECT 'Lifecycle' AS health_signal,COALESCE(c.lifecycle_state,t.status) AS state,c.reason AS detail,c.updated_at AS occurred_at
         FROM tenants t LEFT JOIN platform_tenant_controls c ON c.tenant_id=t.id WHERE t.id=?
-        UNION ALL SELECT 'Latest provisioning',r.status,COALESCE(r.error_message,'No error'),r.started_at FROM tenant_provisioning_runs r WHERE r.tenant_id=? ORDER BY r.started_at DESC LIMIT 1
+        UNION ALL SELECT 'Latest provisioning',p.status,COALESCE(p.error_message,'No error'),p.started_at
+          FROM (
+            SELECT status,error_message,started_at
+              FROM tenant_provisioning_runs
+             WHERE tenant_id=?
+             ORDER BY started_at DESC
+             LIMIT 1
+          ) p
         UNION ALL SELECT 'Failed background jobs',IF(COUNT(*)=0,'HEALTHY','DEGRADED'),CONCAT(COUNT(*),' failed job(s)'),MAX(updated_at) FROM platform_background_jobs WHERE tenant_id=? AND status='FAILED'
         UNION ALL SELECT 'Authentication errors (24h)',IF(COUNT(*)=0,'HEALTHY','DEGRADED'),CONCAT(COUNT(*),' error event(s)'),MAX(occurred_at) FROM application_auth_events WHERE tenant_id=? AND outcome='ERROR' AND occurred_at>=UTC_TIMESTAMP(6)-INTERVAL 1 DAY`,[tenantId,tenantId,tenantId,tenantId]);
       case 'security': return make(`SELECT p.mfa_requirement,p.passkey_enabled,p.session_ttl_minutes,p.idle_timeout_minutes,p.max_active_sessions,

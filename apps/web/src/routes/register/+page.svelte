@@ -3,6 +3,38 @@
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
+  type FunctionState = 'DEFAULT_ENABLED' | 'AVAILABLE_DISABLED' | 'HIDDEN_NOT_APPLICABLE';
+
+  type CbeOperatingProfilePreview = {
+    resolverVersion: number;
+    provisioningCode: string;
+    intakeArchetypeCode: string;
+    effectiveArchetypeCode: string;
+    contractualPositionCode: string;
+    employsOperatives: boolean;
+    sizeBand: string;
+    summary: {
+      totalFunctions: number;
+      defaultEnabled: number;
+      availableDisabled: number;
+      hiddenNotApplicable: number;
+    };
+    functions: Array<{
+      functionId: string;
+      code: string;
+      name: string;
+      functionFamily: 'CORE_BUSINESS' | 'CBE';
+      recommendationState: FunctionState;
+      rationale: string;
+    }>;
+    capabilityAdders: Array<{
+      code: string;
+      name: string;
+      capabilityType: 'SUB_FUNCTION';
+      sizeBand: string;
+    }>;
+  };
+
   let step = $state(1);
   let registrationForm: HTMLFormElement | undefined;
   let wizardMessage = $state('');
@@ -24,17 +56,22 @@
       availableDisabled: number;
       hiddenNotApplicable: number;
     } | null;
+    cbeOperatingProfile: CbeOperatingProfilePreview | null;
   } | null>(null);
   let businessName = $state(form?.businessName ?? '');
   let primaryClassificationValueId = $state(form?.primaryClassificationValueId ?? '');
   let sizeTier = $state(form?.sizeTier ?? '');
   let operatingModelCodes = $state<string[]>(form?.operatingModelCodes ?? []);
+  let cbeArchetypeCode = $state(form?.cbeArchetypeCode ?? '');
+  let cbeContractualPositionCode = $state(form?.cbeContractualPositionCode ?? '');
+  let cbeEmploysOperatives = $state(form?.cbeEmploysOperatives ?? '');
 
   const selectedIndustry = $derived(
     data.catalogue.industries.find(
       (industry) => industry.classificationValueId === primaryClassificationValueId
     )
   );
+  const isCbe = $derived(selectedIndustry?.industrySolutionId === 'CBE');
   const selectedSizeTier = $derived(
     data.catalogue.sizeTiers.find((tier) => tier.code === sizeTier)
   );
@@ -94,6 +131,15 @@
       return;
     }
 
+    if (
+      step === 2 &&
+      isCbe &&
+      (!cbeArchetypeCode || !cbeContractualPositionCode || !cbeEmploysOperatives)
+    ) {
+      wizardMessage = 'Complete all Construction & Built Environment operating-profile questions.';
+      return;
+    }
+
     if (step === 2 && registrationForm) {
       const response = await fetch('/register/preview', {
         method: 'POST',
@@ -148,7 +194,7 @@
           {step === 1
             ? 'Business identity'
             : step === 2
-              ? 'Size and operating model'
+              ? 'Operating profile'
               : step === 3
                 ? 'Configuration preview'
                 : 'Administrator setup'}
@@ -157,9 +203,9 @@
           {step === 1
             ? 'Tell NuBlox what business is being created and where it principally operates.'
             : step === 2
-              ? 'These dimensions determine configuration depth and applicable template overlays.'
+              ? 'Size, operating model and Industry Solution intake determine the recommended operating profile.'
               : step === 3
-                ? 'Review the configuration basis before the Tenant is provisioned.'
+                ? 'Review the recommended configuration before the Tenant is provisioned.'
                 : 'Create the first verified employee identity and Tenant administrator.'}
         </p>
       </header>
@@ -197,13 +243,14 @@
             <span>Primary country</span>
             <input
               name="primaryCountryCode"
+              minlength="2"
               maxlength="2"
-              pattern="[A-Za-z]{2}"
+              autocomplete="country"
               placeholder="GB"
               value={form?.primaryCountryCode ?? ''}
               required
             />
-            <small>Two-letter country code.</small>
+            <small>ISO alpha-2 country code, for example GB.</small>
           </label>
 
           <label>
@@ -309,6 +356,75 @@
               {/each}
             </div>
           {/if}
+
+          {#if isCbe}
+            <section class="home-section">
+              <header class="home-section-heading">
+                <div>
+                  <p class="app-eyebrow">Construction &amp; Built Environment</p>
+                  <h2>Quick operating profile</h2>
+                </div>
+              </header>
+              <p class="login-help">
+                These questions recommend the CBE Functions most relevant to how the business actually
+                operates and delivers. They do not remove the canonical Function model.
+              </p>
+
+              <label>
+                <span>What does the business primarily do?</span>
+                <select name="cbeArchetypeCode" bind:value={cbeArchetypeCode} required>
+                  <option value="">Choose the closest business archetype</option>
+                  {#each data.cbeCatalogue.archetypes as archetype}
+                    <option value={archetype.code}>{archetype.name}</option>
+                  {/each}
+                </select>
+                {#if cbeArchetypeCode}
+                  <small>{data.cbeCatalogue.archetypes.find((item) => item.code === cbeArchetypeCode)?.description}</small>
+                {/if}
+              </label>
+
+              <label>
+                <span>What is the organisation's contractual position?</span>
+                <select
+                  name="cbeContractualPositionCode"
+                  bind:value={cbeContractualPositionCode}
+                  required
+                >
+                  <option value="">Choose the contractual position</option>
+                  {#each data.cbeCatalogue.contractualPositions as position}
+                    <option value={position.code}>{position.name}</option>
+                  {/each}
+                </select>
+                <small>
+                  Contractual position takes precedence when it materially changes the delivery model.
+                </small>
+              </label>
+
+              <div>
+                <span>Do you directly employ operatives or trades who perform physical site work?</span>
+                <label class="login-checkbox">
+                  <input
+                    name="cbeEmploysOperatives"
+                    type="radio"
+                    value="Y"
+                    bind:group={cbeEmploysOperatives}
+                    required
+                  />
+                  <span>Yes — we directly employ operatives or trades.</span>
+                </label>
+                <label class="login-checkbox">
+                  <input
+                    name="cbeEmploysOperatives"
+                    type="radio"
+                    value="N"
+                    bind:group={cbeEmploysOperatives}
+                    required
+                  />
+                  <span>No — our work is professional, advisory, client-side, supply or otherwise non-operative.</span>
+                </label>
+              </div>
+            </section>
+          {/if}
         </fieldset>
 
         <fieldset data-step="3" hidden={step !== 3}>
@@ -318,8 +434,8 @@
               <div>
                 <strong>NuBlox Enterprise Core</strong>
                 <p>
-                  All 29 core business Functions remain part of the Tenant. Industry configuration
-                  does not remove enterprise capability.
+                  All 29 core business Functions remain canonical. The operating profile recommends
+                  what should be visible and enabled by default for this Tenant.
                 </p>
               </div>
             </article>
@@ -390,6 +506,81 @@
                 <p class="workspace-lede">
                   Industry Solutions resolved: {preview.industrySolutionIds.join(', ')}.
                 </p>
+              {/if}
+
+              {#if preview.cbeOperatingProfile}
+                <section class="home-section">
+                  <header class="home-section-heading">
+                    <div>
+                      <p class="app-eyebrow">Recommended operating profile</p>
+                      <h2>{preview.cbeOperatingProfile.provisioningCode}</h2>
+                    </div>
+                  </header>
+
+                  <div class="home-primary-grid">
+                    <article class="home-primary-card">
+                      <span>●</span>
+                      <div>
+                        <strong>{preview.cbeOperatingProfile.summary.defaultEnabled}</strong>
+                        <p>Functions enabled by default</p>
+                      </div>
+                    </article>
+                    <article class="home-primary-card">
+                      <span>○</span>
+                      <div>
+                        <strong>{preview.cbeOperatingProfile.summary.availableDisabled}</strong>
+                        <p>Functions available to enable</p>
+                      </div>
+                    </article>
+                    <article class="home-primary-card">
+                      <span>—</span>
+                      <div>
+                        <strong>{preview.cbeOperatingProfile.summary.hiddenNotApplicable}</strong>
+                        <p>Functions hidden as not normally applicable</p>
+                      </div>
+                    </article>
+                  </div>
+
+                  <div class="home-primary-grid">
+                    <article class="home-primary-card">
+                      <span>ON</span>
+                      <div>
+                        <strong>Default workspace</strong>
+                        <p>
+                          {preview.cbeOperatingProfile.functions
+                            .filter((item) => item.recommendationState === 'DEFAULT_ENABLED')
+                            .map((item) => `${item.code} ${item.name}`)
+                            .join(' · ')}
+                        </p>
+                      </div>
+                    </article>
+                    <article class="home-primary-card">
+                      <span>OPT</span>
+                      <div>
+                        <strong>Available when needed</strong>
+                        <p>
+                          {preview.cbeOperatingProfile.functions
+                            .filter((item) => item.recommendationState === 'AVAILABLE_DISABLED')
+                            .map((item) => `${item.code} ${item.name}`)
+                            .join(' · ')}
+                        </p>
+                      </div>
+                    </article>
+                  </div>
+
+                  {#if preview.cbeOperatingProfile.capabilityAdders.length > 0}
+                    <p class="workspace-lede">
+                      Size-based capability adders:
+                      {preview.cbeOperatingProfile.capabilityAdders
+                        .map((item) => `${item.code} ${item.name}`)
+                        .join(' · ')}.
+                    </p>
+                  {/if}
+                  <p class="workspace-lede">
+                    This is a governed recommendation, not a licence boundary. Tenant administrators can
+                    later reassess applicable Functions without re-provisioning the canonical platform.
+                  </p>
+                </section>
               {/if}
 
               {#if preview.capabilityGuidance}

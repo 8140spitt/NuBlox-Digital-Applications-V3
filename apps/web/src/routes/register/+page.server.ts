@@ -2,11 +2,15 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import {
   AuthenticationRateLimitError,
+  MySqlCbeOperatingProfileService,
   TenantRegistrationError,
+  type CbeArchetypeCode,
+  type CbeContractualPositionCode,
   type TenantSizeTier
 } from '@nublox/persistence';
 import {
   getAuthenticationRateLimiter,
+  getDatabasePool,
   getTenantProvisioningService,
   getTenantRegistrationService
 } from '$lib/server/platform';
@@ -48,15 +52,23 @@ function formState(formData: FormData) {
     legalEntityCount: value(formData, 'legalEntityCount'),
     operatingModelCodes: values(formData, 'operatingModelCodes'),
     regulatoryRegimeIds: values(formData, 'regulatoryRegimeIds'),
+    cbeArchetypeCode: value(formData, 'cbeArchetypeCode'),
+    cbeContractualPositionCode: value(formData, 'cbeContractualPositionCode'),
+    cbeEmploysOperatives: value(formData, 'cbeEmploysOperatives'),
     personName: value(formData, 'personName'),
     email: value(formData, 'email'),
     acceptedTerms: formData.get('acceptedTerms') === 'on'
   };
 }
 
-export const load: PageServerLoad = async () => ({
-  catalogue: await getTenantProvisioningService().catalogue()
-});
+export const load: PageServerLoad = async () => {
+  const cbeProfiles = new MySqlCbeOperatingProfileService(getDatabasePool());
+  const [catalogue, cbeCatalogue] = await Promise.all([
+    getTenantProvisioningService().catalogue(),
+    cbeProfiles.catalogue()
+  ]);
+  return { catalogue, cbeCatalogue };
+};
 
 export const actions: Actions = {
   default: async ({ request, getClientAddress }) => {
@@ -88,6 +100,23 @@ export const actions: Actions = {
       });
     }
 
+    const hasCbeProfile = Boolean(
+      state.cbeArchetypeCode ||
+      state.cbeContractualPositionCode ||
+      state.cbeEmploysOperatives
+    );
+    if (
+      hasCbeProfile &&
+      (!state.cbeArchetypeCode ||
+        !state.cbeContractualPositionCode ||
+        !['Y', 'N'].includes(state.cbeEmploysOperatives))
+    ) {
+      return fail(400, {
+        ...state,
+        error: 'Complete all Construction & Built Environment operating-profile questions.'
+      });
+    }
+
     try {
       await getAuthenticationRateLimiter().consume(
         'TENANT_REGISTRATION',
@@ -111,7 +140,17 @@ export const actions: Actions = {
           primaryLanguageCode: state.primaryLanguageCode,
           operatingModelCodes: state.operatingModelCodes,
           regulatoryRegimeIds: state.regulatoryRegimeIds
-        }
+        },
+        ...(hasCbeProfile
+          ? {
+              cbeOperatingProfile: {
+                archetypeCode: state.cbeArchetypeCode as CbeArchetypeCode,
+                contractualPositionCode:
+                  state.cbeContractualPositionCode as CbeContractualPositionCode,
+                employsOperatives: state.cbeEmploysOperatives === 'Y'
+              }
+            }
+          : {})
       });
 
       throw redirect(

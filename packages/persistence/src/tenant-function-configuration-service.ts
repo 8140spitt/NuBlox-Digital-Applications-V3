@@ -1,11 +1,7 @@
 import type { Pool, RowDataPacket } from 'mysql2/promise';
+import type { TenantFunctionConfigurationState } from './cbe-operating-profile-service.js';
 import { withTransaction } from './database.js';
 import { writeOutboxEvent } from './platform-writes.js';
-
-export type TenantFunctionConfigurationState =
-  | 'DEFAULT_ENABLED'
-  | 'AVAILABLE_DISABLED'
-  | 'HIDDEN_NOT_APPLICABLE';
 
 export interface TenantFunctionConfigurationProjection {
   provisioningCode: string;
@@ -110,14 +106,22 @@ export class MySqlTenantFunctionConfigurationService {
     reason: string;
   }): Promise<void> {
     const reason = input.reason.trim();
-    if (!reason) throw new TenantFunctionConfigurationError('A reason is required for a Function configuration change.');
+    if (!reason) {
+      throw new TenantFunctionConfigurationError(
+        'A reason is required for a Function configuration change.'
+      );
+    }
 
     await withTransaction(this.pool, async (connection) => {
-      const [rows] = await connection.execute<Array<RowDataPacket & {
-        recommendation_state: TenantFunctionConfigurationState;
-        effective_state: TenantFunctionConfigurationState;
-        code: string;
-      }>>(
+      const [rows] = await connection.execute<
+        Array<
+          RowDataPacket & {
+            recommendation_state: TenantFunctionConfigurationState;
+            effective_state: TenantFunctionConfigurationState;
+            code: string;
+          }
+        >
+      >(
         `SELECT c.recommendation_state,c.effective_state,f.code
            FROM tenant_function_configurations c
            JOIN function_definitions f ON f.id=c.function_id
@@ -126,7 +130,11 @@ export class MySqlTenantFunctionConfigurationService {
         [input.tenantId, input.functionId]
       );
       const current = rows[0];
-      if (!current) throw new TenantFunctionConfigurationError('Tenant Function configuration was not found.');
+      if (!current) {
+        throw new TenantFunctionConfigurationError(
+          'Tenant Function configuration was not found.'
+        );
+      }
       if (
         current.recommendation_state === 'HIDDEN_NOT_APPLICABLE' &&
         input.effectiveState === 'DEFAULT_ENABLED'

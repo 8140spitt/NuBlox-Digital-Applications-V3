@@ -5,6 +5,7 @@
   const viewForm = $derived(
     form as ActionData &
       Partial<{
+        error: string;
         primaryClassificationValueId: string;
         sizeTier: string;
         employeeCount: string;
@@ -75,8 +76,8 @@
   {:else}
     {@const catalogue = data.catalogue}
 
-    {#if form?.error}
-      <p class="form-message error">{form.error}</p>
+    {#if viewForm?.error}
+      <p class="form-message error">{viewForm.error}</p>
     {/if}
 
     <section class="home-section">
